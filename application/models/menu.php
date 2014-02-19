@@ -2,9 +2,10 @@
 
 class Menu extends Doctrine_Record {
 	public function setTableDefinition() {
+		$this -> hasColumn('menu_describe', 'varchar', 100);
 		$this -> hasColumn('menu_text', 'varchar', 20);
 		$this -> hasColumn('menu_url', 'varchar', 100);
-		$this -> hasColumn('access_group', 'varchar', 100);
+		$this -> hasColumn('user_group', 'varchar', 100);
 	}
 
 	public function setUp() {
@@ -16,5 +17,10 @@ class Menu extends Doctrine_Record {
 		$menus = $query -> execute();
 		return $menus;
 	}
-
+	public static function getByUsertype($type_id) {
+		$query = Doctrine_Query::create() -> select("*") -> from("Menu") -> where("user_group=$type_id");
+		$menus = $query -> execute();
+		return $menus;
+	}
+	
 }

@@ -77,7 +77,7 @@ foreach ($menu as $key) {
           </div>
           </div>
           
-          <div class="col-md-1" style="" >
+          <div class="col-md-1" style="">
           	<div >
           	
           	</div>
