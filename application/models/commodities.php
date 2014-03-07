@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @author Kariuki
+ */
 class Commodities extends Doctrine_Record {
 	
 	public function setTableDefinition() {

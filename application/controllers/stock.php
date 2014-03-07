@@ -1,18 +1,30 @@
 <?php
 if (!defined('BASEPATH'))
-	exit('No direct script access allowed');
+exit('No direct script access allowed');
+/**
+ * @author Kariuki
+ */
 class Stock extends MY_Controller {
 
 	function __construct() {
 		parent::__construct();
 		$this->load->helper(array('form','url'));
-		$this->load->library(array('Hcmp_functions','form_validation'));
+		$this->load->library(array('hcmp_functions','form_validation'));
+		 
 	}
-	
-	/* adding stocks the first time a facility is about to use the tool STEP 1*/
-	
-	public function facility_stock_first_run(){
-	
+	public function index(){
+		
+	}	
+/*
+|--------------------------------------------------------------------------
+| update facility stock on first run
+|--------------------------------------------------------------------------
+|1. load the view
+|2. check if the user has any temp data
+|3. auto save the data
+|4. save the data in the facility stock, facility transaction , issues table
+*/
+	 public function facility_stock_first_run(){	
 	    $data['title'] = "Update Stock Level on First Run";
      	$data['content_view'] = "facility/facility_stock_data/update_facility_stock_on_first_run_v";
 		$data['banner_text'] = "Update Stock Level on First Run";
@@ -21,7 +33,7 @@ class Stock extends MY_Controller {
 		$this -> load -> view("shared_files/template/template", $data);	
 		
 	}	//auto save the data here
-	public function autosave_update_stock(){
+	 public function autosave_update_stock(){
 //security check	  
 if($this->input->is_ajax_request()):	
 	 // $facility_code=$this -> session -> userdata('news'); 
@@ -61,9 +73,7 @@ else:
 			 facility_stocks_temp::update_temp($mydata);			
 	        echo "SUCCESS UPDATE BATCH NO: $batch_no";
 endif;
-endif;
-	
-}// get the temp data load it up incase the user had autosaved the data
+endif; }// get the temp data load it up incase the user had autosaved the data
   public function get_temp_stock_data_json(){
 //security check	
 if($this->input->is_ajax_request()):
@@ -84,7 +94,86 @@ endif;
 			facility_stocks_temp::delete_facility_temp($commodity_id, $commodity_batch_no,$facility_code);
 			echo "SUCCESS DELETE BATCH NO: $commodity_batch_no";
  endif;
-}
+}// finally add the stock here, the final step to the first step of new facilities getting on board
+    public function add_stock_level()
+{ // $facility_code=$this -> session -> userdata('news');  //security check 
+if($this->input->post('commodity_id')):
+	     $facility_code=17401; //I HAVE TO CHANGE HERE
+	     $commodity_id=$this->input->post('desc');
+		 $expiry_date=$this->input->post('clone_datepicker');
+		 $batch_no=$this->input->post('commodity_batch_no');
+		 $manu=$this->input->post('commodity_manufacture');
+		 $total_unit_count=$this->input->post('commodity_total_units');		
+		 $source_of_item=$this->input->post('source_of_item');
+         $count=count($commodity_id);
+		 $commodity_id_array=array();
+		 $date_of_entry=date('y-m-d H:i:s');
+         //collect n set the data in the array
+		for($i=0;$i<$count;$i++):
+			$mydata=array('facility_code'=>$facility_code,
+			'commodity_id'=>$commodity_id[$i],
+			'batch_no'=>$batch_no[$i],
+			'manufacture'=>$manu[$i],
+			'expiry_date'=> date('y-m-d', strtotime($expiry_date[$i])),
+			'initial_quantity'=>$total_unit_count[$i],
+			'current_balance'=>$total_unit_count[$i],
+			'source_of_commodity'=>$source_of_item[$i],
+			'date_added'=>$date_of_entry );
+			//update the facility stock table
+			facility_stocks::update_facility_stock($mydata);			
+			//check	
+			$facility_has_commodity=facility_transaction_table::get_if_commodity_is_in_table($facility_code,$commodity_id[$i]);			
+if($facility_has_commodity>0): //update the opening balance for the transaction table 
+		   	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
+			$inserttransaction->execute("UPDATE `facility_transaction_table` SET `opening_balance` =`opening_balance`+$total_unit_count[$i]
+                                          WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code=$facility_code");
+            // update the closing stock for the transaction table                             
+           $inserttransaction1 = Doctrine_Manager::getInstance()->getCurrentConnection();
+		   $inserttransaction1->execute("UPDATE `facility_transaction_table` SET closing_stock = (SELECT SUM(current_balance)
+			 FROM facility_stock WHERE commodity_id = '$commodity_id[$i]' and status='1' and facility_code='$facility_code')
+             WHERE `commodity_id`=$commodity_id[$i] and status='1' and facility_code ='$facility_code'"); 
+			 //merge the commodity ids.
+			 $commodity_id_array=array_merge($commodity_id_array, array($commodity_id[$i]=>$commodity_id[$i]));                                                      		   
+else:       //get the data to send to the facility_transaction_table
+		   	$mydata2=array('facility_code'=>$facility_code,
+			'commodity_id'=>$commodity_id[$i],
+			'opening_balance'=>$total_unit_count[$i],
+			'total_issues'=>0,
+			'total_receipts'=>0,
+			'adjustmentpve'=>0,
+			'adjustmentnve'=>0,
+			'date_added'=>$date_of_entry,
+			'closing_stock'=>$total_unit_count[$i],
+			'status'=>1);	//send the data to the facility_transaction_table		
+			facility_transaction_table::update_facility_table($mydata2);			
+			//merge the commodity ids.
+			 $commodity_id_array=array_merge($commodity_id_array, array($commodity_id[$i]=>$commodity_id[$i]));
+endif;			
+endfor;		
+          foreach ($commodity_id_array as $commodity_id_data):
+            //get the closing stock of the given item           
+            $facility_stock=facility_stocks::get_facility_commodity_total($facility_code,$commodity_id_data)->toArray();	
+            // save this infor in the issues table
+			$mydata=array('facility_code'=>$facility_code,
+			's11_No' => 'initial stock update',
+			'commodity_id'=>$commodity_id_data,
+			'batch_no'=>"N/A",
+			'expiry_date'=> "N/A",
+			'balance_as_of'=>$facility_stock[0]['commodity_balance'],
+			'date_issued' => date('y-m-d'),
+			'issued_to' => 'N/A',
+			'issued_by' =>1 ); //$this -> session -> userdata('identity')
+			 // update the issues table 
+			 facility_issues::update_issues_table($mydata); 
+endforeach;    	
+            //delete the record from the db
+		    facility_stocks_temp::delete_facility_temp(null, null,$facility_code);
+          //set the notifications
+		  //$this->hcmp_functions->send_stock_update_sms();
+		  $this->session->set_flashdata('system_success_message', "Stock Levels Have Been Updated");
+		  //redirect('stock/stock_level');			  
+endif;
+}/////////////////////////////////END OF UPDATING STOCKS ON FIRST RUN//////////////////////////////////////////
 }
 
 ?>

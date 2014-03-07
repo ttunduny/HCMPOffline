@@ -1,7 +1,6 @@
 /**
  * @author Kariuki
  */
-
 /**  HCMP datepicker option */
 json_obj = { "url" : "Images/calendar.gif'",};
 
@@ -10,7 +9,7 @@ var baseUrl=json_obj.url;
   function getLastDayOfYearAndMonth(year, month)
 {
     return(new Date((new Date(year, month + 1, 1)) - 1)).getDate();
-}
+}    // for the last day of the month
 	function refreshDatePickers() {
 		var counter = 0;
 		$('.clone_datepicker').each(function() {
@@ -39,10 +38,24 @@ var baseUrl=json_obj.url;
 		});
 				
   }
-  /****************************************/
-  
-  /* HCMP calculate the actual stock value */
- 
+  //	-- Datepicker	showing just the last day of the month 			
+	$(".clone_datepicker").datepicker({
+	beforeShowDay: function(date)
+    {
+        // getDate() returns the day [ 0 to 31 ]
+     if (date.getDate() ==
+         getLastDayOfYearAndMonth(date.getFullYear(), date.getMonth()))
+        {
+            return [true, ''];
+        }
+        return [false, ''];
+    },				
+	dateFormat: 'd M yy', 
+	changeMonth: true,
+	changeYear: true,
+	buttonImage: baseUrl,       });	
+ /******************---------------END--------------------------**********************/
+ /* HCMP calculate the actual stock value */
 function calculate_actual_stock(actual_units,pack_unit_option,user_input,target_total_units_field,input_object){
 	
   var user_input=parseInt(user_input);
@@ -59,12 +72,10 @@ function calculate_actual_stock(actual_units,pack_unit_option,user_input,target_
     if(isNaN(total_commodity_available_stock)){
      total_commodity_available_stock=0;
     }
-
     input_object.closest("tr").find(target_total_units_field).val(total_commodity_available_stock);
-     
-	
 }
-
+ /******************---------------END--------------------------**********************/
+/* HCMP AJAX request and console response for comfirmation  */
 function ajax_simple_post_with_console_response(url, data){
 	          $.ajax({
 	          type: "POST",
@@ -79,3 +90,16 @@ function ajax_simple_post_with_console_response(url, data){
 	           }
 	         });
 }
+ /******************---------------END--------------------------**********************/
+/* HCMP system confirmation message box */
+function dialog_box(body_html_data,footer_html_data){
+	        $('#communication_dialog .modal-body').html("");
+			$('#communication_dialog .modal-footer').html("");
+            //set message dialog box 
+            $('#communication_dialog .modal-footer').html(footer_html_data);
+            $('#communication_dialog .modal-body').html(body_html_data);
+            $('#communication_dialog').modal('show');
+	
+}
+ /******************---------------END--------------------------**********************/
+

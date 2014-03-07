@@ -3,14 +3,10 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>HCMP |<?php echo $title;?> </title>
-    
+    <title>HCMP |<?php echo $title;?> </title>    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    
-
-    
     <link rel="icon" href="<?php echo base_url().'assets/img/coat_of_arms.png'?>" type="image/x-icon" />
     <link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
@@ -25,12 +21,10 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <style>
-    	
+    <style>    	
     </style>
   </head>  
   <body style="" screen_capture_injected="true">
-
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container" style="margin: auto;padding: 0;width: 99%">
@@ -58,9 +52,7 @@
         <div class="col-md-6">
         <div class="navbar-collapse collapse" id="navigate">
           
-          <ul class="nav navbar-nav navbar-right" >
-            
-            
+          <ul class="nav navbar-nav navbar-right" >   
             <?php
     // foreach ($menu as $key) {
 	//echo "<li><a href='$key->menu_url'>$key->menu_text</a></li>";
@@ -77,8 +69,6 @@
           </div>
         </div><!--/.nav-collapse -->
       </div>
- 
-
     <div class="container" style="margin-top:4.5%;padding: 0;width: 98%">
 <!----------- HCMP MODAL dialog Box for all uses--------->
 <div class="modal fade" id="communication_dialog" tabindex="-1" role="dialog"
@@ -91,20 +81,16 @@
       </div>
       <div class="modal-body">   
       </div>
-      <div class="modal-footer">
-         
+      <div class="modal-footer">         
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
      
-         <?php $this -> load -> view($content_view);?>
-     
-
+    <?php $this -> load -> view($content_view);?>
     </div> <!-- /container -->
-<?php $this -> load -> view("shared_files/template/footer");?>
-
+    <?php $this -> load -> view("shared_files/template/footer");?>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
@@ -113,8 +99,6 @@
 	<script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>
 	<script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
     <!-- Placed at the end of the document so the pages load faster -->
-   
-  
 
 <div id="window-resizer-tooltip"><a href="#" title="Edit settings" style="background-image: url(chrome-extension://kkelicaakdanhinjdeammmilcgefonfh/images/icon_19.png);"></a><span class="tooltipTitle">Window size: </span><span class="tooltipWidth" id="winWidth"></span> x <span class="tooltipHeight" id="winHeight"></span><br><span class="tooltipTitle">Viewport size: </span><span class="tooltipWidth" id="vpWidth"></span> x <span class="tooltipHeight" id="vpHeight"></span></div></body>
 
