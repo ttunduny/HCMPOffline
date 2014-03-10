@@ -19,7 +19,7 @@
 	<link href="<?php echo base_url().'assets/css/normalize.css'?>" type="text/css" rel="stylesheet"/>
 	<script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
 	<script src="<?php echo base_url().'assets/scripts/jquery-1.8.0.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url().'assets/scripts/alert.js'?>" type="text/javascript"></script>
+	<!--<script src="<?php echo base_url().'assets/scripts/alert.js'?>" type="text/javascript"></script>
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -90,7 +90,7 @@ unset($popup);
   	<h2><span style="margin-right: 0.5em;" class="glyphicon glyphicon-lock"></span>Login</h2>	
   	<?php 
     
-	 echo form_open('Home/home'); ?>
+	 echo form_open('user/login_submit'); ?>
 <div id="login" >
 
 		
@@ -119,17 +119,18 @@ unset($popup);
    
  </div><!-- .row -->
  </div><!-- .container -->
-<div class="footer">
-	Government of Kenya &copy; <?php echo date('Y');?>. All Rights Reserved
-</div>
+ <div id="footer">
+      <div class="container">
+        <p class="text-muted"> Government of Kenya &copy <?php echo date('Y');?>. All Rights Reserved</p>
+      </div>
+    </div>
       <!-- JS and analytics only. -->
     <!-- Bootstrap core JavaScript
     	
 ================================================== -->
 		<script>
 	$(document).ready(function() {
-		$(".alert").alert()
-	});
+		
 		</script>
 
 </body>

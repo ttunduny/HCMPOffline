@@ -17,8 +17,8 @@ class Menu extends Doctrine_Record {
 		$menus = $query -> execute();
 		return $menus;
 	}
-	public static function getByUsertype($type_id) {
-		$query = Doctrine_Query::create() -> select("*") -> from("Menu") -> where("user_group=$type_id");
+	public static function getByUsertype($user_typeid) {
+		$query = Doctrine_Query::create() -> select("*") -> from("Menu") -> where("user_group=$user_typeid");
 		$menus = $query -> execute();
 		return $menus;
 	}

@@ -21,16 +21,15 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <style>    	
+    <style> 
+       	
     </style>
   </head>  
   <body style="" screen_capture_injected="true">
     <!-- Fixed navbar -->
-    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-      <div class="container" style="margin: auto;padding: 0;width: 99%">
-      	<div class="row">
-      		<div class="col-md-3">
-        <div class="navbar-header">
+   <div class="navbar navbar-default navbar-fixed-top" id="top_panel">
+   <div class="container" style="border-bottom: 2px solid #C0C0C0;width: 100%;">
+        <div class="navbar-header " > 
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
@@ -44,32 +43,40 @@
 					<span style="font-size: 0.85em;">Health Commodities Management Platform (HCMP)</span>	
 				</div>
         </div>
-        </div>
-        <div class="col-md-2">
-        	<div style="margin: auto;"></div>
-        	
-        	</div>
-        <div class="col-md-6">
-        <div class="navbar-collapse collapse" id="navigate">
-          
-          <ul class="nav navbar-nav navbar-right" >   
-            <?php
-    // foreach ($menu as $key) {
-	//echo "<li><a href='$key->menu_url'>$key->menu_text</a></li>";
-//}?>
+        <div class="navbar-collapse collapse" style="font-weight: bold" id="navigate">
+          <ul class="nav navbar-nav navbar-right" >
+       <li><a href="<?php echo site_url();?>" class=" ">HOME</a> </li>   
+<?php
+//Retrieve all accessible menus from the session
+$menus= $this -> session -> userdata('menus');
+//Loop through all menus to display them in the top panel menu section
+foreach($menus as $menu){?>
+	<li class="" >
+            	
+            	<a href="<?php echo site_url($menu['menu_url']);?>" class=""><?php echo $menu['menu_text']?></a>
+	</li>
+<?php
+				}
+	?>
+
+
+            <li class="dropdown ">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user" ></span><?php echo $this -> session -> userdata('full_name');?> <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                
+                
+                <li><a href="<?php echo site_url("user/change_password");?>"><span class="glyphicon glyphicon-pencil" style="margin-right: 2%"></span>Change password</a></li>
+                
+                <li><a href="<?php echo site_url("user/logout");?>"><span class="glyphicon glyphicon-off" style="margin-right: 2%"></span>Log out</a></li>
+                
+              </ul>
+            </li>
           </ul>
-          </div>
-          </div>
-          
-          <div class="col-md-1" style="" >
-          	<div >
-          	
-          	</div>
-          </div>
-          </div>
-        </div><!--/.nav-collapse -->
+         </div><!--/.nav-collapse -->
       </div>
-    <div class="container" style="margin-top:4.5%;padding: 0;width: 98%">
+      </div>
+   
+    <div class="container" style="margin-top:5.1%;padding: 0;width: 98%">
 <!----------- HCMP MODAL dialog Box for all uses--------->
 <div class="modal fade" id="communication_dialog" tabindex="-1" role="dialog"
  aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -90,16 +97,19 @@
      
     <?php $this -> load -> view($content_view);?>
     </div> <!-- /container -->
-    <?php $this -> load -> view("shared_files/template/footer");?>
+   <div id="footer">
+      <div class="container">
+        <p class="text-muted"> Government of Kenya &copy <?php echo date('Y');?>. All Rights Reserved</p>
+      </div>
+    </div>
     <!-- Bootstrap core JavaScript
     ================================================== -->
-    <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
-    <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url().'assets/boot-strap3/js/alert.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
+	<!--<script src="<?php echo base_url().'assets/boot-strap3/js/alert.js'?>" type="text/javascript"></script>-->
 	<script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>
 	<script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
     <!-- Placed at the end of the document so the pages load faster -->
 
-<div id="window-resizer-tooltip"><a href="#" title="Edit settings" style="background-image: url(chrome-extension://kkelicaakdanhinjdeammmilcgefonfh/images/icon_19.png);"></a><span class="tooltipTitle">Window size: </span><span class="tooltipWidth" id="winWidth"></span> x <span class="tooltipHeight" id="winHeight"></span><br><span class="tooltipTitle">Viewport size: </span><span class="tooltipWidth" id="vpWidth"></span> x <span class="tooltipHeight" id="vpHeight"></span></div></body>
 
 </html>
