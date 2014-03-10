@@ -24,3 +24,4 @@ class Menu extends Doctrine_Record {
 	}
 	
 }
+?>
