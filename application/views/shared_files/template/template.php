@@ -47,16 +47,32 @@
           <ul class="nav navbar-nav navbar-right" >
        <li><a href="<?php echo site_url();?>" class=" ">HOME</a> </li>   
 <?php
-//Retrieve all accessible menus from the session
+//Retrieve all accessible menus/submenus from the session
 $menus= $this -> session -> userdata('menus');
+$sub_menus= $this -> session -> userdata('sub_menus');
 //Loop through all menus to display them in the top panel menu section
 foreach($menus as $menu){?>
 	<li class="" >
             	
             	<a href="<?php echo site_url($menu['menu_url']);?>" class=""><?php echo $menu['menu_text']?></a>
-	</li>
-<?php
+            	
+            	<ul class="dropdown-menu">
+            	<?php 
+            	foreach($sub_menus as $sub_menu){
+            		if ($menu['menu_id']==$sub_menu['submenu_parentid']) {?>
+						
+						<li><a style="background: whitesmoke;color: black !important" href="<?php echo $sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
+					<?php
+					
+            	} 
 				}
+            	?>
+            	
+            </ul>
+	</li>
+	 
+<?php
+					}
 	?>
 
 
@@ -65,9 +81,9 @@ foreach($menus as $menu){?>
               <ul class="dropdown-menu">
                 
                 
-                <li><a href="<?php echo site_url("user/change_password");?>"><span class="glyphicon glyphicon-pencil" style="margin-right: 2%"></span>Change password</a></li>
+                <li><a style="background: whitesmoke;color: black !important" href="<?php echo site_url("user/change_password");?>"><span class="glyphicon glyphicon-pencil" style="margin-right: 2%; "></span>Change password</a></li>
                 
-                <li><a href="<?php echo site_url("user/logout");?>"><span class="glyphicon glyphicon-off" style="margin-right: 2%"></span>Log out</a></li>
+                <li><a style="background: whitesmoke;color: black !important" href="<?php echo site_url("user/logout");?>" ><span class="glyphicon glyphicon-off" style="margin-right: 2%;"></span>Log out</a></li>
                 
               </ul>
             </li>

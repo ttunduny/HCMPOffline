@@ -36,7 +36,7 @@ class User extends MY_Controller {
 		if ($this -> _submit_validate() === FALSE) {
 			$this -> index();
 			return;
-		}
+		}else {
 		//$this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
 		$reply = Users::login($username, $password);
 		$user_data = $reply -> toArray();
@@ -69,20 +69,40 @@ class User extends MY_Controller {
 
 		//Create array that will hold all the accessible menus in the session
 		$menus = array();
+		$menuids = array();
 		$counter = 0;
 		foreach ($menu_items as $menu_item) {
-			$menus[$counter] = array("menu_text" => $menu_item -> menu_text, "menu_url" => $menu_item -> menu_url);
+			$menus[$counter] = array("menu_text" => $menu_item -> menu_text, "menu_url" => $menu_item -> menu_url,"menu_id" => $menu_item -> id,"parent_status" => $menu_item -> parent_status);
 			$counter++;
+			$menuids[]=$menu_item -> id;
+			
+			
 		}
+		$sub_menus = array();
+		foreach ($menuids as $parentid) {
+			
+			$sub_items=Sub_menu::getByparent($parentid);
+			
+			 foreach ($sub_items as $item) {
+			$sub_menus[] = array("submenu_text" => $item -> subm_text, "submenu_url" => $item -> subm_url,"submenu_parentid" => $item -> parent_id);
+			
+			
+		}
+			
+		}
+		
 		//Save this menus array in the session
 		$this -> session -> set_userdata(array("menus" => $menus));
+		//Save this sub menus array in the session
+		$this -> session -> set_userdata(array("sub_menus" => $sub_menus));
 		redirect('Home/home');
+		}
 
 	}
 
 	public function logout() {
 
-		Log::update_log_out_action($this -> session -> userdata('identity'));
+		//Log::update_log_out_action($this -> session -> userdata('identity'));
 
 		$this -> session -> sess_destroy();
 		$data['title'] = "Login";

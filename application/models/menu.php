@@ -6,6 +6,7 @@ class Menu extends Doctrine_Record {
 		$this -> hasColumn('menu_text', 'varchar', 20);
 		$this -> hasColumn('menu_url', 'varchar', 100);
 		$this -> hasColumn('user_group', 'varchar', 100);
+		$this -> hasColumn('parent_status', 'integer', 10);
 	}
 
 	public function setUp() {

@@ -75,7 +75,11 @@
   #containerlogin{
   	margin-top: 2%;
   }
+  #navigate{
+  	text-align:center;
+  }
 }
+
 #main_menu {
 
 	width: auto;
@@ -99,7 +103,7 @@
 
 #navigate ul>li>a {
 	
-	color: white !important;
+	color: white ;
 }
 
 #navigate ul>li {
