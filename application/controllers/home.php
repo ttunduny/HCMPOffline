@@ -11,6 +11,7 @@ class Home extends MY_Controller {
 		$this->load->library(array('hcmp_functions','form_validation'));
 	}
 
+
 	public function index() {
 
 		$this -> load -> view("shared_files/login_pages/login_v");
@@ -22,8 +23,8 @@ class Home extends MY_Controller {
 		$data['title'] = "Facility Home";
 		$data['content_view'] = "facility/facility_home_v";
 		$data['banner_text'] = "Facility Home";
-		$data['menu'] = Menu::getAll();
-		
 		$this -> load -> view("shared_files/template/template", $data);
 	}
+	
+	
 }
