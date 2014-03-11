@@ -1,5 +1,4 @@
-<span  class='label label-info' >Please note this is a one off activity</span>
-<span class='label label-info' >Stock level as of <?php $today= ( date('d M Y')); //get today's date in full?>
+<span  class='label label-info' >Please note this is a one off activity Stock level as of <?php $today= ( date('d M Y')); //get today's date in full?>
 <input type="hidden" name="datepicker" readonly="readonly" value="<?php echo $today;?>"/><?php echo $today;?> 
 To add facility stock data, first do physical stock count</span>
 <hr />
@@ -12,7 +11,7 @@ echo form_open('stock/add_stock_level',$att); ?>
 			<th> Description</th>
 			<th> Supplier</th>
 			<th> Unit Size</th>
-			<th> Unit of Issue</th>
+			<th> Issue Type</th>
 			<th> Batch No</th>
 			<th> Source of Item</th>
 			<th> Manufacturer</th>
@@ -73,7 +72,7 @@ echo form_open('stock/add_stock_level',$att); ?>
 	</tbody>
 </table>
 </div>
-<hr>
+<hr />
 <div class="container-fluid">
 <div style="float: right">
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
@@ -229,6 +228,7 @@ $(document).ready(function() {
 	dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
             //This event is fired immediately when the hide instance method has been called.
     $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.closest("tr").find('.desc').focus();	});			
+    selector_object.closest("tr").find('.commodity_total_units').val();
 	return;
 	}
     // check if the user has inputed a decimal or character 

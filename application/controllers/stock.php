@@ -1,9 +1,9 @@
 <?php
-if (!defined('BASEPATH'))
-exit('No direct script access allowed');
 /**
  * @author Kariuki
  */
+if (!defined('BASEPATH'))
+exit('No direct script access allowed');
 class Stock extends MY_Controller {
 
 	function __construct() {

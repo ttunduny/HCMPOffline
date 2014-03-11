@@ -1,12 +1,14 @@
 <?php
+/**
+ * @author Kariuki
+ */
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
-
 class Home extends MY_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->helper(array('form','url'));
-		$this->load->library(array('Hcmp_functions','form_validation'));
+		$this->load->library(array('hcmp_functions','form_validation'));
 	}
 
 	public function index() {

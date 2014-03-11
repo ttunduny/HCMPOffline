@@ -35,8 +35,7 @@ var baseUrl=json_obj.url;
 			        changeYear: true
 				});; // re-init datepicker
 				counter++;
-		});
-				
+		});				
   }
   //	-- Datepicker	showing just the last day of the month 			
 	$(".clone_datepicker").datepicker({
@@ -54,9 +53,35 @@ var baseUrl=json_obj.url;
 	changeMonth: true,
 	changeYear: true,
 	buttonImage: baseUrl,       });	
+	
+	  //	-- Datepicker	limit today		
+	$(".clone_datepicker_normal_limit_today").datepicker({
+    maxDate: new Date(),				
+	dateFormat: 'd M yy', 
+	changeMonth: true,
+	changeYear: true,
+	buttonImage: baseUrl,       });	
+	
+		function refresh_clone_datepicker_normal_limit_today() {
+		var counter = 0;
+		$('.clone_datepicker_normal_limit_today').each(function() {
+		var this_id = $(this).attr("id"); // current inputs id
+        var new_id = counter +1; // a new id
+        $(this).attr("id", new_id); // change to new id
+        $(this).removeClass('hasDatepicker'); // remove hasDatepicker class
+        $(this).datepicker({ 
+        	        maxDate: new Date(),
+        	        dateFormat: 'd M yy', 
+        	        buttonImage: baseUrl,
+					changeMonth: true,
+			        changeYear: true
+				});; // re-init datepicker
+				counter++;
+		});				
+  }
  /******************---------------END--------------------------**********************/
  /* HCMP calculate the actual stock value */
-function calculate_actual_stock(actual_units,pack_unit_option,user_input,target_total_units_field,input_object){
+function calculate_actual_stock(actual_units,pack_unit_option,user_input,target_total_units_field,input_object,option){
 	
   var user_input=parseInt(user_input);
 
@@ -72,7 +97,13 @@ function calculate_actual_stock(actual_units,pack_unit_option,user_input,target_
     if(isNaN(total_commodity_available_stock)){
      total_commodity_available_stock=0;
     }
-    input_object.closest("tr").find(target_total_units_field).val(total_commodity_available_stock);
+    if(target_total_units_field=='return'){
+    return total_commodity_available_stock;
+    }else{
+     input_object.closest("tr").find(target_total_units_field).val(total_commodity_available_stock);	
+    }
+    
+ 
 }
  /******************---------------END--------------------------**********************/
 /* HCMP AJAX request and console response for comfirmation  */
@@ -84,10 +115,7 @@ function ajax_simple_post_with_console_response(url, data){
 	          beforeSend: function() {
 	           // console.log("data to send :"+data);
 	          },
-	          success: function(msg) {
-	           console.log(msg);
-	            
-	           }
+	          success: function(msg) { console.log(msg);}
 	         });
 }
  /******************---------------END--------------------------**********************/
