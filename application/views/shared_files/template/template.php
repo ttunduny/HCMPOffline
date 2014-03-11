@@ -21,9 +21,7 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <style> 
-       	
-    </style>
+    
   </head>  
   <body style="" screen_capture_injected="true">
     <!-- Fixed navbar -->
@@ -54,9 +52,9 @@ $sub_menus= $this -> session -> userdata('sub_menus');
 foreach($menus as $menu){?>
 	<li class="" >
             	
-            	<a href="<?php echo site_url($menu['menu_url']);?>" class=""><?php echo $menu['menu_text']?></a>
+            	<a id="sub" href="<?php echo site_url($menu['menu_url']);?>" class=""><?php echo $menu['menu_text']?></a>
             	
-            	<ul class="dropdown-menu">
+            	<ul class="dropdown-menu" style="min-width: 0" >
             	<?php 
             	foreach($sub_menus as $sub_menu){
             		if ($menu['menu_id']==$sub_menu['submenu_parentid']) {?>
@@ -127,5 +125,8 @@ foreach($menus as $menu){?>
 	<script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
     <!-- Placed at the end of the document so the pages load faster -->
 
-
+<script>
+	
+	
+</script>
 </html>
