@@ -1,9 +1,9 @@
 <?php
-if (!defined('BASEPATH'))
-exit('No direct script access allowed');
 /**
  * @author Kariuki
  */
+if (!defined('BASEPATH'))
+exit('No direct script access allowed');
 class Stock extends MY_Controller {
 
 	function __construct() {
@@ -36,8 +36,7 @@ class Stock extends MY_Controller {
 	 public function autosave_update_stock(){
 //security check	  
 if($this->input->is_ajax_request()):	
-	 // $facility_code=$this -> session -> userdata('news'); 
-	    $facility_code=17401; //I HAVE TO CHANGE HERE
+        $facility_code=$this -> session -> userdata('facility_id'); 
 	    $commodity_id=$this->input->post('commodity_id');
         $unit_size=$this->input->post('unit_size');
 		$expiry_date=$this->input->post('expiry_date');
@@ -77,8 +76,7 @@ endif; }// get the temp data load it up incase the user had autosaved the data
   public function get_temp_stock_data_json(){
 //security check	
 if($this->input->is_ajax_request()):
-		// $facility_code=$this -> session -> userdata('news'); 
-	    $facility_code=17401; //I HAVE TO CHANGE HERE
+	   $facility_code=$this -> session -> userdata('facility_id'); 
 		$result=facility_stocks_temp::get_temp_stock($facility_code);
 		echo json_encode($result);
 endif;
@@ -86,8 +84,7 @@ endif;
  public  function delete_temp_autosave(){
  //security check	
  if($this->input->is_ajax_request()):
-		    // $facility_code=$this -> session -> userdata('news'); 
-	        $facility_code=17401; //I HAVE TO CHANGE HERE
+		    $facility_code=$this -> session -> userdata('facility_id');      
 			$commodity_id=$this->input->post('commodity_id');			
 			$commodity_batch_no=$this->input->post('commodity_batch_no');	
 			//delete the record from the db
@@ -98,7 +95,7 @@ endif;
     public function add_stock_level()
 { // $facility_code=$this -> session -> userdata('news');  //security check 
 if($this->input->post('commodity_id')):
-	     $facility_code=17401; //I HAVE TO CHANGE HERE
+	    $facility_code=$this -> session -> userdata('facility_id'); 
 	     $commodity_id=$this->input->post('desc');
 		 $expiry_date=$this->input->post('clone_datepicker');
 		 $batch_no=$this->input->post('commodity_batch_no');
@@ -144,7 +141,7 @@ else:       //get the data to send to the facility_transaction_table
 			'adjustmentnve'=>0,
 			'date_added'=>$date_of_entry,
 			'closing_stock'=>$total_unit_count[$i],
-			'status'=>1);	//send the data to the facility_transaction_table		
+			'status'=>$this -> session -> userdata('user_id'));	//send the data to the facility_transaction_table		
 			facility_transaction_table::update_facility_table($mydata2);			
 			//merge the commodity ids.
 			 $commodity_id_array=array_merge($commodity_id_array, array($commodity_id[$i]=>$commodity_id[$i]));
@@ -162,7 +159,7 @@ endfor;
 			'balance_as_of'=>$facility_stock[0]['commodity_balance'],
 			'date_issued' => date('y-m-d'),
 			'issued_to' => 'N/A',
-			'issued_by' =>1 ); //$this -> session -> userdata('identity')
+			'issued_by' =>$this -> session -> userdata('user_id') ); //$this -> session -> userdata('identity')
 			 // update the issues table 
 			 facility_issues::update_issues_table($mydata); 
 endforeach;    	
@@ -174,6 +171,65 @@ endforeach;
 		  //redirect('stock/stock_level');			  
 endif;
 }/////////////////////////////////END OF UPDATING STOCKS ON FIRST RUN//////////////////////////////////////////
+public function facility_stock_data(){///////////////////GET FACILITY STOCK DATA/////////////////////////////
+                $facility_code=$this -> session -> userdata('facility_id');
+				$data['facility_stock_data']=facility_stocks::get_distinct_stocks_for_this_facility($facility_code,'batch_data');
+				$data['title'] = "Facility Stock";
+     			$data['content_view'] = "facility/facility_stock_data/facility_stock_data_v";
+				$data['banner_text'] = "Facility Stock";
+				$this -> load -> view("shared_files/template/template", $data);	
+}////EDITING FACILITY STOCK DATA
+public function edit_facility_stock_data(){
+//security check
+if($this->input->post('id')):
+$facility_code=$this -> session -> userdata('facility_id');
+$stock_id=$this->input->post('id');
+$expiry_date=$this->input->post('expiry_date');
+$batch_no=$this->input->post('batch_no');
+$delete=$this->input->post('delete');
+$manufacturer=$this->input->post('manufacturer');
+$commodity_id=$this->input->post('commodity_id');
+$commodity_balance_units=$this->input->post('commodity_balance_units');
+for($key=0;$key<count($stock_id);$key++):
+	if($delete[$key]==1):
+		//check the total stock balance of the commodity
+		$facility_stock=facility_stocks::get_facility_commodity_total($facility_code, $commodity_id[$key]);
+		$commodity_balance=($commodity_balance_units[$key]*-1);
+	    $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->execute("update facility_transaction_table t 
+		 set  t. `closing_stock`=`closing_stock`-$commodity_balance_units[$key],`adjustmentnve`=$commodity_balance 
+		 where t.facility_code='$facility_code' and t.commodity_id=$commodity_id[$key] and t.status=1");
+		 // prepare the data to save
+		 $commodity_balance=($commodity_balance_units[$key]*-1);
+		 	$mydata=array('facility_code'=>$facility_code,
+			's11_No' => 'Deleted Commodity',
+			'commodity_id'=>$commodity_id[$key],
+			'batch_no'=>$batch_no[$key],
+			'expiry_date'=>date('y-m-d',strtotime(str_replace(",", " ",$expiry_date[$key]))),
+			'balance_as_of'=>$facility_stock[0]['commodity_balance'],
+			'adjustmentnve'=> $commodity_balance,
+			'date_issued' => date('y-m-d'),
+			'issued_to' => 'N/A',
+			'issued_by' =>$this -> session -> userdata('user_id') );
+			 // update the issues table 
+			 facility_issues::update_issues_table($mydata); 
+		 //delete the record
+          $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->execute("delete from facility_stocks where id=$stock_id[$key]"); 
+	 else:
+
+		 $myobj = Doctrine::getTable('facility_stocks')->find($stock_id[$key]);
+         $myobj->batch_no=$batch_no[$key] ;
+		 $myobj->manufacture=$manufacturer[$key];
+		 $myobj->expiry_date=date('y-m-d',strtotime(str_replace(",", " ",$expiry_date[$key])));
+         $myobj->save(); 	
+	 endif;
+endfor;
+$this->session->set_flashdata('system_success_message', "Facility Stock data has Been Updated"); 
+redirect('stock/facility_stock_data');	
+endif;	
+redirect();
+}
 }
 
 ?>

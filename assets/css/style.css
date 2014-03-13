@@ -7,16 +7,7 @@
 	background: white;
 	z-index: 1000;
 }
-/* Make Footer Sticky */
-#footer_container {
-	background: #eee;
-	border: 1px solid #666;
-	bottom: 0;
-	height: 60px;
-	left: 0;
-	position: fixed;
-	width: 100%;
-}
+
 
 #logo_text {
 	width: auto;
@@ -89,7 +80,6 @@
 }
 
 #main_menu {
-
 	width: auto;
 	height: 3em;
 	min-width: 15%;
@@ -247,4 +237,5 @@
 	-moz-transition-function: ease-out;
 	box-shadow: 0 1px 3px 0.5px #000;
 }
+
 
