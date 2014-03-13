@@ -13,6 +13,7 @@
 	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/normalize.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/jquery-ui-1.10.4.custom.min.css'?>" type="text/css" rel="stylesheet"/>
+	<link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
 	<script src="<?php echo base_url().'assets/scripts/jquery-1.8.0.js'?>" type="text/javascript"></script>
 	<script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>
 	<!-- <link href="<?php echo base_url().'assets/metro-bootstrap/docs/font-awesome.css'?>" type="text/css" rel="stylesheet"/>
@@ -21,12 +22,33 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    
+    <style>
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+	
+	.panel-success>.panel-heading {
+color: white;
+background-color: #528f42;
+border-color: #528f42;
+border-radius:0;
+
+}
+.navbar-default {
+background-color: white;
+border-color: #e7e7e7;
+}
+</style>
   </head>  
   <body style="" screen_capture_injected="true">
     <!-- Fixed navbar -->
-   <div class="navbar navbar-default navbar-fixed-top" id="top_panel">
-   <div class="container" style="border-bottom: 2px solid #C0C0C0;width: 100%;">
+   <div class="navbar navbar-default navbar-fixed-top" id="">
+   <div class="container" style="width: 100%;">
         <div class="navbar-header " > 
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -88,9 +110,29 @@ foreach($menus as $menu){?>
           </ul>
          </div><!--/.nav-collapse -->
       </div>
-      </div>
+      
    
-    <div class="container" style="margin-top:5.1%;padding: 0;width: 98%">
+      <div class="container-fluid" style="/*border: 1px solid #036; */ height: 30px;" id="extras-bar">
+      	<div class="row">
+      		
+      		<div class="col-md-4" style="margin-left: 2%;">
+      		
+      		  Banner Text	
+      		</div>
+      		<div class="col-md-4">
+      			
+      		</div>
+      		<div class="col-md-4">
+      			
+      		</div>
+      	</div>
+      	
+      </div>	
+      	
+      </div>
+      
+   
+    <div class="container-fluid" style="" id="main-content">
 <!----------- HCMP MODAL dialog Box for all uses--------->
 <div class="modal fade" id="communication_dialog" tabindex="-1" role="dialog"
  aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -119,13 +161,16 @@ foreach($menus as $menu){?>
     <!-- Bootstrap core JavaScript===================== -->
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
+<<<<<<< HEAD
 	<!--<script src="<?php echo base_url().'assets/boot-strap3/js/alert.js'?>" type="text/javascript"></script>-->
 	<script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>	
+=======
+  <script src="<?php echo base_url().'assets/scripts/exporting.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
+	<script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>
+>>>>>>> d457e59b98843567348697609c90dc8bb1cc7bdd
 	<script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
     <!-- Placed at the end of the document so the pages load faster -->
 
-<script>
-	
-	
-</script>
+
 </html>
