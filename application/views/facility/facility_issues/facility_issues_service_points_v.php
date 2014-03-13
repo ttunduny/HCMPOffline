@@ -5,7 +5,7 @@
 	<hr />
 <div class="table-responsive" style="height:400px; overflow-y: auto;">
  <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/facility_issues_service_points',$att); ?>
-<table   class="table table-hover table-bordered table-update" id="facility_issues_table" >
+<table  class="table table-hover table-bordered table-update" id="facility_issues_table" >
 <thead style="background-color: white">
 					<tr>
 						<th>Service Point</th>
@@ -29,10 +29,7 @@
 							<option value="0" >- select service point -</option>
 								<?php 
 foreach ($service_point as $service_point) :						
-			$service_point_name=$service_point->service_point_name;
-			$commodity_id=$commodities['commodity_id'];
-			$unit=$commodities['unit_size'];
-			$source_name=$commodities['source_name'];			
+			$service_point_name=$service_point->service_point_name;			
 		echo "<option  value='$service_point_name'>$service_point_name</option>";		
 endforeach;
 		?> 
@@ -100,8 +97,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
       		var row_id=$(this).closest("tr").index();	
       		var locator=$('option:selected', this);
 			var data =$('option:selected', this).attr('special_data'); 
-	       	var data_array=data.split("^");
-	       	
+	       	var data_array=data.split("^");	       	
 	        locator.closest("tr").find(".unit_size").val(data_array[1]);
 	     	locator.closest("tr").find(".supplier_name").val(data_array[2]);
 	     	locator.closest("tr").find(".commodity_id").val(data_array[0]);
@@ -165,7 +161,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
     dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
     //This event is fired immediately when the hide instance method has been called.
     $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();	})
-    selector_object.closest("tr").find(".balance").val(selector_object.closest("tr").find(".available_stock").val());
+    selector_object.closest("tr").find(".balance").val(selector_object.closest("tr").find(".commodity_balance").val());
     return;   }// set the balance here
    	selector_object.closest("tr").find(".balance").val(remainder1);	
         });// adding a new row 
@@ -180,7 +176,8 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			//set the quantities to readonly  $("#dropdown").prop("disabled", true);
 			selector_object.closest("tr").find(".quantity_issued").attr('readonly','readonly');
 			selector_object.closest("tr").find(".batch_no").attr("disabled", true);
-			selector_object.closest("tr").find(".commodity_unit_of_issue").attr("disabled", true);			
+			selector_object.closest("tr").find(".commodity_unit_of_issue").attr("disabled", true);
+			selector_object.closest("tr").find(".desc").attr("disabled", true);				
 			//reset the values of current element 
 		  clone_the_last_row_of_the_table();
 		});	/////batch no change event
@@ -279,13 +276,16 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			cloned_object.find(".available_stock").attr('name','available_stock['+next_table_row+']'); 
 			cloned_object.find(".facility_stock_id").attr('name','facility_stock_id['+next_table_row+']'); 
 			cloned_object.find(".batch_no").attr('name','batch_no['+next_table_row+']');
+			cloned_object.find(".commodity_unit_of_issue").attr('name','commodity_unit_of_issue['+next_table_row+']');
 			cloned_object.find(".expiry_date").attr('name','expiry_date['+next_table_row+']');
 			cloned_object.find(".desc").attr('name','desc['+next_table_row+']');
 			cloned_object.find(".commodity_balance").attr('name','commodity_balance['+next_table_row+']');					
             cloned_object.find("input").attr('value',"");     
             cloned_object.find(".quantity_issued").attr('value',"0");   
             cloned_object.find(".quantity_issued").removeAttr('readonly');  
-            cloned_object.find(".batch_no").removeAttr('disabled'); 
+            cloned_object.find(".batch_no").removeAttr('disabled');
+            cloned_object.find(".commodity_unit_of_issue").removeAttr('disabled'); 
+            cloned_object.find(".desc").removeAttr('disabled');   
             cloned_object.find(".commodity_balance").attr('value',"0");            
             cloned_object.find(".batch_no").html("");            
 			cloned_object.insertAfter('#facility_issues_table tr:last');	

@@ -65,7 +65,17 @@ class user extends MY_Controller {
 		$access_level = Access_level::get_access_level_name($access_typeid);
 		$user_indicator = $access_level['user_indicator'];
 
-		$session_data = array('county_id' => $county_id, 'phone_no' => $phone, 'user_email' => $user_email, 'user_id' => $user_id, 'user_indicator' => $user_indicator, 'fname' => $fname, 'lname' => $lname, 'facility_id' => $facility_id, 'district_id' => $district_id, 'county_name' => $county_name, 'full_name' => $fullname);
+		$session_data = array('county_id' => $county_id, 
+		'phone_no' => $phone, 
+		'user_email' => $user_email, 
+		'user_id' => $user_id, 
+		'user_indicator' => $user_indicator, 
+		'fname' => $fname, 
+		'lname' => $lname, 
+		'facility_id' => $facility_id,//facility code 
+		'district_id' => $district_id,
+		'county_name' => $county_name, 
+		'full_name' => $fullname);
 
 		$this -> session -> set_userdata($session_data);
 

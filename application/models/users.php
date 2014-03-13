@@ -33,7 +33,6 @@ class Users extends Doctrine_Record {
 		$this->_set('password', md5($salt . $value));
 		
 	}
-	
 	public static function login($username, $password) {
 		
 		$salt = '#*seCrEt!@-*%';

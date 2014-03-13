@@ -15,7 +15,7 @@ class Facilities extends Doctrine_Record {
 		$this -> hasOne('facility_code as Code', array('local' => 'facility_code', 'foreign' => 'facilityCode'));
 		$this -> hasOne('facility_code as Coder', array('local' => 'facility_code', 'foreign' => 'facility_code'));
 		$this -> hasOne('facility_code as Codes', array('local' => 'facility_code', 'foreign' => 'facility'));
-		$this -> hasOne('district as facility_district', array('local' => 'district', 'foreign' => 'id'));
+		$this -> hasMany('districts as facility_subcounty', array('local' => 'district', 'foreign' => 'id'));
 	}
 
 	public static function getAll() {
