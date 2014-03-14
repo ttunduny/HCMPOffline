@@ -4,6 +4,7 @@
  <script src="<?php echo base_url().'assets/datatable/ZeroClipboard.js'?>" type="text/javascript"></script>
  <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrapPagination.js'?>" type="text/javascript"></script>
  <link rel="stylesheet" href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css"/>
+ <div class="container" style="width: 96%; margin: auto;">
      <?php echo form_open('stock/edit_facility_stock_data'); ?>  
  <table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
@@ -58,6 +59,7 @@ endforeach;?>
 <div class="container-fluid">
 <div style="float: right">
 <button class="btn btn-success" ><span class="glyphicon glyphicon-open"></span>Update</button></div>
+</div>
 </div>
   <?php echo form_close(); ?>  
 <script>

@@ -81,7 +81,8 @@ foreach($menus as $menu){?>
             	foreach($sub_menus as $sub_menu){
             		if ($menu['menu_id']==$sub_menu['submenu_parentid']) {?>
 						
-						<li><a style="background: whitesmoke;color: black !important" href="<?php echo $sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
+						<li><a style="background: whitesmoke;color: black !important" href="<?php 
+						echo base_url().$sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
 					<?php
 					
             	} 
@@ -161,14 +162,9 @@ foreach($menus as $menu){?>
     <!-- Bootstrap core JavaScript===================== -->
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
-<<<<<<< HEAD
-	<!--<script src="<?php echo base_url().'assets/boot-strap3/js/alert.js'?>" type="text/javascript"></script>-->
-	<script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>	
-=======
-  <script src="<?php echo base_url().'assets/scripts/exporting.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>
->>>>>>> d457e59b98843567348697609c90dc8bb1cc7bdd
+   <script src="<?php echo base_url().'assets/scripts/exporting.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>
 	<script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
     <!-- Placed at the end of the document so the pages load faster -->
 

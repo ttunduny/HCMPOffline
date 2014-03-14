@@ -44,8 +44,8 @@ class facility_transaction_table extends Doctrine_Record {
 	public static function get_if_commodity_is_in_table($facility_code,$commodity_id){
 		
 	$query = Doctrine_Query::create() -> select("*") -> from("facility_transaction_table")
-	->where("facility_code='$facility_code' and commodity_id='$commodity_id'")->andwhere("status='1'");
-	$commodities = $query -> execute();	
+	->where("facility_code='$facility_code' and commodity_id='$commodity_id' and status='1'");
+	$commodities = $query -> execute();
 	$commodities = $commodities -> count();
 	return $commodities;
 			

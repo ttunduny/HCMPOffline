@@ -5,18 +5,19 @@
 	batch, Total Balance is the total for the commodity</span>
 	<hr />
 <div class="table-responsive" style="height:400px; overflow-y: auto;">
- <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/internal_issue',$att); ?>
+ <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/external_issue',$att); ?>
 <table  class="table table-hover table-bordered table-update" id="facility_issues_table" >
 <thead style="background-color: white">
 					<tr>
-						<th>Service Point</th>
+						<th>Select Subcounty</th>
+						<th>Select Facility</th>
 						<th>Description</th>
 						<th>Supplier</th>
 						<th>Unit Size</th>
 						<th>Batch&nbsp;No</th>
 						<th>Expiry Date</th>
-						<th>Available Batch Stock</th>
 						<th>Issue Date</th>
+						<th>Available Batch Stock</th>
 						<th>Issue Type</th>
 						<th>Issued Quantity</th>
 						<th>Total Balance</th>
@@ -25,16 +26,22 @@
 					</thead>
 					<tbody>
 						<tr row_id='0'>
-						<td>
-						<select  name="service_point[0]" class="form-control input-small service_point">
-							<option value="0" >- select service point -</option>
+					
+							<td>
+								<select name="district[0]" class="form-control input-small district">
+								<option value="0">--select subcounty---</option>
 								<?php 
-foreach ($service_point as $service_point) :						
-			$service_point_name=$service_point->service_point_name;			
-		echo "<option  value='$service_point_name'>$service_point_name</option>";		
-endforeach;
-		?> 
-						</select>
+		foreach ($subcounties as $district) {
+			$id=$district->id;
+			$name=$district->district;		
+			echo '<option value="'.$id.'"> '.$name.'</option>';
+		}?>	
+								</select>
+							</td>
+							<td>
+						<select  name="mfl[0]" class="form-control input-small facility">
+                       <option value="0">--select facility---</option>
+					   </select>
 						</td>
 						<td>
 	<select class="form-control input-small service desc" name="desc[0]">
@@ -61,16 +68,18 @@ endforeach;
 			            <td><input  type="text" class="form-control input-small unit_size" readonly="readonly"  /></td>
 						<td><select class="form-control input-small batch_no" name="batch_no[0]"></select></td>
 						<td><input type='text' class='form-control input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
-						<td><input class='form-control input-small available_stock' type="text" name="available_stock[0]" readonly="readonly" /></td>
-						<td>
+												<td>
 <input class='form-control input-small clone_datepicker_normal_limit_today' 
 type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
+						<td><input class='form-control input-small available_stock' type="text" name="available_stock[0]" readonly="readonly" /></td>
+
 						<td><select class="form-control commodity_unit_of_issue input-small" name="commodity_unit_of_issue[]">
 			<option value="Pack_Size">Pack Size</option>
 			<option value="Unit_Size">Unit Size</option>
 			</select></td>
 						<td><input class='form-control input-small quantity_issued' type="text" value="0"  name="quantity_issued[0]"  required="required"/></td>
 						<td><input class='form-control input-small balance' type="text" value="" readonly="readonly" /></td>
+
 						<td><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Remove Row</button></td>
 			</tr>
 		           </tbody>
@@ -95,6 +104,40 @@ $(document).ready(function() {
 	});	
 //step one load all the facility data here
 var facility_stock_data=<?php echo $facility_stock_data;     ?>;
+///// county district facility filter 
+       $('.district').live("change", function() {
+			/*
+			 * when clicked, this object should populate district names to district dropdown list.
+			 * Initially it sets default values to the 2 drop down lists(districts and facilities) 
+			 * then ajax is used is to retrieve the district names using the 'dropdown()' method that has
+			 * 3 arguments(the ajax url, value POSTed and the id of the object to populated)
+			 */
+	        var locator =$('option:selected', this);
+			json_obj={"url":"<?php echo site_url("home/get_facilities");?>",}
+			var baseUrl=json_obj.url;
+			var id=$(this).val();
+		    var dropdown;
+			$.ajax({
+			  type: "POST",
+			  url: baseUrl,
+			  data: "district="+id,
+			  success: function(msg){
+			  		var values=msg.split("_");
+			  		var txtbox;
+			  		for (var i=0; i < values.length-1; i++) {
+			  			var id_value=values[i].split("*");				  					  			
+			  			dropdown+="<option value="+id_value[0]+">";
+						dropdown+=id_value[1];						
+						dropdown+="</option>";		  			
+		  		}	
+			  },
+			  error: function(XMLHttpRequest, textStatus, errorThrown) {
+			       if(textStatus == 'timeout') {}
+			   }
+			}).done(function( msg ) {			
+				locator.closest("tr").find(".facility").html(dropdown);
+			});				
+		});	
             ///when changing the commodity combobox
       		$(".desc").live('change',function(){
       		var row_id=$(this).closest("tr").index();	
@@ -272,7 +315,8 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
             var table_row = cloned_object.attr("row_id");
             var next_table_row = parseInt(table_row) + 1;           
 		    cloned_object.attr("row_id", next_table_row);
-			cloned_object.find(".service_point").attr('name','service_point['+next_table_row+']'); 
+			cloned_object.find(".service_point").attr('name','service_point['+next_table_row+']');
+			cloned_object.find(".facility").attr('name','mfl['+next_table_row+']'); 
 			cloned_object.find(".commodity_id").attr('name','commodity_id['+next_table_row+']'); 
 			cloned_object.find(".commodity_id").attr('id',next_table_row); 
 			cloned_object.find(".quantity_issued").attr('name','quantity_issued['+next_table_row+']'); 	
@@ -301,10 +345,12 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 		var commodity_id=selector_object.closest("tr").find(".desc").val();
 		var issue_date=selector_object.closest("tr").find(".clone_datepicker_normal_limit_today").val();
 		var issue_quantity=selector_object.closest("tr").find(".quantity_issued").val();
+		var facility=selector_object.closest("tr").find(".facility").val();
 		//set the message here
+		if (facility==0) {alert_message+="<li>Select a Facility First</li>";}
 		if (service_point==0) {alert_message+="<li>Select a Service Point</li>";}
-	    if (commodity_id==0) {alert_message+="<li>Select a commodity first</li>";}
-	    if (issue_date==0) {alert_message+="<li>Indicate the date of the issue</li>";}	
+	    if (commodity_id==0) {alert_message+="<li>Select a commodity</li>";}
+	    if (issue_date==0 || issue_date=='') {alert_message+="<li>Indicate the date of the issue</li>";}	
 	    if (issue_quantity==0) {alert_message+="<li>Indicate how much you want to issue</li>";}	    
 	    return[alert_message,service_point,commodity_id,issue_quantity,issue_date];	
 		}//extract facility_data  from the json object 		

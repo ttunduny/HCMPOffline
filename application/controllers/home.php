@@ -25,6 +25,19 @@ class Home extends MY_Controller {
 		$data['banner_text'] = "Facility Home";
 		$this -> load -> view("shared_files/template/template", $data);
 	}
+		public function get_facilities(){
+		//for ajax
+		$district=$_POST['district'];
+		$facilities=Facilities::getFacilities($district);
+		$list="";
+		foreach ($facilities as $facilities) {
+			$list.=$facilities->facility_code;
+			$list.="*";
+			$list.=$facilities->facility_name;
+			$list.="_";
+		}
+		echo $list;
+	}
 	
 	
 }

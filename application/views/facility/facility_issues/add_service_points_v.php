@@ -56,7 +56,8 @@
     </div>
   </div>
 </div><!-----END--->
-<div class="row" style="margin-left: 1%; margin-right: 1%">
+<div class="container" style="width: 96%; margin: auto;">
+<div class="row">
 <div style="float:left; height:495px;border: 1px solid #DDD;margin-left: 1px; width: 29%;">
 <?php echo form_open('issues/save_service_points'); ?>
 <div class="table-responsive" style="height:417px; overflow-y: auto;">
@@ -95,6 +96,7 @@
 		</tr>
 	</thead>
 	<tbody>
+
 <?php 
 foreach ($service_point as $service_point) :						
 			$service_point_name=$service_point->service_point_name;
@@ -139,6 +141,7 @@ endforeach;
 ?> 
 </tbody>
 </table>  	
+  </div>
   </div>
   </div>
 <script>
