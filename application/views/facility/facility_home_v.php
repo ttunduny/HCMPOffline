@@ -16,17 +16,17 @@
       		
       	<div style="height:auto; margin-bottom: 2px" class="warning message ">
         	
-        	<h5>Orders Pending Approval by District Pharmacist</h5> 
+        	<h5><span class="badge">2</span>Orders Pending Approval by District Pharmacist</h5> 
         	<p>
-			<a class="link" href=""> <span class="badge">2</span>  Order(s) Pending.</a> 
+			<a class="link" href="">   Order(s) Pending.</a> 
 			</p>
         </div>
         
         <div style="height:auto; margin-bottom: 2px" class="warning message ">
         	
-        	<h5>Expired Commodities</h5>
+        	 <h5> <span class="badge">42</span> Expired Commodities</h5>
         	<p>
-			<a class="link" href=""> <span class="badge">42</span>Expired Commodities awaiting decommisioning.</a> 
+			<a class="link" href=""> Expired Commodities awaiting decommisioning.</a> 
 			</p> 
         </div>
         

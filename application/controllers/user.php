@@ -32,17 +32,23 @@ class user extends MY_Controller {
 
 	}
 
-	public function login_submit() {
-		if ($this -> input -> post('username')) {
-			$username = $_POST['username'];
-			$password = $_POST['password'];
-		}
+	
 
-		if ($this -> _submit_validate() === FALSE) {
-			$this -> index();
-			return;
-		}else {
-		//$this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
+public function login_submit() {
+		
+		
+		$user = new Users();
+
+		$password = $this -> input -> post('password');
+		$username = $this -> input -> post('username');
+		$returned_user = $user -> login($username, $password);
+		
+		//var_dump($returned_user);
+		//echo count($returned_user);
+		//exit;
+		//If user successfully logs in, proceed here
+		if ($returned_user) {
+			//Create basic data to be saved in the session
 		$reply = Users::login($username, $password);
 		$user_data = $reply -> toArray();
 
@@ -60,8 +66,8 @@ class user extends MY_Controller {
 		//get county name
 		$county_name = Counties::get_county_name($county_id);
 		$county_name = $county_name['county'];
-
-		//get user access indicator
+		//exit;
+		
 		$access_level = Access_level::get_access_level_name($access_typeid);
 		$user_indicator = $access_level['user_indicator'];
 
@@ -81,7 +87,6 @@ class user extends MY_Controller {
 
 		//get menu items
 		$menu_items = Menu::getByUsertype($access_typeid);
-
 		//Create array that will hold all the accessible menus in the session
 		$menus = array();
 		$menuids = array();
@@ -99,20 +104,21 @@ class user extends MY_Controller {
 			$sub_items=Sub_menu::getByparent($parentid);
 			
 			 foreach ($sub_items as $item) {
-			$sub_menus[] = array("submenu_text" => $item -> subm_text, "submenu_url" => $item -> subm_url,"submenu_parentid" => $item -> parent_id);
+			$sub_menus[] = array("submenu_text" => $item -> subm_text, "submenu_url" => $item -> subm_url,"menu_id" => $item -> parent_id);
 			
 			
 		}
-			
-		}
-		
 		//Save this menus array in the session
 		$this -> session -> set_userdata(array("menus" => $menus));
 		//Save this sub menus array in the session
 		$this -> session -> set_userdata(array("sub_menus" => $sub_menus));
-		redirect('Home/home');
+		redirect('Home/home');	
 		}
-
+		} else {
+			$data['popup'] = "errorpopup";
+			$data['title'] = "Login";
+			$this -> load -> view("shared_files/login_pages/login_v", $data);
+		}
 	}
 
 	public function logout() {
