@@ -15,6 +15,7 @@
 	<link href="<?php echo base_url().'assets/css/jquery-ui-1.10.4.custom.min.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
 	<script src="<?php echo base_url().'assets/scripts/jquery-1.8.0.js'?>" type="text/javascript"></script>
+	
 	<script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>
 	<!-- <link href="<?php echo base_url().'assets/metro-bootstrap/docs/font-awesome.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/metro-bootstrap/css/metro-bootstrap.css'?>" type="text/css" rel="stylesheet"/>
@@ -65,7 +66,7 @@ border-color: #e7e7e7;
         </div>
         <div class="navbar-collapse collapse" style="font-weight: bold" id="navigate">
           <ul class="nav navbar-nav navbar-right" >
-       <li><a href="<?php echo site_url();?>" class=" ">HOME</a> </li>   
+       <li><a href="<?php echo site_url().'Home/home';?>" class=" ">HOME</a> </li>   
 <?php
 //Retrieve all accessible menus/submenus from the session
 $menus= $this -> session -> userdata('menus');
@@ -74,12 +75,27 @@ $sub_menus= $this -> session -> userdata('sub_menus');
 foreach($menus as $menu){?>
 	<li class="" >
             	
-            	<a id="sub" href="<?php echo site_url($menu['menu_url']);?>" class=""><?php echo $menu['menu_text']?></a>
+            	
+            	
+            	
+            	<a id="sub" href="<?php
+            	
+            	if ($menu['parent_status']==0) {				
+            	
+            	echo site_url().'Home/home';
+            	 
+				}else {
+					
+					 echo site_url($menu['menu_url']);
+            	 
+				}
+            	 
+            	 ?>" class=""><?php echo $menu['menu_text']?></a>
             	
             	<ul class="dropdown-menu" style="min-width: 0" >
             	<?php 
             	foreach($sub_menus as $sub_menu){
-            		if ($menu['menu_id']==$sub_menu['submenu_parentid']) {?>
+            		if ($menu['menu_id']==$sub_menu['menu_id']) {?>
 						
 						<li><a style="background: whitesmoke;color: black !important" href="<?php echo $sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
 					<?php
@@ -160,7 +176,7 @@ foreach($menus as $menu){?>
     </div>
     <!-- Bootstrap core JavaScript===================== -->
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
-  <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
+  
 
   <script src="<?php echo base_url().'assets/scripts/exporting.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>

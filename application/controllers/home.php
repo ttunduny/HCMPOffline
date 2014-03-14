@@ -20,10 +20,47 @@ class Home extends MY_Controller {
 
 	public function home() {
 
-		$data['title'] = "Facility Home";
-		$data['content_view'] = "facility/facility_home_v";
-		$data['banner_text'] = "Facility Home";
-		$this -> load -> view("shared_files/template/template", $data);
+		
+		$identifier = $this -> session -> userdata('user_indicator');
+		
+		if ($identifier == 'moh') {
+			$data['content_view'] = "";
+		}
+		if ($identifier == 'facility_admin') {
+			$data['content_view'] = "";
+		}
+		if ($identifier == 'district') {
+			$data['content_view'] = "";
+		}
+		
+		if ($identifier == 'moh_user') {
+			$data['content_view'] = "";
+		}
+		
+		if ($identifier== 'facility') {
+			$data['content_view'] = "facility/facility_home_v";
+		}
+		
+		if ($identifier == 'district_tech') {
+			$data['content_view'] = "";
+		}
+		
+		if ($identifier== 'rtk_manager') {
+			$data['content_view'] = "";
+		}
+		
+		if ($identifier == 'super_admin') {
+			$data['content_view'] = "";
+		}
+
+		if ($identifier == 'allocation_committee') {
+			$data['content_view'] = "";
+		}
+
+		
+		$data['title'] = "System Home";
+		$data['banner'] = "Home";
+		$this -> load -> view('shared_files/template/template', $data);
 	}
 	
 	

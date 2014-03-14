@@ -19,6 +19,7 @@
 	<link href="<?php echo base_url().'assets/css/normalize.css'?>" type="text/css" rel="stylesheet"/>
 	<script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
 	<script src="<?php echo base_url().'assets/scripts/jquery-1.8.0.js'?>" type="text/javascript"></script>
+	<script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
 	<!--<script src="<?php echo base_url().'assets/scripts/alert.js'?>" type="text/javascript"></script>
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -64,13 +65,12 @@ window.setInterval(function () {
 	
   	
   		<div id="error_contain" class="">
-<?php echo validation_errors('<div class="alert alert-danger alert-dismissable" >
-<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>
-','</div>'); 
-
+<?php 
 if (isset($popup)) {
 	
-	echo	'<p class="successreset">Successful reset. Please check your email.</p>';
+	echo	'<div class="alert alert-danger alert-dismissable" > Error In Login
+<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>
+','</div>';
 }
 unset($popup);
  ?>

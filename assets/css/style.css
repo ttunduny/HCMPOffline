@@ -190,6 +190,7 @@
 .warning {
 	background: #FEFFC8 url('../img/Alert_Resized.png') 20px 50% no-repeat;
 	border: 1px solid #F1AA2D;
+	min-height:70px;
 	width: auto;
 }
 .issue {

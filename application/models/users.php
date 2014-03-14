@@ -33,17 +33,28 @@ class Users extends Doctrine_Record {
 		$this->_set('password', md5($salt . $value));
 		
 	}
+	
 	public static function login($username, $password) {
-		
-		$salt = '#*seCrEt!@-*%';
-		$value=( md5($salt . $password));
-		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username = '" . $username . "' and password='". $value ."'");
 
-		$x = $query -> execute();
-		return $x[0];
-		
-		
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username = '" . $username . "'");
+
+		$user = $query -> fetchOne();
+		if ($user) {
+
+			$user2 = new Users();
+			$user2 -> password = $password;
+
+			if ($user -> password == $user2 -> password) {
+				return $user;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+
 	}
+	
 	public static function getsome($id) {
 		$query = Doctrine_Query::create() -> select("fname") -> from("users")->where("id='$id' ");
 		$level = $query -> execute();
