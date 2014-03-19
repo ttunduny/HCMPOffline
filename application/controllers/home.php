@@ -20,7 +20,6 @@ class Home extends MY_Controller {
 
 	public function home() {
 
-		
 		$identifier = $this -> session -> userdata('user_indicator');
 		
 		if ($identifier == 'moh') {
@@ -59,7 +58,7 @@ class Home extends MY_Controller {
 
 		
 		$data['title'] = "System Home";
-		$data['banner'] = "Home";
+		$data['banner_text'] = "Home";
 		$this -> load -> view('shared_files/template/template', $data);
 	}
 		public function get_facilities(){

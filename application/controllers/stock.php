@@ -164,7 +164,6 @@ endforeach;
 		  redirect('stock/facility_stock_data');			  
 endif;
 }/////////////////////////////////END OF UPDATING STOCKS ON FIRST RUN//////////////////////////////////
-
 public function add_more_stock_level(){//////////////////////////////////ADDING MORE FACILITY STOCK HERE
 	if($this->input->post('desc')):		
 	    $facility_code=$this -> session -> userdata('facility_id'); 
@@ -225,14 +224,7 @@ endfor;
 endif;
 	
 }
-public function facility_stock_data(){///////////////////GET FACILITY STOCK DATA/////////////////////////////
-                $facility_code=$this -> session -> userdata('facility_id');
-				$data['facility_stock_data']=facility_stocks::get_distinct_stocks_for_this_facility($facility_code,'batch_data');
-				$data['title'] = "Facility Stock";
-     			$data['content_view'] = "facility/facility_stock_data/facility_stock_data_v";
-				$data['banner_text'] = "Facility Stock";
-				$this -> load -> view("shared_files/template/template", $data);	
-}////EDITING FACILITY STOCK DATA
+////EDITING FACILITY STOCK DATA
 public function edit_facility_stock_data(){
 //security check
 if($this->input->post('id')):
@@ -271,7 +263,6 @@ for($key=0;$key<count($stock_id);$key++):
           $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 		->execute("delete from facility_stocks where id=$stock_id[$key]"); 
 	 else:
-
 		 $myobj = Doctrine::getTable('facility_stocks')->find($stock_id[$key]);
          $myobj->batch_no=$batch_no[$key] ;
 		 $myobj->manufacture=$manufacturer[$key];
