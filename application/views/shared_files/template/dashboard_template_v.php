@@ -33,7 +33,7 @@
   </script></head>
 
   <body screen_capture_injected="true" style="">
-
+<div class="frame" id="frame"></div>
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -52,7 +52,7 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right" >
-       <li><a href="<?php echo site_url().'Home';?>" class=" ">HOME</a> </li>   
+       <li><a class="clickme" href="<?php echo site_url().'Home';?>" class=" ">HOME</a> </li>   
 <?php
 //Retrieve all accessible menus/submenus from the session
 $menus= $this -> session -> userdata('menus');
@@ -64,11 +64,9 @@ foreach($menus as $menu){?>
             	
             	
             	
-            	<a id="sub" href="<?php
+            	<a id="sub" class="clickme" href="<?php
             	
-            	if ($menu['parent_status']==0) {				
-            	
-            	echo site_url().'Home';
+            	if ($menu['parent_status']==0) {echo site_url().'Home';
             	 
 				}else {
 					
@@ -76,14 +74,14 @@ foreach($menus as $menu){?>
             	 
 				}
             	 
-            	 ?>" class=""><?php echo $menu['menu_text']?></a>
+            	 ?>" > <?php echo $menu['menu_text']?></a>
             	
             	<ul class="dropdown-menu" style="min-width: 0" >
             	<?php 
             	foreach($sub_menus as $sub_menu){
             		if ($menu['menu_id']==$sub_menu['menu_id']) {?>
 						
-						<li><a style="background: whitesmoke;color: black !important" href="<?php echo $sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
+						<li><a style="background: whitesmoke;color: black !important" class="clickme" href="<?php echo $sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
 					<?php
 					
             	} 
@@ -264,7 +262,7 @@ foreach($menus as $menu){?>
             </div>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 " style="padding:0;border-radius: 0 ">
-          <h1 class="page-header" style="margin: 0;">Dashboard</h1>
+          <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Dashboard</h1>
 
 <div class="well">
 	<div style="height: 100%;"></div>
@@ -296,11 +294,25 @@ foreach($menus as $menu){?>
         $( ".col-md-2,.col-md-10" ).css( "position", "" );
     };
 });
+
+$(".clickme").loadingbar({
+	      direction: "right",
+	      done: function(data) {
+	        $.each( data.items, function( i, item ) {
+	          $( "<img/>" ).attr( "src", item.media.m ).prependTo( $("#frame") );
+	          if ( i === 2 ) {
+	            return false;
+	          }
+	        });
+	      }
+	    });
 });
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>
-    
+	    <script type="text/javascript" src="<?php echo base_url().'assets/scripts/jquery.loadingbar.js'?>"></script>
+	    <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/loadingbar.css'?>" />
+	    <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/elusive-webfont.css'?>" />
   
 
 <div id="window-resizer-tooltip" style="display: none;"><a href="#" title="Edit settings" style="background-image: url(chrome-extension://kkelicaakdanhinjdeammmilcgefonfh/images/icon_19.png);"></a><span class="tooltipTitle">Window size: </span><span class="tooltipWidth" id="winWidth">1366</span> x <span class="tooltipHeight" id="winHeight">768</span><br><span class="tooltipTitle">Viewport size: </span><span class="tooltipWidth" id="vpWidth">1366</span> x <span class="tooltipHeight" id="vpHeight">449</span></div></body></html>

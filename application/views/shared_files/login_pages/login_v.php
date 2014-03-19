@@ -61,25 +61,36 @@ window.setInterval(function () {
 				
 				
 	</div>
-	
-	
-  	
-  		<div id="error_contain" class="">
-<?php 
+	<div class="container-fluid">
+		
+		<div class="row">
+			<div class="col-md-4" style="">
+				
+			</div>
+			<div class="col-md-4" style="">
+				
+				<?php 
 if (isset($popup)) {
 	
-	echo	'<div class="alert alert-danger alert-dismissable" > Error In Login
+	echo	'<div class="alert alert-danger alert-dismissable" style="text-align:center;"> Error! Wrong Credentials! Try Again.
 <button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>
 ','</div>';
 }
 unset($popup);
  ?>
- 
-  </div>
+			</div>
+			<div class="col-md-4" style="">
+				
+				
+			</div>
+		</div>
+		
+	</div>
+	
+	
   	
- 
-   
-<div class="container" style="margin-top: 7%;" id="containerlogin">
+  		   
+<div class="container" style="margin-top: 3%;" id="containerlogin">
       
                 
  <div class="row">

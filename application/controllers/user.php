@@ -112,7 +112,7 @@ public function login_submit() {
 		$this -> session -> set_userdata(array("menus" => $menus));
 		//Save this sub menus array in the session
 		$this -> session -> set_userdata(array("sub_menus" => $sub_menus));
-		redirect('Home/home');	
+		redirect('Home');	
 		}
 		} else {
 			$data['popup'] = "errorpopup";
