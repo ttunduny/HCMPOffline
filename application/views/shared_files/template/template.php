@@ -15,8 +15,8 @@
 	<link href="<?php echo base_url().'assets/css/jquery-ui-1.10.4.custom.min.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
 	<script src="<?php echo base_url().'assets/scripts/jquery-1.8.0.js'?>" type="text/javascript"></script>
+    <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
 	
-	<script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>
 	<!-- <link href="<?php echo base_url().'assets/metro-bootstrap/docs/font-awesome.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/metro-bootstrap/css/metro-bootstrap.css'?>" type="text/css" rel="stylesheet"/>
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -24,14 +24,7 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <style>
-html {
-  position: relative;
-  min-height: 100%;
-}
-body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
-}
+
 	
 	.panel-success>.panel-heading {
 color: white;
@@ -66,7 +59,7 @@ border-color: #e7e7e7;
         </div>
         <div class="navbar-collapse collapse" style="font-weight: bold" id="navigate">
           <ul class="nav navbar-nav navbar-right" >
-       <li><a href="<?php echo site_url().'Home/home';?>" class=" ">HOME</a> </li>   
+       <li><a href="<?php echo site_url().'Home';?>" class=" ">HOME</a> </li>   
 <?php
 //Retrieve all accessible menus/submenus from the session
 $menus= $this -> session -> userdata('menus');
@@ -82,7 +75,7 @@ foreach($menus as $menu){?>
             	
             	if ($menu['parent_status']==0) {				
             	
-            	echo site_url().'Home/home';
+            	echo site_url().'Home';
             	 
 				}else {
 					
@@ -175,14 +168,13 @@ foreach($menus as $menu){?>
       </div>
     </div>
     <!-- Bootstrap core JavaScript===================== -->
+	<script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
-  
-
   <script src="<?php echo base_url().'assets/scripts/exporting.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
 	<script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>
-
 	<script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
+	
     <!-- Placed at the end of the document so the pages load faster -->
 
 

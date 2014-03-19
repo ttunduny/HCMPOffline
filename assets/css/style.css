@@ -1,3 +1,11 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px !important;
+}
 /* Make Header Sticky */
 #header_container {
 	border-bottom: 1px solid #666;
