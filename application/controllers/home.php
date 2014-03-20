@@ -11,23 +11,21 @@ class Home extends MY_Controller {
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
 	}
 
-	
-
 	public function index() {
 
 		$identifier = $this -> session -> userdata('user_indicator');
 
 		if ($identifier == 'moh') {
 			$data['content_view'] = "";
-			$view='shared_files/template/dashboard_template_v';
+			$view = 'shared_files/template/dashboard_template_v';
 		}
 		if ($identifier == 'facility_admin') {
 			$data['content_view'] = "";
-			$view='shared_files/template/template';
+			$view = 'shared_files/template/template';
 		}
 		if ($identifier == 'district') {
 			$data['content_view'] = "";
-			$view='shared_files/template/dashboard_template_v';
+			$view = 'shared_files/template/dashboard_template_v';
 		}
 
 		if ($identifier == 'moh_user') {
@@ -36,7 +34,7 @@ class Home extends MY_Controller {
 
 		if ($identifier == 'facility') {
 			$data['content_view'] = "facility/facility_home_v";
-			$view='shared_files/template/template';
+			$view = 'shared_files/template/template';
 		}
 
 		if ($identifier == 'district_tech') {
@@ -56,24 +54,22 @@ class Home extends MY_Controller {
 		}
 
 		$data['title'] = "System Home";
-		$data['banner'] = "Home";
+		$data['banner_text'] = "Home";
 		$this -> load -> view($view, $data);
 	}
 
-	
-		public function get_facilities(){
+	public function get_facilities() {
 		//for ajax
-		$district=$_POST['district'];
-		$facilities=Facilities::getFacilities($district);
-		$list="";
+		$district = $_POST['district'];
+		$facilities = Facilities::getFacilities($district);
+		$list = "";
 		foreach ($facilities as $facilities) {
-			$list.=$facilities->facility_code;
-			$list.="*";
-			$list.=$facilities->facility_name;
-			$list.="_";
+			$list .= $facilities -> facility_code;
+			$list .= "*";
+			$list .= $facilities -> facility_name;
+			$list .= "_";
 		}
 		echo $list;
 	}
-	
-	
+
 }

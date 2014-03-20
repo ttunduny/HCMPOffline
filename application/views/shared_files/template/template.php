@@ -12,6 +12,7 @@
     <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/normalize.css'?>" type="text/css" rel="stylesheet"/>
+	<link href="<?php echo base_url().'assets/css/dashboard.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/jquery-ui-1.10.4.custom.min.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
 	<script src="<?php echo base_url().'assets/scripts/jquery-1.8.0.js'?>" type="text/javascript"></script>
@@ -50,9 +51,11 @@ border-color: #e7e7e7;
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <img style="display:inline-block;" src="<?php echo base_url();?>assets/img/coat_of_arms-resized1.png" class="img-responsive " alt="Responsive image">
-
-				<div id="" style="display:inline-block;">
+          <a href="<?php echo base_url().'Home';?>">
+          	<img style="display:inline-block;"  src="<?php echo base_url();?>assets/img/coat_of_arms-resized1.png" class="img-responsive " alt="Responsive image" id="logo" >
+          	</a>
+          
+				<div id="logo_text" style="display:inline-block;">
 					<span style="font-size: 0.95em;font-weight: bold; ">Ministry of Health</span><br />
 					<span style="font-size: 0.85em;">Health Commodities Management Platform (HCMP)</span>	
 				</div>
@@ -123,7 +126,7 @@ foreach($menus as $menu){?>
       		
       		<div class="col-md-4" style="margin-left: 2%;">
       		
-      		  Banner Text	
+      		  <?php echo $banner_text;?>	
       		</div>
       		<div class="col-md-4">
       			
