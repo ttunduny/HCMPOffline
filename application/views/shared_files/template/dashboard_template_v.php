@@ -33,7 +33,7 @@
   </script></head>
 
   <body screen_capture_injected="true" style="">
-<div class="frame" id="frame"></div>
+
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -52,44 +52,36 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right" >
-       <li><a class="clickme" href="<?php echo site_url().'Home';?>" class=" ">HOME</a> </li>   
+       <li><a class="" href="<?php echo site_url().'Home';?>" >HOME</a> </li>   
 <?php
 //Retrieve all accessible menus/submenus from the session
 $menus= $this -> session -> userdata('menus');
 $sub_menus= $this -> session -> userdata('sub_menus');
 //Loop through all menus to display them in the top panel menu section
 foreach($menus as $menu){?>
-	<li class="" >
+	<li class="">
+		
+		
+            	<a href="<?php echo site_url($menu['menu_url']); ?>" id="sub" class=""><?php echo $menu['menu_text'];?></a>
             	
-            	
-            	
-            	
-            	<a id="sub" class="clickme" href="<?php
-            	
-            	if ($menu['parent_status']==0) {echo site_url().'Home';
-            	 
-				}else {
-					
-					 echo site_url($menu['menu_url']);
-            	 
-				}
-            	 
-            	 ?>" > <?php echo $menu['menu_text']?></a>
-            	
-            	<ul class="dropdown-menu" style="min-width: 0" >
-            	<?php 
+            	<ul  class="dropdown-menu" style="min-width: 0">
+            		
+            		<?php 
             	foreach($sub_menus as $sub_menu){
             		if ($menu['menu_id']==$sub_menu['menu_id']) {?>
 						
-						<li><a style="background: whitesmoke;color: black !important" class="clickme" href="<?php echo $sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
+						<li><a style="background: whitesmoke;color: black !important" class="" href="<?php echo $sub_menu['submenu_url']?>">
+							<?php echo $sub_menu['submenu_text']?></a></li>
 					<?php
 					
             	} 
 				}
             	?>
+            		
+            	</ul>
             	
-            </ul>
-	</li>
+            	
+            	</li>
 	 
 <?php
 					}
@@ -295,19 +287,10 @@ foreach($menus as $menu){?>
     };
 });
 
-$(".clickme").loadingbar({
-	      direction: "right",
-	      done: function(data) {
-	        $.each( data.items, function( i, item ) {
-	          $( "<img/>" ).attr( "src", item.media.m ).prependTo( $("#frame") );
-	          if ( i === 2 ) {
-	            return false;
-	          }
-	        });
-	      }
-	    });
+
 });
     </script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>
 	    <script type="text/javascript" src="<?php echo base_url().'assets/scripts/jquery.loadingbar.js'?>"></script>

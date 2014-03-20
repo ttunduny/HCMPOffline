@@ -73,15 +73,11 @@ foreach($menus as $menu){?>
             	
             	<a id="sub" href="<?php
             	
-            	if ($menu['parent_status']==0) {				
             	
-            	echo site_url().'Home';
-            	 
-				}else {
 					
 					 echo site_url($menu['menu_url']);
             	 
-				}
+				
             	 
             	 ?>" class=""><?php echo $menu['menu_text']?></a>
             	
@@ -90,7 +86,8 @@ foreach($menus as $menu){?>
             	foreach($sub_menus as $sub_menu){
             		if ($menu['menu_id']==$sub_menu['menu_id']) {?>
 						
-						<li><a style="background: whitesmoke;color: black !important" href="<?php echo $sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
+						<li><a style="background: whitesmoke;color: black !important" href="<?php 
+						echo base_url().$sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
 					<?php
 					
             	} 
@@ -170,9 +167,9 @@ foreach($menus as $menu){?>
     <!-- Bootstrap core JavaScript===================== -->
 	<script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
-  <script src="<?php echo base_url().'assets/scripts/exporting.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>
+   <script src="<?php echo base_url().'assets/scripts/exporting.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>
 	<script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
 	
     <!-- Placed at the end of the document so the pages load faster -->

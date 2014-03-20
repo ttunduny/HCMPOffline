@@ -24,10 +24,12 @@ class Stock extends MY_Controller {
 |3. auto save the data
 |4. save the data in the facility stock, facility transaction , issues table
 */
-	 public function facility_stock_first_run(){	
-	    $data['title'] = "Update Stock Level on First Run";
-     	$data['content_view'] = "facility/facility_stock_data/update_facility_stock_on_first_run_v";
-		$data['banner_text'] = "Update Stock Level on First Run";
+	 public function facility_stock_first_run($checker){
+	 	$which_view_to_load=($checker=='first_run')?"facility/facility_stock_data/update_facility_stock_on_first_run_v" :
+		"facility/facility_stock_data/update_facility_stock_v";
+	    $data['title'] = "Update Stock Level";
+     	$data['content_view'] = $which_view_to_load;
+		$data['banner_text'] = "Update Stock Level";
 		$data['commodities'] = Commodities::get_all();
 		$data['commodity_source']=commodity_source::get_all();
 		$this -> load -> view("shared_files/template/template", $data);	
@@ -111,7 +113,7 @@ if($this->input->post('commodity_id')):
 			'commodity_id'=>$commodity_id[$i],
 			'batch_no'=>$batch_no[$i],
 			'manufacture'=>$manu[$i],
-			'expiry_date'=> date('y-m-d', strtotime($expiry_date[$i])),
+			'expiry_date'=> date('y-m-d', strtotime(str_replace(",", " ",$expiry_date[$i]))),
 			'initial_quantity'=>$total_unit_count[$i],
 			'current_balance'=>$total_unit_count[$i],
 			'source_of_commodity'=>$source_of_item[$i],
@@ -119,18 +121,12 @@ if($this->input->post('commodity_id')):
 			//update the facility stock table
 			facility_stocks::update_facility_stock($mydata);			
 			//check	
-			$facility_has_commodity=facility_transaction_table::get_if_commodity_is_in_table($facility_code,$commodity_id[$i]);			
-if($facility_has_commodity>0): //update the opening balance for the transaction table 
+			$facility_has_commodity=facility_transaction_table::get_if_commodity_is_in_table($facility_code,$commodity_id[$i]);
+					
+          if($facility_has_commodity>0): //update the opening balance for the transaction table 
 		   	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
 			$inserttransaction->execute("UPDATE `facility_transaction_table` SET `opening_balance` =`opening_balance`+$total_unit_count[$i]
-                                          WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code=$facility_code");
-            // update the closing stock for the transaction table                             
-           $inserttransaction1 = Doctrine_Manager::getInstance()->getCurrentConnection();
-		   $inserttransaction1->execute("UPDATE `facility_transaction_table` SET closing_stock = (SELECT SUM(current_balance)
-			 FROM facility_stock WHERE commodity_id = '$commodity_id[$i]' and status='1' and facility_code='$facility_code')
-             WHERE `commodity_id`=$commodity_id[$i] and status='1' and facility_code ='$facility_code'"); 
-			 //merge the commodity ids.
-			 $commodity_id_array=array_merge($commodity_id_array, array($commodity_id[$i]=>$commodity_id[$i]));                                                      		   
+                                          WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code=$facility_code");                                                  		   
 else:       //get the data to send to the facility_transaction_table
 		   	$mydata2=array('facility_code'=>$facility_code,
 			'commodity_id'=>$commodity_id[$i],
@@ -141,22 +137,19 @@ else:       //get the data to send to the facility_transaction_table
 			'adjustmentnve'=>0,
 			'date_added'=>$date_of_entry,
 			'closing_stock'=>$total_unit_count[$i],
-			'status'=>$this -> session -> userdata('user_id'));	//send the data to the facility_transaction_table		
+			'status'=>1);	//send the data to the facility_transaction_table		
 			facility_transaction_table::update_facility_table($mydata2);			
-			//merge the commodity ids.
-			 $commodity_id_array=array_merge($commodity_id_array, array($commodity_id[$i]=>$commodity_id[$i]));
 endif;			
-endfor;		
-          foreach ($commodity_id_array as $commodity_id_data):
-            //get the closing stock of the given item           
-            $facility_stock=facility_stocks::get_facility_commodity_total($facility_code,$commodity_id_data)->toArray();	
+endfor;		  //get the closing stock of the given item  
+          $facility_stock_=facility_stocks::get_facility_commodity_total($facility_code,null, $date_of_entry)->toArray();
+          foreach ($facility_stock_ as $facility_stock_):
             // save this infor in the issues table
 			$mydata=array('facility_code'=>$facility_code,
 			's11_No' => 'initial stock update',
-			'commodity_id'=>$commodity_id_data,
+			'commodity_id'=>$facility_stock_['commodity_id'],
 			'batch_no'=>"N/A",
 			'expiry_date'=> "N/A",
-			'balance_as_of'=>$facility_stock[0]['commodity_balance'],
+			'balance_as_of'=>$facility_stock_['commodity_balance'],
 			'date_issued' => date('y-m-d'),
 			'issued_to' => 'N/A',
 			'issued_by' =>$this -> session -> userdata('user_id') ); //$this -> session -> userdata('identity')
@@ -168,17 +161,70 @@ endforeach;
           //set the notifications
 		  //$this->hcmp_functions->send_stock_update_sms();
 		  $this->session->set_flashdata('system_success_message', "Stock Levels Have Been Updated");
-		  //redirect('stock/stock_level');			  
+		  redirect('stock/facility_stock_data');			  
 endif;
-}/////////////////////////////////END OF UPDATING STOCKS ON FIRST RUN//////////////////////////////////////////
-public function facility_stock_data(){///////////////////GET FACILITY STOCK DATA/////////////////////////////
-                $facility_code=$this -> session -> userdata('facility_id');
-				$data['facility_stock_data']=facility_stocks::get_distinct_stocks_for_this_facility($facility_code,'batch_data');
-				$data['title'] = "Facility Stock";
-     			$data['content_view'] = "facility/facility_stock_data/facility_stock_data_v";
-				$data['banner_text'] = "Facility Stock";
-				$this -> load -> view("shared_files/template/template", $data);	
-}////EDITING FACILITY STOCK DATA
+}/////////////////////////////////END OF UPDATING STOCKS ON FIRST RUN//////////////////////////////////
+public function add_more_stock_level(){//////////////////////////////////ADDING MORE FACILITY STOCK HERE
+	if($this->input->post('desc')):		
+	    $facility_code=$this -> session -> userdata('facility_id'); 
+	     $commodity_id=$this->input->post('desc');
+		 $expiry_date=$this->input->post('clone_datepicker');
+		 $batch_no=$this->input->post('commodity_batch_no');
+		 $manu=$this->input->post('commodity_manufacture');
+		 $total_unit_count=$this->input->post('commodity_total_units');		
+		 $source_of_item=$this->input->post('source_of_item');
+         $count=count($commodity_id);
+		 $date_of_entry=date('y-m-d H:i:s');
+         //collect n set the data in the array
+         echo count($commodity_id)."jack";
+		for($i=0;$i<$count;$i++):
+			$mydata=array('facility_code'=>$facility_code,
+			'commodity_id'=>$commodity_id[$i],
+			'batch_no'=>$batch_no[$i],
+			'manufacture'=>$manu[$i],
+			'expiry_date'=> date('y-m-d', strtotime(str_replace(",", " ",$expiry_date[$i]))),
+			'initial_quantity'=>$total_unit_count[$i],
+			'current_balance'=>$total_unit_count[$i],
+			'source_of_commodity'=>$source_of_item[$i],
+			'date_added'=>$date_of_entry );
+			//update the facility stock table
+			facility_stocks::update_facility_stock($mydata);
+			 //get the closing stock of the given item           
+            $facility_stock=facility_stocks::get_facility_commodity_total($facility_code,$commodity_id[$i])->toArray();	
+            // save this infor in the issues table
+            $total_unit_count[$i]=$total_unit_count[$i]*-1;
+			$mydata=array('facility_code'=>$facility_code,
+			's11_No' => 'stock addition',
+			'commodity_id'=>$commodity_id[$i],
+			'batch_no'=>$batch_no[$i],
+			'expiry_date'=> date('y-m-d', strtotime(str_replace(",", " ",$expiry_date[$i]))),
+			'balance_as_of'=>$facility_stock[0]['commodity_balance'],
+			'date_issued' => date('y-m-d'),
+			'issued_to' => 'N/A',
+			'qty_issued' => $total_unit_count[$i],
+			'issued_by' =>$this -> session -> userdata('user_id') ); //$this -> session -> userdata('identity')
+			 // update the issues table 
+			 facility_issues::update_issues_table($mydata);
+										
+endfor;	
+          $facility_stock=facility_stocks::get_facility_commodity_total($facility_code,null, $date_of_entry)->toArray();   
+          foreach ($facility_stock as $facility_stock):
+            //check			
+		   	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
+			$inserttransaction->execute("UPDATE `facility_transaction_table` SET `opening_balance` =`opening_balance`+$facility_stock[commodity_balance]
+			                                 ,`closing_stock` =`closing_stock`+$facility_stock[commodity_balance]
+                                          WHERE `commodity_id`= '$facility_stock[commodity_id]' and status='1' and facility_code=$facility_code");
+			 endforeach; 	
+            //delete the record from the db
+		    facility_stocks_temp::delete_facility_temp(null, null,$facility_code);
+          //set the notifications
+		  //$this->hcmp_functions->send_stock_update_sms();
+		  $this->session->set_flashdata('system_success_message', "Stock Levels Have Been Updated");
+		  redirect('stock/facility_stock_data');			  
+endif;
+	
+}
+////EDITING FACILITY STOCK DATA
 public function edit_facility_stock_data(){
 //security check
 if($this->input->post('id')):
@@ -217,7 +263,6 @@ for($key=0;$key<count($stock_id);$key++):
           $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 		->execute("delete from facility_stocks where id=$stock_id[$key]"); 
 	 else:
-
 		 $myobj = Doctrine::getTable('facility_stocks')->find($stock_id[$key]);
          $myobj->batch_no=$batch_no[$key] ;
 		 $myobj->manufacture=$manufacturer[$key];

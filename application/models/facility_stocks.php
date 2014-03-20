@@ -40,11 +40,13 @@ class facility_stocks extends Doctrine_Record {
 		$o->save();		
 		return TRUE;
 	}// get the total balance of a specific item within a balance
-	public static function get_facility_commodity_total($facility_code,$commodity_id){
-	$query = Doctrine_Query::create() -> select("sum(current_balance) as commodity_balance") 
-	-> from("facility_stocks") -> where("facility_code='$facility_code' and commodity_id=$commodity_id")->andwhere("status='1'");	
+	public static function get_facility_commodity_total($facility_code,$commodity_id=null,$date_added=null){
+		$date_checker=isset($date_added)?" and date_added='$date_added'" : null;
+		$commodity_id=isset($commodity_id)?"and commodity_id=$commodity_id" : null;
+	    $query = Doctrine_Query::create() -> select("commodity_id,sum(current_balance) as commodity_balance") 
+	-> from("facility_stocks") -> where("facility_code='$facility_code' $commodity_id  $date_checker and status='1'")->groupBy("commodity_id");	
 		$stocks= $query -> execute();
-		return $stocks;	
+		return $stocks;
 	}// get all facility stock commodity id, options check if the user wants batch data or commodity grouped data and return the total 
 	public static function get_distinct_stocks_for_this_facility($facility_code,$checker=null){
 $addition=isset($checker)? ($checker=='batch_data')? 'and fs.current_balance>0 group by fs.batch_no,c.id order by fs.expiry_date asc' 

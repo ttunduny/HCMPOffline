@@ -4,7 +4,7 @@
 To add facility stock data, first do physical stock count</span>
 <hr />
 <?php $att=array("name"=>'myform','id'=>'myform');
-echo form_open('stock/add_stock_level',$att); ?>
+echo form_open('stock/add_more_stock_level',$att); ?>
 <div class="table-responsive" style="height:400px; overflow-y: auto;">
 <table  class="table table-hover table-bordered table-update"  id="facility_stock_table">
 	<thead style="background-color: white">

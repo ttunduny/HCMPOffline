@@ -5,7 +5,7 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-class user extends MY_Controller {
+class User extends MY_Controller {
 
 	function __construct() {
 		parent::__construct();
@@ -101,19 +101,25 @@ public function login_submit() {
 		$sub_menus = array();
 		foreach ($menuids as $parentid) {
 			
-			$sub_items=Sub_menu::getByparent($parentid);
+			$sub_items=Sub_menu::getByparent((int)$parentid);
 			
 			 foreach ($sub_items as $item) {
 			$sub_menus[] = array("submenu_text" => $item -> subm_text, "submenu_url" => $item -> subm_url,"menu_id" => $item -> parent_id);
 			
-			
 		}
+			
+		
+		}	 
+		
+			//var_dump($menus);
+			//var_dump($sub_menus);
+			 //exit;	
 		//Save this menus array in the session
 		$this -> session -> set_userdata(array("menus" => $menus));
 		//Save this sub menus array in the session
 		$this -> session -> set_userdata(array("sub_menus" => $sub_menus));
+		
 		redirect('Home');	
-		}
 		} else {
 			$data['popup'] = "errorpopup";
 			$data['title'] = "Login";
