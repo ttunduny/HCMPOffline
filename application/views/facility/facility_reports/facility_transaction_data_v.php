@@ -1,10 +1,5 @@
- <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
- <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrap.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/TableTools.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/ZeroClipboard.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrapPagination.js'?>" type="text/javascript"></script>
- <link rel="stylesheet" href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css"/>
- <div class="container" style="width: 96%; margin: auto;">
+ <?php echo form_open('orders/facility_order/'.$supplier_name[0]['id']); ?>  
+<div class="container" style="width: 96%; margin: auto;">
  <table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
 		<tr>
@@ -42,16 +37,21 @@
 		<td>$facility_stock_data->days_out_of_stock</td>
 		<td>$facility_stock_data->closing_stock</td>
 		";
-		endforeach;
-		
+		endforeach;		
 	endforeach;
  ?>
 </tbody>
 </table>  
-
+<hr />
+<div class="container-fluid">
+<div style="float: right">
+<button class="btn btn-success" type="submit">
+<span class="glyphicon glyphicon-open"></span>Proceed to Order from <?php echo $supplier_name[0]['source_name'] ?></button></div>
 </div>
-  
+</div>
+ </form> 
 <script>
+$(function () {
 	//datatables settings 
 	$('#example').dataTable( {
 		 "sDom": "T<'clear'>lfrtip",
@@ -69,14 +69,14 @@
 				"print",
 				{
 					"sExtends":    "collection",
-					"sButtonText": 'Save <span class="caret"></span>',
+					"sButtonText": 'Save',
 					"aButtons":    [ "csv", "xls", "pdf" ]
 				}
 			],
-			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+		"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
 		}
 	} );
 	$('#example_filter label input').addClass('form-control');
 	$('#example_length label select').addClass('form-control');
-
+});
 </script>
