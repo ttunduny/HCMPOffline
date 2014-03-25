@@ -11,6 +11,8 @@ class Home extends MY_Controller {
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
 	}
 
+	/
+
 	public function index() {
 
 		$identifier = $this -> session -> userdata('user_indicator');
