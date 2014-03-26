@@ -28,8 +28,7 @@ echo form_open('stock/add_more_stock_level',$att); ?>
 			<select  name="desc[]" class="form-control desc">
 	<option special_data="0" value="0">-Select One--</option>
 				<?php
-				foreach ($commodities as $commodities) {
-					
+				foreach ($commodities as $commodities) {					
 					$id=$commodities->id;
 					$commodities_name=$commodities->commodity_name;
 					$unit_size=$commodities->unit_size;
@@ -37,8 +36,7 @@ echo form_open('stock/add_more_stock_level',$att); ?>
 					$total_units=$commodities->total_commodity_units;					
 					foreach($commodities->supplier_name as $supplier_name):
 					$name=$supplier_name->source_name;
-					endforeach;
-					
+					endforeach;					
 					echo "<option special_data='" . $id."^".$name."^".$commodity_code."^".$unit_size ."^".$total_units."' 
 					value='$id'>".$commodities_name."</option>" ;
 				}
@@ -77,7 +75,7 @@ echo form_open('stock/add_more_stock_level',$att); ?>
 <div class="container-fluid">
 <div style="float: right">
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
-<button class="btn btn-success" id="save"><span class="glyphicon glyphicon-open"></span>Save</button></div>
+<button class="btn btn-sm btn-success" id="save"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 </div>
 </div>
 <?php echo form_close();?>
@@ -208,7 +206,9 @@ $(document).ready(function() {
 			commodity_total_units.attr("id", commodity_total_units_id);
 			commodity_total_units.attr("value", "");
 			clone_datepicker.attr("id", clone_datepicker_id);	
-			clone_datepicker.attr("value", "");	   
+			clone_datepicker.attr("value", "");	 
+			 // remove the error class
+            cloned_object.find("label.error").remove();     
 			//insert the data
 			cloned_object.insertAfter('#facility_stock_table tr:last');
 	        // refresh the datepickers
@@ -284,7 +284,6 @@ $(document).ready(function() {
                     
 	         return [data, data_ ,commodity_batch_noo,commodity_manufacture,clone_datepicker,stock_level,data_array[0]];
     }
-    
     function check_if_the_form_has_been_filled_correctly(selector_object){
     	    var temp_data=send_data_to_the_temp_table(selector_object);
     	    var alert_message='';
@@ -326,8 +325,9 @@ $(document).ready(function() {
     })
     });						
 /************save the data here*******************/
+    $("#myform").validate();
 	$('#save').button().click(function() {
-	$( "#myform" ).submit();    
+	 confirm_if_the_user_wants_to_save_the_form("#myform"); 
      });	});	
 </script>
 

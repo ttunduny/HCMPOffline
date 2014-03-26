@@ -1,6 +1,4 @@
-  
-   
-    <div class="container-fluid" style="">
+<div class="container-fluid" style="">
       <div class="row row-offcanvas row-offcanvas-right" id="sidebar" >
       	<p class="pull-left visible-xs">
             <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Click to view Side Menu</button>

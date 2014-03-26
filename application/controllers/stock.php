@@ -176,7 +176,7 @@ public function add_more_stock_level(){//////////////////////////////////ADDING 
          $count=count($commodity_id);
 		 $date_of_entry=date('y-m-d H:i:s');
          //collect n set the data in the array
-         echo count($commodity_id)."jack";
+         //echo count($commodity_id)."jack";
 		for($i=0;$i<$count;$i++):
 			$mydata=array('facility_code'=>$facility_code,
 			'commodity_id'=>$commodity_id[$i],

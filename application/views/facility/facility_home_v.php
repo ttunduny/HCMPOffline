@@ -84,7 +84,7 @@
       <div class="panel-heading">
         <h3 class="panel-title">Graph <span class="glyphicon glyphicon-stats" style=""></span><span class="glyphicon glyphicon-align-left" style="margin-left: 1%"></span></h3>
       </div>
-      <div class="panel-body" style="overflow-x: scroll">
+      <div class="panel-body" style="overflow-y: auto">
         <div style="/*border: 1px solid #036;*/ ;" id="container"></div>
       </div>
     </div>
@@ -96,44 +96,7 @@
 
 </div>
 <script>
-	
 	$(function () {
-        $('#container').highcharts({
-            chart: {
-            	zoomType:'x',
-                type: 'column'
-            },
-            title: {
-                text: 'Stacked column chart'
-            },
-            xAxis: {
-                categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas','Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas','Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas','Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas','Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Total fruit consumption'
-                }
-            },
-            tooltip: {
-                pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
-                shared: true
-            },
-            plotOptions: {
-                column: {
-                    stacking: 'percent'
-                }
-            },
-                series: [{
-                name: 'John',
-                data: [5, 3, 4, 7, 2,5, 3, 4, 7, 2,5, 3, 4, 7, 2,5, 3, 4, 7, 2,3, 4, 4, 2, 5]
-            }, {
-                name: 'Jane',
-                data: [5, 3, 4, 7, 2,2, 2, 3, 2, 1,3, 4, 4, 2, 5,3, 4, 4, 2, 5,4, 2, 5,2, 2]
-            }, {
-                name: 'Joe',
-                data: [3, 4, 4, 2, 5,2, 2, 3, 2, 1,2, 2, 3, 2, 1,5, 3, 4, 7, 2,2, 3, 2, 1,5]
-            }]
-        });
+       <?php echo $facility_dashboard_notifications['faciliy_stock_graph'] ?>
     });
 </script>
