@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Kariuki
+ * @author Kariuki & Mureithi
  */
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
