@@ -140,11 +140,13 @@ foreach($menus as $menu){?>
    <script src="<?php echo base_url().'assets/highcharts/exporting.js'?>" type="text/javascript"></script>
    <!-- HCMP COre===================== -->
   <script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
-<!----------Datatables==========================  -->
+  <script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
+  <!----------Datatables==========================  -->
   <script src="<?php echo base_url().'assets/datatable/jquery.dataTables.js'?>" type="text/javascript"></script>
  <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrap.js'?>" type="text/javascript"></script>
  <script src="<?php echo base_url().'assets/datatable/TableTools.js'?>" type="text/javascript"></script>
  <script src="<?php echo base_url().'assets/datatable/ZeroClipboard.js'?>" type="text/javascript"></script>
  <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrapPagination.js'?>" type="text/javascript"></script>
+  <!-- validation ===================== -->
+  <script src="<?php echo base_url().'assets/scripts/jquery.validate.min.js'?>" type="text/javascript"></script>
 </html>
