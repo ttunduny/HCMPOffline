@@ -60,7 +60,11 @@ class Home extends MY_Controller {
 	}
 
 	public function get_facilities() {
-		//for ajax
+		/**
+		 * [$district description]
+		 * @var [type]
+		 * for ajax
+		 */
 		$district = $_POST['district'];
 		$facilities = Facilities::getFacilities($district);
 		$list = "";
