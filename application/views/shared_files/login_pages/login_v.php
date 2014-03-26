@@ -48,13 +48,13 @@ window.setInterval(function () {
 }, 50);
 </script> 
   </head>  
-  <body data-spy="scroll" data-target=".subnav" data-offset="50" screen_capture_injected="true">
+  <body data-spy="scroll" data-target=".subnav" data-offset="50" screen_capture_injected="true" style="padding: 0;">
 	<div class="navbar  navbar-static-top" id="top-panel">
       
 
 	<img style="max-width: 6em; float: left; margin-right: 2px;" src="<?php echo base_url();?>assets/img/coat_of_arms-resized1.png" class="img-responsive " alt="Responsive image">
 
-				<div id="logo_text">
+				<div id="logo_text" style="margin-top: 1%">
 					<span style="font-size: 0.95em;font-weight: bold">Ministry of Health</span><br />
 					<span style="font-size: 0.85em">Health Commodities Management Platform (HCMP)</span>	
 				</div>
