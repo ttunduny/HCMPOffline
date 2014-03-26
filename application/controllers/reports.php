@@ -73,7 +73,8 @@ class Reports extends MY_Controller {
 	 | FACILITY REPORTS
 	 |--------------------------------------------------------------------------
 	 */
-	 ///////////////////GET FACILITY STOCK DATA/////////////////////////////	 
+	 ///////////////////GET FACILITY STOCK DATA/////////////////////////////
+	 
 	public function facility_stock_data() {
 		$facility_code = $this -> session -> userdata('facility_id');
 		$data['facility_stock_data'] = facility_stocks::get_distinct_stocks_for_this_facility($facility_code, 'batch_data');
@@ -82,14 +83,15 @@ class Reports extends MY_Controller {
 		$data['banner_text'] = "Facility Stock";
 		$this -> load -> view("shared_files/template/template", $data);
 	}
+	
 	// get the facility transaction data for ordering or quick analysis
-	public function facility_transaction_data($supplier) {
+
+	public function facility_transaction_data() {
 		$facility_code = $this -> session -> userdata('facility_id');
 		$data['facility_stock_data'] = facility_transaction_table::get_all($facility_code);
 		$data['title'] = "Facility Stock Summary";
 		$data['content_view'] = "facility/facility_reports/facility_transaction_data_v";
 		$data['banner_text'] = "Facility Stock Summary";
-		$data['supplier_name']=Commodity_source::get_all_id($supplier)->toArray();
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 

@@ -27,7 +27,7 @@ class orders extends MY_Controller {
 		$data['title'] = "Order Listing";
 		$data['banner_text'] = "Order Listing";	*/
     }
-	public function facility_order($supplier_id){
+	public function facility_order(){
 		$facility_code=$this -> session -> userdata('facility_id'); 
 		$data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";
 	    $data['title'] = "Facility New Order";

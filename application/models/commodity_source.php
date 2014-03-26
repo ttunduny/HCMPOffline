@@ -17,11 +17,6 @@ class Commodity_source extends Doctrine_Record {
 		$commodity_source = $query -> execute();
 		return $commodity_source;
 	}
-	public static function get_all_id($id) {
-		$query = Doctrine_Query::create() -> select("*") -> from("commodity_source")->where("id=$id");
-		$commodity_source = $query -> execute();
-		return $commodity_source;
-	}
 
 }
 ?>

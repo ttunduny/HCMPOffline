@@ -1,4 +1,11 @@
-<div class="container" style="width: 96%; margin: auto;">
+ <script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>
+ <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
+  <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrap.js'?>" type="text/javascript"></script>
+ <script src="<?php echo base_url().'assets/datatable/TableTools.js'?>" type="text/javascript"></script>
+ <script src="<?php echo base_url().'assets/datatable/ZeroClipboard.js'?>" type="text/javascript"></script>
+ <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrapPagination.js'?>" type="text/javascript"></script>
+ <link rel="stylesheet" href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css"/>
+ <div class="container" style="width: 96%; margin: auto;">
  <table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
 		<tr>
@@ -25,9 +32,10 @@
  ?>
 </tbody>
 </table>  
-</div> 
+
+</div>
+  
 <script>
-$(document).ready(function() {	
 	//datatables settings 
 	$('#example').dataTable( {
 		 "sDom": "T<'clear'>lfrtip",
@@ -45,14 +53,14 @@ $(document).ready(function() {
 				"print",
 				{
 					"sExtends":    "collection",
-					"sButtonText": 'Save',
+					"sButtonText": 'Save <span class="caret"></span>',
 					"aButtons":    [ "csv", "xls", "pdf" ]
 				}
 			],
-			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_cvs_xls_pdf.swf"
+			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
 		}
 	} );
 	$('#example_filter label input').addClass('form-control');
 	$('#example_length label select').addClass('form-control');
-});
+
 </script>
