@@ -1,3 +1,8 @@
+<?php
+if (!$this -> session -> userdata('user_id')) {
+  redirect("user");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -40,7 +45,7 @@ border-color: #e7e7e7;
 }
 </style>
   </head>  
-  <body style="" screen_capture_injected="true">
+  <body style="" screen_capture_injected="true" onload="set_interval()" onmouseover="reset_interval()" onclick="reset_interval()">
     <!-- Fixed navbar -->
    <div class="navbar navbar-default navbar-fixed-top" id="">
    <div class="container" style="width: 100%;">
@@ -89,8 +94,7 @@ foreach($menus as $menu){?>
             	foreach($sub_menus as $sub_menu){
             		if ($menu['menu_id']==$sub_menu['menu_id']) {?>
 						
-						<li><a style="background: whitesmoke;color: black !important" href="<?php 
-						echo base_url().$sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
+		<li><a style="background: whitesmoke;color: black !important" href="<?php echo base_url().$sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
 					<?php
 					
             	} 
@@ -120,19 +124,20 @@ foreach($menus as $menu){?>
          </div><!--/.nav-collapse -->
       </div>
       
-   
+
       <div class="container-fluid" style="/*border: 1px solid #036; */ height: 30px;" id="extras-bar">
       	<div class="row">
       		
-      		<div class="col-md-4" style="margin-left: 2%;">
-      		
-      		  <?php echo $banner_text;?>	
+      		<div class="col-md-4" style="font-weight:bold; ">
+      		<span style="margin-left:2%;">  <?php echo $banner_text;?> </span>
+      		 	
       		</div>
       		<div class="col-md-4">
       			
       		</div>
-      		<div class="col-md-4">
-      			
+      		<div class="col-md-4"  style="text-align: right;">
+      			<?php  echo date('l, dS F Y'); ?>
+             <span id="clock" style="font-size:0.85em; " ></span>
       		</div>
       	</div>
       	
@@ -167,8 +172,75 @@ foreach($menus as $menu){?>
         <p class="text-muted"> Government of Kenya &copy <?php echo date('Y');?>. All Rights Reserved</p>
       </div>
     </div>
+
+    <script type="text/javascript">
+
+/*
+ * Auto logout
+ */
+var timer = 0;
+function set_interval() {
+  showTime()
+  // the interval 'timer' is set as soon as the page loads
+  timer = setInterval("auto_logout()", 3600000);
+  // the figure '1801000' above indicates how many milliseconds the timer be set to.
+  // Eg: to set it to 5 mins, calculate 3min = 3x60 = 180 sec = 180,000 millisec.
+  // So set it to 180000
+}
+
+function reset_interval() {
+  showTime()
+  //resets the timer. The timer is reset on each of the below events:
+  // 1. mousemove   2. mouseclick   3. key press 4. scroliing
+  //first step: clear the existing timer
+
+  if(timer != 0) {
+    clearInterval(timer);
+    timer = 0;
+    // second step: implement the timer again
+    timer = setInterval("auto_logout()", 3600000);
+    // completed the reset of the timer
+  }
+}
+
+function auto_logout() {
+
+  // this function will redirect the user to the logout script
+  window.location = "<?php echo base_url(); ?>user/logout";
+}
+
+/*
+* Auto logout end
+*/
+  function showTime()
+{
+var today=new Date();
+var h=today.getHours();
+var m=today.getMinutes();
+var s=today.getSeconds();
+// add a zero in front of numbers<10
+h=checkTime(h);
+m=checkTime(m);
+s=checkTime(s);
+$("#clock").text(h+":"+m);
+t=setTimeout('showTime()',1000);
+
+
+
+}
+function checkTime(i)
+{
+if (i<10)
+  {
+  i="0" + i;
+  }
+return i;
+}
+
+  
+</script>
     <!-- Bootstrap core JavaScript===================== -->
-	<script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>
+	
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
    <script src="<?php echo base_url().'assets/scripts/exporting.js'?>" type="text/javascript"></script>
