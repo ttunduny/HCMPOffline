@@ -9,41 +9,63 @@
            <div class="panel-group " id="accordion" style="padding: 0;">
                 
                 
-                
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour"><span class="glyphicon glyphicon-file">
-                            </span>Reports</a>
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree"><span class="glyphicon">
+                            </span>Expiries</a>
                         </h4>
                     </div>
-                    <div id="collapseFour" class="panel-collapse collapse in">
+                    <div id="collapseThree" class="panel-collapse collapse in">
                         <div class="panel-body">
                             <table class="table">
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-usd"></span><a href="#">Expiries</a>
+                                        <a href="">Potential Expiries</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-user"></span><a href="#">Stock Control Card</a>
+                                        <a href="">Expired</a> <span class="label label-info"></span>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-tasks"></span><a href="#">Order Report</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-shopping-cart"></span><a href="#">Commodities Issue</a>
-                                    </td>
-                                </tr>
+                                
                             </table>
                         </div>
                     </div>
                 </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour"><span class="glyphicon glyphicon-file">
+                            </span>Other Reports</a>
+                        </h4>
+                    </div>
+                    <div id="collapseFour" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        <span class="glyphicon "></span><a href="">Order Report</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="glyphicon "></span><a href="">Stock Control Card</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="glyphicon  "></span><a href="">Commodities Issued</a>
+                                    </td>
+                                </tr>
+                                
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 " style="padding:0;border-radius: 0 ">

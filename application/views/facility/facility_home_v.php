@@ -51,6 +51,18 @@
         	<a href=""><h5>Issue Commodities to service points</h5></a>
         	 
         </div>
+
+         <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="order message " id="order_tab">
+            <h5>Orders</h5>
+             
+        </div>
+         <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
+            <a href="<?php echo base_url().'reports/facility_transaction_data/1'; ?>"><h5>KEMSA</h5></a>
+            <a href=""><h5>MEDS</h5></a>
+             
+        </div>
+
+        
         <div style="height:auto; margin-bottom: 2px" class="distribute message ">
         	<a href=""><h5>Redistribute Commodities to other facilities</h5></a>
         	 
@@ -69,9 +81,9 @@
         	 
         </div>
         
-         <div style="height:auto; margin-bottom: 2px" class="reports message ">
-        	<a href=""><h5>Reports</h5></a>
-        	 
+        <div style="height:auto; margin-bottom: 2px" class="reports message ">
+            <a href=""><h5>Reports</h5></a>
+             
         </div>
         
       </div>
@@ -101,43 +113,12 @@
 </div>
 <script>
 	
-	$(function () {
-        $('#container').highcharts({
-            chart: {
-            	zoomType:'x',
-                type: 'column'
-            },
-            title: {
-                text: 'Stacked column chart'
-            },
-            xAxis: {
-                categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas','Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas','Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas','Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas','Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Total fruit consumption'
-                }
-            },
-            tooltip: {
-                pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
-                shared: true
-            },
-            plotOptions: {
-                column: {
-                    stacking: 'percent'
-                }
-            },
-                series: [{
-                name: 'John',
-                data: [5, 3, 4, 7, 2,5, 3, 4, 7, 2,5, 3, 4, 7, 2,5, 3, 4, 7, 2,3, 4, 4, 2, 5]
-            }, {
-                name: 'Jane',
-                data: [5, 3, 4, 7, 2,2, 2, 3, 2, 1,3, 4, 4, 2, 5,3, 4, 4, 2, 5,4, 2, 5,2, 2]
-            }, {
-                name: 'Joe',
-                data: [3, 4, 4, 2, 5,2, 2, 3, 2, 1,2, 2, 3, 2, 1,5, 3, 4, 7, 2,2, 3, 2, 1,5]
-            }]
-        });
+   $(document).ready(function() {
+       $('#order_hide').hide() 
+
+       $('#order_tab').click(function(event) {
+           /* Act on the event */
+           $('#order_hide').toggle('slow')
+       }); 
     });
 </script>
