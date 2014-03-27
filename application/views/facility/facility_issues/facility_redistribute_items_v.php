@@ -300,14 +300,18 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 	       	$(this).parent().parent().remove(); 
 	       }	         
       });
+      // validate the form
+	$("#myform").validate();
       /************save the data here*******************/
 	$('#save').button().click(function() {
     $("input[name^=commodity_id]").each(function() {
                 	$(this).closest("tr").find(".batch_no").removeAttr('disabled'); 
                 	$(this).closest("tr").find(".commodity_unit_of_issue").removeAttr('disabled'); 	
-                	$(this).closest("tr").find(".desc").removeAttr('disabled'); 		
+                	$(this).closest("tr").find(".desc").removeAttr('disabled');  	
+                	$(this).closest("tr").find(".commodity_unit_of_issue").removeAttr('disabled');	
                 	});
-	$( "#myform" ).submit();    
+    // save the form
+    confirm_if_the_user_wants_to_save_the_form("#myform");
      });
         function clone_the_last_row_of_the_table(){
             var last_row = $('#facility_issues_table tr:last');
@@ -335,7 +339,9 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
             cloned_object.find(".commodity_unit_of_issue").removeAttr('disabled'); 
             cloned_object.find(".desc").removeAttr('disabled');   
             cloned_object.find(".commodity_balance").attr('value',"0");            
-            cloned_object.find(".batch_no").html("");            
+            cloned_object.find(".batch_no").html("");  
+            // remove the error class
+            cloned_object.find("label.error").remove();           
 			cloned_object.insertAfter('#facility_issues_table tr:last');	
 			refresh_clone_datepicker_normal_limit_today();	
         }

@@ -69,7 +69,7 @@ type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="re
 			<option value="Pack_Size">Pack Size</option>
 			<option value="Unit_Size">Unit Size</option>
 			</select></td>
-						<td><input class='form-control input-small quantity_issued' type="text" value="0"  name="quantity_issued[0]"  required="required"/></td>
+						<td><input class='form-control input-small quantity_issued' type="text" value=""  name="quantity_issued[0]"  required="required"/></td>
 						<td><input class='form-control input-small balance' type="text" value="" readonly="readonly" /></td>
 						<td><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Remove Row</button></td>
 			</tr>
@@ -182,7 +182,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			selector_object.closest("tr").find(".batch_no").attr("disabled", true);
 			selector_object.closest("tr").find(".commodity_unit_of_issue").attr("disabled", true);
 			selector_object.closest("tr").find(".desc").attr("disabled", true);				
-			//reset the values of current element 
+			//reset the values of current element */
 		  clone_the_last_row_of_the_table();
 		});	/////batch no change event
 		$('.batch_no').live('change',function(){
@@ -257,15 +257,20 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 	       	$(this).parent().parent().remove(); 
 	       }	         
       });
+    // validate the form
+	$("#myform").validate();
       /************save the data here*******************/
 	$('#save').button().click(function() {
     $("input[name^=commodity_id]").each(function() {
                 	$(this).closest("tr").find(".batch_no").removeAttr('disabled'); 
                 	$(this).closest("tr").find(".commodity_unit_of_issue").removeAttr('disabled'); 	
-                	$(this).closest("tr").find(".desc").removeAttr('disabled'); 		
+                	$(this).closest("tr").find(".desc").removeAttr('disabled');  	
+                	$(this).closest("tr").find(".commodity_unit_of_issue").removeAttr('disabled');	
                 	});
-	$( "#myform" ).submit();    
+    // save the form
+    confirm_if_the_user_wants_to_save_the_form("#myform");
      });
+     /************************* form validation ************/
         function clone_the_last_row_of_the_table(){
             var last_row = $('#facility_issues_table tr:last');
             var cloned_object = last_row.clone(true);
@@ -285,13 +290,15 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			cloned_object.find(".desc").attr('name','desc['+next_table_row+']');
 			cloned_object.find(".commodity_balance").attr('name','commodity_balance['+next_table_row+']');					
             cloned_object.find("input").attr('value',"");     
-            cloned_object.find(".quantity_issued").attr('value',"0");   
+            cloned_object.find(".quantity_issued").attr('value',"");   
             cloned_object.find(".quantity_issued").removeAttr('readonly');  
             cloned_object.find(".batch_no").removeAttr('disabled');
             cloned_object.find(".commodity_unit_of_issue").removeAttr('disabled'); 
             cloned_object.find(".desc").removeAttr('disabled');   
-            cloned_object.find(".commodity_balance").attr('value',"0");            
-            cloned_object.find(".batch_no").html("");            
+            cloned_object.find(".commodity_balance").attr('value',"");            
+            cloned_object.find(".batch_no").html("");
+            // remove the error class
+            cloned_object.find("label.error").remove();             
 			cloned_object.insertAfter('#facility_issues_table tr:last');	
 			refresh_clone_datepicker_normal_limit_today();	
         }

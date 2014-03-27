@@ -100,7 +100,7 @@
       <div class="panel-heading">
         <h3 class="panel-title">Graph <span class="glyphicon glyphicon-stats" style=""></span><span class="glyphicon glyphicon-align-left" style="margin-left: 1%"></span></h3>
       </div>
-      <div class="panel-body" style="overflow-x: scroll">
+      <div class="panel-body" style="overflow-y: auto">
         <div style="/*border: 1px solid #036;*/ ;" id="container"></div>
       </div>
     </div>
@@ -112,6 +112,7 @@
 
 </div>
 <script>
+<<<<<<< HEAD
 	
    $(document).ready(function() {
        $('#order_hide').hide() 
@@ -120,5 +121,9 @@
            /* Act on the event */
            $('#order_hide').toggle('slow')
        }); 
+=======
+	$(function () {
+       <?php echo $facility_dashboard_notifications['faciliy_stock_graph'] ?>
+>>>>>>> ca912bf3f6f4e2cf22f9c17a9f2d69d0c610c5f2
     });
 </script>
