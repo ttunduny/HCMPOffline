@@ -20,8 +20,6 @@ class facility_issues extends Doctrine_Record {
 		$this -> hasColumn('issued_to', 'varchar', 200);
 		$this -> hasColumn('issued_by', 'int', 12);
 		$this -> hasColumn('status', 'int');
-
-		
 			
 	}
 	public function setUp() {

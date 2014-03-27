@@ -118,7 +118,7 @@ var $table = $('#example');
   $table.floatThead({ 
 	 scrollingTop: 100,
 	 zIndex: 1001,
-	 scrollContainer: function($table){ return $table.closest('.col-md-3'); }
+	 scrollContainer: function($table){ return $table.closest('.col-md-2'); }
 	});	
 	//datatables settings 
 	$('#example').dataTable( {

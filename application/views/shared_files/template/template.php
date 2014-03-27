@@ -17,21 +17,19 @@
 	<link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
     <link rel="stylesheet" href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css"/>
-	<script src="<?php echo base_url().'assets/scripts/jquery-1.8.0.js'?>" type="text/javascript"></script>
-	
+	<script src="<?php echo base_url().'assets/scripts/jquery-1.8.0.js'?>" type="text/javascript"></script>	
 	<!-- <link href="<?php echo base_url().'assets/metro-bootstrap/docs/font-awesome.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/metro-bootstrap/css/metro-bootstrap.css'?>" type="text/css" rel="stylesheet"/>
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <style>
+ <style>
 .panel-success>.panel-heading {
 color: white;
 background-color: #528f42;
 border-color: #528f42;
 border-radius:0;
-
 }
 .navbar-default {
 background-color: white;
@@ -60,7 +58,7 @@ border-color: #e7e7e7;
         </div>
         <div class="navbar-collapse collapse" style="font-weight: bold" id="navigate">
           <ul class="nav navbar-nav navbar-right" >
-       <li><a href="<?php echo site_url().'home';?>" class=" ">HOME</a> </li>   
+       <li><a href="<?php echo base_url().'home';?>" class=" ">HOME</a> </li>   
 <?php
 //Retrieve all accessible menus/submenus from the session
 $menus= $this -> session -> userdata('menus');
@@ -69,13 +67,12 @@ $sub_menus= $this -> session -> userdata('sub_menus');
 foreach($menus as $menu){?>
 	<li class="" >
             	<a id="sub" href="<?php
-					 echo site_url($menu['menu_url']);
+					 echo base_url($menu['menu_url']);
             	 ?>" class=""><?php echo $menu['menu_text']?></a>           	
             	<ul class="dropdown-menu" style="min-width: 0" >
             	<?php 
             	foreach($sub_menus as $sub_menu){
-            		if ($menu['menu_id']==$sub_menu['menu_id']) {?>
-						
+            		if ($menu['menu_id']==$sub_menu['menu_id']) {?>						
 						<li><a style="background: whitesmoke;color: black !important" href="<?php 
 						echo base_url().$sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
 					<?php					
@@ -83,12 +80,12 @@ foreach($menus as $menu){?>
 				}?>
             	</ul></li>	 
 <?php }?>
-<li><a href="<?php echo site_url().'reports/commodity_listing/';?>" class=" ">COMMODITY LIST</a> </li>
+<li><a href="<?php echo base_url().'reports/commodity_listing/';?>" class=" ">COMMODITY LIST</a> </li>
             <li class="dropdown ">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user" ></span><?php echo $this -> session -> userdata('full_name');?> <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a style="background: whitesmoke;color: black !important" href="<?php echo site_url("user/change_password");?>"><span class="glyphicon glyphicon-pencil" style="margin-right: 2%; "></span>Change password</a></li>               
-                <li><a style="background: whitesmoke;color: black !important" href="<?php echo site_url("user/logout");?>" ><span class="glyphicon glyphicon-off" style="margin-right: 2%;"></span>Log out</a></li>               
+                <li><a style="background: whitesmoke;color: black !important" href="<?php echo base_url("user/change_password");?>"><span class="glyphicon glyphicon-pencil" style="margin-right: 2%; "></span>Change password</a></li>               
+                <li><a style="background: whitesmoke;color: black !important" href="<?php echo base_url("user/logout");?>" ><span class="glyphicon glyphicon-off" style="margin-right: 2%;"></span>Log out</a></li>               
               </ul>
             </li>
           </ul>
