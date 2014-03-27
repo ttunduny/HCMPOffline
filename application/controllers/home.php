@@ -9,15 +9,10 @@ class Home extends MY_Controller {
 		$this -> load -> helper(array('form', 'url'));
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
 	}
+	
 
-	public function index() {
-
-		/**
-		 * [$identifier description]
-		 * saves value of user type
-		 * @var [varchar]
-		 */
-			
+	public function index() {	
+		(!$this -> session -> userdata('user_id')) ? redirect('user'): null ;		
 		$identifier = $this -> session -> userdata('user_indicator');
         switch ($identifier):
 			case 'moh':

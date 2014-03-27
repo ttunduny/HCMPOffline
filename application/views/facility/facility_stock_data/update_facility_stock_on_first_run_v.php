@@ -77,7 +77,7 @@ echo form_open('stock/add_stock_level',$att); ?>
 <div class="container-fluid">
 <div style="float: right">
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
-<button class="btn btn-success" id="save"><span class="glyphicon glyphicon-open"></span>Save</button></div>
+<button class=" save btn btn-sm btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 </div>
 </div>
 <?php echo form_close();?>
@@ -208,7 +208,9 @@ $(document).ready(function() {
 			commodity_total_units.attr("id", commodity_total_units_id);
 			commodity_total_units.attr("value", "");
 			clone_datepicker.attr("id", clone_datepicker_id);	
-			clone_datepicker.attr("value", "");	   
+			clone_datepicker.attr("value", "");	  
+			 // remove the error class
+            cloned_object.find("label.error").remove();      
 			//insert the data
 			cloned_object.insertAfter('#facility_stock_table tr:last');
 	        // refresh the datepickers
@@ -326,8 +328,9 @@ $(document).ready(function() {
     })
     });						
 /************save the data here*******************/
-	$('#save').button().click(function() {
-	$( "#myform" ).submit();    
-     });	});	
+	$("#myform").validate();
+	$('.save').button().click(function() {
+	 confirm_if_the_user_wants_to_save_the_form("#myform"); 
+     });});	
 </script>
 
