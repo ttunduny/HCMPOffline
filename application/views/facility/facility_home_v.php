@@ -112,7 +112,7 @@
 
 </div>
 <script>
-<<<<<<< HEAD
+
 	
    $(document).ready(function() {
        $('#order_hide').hide() 
@@ -121,9 +121,9 @@
            /* Act on the event */
            $('#order_hide').toggle('slow')
        }); 
-=======
-	$(function () {
+
+	
        <?php echo $facility_dashboard_notifications['faciliy_stock_graph'] ?>
->>>>>>> ca912bf3f6f4e2cf22f9c17a9f2d69d0c610c5f2
+
     });
 </script>
