@@ -74,28 +74,19 @@
 
          <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="order message " id="order_tab">
             <h5>Orders</h5>
-             
         </div>
          <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
             <a href="<?php echo base_url().'reports/facility_transaction_data/1'; ?>"><h5>KEMSA</h5></a>
-            <a href=""><h5>MEDS</h5></a>
-             
+            <a href=""><h5>MEDS</h5></a> 
         </div>
-
-        
         <div style="height:auto; margin-bottom: 2px" class="distribute message ">
-        	<a href=""><h5>Redistribute Commodities to other facilities</h5></a>
-        	 
+        	<a href="<?php echo base_url().'issues/index/external'; ?>"><h5>Redistribute Commodities to other facilities</h5></a>	 
         </div>
         
  		<div style="height:auto; margin-bottom: 2px" class="distribute message ">
         	<a href=""><h5>Receive Commodities From Other Sources</h5></a>
         	 
         </div>        
-         <div style="height:auto; margin-bottom: 2px" class="order message ">
-        	<a href=""><h5>Redistribute Commodities to other facilities</h5></a>
-        	 
-        </div>
          <div style="height:auto; margin-bottom: 2px" class="delivery message ">
         	<a href=""><h5>Update order delivery</h5></a>
         	 

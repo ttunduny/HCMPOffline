@@ -1,9 +1,3 @@
- <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
- <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrap.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/TableTools.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/ZeroClipboard.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrapPagination.js'?>" type="text/javascript"></script>
- <link rel="stylesheet" href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css"/>
  <!------MODAL BOX------>
  <div class="modal fade" id="edit_" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -179,7 +173,7 @@ $(".add").click(function() { //add row here
 	});
 	//datatables settings 
 	$('#example').dataTable( {
-	     "sDom": "<'row-fluid'<'span6'T><'span6'f>r>t<'row-fluid'<'span6'l><'span6'p>>",
+	     "sDom": "T lfrtip",
 	     "sScrollY": "377px",
                     "sPaginationType": "bootstrap",
                     "oLanguage": {
@@ -192,7 +186,7 @@ $(".add").click(function() { //add row here
 				"print",
 				{
 					"sExtends":    "collection",
-					"sButtonText": 'Save <span class="caret"></span>',
+					"sButtonText": 'Save',
 					"aButtons":    [ "csv", "xls", "pdf" ]
 				}
 			],

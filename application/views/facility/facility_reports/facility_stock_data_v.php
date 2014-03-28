@@ -1,9 +1,3 @@
- <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
- <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrap.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/TableTools.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/ZeroClipboard.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrapPagination.js'?>" type="text/javascript"></script>
- <link rel="stylesheet" href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css"/>
  <div class="container" style="width: 96%; margin: auto;">
      <?php echo form_open('stock/edit_facility_stock_data'); ?>  
  <table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
@@ -63,6 +57,7 @@ endforeach;?>
 </div>
   <?php echo form_close(); ?>  
 <script>
+$.(function() {
 	//datatables settings 
 	$('#example').dataTable( {
 		 "sDom": "T<'clear'>lfrtip",
@@ -89,5 +84,5 @@ endforeach;?>
 	} );
 	$('#example_filter label input').addClass('form-control');
 	$('#example_length label select').addClass('form-control');
-
+});
 </script>

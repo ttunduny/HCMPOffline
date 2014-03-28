@@ -14,15 +14,15 @@ if (!$this -> session -> userdata('user_id')) {
     <meta name="author" content="">
     <link rel="icon" href="<?php echo base_url().'assets/img/coat_of_arms.png'?>" type="image/x-icon" />
     <link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/>
-    <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
-	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/normalize.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/dashboard.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/jquery-ui-1.10.4.custom.min.css'?>" type="text/css" rel="stylesheet"/>
+	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
+	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
+	<link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
+	<link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
 	<script src="<?php echo base_url().'assets/scripts/jquery-1.8.0.js'?>" type="text/javascript"></script>
-    <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
-	
 	<!-- <link href="<?php echo base_url().'assets/metro-bootstrap/docs/font-awesome.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/metro-bootstrap/css/metro-bootstrap.css'?>" type="text/css" rel="stylesheet"/>
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -30,9 +30,7 @@ if (!$this -> session -> userdata('user_id')) {
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <style>
-
-	
-	.panel-success>.panel-heading {
+.panel-success>.panel-heading {
 color: white;
 background-color: #528f42;
 border-color: #528f42;
@@ -67,7 +65,7 @@ border-color: #e7e7e7;
         </div>
         <div class="navbar-collapse collapse" style="font-weight: bold" id="navigate">
           <ul class="nav navbar-nav navbar-right" >
-       <li><a href="<?php echo site_url().'Home';?>" class=" ">HOME</a> </li>   
+       <li><a href="<?php echo site_url().'home';?>" class=" ">HOME</a> </li>   
 <?php
 //Retrieve all accessible menus/submenus from the session
 $menus= $this -> session -> userdata('menus');
@@ -75,40 +73,20 @@ $sub_menus= $this -> session -> userdata('sub_menus');
 //Loop through all menus to display them in the top panel menu section
 foreach($menus as $menu){?>
 	<li class="" >
-            	
-            	
-            	
-            	
-            	<a id="sub" href="<?php
-            	
-            	
-					
-					 echo site_url($menu['menu_url']);
-            	 
-				
-            	 
-            	 ?>" class=""><?php echo $menu['menu_text']?></a>
-            	
+            	<a id="sub" href="<?php echo site_url($menu['menu_url']); ?>" class=""><?php echo $menu['menu_text']?></a>            	
             	<ul class="dropdown-menu" style="min-width: 0" >
             	<?php 
             	foreach($sub_menus as $sub_menu){
-            		if ($menu['menu_id']==$sub_menu['menu_id']) {?>
-						
+            		if ($menu['menu_id']==$sub_menu['menu_id']) {?>						
 		<li><a style="background: whitesmoke;color: black !important" href="<?php echo base_url().$sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
-					<?php
-					
+					<?php	
             	} 
 				}
             	?>
-            	
             </ul>
-	</li>
-	 
-<?php
-					}
-	?>
-
-
+	</li>	 
+<?php }?>
+ <li><a href="<?php echo site_url("reports/commodity_listing");?>" class="">COMMODITY LIST</a> </li>
             <li class="dropdown ">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user" ></span><?php echo $this -> session -> userdata('full_name');?> <b class="caret"></b></a>
               <ul class="dropdown-menu">
@@ -123,8 +101,6 @@ foreach($menus as $menu){?>
           </ul>
          </div><!--/.nav-collapse -->
       </div>
-      
-
       <div class="container-fluid" style="/*border: 1px solid #036; */ height: 30px;" id="extras-bar">
       	<div class="row">
       		
@@ -144,8 +120,6 @@ foreach($menus as $menu){?>
       </div>	
       	
       </div>
-      
-   
     <div class="container-fluid" style="" id="main-content">
 <!----------- HCMP MODAL dialog Box for all uses--------->
 <div class="modal fade" id="communication_dialog" tabindex="-1" role="dialog"
@@ -225,8 +199,6 @@ s=checkTime(s);
 $("#clock").text(h+":"+m);
 t=setTimeout('showTime()',1000);
 
-
-
 }
 function checkTime(i)
 {
@@ -235,26 +207,22 @@ if (i<10)
   i="0" + i;
   }
 return i;
-}
-
-  
+}  
 </script>
-    <!-- Bootstrap core JavaScript===================== -->
-	
+   <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
+    <!-- Bootstrap core JavaScript===================== -->	
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
    <script src="<?php echo base_url().'assets/scripts/exporting.js'?>" type="text/javascript"></script>
-  <script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>
-	
-    <!-- Placed at the end of the document so the pages load faster -->
-
- <script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
-  <!----------Datatables==========================  -->
-  <script src="<?php echo base_url().'assets/datatable/jquery.dataTables.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrap.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/TableTools.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/ZeroClipboard.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrapPagination.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>	
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
+    <!--Datatables==========================  -->
+  <script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>	
+  <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrap.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/datatable/TableTools.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/datatable/ZeroClipboard.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrapPagination.js'?>" type="text/javascript"></script>
   <!-- validation ===================== -->
   <script src="<?php echo base_url().'assets/scripts/jquery.validate.min.js'?>" type="text/javascript"></script>
 </html>
