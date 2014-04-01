@@ -51,6 +51,7 @@ class Home extends MY_Controller {
     //format the graph here
     $facility_code=$this -> session -> userdata('facility_id'); 
     $facility_stock_=facility_stocks::get_distinct_stocks_for_this_facility($facility_code);
+	$facility_stock_count=count($facility_stock_);
     $graph_data=array();
 	$graph_data=array_merge($graph_data,array("graph_id"=>'container'));
 	$graph_data=array_merge($graph_data,array("graph_title"=>'Facility stock level'));
@@ -66,8 +67,18 @@ class Home extends MY_Controller {
 	$faciliy_stock_data=$this->hcmp_functions->create_high_chart_graph($graph_data);
 	$loading_icon=base_url().'assests/img/no-record-found.png'; 
 	$faciliy_stock_data=isset($faciliy_stock_data)? $faciliy_stock_data : "$('#container').html('<img src=$loading_icon>')'" ;
-
-	return array('faciliy_stock_graph'=>$faciliy_stock_data);	
+    //compute stocked out items
+    $items_stocked_out_in_facility=count(facility_stocks::get_items_that_have_stock_out_in_facility($facility_code));
+	//get order information from the db
+	$facility_order_count_=facility_orders::get_facility_order_summary_count($facility_code);
+	$facility_order_count=array();
+     foreach($facility_order_count_ as $facility_order_count_){
+     	$facility_order_count[$facility_order_count_['status']]=$facility_order_count_['total'];
+     }
+    
+	return array('facility_stock_count'=>$facility_stock_count,'faciliy_stock_graph'=>$faciliy_stock_data,
+	'items_stocked_out_in_facility'=>$items_stocked_out_in_facility,
+	'facility_order_count'=>$facility_order_count);	
     }
 	public function get_facilities() {
 		/**

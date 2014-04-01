@@ -8,6 +8,7 @@
         		<h3 class="panel-title">Notification <span class="glyphicon glyphicon-bell"></span> </h3>
       		</div>
       <div class="panel-body">
+   <?php if($facility_dashboard_notifications['facility_stock_count']==0): ?>
       	<div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         <h5> 1) Set up facility stock</h5> 
         	<p>
@@ -20,6 +21,7 @@
 	<a class="link" href="<?php echo base_url('stock/facility_stock_first_run/first_run') ?>">Please update your stock details</a> 
 			</p>
         </div>
+         <?php endif; // items_stocked_out_in_facility?>
       	 <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         <h5>Potential Expiries</h5> 
         	<p>
@@ -32,30 +34,45 @@
 			<a class="link" href=""> <span class="badge">42</span>Expired Commodities awaiting decommisioning.</a> 
 			</p> 
         </div>
+         <?php if($facility_dashboard_notifications['items_stocked_out_in_facility']>0): ?>
         <div style="height:auto; margin-bottom: 2px" class="warning message ">       	
         <h5>Stock Outs</h5>
         	<p>
-			<a class="link" href=""> <span class="badge">42</span>Expired Commodities awaiting decommisioning.</a> 
+			<a class="link" href="<?php echo base_url('reports/facility_stocked_out_items') ?>"> <span class="badge">
+		<?php echo $facility_dashboard_notifications['items_stocked_out_in_facility'] ?></span>Item(s) are stocked out </a> 
 			</p> 
         </div>
+        <?php endif; // items_stocked_out_in_facility?>
+        <?php if(array_key_exists('pending', $facility_dashboard_notifications['facility_order_count']) 
+        && @$facility_dashboard_notifications['facility_order_count']['pending']>0): ?>
       	<div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         	<h5>Orders Pending Approval by District Pharmacist</h5> 
         	<p>
-			<a class="link" href=""><span class="badge">2</span>Order(s) Pending.</a> 
+			<a class="link" href="<?php echo base_url('reports/order_listing#Approval') ?>"><span class="badge"><?php 
+			echo $facility_dashboard_notifications['facility_order_count']['pending'] ?></span>Order(s) Pending.</a> 
 			</p>
         </div>
+        <?php endif; //pending
+         if(array_key_exists('rejected', $facility_dashboard_notifications['facility_order_count']) 
+         && @$facility_dashboard_notifications['facility_order_count']['rejected']>0): ?>
         <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         	<h5>Orders Rejected by District Pharmacist</h5> 
         	<p>
-			<a class="link" href=""><span class="badge">2</span>Order(s) rejected</a> 
+			<a class="link" href="href="<?php echo base_url('reports/order_listing#Rejected') ?>""><span class="badge"><?php 
+			echo $facility_dashboard_notifications['facility_order_count']['rejected'] ?></span>Order(s) rejected</a> 
 			</p>
         </div>
+        <?php endif; //rejected
+        if(array_key_exists('approved', $facility_dashboard_notifications['facility_order_count'])
+		 && @$facility_dashboard_notifications['facility_order_count']['approved']>0): ?>
         <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         	<h5>Pending Dispatch</h5> 
         	<p>
-			<a class="link" href=""><span class="badge">2</span>Order(s) pending dispatch from KEMSA</a> 
+			<a class="link" href="href="<?php echo base_url('reports/order_listing#Delivery') ?>""><span class="badge"><?php 
+			echo $facility_dashboard_notifications['facility_order_count']['approved'] ?></span>Order(s) pending dispatch from KEMSA</a> 
 			</p>
         </div>
+         <?php endif; //approved?>
       </div>    
     </div>
 	</div>
@@ -67,8 +84,7 @@
         		<h3 class="panel-title">Actions <span class="glyphicon glyphicon-list-alt"></span></h3>
       </div>
       <div class="panel-body">
-        <div style="height:auto; margin-bottom: 2px" class="issue message ">
-        	 
+        <div style="height:auto; margin-bottom: 2px" class="issue message ">	 
         	<a href="<?php echo base_url()."issues/index/internal" ?>"><h5>Issue Commodities to service points</h5></a>       	 
         </div>
 
