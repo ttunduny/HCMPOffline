@@ -47,9 +47,14 @@ class facility_transaction_table extends Doctrine_Record {
 	->where("facility_code='$facility_code' and commodity_id='$commodity_id' and status='1'");
 	$commodities = $query -> execute();
 	$commodities = $commodities -> count();
-	return $commodities;
-			
-	}
+	return $commodities;		}
+
+    public static function get_commodities_for_ordering($facility_code){
+	 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("SELECT * from `facility_stock_movement_order_summary` where facility_code= '$facility_code'");
+        return $inserttransaction ;
+		
+	 }
 	
 	
 }

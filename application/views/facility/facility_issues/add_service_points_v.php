@@ -1,9 +1,3 @@
- <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
- <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrap.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/TableTools.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/ZeroClipboard.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrapPagination.js'?>" type="text/javascript"></script>
- <link rel="stylesheet" href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css"/>
  <!------MODAL BOX------>
  <div class="modal fade" id="edit_" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -82,7 +76,7 @@
 <?php echo form_close();?>
   </div>
   <div style="float:right;height:495px;border: 1px solid #DDD;margin-left: 1px; width: 69%;">
-  	<table cellpadding="0" cellspacing="0" width="80%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
+  	<table cellpadding="0" cellspacing="0" width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
 		<tr>
 			<th>Service Point Name</th>
@@ -181,6 +175,7 @@ $(".add").click(function() { //add row here
 	$('#example').dataTable( {
 	     "sDom": "<'row-fluid'<'span6'T><'span6'f>r>t<'row-fluid'<'span6'l><'span6'p>>",
 	     "sScrollY": "377px",
+	     "sScrollX": "100%",
                     "sPaginationType": "bootstrap",
                     "oLanguage": {
                         "sLengthMenu": "_MENU_ Records per page"
@@ -192,11 +187,12 @@ $(".add").click(function() { //add row here
 				"print",
 				{
 					"sExtends":    "collection",
-					"sButtonText": 'Save <span class="caret"></span>',
+					"sButtonText": 'Save ',
 					"aButtons":    [ "csv", "xls", "pdf" ]
 				}
+
 			],
-			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_cvs_xls_pdf.swf"
 		}
 	} );
 	$('#example_filter label input').addClass('form-control');
@@ -212,3 +208,4 @@ $(".add").click(function() { //add row here
 	}
 } );
 </script>
+

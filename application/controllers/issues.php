@@ -19,7 +19,8 @@ if (!defined('BASEPATH'))
 |2. check if the facility has commodity data 
 |4. save the data in the facility stock, facility transaction , issues table
 */
-	public function index($checker=NULL) {
+	public function index($checker=NULL) 
+	{
 		    $facility_code=$this -> session -> userdata('facility_id'); 
 			switch ($checker):		
 				case 'internal':					
@@ -39,22 +40,24 @@ if (!defined('BASEPATH'))
 		$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_facility($facility_code,1);
 	    $data['facility_stock_data']=json_encode(facility_stocks::get_distinct_stocks_for_this_facility($facility_code,"batch_data"));	
      	$this -> load -> view("shared_files/template/template", $data);		
-	}// facility internal issue
-	public function internal_issue(){
-//security check
-if($this->input->post('service_point')):
-$facility_code=$this -> session -> userdata('facility_id');
-$service_points=$this->input->post('service_point');
-$commodity_id=$this->input->post('desc');
-$commodity_balance_before=$this->input->post('commodity_balance');
-$facility_stock_id=$this->input->post('facility_stock_id');
-$batch_no=$this->input->post('batch_no');
-$expiry_date=$this->input->post('expiry_date');
-$commodity_unit_of_issue=$this->input->post('commodity_unit_of_issue');
-$quantity_issued=$this->input->post('quantity_issued');
-$clone_datepicker_normal_limit_today=$this->input->post('clone_datepicker_normal_limit_today');
-$total_units=$this->input->post('total_units');
-$total_items=count($facility_stock_id);
+	}
+	// facility internal issue
+	public function internal_issue()
+	{
+		//security check
+		if($this->input->post('service_point')):
+		$facility_code=$this -> session -> userdata('facility_id');
+		$service_points=$this->input->post('service_point');
+		$commodity_id=$this->input->post('desc');
+		$commodity_balance_before=$this->input->post('commodity_balance');
+		$facility_stock_id=$this->input->post('facility_stock_id');
+		$batch_no=$this->input->post('batch_no');
+		$expiry_date=$this->input->post('expiry_date');
+		$commodity_unit_of_issue=$this->input->post('commodity_unit_of_issue');
+		$quantity_issued=$this->input->post('quantity_issued');
+		$clone_datepicker_normal_limit_today=$this->input->post('clone_datepicker_normal_limit_today');
+		$total_units=$this->input->post('total_units');
+		$total_items=count($facility_stock_id);
 
         for($i=0;$i<$total_items;$i++)://compute the actual stock
         $total_items_issues=($commodity_unit_of_issue[$i]=='Pack_Size')? 
@@ -75,11 +78,11 @@ $total_items=count($facility_stock_id);
 			$inserttransaction->execute("UPDATE `facility_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
 			`closing_stock`=`closing_stock`-$total_items_issues
             WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");		
-endfor;
-         $this->session->set_flashdata('system_success_message', "You have issued $total_items item(s)");
-		 redirect();
-endif;
-redirect();		
+	endfor;
+	         $this->session->set_flashdata('system_success_message', "You have issued $total_items item(s)");
+			 redirect();
+	endif;
+	redirect();		
 	}
 		public function external_issue(){
 //security check
@@ -121,6 +124,14 @@ endfor;
 		 redirect();
 endif;
 redirect();		
+	}//confirm the external issue
+	public function confirm_external_issue(){
+	$facility_code=$this -> session -> userdata('facility_id');
+	$data['title'] ="Confirm Redistribution";	
+	$data['banner_text'] = "Confirm Redistribution";
+	$data['redistribution_data']=redistribution_data::get_all_active($facility_code,'all');	
+	$data['content_view'] = "facility/facility_issues/facility_redistribute_items_confirmation_v";
+	$this -> load -> view("shared_files/template/template", $data);		
 	}
 public function add_service_points(){
 	$facility_code=$this -> session -> userdata('facility_id');
