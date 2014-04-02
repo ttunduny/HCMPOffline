@@ -135,7 +135,7 @@ public function add_service_points(){
 	$data['title'] ="Facility Service Points";	
 	$data['banner_text'] = "Facility Service Points";
 	$data['service_point']=service_points::get_all_active($facility_code,'all');	
-	$data['content_view'] = "facility/facility_issues/facility_redistribute_items_confirmation_v";
+	$data['content_view'] = "facility/facility_issues/add_service_points_v";
 	$this -> load -> view("shared_files/template/template", $data);	
 }// save service points 
 public function save_service_points(){

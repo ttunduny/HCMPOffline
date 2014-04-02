@@ -52,7 +52,6 @@ class Facility_stocks extends Doctrine_Record {
 	public static function get_distinct_stocks_for_this_facility($facility_code,$checker=null){
 $addition=isset($checker)? ($checker=='batch_data')? 'and fs.current_balance>0 group by fs.batch_no,c.id order by fs.expiry_date asc' 
 : 'and fs.current_balance>0 group by c.id order by c.commodity_name asc' : null ;
-
 $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 ->fetchAll("SELECT DISTINCT c.id as commodity_id, fs.id as facility_stock_id,fs.expiry_date,c.commodity_name,c.commodity_code,
 c.unit_size,sum(fs.current_balance) as commodity_balance, round((SUM(fs.current_balance ) / c.total_commodity_units) ,1) as pack_balance,
@@ -61,8 +60,26 @@ c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commo
  where fs.facility_code ='$facility_code' and fs.expiry_date >= NOW() 
  and c.id=fs.commodity_id and fs.status='1' $addition   
 ");
-        return $stocks ;
+return $stocks ;
 }
+	  public static function get_items_that_have_stock_out_in_facility($facility_code=null,$district_id=null,$county_id=null){
+$where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+$group_by=isset($facility_code)? " order by c.commodity_name asc" : 
+(isset($district_id)? " order by f.facility_name asc" : " order by d.district asc" );
+
+$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("SELECT d.district, f_s.`facility_code` , f.facility_name, c.`id` AS commodity_id,
+ c.`commodity_code` , c.`commodity_name`, max( date_modified ) AS last_day, sum(current_balance) as current_balance
+FROM facilities f, commodities c, districts d, facility_stocks f_s
+WHERE f.facility_code = f_s.facility_code
+and $where_clause
+AND f_s.commodity_id = c.id
+AND f.district = d.id
+AND f_s.status =1  
+GROUP BY c.id having current_balance=0
+$group_by ");
+        return $stocks ;	  	
+	  }
 	
  		public static function potential_expiries($facility_code){
 		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code'");

@@ -1,11 +1,6 @@
- <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
- <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrap.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/TableTools.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/ZeroClipboard.js'?>" type="text/javascript"></script>
- <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrapPagination.js'?>" type="text/javascript"></script>
- <link rel="stylesheet" href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css"/>
- <div class="container" style="width: 96%; margin: auto;">
- <table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
+<div class="container" style="width: 96%; margin: auto;">
+	<?php echo form_open('orders/facility_order'); ?>
+ <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
 		<tr>
                         <th>Category</th>
@@ -43,19 +38,22 @@
 		<td>$facility_stock_data->closing_stock</td>
 		";
 		endforeach;
-		
 	endforeach;
  ?>
 </tbody>
-</table>  
-
+</table> 
+<hr />
+<div class="container-fluid">
+<div style="float: right">
+<button class="btn btn-success" type="submit"><span class="glyphicon glyphicon-open"></span>Proceed to Order from KEMSA</button></div>
+<?php echo form_close();?>
 </div>
-  
+</div>
 <script>
+$(document).ready(function() {
 	//datatables settings 
 	$('#example').dataTable( {
-		 "sDom": "T<'clear'>lfrtip",
-	     "sDom": "<'row-fluid'<'span6'T><'span6'f>r>t<'row-fluid'<'span6'l><'span6'p>>",
+		 "sDom": "T lfrtip",
 	     "sScrollY": "377px",
 	     "sScrollX": "100%",
                     "sPaginationType": "bootstrap",
@@ -69,7 +67,7 @@
 				"print",
 				{
 					"sExtends":    "collection",
-					"sButtonText": 'Save <span class="caret"></span>',
+					"sButtonText": 'Save',
 					"aButtons":    [ "csv", "xls", "pdf" ]
 				}
 			],
@@ -78,5 +76,5 @@
 	} );
 	$('#example_filter label input').addClass('form-control');
 	$('#example_length label select').addClass('form-control');
-
+});
 </script>

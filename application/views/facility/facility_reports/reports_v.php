@@ -23,7 +23,28 @@
         $( ".col-md-2,.col-md-10" ).css( "position", "" );
     };
 });
-
+$('#exp_datatable,#potential_exp_datatable,#potential_exp_datatable2').dataTable( {
+     "sDom": "T lfrtip",
+  
+       "sScrollY": "377px",
+       
+                    "sPaginationType": "bootstrap",
+                    "oLanguage": {
+                        "sLengthMenu": "_MENU_ Records per page",
+                        "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
+                    },
+            "oTableTools": {
+                 "aButtons": [
+        "copy",
+        "print",
+        {
+          "sExtends":    "collection",
+          "aButtons":    [ "csv", "xls", "pdf" ]
+        }
+      ],
+      "sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+    }
+  } ); 
 
 });
     </script>

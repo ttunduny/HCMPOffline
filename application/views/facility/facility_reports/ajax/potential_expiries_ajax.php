@@ -1,6 +1,6 @@
 <div style="min-height: 400px;" id="reports_display">
-    <table class="table table-bordered table-hover">
-  
+   <table  class="table table-hover table-bordered table-update" id="potential_exp_datatable2" >
+  <thead style="background-color: white">
   <tr>
     <th>Commodity Code </th>
     <th>Commodity Description</th>
@@ -12,7 +12,7 @@
     <th>Unit Cost (KSH)</th>
     <th>Total Cost(KSH)</th>
   </tr>
-  
+  </thead>
       
     <tbody>
     
@@ -61,3 +61,31 @@
    </tbody>
 </table>
   </div>
+  <script>
+      $(document).ready(function () {
+ 
+$('#exp_datatable,#potential_exp_datatable,#potential_exp_datatable2').dataTable( {
+     "sDom": "T lfrtip",
+  
+       "sScrollY": "377px",
+       
+                    "sPaginationType": "bootstrap",
+                    "oLanguage": {
+                        "sLengthMenu": "_MENU_ Records per page",
+                        "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
+                    },
+            "oTableTools": {
+                 "aButtons": [
+        "copy",
+        "print",
+        {
+          "sExtends":    "collection",
+          "aButtons":    [ "csv", "xls", "pdf" ]
+        }
+      ],
+      "sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+    }
+  } ); 
+
+});
+    </script>

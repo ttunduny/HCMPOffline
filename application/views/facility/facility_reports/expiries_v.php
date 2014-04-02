@@ -69,7 +69,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	
-	$('#exp_datatable').dataTable( {
+	$('#datatable').dataTable( {
 		 "sDom": "T lfrtip",
 	
 	     "sScrollY": "377px",

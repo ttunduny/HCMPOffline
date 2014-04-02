@@ -1,13 +1,13 @@
  <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Potential Expiries</h1>
  <div class="filter" style="width=device; height:auto; ">
 <div class="btn-group" data-toggle="buttons">
-  <label class="btn btn-primary">
+  <label class="btn btn-primary  btn-xs">
     <input type="radio" name="options" id="3months" class="optioncheck" value="3"> 3 Months
   </label>
-  <label class="btn btn-primary">
+  <label class="btn btn-primary btn-xs">
     <input type="radio" name="options" id="6months" checked="checked" class="optioncheck" value="6"> 6 Months
   </label>
-  <label class="btn btn-primary">
+  <label class="btn btn-primary btn-xs">
     <input type="radio" name="options" id="1year" class="optioncheck" value="12"> 1 Year
   </label>
 </div>
@@ -15,8 +15,8 @@
 
 <div class="well">
   <div style="min-height: 400px;" id="reports_display">
-    <table class="table table-bordered table-hover">
-  
+    <table  class="table table-hover table-bordered table-update" id="potential_exp_datatable" >
+  <thead style="background-color: white">
   <tr>
     <th>Commodity Code </th>
     <th>Commodity Description</th>
@@ -28,7 +28,7 @@
     <th>Unit Cost (KSH)</th>
     <th>Total Cost(KSH)</th>
   </tr>
-  
+  </thead>
       
     <tbody>
     
@@ -123,7 +123,7 @@ $(document).ready(function() {
           }
         }); 
 }
-  
+ 
 
 });
 
