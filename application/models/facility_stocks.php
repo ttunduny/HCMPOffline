@@ -64,7 +64,7 @@ c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commo
         return $stocks ;
 }
 	
- 		public static function Allexpiries($facility_code){
+ 		public static function potential_expiries($facility_code){
 		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code'");
 		
 		$stocks= $query -> execute();
@@ -76,6 +76,13 @@ c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commo
 		
 		$stocks= $query -> execute();
 		return $stocks;
+	}	
+
+	public static function All_expiries($facility_code){
+		
+
+		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select * from  facility_stocks f_s LEFT JOIN  commodities c ON c.id=f_s.commodity_id where facility_code=17401 and f_s.status =1 and expiry_date <= NOW()");
+		        return $stocks ;
 	}	
 	
 }

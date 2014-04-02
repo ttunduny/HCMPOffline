@@ -36,7 +36,7 @@ class Reports extends MY_Controller {
 				$data['content_view'] = "facility/facility_reports/reports_v";
 				$view = 'shared_files/template/template';
 				$data['report_view'] = "facility/facility_reports/potential_expiries_v";
-				$data['report_data'] = Facility_stocks::Allexpiries($facility_code);
+				$data['report_data'] = Facility_stocks::potential_expiries($facility_code);
 
 				break;
 			case district_tech :
@@ -78,8 +78,8 @@ class Reports extends MY_Controller {
 	 | FACILITY REPORTS
 	 |--------------------------------------------------------------------------
 	 */
-	 ///////////////////GET FACILITY STOCK DATA/////////////////////////////
-	 
+	///////////////////GET FACILITY STOCK DATA/////////////////////////////
+
 	public function facility_stock_data() {
 		$facility_code = $this -> session -> userdata('facility_id');
 		$data['facility_stock_data'] = facility_stocks::get_distinct_stocks_for_this_facility($facility_code, 'batch_data');
@@ -88,7 +88,7 @@ class Reports extends MY_Controller {
 		$data['banner_text'] = "Facility Stock";
 		$this -> load -> view("shared_files/template/template", $data);
 	}
-	
+
 	// get the facility transaction data for ordering or quick analysis
 
 	public function facility_transaction_data() {
@@ -100,35 +100,29 @@ class Reports extends MY_Controller {
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 
-	
-	public function expiries(){
-		
-		
+	public function expiries() {
+
 		$facility_code = $this -> session -> userdata('facility_id');
-       
-		$data['title'] = "Expiries";;
-        $data['banner_text'] = "Expiries";
-		//$facility_expired=Facility_stocks::Allexpiries($facility_code);
-		//$data['report']=$facility_expired;
-		//$data['report_view'] = "facility/facility_reports/expiries_v";
+
+		$data['title'] = "Expiries";
+		$data['banner_text'] = "Expiries";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		$data['content_view'] = "facility/facility_reports/reports_v";
-		
-	   // $mycount= count($facility_expired);
+		$data['expiry_data'] = Facility_stocks::All_expiries($facility_code);
+		$data['report_view'] = "facility/facility_reports/expiries_v";
+
 		$this -> load -> view("shared_files/template/template", $data);
-	
+
 	}
 
+	public function potential_exp_process() {
 
-	public function potential_exp_process(){
-		
 		$facility_code = $this -> session -> userdata('facility_id');
 		$interval = $_POST['option_selected'];
-		$data['report_data'] =Facility_stocks::specify_period_potential_expiry($facility_code,$interval);
-		$this->load-> view("facility/facility_reports/ajax/potential_expiries_ajax",$data);
-        
-	}
+		$data['report_data'] = Facility_stocks::specify_period_potential_expiry($facility_code, $interval);
+		$this -> load -> view("facility/facility_reports/ajax/potential_expiries_ajax", $data);
 
+	}
 
 }
 ?>

@@ -114,7 +114,7 @@ $(document).ready(function() {
           beforeSend: function() {
             $(div).html("");
             
-             $(div).html("<img style='margin:20% 0 20% 10%;' src="+loading_icon+">");
+             $(div).html("<img style='margin:20% 0 20% 30%;' src="+loading_icon+">");
             
           },
           success: function(msg) {
