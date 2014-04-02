@@ -12,7 +12,9 @@ class Home extends MY_Controller {
 	
 
 	public function index() {	
-		(!$this -> session -> userdata('user_id')) ? redirect('user'): null ;		
+		(!$this -> session -> userdata('user_id')) ? redirect('user'): null ;	
+
+			
 		$identifier = $this -> session -> userdata('user_indicator');
         switch ($identifier):
 			case 'moh':

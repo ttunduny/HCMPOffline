@@ -14,6 +14,7 @@ class Reports extends MY_Controller {
 	public function index() {
 
 		$identifier = $this -> session -> userdata('user_indicator');
+		$facility_code = $this -> session -> userdata('facility_id');
 
 		switch ($identifier) {
 			case moh :
@@ -34,6 +35,9 @@ class Reports extends MY_Controller {
 			case facility :
 				$data['content_view'] = "facility/facility_reports/reports_v";
 				$view = 'shared_files/template/template';
+				$data['report_view'] = "facility/facility_reports/potential_expiries_v";
+				$data['report_data'] = Facility_stocks::Allexpiries($facility_code);
+
 				break;
 			case district_tech :
 				$data['content_view'] = "";
@@ -50,7 +54,8 @@ class Reports extends MY_Controller {
 		}
 
 		$data['title'] = "Reports";
-		$data['banner_text'] = "Reports";
+		//$data['banner_text'] = "Reports";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		$this -> load -> view($view, $data);
 	}
 
@@ -94,6 +99,36 @@ class Reports extends MY_Controller {
 		$data['banner_text'] = "Facility Stock Summary";
 		$this -> load -> view("shared_files/template/template", $data);
 	}
+
+	
+	public function expiries(){
+		
+		
+		$facility_code = $this -> session -> userdata('facility_id');
+       
+		$data['title'] = "Expiries";;
+        $data['banner_text'] = "Expiries";
+		//$facility_expired=Facility_stocks::Allexpiries($facility_code);
+		//$data['report']=$facility_expired;
+		//$data['report_view'] = "facility/facility_reports/expiries_v";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		$data['content_view'] = "facility/facility_reports/reports_v";
+		
+	   // $mycount= count($facility_expired);
+		$this -> load -> view("shared_files/template/template", $data);
+	
+	}
+
+
+	public function potential_exp_process(){
+		
+		$facility_code = $this -> session -> userdata('facility_id');
+		$interval = $_POST['option_selected'];
+		$data['report_data'] =Facility_stocks::specify_period_potential_expiry($facility_code,$interval);
+		$this->load-> view("facility/facility_reports/ajax/potential_expiries_ajax",$data);
+        
+	}
+
 
 }
 ?>

@@ -48,6 +48,7 @@
 <script>
 $(document).ready(function() {	
 var $table = $('#example');
+div = null; 
 //float the headers
   $table.floatThead({ 
 	 scrollingTop: 5,
@@ -87,8 +88,9 @@ var $table = $('#example');
     calculate_actual_stock(actual_unit_size,commodity_unit_of_issue,num,".actual_quantity",selector_object);
     var data =get_the_data_from_the_form_to_save(selector_object);	
      //save the data in the db          
-	var url = "<?php echo base_url().'stock/save_set_up_facility_stock'?>";	  
-    ajax_simple_post_with_console_response(url, data);	  	
+	var url = "<?php echo base_url().'stock/save_set_up_facility_stock'?>";	
+
+    ajax_simple_post_with_console_response(url, data,div);	  	
 	});	//check box movement
 	$(".checkbox").change(function() {
 	var selector_object=$(this);
@@ -96,14 +98,14 @@ var $table = $('#example');
     var data =get_the_data_from_the_form_to_save(selector_object);	
      //save the data in the db          
 	var url = "<?php echo base_url().'stock/save_set_up_facility_stock'?>";	  
-    ajax_simple_post_with_console_response(url, data);	
+    ajax_simple_post_with_console_response(url, data,div);	
     } else{
     selector_object.closest("tr").find('.actual_units').val(0);
     selector_object.closest("tr").find('.quantity').val(0);
     var data =get_the_data_from_the_form_to_save(selector_object);	
      //save the data in the db          
 	var url = "<?php echo base_url().'stock/save_set_up_facility_stock/delete'?>";	  
-    ajax_simple_post_with_console_response(url, data);	  	
+    ajax_simple_post_with_console_response(url, data,div);	  	
     }
     });
 	function get_the_data_from_the_form_to_save(selector_object){

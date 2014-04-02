@@ -2,7 +2,7 @@
 /**
  * @author Kariuki
  */
-class facility_stocks extends Doctrine_Record {
+class Facility_stocks extends Doctrine_Record {
 		
 	public function setTableDefinition()
 	{
@@ -23,6 +23,7 @@ class facility_stocks extends Doctrine_Record {
 	public function setUp() {
 		$this -> setTableName('facility_stocks');		
 		$this -> hasMany('commodities as commodity_detail', array('local' => 'commodity_id', 'foreign' => 'id'));
+		$this -> hasMany('Commodities as Code', array('local' => 'commodity_id', 'foreign' => 'id'));
 	}
 	public static function get_all_active($facility_code) {
 		$query = Doctrine_Query::create() -> select("*") -> from("facility_stocks")->where("facility_code=$facility_code and status=1");
@@ -63,6 +64,18 @@ c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commo
         return $stocks ;
 }
 	
-	
+ 		public static function Allexpiries($facility_code){
+		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code'");
+		
+		$stocks= $query -> execute();
+		return $stocks;
+	}	
+
+	public static function specify_period_potential_expiry($facility_code,$interval){
+		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL $interval MONTH) AND facility_code='$facility_code'");
+		
+		$stocks= $query -> execute();
+		return $stocks;
+	}	
 	
 }
