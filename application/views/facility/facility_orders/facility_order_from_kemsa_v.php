@@ -6,6 +6,7 @@
  <div class="container" style="width: 96%; margin: auto;">
 <span  class='label label-info'>Enter Order Quantity and Comment,
 Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
+<?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order',$att); ?>
 <div class="row" style="padding-left: 1%;">
 	<div class="col-md-2">
 	<b>*select ordering frequency</b> <select class="form-control" name="order_period" id="order_period">
@@ -24,11 +25,13 @@ Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
 </div>
 <div class="col-md-2">
 <b>Total Order Value</b>
-<input type="text" class="form-control" name="total_order_value" id="total_order_value" readonly="readonly" value="0"/>					
+<input type="text" class="form-control" name="total_order_value" id="total_order_value" readonly="readonly" value="0"/>	
+<input type="hidden" id="actual_drawing_rights" name="actual_drawing_rights" value="<?php echo $drawing_rights; ?>" />				
 </div>
 <div class="col-md-2">
 <b>Drawing Rights Available Balance :</b>
-<input type="text" class="form-control" name="total_order_balance_value" id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_rights; ?>"/>						
+<input type="text" class="form-control" name="total_order_balance_value" 
+id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_rights; ?>"/>						
 </div>
 </div>
 <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
@@ -45,8 +48,8 @@ Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
 					    <th>Adjustments(-ve)</th>
 					    <th>Adjustments(+ve)</th>
 					    <th>Losses</th>
-					    <th>Closing Stock</th>
 					    <th>No days out of stock</th>
+					    <th>Closing Stock</th>
 					    <th>AMC</th>
 					    <th>Suggested Order Quantity</th>
 					    <th>Order Quantity</th>
@@ -87,12 +90,12 @@ Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
 							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="receipts['.$i.']"'; ?>  value="<?php echo $facility_order[$i]['total_receipts'];?>" /></td>
 							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="issues['.$i.']"'; ?>  value="<?php echo $facility_order[$i]['total_issues'];?>" /></td>
 				<td><input  class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="adjustmentnve['.$i.']"'; ?> value="<?php echo $facility_order[$i]['adjustmentnve']?>" /></td>
-				<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="aadjustmentpve['.$i.']"'; ?> value="<?php echo $facility_order[$i]['adjustmentpve']?>" /></td>
+				<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="adjustmentpve['.$i.']"'; ?> value="<?php echo $facility_order[$i]['adjustmentpve']?>" /></td>
 							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="losses['.$i.']"'; ?> value="<?php echo $facility_order[$i]['losses'] ?>" /></td>
-							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="closing['.$i.']"'; ?> value="<?php echo $facility_order[$i]['closing_stock'];?>" /></td>
 							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="days['.$i.']"'; ?> value="<?php echo $facility_order[$i]['days_out_of_stock'];?>" /></td>
-							<td><input class="form-control input-small" readonly="readonly" type="text" value="<?php echo $facility_order[$i]['historical'];?>"/></td>
-							<td><input class="form-control input-small" readonly="readonly"type="text" <?php echo 'name="suggested['.$i.']"';?> value=""/></td>
+							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="closing['.$i.']"'; ?> value="<?php echo $facility_order[$i]['closing_stock'];?>" /></td>
+							<td><input class="form-control input-small" readonly="readonly" type="text" <?php echo 'name="amc['.$i.']"'; ?> value="<?php echo $facility_order[$i]['historical'];?>" /></td>
+							<td><input class="form-control input-small" readonly="readonly" type="text" <?php echo 'name="suggested['.$i.']"';?> value="0"/></td>
 							<td><input class="form-control input-small quantity" type="text" <?php echo 'name="quantity['.$i.']"';?> value="<?php $qty=$facility_order[$i]['quantity_ordered'];
 							if($qty>0){echo $qty;} else echo 0;?>"/></td>
 							<td><input class="form-control input-small actual_quantity" readonly="readonly" type="text" <?php echo 'name="actual_quantity['.$i.']"';?> value="0"/></td>
@@ -101,18 +104,20 @@ Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
 			       			</tr>						
 						<?php $i++;  } $i=$i-1; echo form_close()."<script>var count=".$i."</script>"	?>
 </tbody>
-</table>  
+</table>
+</form>  
 <hr />
 <div class="container-fluid">
 <div style="float: right">
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
 <button class="btn btn-success save_order"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 </div>
+
 </div>
 <script>
 $(document).ready(function() {
 	var new_count =count;
-	var drawing_rights_balance=<?php echo $drawing_rights?>;
+	var drawing_rights_balance=$('#actual_drawing_rights').val();
 var $table = $('#example');
 //float the headers
   $table.floatThead({ 
@@ -224,7 +229,7 @@ var $table = $('#example');
     calculate_totals();
     $(this).closest("tr").find(".actual_quantity").val("");
 	$(this).closest("tr").find(".cost").val("");
-    return;   }
+    return;   } 
 	var actual_units=parseInt(total_units)*user_input;
 	var total_cost=parseInt(unit_cost.replace(",", ""))*user_input;
 	$(this).closest("tr").find(".actual_quantity").val(actual_units);
@@ -257,6 +262,12 @@ var $table = $('#example');
     //hcmp custom message dialog
     dialog_box(table_data,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
 	});
+	// validate the form
+	$("#myform").validate();
+	$(".save_order").button().click( function (){
+    // save the form
+    confirm_if_the_user_wants_to_save_the_form("#myform");
+	})
 	function calculate_totals(){
 	var order_total=0;
 	var balance=0

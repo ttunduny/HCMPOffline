@@ -132,10 +132,11 @@ function dialog_box(body_html_data,footer_html_data){
  /******************---------------END--------------------------**********************/
 
 function confirm_if_the_user_wants_to_save_the_form(form_id){
+	
 	   var buttons='<button type="button" class="save_issue btn btn-sm btn-success" data-dismiss="modal">Save</button>'+
        '<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>';
       dialog_box("Kindly confirm the values before saving",buttons);
-      $('.save_issue').button().click(function() {
+      $('.save_issue').on('click', function() {
       $(form_id).submit();   
       });
 }
