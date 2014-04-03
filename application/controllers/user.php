@@ -5,8 +5,8 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-class User extends MY_Controller 
-{
+
+class User extends MY_Controller {
 
 	function __construct() 
 	{
@@ -16,9 +16,8 @@ class User extends MY_Controller
 		$this -> load -> library('form_validation');
 	}
 
-	public function index() 
-	{
 
+	public function index() {
 		$data['title'] = "Login";
 		$this -> load -> view("shared_files/login_pages/login_v", $data);
 	}

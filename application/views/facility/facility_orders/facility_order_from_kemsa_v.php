@@ -31,7 +31,7 @@ Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
 <input type="text" class="form-control" name="total_order_balance_value" id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_rights; ?>"/>						
 </div>
 </div>
-<table width="50%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
+<table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 <thead>
 <tr style="background-color: white">
 						<th>Category</th>
@@ -158,7 +158,6 @@ var $table = $('#example');
     var data= $('option:selected', this).attr('special_data');  
 				var code_array=data.split("^");
 				var commodity_id=code_array[0];
-				alert(code_array[0])
 				$('input:text[name=commodity_code]').val(code_array[4]);
 				$('input:text[name=commodity_id_]').val(commodity_id);
 				$('input:text[name=unit_size]').val(code_array[2]);
@@ -175,9 +174,9 @@ var $table = $('#example');
 	 }	
 	// add the items here to the order form
 	  $("#example" ).dataTable().fnAddData( [ 
-	  	 '<input type="hidden" class="commodity_name" name="commodity_name['+new_count+']" value="'+$('input:text[name=commodity_name_]').val()+'" />'+
+  	 '<input type="hidden" class="commodity_name" name="commodity_name['+new_count+']" value="'+$("#desc option:selected").text()+'" />'+
           '<input type="hidden" class="commodity_code" name="commodity_code['+new_count+']" value="'+$('input:text[name=commodity_code]').val()+'" />'+
-         '<input type="hidden" class="commodity_id" name="commodity_id['+new_count+']" value="'+$('input:hidden[name=commodity_id_]').val()+'" />'+
+         '<input type="hidden" class="commodity_id" name="commodity_id['+new_count+']" value="'+$("#desc option:selected").val()+'" />'+
          '<input type="hidden" class="total_commodity_units" name="total_commodity_units['+new_count+']" value="'+$('input:hidden[name=total_commodity_units]').val()+'" />'+ 
          '<input type="hidden" class="unit_cost" name="unit_cost['+new_count+']" value="'+$('input:text[name=unit_cost]').val()+'" />'+
          '<input type="hidden" name="unit_size['+new_count+']" value="'+$('input:text[name=unit_size]').val()+'" />'+
@@ -196,9 +195,9 @@ var $table = $('#example');
 							'<input class="form-control input-small" type="text" name="days['+new_count+']" value="0"   />',
 							'<input class="form-control input-small" type="text" name="historical['+new_count+']" value="0"   />',
 							'<input class="form-control input-small" type="text" value="0" readonly="yes"  />',
-							'<input class="form-control input-small" type="text" name="quantity['+new_count+']" value="0" />',
-							'<input class="form-control input-small" type="text" name="actual_quantity['+new_count+']" value="0" readonly="yes" />',
-							'<input id="cost[]" class="form-control input-small" type="text" name="cost['+new_count+']" value="0" readonly="yes" />',
+						'<input class="form-control input-small quantity" type="text" name="quantity['+new_count+']" value="0" />',
+							'<input class="form-control input-small actual_quantity" type="text" name="actual_quantity['+new_count+']" value="0" readonly="yes" />',
+							'<input class="form-control input-small cost" type="text" name="cost['+new_count+']" value="0" readonly="yes" />',
 							'<input type="text" class="form-control input-small" name="comment['+new_count+']" value="N/A"/>'
 		]); 
 		new_count=new_count+1;
@@ -234,9 +233,10 @@ var $table = $('#example');
 	calculate_totals();	
 	});// process all the order into a summary table for the user to confirm before placing the order 
 	$(".save_order").button().click( function (){
-    var table_data='<div class="row" style=""><div class="col-md-6">Initial Drawing Rights (Ksh)</div><div class="col-md-6">'+number_format(drawing_rights_balance, 2, '.', ',')+'</div></div>'+
-    '<div class="row"><div class="col-md-6">Total Order Value (Ksh)</div><div class="col-md-6">'+number_format($("#total_order_value").val(), 2, '.', ',')+'</div></div>'+
-    '<div class="row"><div class="col-md-6">Drawing Rights Balance(Ksh)</div><div class="col-md-6">'+number_format($("#total_order_balance_value").val(), 2, '.', ',')+'</div></div>'+
+    var table_data='<div class="row" style="padding-left:2em"><div class="col-md-6">Initial Drawing Rights (Ksh)</div>'+
+    '<div class="row" style="padding-left:2em"><div class="col-md-6">Initial Drawing Rights (Ksh)</div><div class="col-md-6">'+number_format(drawing_rights_balance, 2, '.', ',')+'</div></div>'+
+    '<div class="row" style="padding-left:2em"><div class="col-md-6">Total Order Value (Ksh)</div><div class="col-md-6">'+number_format($("#total_order_value").val(), 2, '.', ',')+'</div></div>'+
+    '<div class="row" style="padding-left:2em"><div class="col-md-6">Drawing Rights Balance(Ksh)</div><div class="col-md-6">'+number_format($("#total_order_balance_value").val(), 2, '.', ',')+'</div></div>'+
     '<table class="table table-hover table-bordered table-update">'+
 					"<thead><tr>"+
 					"<th>Description</th>"+
@@ -244,13 +244,13 @@ var $table = $('#example');
 					"<th>Order Quantity</th>"+
 					"<th>Unit Cost Ksh</th>"+
 					"<th>Total Ksh</th></tr></thead><tbody>";	 	    			
-         $("input[name^=commodity_id]").each(function(i) {
+         $("input[name^=cost]").each(function(i) { 
         table_data +="<tr>" +
-							"<td>" +$(document.getElementsByName("commodity_name["+i+"]")).val()+ "</td>" +
-							"<td>" +$(document.getElementsByName("commodity_code["+i+"]")).val()+ "</td>" +
-							"<td>" +$(document.getElementsByName("quantity["+i+"]")).val()+ "</td>" +	
-							"<td>" +number_format($(document.getElementsByName("unit_cost["+i+"]")).val(), 2, '.', ',')+ "</td>" +	
-							"<td>" +number_format($(document.getElementsByName("cost["+i+"]")).val(), 2, '.', ',')+ "</td>" +													
+							"<td>" +$(this).closest("tr").find(".commodity_name").val()+ "</td>" +
+							"<td>" +$(this).closest("tr").find(".commodity_code").val()+ "</td>" +
+							"<td>" +$(this).closest("tr").find(".quantity").val()+ "</td>" +	
+							"<td>" +number_format($(this).closest("tr").find(".unit_cost").val(), 2, '.', ',')+ "</td>" +	
+							"<td>" +number_format($(this).closest("tr").find(".cost").val(), 2, '.', ',')+ "</td>" +													
 						"</tr>" 
                     });
          table_data +="</tbody></table>";
@@ -261,12 +261,15 @@ var $table = $('#example');
 	var order_total=0;
 	var balance=0
 	 $("input[name^=quantity]").each(function() {
+
+	 	if($(this).val()=='')
+	 	{ var total=0} 
+	 	else{ var total=$(this).val()
+	 		}//calculate the balances here
 	 	var unit_cost=$(this).closest("tr").find(".unit_cost").val();    	
-        order_total=(parseInt($(this).val())*parseInt(unit_cost.replace(",", "")))+parseInt(order_total);     
+        order_total=(parseInt(total)*parseInt(unit_cost.replace(",", "")))+parseInt(order_total);    
      });//check if order total is a NAN
-     if(isNaN(order_total)){
-     	order_total=0
-     }//calculate the balances here
+    //calculate the balances here
       balance=parseInt(drawing_rights_balance)-order_total;
      //set the balances here
      $("#total_order_balance_value").val(balance)

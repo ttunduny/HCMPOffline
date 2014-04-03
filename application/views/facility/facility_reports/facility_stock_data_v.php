@@ -1,4 +1,4 @@
-<div class="container" style="width: 96%; margin: auto;">
+ <div class="container" style="width: 96%; margin: auto;">
      <?php echo form_open('stock/edit_facility_stock_data'); ?>  
  <table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
@@ -57,11 +57,10 @@ endforeach;?>
 </div>
   <?php echo form_close(); ?>  
 <script>
-$(function () {
+$(document).ready(function() {
 	//datatables settings 
 	$('#example').dataTable( {
-		 "sDom": "T<'clear'>lfrtip",
-	     "sDom": "<'row-fluid'<'span6'T><'span6'f>r>t<'row-fluid'<'span6'l><'span6'p>>",
+		 "sDom": "T lfrtip",
 	     "sScrollY": "377px",
 	     "sScrollX": "100%",
                     "sPaginationType": "bootstrap",
@@ -69,17 +68,17 @@ $(function () {
                         "sLengthMenu": "_MENU_ Records per page",
                         "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
                     },
-			    "oTableTools": {
-                "aButtons": [
+			      "oTableTools": {
+                 "aButtons": [
 				"copy",
 				"print",
 				{
 					"sExtends":    "collection",
-					"sButtonText": 'Save',
+					"sButtonText": 'Save <span class="caret"></span>',
 					"aButtons":    [ "csv", "xls", "pdf" ]
 				}
 			],
-			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+		"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_cvs_xls_pdf.swf"
 		}
 	} );
 	$('#example_filter label input').addClass('form-control');

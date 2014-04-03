@@ -10,14 +10,12 @@ class Reports extends MY_Controller {
 		$this -> load -> helper(array('form', 'url'));
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
 	}
-
-	public function index() 
-	{
-
+	public function index() {
 		$identifier = $this -> session -> userdata('user_indicator');
 
-		switch ($identifier) 
-		{
+		$facility_code = $this -> session -> userdata('facility_id');
+
+		switch ($identifier) {
 			case moh :
 				$data['content_view'] = "";
 				$view = 'shared_files/template/dashboard_template_v';
@@ -36,6 +34,9 @@ class Reports extends MY_Controller {
 			case facility :
 				$data['content_view'] = "facility/facility_reports/reports_v";
 				$view = 'shared_files/template/template';
+				$data['report_view'] = "facility/facility_reports/potential_expiries_v";
+				$data['report_data'] = Facility_stocks::potential_expiries($facility_code);
+
 				break;
 			case district_tech :
 				$data['content_view'] = "";
@@ -52,10 +53,10 @@ class Reports extends MY_Controller {
 		}
 
 		$data['title'] = "Reports";
-		$data['banner_text'] = "Reports";
+	//$data['banner_text'] = "Reports";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		$this -> load -> view($view, $data);
 	}
-
 	/*
 	 |--------------------------------------------------------------------------
 	 | SHARED REPORTS
@@ -70,8 +71,7 @@ class Reports extends MY_Controller {
 		$data['commodity_list'] = commodity_sub_category::get_all();
 		$this -> load -> view('shared_files/template/template', $data);
 	}
-
-	/*
+/*
 	 |--------------------------------------------------------------------------
 	 | FACILITY REPORTS
 	 |--------------------------------------------------------------------------
@@ -84,16 +84,66 @@ class Reports extends MY_Controller {
 		$data['content_view'] = "facility/facility_reports/facility_stock_data_v";
 		$data['banner_text'] = "Facility Stock";
 		$this -> load -> view("shared_files/template/template", $data);
-	}
+
+
+
+	}	
 	// get the facility transaction data for ordering or quick analysis
-	public function facility_transaction_data($supplier) {
+	public function facility_transaction_data() {
 		$facility_code = $this -> session -> userdata('facility_id');
 		$data['facility_stock_data'] = facility_transaction_table::get_all($facility_code);
 		$data['title'] = "Facility Stock Summary";
 		$data['content_view'] = "facility/facility_reports/facility_transaction_data_v";
 		$data['banner_text'] = "Facility Stock Summary";
-		$data['supplier_name']=Commodity_source::get_all_id($supplier)->toArray();
 		$this -> load -> view("shared_files/template/template", $data);
+	}
+	///////GET THE ITEMS A FACILITY HAS STOCKED OUT ON 
+	public function facility_stocked_out_items(){
+		$facility_code = $this -> session -> userdata('facility_id');
+		$data['facility_stock_data'] =facility_stocks::get_items_that_have_stock_out_in_facility($facility_code);
+		$data['title'] = "Facility Stock Out Summary";
+		$data['content_view'] = "facility/facility_reports/facility_stocked_out_items_v";
+		$data['banner_text'] = "Facility Stock Out Summary";
+		$this -> load -> view("shared_files/template/template", $data);
+	}
+	 public function order_listing(){
+		/*		
+    	$data['order_counts']=Counties::get_county_order_details("","", $facility_c);
+		$data['delivered']=Counties::get_county_received("","", $facility_c);
+		$data['pending']=Counties::get_pending_county("","", $facility_c);
+		$data['approved']=Counties::get_approved_county("","", $facility_c);
+		$data['rejected']=Counties::get_rejected_county("","", $facility_c);
+    	$data['content_view'] = "facility/facility_issues/facility_issues_service_points_v";
+		$data['title'] = "Order Listing";
+		$data['banner_text'] = "Order Listing";	*/
+		$data['title'] = "Facility Orders";
+		$data['banner_text'] =  "Facility Orders";
+		$data['content_view'] = "facility/facility_orders/order_listing_v";
+		$this -> load -> view('shared_files/template/template', $data);
+    }
+
+	public function expiries() {
+
+		$facility_code = $this -> session -> userdata('facility_id');
+
+		$data['title'] = "Expiries";
+		$data['banner_text'] = "Expiries";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		$data['content_view'] = "facility/facility_reports/reports_v";
+		$data['expiry_data'] = Facility_stocks::All_expiries($facility_code);
+		$data['report_view'] = "facility/facility_reports/expiries_v";
+
+		$this -> load -> view("shared_files/template/template", $data);
+
+	}
+
+	public function potential_exp_process() {
+
+		$facility_code = $this -> session -> userdata('facility_id');
+		$interval = $_POST['option_selected'];
+		$data['report_data'] = Facility_stocks::specify_period_potential_expiry($facility_code, $interval);
+		$this -> load -> view("facility/facility_reports/ajax/potential_expiries_ajax", $data);
+
 	}
 
 }

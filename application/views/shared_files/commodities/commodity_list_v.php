@@ -27,11 +27,10 @@
 </table>  
 </div> 
 <script>
-$(document).ready(function() {	
+    $(document).ready(function() {
 	//datatables settings 
 	$('#example').dataTable( {
-		 "sDom": "T<'clear'>lfrtip",
-	     "sDom": "<'row-fluid'<'span6'T><'span6'f>r>t<'row-fluid'<'span6'l><'span6'p>>",
+	   "sDom": "T lfrtip",
 	     "sScrollY": "377px",
 	     "sScrollX": "100%",
                     "sPaginationType": "bootstrap",
@@ -49,7 +48,8 @@ $(document).ready(function() {
 					"aButtons":    [ "csv", "xls", "pdf" ]
 				}
 			],
-			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_cvs_xls_pdf.swf"
+
+			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
 		}
 	} );
 	$('#example_filter label input').addClass('form-control');

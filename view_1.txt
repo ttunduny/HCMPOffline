@@ -6,7 +6,10 @@ select `c`.`facility_code` AS `facility_code`,
 `b`.`unit_cost` AS `unit_cost`,
 `b`.`commodity_code` AS `commodity_code`,
 `b`.`id` AS `commodity_id`,
+<<<<<<< HEAD
 `b`.`total_commodity_units`as `total_commodity_units`,
+=======
+>>>>>>> 112aeab2173cefcfa5aea7cf64c14b008f777034
 `c`.`opening_balance` AS `opening_balance`,
 `c`.`total_receipts` AS `total_receipts`,
 `c`.`total_issues` AS `total_issues`,

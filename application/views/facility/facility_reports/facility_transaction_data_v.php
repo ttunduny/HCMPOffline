@@ -1,6 +1,6 @@
- <?php echo form_open('orders/facility_order/'.$supplier_name[0]['id']); ?>  
 <div class="container" style="width: 96%; margin: auto;">
- <table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
+	<?php echo form_open('orders/facility_order'); ?>
+ <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
 		<tr>
                         <th>Category</th>
@@ -37,25 +37,23 @@
 		<td>$facility_stock_data->days_out_of_stock</td>
 		<td>$facility_stock_data->closing_stock</td>
 		";
-		endforeach;		
+		endforeach;
 	endforeach;
  ?>
 </tbody>
-</table>  
+</table> 
 <hr />
 <div class="container-fluid">
 <div style="float: right">
-<button class="btn btn-success" type="submit">
-<span class="glyphicon glyphicon-open"></span>Proceed to Order from <?php echo $supplier_name[0]['source_name'] ?></button></div>
+<button class="btn btn-success" type="submit"><span class="glyphicon glyphicon-open"></span>Proceed to Order from KEMSA</button></div>
+<?php echo form_close();?>
 </div>
 </div>
- </form> 
 <script>
-$(function () {
+$(document).ready(function() {
 	//datatables settings 
 	$('#example').dataTable( {
-		 "sDom": "T<'clear'>lfrtip",
-	     "sDom": "<'row-fluid'<'span6'T><'span6'f>r>t<'row-fluid'<'span6'l><'span6'p>>",
+		 "sDom": "T lfrtip",
 	     "sScrollY": "377px",
 	     "sScrollX": "100%",
                     "sPaginationType": "bootstrap",
@@ -73,7 +71,7 @@ $(function () {
 					"aButtons":    [ "csv", "xls", "pdf" ]
 				}
 			],
-		"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
 		}
 	} );
 	$('#example_filter label input').addClass('form-control');

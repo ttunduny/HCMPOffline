@@ -52,7 +52,7 @@
 </div><!-----END--->
 <div class="container" style="width: 96%; margin: auto;">
 <div class="row">
-<div style="float:left; height:495px;border: 1px solid #DDD;margin-left: 1px; width: 29%;">
+<div class="col-md-3" style="border: 1px solid #DDD;">
 <?php echo form_open('issues/save_service_points'); ?>
 <div class="table-responsive" style="height:417px; overflow-y: auto;">
 <table  class="table table-hover table-bordered table-update" id="facility_service_points" >
@@ -74,9 +74,10 @@
 <button class="btn btn-success" id="save"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 </div>
 <?php echo form_close();?>
-  </div>
-  <div style="float:right;height:495px;border: 1px solid #DDD;margin-left: 1px; width: 69%;">
-  	<table cellpadding="0" cellspacing="0" width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
+
+ </div>
+  <div class="col-md-9"  style="border: 1px solid #DDD;">
+  	<table cellpadding="0" cellspacing="0" width="80%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
 		<tr>
 			<th>Service Point Name</th>
@@ -173,7 +174,7 @@ $(".add").click(function() { //add row here
 	});
 	//datatables settings 
 	$('#example').dataTable( {
-	     "sDom": "<'row-fluid'<'span6'T><'span6'f>r>t<'row-fluid'<'span6'l><'span6'p>>",
+	     "sDom": "T lfrtip",
 	     "sScrollY": "377px",
 	     "sScrollX": "100%",
                     "sPaginationType": "bootstrap",
@@ -187,7 +188,7 @@ $(".add").click(function() { //add row here
 				"print",
 				{
 					"sExtends":    "collection",
-					"sButtonText": 'Save ',
+					"sButtonText": 'Save',
 					"aButtons":    [ "csv", "xls", "pdf" ]
 				}
 
