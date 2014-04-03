@@ -8,7 +8,7 @@ class facility_orders extends Doctrine_Record {
 		        $this->hasColumn('id', 'int');
 				$this->hasColumn('order_date', 'date');
 				$this->hasColumn('approval_date', 'date');
-				$this->hasColumn('deliver_date', 'date');
+				$this->hasColumn('dispatch_date', 'date');
 				$this->hasColumn('deliver_date', 'date');
 				$this->hasColumn('dispatch_update_date', 'date');
 				$this->hasColumn('facility_code', 'int');
@@ -29,11 +29,10 @@ class facility_orders extends Doctrine_Record {
 	}
 
 	public function setUp() {
-		$this -> setTableName('facility_orders');		
+		$this -> setTableName('facility_orders');
+		$this->hasMany('facility_order_details as order_detail', array('local' => 'id', 'foreign' => 'order_number_id'));	
 		
 	}
-
-
     public static function get_facility_order_summary_count($facility_code=null,$district_id=null,$county_id=null){
 $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
 
@@ -42,6 +41,18 @@ $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($
  facility_orders f_o where f.facility_code=f_o.facility_code and f.district=d.id and f_o.`status`= f_o_s.id and $where_clause");
   return $orders ;	    	
     }
+	////dumbing data into the issues table
+	public static function update_orders_table($data_array){
+		$o = new facility_orders();
+	    $o->fromArray($data_array);
+		$o->save();
+		return TRUE;
+	}
+	public static function get_order_($order_id){
+		$query = Doctrine_Query::create() -> select("*") -> from("facility_orders")->where("id=$order_id");
+		$order = $query -> execute();
+		return $order;
+	}
 
 	
 	

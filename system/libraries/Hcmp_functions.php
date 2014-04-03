@@ -343,8 +343,8 @@ endif;
 public function create_pdf($pdf_data=NULL){
 
 if(count($pdf_data)>0):	
-	
-$html_title="<div align=center><img src='Images/coat_of_arms.png' height='70' width='70'style='vertical-align: top;' > </img></div>
+$url=base_url().'assets/img/coat_of_arms.png';
+$html_title="<div align=center><img src='$url' height='70' width='70'style='vertical-align: top;'> </img></div>
 <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>$pdf_data[pdf_title]</div>
 <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>
 Ministry of Health</div>
@@ -356,21 +356,23 @@ table.data-table th {border: none;color: #036;text-align: center;background-colo
 table.data-table td, table th {padding: 4px;}
 table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px solid #DDD;height: 30px;margin: 0px;border-bottom: 1px solid #DDD;}
 </style>';
-	
+            $name=$this -> session -> userdata('fname');
 	        $this->mpdf = new mPDF('', 'A4-L', 0, '', 15, 15, 16, 16, 9, 9, '');
             $this->mpdf->WriteHTML($html_title);
             $this->mpdf->defaultheaderline = 1;  
             $this->mpdf->simpleTables = true;
             $this->mpdf->WriteHTML($table_style.$pdf_data['pdf_html_body']);
-					
+			$this->mpdf->SetHTMLFooter("<div style='width:100%'>
+			<div style='float:right; width: 30%;'>created by:$name|source: HCMP</div>
+			<div style='float:right; width:60%'>{PAGENO} / {nb}</div></div>");
+			
 	if($pdf_data['pdf_view_option']=='save_file'):
 		 //change the pdf to a binary file then use codeigniter write function to write the file as pdf in a specific folder 
 		 
 		 // $this->mpdf->Output(realpath($path).'arif.pdf','F'); 
 		    if(write_file( './pdf/'.$pdf_data['file_name'].'.pdf',$this->mpdf->Output($pdf_data['file_name'],'S'))):return true; else: return false; endif;
-			
 	        else:
-				//show the pdf on the bowser let the user determine where to save it;
+			//show the pdf on the bowser let the user determine where to save it;
 	        $this->mpdf->Output($pdf_data['file_name'],'I');
 			exit;
 	endif;		
