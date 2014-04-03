@@ -45,7 +45,7 @@
                                 <tr>
                                     <td>
                                         <span class="glyphicon ">
-                                        </span><a href="<?php echo base_url().'reports/stock_contol_card' ?>">Stock Control Card</a>
+                                        </span><a href="<?php echo base_url().'reports/stock_control' ?>">Stock Control Card</a>
                                     </td>
                                 </tr>
                                 <tr>

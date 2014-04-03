@@ -147,5 +147,29 @@ class Reports extends MY_Controller {
 
 	}
 
+	public function stock_control() {
+
+		$facility_code = $this -> session -> userdata('facility_id');
+
+		$data['title'] = "Bin Card";
+		$data['banner_text'] = "Bin Card";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		$data['content_view'] = "facility/facility_reports/reports_v";
+		$data['commodities']=Commodities::get_facility_commodities($facility_code);
+		$data['report_view'] = "facility/facility_reports/bin_card_v";
+		$this -> load -> view("shared_files/template/template", $data);
+
+	}
+	public function stock_control_ajax() {
+
+		$facility_code = $this -> session -> userdata('facility_id');
+		$commodity_id = $_POST['commodity_select'];
+		$to = $_POST['to'];
+		$from = $_POST['from'];			
+		$data['bin_card'] = Facility_issues::get_bin_card($facility_code,$commodity_id,$from,$to);
+		$this -> load -> view("facility/facility_reports/ajax/bin_card_ajax", $data);
+
+	}
+
 }
 ?>
