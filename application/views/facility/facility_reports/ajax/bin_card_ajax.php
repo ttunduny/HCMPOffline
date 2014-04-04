@@ -5,10 +5,11 @@
     <th>Date of Issue</th>
     <th>Reference No/S11 No</th>
     <th>Commodity Unit Size</th>
-    <th>Batch No</th>
+    <th>Batch No -Issued</th>
     <th>Expiry Date</th>
     <th>Receipts/Opening Bal.</th>
-    <th>ADJ</th>
+    <th>+ADJ</th>
+    <th style="white-space:nowrap;">-ADJ</th>
     <th>Issues</th>
     <th>Closing Bal.</th>
     <th>Service Point</th>
@@ -26,33 +27,71 @@
                 $bin['unit_size'];
                 $formatdate = new DateTime($bin['date_issued']);
                 $formated_date= $formatdate->format('d M Y');
+                $formatdate_exp = new DateTime($bin['expiry_date']);
+                $formated_date_exp= $formatdate_exp->format('d M Y');
                 $bin['batch_no'];
-                $calculated=$bin['current_balance'];
+                $calculated=$bin['balance_as_of'];
                 $bin['balance_as_of'];
-                $bin['adjustmentnve'];
-                $bin['adjustmentpve'];
-                $bin['qty_issued'];
+                $negative_adj= $bin['adjustmentnve'];
+                $positive_adj= $bin['adjustmentpve'];
                 $bin['fname'];
                 $bin['lname'];
-                $bin['service_point_name'];  
-                
+                $bin['service_point_name']; 
+
+               
+
+              if ($positive_adj ==0 && $negative_adj == 0) {
+
+                $closing_bal= ($bin['balance_as_of']-$bin['qty_issued']);
+                $adj_value="-";
+              
+              }elseif ($negative_adj !=0) {
+
+                 $closing_bal= ($bin['balance_as_of']+$negative_adj);
+              
+              }elseif ($positive_adj !=0) {
+
+                 $closing_bal= ($bin['balance_as_of']+$positive_adj);
+               
+              } 
        
-                
+               if ($bin['qty_issued'] < 0) {
+                 $qty_issued= (string)$bin['qty_issued'];
+                 $qty_issued_text= trim($qty_issued, "-");
+                 }else{
+                   $qty_issued_text= $bin['qty_issued'];
+                 }   
               
         
                 ?>
         
             <tr>
               
-              <td><?php //echo $potential_exp['commodity_code']; ;?> </td>
-              <td><?php //echo $potential_exp['commodity_code']; ;?> </td>
+              <td><?php echo $formated_date;?> </td>
+              <td><?php echo $bin['s11_No']; ;?> </td>
               <td><?php echo $bin['unit_size'];?> </td>
               <td><?php echo $bin['batch_no'];?> </td>
-              <td><?php //echo $potential_exp['manufacture'];?> </td>
-              <td><?php// echo $formated_date;?> </td>
-              <td><?php// echo $potential_exp['unit_size'];?> </td>
-              <td><?php //echo $expired_packs;?> </td>
-              <td><?php //echo $potential_exp['unit_cost'];?> </td>
+              <td style="white-space:nowrap;"><?php echo $formated_date_exp;?> </td>
+              <td><?php echo $bin['balance_as_of'];?> </td>
+              <?php  if ($positive_adj ==0 && $negative_adj == 0) {
+               ?>
+               <td>-</td>
+               <td>-</td>
+               <?php
+              }elseif ($negative_adj !=0) {
+               
+               ?>
+               <td>-</td>
+               <td><?php echo $negative_adj; ?></td>
+               <?php
+              }elseif ($positive_adj !=0) {
+               ?>
+               <td><?php echo $positive_adj; ?></td>
+               <td>-</td>
+               <?php
+              } ?>
+              <td><?php echo   $qty_issued_text;?> </td>
+              <td><?php echo  $closing_bal;?> </td>
               <td><?php echo $bin['service_point_name']; ?> </td>
               <td><?php echo $bin['fname'].' '.$bin['lname'];?> </td>
               

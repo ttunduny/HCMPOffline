@@ -49,7 +49,7 @@ class facility_issues extends Doctrine_Record {
 		
 
 	$transaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-    ->fetchAll("SELECT f.date_issued,f.batch_no,c.unit_size,f.s11_No,f.balance_as_of,f.adjustmentnve,f.adjustmentpve,f.qty_issued,u.fname,u.lname,
+    ->fetchAll("SELECT f.date_issued,f.expiry_date,f.batch_no,c.unit_size,f.s11_No,f.balance_as_of,f.adjustmentnve,f.adjustmentpve,f.qty_issued,u.fname,u.lname,
 		s.service_point_name FROM  hcmp.facility_issues f 
 		INNER JOIN  hcmp.commodities c
 		ON c.id=f.commodity_id
