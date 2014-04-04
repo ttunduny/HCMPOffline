@@ -71,7 +71,7 @@
               <td><?php echo $bin['s11_No']; ;?> </td>
               <td><?php echo $bin['unit_size'];?> </td>
               <td><?php echo $bin['batch_no'];?> </td>
-              <td style="white-space:nowrap;"><?php echo $formated_date_exp;?> </td>
+              <td style="white-space:nowrap;"l><?php echo $formated_date_exp;?> </td>
               <td><?php echo $bin['balance_as_of'];?> </td>
               <?php  if ($positive_adj ==0 && $negative_adj == 0) {
                ?>
