@@ -8,7 +8,7 @@
                             </span>Expiries</a>
                         </h4>
                     </div>
-                    <div id="collapseThree" class="panel-collapse collapse in">
+                    <div id="collapseThree" class="panel-collapse collapse ">
                         <div class="panel-body">
                             <table class="table">
                                 <tr>
@@ -45,7 +45,7 @@
                                 <tr>
                                     <td>
                                         <span class="glyphicon ">
-                                        </span><a href="<?php echo base_url().'reports/stock_contol_card' ?>">Stock Control Card</a>
+                                        </span><a href="<?php echo base_url().'reports/stock_control' ?>">Stock Control Card</a>
                                     </td>
                                 </tr>
                                 <tr>
