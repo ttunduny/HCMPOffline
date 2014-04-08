@@ -6,6 +6,7 @@
 		<th>Date of Submission</th>
 		<th>Action</th>
 		
+		
 	</tr>
 	</thead>
 	<tbody>
@@ -23,7 +24,20 @@
 				
 							<td><?php echo $name[0]['fname']." ".$name[0]['lname'];?> </td>
 							<td><?php echo $d['Report_Date'];?></td>
-							<td><a href="<?php echo base_url().'Divisional_Reports/edit_report/'.$d['Report_Date'];?>">Edit</a></td>
+							<td><a href="<?php echo base_url().'Divisional_Reports/edit_report/'.$d['Report_Date'];?>">
+								<button class="btn btn-primary" >
+									<span class="glyphicon glyphicon-edit"></span>Edit
+								</button></a>
+								<a href="<?php echo base_url().'Divisional_Reports/malaria_report_pdf/pdf';?>">
+									<button class="download btn btn-xs btn-primary btn-success" >
+										<span class="glyphicon glyphicon-download"></span>PDF
+										</button></a>
+									<a href="<?php echo base_url().'Divisional_Reports/malaria_report_pdf/excel';?>">
+								<button class="download btn btn-xs btn-primary btn-success" >
+									<span class="glyphicon glyphicon-download"></span>Excel
+									</button></a>
+							</td>
+							<!--<td><a href="<?php echo base_url().'Divisional_Reports/edit_report/'.$d['Report_Date'];?>"></a></td>-->
 							
 						</tr>
 					<?php 	
