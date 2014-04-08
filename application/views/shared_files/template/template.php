@@ -61,7 +61,6 @@ border-color: #e7e7e7;
           <a href="<?php echo base_url().'Home';?>">
           	<img style="display:inline-block;"  src="<?php echo base_url();?>assets/img/coat_of_arms-resized1.png" class="img-responsive " alt="Responsive image" id="logo" >
           	</a>
-          
 				<div id="logo_text" style="display:inline-block;">
 					<span style="font-size: 0.95em;font-weight: bold; ">Ministry of Health</span><br />
 					<span style="font-size: 0.85em;">Health Commodities Management Platform (HCMP)</span>	
@@ -94,12 +93,8 @@ foreach($menus as $menu){?>
             <li class="dropdown ">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user" ></span><?php echo $this -> session -> userdata('full_name');?> <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                
-                
-                <li><a style="background: whitesmoke;color: black !important" href="<?php echo site_url("user/change_password");?>"><span class="glyphicon glyphicon-pencil" style="margin-right: 2%; "></span>Change password</a></li>
-                
-                <li><a style="background: whitesmoke;color: black !important" href="<?php echo site_url("user/logout");?>" ><span class="glyphicon glyphicon-off" style="margin-right: 2%;"></span>Log out</a></li>
-                
+                <li><a style="background: whitesmoke;color: black !important" href="<?php echo site_url("user/change_password");?>"><span class="glyphicon glyphicon-pencil" style="margin-right: 2%; "></span>Change password</a></li>               
+                <li><a style="background: whitesmoke;color: black !important" href="<?php echo site_url("user/logout");?>" ><span class="glyphicon glyphicon-off" style="margin-right: 2%;"></span>Log out</a></li>               
               </ul>
             </li>
           </ul>
@@ -111,18 +106,15 @@ foreach($menus as $menu){?>
       		<div class="col-md-4" style="font-weight:bold; ">
       		<span style="margin-left:2%;">  <?php echo $banner_text;?> </span>
       		 	
-      		</div>
-      		<div class="col-md-4">
-      			
+     		</div>
+      		<div class="col-md-4">     			
       		</div>
       		<div class="col-md-4"  style="text-align: right;">
       			<?php  echo date('l, dS F Y'); ?>
              <span id="clock" style="font-size:0.85em; " ></span>
       		</div>
-      	</div>
-      	
+      	</div>      	
       </div>	
-      	
       </div>
     <div class="container-fluid" style="" id="main-content">
 <!----------- HCMP MODAL dialog Box for all uses--------->
@@ -141,8 +133,7 @@ foreach($menus as $menu){?>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div>
-<!-- /.modal -->
-     
+<!-- /.modal -->   
     <?php $this -> load -> view($content_view);?>
     </div> <!-- /container -->
    <div id="footer">
@@ -150,7 +141,6 @@ foreach($menus as $menu){?>
         <p class="text-muted"> Government of Kenya &copy <?php echo date('Y');?>. All Rights Reserved</p>
       </div>
     </div>
-
     <script type="text/javascript">
 
 /*

@@ -48,6 +48,7 @@
 					"aButtons":    [ "csv", "xls", "pdf" ]
 				}
 			],
+
 			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
 		}
 	} );

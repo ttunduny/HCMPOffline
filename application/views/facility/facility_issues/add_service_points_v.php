@@ -74,6 +74,7 @@
 <button class="btn btn-success" id="save"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 </div>
 <?php echo form_close();?>
+
  </div>
   <div class="col-md-9"  style="border: 1px solid #DDD;">
   	<table cellpadding="0" cellspacing="0" width="80%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
@@ -175,6 +176,7 @@ $(".add").click(function() { //add row here
 	$('#example').dataTable( {
 	     "sDom": "T lfrtip",
 	     "sScrollY": "377px",
+	     "sScrollX": "100%",
                     "sPaginationType": "bootstrap",
                     "oLanguage": {
                         "sLengthMenu": "_MENU_ Records per page"
@@ -189,8 +191,9 @@ $(".add").click(function() { //add row here
 					"sButtonText": 'Save',
 					"aButtons":    [ "csv", "xls", "pdf" ]
 				}
+
 			],
-			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_cvs_xls_pdf.swf"
 		}
 	} );
 	$('#example_filter label input').addClass('form-control');
@@ -206,3 +209,4 @@ $(".add").click(function() { //add row here
 	}
 } );
 </script>
+

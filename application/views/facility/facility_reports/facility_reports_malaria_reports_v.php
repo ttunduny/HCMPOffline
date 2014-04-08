@@ -1,100 +1,116 @@
 <div class="container" style="width: 96%; margin: auto;">
-<span  class='label label-info'>To Issue commodities i) select commodity to issue 
-	ii) enter the service point and quanitity you wish to issue and select the batch no
-	iii) to add more issues press add row</span><br /><span class="label label-danger">Available Batch Stock is for a specific 
-	batch, Total Balance is the total for the commodity</span>
+<span  class='label label-info'>
+	Write up on how to use the Report
+	</span><br />
+	<span class="label label-danger">
+		Available Batch Stock is for a specific 
+	batch, Total Balance is the total for the commodity
+	</span>
 	<hr />
 <div class="table-responsive" style="height:400px; overflow-y: auto;">
- <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/external_issue',$att); ?>
-<table  class="table table-hover table-bordered table-update" id="facility_issues_table" >
-<thead style="background-color: white">
-					<tr>
-						<th>Select Subcounty</th>
-						<th>Select Facility</th>
-						<th>Description</th>
-						<th>Supplier</th>
-						<th>Unit Size</th>
-						<th>Batch&nbsp;No</th>
-						<th>Expiry Date</th>
-						<th>Issue Date</th>
-						<th>Available Batch Stock</th>
-						<th>Issue Type</th>
-						<th>Issued Quantity</th>
-						<th>Total Balance</th>
-						<th>Action</th>				    
-					</tr>
-					</thead>
-					<tbody>
-						<tr row_id='0'>
-					
-							<td>
-								<select name="district[0]" class="form-control input-small district">
-								<option value="0">--select subcounty---</option>
-								<?php 
-		foreach ($subcounties as $district) {
-			$id=$district->id;
-			$name=$district->district;		
-			echo '<option value="'.$id.'"> '.$name.'</option>';
-		}?>	
-								</select>
-							</td>
-							<td>
-						<select  name="mfl[0]" class="form-control input-small facility">
-                       <option value="0">--select facility---</option>
-					   </select>
-						</td>
-						<td>
-	<select class="form-control input-small service desc" name="desc[0]">
-    <option special_data="0" value="0" selected="selected">-Select Commodity -</option>
-		<?php 
-foreach ($commodities as $commodities) :						
-			$commodity_name=$commodities['commodity_name'];
-			$commodity_id=$commodities['commodity_id'];
-			$unit=$commodities['unit_size'];
-			$source_name=$commodities['source_name'];
-			$total_commodity_units=$commodities['total_commodity_units'];
-			$commodity_balance=$commodities['commodity_balance'];		
-		echo "<option special_data='$commodity_id^$unit^$source_name^$total_commodity_units^$commodity_balance' value='$commodity_id'>$commodity_name</option>";		
-endforeach;
-		?> 		
-	</select>
-						</td>
-						<td>
-						<input type="hidden" id="0" name="commodity_id[0]" value="" class="commodity_id"/>
-						<input type="hidden" id="0" name="total_units[0]" value="" class="total_units"/>
-						<input type="hidden" name="commodity_balance[0]" value="0" class="commodity_balance"/>
-						<input type="hidden" name="facility_stock_id[0]" value="0" class="facility_stock_id"/>	
-						<input type="text" class="form-control input-small supplier_name" readonly="readonly" name="supplier_name[]"/></td>
-			            <td><input  type="text" class="form-control input-small unit_size" readonly="readonly"  /></td>
-						<td><select class="form-control input-small batch_no" name="batch_no[0]"></select></td>
-						<td><input type='text' class='form-control input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
-												<td>
-<input class='form-control input-small clone_datepicker_normal_limit_today' 
-type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
-						<td><input class='form-control input-small available_stock' type="text" name="available_stock[0]" readonly="readonly" /></td>
-
-						<td><select class="form-control commodity_unit_of_issue input-small" name="commodity_unit_of_issue[]">
-			<option value="Pack_Size">Pack Size</option>
-			<option value="Unit_Size">Unit Size</option>
-			</select></td>
-						<td><input class='form-control input-small quantity_issued' type="text" value="0"  name="quantity_issued[0]"  required="required"/></td>
-						<td><input class='form-control input-small balance' type="text" value="" readonly="readonly" /></td>
-
-						<td><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Remove Row</button></td>
-			</tr>
-		           </tbody>
-		           </table>
+	<?php 
+		$att = array("name"=>'myform','id'=>'myform'); 
+		//add a function for saving the data
+		echo form_open('divisional_reports/save_malaria_report',$att); 
+	
+	?>
+	<table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
+	<thead style="background-color: white">
+		<tr>
+			<th>Drug Name</th>
+			<th>Beginning Balance</th>
+			<th>Quantity Received</th>
+			<th>Quantity Dispensed</th>
+			<th>Losses Excluding Expiries</th>
+			<th>Positive Adjustments</th>
+			<th>Negative Adjustments</th>
+			<th>Physical Count</th>
+			<th>Expired Drugs</th>
+			<th>Stock Out Days</th>
+			<th>Total</th>
+			
+					    
+		</tr>
+	</thead>
+	<tbody><?php
+	//Used to puck the Kemsa code from the malaria drugs table in order to save it in the Malaria Data table
+	$code = "";
+	foreach ($malaria_data as $row)
+	{
+		extract($row, EXTR_OVERWRITE);
+		$code .= $kemsa_code. " ";
+	
+	}
+	$code1 = explode(" ", $code);
+	$counter = 0;
+	foreach($drug_rows as $drug)
+	{		
+		echo"
+		<tr row_id='0'>
+		<td>".$drug['drug_name']."</td>
+		<td>
+			<input type='text' class='form-control input-small Beginning_Balance' name='Beginning_Balance[".$counter."]' required='required' required='required'/>
+		</td>
+	    <td>
+	    	<input type='text' class='form-control input-small Quantity_Received' name='Quantity_Received[".$counter."]'' required='required' required='required'/>
+	    </td>
+	    <td>
+	    	<input type='text' class='form-control input-small Quantity_Dispensed' name='Quantity_Dispensed[".$counter."]'' required='required' required='required'/>
+	    </td>
+	    <td>
+	    	<input type='text' class='form-control input-small Losses_Excluding_Expiries' name='Losses_Excluding_Expiries[".$counter."]'' required='required' required='required'/>
+	    </td>
+	    <td>
+	    	<input type='text' class='form-control input-small Positive_Adjustments' name='Positive_Adjustments[".$counter."]'' required='required' required='required'/>
+	    </td>
+	    <td>
+	    	<input type='text' class='form-control input-small Negative_Adjustments' name='Negative_Adjustments[".$counter."]'' required='required' required='required'/>
+	    </td>
+	    <td>
+	    	<input type='text' class='form-control input-small Physical_Count' name='Physical_Count[".$counter."]'' required='required'/>
+	    </td>
+	    <td>
+	    	<input type='text' class='form-control input-small Expired_Drugs' name='Expired_Drugs[".$counter."]'' required='required'/>
+	    </td>
+	    <td>
+	    	<input type='text' class='form-control input-small Days_Out_Stock' name='Days_Out_Stock[".$counter."]'' required='required'/>
+	    </td>
+	    <td>
+	    	<input type='text' class='form-control input-small Report_Total' name='Total[".$counter."]'' required='required'/>
+	    </td>
+	    <td style='display:none;'>
+	    	<input type='hidden' class='kemsa' name='kemsa[".$counter."]'' value='".$code1[$counter]."'/>
+	    </td>
+	    ";
+	    $counter++;
+		
+	};?>
+		     </tbody>
+		   </table>
 </div>
 <hr />
 <div class="container-fluid">
 <div style="float: right">
-<button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
-<button class=" save btn btn-sm btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>
+<button class="save btn btn-sm btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 </div>
 </div>
 <?php echo form_close();?>
 <script>
 $(document).ready(function() {	
+	//datatables settings 
+	$('#example').dataTable( {
+		 //"sDom": "T<'clear'>lfrtip",
+	     "sScrollY": "377px",
+	     "sScrollX": "100%",
+                    "sPaginationType": "bootstrap",
+                    "oLanguage": {
+                        "sLengthMenu": "_MENU_ Records per page",
+                        "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
+                    },
+			     
+	} );
+	$('#example_filter label input').addClass('form-control');
+	$('#example_length label select').addClass('form-control');
  var $table = $('table');
 //float the headers
   $table.floatThead({ 
@@ -104,40 +120,6 @@ $(document).ready(function() {
 	});	
 //step one load all the facility data here
 var facility_stock_data=<?php echo $facility_stock_data;     ?>;
-///// county district facility filter 
-       $('.district').live("change", function() {
-			/*
-			 * when clicked, this object should populate district names to district dropdown list.
-			 * Initially it sets default values to the 2 drop down lists(districts and facilities) 
-			 * then ajax is used is to retrieve the district names using the 'dropdown()' method that has
-			 * 3 arguments(the ajax url, value POSTed and the id of the object to populated)
-			 */
-	        var locator =$('option:selected', this);
-			json_obj={"url":"<?php echo site_url("home/get_facilities");?>",}
-			var baseUrl=json_obj.url;
-			var id=$(this).val();
-		    var dropdown;
-			$.ajax({
-			  type: "POST",
-			  url: baseUrl,
-			  data: "district="+id,
-			  success: function(msg){
-			  		var values=msg.split("_");
-			  		var txtbox;
-			  		for (var i=0; i < values.length-1; i++) {
-			  			var id_value=values[i].split("*");				  					  			
-			  			dropdown+="<option value="+id_value[0]+">";
-						dropdown+=id_value[1];						
-						dropdown+="</option>";		  			
-		  		}	
-			  },
-			  error: function(XMLHttpRequest, textStatus, errorThrown) {
-			       if(textStatus == 'timeout') {}
-			   }
-			}).done(function( msg ) {			
-				locator.closest("tr").find(".facility").html(dropdown);
-			});				
-		});	
             ///when changing the commodity combobox
       		$(".desc").live('change',function(){
       		var row_id=$(this).closest("tr").index();	
@@ -300,18 +282,14 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 	       	$(this).parent().parent().remove(); 
 	       }	         
       });
-      // validate the form
-	$("#myform").validate();
       /************save the data here*******************/
 	$('.save').button().click(function() {
     $("input[name^=commodity_id]").each(function() {
                 	$(this).closest("tr").find(".batch_no").removeAttr('disabled'); 
                 	$(this).closest("tr").find(".commodity_unit_of_issue").removeAttr('disabled'); 	
-                	$(this).closest("tr").find(".desc").removeAttr('disabled');  	
-                	$(this).closest("tr").find(".commodity_unit_of_issue").removeAttr('disabled');	
+                	$(this).closest("tr").find(".desc").removeAttr('disabled'); 		
                 	});
-    // save the form
-    confirm_if_the_user_wants_to_save_the_form("#myform");
+	$( "#myform" ).submit();    
      });
         function clone_the_last_row_of_the_table(){
             var last_row = $('#facility_issues_table tr:last');
@@ -319,8 +297,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
             var table_row = cloned_object.attr("row_id");
             var next_table_row = parseInt(table_row) + 1;           
 		    cloned_object.attr("row_id", next_table_row);
-			cloned_object.find(".service_point").attr('name','service_point['+next_table_row+']');
-			cloned_object.find(".facility").attr('name','mfl['+next_table_row+']'); 
+			cloned_object.find(".service_point").attr('name','service_point['+next_table_row+']'); 
 			cloned_object.find(".commodity_id").attr('name','commodity_id['+next_table_row+']'); 
 			cloned_object.find(".commodity_id").attr('id',next_table_row); 
 			cloned_object.find(".quantity_issued").attr('name','quantity_issued['+next_table_row+']'); 	
@@ -339,9 +316,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
             cloned_object.find(".commodity_unit_of_issue").removeAttr('disabled'); 
             cloned_object.find(".desc").removeAttr('disabled');   
             cloned_object.find(".commodity_balance").attr('value',"0");            
-            cloned_object.find(".batch_no").html("");  
-            // remove the error class
-            cloned_object.find("label.error").remove();           
+            cloned_object.find(".batch_no").html("");            
 			cloned_object.insertAfter('#facility_issues_table tr:last');	
 			refresh_clone_datepicker_normal_limit_today();	
         }
@@ -351,12 +326,10 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 		var commodity_id=selector_object.closest("tr").find(".desc").val();
 		var issue_date=selector_object.closest("tr").find(".clone_datepicker_normal_limit_today").val();
 		var issue_quantity=selector_object.closest("tr").find(".quantity_issued").val();
-		var facility=selector_object.closest("tr").find(".facility").val();
 		//set the message here
-		if (facility==0) {alert_message+="<li>Select a Facility First</li>";}
 		if (service_point==0) {alert_message+="<li>Select a Service Point</li>";}
-	    if (commodity_id==0) {alert_message+="<li>Select a commodity</li>";}
-	    if (issue_date==0 || issue_date=='') {alert_message+="<li>Indicate the date of the issue</li>";}	
+	    if (commodity_id==0) {alert_message+="<li>Select a commodity first</li>";}
+	    if (issue_date==0) {alert_message+="<li>Indicate the date of the issue</li>";}	
 	    if (issue_quantity==0) {alert_message+="<li>Indicate how much you want to issue</li>";}	    
 	    return[alert_message,service_point,commodity_id,issue_quantity,issue_date];	
 		}//extract facility_data  from the json object 		

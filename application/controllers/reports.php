@@ -53,7 +53,7 @@ class Reports extends MY_Controller {
 		}
 
 		$data['title'] = "Reports";
-		//$data['banner_text'] = "Reports";
+	//$data['banner_text'] = "Reports";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		$this -> load -> view($view, $data);
 	}
@@ -63,20 +63,19 @@ class Reports extends MY_Controller {
 	 |--------------------------------------------------------------------------
 	 */
 	// get the commodity listing here
-	public function commodity_listing() {
+	public function commodity_listing() 
+	{
 		$data['title'] = "Commodity Listing";
 		$data['banner_text'] = "Commodity Listing";
 		$data['content_view'] = "shared_files/commodities/commodity_list_v";
 		$data['commodity_list'] = commodity_sub_category::get_all();
 		$this -> load -> view('shared_files/template/template', $data);
 	}
-	/*
+/*
 	 |--------------------------------------------------------------------------
 	 | FACILITY REPORTS
 	 |--------------------------------------------------------------------------
 	 */
-	///////////////////GET FACILITY STOCK DATA/////////////////////////////
-
 	 ///////////////////GET FACILITY STOCK DATA/////////////////////////////	 
 	public function facility_stock_data() {
 		$facility_code = $this -> session -> userdata('facility_id');
@@ -85,7 +84,7 @@ class Reports extends MY_Controller {
 		$data['content_view'] = "facility/facility_reports/facility_stock_data_v";
 		$data['banner_text'] = "Facility Stock";
 		$this -> load -> view("shared_files/template/template", $data);
-	
+
 
 
 	}	

@@ -174,7 +174,7 @@ var $table = $('#example');
 	 }	
 	// add the items here to the order form
 	  $("#example" ).dataTable().fnAddData( [ 
-	  	 '<input type="hidden" class="commodity_name" name="commodity_name['+new_count+']" value="'+$("#desc option:selected").text()+'" />'+
+  	 '<input type="hidden" class="commodity_name" name="commodity_name['+new_count+']" value="'+$("#desc option:selected").text()+'" />'+
           '<input type="hidden" class="commodity_code" name="commodity_code['+new_count+']" value="'+$('input:text[name=commodity_code]').val()+'" />'+
          '<input type="hidden" class="commodity_id" name="commodity_id['+new_count+']" value="'+$("#desc option:selected").val()+'" />'+
          '<input type="hidden" class="total_commodity_units" name="total_commodity_units['+new_count+']" value="'+$('input:hidden[name=total_commodity_units]').val()+'" />'+ 
@@ -195,7 +195,7 @@ var $table = $('#example');
 							'<input class="form-control input-small" type="text" name="days['+new_count+']" value="0"   />',
 							'<input class="form-control input-small" type="text" name="historical['+new_count+']" value="0"   />',
 							'<input class="form-control input-small" type="text" value="0" readonly="yes"  />',
-							'<input class="form-control input-small quantity" type="text" name="quantity['+new_count+']" value="0" />',
+						'<input class="form-control input-small quantity" type="text" name="quantity['+new_count+']" value="0" />',
 							'<input class="form-control input-small actual_quantity" type="text" name="actual_quantity['+new_count+']" value="0" readonly="yes" />',
 							'<input class="form-control input-small cost" type="text" name="cost['+new_count+']" value="0" readonly="yes" />',
 							'<input type="text" class="form-control input-small" name="comment['+new_count+']" value="N/A"/>'
@@ -261,6 +261,7 @@ var $table = $('#example');
 	var order_total=0;
 	var balance=0
 	 $("input[name^=quantity]").each(function() {
+
 	 	if($(this).val()=='')
 	 	{ var total=0} 
 	 	else{ var total=$(this).val()

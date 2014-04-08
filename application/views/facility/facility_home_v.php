@@ -84,6 +84,7 @@
         		<h3 class="panel-title">Actions <span class="glyphicon glyphicon-list-alt"></span></h3>
       </div>
       <div class="panel-body">
+
         <div style="height:auto; margin-bottom: 2px" class="issue message ">	 
         	<a href="<?php echo base_url()."issues/index/internal" ?>"><h5>Issue Commodities to service points</h5></a>       	 
         </div>
@@ -108,6 +109,7 @@
         	 
         </div>
         
+
         <div style="height:auto; margin-bottom: 2px" class="reports message ">
           <a href="<?php echo base_url()."reports" ?>"><h5>Reports</h5></a>        
         </div>   

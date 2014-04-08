@@ -5,21 +5,25 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
+
 class User extends MY_Controller {
 
-	function __construct() {
+	function __construct() 
+	{
 		parent::__construct();
 
 		$this -> load -> helper(array('form', 'url'));
 		$this -> load -> library('form_validation');
 	}
 
+
 	public function index() {
 		$data['title'] = "Login";
 		$this -> load -> view("shared_files/login_pages/login_v", $data);
 	}
 
-	private function _submit_validate() {
+	private function _submit_validate() 
+	{
 
 		$this -> form_validation -> set_rules('username', 'Username', 'trim|required|callback_authenticate');
 

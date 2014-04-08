@@ -1,95 +1,294 @@
 <div class="container" style="width: 96%; margin: auto;">
-<span  class='label label-info'>To Issue commodities i) select commodity to issue 
-	ii) enter the service point and quanitity you wish to issue and select the batch no
-	iii) to add more issues press add row</span><br /><span class="label label-danger">Available Batch Stock is for a specific 
-	batch, Total Balance is the total for the commodity</span>
+<span  class='label label-info'>
+	Write up on how to use the Report
+	</span><br />
+	<span class="label label-danger">
+		Available Batch Stock is for a specific 
+	batch, Total Balance is the total for the commodity
+	</span>
 	<hr />
 <div class="table-responsive" style="height:400px; overflow-y: auto;">
- <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/external_issue',$att); ?>
-<table  class="table table-hover table-bordered table-update" id="facility_issues_table" >
-<thead style="background-color: white">
-					<tr>
-						<th>Select Subcounty</th>
-						<th>Select Facility</th>
-						<th>Description</th>
-						<th>Supplier</th>
-						<th>Unit Size</th>
-						<th>Batch&nbsp;No</th>
-						<th>Expiry Date</th>
-						<th>Issue Date</th>
-						<th>Available Batch Stock</th>
-						<th>Issue Type</th>
-						<th>Issued Quantity</th>
-						<th>Total Balance</th>
-						<th>Action</th>				    
-					</tr>
-					</thead>
-					<tbody>
-						<tr row_id='0'>
-					
-							<td>
-								<select name="district[0]" class="form-control input-small district">
-								<option value="0">--select subcounty---</option>
-								<?php 
-		foreach ($subcounties as $district) {
-			$id=$district->id;
-			$name=$district->district;		
-			echo '<option value="'.$id.'"> '.$name.'</option>';
-		}?>	
-								</select>
-							</td>
-							<td>
-						<select  name="mfl[0]" class="form-control input-small facility">
-                       <option value="0">--select facility---</option>
-					   </select>
-						</td>
-						<td>
-	<select class="form-control input-small service desc" name="desc[0]">
-    <option special_data="0" value="0" selected="selected">-Select Commodity -</option>
-		<?php 
-foreach ($commodities as $commodities) :						
-			$commodity_name=$commodities['commodity_name'];
-			$commodity_id=$commodities['commodity_id'];
-			$unit=$commodities['unit_size'];
-			$source_name=$commodities['source_name'];
-			$total_commodity_units=$commodities['total_commodity_units'];
-			$commodity_balance=$commodities['commodity_balance'];		
-		echo "<option special_data='$commodity_id^$unit^$source_name^$total_commodity_units^$commodity_balance' value='$commodity_id'>$commodity_name</option>";		
-endforeach;
-		?> 		
-	</select>
-						</td>
-						<td>
-						<input type="hidden" id="0" name="commodity_id[0]" value="" class="commodity_id"/>
-						<input type="hidden" id="0" name="total_units[0]" value="" class="total_units"/>
-						<input type="hidden" name="commodity_balance[0]" value="0" class="commodity_balance"/>
-						<input type="hidden" name="facility_stock_id[0]" value="0" class="facility_stock_id"/>	
-						<input type="text" class="form-control input-small supplier_name" readonly="readonly" name="supplier_name[]"/></td>
-			            <td><input  type="text" class="form-control input-small unit_size" readonly="readonly"  /></td>
-						<td><select class="form-control input-small batch_no" name="batch_no[0]"></select></td>
-						<td><input type='text' class='form-control input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
-												<td>
-<input class='form-control input-small clone_datepicker_normal_limit_today' 
-type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
-						<td><input class='form-control input-small available_stock' type="text" name="available_stock[0]" readonly="readonly" /></td>
-
-						<td><select class="form-control commodity_unit_of_issue input-small" name="commodity_unit_of_issue[]">
-			<option value="Pack_Size">Pack Size</option>
-			<option value="Unit_Size">Unit Size</option>
-			</select></td>
-						<td><input class='form-control input-small quantity_issued' type="text" value="0"  name="quantity_issued[0]"  required="required"/></td>
-						<td><input class='form-control input-small balance' type="text" value="" readonly="readonly" /></td>
-
-						<td><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Remove Row</button></td>
+	<?php 
+		$att = array("name"=>'myform','id'=>'myform'); 
+		//add a function for saving the data
+		echo form_open('divisional_reports/save_RH_report',$att); 
+	
+	?>
+	<table  class="table table-hover table-bordered table-update" id="reproductive_health_reports_table" >
+	<thead style="background-color: white">
+		<tr>
+			<th>Contraceptive</th>
+			<th>Beginning Balance</th>
+			<th>Received This Month</th>
+			<th>Dispensed</th>
+			<th>Losses</th>
+			<th>Positive</th>
+			<th>Negative</th>
+			<th>Ending Balance</th>
+			<th>Quantity Requested</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr row_id='0'>
+			<td>Combined Oral contraceptive Pills</td>
+			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[1]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Received_This_Month[1]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Dispensed[1]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Losses[1]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Positive[1]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Negative[1]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Ending_Balance[1]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[1]'/></td>
+			
 			</tr>
-		           </tbody>
-		           </table>
+		<tr row_id='0'>
+			<td>Progestin only pills</td>
+			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[2]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Received_This_Month[2]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Dispensed[2]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Losses[2]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Positive[2]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Negative[2]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Ending_Balance[2]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[2]'/></td>
+			
+			</tr>
+			<tr row_id='0'>
+			<td>Injectables</td>
+			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[3]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Received_This_Month[3]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Dispensed[3]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Losses[3]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Positive[3]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Negative[3]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Ending_Balance[3]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[1]'/></td>
+			
+			</tr>
+			<tr row_id='0'>
+			<td>Implants (1-Rod)</td>
+			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[4]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Received_This_Month[4]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Dispensed[4]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Losses[4]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Positive[4]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Negative[4]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Ending_Balance[4]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[4]'/></td>
+			
+			</tr>
+			<tr row_id='0'>
+			<td>Implants (2-Rod)</td>
+			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[5]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Received_This_Month[5]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Dispensed[5]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Losses[5]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Positive[5]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Negative[5]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Ending_Balance[5]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[5]'/></td>
+			
+			</tr>
+			<tr row_id='0'>
+			<td>Emergency Contraceptive pills</td>
+			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[6]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Received_This_Month[6]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Dispensed[6]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Losses[6]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Positive[6]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Negative[6]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Ending_Balance[6]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[6]'/></td>
+			
+			</tr>
+			<tr row_id='0'>
+			<td>IUCDs</td>
+			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[7]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Received_This_Month[7]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Dispensed[7]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Losses[7]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Positive[7]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Negative[7]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Ending_Balance[7]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[1]'/></td>
+			
+			</tr>
+			<tr row_id='0'>
+			<td>Male Condoms</td>
+			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[8]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Received_This_Month[8]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Dispensed[8]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Losses[8]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Positive[8]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Negative[8]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Ending_Balance[8]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[8]'/></td>
+			
+			</tr>
+			<tr row_id='0'>
+			<td>Female Condoms</td>
+			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[9]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Received_This_Month[9]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Dispensed[9]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Losses[9]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Positive[9]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Negative[9]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Ending_Balance[9]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[9]'/></td>
+			
+			</tr>
+			<tr row_id='0'>
+			<td>Cycle Beads</td>
+			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[10]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Received_This_Month[10]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Dispensed[10]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Losses[10]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Positive[10]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Negative[10]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Ending_Balance[10]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[10]'/></td>
+			
+			</tr>
+			<tr row_id='0'>
+			<td>Others</td>
+			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[11]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Received_This_Month[11]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Dispensed[11]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Losses[11]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Positive[11]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Negative[11]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Ending_Balance[11]'/></td>
+			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[11]'/></td>
+			
+			</tr>
+			<tr row_id='0'>
+				<th colspan="5">SERVICE STATISTICS (Indicate only the number of Clients issued with Contraceptives</th>
+				<td>New Clients</td>
+				<td><input type='text' class='form-control input-small ' name=''/></td>
+				<td>Natural FP Counseling</td>
+				<td><input type='text' class='form-control input-small ' /></td>
+			</tr>
+			<tr row_id='0' rowspan="2">
+				<td>&nbsp;</td>
+				<td>New Clients</td>
+				<td>Revisits</td>
+				<!--<td>Change of Method</td>-->
+				<td>From</td>
+				<td>To</td>
+				<td>Revisits</td>
+				<td><input type='text' class='form-control input-small ' /></td>
+				<td>Natural FP Referrals</td>
+				<td><input type='text' class='form-control input-small ' /></td>
+			</tr>
+			<tr row_id='0'>
+			<td>Combined Oral contraceptive Pills</td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td colspan="4">&nbsp;</td>
+			
+			</tr>
+		<tr row_id='0'>
+			<td>Progestin only pills</td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td colspan="4">HIV COUNSELING AND TESTING</td>
+		</tr>
+		
+		<tr row_id='0'>
+			<td>Injectables</td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td rowspan="2">Counseled and Tested</td>
+			<td rowspan="2">Referred for Counseling and Testing</td>
+			<td colspan="2">Known HIV Status</td>
+		</tr>
+		<tr row_id='0'>
+			<td>Implants (1-Rod)</td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td>1</td>
+			<td>2</td>
+			
+		</tr>
+		<tr row_id='0'>
+			<td>Implants (2-Rod)</td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			
+		</tr>
+		<tr row_id='0'>
+			<td>IUCDs</td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td rowspan="4">&nbsp;</td>
+			<td colspan="3">Sterilization</td>
+			
+		</tr>
+		<tr row_id='0'>
+			<td>Male Condoms</td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td>Males</td>
+			<td colspan="2"><input type='text' class='form-control input-small ' /></td>
+			
+			
+			
+		</tr>
+		<tr row_id='0'>
+			<td>Female Condoms</td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td>Females</td>
+			<td colspan="2"><input type='text' class='form-control input-small ' /></td>
+			
+		</tr>
+		<tr row_id='0'>
+			<td>Cycle Beads</td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td>Referrals</td>
+			<td colspan="2"><input type='text' class='form-control input-small ' /></td>
+			
+		</tr>
+		<tr row_id='0'>
+			<td>Others</td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' /></td>
+			<td colspan="2">Cases for Emergency Pills</td>
+			<td colspan="2"><input type='text' class='form-control input-small ' /></td>
+			
+		</tr>
+     </tbody>
+   </table>
 </div>
 <hr />
 <div class="container-fluid">
 <div style="float: right">
-<button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
-<button class=" save btn btn-sm btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>
+<button class="save btn btn-sm btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 </div>
 </div>
 <?php echo form_close();?>
@@ -104,40 +303,6 @@ $(document).ready(function() {
 	});	
 //step one load all the facility data here
 var facility_stock_data=<?php echo $facility_stock_data;     ?>;
-///// county district facility filter 
-       $('.district').live("change", function() {
-			/*
-			 * when clicked, this object should populate district names to district dropdown list.
-			 * Initially it sets default values to the 2 drop down lists(districts and facilities) 
-			 * then ajax is used is to retrieve the district names using the 'dropdown()' method that has
-			 * 3 arguments(the ajax url, value POSTed and the id of the object to populated)
-			 */
-	        var locator =$('option:selected', this);
-			json_obj={"url":"<?php echo site_url("home/get_facilities");?>",}
-			var baseUrl=json_obj.url;
-			var id=$(this).val();
-		    var dropdown;
-			$.ajax({
-			  type: "POST",
-			  url: baseUrl,
-			  data: "district="+id,
-			  success: function(msg){
-			  		var values=msg.split("_");
-			  		var txtbox;
-			  		for (var i=0; i < values.length-1; i++) {
-			  			var id_value=values[i].split("*");				  					  			
-			  			dropdown+="<option value="+id_value[0]+">";
-						dropdown+=id_value[1];						
-						dropdown+="</option>";		  			
-		  		}	
-			  },
-			  error: function(XMLHttpRequest, textStatus, errorThrown) {
-			       if(textStatus == 'timeout') {}
-			   }
-			}).done(function( msg ) {			
-				locator.closest("tr").find(".facility").html(dropdown);
-			});				
-		});	
             ///when changing the commodity combobox
       		$(".desc").live('change',function(){
       		var row_id=$(this).closest("tr").index();	
@@ -300,18 +465,14 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 	       	$(this).parent().parent().remove(); 
 	       }	         
       });
-      // validate the form
-	$("#myform").validate();
       /************save the data here*******************/
 	$('.save').button().click(function() {
     $("input[name^=commodity_id]").each(function() {
                 	$(this).closest("tr").find(".batch_no").removeAttr('disabled'); 
                 	$(this).closest("tr").find(".commodity_unit_of_issue").removeAttr('disabled'); 	
-                	$(this).closest("tr").find(".desc").removeAttr('disabled');  	
-                	$(this).closest("tr").find(".commodity_unit_of_issue").removeAttr('disabled');	
+                	$(this).closest("tr").find(".desc").removeAttr('disabled'); 		
                 	});
-    // save the form
-    confirm_if_the_user_wants_to_save_the_form("#myform");
+	$( "#myform" ).submit();    
      });
         function clone_the_last_row_of_the_table(){
             var last_row = $('#facility_issues_table tr:last');
@@ -319,8 +480,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
             var table_row = cloned_object.attr("row_id");
             var next_table_row = parseInt(table_row) + 1;           
 		    cloned_object.attr("row_id", next_table_row);
-			cloned_object.find(".service_point").attr('name','service_point['+next_table_row+']');
-			cloned_object.find(".facility").attr('name','mfl['+next_table_row+']'); 
+			cloned_object.find(".service_point").attr('name','service_point['+next_table_row+']'); 
 			cloned_object.find(".commodity_id").attr('name','commodity_id['+next_table_row+']'); 
 			cloned_object.find(".commodity_id").attr('id',next_table_row); 
 			cloned_object.find(".quantity_issued").attr('name','quantity_issued['+next_table_row+']'); 	
@@ -339,9 +499,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
             cloned_object.find(".commodity_unit_of_issue").removeAttr('disabled'); 
             cloned_object.find(".desc").removeAttr('disabled');   
             cloned_object.find(".commodity_balance").attr('value',"0");            
-            cloned_object.find(".batch_no").html("");  
-            // remove the error class
-            cloned_object.find("label.error").remove();           
+            cloned_object.find(".batch_no").html("");            
 			cloned_object.insertAfter('#facility_issues_table tr:last');	
 			refresh_clone_datepicker_normal_limit_today();	
         }
@@ -351,12 +509,10 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 		var commodity_id=selector_object.closest("tr").find(".desc").val();
 		var issue_date=selector_object.closest("tr").find(".clone_datepicker_normal_limit_today").val();
 		var issue_quantity=selector_object.closest("tr").find(".quantity_issued").val();
-		var facility=selector_object.closest("tr").find(".facility").val();
 		//set the message here
-		if (facility==0) {alert_message+="<li>Select a Facility First</li>";}
 		if (service_point==0) {alert_message+="<li>Select a Service Point</li>";}
-	    if (commodity_id==0) {alert_message+="<li>Select a commodity</li>";}
-	    if (issue_date==0 || issue_date=='') {alert_message+="<li>Indicate the date of the issue</li>";}	
+	    if (commodity_id==0) {alert_message+="<li>Select a commodity first</li>";}
+	    if (issue_date==0) {alert_message+="<li>Indicate the date of the issue</li>";}	
 	    if (issue_quantity==0) {alert_message+="<li>Indicate how much you want to issue</li>";}	    
 	    return[alert_message,service_point,commodity_id,issue_quantity,issue_date];	
 		}//extract facility_data  from the json object 		
