@@ -99,6 +99,20 @@ foreach($menus as $menu){?>
               </ul>
             </li>
           </ul>
+     <div  id="system_alerts">
+      				<?php $flash_success_data = NULL;
+					      $flash_error_data = NULL;
+	                      $flash_success_data = $this -> session -> flashdata('system_success_message');
+						  $flash_error_data = $this -> session -> flashdata('system_error_message');
+							if ($flash_success_data != NULL) {
+							echo '<div class="alert alert-success alert-dismissable" >
+							<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>' . $flash_success_data . '</div>';
+						   } elseif ($flash_error_data != NULL) {
+							echo '<div class="alert alert-danger alert-dismissable" >
+							<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>' . $flash_error_data . '</div>';
+							}
+ 						?>
+ </div>
          </div><!--/.nav-collapse -->
       </div>
       <div class="container-fluid" style="/*border: 1px solid #036; */ height: 30px;" id="extras-bar">
@@ -118,8 +132,8 @@ foreach($menus as $menu){?>
       	</div>
       	
       </div>	
-      	
       </div>
+
     <div class="container-fluid" style="" id="main-content">
 <!----------- HCMP MODAL dialog Box for all uses--------->
 <div class="modal fade" id="communication_dialog" tabindex="-1" role="dialog"
@@ -148,8 +162,7 @@ foreach($menus as $menu){?>
     </div>
 
     <script type="text/javascript">
-
-/*
+    /*
  * Auto logout
  */
 var timer = 0;
@@ -208,6 +221,11 @@ if (i<10)
   }
 return i;
 }  
+	$(document).ready(function() {
+					$('.alert-success').fadeOut(10000, function() {
+    // Animation complete.
+});
+});
 </script>
    <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
     <!-- Bootstrap core JavaScript===================== -->	

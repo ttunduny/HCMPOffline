@@ -1,6 +1,6 @@
  <div class="container" style="width: 96%; margin: auto;">
      <?php echo form_open('stock/edit_facility_stock_data'); ?>  
- <table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
+ <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
 		<tr>
 			<th>Commodity Name</th>
