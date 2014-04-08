@@ -8,7 +8,7 @@
                             </span>Expiries</a>
                         </h4>
                     </div>
-                    <div id="collapseThree" class="panel-collapse collapse in">
+                    <div id="collapseThree" class="panel-collapse collapse ">
                         <div class="panel-body">
                             <table class="table">
                                 <tr>

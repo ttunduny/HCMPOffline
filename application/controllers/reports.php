@@ -167,7 +167,24 @@ class Reports extends MY_Controller {
 		$to = $_POST['to'];
 		$from = $_POST['from'];			
 		$data['bin_card'] = Facility_issues::get_bin_card($facility_code,$commodity_id,$from,$to);
+		$count_records=count(Facility_issues::get_bin_card($facility_code,$commodity_id,$from,$to));
+		
+		if ($count_records<=0) {
+
+			echo ' <div class="" id="reports_display" style="min-height: 350px;" >
+            <div style="margin:auto; text-align: center">
+                
+                <h2> Please Filter above</h2>
+                <h3>
+                  If you have selected filters above and you still see this message, You have no Records
+                </h3>
+                
+                </div>
+            </div>
+            ';
+		}else{
 		$this -> load -> view("facility/facility_reports/ajax/bin_card_ajax", $data);
+	}
 
 	}
 

@@ -1,6 +1,12 @@
- <div style="min-height: 400px;">
-    <table  class="table table-hover table-bordered table-update" id="" >
-  <thead style="background-color: white">
+ <div style="min-height: 400px; background:#edc1d8">
+  <img style="align-content: center;margin-left: 46%; border:0 none;" src="<?php echo base_url();?>assets/img/coat_of_arms-resized1.png" class="img-responsive " alt="Responsive image">
+
+        <div id="" style="text-align: center; ">
+          <span style="font-size: 0.95em;font-weight: bold; ">Ministry of Health</span><br />
+          <span style="font-size: 0.85em;">Health Commodities Management Platform (HCMP)</span> 
+        </div>
+    <table  class="table table-bordered table-update" id="" >
+  <thead style="">
   <tr>
     <th>Date of Issue</th>
     <th>Reference No/S11 No</th>

@@ -34,17 +34,14 @@
  </div>
 
 <div class="well">
- <div class="jumbotron" id="reports_display" >
+ <div class="" id="reports_display" style="min-height: 350px;" >
             <div style="margin:auto; text-align: center">
-                <h2> Oops!</h2>
-                <h1> Please Filter above</h1>
-                <h2>
+                
+                <h2> Please Filter above</h2>
+                <h3>
                   If you have selected filters above and you still see this message, You have no Records
-                </h2>
-                <div class="error-actions">
-                    <a href="<?php echo base_url();?>" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-home"></span>Take Me Home</a>
-                     
-                </div>
+                </h3>
+                
                 </div>
             </div>
 
