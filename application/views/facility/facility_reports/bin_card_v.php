@@ -1,4 +1,4 @@
- <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Expiries</h1>
+ <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Bin Card</h1>
  <div class="filter" style="width=device; height:auto; ">
 
 <div class="form-inline" role="form">
