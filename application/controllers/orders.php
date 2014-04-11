@@ -15,12 +15,24 @@ class orders extends MY_Controller {
 	}
 	public function facility_order(){
 		$facility_code=$this -> session -> userdata('facility_id'); 
+		$facility_data=Facilities::get_facility_name_($facility_code)->toArray();
 		$data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";
 	    $data['title'] = "Facility New Order";
 		$data['banner_text'] =  "Facility New Order";
-	    $data['drawing_rights'] =100;
+	    $data['drawing_rights'] =$facility_data[0]['drawing_rights'];;
 		$data['order_details']=$data['facility_order'] = Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
 		$data['facility_commodity_list']=Commodities::get_facility_commodities($facility_code);
+		$this -> load -> view('shared_files/template/template', $data);	
+	}
+	public function facility_order_($facility_code){
+		$facility_data=Facilities::get_facility_name_($facility_code)->toArray();
+		$data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";
+	    $data['title'] = "Facility New Order";
+	    $data['facility_code']=$facility_code;
+		$data['banner_text'] =  "Facility New Order";
+	    $data['drawing_rights'] =$facility_data[0]['drawing_rights'];
+		$data['order_details']=$data['facility_order'] = Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
+		$data['facility_commodity_list']=Commodities::get_all_from_supllier(1);
 		$this -> load -> view('shared_files/template/template', $data);	
 	}
 	public function update_facility_order($order_id,$rejected=null,$option=null){
@@ -60,7 +72,7 @@ if($this->input->post('commodity_id')):
 	$drawing_rights=$this->input->post('drawing_rights');
 	$order_total=$this->input->post('total_order_value');
 	$order_no=$this->input->post('order_no');
-	$facility_code=$this -> session -> userdata('facility_id'); 
+	$facility_code=$this->input->post('facility_code'); 
 	$user_id=$this->session->userdata('user_id');
     $order_date=date('y-m-d'); 
 	$number_of_id=count($commodity_id);
@@ -73,7 +85,8 @@ if($this->input->post('commodity_id')):
 		'order_no'=>$order_no,
 		'order_date'=>$order_date,
 		'facility_code'=>$facility_code,
-		'ordered_by'=>$user_id);	
+		'ordered_by'=>$user_id,
+		'drawing_rights'=>$drawing_rights);	
 		$this->db->insert('facility_orders',$order_details);
 		$new_order_no=$this->db->insert_id();		
 		}
@@ -98,18 +111,25 @@ if($this->input->post('commodity_id')):
 	}// insert the data here 
 	$this->db->insert_batch('facility_order_details', $data_array); 
 	
+
+	if($this -> session -> userdata('user_indicator')=='district'):
+	$order_listing='subcounty';
+	elseif($this -> session -> userdata('user_indicator')=='county'):
+	$order_listing='county';
+    else:
 	$myobj = Doctrine::getTable('Facilities')->findOneByfacility_code($facility_code);
     $facility_name= $myobj->facility_name;// get the order form details here 
-    //create the pdf here
+	 //create the pdf here
 	$pdf_body=$this->create_order_pdf_template($new_order_no); $file_name=$facility_name.'_facility_order_no_'.$new_order_no."_date_created_".date('d-m-y');
 	$pdf_data=array("pdf_title"=>"Order Report For $facility_name",
 	'pdf_html_body'=>$pdf_body,'pdf_view_option'=>'save_file',
 	'file_name'=>$file_name);
-	
 	$this->hcmp_functions->create_pdf($pdf_data);
-	
+	$order_listing='facility';
+	endif;
+
 	$this->session->set_flashdata('system_success_message', "Facility Order No $new_order_no has Been Saved"); 
-    redirect('reports/order_listing');	
+    redirect("reports/order_listing/$order_listing");	
 	
 endif;
 	
@@ -120,6 +140,8 @@ if($this->input->post('commodity_id')):
 	$this->load->database();
 	$data_array=array();
 	$rejected=$this->input->post('rejected');
+	$rejected_admin=$this->input->post('rejected_admin');
+	$approved_admin=$this->input->post('approved_admin');
 	$commodity_id=$this->input->post('commodity_id');//order details table details 
 	$quantity_ordered_pack=$this->input->post('quantity');
 	$order_id=$this->input->post('order_number');
@@ -200,32 +222,52 @@ ON DUPLICATE KEY UPDATE
 		`amc`=$amc[$i],
 		`order_number_id`=$order_id");
 
-	}// insert the data here 
+	}//insert the data here 
 	
 	$myobj = Doctrine::getTable('facility_orders')->find($order_id);
     $myobj->workload=$workload;
     $myobj->bed_capacity=$bed_capacity;
     $myobj->order_no=$order_no;
     $myobj->order_total=$order_total;
-    ($rejected==1)?  $myobj->status=1: null ;
-    $myobj->save();
+    if($rejected==1){
+    	$myobj->status=1;
+    	$status="Updated";
+    }
+    if($rejected_admin==1){
+    	$myobj->status=3;
+    	$status="Rejected";
+    }
+    if($approved_admin==1){
+    	$myobj->status=2;
+    	$myobj->approval_date=date('y-m-d');
+    	$myobj->approved_by=$this->session->userdata('user_id');
+    	$status="Approved";
+    }
+    $myobj->save();  
     
-	$this->session->set_flashdata('system_success_message', "Facility Order No $order_id has Been Updated"); 
-    redirect('reports/order_listing');	
+    if($this -> session -> userdata('user_indicator')=='district'):
+	$order_listing='subcounty';
+    elseif($this -> session -> userdata('user_indicator')=='county'):
+	$order_listing='county';
+    else:
+    $order_listing='facility';
+	endif;
+      
+	$this->session->set_flashdata('system_success_message', "Facility Order No $order_id has Been $status"); 
+    redirect("reports/order_listing/$order_listing");	
     endif;
 	
 	}
 	
-	public function delete_facility_order($order_id){
+	public function delete_facility_order($for,$order_id){
 		$reset_facility_order_table = Doctrine_Manager::getInstance()->getCurrentConnection();
 	    $reset_facility_order_table->execute("DELETE FROM `facility_order_details` WHERE order_number_id=$order_id; ");	
 
 	    $reset_facility_order_table = Doctrine_Manager::getInstance()->getCurrentConnection();
 	    $reset_facility_order_table->execute("DELETE FROM `facility_orders` WHERE  id=$order_id; ");
 		
-		$this->session->set_flashdata('system_success_message', "Order Number $order_id has been deleted");
-		
-		redirect('reports/order_listing');
+		$this->session->set_flashdata('system_success_message', "Order Number $order_id has been deleted");		
+		redirect("reports/order_listing/$for");
 	}
 	
      public function get_facility_sorf($order_id=null,$facility_code=null){

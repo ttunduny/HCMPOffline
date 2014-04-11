@@ -48,7 +48,7 @@
       	<div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         	<h5>Orders Pending Approval by District Pharmacist</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('reports/order_listing#Approval') ?>"><span class="badge"><?php 
+			<a class="link" href="<?php echo base_url('reports/order_listing/facility') ?>"><span class="badge"><?php 
 			echo $facility_dashboard_notifications['facility_order_count']['pending'] ?></span>Order(s) Pending.</a> 
 			</p>
         </div>
@@ -58,7 +58,7 @@
         <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         	<h5>Orders Rejected by District Pharmacist</h5> 
         	<p>
-			<a class="link" href="href="<?php echo base_url('reports/order_listing#Rejected') ?>""><span class="badge"><?php 
+			<a class="link" href="href="<?php echo base_url('reports/order_listing/facility') ?>""><span class="badge"><?php 
 			echo $facility_dashboard_notifications['facility_order_count']['rejected'] ?></span>Order(s) rejected</a> 
 			</p>
         </div>
@@ -68,7 +68,7 @@
         <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         	<h5>Pending Dispatch</h5> 
         	<p>
-			<a class="link" href="href="<?php echo base_url('reports/order_listing#Delivery') ?>""><span class="badge"><?php 
+			<a class="link" href="href="<?php echo base_url('reports/order_listing/facility') ?>""><span class="badge"><?php 
 			echo $facility_dashboard_notifications['facility_order_count']['approved'] ?></span>Order(s) pending dispatch from KEMSA</a> 
 			</p>
         </div>

@@ -30,19 +30,21 @@ class Commodities extends Doctrine_Record {
 	}
 	public static function get_all_from_supllier($supplier_id) {
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-    ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as commodity_id,
+    ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as commodity_id, c.total_commodity_units,
               c.unit_size,c.unit_cost ,c_s.source_name, c_s_c.sub_category_name
                FROM commodities c,commodity_sub_category c_s_c, commodity_source c_s
                WHERE c.commodity_sub_category_id = c_s_c.id
                AND c.commodity_source_id=$supplier_id
-                  AND c.commodity_sub_category_id = c_s_c.id
+               AND c.commodity_sub_category_id = c_s_c.id
                order by c_s_c.id asc,c.commodity_name asc "); 
 return $inserttransaction;
 	}
 	public static function get_facility_commodities($facility_code,$checker=null){
 		$order_by=isset($checker)? " order by c_s_c.sub_category_name asc ": "order by c.commodity_name asc" ;
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-    ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as commodity_id,c.unit_size,c.unit_cost as unit_cost,c_s.source_name, c_s_c.sub_category_name
+    ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as commodity_id,c.unit_size,c.unit_cost as unit_cost,
+    c.total_commodity_units,
+    c_s.source_name, c_s_c.sub_category_name
                FROM commodities c, commodity_source c_s, commodity_sub_category c_s_c,facility_monthly_stock f_m_s
                WHERE f_m_s.commodity_id = c.id
                AND c.commodity_sub_category_id = c_s_c.id

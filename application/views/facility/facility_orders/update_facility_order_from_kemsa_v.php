@@ -6,7 +6,7 @@
  <div class="container" style="width: 96%; margin: auto;">
 <span  class='label label-info'>Enter Order Quantity and Comment,
 Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
-<?php
+<?php $identifier = $this -> session -> userdata('user_indicator');
  $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/update_facility_new_order',$att); 
 //?>
 <div class="row" style="padding-left: 1%;">
@@ -41,7 +41,9 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo ($order_det
 </div>
 </div>
 <?php $order_number=$order_details[0]['id']; echo "<input type='hidden' name='order_number' value='$order_number'/>
-<input type='hidden' name='rejected' value='$rejected'/>"; ?>
+<input type='hidden' name='rejected' value='$rejected'/>
+<input type='hidden' name='rejected_admin' id='rejected_admin' value='0'/>
+<input type='hidden' name='approved_admin' id='approved_admin' value='0'/>"; ?>
 <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 <thead>
 <tr style="background-color: white">
@@ -122,15 +124,20 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo ($order_det
 <hr />
 <div class="container-fluid">
 <div style="float: right;">
-<?php if($option_==='readonly_'){?>
+<?php if($option_==='readonly_'):?>
 <a target="_blank" href="<?php echo base_url('reports/get_facility_sorf'.$order_number.'/'.$order_details[0]['facility_code']); ?>" >
 <button style="margin-left: 130px;" type="button" class="btn btn-primary">
 <span class="glyphicon glyphicon-save"></span>Download Order</button>
 </a>
-<?php }else{?>
+<?php else:?>
+<?php if($identifier==='district'):	?>
+<button type="button" class="reject btn btn-danger"><span class="glyphicon glyphicon-plus"></span>Reject Order</button>
+<button type="button" class="approve btn btn-success "><span class="glyphicon glyphicon-open"></span>Approve Order</button>
+<button type="button" class="add btn btn-sm btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Item</button></div>
+<?php else: ?>
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
-<button type="button" class="btn btn-success test"><span class="glyphicon glyphicon-open"></span>Update Order</button></div>
-<?php }?>
+<button type="button" class="btn btn-success test"><span class="glyphicon glyphicon-open"></span>Edit Order</button></div>
+<?php endif; endif?>
 </div>
 </form>  
 </div>
@@ -286,6 +293,17 @@ var $table = $('#example');
 	});
       /************save the data here*******************/
 	$('#save_dem_order').live('click', function() {
+    save_the_order_form()
+     });
+     $('.approve').live('click', function() {
+     $('#approved_admin').val(1);
+     save_the_order_form()
+     });
+     $('.reject').live('click', function() {
+     $('#rejected_admin').val(1);
+     save_the_order_form()
+     });
+     function save_the_order_form(){
      var order_total=$('#total_order_value').val();
      var workload=$('#workload').val();
      var bed_capacity=$('#bed_capacity').val();
@@ -303,17 +321,17 @@ var $table = $('#example');
     });
      }else{
    
-    $('#workload').delay(500).queue(function (nxt){
-    	
+    $('#workload').delay(500).queue(function (nxt){  	
     // Load up a new modal...
     var img='<img src="<?php echo base_url('assets/img/wait.gif') ?>"/>';
      dialog_box(img+'<h5 style="display: inline-block; font-weight:500;font-size: 18px;padding-left: 2%;"> Please wait as the order is being processed</h5>',
      '');
     	nxt();
     });
-       $("#myform").submit();  	
+     $("#myform").submit();  	
+     }	
      }
-     });
+     
 	function calculate_totals(){
 	var order_total=0;
 	var balance=0
