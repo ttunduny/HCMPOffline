@@ -88,11 +88,10 @@ type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="re
 <div class="container-fluid">
 <div style="float: right">
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
-<<<<<<< HEAD
+
 <button class=" save btn btn-sm btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>
-=======
-<button class="btn btn-sm btn-success" id="save"><span class="glyphicon glyphicon-open"></span>Save</button></div>
->>>>>>> 58859ecd907bf75731900b6846b3ce27b48e0bd7
+
+
 </div>
 </div>
 <?php echo form_close();?>

@@ -6,7 +6,7 @@
  <div class="container" style="width: 96%; margin: auto;">
 <span  class='label label-info'>Enter Order Quantity and Comment,
 Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
-<?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('',$att); //orders/facility_new_order?>
+<?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order',$att); //?>
 <div class="row" style="padding-left: 1%;">
 	<div class="col-md-2">
 	<b>*select ordering frequency</b> <select class="form-control" name="order_period" id="order_period">
@@ -31,7 +31,8 @@ Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
 <div class="col-md-2">
 <b>Drawing Rights Available Balance :</b>
 <input type="text" class="form-control" name="total_order_balance_value" 
-id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_rights; ?>"/>						
+id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_rights; ?>"/>	
+<input name="facility_code" type="hidden" value="<?php echo isset($facility_code)? $facility_code :$this -> session -> userdata('facility_id'); ?>" />					
 </div>
 </div>
 <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
@@ -102,7 +103,8 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 							<td><?php echo '<input type="text" class="form-control input-small cost" name="cost['.$i.']" value="0" readonly="yes"   />';?></td>
 							<td><input class="form-control input-small" type="text" <?php echo 'name="comment['.$i.']"' ?>  value="N/A" /></td>
 			       			</tr>						
-						<?php $i++;  } $i=$i-1; echo form_close()."<script>var count=".$i."</script>"	?>
+						<?php $i++; } $i=($i==0)? 0: $i=$i-1;
+						 echo form_close()."<script>var count=".$i."</script>"	?>
 </tbody>
 </table>
 
@@ -153,7 +155,7 @@ var $table = $('#example');
 						'<td><input class="form-control" readonly="readonly" type="text" name="unit_size"  /></td>'+
 						'<td><input class="form-control" readonly="readonly" type="text" name="unit_cost"   />'+
 						'<input type="hidden" name="cat_name"/><input type="hidden" name="commodity_id"  />' +
-						'<input type="hidden" name="commodity_name_"  /><input type="hidden" name="total_commodity_units"/></td></tr></tbody></table>';
+						'<input type="hidden" name="commodity_name_"  /><input type="hidden" name="total_commodity_units_" value=""/></td></tr></tbody></table>';
         //hcmp custom message dialog
     dialog_box(body_content,'<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'+
         '<button type="button" class="btn btn-primary add_item"><span class="glyphicon glyphicon-plus"></span>Add</button>');
@@ -169,7 +171,7 @@ var $table = $('#example');
 				$('input:text[name=unit_cost]').val(code_array[1]);
 				$('input:hidden[name=cat_name]').val(code_array[3]);
 				$('input:hidden[name=commodity_name_]').val($("#desc option:selected").text());
-				$('input:hidden[name=total_commodity_units]').val(code_array[5]);});
+				$('input:hidden[name=total_commodity_units_]').val(code_array[5]);});
 	// add the item to the order list			
 	$(".add_item").live("click", function (){
 	 var check_if_the_user_has_selected_a_commodity=$('#desc').val();
@@ -182,8 +184,8 @@ var $table = $('#example');
   	 '<input type="hidden" class="commodity_name" name="commodity_name['+new_count+']" value="'+$("#desc option:selected").text()+'" />'+
           '<input type="hidden" class="commodity_code" name="commodity_code['+new_count+']" value="'+$('input:text[name=commodity_code]').val()+'" />'+
          '<input type="hidden" class="commodity_id" name="commodity_id['+new_count+']" value="'+$("#desc option:selected").val()+'" />'+
-         '<input type="hidden" class="total_commodity_units" name="total_commodity_units['+new_count+']" value="'+$('input:hidden[name=total_commodity_units]').val()+'" />'+ 
-         '<input type="hidden" class="unit_cost" name="unit_cost['+new_count+']" value="'+$('input:text[name=unit_cost]').val()+'" />'+
+         '<input type="hidden" class="total_commodity_units" name="total_commodity_units['+new_count+']" value="'+$('input:hidden[name=total_commodity_units_]').val()+'" />'+ 
+         '<input type="hidden" class="unit_cost" name="price['+new_count+']" value="'+$('input:text[name=unit_cost]').val()+'" />'+
          '<input type="hidden" name="unit_size['+new_count+']" value="'+$('input:text[name=unit_size]').val()+'" />'+
 							"" + $('input:hidden[name=cat_name]').val() + "" ,  
 							"" + $("#desc option:selected").text() + "" , 
@@ -198,9 +200,9 @@ var $table = $('#example');
 							'<input class="form-control input-small" type="text" name="losses['+new_count+']" value="0"   />' ,
 							'<input class="form-control input-small" type="text" name="closing['+new_count+']" value="0"   />',
 							'<input class="form-control input-small" type="text" name="days['+new_count+']" value="0"   />',
-							'<input class="form-control input-small" type="text" name="historical['+new_count+']" value="0"   />',
-							'<input class="form-control input-small" type="text" value="0" readonly="yes"  />',
-						'<input class="form-control input-small quantity" type="text" name="quantity['+new_count+']" value="0" />',
+							'<input class="form-control input-small" type="text" name="amc['+new_count+']" value="0"   />',
+							'<input class="form-control input-small" type="text" value="0" name="suggested['+new_count+']" readonly="yes"  />',
+							'<input class="form-control input-small quantity" type="text" name="quantity['+new_count+']" value="0" />',
 							'<input class="form-control input-small actual_quantity" type="text" name="actual_quantity['+new_count+']" value="0" readonly="yes" />',
 							'<input class="form-control input-small cost" type="text" name="cost['+new_count+']" value="0" readonly="yes" />',
 							'<input type="text" class="form-control input-small" name="comment['+new_count+']" value="N/A"/>'
@@ -230,6 +232,9 @@ var $table = $('#example');
     $(this).closest("tr").find(".actual_quantity").val("");
 	$(this).closest("tr").find(".cost").val("");
     return;   } 
+    if(user_input==''){
+    	user_input=0;
+    }
 	var actual_units=parseInt(total_units)*user_input;
 	var total_cost=parseInt(unit_cost.replace(",", ""))*user_input;
 	$(this).closest("tr").find(".actual_quantity").val(actual_units);
@@ -287,6 +292,7 @@ var $table = $('#example');
      dialog_box(img+'<h5 style="display: inline-block; font-weight:500;font-size: 18px;padding-left: 2%;"> Please wait as the order is being processed</h5>',
      '');
     	nxt();
+    	$("#myform").submit();
     });
      	
      }

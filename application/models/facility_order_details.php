@@ -73,6 +73,14 @@ and c.order_number_id=$order_id  order by a.id asc,b.commodity_name asc ");
 		
 	 
 	}
+		public static function get_order_details_from_order($order_id,$commodity_id){	
+$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("select ifnull(`c`.`quantity_ordered_pack`,0) as total,price
+from `facility_order_details` `c`
+where `c`.`commodity_id`=$commodity_id
+and c.order_number_id=$order_id ");
+        return $inserttransaction ;
+	}
 
 	
 	

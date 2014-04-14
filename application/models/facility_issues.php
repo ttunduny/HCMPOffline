@@ -46,19 +46,18 @@ class facility_issues extends Doctrine_Record {
 		$convertfrom=date('Y-m-d',strtotime($from ));
 		$convertto=date('Y-m-d',strtotime($to ));
 
-		
-
 	$transaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-    ->fetchAll("SELECT f.date_issued,f.expiry_date,f.batch_no,c.unit_size,f.s11_No,f.balance_as_of,f.adjustmentnve,f.adjustmentpve,f.qty_issued,u.fname,u.lname,
-		s.service_point_name FROM  hcmp.facility_issues f 
-		INNER JOIN  hcmp.commodities c
-		ON c.id=f.commodity_id
-		LEFT JOIN hcmp.service_points s
-		ON f.issued_to = s.id
-		INNER JOIN hcmp.user u
-		ON f.issued_by = u.id
-		WHERE f.facility_code=17401 AND f.status =1 AND f.commodity_id=1 AND f.date_issued BETWEEN '$convertfrom' AND '$convertto'
-		ORDER BY f.date_issued ASC"); 
+
+     ->fetchAll("SELECT f.date_issued,f.expiry_date,f.batch_no,c.unit_size,f.s11_No,f.balance_as_of,f.adjustmentnve,
+f.adjustmentpve,f.qty_issued,u.fname,u.lname, f. issued_to as service_point_name 
+FROM hcmp.facility_issues f INNER JOIN hcmp.commodities c 
+ON c.id=f.commodity_id  INNER JOIN hcmp.user u 
+ON f.issued_by = u.id WHERE f.facility_code=17401 
+AND f.status =1 AND f.commodity_id=1 
+AND f.date_issued BETWEEN '$convertfrom' 
+AND '$convertto' 
+ORDER BY f.date_issued ASC"); 
+
 
 			return $transaction;	
 	}

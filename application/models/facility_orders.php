@@ -39,7 +39,7 @@ $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($
 
  $orders = Doctrine_Manager::getInstance()->getCurrentConnection()
 ->fetchAll("SELECT  f_o_s.`status_desc` as status, count(f_o.`id`) as total from facilities f, districts d,facility_order_status f_o_s,
- facility_orders f_o where f.facility_code=f_o.facility_code and f.district=d.id and f_o.`status`= f_o_s.id and $where_clause");
+ facility_orders f_o where f.facility_code=f_o.facility_code and f.district=d.id and f_o.`status`= f_o_s.id and $where_clause GROUP BY f_o_s.id");
   return $orders ;	    	
     }
 	////dumbing data into the issues table
