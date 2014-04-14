@@ -223,7 +223,7 @@ class Reports extends MY_Controller {
 		if(count($total)==0){
 		 array_push($temp_array,0,0);
 		}else{
-		$total_=$total[0]['total']*$total[0]['price'];
+		$total_=$total[0]['total']*str_replace(",", '',$stock_data[$i]["unit_cost"]);
 		array_push($temp_array,$total[0]['total'],$total_);
 		$total_all=$total_all+$total_;
 		$order_total_all_items=$order_total_all_items+$total_;

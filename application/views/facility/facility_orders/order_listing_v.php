@@ -177,15 +177,15 @@ HTML_DATA;
 </div>
  </div>
 <div class="col-md-10" style="border: 1px solid #DDD;">
-	   <div id="myTabContent" class="tab-content">
-	<ul id="myTab" class="nav nav-tabs">
+	   <div id="myTabContent_">
+	<ul >
       <li class=""><a href="#Rejected" data-toggle="tab">Rejected Orders</a></li>
       <li class=""><a href="#Approval" data-toggle="tab">Pending Approval</a></li>
       <li class=""><a href="#Delivery" data-toggle="tab">Pending Delivery</a></li>
       <li class=""><a href="#Delivered" data-toggle="tab">Delivered</a></li>
     </ul>
  
-      <div class="tab-pane fade active in" id="Rejected">
+      <div  id="Rejected">
  <table cellpadding="0" cellspacing="0" width="100%" border="0" 
  class="row-fluid table table-hover table-bordered table-update"  id="test1">
 	<thead>
@@ -204,9 +204,9 @@ HTML_DATA;
 </tbody>
 </table> 
       </div>
-      <div class="tab-pane fade" id="Approval">
-        <table width="100%" border="0" 
-        class="row-fluid table table-hover table-bordered table-update"  id="test2" style="margin-top: 50px">
+      <div  id="Approval">
+        <table width="80%" border="0" 
+        class="row-fluid table table-hover table-bordered table-update"  id="test2">
 	<thead>
 		<tr>
 			<th>HCMP Order No.</th>
@@ -278,12 +278,13 @@ HTML_DATA;
 <script>
 /* Table initialisation */
 $(document).ready(function() {
-	//datatables settings 
+	/*
+	 	//datatables settings 
 	$("#test1").dataTable( {
 	     "sDom": "T lfrtip",
 	     "sScrollY": "377px",
 	     
-                    "sPaginationType": "bootstrap",
+                  "bJQueryUI": true,
                     "oLanguage": {
                         "sLengthMenu": "_MENU_ Records per page"
                     },
@@ -305,7 +306,7 @@ $(document).ready(function() {
 		$("#test2").dataTable( {
 	     "sDom": "T lfrtip",
 	     "sScrollY": "377px",
-                    "sPaginationType": "bootstrap",
+                  "bJQueryUI": true,
                     "oLanguage": {
                         "sLengthMenu": "_MENU_ Records per page"
                     },
@@ -327,7 +328,7 @@ $(document).ready(function() {
 		$("#test3").dataTable( {
 	     "sDom": "T lfrtip",
 	     "sScrollY": "377px",
-                    "sPaginationType": "bootstrap",
+                  "bJQueryUI": true,
                     "oLanguage": {
                         "sLengthMenu": "_MENU_ Records per page"
                     },
@@ -349,7 +350,7 @@ $(document).ready(function() {
 		$("#test4").dataTable( {
 	     "sDom": "T lfrtip",
 	     "sScrollY": "377px",
-                    "sPaginationType": "bootstrap",
+                  "bJQueryUI": true,
                     "oLanguage": {
                         "sLengthMenu": "_MENU_ Records per page"
                     },
@@ -370,7 +371,9 @@ $(document).ready(function() {
 	} );
 
 	$('.dataTables_filter label input').addClass('form-control');
-	$('.dataTables_length label select').addClass('form-control');
+	$('.dataTables_length label select').addClass('form-control');*/
+
+    $( "#myTabContent_" ).tabs();
 	$(".order-for").live('click', function() {
 	var body_content='<select id="facility_code" name="facility_code" class="form-control"><option value="0">--Select Facility Name--</option>'+
                     '<?php	foreach($facilities as $facility):
