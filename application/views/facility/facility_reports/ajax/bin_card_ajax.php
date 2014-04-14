@@ -1,11 +1,18 @@
+<style type="text/css">
+.table-bordered{border: 1px solid #FFF !important;}
+.table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td {
+border: 1px solid #FFF !important;
+}
+</style>
+<button type="submit" id="filter" name="filter" class="btn btn-default ">Download PDF <span class="glyphicon glyphicon-download"></span> </button>
  <div style="min-height: 400px; background:#edc1d8">
   <img style="align-content: center;margin-left: 46%; border:0 none;" src="<?php echo base_url();?>assets/img/coat_of_arms-resized1.png" class="img-responsive " alt="Responsive image">
 
         <div id="" style="text-align: center; ">
           <span style="font-size: 0.95em;font-weight: bold; ">Ministry of Health</span><br />
-          <span style="font-size: 0.85em;">Health Commodities Management Platform (HCMP)</span> 
+          <span style="font-size: 0.9em;">Health Commodities Management Platform (HCMP)</span> 
         </div>
-    <table  class="table table-bordered table-update" id="" >
+    <table  class="table table-bordered table-update" id="" style="text-transform:capitalize">
   <thead style="">
   <tr>
     <th>Date of Issue</th>
@@ -69,12 +76,25 @@
                  }   
               
         
-                ?>
+                
+
+                  if ($bin['s11_No']=='initial stock update') {
+                $color="red";
+                $formated_date_exp="N/A";
+                 }elseif ($bin['s11_No']=='stock addition') {
+                   $color="red";
+                 }
+                 else{
+                  $color="black";
+                 }
+               ?>
         
-            <tr>
+            <tr style="color:<?php echo $color;?> " >
               
               <td><?php echo $formated_date;?> </td>
-              <td><?php echo $bin['s11_No']; ;?> </td>
+             
+              <td ><?php echo $bin['s11_No']; ;?> </td>
+             
               <td><?php echo $bin['unit_size'];?> </td>
               <td><?php echo $bin['batch_no'];?> </td>
               <td style="white-space:nowrap;"l><?php echo $formated_date_exp;?> </td>
@@ -106,8 +126,8 @@
               
             </tr>
           <?php
-               }
-                      
+              
+              }        
 
           ?>  
      

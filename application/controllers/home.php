@@ -18,11 +18,13 @@ class Home extends MY_Controller
 		(!$this -> session -> userdata('user_id')) ? redirect('user'): null ;	
 
 		$identifier = $this -> session -> userdata('user_indicator');
+		
         switch ($identifier):
 			case 'moh':
 			$view = 'shared_files/template/dashboard_template_v';	
 			break;
-			case 'facility_admin' || 'facility':
+			case 'facility_admin':
+			case 'facility':
 			$view = 'shared_files/template/template';
 		    $data['content_view'] = "facility/facility_home_v";	
 			$data['facility_dashboard_notifications']=$this->get_facility_dashboard_notifications_graph_data();

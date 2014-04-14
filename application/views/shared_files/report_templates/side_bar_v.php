@@ -1,3 +1,5 @@
+<?php ?>
+
 <div class="panel-group " id="accordion" style="padding: 0;">
                 
                 
@@ -124,3 +126,4 @@
 
 
             </div>
+<?php?>

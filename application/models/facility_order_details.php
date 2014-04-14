@@ -8,7 +8,8 @@ class facility_order_details extends Doctrine_Record {
 		        $this->hasColumn('id', 'int');
 				$this->hasColumn('order_number_id', 'int');
 				$this->hasColumn('commodity_id', 'int');
-				$this->hasColumn('quantity_ordered', 'int');
+				$this->hasColumn('quantity_ordered_pack', 'int');
+				$this->hasColumn('quantity_ordered_unit', 'int');
 				$this->hasColumn('quantity_recieved', 'int');
 				$this->hasColumn('price', 'int');
 				$this->hasColumn('o_balance', 'int');
@@ -20,6 +21,7 @@ class facility_order_details extends Doctrine_Record {
 				$this->hasColumn('days', 'int');
 				$this->hasColumn('comment', 'varchar',100);
 				$this->hasColumn('s_quantity', 'int');
+				$this->hasColumn('c_stock', 'int');
 				$this->hasColumn('amc', 'int');
 				$this->hasColumn('status', 'int');	
 	}
@@ -27,6 +29,49 @@ class facility_order_details extends Doctrine_Record {
 	public function setUp() {
 		$this -> setTableName('facility_order_details');		
 		$this -> hasMany('commodities as commodity_detail', array('local' => 'commodity_id', 'foreign' => 'id'));
+		
+	}
+	////dumbing data into the issues table
+	public static function update_facility_order_details_table($data_array){
+		$o = new facility_order_details();
+	    $o->fromArray($data_array);
+		$o->save();
+		return TRUE;
+	}
+	
+	public static function get_order_details($order_id){	
+$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("select
+`a`.`sub_category_name` AS `sub_category_name`,
+`b`.`commodity_name` AS `commodity_name`,
+`b`.`commodity_code` AS `commodity_code`,
+`b`.total_commodity_units,
+`b`.`unit_size` AS `unit_size`,
+`c`.`id`,
+`c`.`price` AS `unit_cost`,
+`c`.`commodity_id` AS `commodity_id`,
+`c`.`quantity_ordered_pack`,
+`c`.`quantity_ordered_unit`,
+`c`.`o_balance` AS `opening_balance`,
+`c`.`t_receipts` AS `total_receipts`,
+`c`.`t_issues` AS `total_issues`,
+`c`.`comment` AS `comment`,
+ceiling((`c`.`c_stock` / `b`.`total_commodity_units`)) AS `closing_stock_`,
+`c`.`c_stock` AS `closing_stock`,
+`c`.`days` AS `days_out_of_stock`,
+`c`.`losses` AS `losses`,
+`c`.`status` AS `status`,
+`c`.`adjustpve` AS `adjustmentpve`,
+`c`.`adjustnve` AS `adjustmentnve`,
+`c`.`amc` AS `historical` 
+from  `commodities` `b`,`commodity_sub_category` `a` ,`facility_order_details` `c`
+where `b`.`id` = `c`.`commodity_id`
+and `c`.`status` = '1' 
+and `a`.`id` = `b`.`commodity_sub_category_id` 
+and c.order_number_id=$order_id  order by a.id asc,b.commodity_name asc ");
+        return $inserttransaction ;
+		
+	 
 	}
 
 	

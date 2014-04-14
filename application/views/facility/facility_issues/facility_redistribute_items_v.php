@@ -1,4 +1,4 @@
-<div class="container" style="width: 96%; margin: auto;">
+<div class="container" style="width: 94%; margin: auto;">
 <span  class='label label-info'>To Issue commodities i) select commodity to issue 
 	ii) enter the service point and quanitity you wish to issue and select the batch no
 	iii) to add more issues press add row</span><br /><span class="label label-danger">Available Batch Stock is for a specific 
@@ -6,7 +6,7 @@
 	<hr />
 <div class="table-responsive" style="height:400px; overflow-y: auto;">
  <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/external_issue',$att); ?>
-<table  class="table table-hover table-bordered table-update" id="facility_issues_table" >
+<table width="100%"  class="table table-hover table-bordered table-update" id="facility_issues_table" >
 <thead style="background-color: white">
 					<tr>
 						<th>Select Subcounty</th>
@@ -26,7 +26,6 @@
 					</thead>
 					<tbody>
 						<tr row_id='0'>
-					
 							<td>
 								<select name="district[0]" class="form-control input-small district">
 								<option value="0">--select subcounty---</option>
@@ -89,7 +88,11 @@ type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="re
 <div class="container-fluid">
 <div style="float: right">
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
+<<<<<<< HEAD
 <button class=" save btn btn-sm btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>
+=======
+<button class="btn btn-sm btn-success" id="save"><span class="glyphicon glyphicon-open"></span>Save</button></div>
+>>>>>>> 58859ecd907bf75731900b6846b3ce27b48e0bd7
 </div>
 </div>
 <?php echo form_close();?>

@@ -53,7 +53,7 @@ class facility_issues extends Doctrine_Record {
 		s.service_point_name FROM  hcmp.facility_issues f 
 		INNER JOIN  hcmp.commodities c
 		ON c.id=f.commodity_id
-		INNER JOIN hcmp.service_points s
+		LEFT JOIN hcmp.service_points s
 		ON f.issued_to = s.id
 		INNER JOIN hcmp.user u
 		ON f.issued_by = u.id

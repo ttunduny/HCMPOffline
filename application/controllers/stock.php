@@ -271,7 +271,7 @@ for($key=0;$key<count($stock_id);$key++):
 	 endif;
 endfor;
 $this->session->set_flashdata('system_success_message', "Facility Stock data has Been Updated"); 
-redirect('stock/facility_stock_data');	
+redirect('reports/facility_stock_data');	
 endif;	
 redirect();
 }
