@@ -88,7 +88,8 @@ type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="re
 <div class="container-fluid">
 <div style="float: right">
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
-<button class="btn btn-sm btn-success" id="save"><span class="glyphicon glyphicon-open"></span>Save</button></div>
+<button class=" save btn btn-sm btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>
+
 </div>
 </div>
 <?php echo form_close();?>
@@ -302,7 +303,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
       // validate the form
 	$("#myform").validate();
       /************save the data here*******************/
-	$('#save').button().click(function() {
+	$('.save').button().click(function() {
     $("input[name^=commodity_id]").each(function() {
                 	$(this).closest("tr").find(".batch_no").removeAttr('disabled'); 
                 	$(this).closest("tr").find(".commodity_unit_of_issue").removeAttr('disabled'); 	

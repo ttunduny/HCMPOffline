@@ -1,18 +1,22 @@
-<?php /**
+<?php
+/*
  * @author Kariuki & Mureithi
  */
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
-class Home extends MY_Controller {
-	function __construct() {
+class Home extends MY_Controller 
+{
+	function __construct() 
+	{
 		parent::__construct();
 		$this -> load -> helper(array('form', 'url'));
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
 	}
-	
 
+		
 	public function index() {	
-		(!$this -> session -> userdata('user_id')) ? redirect('user'): null ;		
+		(!$this -> session -> userdata('user_id')) ? redirect('user'): null ;	
+
 		$identifier = $this -> session -> userdata('user_indicator');
 		
         switch ($identifier):
@@ -49,6 +53,7 @@ class Home extends MY_Controller {
 		$data['banner_text'] = "Home";
 		$this -> load -> view($view, $data);
 	}
+
     public function get_facility_dashboard_notifications_graph_data(){
     //format the graph here
     $facility_code=$this -> session -> userdata('facility_id'); 
@@ -88,6 +93,7 @@ class Home extends MY_Controller {
 		 * @var [type]
 		 * for ajax
 		 */
+
 		$district = $_POST['district'];
 		$facilities = Facilities::getFacilities($district);
 		$list = "";

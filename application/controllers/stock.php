@@ -19,55 +19,11 @@ class Stock extends MY_Controller {
 |--------------------------------------------------------------------------
 | update facility stock on first run
 |--------------------------------------------------------------------------
-|0. set up the commodities the facility uses
- 1. load the view
+|1. load the view
 |2. check if the user has any temp data
 |3. auto save the data
 |4. save the data in the facility stock, facility transaction , issues table
 */
-     public function set_up_facility_stock(){
-     	$facility_code=$this -> session -> userdata('facility_id'); 
-        $data['title'] = "Set up facility stock";
-     	$data['content_view'] = "facility/facility_stock_data/set_up_facility_stock_v";
-		$data['banner_text'] = "Set up facility stock";
-		$data['commodities']=commodities::set_facility_stock_data_amc($facility_code);
-		$this -> load -> view("shared_files/template/template", $data);		
-     }
-	 public function save_set_up_facility_stock($checker=null){
-	 //security check	  
-if($this->input->is_ajax_request()):
-	    $commodity_id=$this->input->post('commodity_id');
-        $consumption_level=$this->input->post('consumption_level');
-		$selected_option=$this->input->post('selected_option');
-        $total_units=$this->input->post('total_units');
-		$facility_code=$this -> session -> userdata('facility_id'); 
-		if($checker=='delete'): // check if the user has uncheked an option
-		$insert = Doctrine_Manager::getInstance()->getCurrentConnection();
-		$insert->execute("delete from  facility_monthly_stock where facility_code='$facility_code' AND commodity_id='$commodity_id'");
-		else:
-        //check if this commodity exits in the db
-		$query = Doctrine_Query::create() -> select("id") -> from("facility_monthly_stock")
-		-> where("facility_code=$facility_code")->andwhere("commodity_id=$commodity_id");
-		$stocktake = $query ->execute(); $count=count($stocktake);
-		if ($count>0) {
-		$update = Doctrine_Manager::getInstance()->getCurrentConnection();
-      	$q = Doctrine_Query::create()
-			->update('facility_monthly_stock')
-				->set('consumption_level','?',"$consumption_level")
-				->set('selected_option','?',"$selected_option")
-				->set('total_units','?',"$total_units")
-				->where("facility_code='$facility_code' AND commodity_id='$commodity_id'");
-				 $q->execute();
-		} else if ($count==0) {
-		$insert = Doctrine_Manager::getInstance()->getCurrentConnection();
-		$insert->execute("INSERT INTO facility_monthly_stock 
-		(`facility_code`, `commodity_id`, `consumption_level`, `total_units`, `selected_option`) 
-		VALUES ('$facility_code', $commodity_id,'$consumption_level', $total_units,'$selected_option')");
-		}				
-endif;	
-      echo 'success ';
-endif;
-	 }
 	 public function facility_stock_first_run($checker){
 	 	$which_view_to_load=($checker=='first_run')?"facility/facility_stock_data/update_facility_stock_on_first_run_v" :
 		"facility/facility_stock_data/update_facility_stock_v";
@@ -220,7 +176,7 @@ public function add_more_stock_level(){//////////////////////////////////ADDING 
          $count=count($commodity_id);
 		 $date_of_entry=date('y-m-d H:i:s');
          //collect n set the data in the array
-         //echo count($commodity_id)."jack";
+         echo count($commodity_id)."jack";
 		for($i=0;$i<$count;$i++):
 			$mydata=array('facility_code'=>$facility_code,
 			'commodity_id'=>$commodity_id[$i],

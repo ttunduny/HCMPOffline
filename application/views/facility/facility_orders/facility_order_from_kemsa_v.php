@@ -181,7 +181,7 @@ var $table = $('#example');
 	 }	
 	// add the items here to the order form
 	  $("#example" ).dataTable().fnAddData( [ 
-	  	 '<input type="hidden" class="commodity_name" name="commodity_name['+new_count+']" value="'+$("#desc option:selected").text()+'" />'+
+  	 '<input type="hidden" class="commodity_name" name="commodity_name['+new_count+']" value="'+$("#desc option:selected").text()+'" />'+
           '<input type="hidden" class="commodity_code" name="commodity_code['+new_count+']" value="'+$('input:text[name=commodity_code]').val()+'" />'+
          '<input type="hidden" class="commodity_id" name="commodity_id['+new_count+']" value="'+$("#desc option:selected").val()+'" />'+
          '<input type="hidden" class="total_commodity_units" name="total_commodity_units['+new_count+']" value="'+$('input:hidden[name=total_commodity_units_]').val()+'" />'+ 
@@ -301,6 +301,7 @@ var $table = $('#example');
 	var order_total=0;
 	var balance=0
 	 $("input[name^=quantity]").each(function() {
+
 	 	if($(this).val()=='')
 	 	{ var total=0} 
 	 	else{ var total=$(this).val()

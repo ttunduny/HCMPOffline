@@ -80,12 +80,15 @@ body {
 	#logo_text{
 		margin-left:20px;
 	}
+<<<<<<< HEAD
+=======
 	body{
 		font-size: 1em !important;
 	}
 	h5{
 		font-size: 12px !important;
 	}
+>>>>>>> 112aeab2173cefcfa5aea7cf64c14b008f777034
 }
 @media all and (min-width: 1025px) {
 	#logo{
