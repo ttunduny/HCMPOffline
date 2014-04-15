@@ -66,13 +66,10 @@
                  $qty_issued_text= trim($qty_issued, "-");
                  }else{
                    $qty_issued_text= $bin['qty_issued'];
-                 }   
-              
+                 }            
         
                 ?>
-        
-            <tr>
-              
+            <tr>             
               <td><?php echo $formated_date;?> </td>
               <td><?php echo $bin['s11_No']; ;?> </td>
               <td><?php echo $bin['unit_size'];?> </td>

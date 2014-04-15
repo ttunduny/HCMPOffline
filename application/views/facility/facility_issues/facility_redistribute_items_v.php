@@ -88,13 +88,15 @@ type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="re
 <div class="container-fluid">
 <div style="float: right">
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
-<button class=" save btn btn-sm btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>
+<button class=" save btn btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 
 </div>
 </div>
 <?php echo form_close();?>
 <script>
 $(document).ready(function() {	
+	//step one load all the facility data here
+var facility_stock_data=<?php echo $facility_stock_data;     ?>;
  var $table = $('table');
 //float the headers
   $table.floatThead({ 
@@ -102,10 +104,9 @@ $(document).ready(function() {
 	 zIndex: 1001,
 	 scrollContainer: function($table){ return $table.closest('.table-responsive'); }
 	});	
-//step one load all the facility data here
-var facility_stock_data=<?php echo $facility_stock_data;     ?>;
+
 ///// county district facility filter 
-       $('.district').live("change", function() {
+       $('.district').on("change", function() {
 			/*
 			 * when clicked, this object should populate district names to district dropdown list.
 			 * Initially it sets default values to the 2 drop down lists(districts and facilities) 
@@ -113,7 +114,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			 * 3 arguments(the ajax url, value POSTed and the id of the object to populated)
 			 */
 	        var locator =$('option:selected', this);
-			json_obj={"url":"<?php echo site_url("home/get_facilities");?>",}
+			json_obj={"url":"<?php echo site_url("Reports/get_facilities");?>",}
 			var baseUrl=json_obj.url;
 			var id=$(this).val();
 		    var dropdown;
@@ -139,7 +140,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			});				
 		});	
             ///when changing the commodity combobox
-      		$(".desc").live('change',function(){
+      		$(".desc").on('change',function(){
       		var row_id=$(this).closest("tr").index();	
       		var locator=$('option:selected', this);
 			var data =$('option:selected', this).attr('special_data'); 
@@ -185,7 +186,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 				locator.closest("tr").find(".commodity_id").val(commodity_id);
 				locator.closest("tr").find(".commodity_balance").val(remaining_items);	
 		});//entering the values to issue check if you have enough balance
-        $(".quantity_issued").live('keyup',function (){
+        $(".quantity_issued").on('keyup',function (){
         	var bal=parseInt($(this).closest("tr").find(".available_stock").val());
         	var bal1=parseInt($(this).closest("tr").find(".commodity_balance").val());
         	var selector_object=$(this);
@@ -228,7 +229,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			//reset the values of current element 
 		  clone_the_last_row_of_the_table();
 		});	/////batch no change event
-		$('.batch_no').live('change',function(){
+		$('.batch_no').on('change',function(){
 			var row_id=$(this).closest("tr").index();
 		    var locator=$('option:selected', this);
 			var data =$('option:selected', this).attr('special_data'); 
@@ -263,11 +264,11 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			    }
 			  			
       }); // change issue type
-        $(".commodity_unit_of_issue").live('change', function(){
+        $(".commodity_unit_of_issue").on('change', function(){
           $(this).closest("tr").find(".quantity_issued").val('0');
           $(this).closest("tr").find(".balance").val($(this).closest("tr").find(".commodity_balance").val());	
         })/// remove the row
-		$('.remove').live('click',function(){
+		$('.remove').on('click',function(){
 			var data_ =$('option:selected', $(this).closest("tr").find('.desc')).attr('special_data'); 
 	       	var data_array=data_.split("^");
 			var row_id=$(this).closest("tr").index();

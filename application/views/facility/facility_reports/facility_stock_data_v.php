@@ -74,7 +74,7 @@ $(document).ready(function() {
 				"print",
 				{
 					"sExtends":    "collection",
-					"sButtonText": 'Save <span class="caret"></span>',
+					"sButtonText": 'Save ',
 					"aButtons":    [ "csv", "xls", "pdf" ]
 				}
 			],

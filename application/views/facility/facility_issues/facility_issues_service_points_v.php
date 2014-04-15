@@ -80,7 +80,7 @@ type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="re
 <div class="container-fluid">
 <div style="float: right">
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
-<button class="save btn btn-sm btn-success" id=""><span class="glyphicon glyphicon-open"></span>Save</button></div>
+<button class="save btn btn-success" id=""><span class="glyphicon glyphicon-open"></span>Save</button></div>
 </div>
 </div>
 <?php echo form_close();?>
