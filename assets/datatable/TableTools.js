@@ -1024,7 +1024,7 @@ TableTools.prototype = {
 			
 			$(dt.nTable).addClass( this.classes.select.table );
 			
-			$('tr', dt.nTBody).live( 'click', function(e) {
+			$('tr', dt.nTBody).on( 'click', function(e) {
 				/* Sub-table must be ignored (odd that the selector won't do this with >) */
 				if ( this.parentNode != dt.nTBody )
 				{

@@ -121,12 +121,28 @@ function ajax_simple_post_with_console_response(url, data){
  /******************---------------END--------------------------**********************/
 /* HCMP system confirmation message box */
 function dialog_box(body_html_data,footer_html_data){
+	
 	        $('#communication_dialog .modal-body').html("");
 			$('#communication_dialog .modal-footer').html("");
             //set message dialog box 
             $('#communication_dialog .modal-footer').html(footer_html_data);
             $('#communication_dialog .modal-body').html(body_html_data);
             $('#communication_dialog').modal('show');
+            $(".clone_datepicker").datepicker({
+	beforeShowDay: function(date)
+    {
+        // getDate() returns the day [ 0 to 31 ]
+     if (date.getDate() ==
+         getLastDayOfYearAndMonth(date.getFullYear(), date.getMonth()))
+        {
+            return [true, ''];
+        }
+        return [false, ''];
+    },				
+	dateFormat: 'd M yy', 
+	changeMonth: true,
+	changeYear: true,
+	buttonImage: baseUrl,       });	
 	
 }
 /******************---------------END--------------------------**********************/

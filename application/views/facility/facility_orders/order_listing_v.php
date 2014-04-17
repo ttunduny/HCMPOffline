@@ -374,7 +374,7 @@ $(document).ready(function() {
 	$('.dataTables_length label select').addClass('form-control');*/
 
     $( "#myTabContent_" ).tabs();
-	$(".order-for").live('click', function() {
+	$(".order-for").on('click', function() {
 	var body_content='<select id="facility_code" name="facility_code" class="form-control"><option value="0">--Select Facility Name--</option>'+
                     '<?php	foreach($facilities as $facility):
 						     $facility_code=$facility->facility_code;
@@ -384,7 +384,7 @@ $(document).ready(function() {
     dialog_box(body_content,
     '<button type="button" class="btn btn-primary order_for_them" >Order For Them</button>'
     +'<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>'); 
-    $(".order_for_them").live('click', function() {
+    $(".order_for_them").on('click', function() {
     var facility_code=$('#facility_code').val();
     if(facility_code==0){
     alert("Please select a Facility First");
@@ -396,18 +396,18 @@ $(document).ready(function() {
     });
 		
 	});
-	$(".delete").live('click', function() {
+	$(".delete").on('click', function() {
 	id= $(this).attr("id");
 		 //hcmp custom message dialog
     dialog_box("The order will be deleted and cannot be recovered!. Are you sure?",
     '<button type="button" class="btn btn-danger delete-dem-order" data-dismiss="modal">Delete</button>'
     +'<button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>');    
-    $(".delete-dem-order").live('click', function() {
+    $(".delete-dem-order").on('click', function() {
     window.location="<?php     $for=$identifier=='district'? 'subcounty': (($identifier=='facility')? 'facility':'county'); 
      echo site_url("orders/delete_facility_order/$for");?>/"+id;	
     });
 	});	
-	$(".aggregate-orders").live('click', function() {
+	$(".aggregate-orders").on('click', function() {
 	var addition="";
 	var url="<?php echo base_url("reports/aggragate_order_new_sorf");?>/";
 	var aggragate=false;

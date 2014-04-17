@@ -216,7 +216,7 @@ $(document).ready(function() {
 	        // refresh the datepickers
 			refreshDatePickers();
 		});	
-	$('.commodity_available_stock').live('keyup',function(){
+	$('.commodity_available_stock').on('keyup',function(){
    //get the value of the input
     var num=$(this).val();
     //get the object 
@@ -307,12 +307,12 @@ $(document).ready(function() {
 			}		
 			return alert_message;
     }
-    $('.remove').live('click',function(){
+    $('.remove').on('click',function(){
     var selector_object=$(this);
      //hcmp custom message dialog
     dialog_box("Are you sure you want to delete this record?",'<button type="button" class="btn btn-danger remove_record" >OK</button>'+
     '<button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>'); 
-    $('.remove_record').live('click',function(){
+    $('.remove_record').on('click',function(){
     //url for deleting the row
     var url = "<?php echo base_url().'stock/delete_temp_autosave'?>";
     //get the data to delete the row

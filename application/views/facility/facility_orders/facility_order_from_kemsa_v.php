@@ -161,7 +161,7 @@ var $table = $('#example');
         '<button type="button" class="btn btn-primary add_item"><span class="glyphicon glyphicon-plus"></span>Add</button>');
     });
     // add item modal box
-    $("#desc").live("change", function (){
+    $("#desc").on("change", function (){
     var data= $('option:selected', this).attr('special_data');  
 				var code_array=data.split("^");
 				var commodity_id=code_array[0];
@@ -173,7 +173,7 @@ var $table = $('#example');
 				$('input:hidden[name=commodity_name_]').val($("#desc option:selected").text());
 				$('input:hidden[name=total_commodity_units_]').val(code_array[5]);});
 	// add the item to the order list			
-	$(".add_item").live("click", function (){
+	$(".add_item").on("click", function (){
 	 var check_if_the_user_has_selected_a_commodity=$('#desc').val();
 	 if(check_if_the_user_has_selected_a_commodity==0){
 	 	alert("Please select a commodity first");
@@ -211,7 +211,7 @@ var $table = $('#example');
 		$('#communication_dialog').modal('hide');	
 	});
 	//compute the order totals here
-	$(".quantity").live('keyup', function (){
+	$(".quantity").on('keyup', function (){
 	var selector_object=$(this);
 	var user_input=$(this).val();
 	var total_units=$(this).closest("tr").find(".total_commodity_units").val();
@@ -269,7 +269,7 @@ var $table = $('#example');
     +'<button type="button" class="btn btn-primary" id="save_dem_order" data-dismiss="modal">Save</button>');
 	});
       /************save the data here*******************/
-	$('#save_dem_order').live('click', function() {
+	$('#save_dem_order').on('click', function() {
      var order_total=$('#total_order_value').val();
      var workload=$('#workload').val();
      var bed_capacity=$('#bed_capacity').val();
