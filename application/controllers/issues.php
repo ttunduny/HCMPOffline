@@ -10,6 +10,7 @@ if (!defined('BASEPATH'))
 		
 		$this->load->helper(array('form','url'));
 		$this->load->library(array('hcmp_functions','form_validation'));
+		$this->load->database();
 	}
 /*
 |--------------------------------------------------------------------------
@@ -88,7 +89,7 @@ if (!defined('BASEPATH'))
 //security check
 if($this->input->post('mfl')):
 $facility_code=$this -> session -> userdata('facility_id');
-$service_points=$this->input->post('mfl');
+$service_point=$this->input->post('mfl');
 $commodity_id=$this->input->post('desc');
 $commodity_balance_before=$this->input->post('commodity_balance');
 $facility_stock_id=$this->input->post('facility_stock_id');
@@ -99,7 +100,8 @@ $quantity_issued=$this->input->post('quantity_issued');
 $clone_datepicker_normal_limit_today=$this->input->post('clone_datepicker_normal_limit_today');
 $total_units=$this->input->post('total_units');
 $total_items=count($facility_stock_id);
-
+$data_array_issues_table=array();
+$data_array_redistribution_table=array();
         for($i=0;$i<$total_items;$i++)://compute the actual stock
         $total_items_issues=($commodity_unit_of_issue[$i]=='Pack_Size')? 
         $quantity_issued[$i]*$total_units[$i] : $quantity_issued[$i]; 
@@ -108,9 +110,16 @@ $total_items=count($facility_stock_id);
 	                 's11_No'=>'(-ve Adj) Stock Deduction', 'batch_no' => $batch_no[$i] ,'commodity_id' => $commodity_id[$i],
 				     'expiry_date' => date('y-m-d',strtotime($expiry_date[$i])),'qty_issued'=> $total_items_issues ,
 				     'issued_to'=>"inter-facility donation: MFL NO ".$service_point[$i],'balance_as_of'=>$commodity_balance_before[$i], 
-				     'date_issued'=>date('y-m-d',strtotime($clone_datepicker_normal_limit_today[$i])),'issued_by'=>$this -> session -> userdata('user_id'));				
+				     'date_issued'=>date('y-m-d',strtotime($clone_datepicker_normal_limit_today[$i])),'issued_by'=>$this -> session -> userdata('user_id'));
+					 
+					  $mydata_2 = array('source_facility_code' => $facility_code,	 
+	                 'batch_no' => $batch_no[$i] ,'commodity_id' => $commodity_id[$i],
+				     'expiry_date' => date('y-m-d',strtotime($expiry_date[$i])),'quantity_sent'=> $total_items_issues ,
+				     'receive_facility_code'=>$service_point[$i],'facility_stock_ref_id'=>$facility_stock_id[$i], 
+				     'date_sent'=>date('y-m-d'),'sender_id'=>$this -> session -> userdata('user_id'));				
 			// update the issues table 
-			 facility_issues::update_issues_table($mydata); 
+			array_push($data_array_issues_table,$mydata); 
+			array_push($data_array_redistribution_table,$mydata_2); 
             // reduce the stock levels 
 			$a = Doctrine_Manager::getInstance()->getCurrentConnection();
 			$a->execute("UPDATE `facility_stocks` SET `current_balance` = `current_balance`-$total_items_issues where id='$facility_stock_id[$i]'");
@@ -120,6 +129,8 @@ $total_items=count($facility_stock_id);
 			`closing_stock`=`closing_stock`-$total_items_issues
             WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");		
 endfor;
+         $this->db->insert_batch('facility_issues', $data_array_issues_table); 
+		 $this->db->insert_batch('redistribution_data', $data_array_redistribution_table); 
          $this->session->set_flashdata('system_success_message', "You have issued $total_items item(s)");
 		 redirect();
 endif;

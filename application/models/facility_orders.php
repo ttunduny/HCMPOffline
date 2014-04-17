@@ -31,6 +31,7 @@ class facility_orders extends Doctrine_Record {
 	public function setUp() {
 		$this -> setTableName('facility_orders');
 		$this->hasMany('facility_order_details as order_detail', array('local' => 'id', 'foreign' => 'order_number_id'));	
+		$this->hasMany('facilities as facility_detail', array('local' => 'facility_code', 'foreign' => 'facility_code'));	
 		
 	}
     public static function get_facility_order_summary_count($facility_code=null,$district_id=null,$county_id=null){
@@ -38,7 +39,7 @@ $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($
 
  $orders = Doctrine_Manager::getInstance()->getCurrentConnection()
 ->fetchAll("SELECT  f_o_s.`status_desc` as status, count(f_o.`id`) as total from facilities f, districts d,facility_order_status f_o_s,
- facility_orders f_o where f.facility_code=f_o.facility_code and f.district=d.id and f_o.`status`= f_o_s.id and $where_clause");
+ facility_orders f_o where f.facility_code=f_o.facility_code and f.district=d.id and f_o.`status`= f_o_s.id and $where_clause GROUP BY f_o_s.id");
   return $orders ;	    	
     }
 	////dumbing data into the issues table
@@ -49,12 +50,39 @@ $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($
 		return TRUE;
 	}
 	public static function get_order_($order_id){
-		$query = Doctrine_Query::create() -> select("*") -> from("facility_orders")->where("id=$order_id");
+		$query = Doctrine_Query::create() -> select("*") -> from("facility_orders")->where("id=$order_id" );
 		$order = $query -> execute();
 		return $order;
-	}
+		}
+		public static function get_order_details($facility_code=null,$district_id=null,$county_id=null,$order_status){
+		if(isset($district_id) && $district_id>0):
+		$and_data =" AND d.id ='$district_id' " ;
+		elseif(isset($county_id) && $county_id>0):
+		$and_data =" AND d.county ='$county_id' " ;
+		else: $and_data =" AND f.facility_code ='$facility_code' " ;
+		endif;
+		
+		$standard_query="
+		SELECT o.id, d.district, f.facility_name, f.facility_code, o.order_date, date_format( o.order_date, '%b %Y' ) AS mwaka, o.order_total
+		FROM districts d, facilities f, facility_orders o
+		WHERE f.district = d.id
+		AND o.facility_code = f.facility_code
+		$and_data" ;
+		
+		if($order_status=="pending"):// pending approval
+		$query=$standard_query."AND o.status =1";
+		elseif($order_status=="approved"):
+		$query=$standard_query."AND o.status =2";
+		elseif($order_status=="rejected"):
+		$query=$standard_query."AND o.status =3";
+		else: $query=$standard_query."AND o.status =4";
+		endif;
 
+		$query_results=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($query);
+
+		return $query_results;
+
+		}
+
+		}
 	
-	
-	
-}

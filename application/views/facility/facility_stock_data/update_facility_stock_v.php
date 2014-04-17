@@ -1,24 +1,43 @@
-<div class="container" style="width: 96%; margin: auto;">
+<div class="container" style="width: 96%;">
 <span  class='label label-info' >Please note this is a one off activity Stock level as of <?php $today= ( date('d M Y')); //get today's date in full?>
 <input type="hidden" name="datepicker" readonly="readonly" value="<?php echo $today;?>"/><?php echo $today;?> 
 To add facility stock data, first do physical stock count</span>
 <hr />
 <?php $att=array("name"=>'myform','id'=>'myform');
 echo form_open('stock/add_more_stock_level',$att); ?>
-<div class="table-responsive" style="height:400px; overflow-y: auto;">
-<table  class="table table-hover table-bordered table-update"  id="facility_stock_table">
+<div class="test"></div>
+<div class="row">
+<div class="col-md-3" style="border: 1px solid #DDD;">
+<a target="_blank" href="<?php echo base_url('reports/create_excel_facility_stock_template') ?>" >
+<button style="margin-left: 130px;" type="button" class="btn btn-primary">
+<span class="glyphicon glyphicon-save"></span>download excel template</button>
+</a>
+<p></p>
+<form class="form-horizontal" role="form">
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-4 control-label">Upload Excel Template</label>
+    <div class="col-sm-8">
+      <input type="file" class="form-control" id="inputEmail3">
+    </div>
+  </div>
+  <button style="margin-left: 20px;" type="button" class="btn btn-success"><span class="glyphicon glyphicon-open"></span>upload</button>
+</form>
+
+ </div>
+<div class="col-md-9 table-responsive"  style="height:400px; overflow: auto;">
+<table width="80%"  class="table table-hover table-bordered table-update"  id="facility_stock_table">
 	<thead style="background-color: white">
 		<tr>
-			<th> Description</th>
-			<th> Supplier</th>
-			<th> Unit Size</th>
-			<th> Issue Type</th>
-			<th> Batch No</th>
-			<th> Source of Item</th>
-			<th> Manufacturer</th>
-			<th> Expiry Date</th>
-			<th> Stock Level</th>
-			<th> Total Unit Count</th>
+			<th>Description</th>
+			<th>Supplier</th>
+			<th>Unit Size</th>
+			<th>Issue Type</th>
+			<th>Batch No</th>
+			<th>Source of Item</th>
+			<th>Manufacturer</th>
+			<th>Expiry Date</th>
+			<th>Stock Level</th>
+			<th>Total Unit Count</th>
 			<th> Options</th>
 		</tr>
 	</thead>
@@ -75,7 +94,8 @@ echo form_open('stock/add_more_stock_level',$att); ?>
 <div class="container-fluid">
 <div style="float: right">
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
-<button class="btn btn-sm btn-success" id="save"><span class="glyphicon glyphicon-open"></span>Save</button></div>
+<button type="button" class="btn btn-sm btn-success" id="save"><span class="glyphicon glyphicon-open"></span>Save</button></div>
+</div>
 </div>
 </div>
 <?php echo form_close();?>
@@ -86,7 +106,7 @@ $(document).ready(function() {
   $table.floatThead({ 
 	 scrollingTop: 100,
 	 zIndex: 1001,
-	 scrollContainer: function($table){ return $table.closest('.table-responsive'); }
+	 scrollContainer: function($table){ return $table.closest('.test'); }
 	});	
 	//Check if drugs were temporarily saved
 		var link="<?php echo base_url().'stock/get_temp_stock_data_json' ?>";
@@ -154,7 +174,7 @@ $(document).ready(function() {
 			var url = "<?php echo base_url().'stock/autosave_update_stock'?>";
 			var temp_data=send_data_to_the_temp_table(selector_object);	
 			var alert_message=check_if_the_form_has_been_filled_correctly(selector_object);
-			if(isNaN(alert_message)){
+			/*if(isNaN(alert_message)){
 			var notification='<ol>'+alert_message+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;<span class="label label-danger">Before adding a new row</span>';
 			//hcmp custom dialog box
 			dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
@@ -168,7 +188,7 @@ $(document).ready(function() {
 			else{
 			 //send data to the temp table
 	        ajax_simple_post_with_console_response(url, temp_data[0]);  /// uncomment this	
-			}     
+			}   */  
 	        //Get New Object id's
 			var cloned_object = $('#facility_stock_table tr:last').clone(true);
 			var table_row = cloned_object.attr("table_row");
@@ -214,7 +234,7 @@ $(document).ready(function() {
 	        // refresh the datepickers
 			refreshDatePickers();
 		});	
-	$('.commodity_available_stock').live('keyup',function(){
+	$('.commodity_available_stock').on('keyup',function(){
    //get the value of the input
     var num=$(this).val();
     //get the object 
@@ -304,12 +324,12 @@ $(document).ready(function() {
 			}		
 			return alert_message;
     }
-    $('.remove').live('click',function(){
+    $('.remove').on('click',function(){
     var selector_object=$(this);
      //hcmp custom message dialog
     dialog_box("Are you sure you want to delete this record?",'<button type="button" class="btn btn-danger remove_record" >OK</button>'+
     '<button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>'); 
-    $('.remove_record').live('click',function(){
+    $('.remove_record').on('click',function(){
     //url for deleting the row
     var url = "<?php echo base_url().'stock/delete_temp_autosave'?>";
     //get the data to delete the row

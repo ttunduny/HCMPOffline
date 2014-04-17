@@ -50,6 +50,7 @@ class facility_transaction_table extends Doctrine_Record {
 	return $commodities;		}
 
     public static function get_commodities_for_ordering($facility_code){
+    	//echo ; exit;
 	 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 ->fetchAll("select `c`.`facility_code` AS `facility_code`,
 `a`.`sub_category_name` AS `sub_category_name`,
@@ -78,7 +79,8 @@ left join `facility_monthly_stock` `h` on (h.`facility_code`=$facility_code
 and  `h`.`commodity_id` = `c`.`commodity_id`)
 where (`b`.`id` = `c`.`commodity_id`
 and `c`.`status` = '1' 
-and `a`.`id` = `b`.`commodity_sub_category_id` )
+and `a`.`id` = `b`.`commodity_sub_category_id` 
+and c.`facility_code`=$facility_code)
 group by `c`.`facility_code`,`c`.`commodity_id` 
 order by `a`.`sub_category_name` desc");
         return $inserttransaction ;

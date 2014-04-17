@@ -38,6 +38,49 @@ class facility_order_details extends Doctrine_Record {
 		$o->save();
 		return TRUE;
 	}
+	
+	public static function get_order_details($order_id){	
+$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("select
+`a`.`sub_category_name` AS `sub_category_name`,
+`b`.`commodity_name` AS `commodity_name`,
+`b`.`commodity_code` AS `commodity_code`,
+`b`.total_commodity_units,
+`b`.`unit_size` AS `unit_size`,
+`c`.`id`,
+`c`.`price` AS `unit_cost`,
+`c`.`commodity_id` AS `commodity_id`,
+`c`.`quantity_ordered_pack`,
+`c`.`quantity_ordered_unit`,
+`c`.`o_balance` AS `opening_balance`,
+`c`.`t_receipts` AS `total_receipts`,
+`c`.`t_issues` AS `total_issues`,
+`c`.`comment` AS `comment`,
+ceiling((`c`.`c_stock` / `b`.`total_commodity_units`)) AS `closing_stock_`,
+`c`.`c_stock` AS `closing_stock`,
+`c`.`days` AS `days_out_of_stock`,
+`c`.`losses` AS `losses`,
+`c`.`status` AS `status`,
+`c`.`adjustpve` AS `adjustmentpve`,
+`c`.`adjustnve` AS `adjustmentnve`,
+`c`.`amc` AS `historical` 
+from  `commodities` `b`,`commodity_sub_category` `a` ,`facility_order_details` `c`
+where `b`.`id` = `c`.`commodity_id`
+and `c`.`status` = '1' 
+and `a`.`id` = `b`.`commodity_sub_category_id` 
+and c.order_number_id=$order_id  order by a.id asc,b.commodity_name asc ");
+        return $inserttransaction ;
+		
+	 
+	}
+		public static function get_order_details_from_order($order_id,$commodity_id){	
+$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("select ifnull(`c`.`quantity_ordered_pack`,0) as total,price
+from `facility_order_details` `c`
+where `c`.`commodity_id`=$commodity_id
+and c.order_number_id=$order_id ");
+        return $inserttransaction ;
+	}
 
 	
 	

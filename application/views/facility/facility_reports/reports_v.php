@@ -1,9 +1,10 @@
 <div class="container-fluid" style="">
       <div class="row row-offcanvas row-offcanvas-right" id="sidebar" >
-      	<p class="pull-left visible-xs">
+        <p class="pull-left visible-xs">
             <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Click to view Side Menu</button>
           </p>
         <div class="col-sm-3 col-md-2 sidebar-offcanvas"  id="bar" role="navigation" style="margin-left:0.5%">
+<<<<<<< HEAD
 
            <div class="panel-group " id="accordion" style="padding: 0;">
              <!--Reports Accordion -->   
@@ -156,6 +157,9 @@
 	          	?>
           	</h1>
 
+=======
+           <?php $this -> load -> view($sidebar);?>
+>>>>>>> e53412ba2c3fd813b3af14181ac2b81181bff4db
         </div>
         
 		
@@ -170,14 +174,11 @@
       </div>
     </div>
 <script>
-$(document).ready(function () 
-{
-	<?php echo @$graph_data; ?>
-	
-	$('[data-toggle=offcanvas]').click(function () 
-	{
-    	$('.row-offcanvas').toggleClass('active')
-  	});
+
+      $(document).ready(function () {
+  $('[data-toggle=offcanvas]').click(function () {
+    $('.row-offcanvas').toggleClass('active')
+  });
   
  	$(window).resize(function() 
  	{
@@ -250,6 +251,7 @@ $('#exp_datatable,#potential_exp_datatable,#potential_exp_datatable2').dataTable
       "sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
     }
   } ); 
+    
 
 });
     </script>

@@ -288,36 +288,33 @@ if(count($excel_data)>0):
 		$objPHPExcel -> getProperties() -> setSubject($excel_data['doc_title']);
 		$objPHPExcel -> getProperties() -> setDescription("");
 
-		// Add some data
-		//	echo date('H:i:s') . " Add some data\n";
 		$objPHPExcel -> setActiveSheetIndex(0);
 
 		$rowExec = 1;
 
 		//Looping through the cells
 		$column = 0;
-		
-		
-		foreach ($excel_data['column_data'] as $cell) {
-			$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $cell);
+
+		foreach ($excel_data['column_data'] as $column_data) {
+			$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $column_data);
 			$objPHPExcel -> getActiveSheet() -> getColumnDimension(PHPExcel_Cell::stringFromColumnIndex($column)) -> setAutoSize(true);
-
+			//$objPHPExcel->getActiveSheet()->getStyle($column, $rowExec)->getFont()->setBold(true);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($column, $rowExec)->getFont()->setBold(true);
 			$column++;
-		}
-		
+		}		
 		$rowExec = 2;
+				
+		foreach ($excel_data['row_data'] as $row_data) {
 		$column = 0;
-		
-		foreach ($excel_data['row_data'] as $cell) {
-
-		//Looping through the cells per facility
+        foreach($row_data as $cell){
+         //Looping through the cells per facility
 		$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $cell);
-		$rowExec++;
-		$column++;
-			
+				
+		$column++;	
+         }
+        $rowExec++;
 		}
 
-		// Rename sheet
 		//	echo date('H:i:s') . " Rename sheet\n";
 		$objPHPExcel -> getActiveSheet() -> setTitle('Simple');
 
@@ -329,7 +326,7 @@ if(count($excel_data)>0):
 		header('Content-type: application/vnd.ms-excel');
 
 		// It will be called file.xls
-		header("Content-Disposition: attachment; filename=".$excel_data['file_name']);
+		header("Content-Disposition: attachment; filename=".$excel_data['file_name'].".xls");
 
 		// Write file to the browser
 		$objWriter -> save('php://output');

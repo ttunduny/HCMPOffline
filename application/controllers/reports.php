@@ -12,20 +12,15 @@ class Reports extends MY_Controller
 		$this -> load -> helper(array('form', 'url'));
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
 	}
-	public function index() 
-	{
-		$identifier = $this -> session -> userdata('user_indicator');
-		$facility_code = $this -> session -> userdata('facility_id');
 
-		switch ($identifier) 
-		{
+
+	public function index() {
+		$identifier = $this -> session -> userdata('user_indicator');
+
+		switch ($identifier) {
 			case moh :
 				$data['content_view'] = "";
 				$view = 'shared_files/template/dashboard_template_v';
-				break;
-			case facility_admin :
-				$data['content_view'] = "";
-				$view = 'shared_files/template/template';
 				break;
 			case district :
 				$data['content_view'] = "";
@@ -34,7 +29,9 @@ class Reports extends MY_Controller
 			case moh_user :
 				$data['content_view'] = "";
 				break;
+			case facility_admin :
 			case facility :
+				$facility_code = $this -> session -> userdata('facility_id');
 				$data['content_view'] = "facility/facility_reports/reports_v";
 				$view = 'shared_files/template/template';
 				$data['report_view'] = "facility/facility_reports/potential_expiries_v";
@@ -60,6 +57,7 @@ class Reports extends MY_Controller
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		$this -> load -> view($view, $data);
 	}
+
 	/*
 	 |--------------------------------------------------------------------------
 	 | SHARED REPORTS
@@ -74,23 +72,36 @@ class Reports extends MY_Controller
 		$data['commodity_list'] = commodity_sub_category::get_all();
 		$this -> load -> view('shared_files/template/template', $data);
 	}
-/*
-	 |--------------------------------------------------------------------------
+	
+	public function get_facilities() {
+		$district = $_POST['district'];
+		$facilities = Facilities::getFacilities($district);
+		$list = "";
+		foreach ($facilities as $facilities) {
+			$list .= $facilities -> facility_code;
+			$list .= "*";
+			$list .= $facilities -> facility_name;
+			$list .= "_";
+		}
+		echo $list;
+	}
+	
+
+    /*
+	|--------------------------------------------------------------------------
 	 | FACILITY REPORTS
 	 |--------------------------------------------------------------------------
 	 */
-	 ///////////////////GET FACILITY STOCK DATA/////////////////////////////	 
+	///////////////////GET FACILITY STOCK DATA/////////////////////////////
 	public function facility_stock_data() {
 		$facility_code = $this -> session -> userdata('facility_id');
-		$data['facility_stock_data'] = facility_stocks::get_distinct_stocks_for_this_facility($facility_code, 'batch_data');
+		$data['facility_stock_data'] = facility_stocks::get_distinct_stocks_for_this_facility($facility_code, 'batch_data_', 'show_all');
 		$data['title'] = "Facility Stock";
 		$data['content_view'] = "facility/facility_reports/facility_stock_data_v";
 		$data['banner_text'] = "Facility Stock";
 		$this -> load -> view("shared_files/template/template", $data);
+	}
 
-
-
-	}	
 	// get the facility transaction data for ordering or quick analysis
 	public function facility_transaction_data() {
 		$facility_code = $this -> session -> userdata('facility_id');
@@ -100,29 +111,161 @@ class Reports extends MY_Controller
 		$data['banner_text'] = "Facility Stock Summary";
 		$this -> load -> view("shared_files/template/template", $data);
 	}
-	///////GET THE ITEMS A FACILITY HAS STOCKED OUT ON 
-	public function facility_stocked_out_items(){
+
+	///////GET THE ITEMS A FACILITY HAS STOCKED OUT ON
+	public function facility_stocked_out_items() {
 		$facility_code = $this -> session -> userdata('facility_id');
-		$data['facility_stock_data'] =facility_stocks::get_items_that_have_stock_out_in_facility($facility_code);
+		$data['facility_stock_data'] = facility_stocks::get_items_that_have_stock_out_in_facility($facility_code);
 		$data['title'] = "Facility Stock Out Summary";
 		$data['content_view'] = "facility/facility_reports/facility_stocked_out_items_v";
 		$data['banner_text'] = "Facility Stock Out Summary";
 		$this -> load -> view("shared_files/template/template", $data);
 	}
-	 public function order_listing(){
-		/*		
-    	$data['order_counts']=Counties::get_county_order_details("","", $facility_c);
-		$data['delivered']=Counties::get_county_received("","", $facility_c);
-		$data['pending']=Counties::get_pending_county("","", $facility_c);
-		$data['approved']=Counties::get_approved_county("","", $facility_c);
-		$data['rejected']=Counties::get_rejected_county("","", $facility_c);
-    	$data['content_view'] = "facility/facility_issues/facility_issues_service_points_v";
-		$data['title'] = "Order Listing";
-		$data['banner_text'] = "Order Listing";	*/
-		$data['title'] = "Facility Orders";
-		$data['banner_text'] =  "Facility Orders";
+
+	public function order_listing($for) {
+		$facility_code =null ;	
+		$district_id=null;
+		$county_id=null;
+		if($for=='facility'):
+		$facility_code = $this -> session -> userdata('facility_id');		
+		$desc='Facility Orders';
+		elseif($for=='subcounty'):
+		$district_id=$this -> session -> userdata('district_id');
+		$desc='Subcounty Orders';
+		elseif($for=='county'):
+		$county_id=$this -> session -> userdata('county_id');
+		$desc='County Orders';
+		endif;		
+		//get order information from the db
+		$facility_order_count_ = facility_orders::get_facility_order_summary_count($facility_code, $district_id, $county_id);
+		$facility_order_count = array();
+		foreach ($facility_order_count_ as $facility_order_count_) {
+		$facility_order_count[$facility_order_count_['status']] = $facility_order_count_['total'];
+		}
+		$data['order_counts'] = $facility_order_count;
+		$data['delivered'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "delivered");
+		$data['pending'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending");
+		$data['approved'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "approved");
+		$data['rejected'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "rejected");
+		$data['facilities']=($for=='subcounty') ? Facilities::getFacilities($district_id) : array();
+		$data['title'] = $desc;
+		$data['banner_text'] = $desc;
 		$data['content_view'] = "facility/facility_orders/order_listing_v";
 		$this -> load -> view('shared_files/template/template', $data);
+	}
+
+	public function create_excel_facility_stock_template() {
+		$facility_code = $this -> session -> userdata('facility_id');
+		$facility_details = Facilities::get_facility_name_($facility_code) -> toArray();
+		$facility_stock_data = Commodities::get_facility_commodities($facility_code, 'sub category data');
+		$excel_data = array('doc_creator' => $facility_details[0]['facility_name'], 'doc_title' => 'facility stock list template ', 'file_name' => 'facility stock list template');
+		$row_data = array();
+		$column_data = array("item HCMP code", "Description", "Supplier", "Commodity Code", "Unit Size", "Batch No", "Manufacturer", "Expiry Date", "Stock Level (Pack)", "Stock Level (Units)");
+		$excel_data['column_data'] = $column_data;
+		foreach ($facility_stock_data as $facility_stock_data_item) :
+		array_push($row_data, array($facility_stock_data_item["commodity_id"], $facility_stock_data_item["commodity_name"], $facility_stock_data_item["source_name"], $facility_stock_data_item["commodity_code"], $facility_stock_data_item["unit_size"], "", "", "", "", ""));
+		endforeach;
+		$excel_data['row_data'] = $row_data;
+
+		$this -> hcmp_functions -> create_excel($excel_data);
+	}
+    
+	public function create_excel_facility_order_template($order_id,$facility_code) {
+		$facility_details = Facilities::get_facility_name_($facility_code) -> toArray();
+		$facility_stock_data_item = facility_order_details::get_order_details($order_id);
+		$excel_data = array('doc_creator' => $facility_details[0]['facility_name'], 
+		'doc_title' => 'facility order template ', 'file_name' => $facility_details[0]['facility_name'].'facility order template');
+		$row_data = array();
+		$column_data = array("Product Code","Item description(Name/form/strength)","Order unit size", "Price","Quantity Ordered","Total");
+		$excel_data['column_data'] = $column_data;
+		$from_stock_data=count($facility_stock_data_item);
+		for($i=0;$i<$from_stock_data;$i++):
+		if ($i==0) {		
+		array_push($row_data, array($facility_stock_data_item[$i]["sub_category_name"],"","", "",  ""));}      	
+        else if( $facility_stock_data_item[$i]['sub_category_name']!=$facility_stock_data_item[$i-1]['sub_category_name']){
+       	 array_push($row_data,array($facility_stock_data_item[$i]["sub_category_name"],"","", "",  ""));
+       	 }	
+		$total=$facility_stock_data_item["unit_cost"]*$facility_stock_data_item["quantity_ordered_pack"];
+		$total=number_format($total, 2, '.', ',');
+		array_push($row_data, array($facility_stock_data_item[$i]["commodity_code"], 
+		$facility_stock_data_item[$i]["commodity_name"], 
+		$facility_stock_data_item[$i]["unit_size"], 
+		$facility_stock_data_item[$i]["unit_cost"],
+		$facility_stock_data_item[$i]["quantity_ordered_pack"],$total)); //
+		endfor;
+		$excel_data['row_data'] = $row_data;
+
+		$this -> hcmp_functions -> create_excel($excel_data);
+	}
+
+    public function aggragate_order_new_sorf($order_id){
+    $order_id_array=explode("_", $order_id);
+	$facility_name=array();
+	$order_id=array();
+	$order_total=array("","","","");
+	$order_total_all=0;
+	$order_total_all_items=0;
+	foreach($order_id_array as $single_order_id){//get the facility names from the orders 
+		if($single_order_id>0):
+	    $test=facility_orders::get_order_($single_order_id);
+	    $order_id=array_merge($order_id,array($single_order_id));
+		foreach($test as $test_){
+		$order_total=array_merge($order_total,array("",$test_->order_total));
+		$order_total_all=$order_total_all+$test_->order_total;
+		foreach($test_->facility_detail as $facility_data){
+		array_push($facility_name,"$facility_data->facility_name",'');
+		}		
+		}
+		endif;
+	 }
+	    array_push($order_total,$order_total_all);
+	    array_push($facility_name ,"TOTAL");//combine all of them
+        $stock_data=Commodities::get_all_from_supllier(1);
+		$from_stock_data=count($stock_data);//get items from a supplier 
+		$excel_data = array('doc_creator' => "HCMP", 'doc_title' => 'test ', 'file_name' => 'test');
+		$row_data = array(array("Product Code","Item description(Name/form/strength)","Order unit size", "Price"));
+		foreach($order_id as $order_id_){
+		array_push($row_data[0],"Quantity  to Order","Total");	//push this to go with each facility
+		}		
+		$column_data = array("","","FACILITY NAME","");
+		$column_data=array_merge($column_data ,$facility_name);
+		$excel_data['column_data'] = $column_data;
+		for($i=0;$i<$from_stock_data;$i++):
+		$total_all=0;
+	    $temp_array=array();
+	    $temp_array_=array();
+		if ($i==0) {//push the first sub category		
+		array_push($row_data,
+		 array($stock_data[$i]["sub_category_name"],"","", "",  ""));
+			   }      	
+        else if( $stock_data[$i]['sub_category_name']!=$stock_data[$i-1]['sub_category_name']){//push the first sub category
+       	 array_push($row_data,array($stock_data[$i]["sub_category_name"],"","", "",  ""));
+       	 }
+		foreach($order_id as $order_id_){
+		$total=facility_order_details::get_order_details_from_order($order_id_,$stock_data[$i]["commodity_id"]);
+			    
+		if(count($total)==0){
+		 array_push($temp_array,0,0);
+		}else{
+		$total_=$total[0]['total']*str_replace(",", '',$stock_data[$i]["unit_cost"]);
+		array_push($temp_array,$total[0]['total'],$total_);
+		$total_all=$total_all+$total_;
+		$order_total_all_items=$order_total_all_items+$total_;
+		}
+		}	
+        $temp_array_= array($stock_data[$i]["commodity_code"],
+		 $stock_data[$i]["commodity_name"], 
+		 $stock_data[$i]["unit_size"], 
+		 $stock_data[$i]["unit_cost"]);
+		 $temp_array_=array_merge($temp_array_,$temp_array);
+		 array_push($temp_array_,$total_all);
+		 array_push($row_data,$temp_array_);
+		endfor;
+
+        array_push($row_data,$order_total);
+		$excel_data['row_data'] = $row_data;
+      
+		$this -> hcmp_functions -> create_excel($excel_data);    	
     }
 
 	public function expiries() {

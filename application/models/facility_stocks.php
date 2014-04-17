@@ -50,20 +50,20 @@ class Facility_stocks extends Doctrine_Record {
 		$stocks= $query -> execute();
 		return $stocks;
 	}// get all facility stock commodity id, options check if the user wants batch data or commodity grouped data and return the total 
-	public static function get_distinct_stocks_for_this_facility($facility_code,$checker=null)
-	{
-		$addition=isset($checker)? ($checker=='batch_data')? 'and fs.current_balance>0 group by fs.batch_no,c.id order by fs.expiry_date asc' 
-		: 'and fs.current_balance>0 group by c.id order by c.commodity_name asc' : null ;
-		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
-		->fetchAll("SELECT DISTINCT c.id as commodity_id, fs.id as facility_stock_id,fs.expiry_date,c.commodity_name,c.commodity_code,
-		c.unit_size,sum(fs.current_balance) as commodity_balance, round((SUM(fs.current_balance ) / c.total_commodity_units) ,1) as pack_balance,
-		c.total_commodity_units,fs.manufacture,
-		c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commodities c, commodity_source c_s
-		 where fs.facility_code ='$facility_code' and fs.expiry_date >= NOW() 
-		 and c.id=fs.commodity_id and fs.status='1' $addition   
-		");
-		return $stocks ;
-	}
+	public static function get_distinct_stocks_for_this_facility($facility_code,$checker=null,$exception=null){
+$addition=isset($checker)? ($checker==='batch_data')? 'and fs.current_balance>0 group by fs.batch_no,c.id order by fs.expiry_date asc' 
+: 'and fs.current_balance>0 group by fs.id order by c.commodity_name asc' : null ;
+$check_expiry_date=isset($exception)? null: " and fs.expiry_date >= NOW()" ;
+$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("SELECT DISTINCT c.id as commodity_id, fs.id as facility_stock_id,fs.expiry_date,c.commodity_name,c.commodity_code,
+c.unit_size,sum(fs.current_balance) as commodity_balance, round((SUM(fs.current_balance ) / c.total_commodity_units) ,1) as pack_balance,
+c.total_commodity_units,fs.manufacture,
+c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commodities c, commodity_source c_s
+ where fs.facility_code ='$facility_code' $check_expiry_date 
+ and c.id=fs.commodity_id and fs.status='1' $addition   
+");
+return $stocks ;
+}
 	  public static function get_items_that_have_stock_out_in_facility($facility_code=null,$district_id=null,$county_id=null){
 $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
 $group_by=isset($facility_code)? " order by c.commodity_name asc" : 
@@ -91,15 +91,25 @@ $group_by ");
 	}	
 
 	public static function specify_period_potential_expiry($facility_code,$interval){
-		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL $interval MONTH) AND facility_code='$facility_code'");
+		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks")
+		 -> where("expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL $interval MONTH) AND facility_code='$facility_code' AND current_balance>0");
 		
 		$stocks= $query -> execute();
 		return $stocks;
 	}	
 
+<<<<<<< HEAD
 	public static function All_expiries($facility_code)
 	{
 		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select * from  facility_stocks f_s LEFT JOIN  commodities c ON c.id=f_s.commodity_id where facility_code=17401 and f_s.status =1 and expiry_date <= NOW()");
+=======
+	public static function All_expiries($facility_code){
+		
+
+		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select * from  facility_stocks f_s 
+		LEFT JOIN  commodities c ON c.id=f_s.commodity_id where facility_code=$facility_code and f_s.status =1
+		 and f_s.current_balance>0 and expiry_date <= NOW()");
+>>>>>>> e53412ba2c3fd813b3af14181ac2b81181bff4db
 		        return $stocks ;
 	}	
 public static function get_facility_drug_consumption_level($facilities_filter,$county_id,$commodity_filter,$year_filter,$plot_value_filter)

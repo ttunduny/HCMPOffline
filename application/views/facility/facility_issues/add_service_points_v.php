@@ -152,7 +152,7 @@ $(document).ready(function() {
 $(".add").click(function() { //add row here
              clone_the_last_row_of_the_table();
 		});
-			$('.remove').live('click',function(){
+			$('.remove').on('click',function(){
 			var rowCount =0;
 			rowCount = $('#facility_service_points  >tbody >tr').length;
 			//finally remove the row 
