@@ -115,26 +115,31 @@
             <h5>Orders</h5>
         </div>
 
-         <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
+       <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
             <a href="<?php echo base_url().'reports/facility_transaction_data/1'; ?>"><h5>KEMSA</h5></a>
             <a href=""><h5>MEDS</h5></a> 
-        </div>       
+        </div>   
+
+        <div style="height:auto; margin-bottom: 2px" class="reports message " id="order_tab">
+          <a href="<?php echo base_url()."reports" ?>"><h5>Reports</h5></a>        
+         
+      </div>
+          
          <div style="height:auto; margin-bottom: 2px" class="delivery message ">
-        	<a href=""><h5>Update order delivery</h5></a> 
-        	 </div>   	 
+          <a href=""><h5>Update order delivery</h5></a>    
+
+        </div>   
         <div style="height:auto; margin-bottom: 2px" class="order message ">
           <a href="<?php echo base_url()."issues/add_service_points" ?>"><h5>Add Service Points </h5></a>          
         </div>
-         <div style="height:auto; margin-bottom: 2px" class="reports message ">
-          <a href="<?php echo base_url()."reports" ?>"><h5>Reports</h5></a>        
-        </div>
-      </div>
+        
         </div>      
 
       </div>    
     </div>
 	</div>
-  <div class="col-md-8">
+ 	</div>	
+   <div class="col-md-8">
     <div class="panel panel-success">
       <div class="panel-heading">
         <h3 class="panel-title">Graph <span class="glyphicon glyphicon-stats" style=""></span><span class="glyphicon glyphicon-align-left" style="margin-left: 1%"></span></h3>
@@ -143,12 +148,11 @@
         <div style="/*border: 1px solid #036;*/ ;" id="container"></div>
       </div>
     </div>
-  </div>  
-	</div>		
+  </div>  	
 	</div>	
 	
 </div>
-</div>
+
 <script>
 
 	

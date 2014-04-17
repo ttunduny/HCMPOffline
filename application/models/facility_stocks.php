@@ -98,18 +98,12 @@ $group_by ");
 		return $stocks;
 	}	
 
-<<<<<<< HEAD
-	public static function All_expiries($facility_code)
-	{
-		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select * from  facility_stocks f_s LEFT JOIN  commodities c ON c.id=f_s.commodity_id where facility_code=17401 and f_s.status =1 and expiry_date <= NOW()");
-=======
 	public static function All_expiries($facility_code){
 		
 
 		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select * from  facility_stocks f_s 
 		LEFT JOIN  commodities c ON c.id=f_s.commodity_id where facility_code=$facility_code and f_s.status =1
 		 and f_s.current_balance>0 and expiry_date <= NOW()");
->>>>>>> e53412ba2c3fd813b3af14181ac2b81181bff4db
 		        return $stocks ;
 	}	
 public static function get_facility_drug_consumption_level($facilities_filter,$county_id,$commodity_filter,$year_filter,$plot_value_filter)

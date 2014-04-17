@@ -23,7 +23,7 @@
 		foreach($facility_stock_data->commodity_detail as $item):
 		foreach($item->sub_category_data as $sub_category):
 		endforeach;		
-		echo "
+		echo "<tr>
 		<td>$sub_category->sub_category_name</td>
 		<td>$item->commodity_name</td>
 		<td>$item->commodity_code</td>
@@ -36,6 +36,7 @@
 		<td>$facility_stock_data->losses</td>
 		<td>$facility_stock_data->days_out_of_stock</td>
 		<td>$facility_stock_data->closing_stock</td>
+		</tr>
 		";
 		endforeach;
 	endforeach;

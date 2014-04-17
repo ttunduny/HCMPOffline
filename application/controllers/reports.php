@@ -72,20 +72,12 @@ class Reports extends MY_Controller
 		$data['commodity_list'] = commodity_sub_category::get_all();
 		$this -> load -> view('shared_files/template/template', $data);
 	}
-	
-	public function get_facilities() {
-		$district = $_POST['district'];
-		$facilities = Facilities::getFacilities($district);
-		$list = "";
-		foreach ($facilities as $facilities) {
-			$list .= $facilities -> facility_code;
-			$list .= "*";
-			$list .= $facilities -> facility_name;
-			$list .= "_";
-		}
-		echo $list;
-	}
-	
+/*
+=======
+
+	/*
+	 |--------------------------------------------------------------------------
+=======
 
     /*
 	|--------------------------------------------------------------------------
@@ -100,6 +92,8 @@ class Reports extends MY_Controller
 		$data['content_view'] = "facility/facility_reports/facility_stock_data_v";
 		$data['banner_text'] = "Facility Stock";
 		$this -> load -> view("shared_files/template/template", $data);
+
+	
 	}
 
 	// get the facility transaction data for ordering or quick analysis
@@ -319,7 +313,7 @@ class Reports extends MY_Controller
 			echo ' <div class="" id="reports_display" style="min-height: 350px;" >
             <div style="margin:auto; text-align: center">
                 
-                <h2> Please Filter above</h2>
+                <h2> No records</h2>
                 <h3>
                   If you have selected filters above and you still see this message, You have no Records
                 </h3>
@@ -488,6 +482,22 @@ class Reports extends MY_Controller
 	}
 	
 	
+
+	public function bin_card_pdf() {
+
+		$facility_code = $this -> session -> userdata('facility_id');
+
+		$commodity_id = 1;
+		$to = '2014-01-14';
+		$from = '2014-04-14';			
+		$data['bin_card'] = Facility_issues::get_bin_card($facility_code,$commodity_id,$from,$to);
+
+
+		
+		$this -> hcmp_functions -> create_pdf($pdf_data);  
+		
+
+	}
 
 }
 ?>
