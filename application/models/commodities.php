@@ -29,18 +29,26 @@ class Commodities extends Doctrine_Record {
 		$commodities = $query -> execute();
 		return $commodities;
 	}
-	public static function get_facility_commodities($facility_code){
+	//Gets the name of the Commodity
+	public static function get_commodity_name($commodity_id) 
+	{
+		$query = Doctrine_Query::create() -> select("commodity_name") -> from("commodities")->where("id = $commodity_id");
+		$commodities = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $commodities[0]['commodity_name'];
+	}
+	public static function get_facility_commodities($facility_code)
+	{
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-    ->fetchAll("SELECT commodity_name, commodity_code, c.id AS commodity_id, unit_size, unit_cost, total_commodity_units, sub_category_name
-FROM commodities c, commodity_sub_category c_s_c
-WHERE c.commodity_sub_category_id = c_s_c.id
-AND c.id
-IN (
-SELECT commodity_id
-FROM facility_monthly_stock f_m_s
-WHERE f_m_s.facility_code =$facility_code
-group by commodity_id
-)"); 
+    ->fetchAll("SELECT commodity_name, commodity_code, c.id AS commodity_id, 
+    			unit_size, unit_cost, total_commodity_units, sub_category_name
+					FROM commodities c, commodity_sub_category c_s_c
+					WHERE c.commodity_sub_category_id = c_s_c.id
+					AND c.id
+					IN (
+						SELECT commodity_id
+						FROM facility_monthly_stock f_m_s
+						WHERE f_m_s.facility_code =$facility_code
+						group by commodity_id)"); 
 return $inserttransaction;
 	}// set up the facility stock here
 	public function set_facility_stock_data_amc($facility_code){

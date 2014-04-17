@@ -29,29 +29,17 @@ class Facilities extends Doctrine_Record {
 		return $drugs;
 	}
 	// getting facilities which are using the system
-	public static function get_facilities_which_are_online($county_id){
-$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT facility_code, facility_name,f.district
-FROM facilities f, districts d
-WHERE f.district = d.id
-AND d.id =$county_id
-AND UNIX_TIMESTAMP(  `date_of_activation` ) >0
-ORDER BY  `facility_name` ASC ");
-return $q;	
+	public static function get_facilities_which_are_online($county_id)
+	{
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT facility_code, facility_name,f.district
+		FROM facilities f, districts d
+		WHERE f.district = d.id
+		AND d.id =$county_id
+		AND UNIX_TIMESTAMP(  `date_of_activation` ) >0
+		ORDER BY  `facility_name` ASC ");
+		return $q;	
 }
-	public static function get_facility_name_($facility_code){
-				
-	if($facility_code!=NULL){
-		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("facility_code='$facility_code'");
-		$drugs = $query -> execute();
-		
-		
-		return $drugs;	
-	}	
-else{
-	return NULL;
-}	
-			
-	}
+	
 	
 	public static function get_d_facility($district){
 		'SELECT unique facilities.facility_name, user.fname, user.lname, user.telephone
@@ -79,12 +67,18 @@ GROUP BY user.facility");
 	}
 	
 	/*************************getting the facility name *******************/
-	public static function get_facility_name($facility_code){
-	$query=Doctrine_Query::create()->select('*')->from('facilities')->where("facility_code='$facility_code'");
-	$result=$query->execute();
+	public static function get_facility_name($facility_code)
+	{
+	$query = Doctrine_Query::create()->select('*')->from('facilities')->where("facility_code='$facility_code'");
+	$result = $query->execute();
 	return $result;
 	}
-	
+	public static function get_facility_name2($facility_code)
+	{
+	$query = Doctrine_Query::create()->select('facility_name')->from('facilities')->where("facility_code='$facility_code'");
+	$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+	return $result;
+	}
 	/********************getting the facility owners  count*************/
 	public static function get_owner_count() {
 		$query = Doctrine_Query::create() -> select("COUNT(facility_code) as count , owner ") 

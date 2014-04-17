@@ -383,7 +383,8 @@ endif;
 }
 /****************************END************************/
  //// /////HCMP Create high chart graph
-  public function create_high_chart_graph($graph_data=null){
+  public function create_high_chart_graph($graph_data=null)
+  {
   	$high_chart='';
   	if(isset($graph_data)):
 		$graph_id=$graph_data['graph_id'];

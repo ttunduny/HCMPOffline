@@ -4,18 +4,21 @@
  */
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
-class Reports extends MY_Controller {
-	function __construct() {
+class Reports extends MY_Controller 
+{
+	function __construct() 
+	{
 		parent::__construct();
 		$this -> load -> helper(array('form', 'url'));
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
 	}
-	public function index() {
+	public function index() 
+	{
 		$identifier = $this -> session -> userdata('user_indicator');
-
 		$facility_code = $this -> session -> userdata('facility_id');
 
-		switch ($identifier) {
+		switch ($identifier) 
+		{
 			case moh :
 				$data['content_view'] = "";
 				$view = 'shared_files/template/dashboard_template_v';
@@ -183,9 +186,165 @@ class Reports extends MY_Controller {
             ';
 		}else{
 		$this -> load -> view("facility/facility_reports/ajax/bin_card_ajax", $data);
-	}
+		}
 
 	}
+	//Gets the consumption data for a particular facility
+	public function view_consumption()
+	{
+		$data['report_view']="facility/facility_reports/consumption_report_v";
+		$data['report_title'] =	"Divisional Malaria Reports";
+	}
+	//Gets the consumption data for a particular facility
+	//Only the facility that is logged in
+	public function consumption_data() 
+	{
+		$county_id = $this -> session -> userdata('county_id');
+		$facility_id = $this -> session -> userdata('facility_id');
+		$county_name = counties::get_county_name($county_id);
+		$facility_name = Facilities::get_facility_name2($facility_code);
+		
+			
+		$data['c_data'] = Commodities::get_facility_commodities($facility_id);
+		$data['content_view']="facility/facility_reports/reports_v";
+		$data['report_view']="facility/facility_reports/ajax/consumption_stats_ajax";
+		$view = 'shared_files/template/template';
+		$this -> load -> view($view, $data);
+				
+				
+	}
+	public function consumption_stats_graph() 
+	{
+		$county_id = $this -> session -> userdata('county_id');
+		$facilities_filter = $this -> session -> userdata('facility_id');
+		$facility_name = Facilities::get_facility_name2($facility_code);
+		
+		$commodity_filter = $_POST['commodity_filter'];
+		$commodity_name = Commodities::get_commodity_name($commodity_filter);
+		$year_filter = $_POST['year_filter'];
+		$plot_value_filter = $_POST['plot_value_filter'];
+		
+		//Holds all the months of the year
+		$months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+		
+		$consumption_data = Facility_stocks::get_facility_drug_consumption_level($facilities_filter, $county_id, $commodity_filter, $year_filter, $plot_value_filter);
+		//print_r($consumption_data);
+		//exit;
+		
+		//Build the line graph showing the expiries graph
+		$graph_data = array();
+		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
+		$graph_data = array_merge($graph_data,array("graph_title"=>'Expired Commodities in '.$facility_name[0]['facility_name']));
+		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
+		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Expired Commodities  (values in '.$plot_value_filter.')'));
+		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
+		$graph_data = array_merge($graph_data,array("series_data"=>array("Current Balance"=>array())));
+		//$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],$);	
+		
+		foreach($consumption_data as $facility_stock_expired):
+			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($consumption_data['Name']));	
+			$graph_data['series_data']['Current Balance'] = array_merge($graph_data['series_data']['Current Balance'],array($facility_stock_expired['total']));	
+		endforeach;
+			
+		//create the graph here
+		$faciliy_stock_data = $this->hcmp_functions->create_high_chart_graph($graph_data);
+	
+		$loading_icon = base_url().'assests/img/no-record-found.png'; 
+		$faciliy_stock_data = isset($faciliy_stock_data)? $faciliy_stock_data : "$('#graph_content').html('<img src=$loading_icon>')'" ;
+   
+   		$data['graph_data'] =	$faciliy_stock_data;
+   		//$data['content_view'] = "facility/facility_reports/reports_v";
+		$data['report_view'] = "facility/facility_reports/ajax/graph_data_v";
+		$view = 'shared_files/template/template';
+		$this -> load -> view($view, $data);
+		
+		
+	/*	
+		$data['commodity_name'] = $commodity_name;
+		$data['plot_value_filter'] = json_encode($plot_value_filter);
+		$data['arrayto_graph'] = json_encode($arrayto_graph);
+		$data['montharray'] = json_encode($mymontharray);
+		$this -> load -> view("facility/facility_reports/ajax/consumption_graph_v", $data);*/
+
+	}
+	public function load_facility_cost_of_expiries() 
+	{
+		$facility_code = $this -> session -> userdata('facility_id'); 
+		$county_id = $this -> session -> userdata('county_id');
+		$facility_name = Facilities::get_facility_name2($facility_code);
+		
+		$expired_commodities = Facility_stocks::get_facility_expiries($facility_code);
+		//Holds all the months of the year
+		$months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+		//Build the line graph showing the expiries graph
+		$graph_data = array();
+		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
+		$graph_data = array_merge($graph_data,array("graph_title"=>'Expired Commodities in '.$facility_name[0]['facility_name']));
+		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
+		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Expired Commodities  (values in packs)'));
+		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
+		$graph_data = array_merge($graph_data,array("series_data"=>array("Current Balance"=>array())));
+		$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],$months);	
+		
+		foreach($expired_commodities as $facility_stock_expired):
+			//$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_stock_expired['commodity_name']));	
+			$graph_data['series_data']['Current Balance'] = array_merge($graph_data['series_data']['Current Balance'],array($facility_stock_expired['current_balance']));	
+		endforeach;
+			
+		//create the graph here
+		$faciliy_stock_data = $this->hcmp_functions->create_high_chart_graph($graph_data);
+	
+		$loading_icon = base_url().'assests/img/no-record-found.png'; 
+		$faciliy_stock_data = isset($faciliy_stock_data)? $faciliy_stock_data : "$('#graph_content').html('<img src=$loading_icon>')'" ;
+   
+   		$data['graph_data'] =	$faciliy_stock_data;
+   		$data['content_view'] = "facility/facility_reports/reports_v";
+		$data['report_view'] = "facility/facility_reports/ajax/facility_expiry_filter_v";
+		$view = 'shared_files/template/template';
+		$this -> load -> view($view, $data);
+		
+	}
+	public function get_facility_expiries($year = null, $month = null,$option = null)
+	{
+		$facility_code = $this -> session -> userdata('facility_id'); 
+		$county_id = $this -> session -> userdata('county_id');
+		$facility_name = Facilities::get_facility_name2($facility_code);
+		
+		$year = (isset($year)) ? $year: date("Y");
+		$month = (isset($month)) ? $month:date("m");
+		$option = (isset($option)) ? $option: "Packs" ;
+	
+		$expired_commodities = Facility_stocks::get_filtered_facility_expiries($facility_code, $year, $month, $option);
+		//print_r($expired_commodities);
+		//exit;
+		
+		$graph_data = array();
+		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
+		$graph_data = array_merge($graph_data,array("graph_title"=>'Expired Commodities in '.$facility_name[0]['facility_name']));
+		$graph_data = array_merge($graph_data,array("graph_type"=>'column'));
+		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Expired Commodities  (values in '.$option.')'));
+		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
+		$graph_data = array_merge($graph_data,array("series_data"=>array("Expired Commodities"=>array())));
+		//$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],$month);	
+		
+		foreach($expired_commodities as $facility_stock_expired):
+			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_stock_expired['Month']));	
+			$graph_data['series_data']['Expired Commodities'] = array_merge($graph_data['series_data']['Expired Commodities'],array($facility_stock_expired['total']));	
+		endforeach;
+			
+		//create the graph here
+		$faciliy_stock_data = $this->hcmp_functions->create_high_chart_graph($graph_data);
+	
+		$loading_icon = base_url().'assests/img/no-record-found.png'; 
+		$faciliy_stock_data = isset($faciliy_stock_data)? $faciliy_stock_data : "$('#graph_content').html('<img src=$loading_icon>')'" ;
+   
+   		$data['graph_data'] =	$faciliy_stock_data;
+   		$this -> load -> view("facility/facility_reports/ajax/graph_data_v", $data);
+		
+		
+	}
+	
+	
 
 }
 ?>
