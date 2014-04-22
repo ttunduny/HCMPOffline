@@ -118,7 +118,21 @@ class Reports extends MY_Controller {
 		$data['banner_text'] = "Facility Stock Out Summary";
 		$this -> load -> view("shared_files/template/template", $data);
 	}
-
+    public function order_delivery($order_id) {
+    	$test= $this -> hcmp_functions -> create_order_delivery_color_coded_table($order_id);
+		$data['content_view'] = "facility/facility_orders/view_order_delivery_details_v";
+		$data['table']=$test['table'];
+		$data['order_id']=$order_id;
+		$data['title'] = "Facility Order delivery Report";
+		$data['banner_text'] = "Facility Order delivery Report";
+		$this -> load -> view('shared_files/template/template', $data);
+	}
+	public function download_order_delivery($order_id) {
+    	$test= $this -> hcmp_functions -> create_order_delivery_color_coded_table($order_id);
+		$file_name = $test['facility_name'] . '_facility_order_no_' .$order_id. "_date_created_" .$test['date_ordered'];
+		$pdf_data = array("pdf_title" => "Order Report For $test[facility_name]", 'pdf_html_body' => $test['table'], 'pdf_view_option' => 'view_file', 'file_name' => $file_name);
+		$this -> hcmp_functions -> create_pdf($pdf_data);
+	}
 	public function order_listing($for) {
 		$facility_code =null ;	
 		$district_id=null;
