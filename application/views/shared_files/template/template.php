@@ -157,6 +157,7 @@ foreach($menus as $menu){?>
       </div>
     </div>
     <script type="text/javascript">
+    
     /*
  * Auto logout
  */

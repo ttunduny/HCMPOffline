@@ -66,6 +66,13 @@ class Users extends Doctrine_Record {
 		$names = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $names;
 	}
+
+	public static function check_user_exist($email)
+	{
+		$query = Doctrine_Query::create() -> select("*") -> from("Users")->where("username='$email'");
+		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result;
+	}
 	
 
 

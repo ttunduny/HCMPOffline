@@ -13,7 +13,7 @@ class User extends MY_Controller {
 		parent::__construct();
 
 		$this -> load -> helper(array('form', 'url'));
-		$this -> load -> library('form_validation');
+		$this -> load -> library(array('hcmp_functions', 'form_validation'));
 	}
 
 
@@ -141,7 +141,127 @@ public function login_submit() {
 
 	public function forgot_password() {
 
-		$this -> load -> view("user/forgotpassword_v");
+		$this -> load -> view("shared_files/login_pages/forgotpassword_v");
+
+	}
+
+	public function password_recovery(){
+		
+		$email=$_POST['username'];
+
+		
+		
+		$myresult= Users::check_user_exist($email);
+		
+
+		if(count($myresult) > 0)
+
+		{
+
+  //generate random code
+  	$range=microtime(true) ;
+   	$rand = rand(0, $range);
+   	//encrypt code
+   	$save_code= md5($rand );
+
+   	//retrieve user details to be used 
+		
+		foreach ($myresult as $key => $value) {
+
+			$Usersname= $value["fname"]." ".$value["lname"];
+			$email_address=$value["email"];
+			$user_id=$value["id"];
+			
+		}
+   		//log the password recovery requests as a code
+		$Logthis=new Log_monitor();
+		$Logthis->user_id=$user_id;
+		$Logthis->log_activity=4;
+		$Logthis->forgetpw_code=$save_code;
+		//$Logthis->save();
+
+		
+		
+		//Send Code to User
+		$subject="Request For Password Reset";
+		$message="<html><body>
+		<div style='border-color: #666; margin:auto;'>	
+		Hi ".$Usersname.", </br>
+		<p>
+		You (HCMP Account - ".$email_address." - )  recently requested for a password reset.</br>
+		If you made this request this is your reset code.</br></p> 
+		<p>
+		<strong style='font-size:20px;'>". $rand ."</strong>
+		</p>
+		<p>
+		<strong style='font-size:16px;'>This code will expire in 3 Days</strong>
+		</p>
+		<p>
+		If you didn't request for a password reset,your account might have been hijacked. </br>
+		To get back into your account, you'll need to reset your password or contact your administrator.
+		</p>
+		<p>
+		Yours sincerely,</br>
+		</p>
+		<p>
+		The HCMP team.</br>
+		</p>
+		This email can't receive replies. </br> For more information, Contact your Administrator.
+		</body></html>";
+
+			//exit;
+
+
+		//$this->hcmp_functions ->send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL);
+			
+			$data['user_email'] = $email_address;
+			$data['popup'] = "successpopup";
+			$data['title'] = "Password Recovery";
+			$this -> load -> view("shared_files/login_pages/enter_reset_code_v", $data);
+		}
+
+	else
+		{
+
+   			$data['popup'] = "error_no_exist";
+			$data['title'] = "Password Recovery";
+			$this -> load -> view("shared_files/login_pages/forgotpassword_v", $data);
+
+		}
+
+	
+			
+	}
+
+	public function confirm_code() {
+
+		$reset_code=$_POST['code'];
+		$email=$_POST['username'];
+		$code=md5($reset_code);
+
+		$userdetail_result= Users::check_user_exist($email);
+
+		foreach ($userdetail_result as $key => $value) {
+
+			$user_id=$value["id"];
+			
+		}
+
+		$user_code_check_result= Log_monitor::check_code_exist($code,$user_id);
+
+
+
+		if(count($user_code_check_result) > 0)
+
+		{
+
+			echo "code correct";
+		}else{
+			echo "code wrong";
+
+		}
+
+		//$this -> load -> view("shared_files/login_pages/forgotpassword_v");
 
 	}
 
