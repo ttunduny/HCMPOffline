@@ -50,8 +50,8 @@ class Facility_stocks extends Doctrine_Record {
 		return $stocks;
 	}// get all facility stock commodity id, options check if the user wants batch data or commodity grouped data and return the total 
 	public static function get_distinct_stocks_for_this_facility($facility_code,$checker=null,$exception=null){
-$addition=isset($checker)? ($checker=='batch_data')? 'and fs.current_balance>0 group by fs.batch_no,c.id order by fs.expiry_date asc' 
-: 'and fs.current_balance>0 group by c.id order by c.commodity_name asc' : null ;
+$addition=isset($checker)? ($checker==='batch_data')? 'and fs.current_balance>0 group by fs.batch_no,c.id order by fs.expiry_date asc' 
+: 'and fs.current_balance>0 group by fs.id order by c.commodity_name asc' : null ;
 $check_expiry_date=isset($exception)? null: " and fs.expiry_date >= NOW()" ;
 $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 ->fetchAll("SELECT DISTINCT c.id as commodity_id, fs.id as facility_stock_id,fs.expiry_date,c.commodity_name,c.commodity_code,
@@ -90,7 +90,8 @@ $group_by ");
 	}	
 
 	public static function specify_period_potential_expiry($facility_code,$interval){
-		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL $interval MONTH) AND facility_code='$facility_code'");
+		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks")
+		 -> where("expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL $interval MONTH) AND facility_code='$facility_code' AND current_balance>0");
 		
 		$stocks= $query -> execute();
 		return $stocks;
@@ -99,7 +100,9 @@ $group_by ");
 	public static function All_expiries($facility_code){
 		
 
-		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select * from  facility_stocks f_s LEFT JOIN  commodities c ON c.id=f_s.commodity_id where facility_code=17401 and f_s.status =1 and expiry_date <= NOW()");
+		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select * from  facility_stocks f_s 
+		LEFT JOIN  commodities c ON c.id=f_s.commodity_id where facility_code=$facility_code and f_s.status =1
+		 and f_s.current_balance>0 and expiry_date <= NOW()");
 		        return $stocks ;
 	}	
 	

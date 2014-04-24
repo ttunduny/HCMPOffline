@@ -121,7 +121,7 @@ $(document).ready(function() {
 //step one load all the facility data here
 var facility_stock_data=<?php echo $facility_stock_data;     ?>;
             ///when changing the commodity combobox
-      		$(".desc").live('change',function(){
+      		$(".desc").on('change',function(){
       		var row_id=$(this).closest("tr").index();	
       		var locator=$('option:selected', this);
 			var data =$('option:selected', this).attr('special_data'); 
@@ -167,7 +167,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 				locator.closest("tr").find(".commodity_id").val(commodity_id);
 				locator.closest("tr").find(".commodity_balance").val(remaining_items);	
 		});//entering the values to issue check if you have enough balance
-        $(".quantity_issued").live('keyup',function (){
+        $(".quantity_issued").on('keyup',function (){
         	var bal=parseInt($(this).closest("tr").find(".available_stock").val());
         	var bal1=parseInt($(this).closest("tr").find(".commodity_balance").val());
         	var selector_object=$(this);
@@ -210,7 +210,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			//reset the values of current element 
 		  clone_the_last_row_of_the_table();
 		});	/////batch no change event
-		$('.batch_no').live('change',function(){
+		$('.batch_no').on('change',function(){
 			var row_id=$(this).closest("tr").index();
 		    var locator=$('option:selected', this);
 			var data =$('option:selected', this).attr('special_data'); 
@@ -245,11 +245,11 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			    }
 			  			
       }); // change issue type
-        $(".commodity_unit_of_issue").live('change', function(){
+        $(".commodity_unit_of_issue").on('change', function(){
           $(this).closest("tr").find(".quantity_issued").val('0');
           $(this).closest("tr").find(".balance").val($(this).closest("tr").find(".commodity_balance").val());	
         })/// remove the row
-		$('.remove').live('click',function(){
+		$('.remove').on('click',function(){
 			var data_ =$('option:selected', $(this).closest("tr").find('.desc')).attr('special_data'); 
 	       	var data_array=data_.split("^");
 			var row_id=$(this).closest("tr").index();

@@ -8,6 +8,15 @@
         		<h3 class="panel-title">Notification <span class="glyphicon glyphicon-bell"></span> </h3>
       		</div>
       <div class="panel-body">
+    <?php if($facility_dashboard_notifications['facility_donations']>0): ?>
+      	 <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
+        <h5>Inter Facility Donation</h5> 
+        	<p>
+			<a class="link" href="<?php echo base_url('issues/confirm_external_issue') ?>"><span class="badge"><?php 
+				echo $facility_dashboard_notifications['facility_donations'];?></span> Items have been donated</a> 
+			</p>
+			 </div>
+		  <?php endif; // Potential Expiries?>
    <?php if($facility_dashboard_notifications['facility_stock_count']==0): ?>
       	<div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         <h5> 1) Set up facility stock</h5> 
@@ -22,18 +31,24 @@
 			</p>
         </div>
          <?php endif; // items_stocked_out_in_facility?>
+          <?php if($facility_dashboard_notifications['potential_expiries']>0): ?>
       	 <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         <h5>Potential Expiries</h5> 
         	<p>
-			<a class="link" href=""><span class="badge">2</span>Commodities Expiring in the next 6 months</a> 
+			<a class="link" href="<?php echo base_url('reports') ?>"><span class="badge"><?php 
+				echo $facility_dashboard_notifications['potential_expiries'];?></span>Commodities Expiring in the next 6 months</a> 
 			</p>
-        </div>
+			 </div>
+		  <?php endif; // Potential Expiries?>
+          <?php if($facility_dashboard_notifications['actual_expiries']>0): ?>
         <div style="height:auto; margin-bottom: 2px" class="warning message ">       	
         <h5>Expired Commodities</h5>
         	<p>
-			<a class="link" href=""> <span class="badge">42</span>Expired Commodities awaiting decommisioning.</a> 
+			<a class="link" href="<?php echo base_url('reports') ?>"> <span class="badge"><?php 
+				echo $facility_dashboard_notifications['actual_expiries'];?></span>Expired Commodities awaiting decommisioning.</a> 
 			</p> 
         </div>
+         <?php endif; // Actual Expiries?>
          <?php if($facility_dashboard_notifications['items_stocked_out_in_facility']>0): ?>
         <div style="height:auto; margin-bottom: 2px" class="warning message ">       	
         <h5>Stock Outs</h5>
@@ -58,7 +73,7 @@
         <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         	<h5>Orders Rejected by District Pharmacist</h5> 
         	<p>
-			<a class="link" href="href="<?php echo base_url('reports/order_listing/facility') ?>""><span class="badge"><?php 
+			<a class="link" href="<?php echo base_url('reports/order_listing/facility') ?>"><span class="badge"><?php 
 			echo $facility_dashboard_notifications['facility_order_count']['rejected'] ?></span>Order(s) rejected</a> 
 			</p>
         </div>
@@ -68,7 +83,7 @@
         <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         	<h5>Pending Dispatch</h5> 
         	<p>
-			<a class="link" href="href="<?php echo base_url('reports/order_listing/facility') ?>""><span class="badge"><?php 
+			<a class="link" href="<?php echo base_url('reports/order_listing/facility') ?>"><span class="badge"><?php 
 			echo $facility_dashboard_notifications['facility_order_count']['approved'] ?></span>Order(s) pending dispatch from KEMSA</a> 
 			</p>
         </div>
@@ -86,10 +101,10 @@
       <div class="panel-body">
 
         <div style="height:auto; margin-bottom: 2px" class="issue message ">	 
-        	<a href="<?php echo base_url()."issues/index/internal" ?>"><h5>Issue Commodities to service points</h5></a>       	 
+        	<a href="<?php echo base_url("issues/index/internal") ?>"><h5>Issue Commodities to service points</h5></a>       	 
         </div>
         <div style="height:auto; margin-bottom: 2px" class="distribute message ">
-        	<a href="<?php echo base_url().'issues/index/external'; ?>"><h5>Redistribute Commodities to other facilities</h5></a>	 
+        	<a href="<?php echo base_url('issues/index/external'); ?>"><h5>Redistribute Commodities to other facilities</h5></a>	 
         </div>
         
  		<div style="height:auto; margin-bottom: 2px" class="distribute message ">
@@ -99,31 +114,26 @@
         <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="order message " id="order_tab">
             <h5>Orders</h5>
         </div>
-
-       <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
-            <a href="<?php echo base_url().'reports/facility_transaction_data/1'; ?>"><h5>KEMSA</h5></a>
+         <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
+            <a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>KEMSA</h5></a>
             <a href=""><h5>MEDS</h5></a> 
-        </div>   
-
-        <div style="height:auto; margin-bottom: 2px" class="reports message " id="order_tab">
-          <a href="<?php echo base_url()."reports" ?>"><h5>Reports</h5></a>        
-         
-      </div>
-          
+        </div>       
          <div style="height:auto; margin-bottom: 2px" class="delivery message ">
-          <a href=""><h5>Update order delivery</h5></a>    
-
-        </div>   
+        	<a href="<?php echo base_url('reports/order_listing/facility')?>"><h5>Update order delivery</h5></a> 
+        	 </div>   	 
         <div style="height:auto; margin-bottom: 2px" class="order message ">
-          <a href="<?php echo base_url()."issues/add_service_points" ?>"><h5>Add Service Points </h5></a>          
+          <a href="<?php echo base_url("issues/add_service_points") ?>"><h5>Add Service Points </h5></a>          
         </div>
         
+         <div style="height:auto; margin-bottom: 2px" class="reports message ">
+          <a href="<?php echo base_url("reports") ?>"><h5>Reports</h5></a>        
+        </div>
+      </div>
         </div>      
 
       </div>    
     </div>
 	</div>
- 	</div>	
    <div class="col-md-8">
     <div class="panel panel-success">
       <div class="panel-heading">

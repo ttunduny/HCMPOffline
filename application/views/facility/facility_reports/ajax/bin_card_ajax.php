@@ -74,9 +74,6 @@ border: 1px solid #FFF !important;
                  }else{
                    $qty_issued_text= $bin['qty_issued'];
                  }   
-              
-        
-                
 
                   if ($bin['s11_No']=='initial stock update') {
                 $color="red";
@@ -90,7 +87,8 @@ border: 1px solid #FFF !important;
                ?>
         
             <tr style="color:<?php echo $color;?> " >
-              
+                
+            <tr>             
               <td><?php echo $formated_date;?> </td>
              
               <td ><?php echo $bin['s11_No']; ;?> </td>

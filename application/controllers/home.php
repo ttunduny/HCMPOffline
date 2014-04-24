@@ -13,7 +13,6 @@ class Home extends MY_Controller
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
 	}
 
-		
 	public function index() {	
 		(!$this -> session -> userdata('user_id')) ? redirect('user'): null ;	
 
@@ -82,28 +81,19 @@ class Home extends MY_Controller
      foreach($facility_order_count_ as $facility_order_count_){
      	$facility_order_count[$facility_order_count_['status']]=$facility_order_count_['total'];
      }
-    
-	return array('facility_stock_count'=>$facility_stock_count,'faciliy_stock_graph'=>$faciliy_stock_data,
+    //get potential expiries infor here
+    $potential_expiries=Facility_stocks::potential_expiries($facility_code)->count();
+    //get actual Expiries infor here
+    $actual_expiries=count(Facility_stocks::All_expiries($facility_code));
+	//get items they have been donated for
+	$facility_donations=redistribution_data::get_all_active($facility_code)->count();
+	return array('facility_stock_count'=>$facility_stock_count,
+	'faciliy_stock_graph'=>$faciliy_stock_data,
 	'items_stocked_out_in_facility'=>$items_stocked_out_in_facility,
-	'facility_order_count'=>$facility_order_count);	
+	'facility_order_count'=>$facility_order_count,
+	'potential_expiries'=>$potential_expiries,
+	'actual_expiries'=>$actual_expiries,
+	'facility_donations'=>$facility_donations);	
     }
-	public function get_facilities() {
-		/**
-		 * [$district description]
-		 * @var [type]
-		 * for ajax
-		 */
-
-		$district = $_POST['district'];
-		$facilities = Facilities::getFacilities($district);
-		$list = "";
-		foreach ($facilities as $facilities) {
-			$list .= $facilities -> facility_code;
-			$list .= "*";
-			$list .= $facilities -> facility_name;
-			$list .= "_";
-		}
-		echo $list;
-	}
-
+	
 }

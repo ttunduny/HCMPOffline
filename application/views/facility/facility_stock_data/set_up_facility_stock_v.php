@@ -80,7 +80,7 @@ div = null;
         "bPaginate": false} );
 	$('#example_filter label input').addClass('form-control');
 	$('#example_length label select').addClass('form-control');			
-	$('.quantity').live('keyup',function(){
+	$('.quantity').on('keyup',function(){
 	var selector_object=$(this);
 	var num=selector_object.val();	
 	var commodity_unit_of_issue=selector_object.closest("tr").find('.commodity_unit_of_issue').val();
@@ -94,7 +94,7 @@ div = null;
     calculate_actual_stock(actual_unit_size,commodity_unit_of_issue,num,".actual_quantity",selector_object);
     get_the_data_from_the_form_to_save(selector_object);
 	});	
-	$('.commodity_unit_of_issue').live('change',function(){
+	$('.commodity_unit_of_issue').on('change',function(){
     var selector_object=$(this);
     var num=selector_object.closest("tr").find('.quantity').val();
 	var commodity_unit_of_issue=selector_object.closest("tr").find('.commodity_unit_of_issue').val();

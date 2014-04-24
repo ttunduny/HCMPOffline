@@ -13,15 +13,10 @@
 			$year=$delivered_details['mwaka'];
 			$order_total=$delivered_details['order_total'];
 			$order_total=number_format($order_total, 2, '.', ',');
-			/*$delivery_total=$delivered_details['total_delivered'];
-			$delivery_total=number_format($delivery_total, 2, '.', ',');
-			$fill_rate=$delivered_details['fill_rate'];
-			 *            <td>$delivery_total</td>
-           <td>$fill_rate %</td>
-           <td></td>*/
 			$link=base_url('orders/get_facility_sorf/'.$delivered_details['id'].'/'.$mfl);	
 			$link_excel=base_url('reports/create_excel_facility_order_template/'.$delivered_details['id'].'/'.$mfl);
-			$link2=base_url().'order_management/update_order/'.$delivered_details['id'];			
+			$link2=base_url().'reports/order_delivery/'.$delivered_details['id'];//view the order
+			$link3=base_url().'reports/download_order_delivery/'.$delivered_details['id'];			
 		    $delivery_data .= <<<HTML_DATA
            <tr>           
 	<td>$order_id</td>          
@@ -36,7 +31,10 @@
            <a href='$link_excel' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
            <span class="glyphicon glyphicon-save"></span>Download Order excel</button></a>
-                <span ><a href='$link'>View</a></span></td>
+           
+           <a href='$link3' target="_blank">
+           <button  type="button" class="btn btn-xs btn-primary">
+           <span class="glyphicon glyphicon-save"></span>Download Report</button></a>
            </tr>
 HTML_DATA;
 			
@@ -120,7 +118,11 @@ $mfl=$delivered_details['facility_code'];
 	        $aggregate_data=($identifier==='district')? "<td><input type='checkbox' name='delete' value='$order_id' /></td>": null;
 			$link=base_url('orders/get_facility_sorf/'.$delivered_details['id'].'/'.$mfl); 
 			$link_excel=base_url('reports/create_excel_facility_order_template/'.$delivered_details['id'].'/'.$mfl);
-			$link2=base_url('orders/update_facility_order/'.$delivered_details['id']."/0/readonly");			
+			$link2=base_url('orders/update_facility_order/'.$delivered_details['id']."/0/readonly");
+			$link3=base_url('orders/update_order_delivery/'.$delivered_details['id']);	
+			$view_data=($identifier==='facility' ||$identifier==='facility_admin')? '<a href="'.$link3.'">
+            <button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-zoom-in"></span>Update Order</button></a>':'<a href="'.$link2.'">
+            <button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-zoom-in"></span>View Order</button></a>';		
 		    $approved_data .= <<<HTML_DATA
             <tr>
            
@@ -133,11 +135,10 @@ $mfl=$delivered_details['facility_code'];
            <td><a href='$link' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
            <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a> 
-            <a href='$link_excel' target="_blank">
+           <a href='$link_excel' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
            <span class="glyphicon glyphicon-save"></span>Download Order excel</button></a>        
-            <a href='$link2'>
-            <button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-zoom-in"></span>View Order</button></a>
+            $view_data
            </td>
            $aggregate_data
            </tr>
@@ -159,8 +160,11 @@ HTML_DATA;
 <div class="row container" style="width: 95%; margin: auto;">
 <div class="col-md-2" style="border: 1px solid #DDD;">
 <div class="table-responsive" style="height:100%; overflow-y: auto;">
-<span class='label label-info'>Orders Summary</span>
-<table>
+	<legend>
+			Orders Summary
+		</legend>
+
+<table class="row-fluid table table-hover table-bordered table-update">
  <tr><td>Rejected Orders</td><td><?php echo $rejected_orders; ?></td></tr>
 		<tr><td>Pending Approval</td><td><?php echo $pending_orders; ?></td></tr>
 		<tr><td>Pending Delivery</td><td><?php echo $approved_orders; ?></td></tr>
@@ -252,8 +256,8 @@ HTML_DATA;
 
       </div>
       <div class="tab-pane fade" id="Delivered">
-        <table cellpadding="0" cellspacing="0" width="50%" border="0" 
-        class="row-fluid table table-hover table-bordered table-update"  id="test4">
+        <table cellpadding="0" cellspacing="0" width="100%" border="0" 
+        class="row-fluid table table-bordered"  id="test4">
 	<thead>
 		<tr>
 			<th>HCMP Order No.</th>
@@ -374,7 +378,7 @@ $(document).ready(function() {
 	$('.dataTables_length label select').addClass('form-control');*/
 
     $( "#myTabContent_" ).tabs();
-	$(".order-for").live('click', function() {
+	$(".order-for").on('click', function() {
 	var body_content='<select id="facility_code" name="facility_code" class="form-control"><option value="0">--Select Facility Name--</option>'+
                     '<?php	foreach($facilities as $facility):
 						     $facility_code=$facility->facility_code;
@@ -384,7 +388,7 @@ $(document).ready(function() {
     dialog_box(body_content,
     '<button type="button" class="btn btn-primary order_for_them" >Order For Them</button>'
     +'<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>'); 
-    $(".order_for_them").live('click', function() {
+    $(".order_for_them").on('click', function() {
     var facility_code=$('#facility_code').val();
     if(facility_code==0){
     alert("Please select a Facility First");
@@ -396,18 +400,18 @@ $(document).ready(function() {
     });
 		
 	});
-	$(".delete").live('click', function() {
+	$(".delete").on('click', function() {
 	id= $(this).attr("id");
 		 //hcmp custom message dialog
     dialog_box("The order will be deleted and cannot be recovered!. Are you sure?",
     '<button type="button" class="btn btn-danger delete-dem-order" data-dismiss="modal">Delete</button>'
     +'<button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>');    
-    $(".delete-dem-order").live('click', function() {
+    $(".delete-dem-order").on('click', function() {
     window.location="<?php     $for=$identifier=='district'? 'subcounty': (($identifier=='facility')? 'facility':'county'); 
      echo site_url("orders/delete_facility_order/$for");?>/"+id;	
     });
 	});	
-	$(".aggregate-orders").live('click', function() {
+	$(".aggregate-orders").on('click', function() {
 	var addition="";
 	var url="<?php echo base_url("reports/aggragate_order_new_sorf");?>/";
 	var aggragate=false;

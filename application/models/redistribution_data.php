@@ -8,16 +8,22 @@ class redistribution_data extends Doctrine_Record {
 		$this -> hasColumn('commodity_id', 'int');
 		$this -> hasColumn('quantity_sent',  'int');
 		$this -> hasColumn('quantity_received',  'int');
-		$this -> hasColumn('source_of_item',  'int');
-		$this -> hasColumn('total_units',  'int');
+		$this -> hasColumn('sender_id',  'int');
+		$this -> hasColumn('receiver_id',  'int');
 		$this -> hasColumn('manufacturer', 'varchar', 100);
 		$this -> hasColumn('batch_no', 'varchar', 100);
 		$this -> hasColumn('expiry_date', 'date');
+		$this -> hasColumn('date_sent', 'date');
+		$this -> hasColumn('date_received', 'date');
+		$this -> hasColumn('facility_stock_ref_id', 'int');
 		$this -> hasColumn('status', 'int');
 	}
 
 	public function setUp() {
 		$this -> setTableName('redistribution_data');
+		$this->hasMany('facility_stocks as stock_detail', array('local' => 'facility_stock_ref_id', 'foreign' => 'id'));
+		$this->hasMany('facilities as facility_detail_source', array('local' => 'source_facility_code', 'foreign' => 'facility_code'));
+		$this->hasMany('facilities as facility_detail_receive', array('local' => 'receive_facility_code', 'foreign' => 'facility_code'));
 	}
 
 	public static function get_all() {
