@@ -36,7 +36,7 @@ class Users extends Doctrine_Record {
 	
 	public static function login($username, $password) {
 
-		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username = '" . $username . "'");
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username = '" . $username . "' AND status=1");
 
 		$user = $query -> fetchOne();
 		if ($user) {
@@ -69,9 +69,29 @@ class Users extends Doctrine_Record {
 
 	public static function check_user_exist($email)
 	{
-		$query = Doctrine_Query::create() -> select("*") -> from("Users")->where("username='$email'");
+		$query = Doctrine_Query::create() -> select("*") -> from("Users")->where("username='$email' AND status IN(1,2)");
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
+	}
+
+	public static function reset_password($user_id,$new_password_confirm)
+	{
+		
+		//$new_password_confirm;
+			$salt ='#*seCrEt!@-*%';
+			$value= md5($salt . $new_password_confirm);
+			
+			$update = Doctrine_Manager::getInstance()->getCurrentConnection();
+			$update->execute("UPDATE user SET password='$value',status=1  WHERE id='$user_id' ; ");
+	}
+
+	public static function set_deactivate_for_recovery($user_id)
+	{
+					
+			$update = Doctrine_Manager::getInstance()->getCurrentConnection();
+			
+
+			$update->execute("UPDATE user SET status=2  WHERE id='$user_id' ;");
 	}
 	
 
