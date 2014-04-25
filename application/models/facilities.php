@@ -69,9 +69,9 @@ GROUP BY user.facility");
 	/*************************getting the facility name *******************/
 	public static function get_facility_name($facility_code)
 	{
-	$query = Doctrine_Query::create()->select('*')->from('facilities')->where("facility_code='$facility_code'");
-	$result = $query->execute();
-	return $result;
+		$query = Doctrine_Query::create()->select('*')->from('facilities')->where("facility_code='$facility_code'");
+		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result;
 	}
 	public static function get_facility_name2($facility_code)
 	{

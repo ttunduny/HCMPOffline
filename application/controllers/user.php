@@ -17,7 +17,8 @@ class User extends MY_Controller {
 	}
 
 
-	public function index() {
+	public function index() 
+	{
 		$data['title'] = "Login";
 		$this -> load -> view("shared_files/login_pages/login_v", $data);
 	}

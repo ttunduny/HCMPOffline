@@ -14,7 +14,8 @@ class Reports extends MY_Controller
 	}
 
 
-	public function index() {
+	public function index() 
+	{
 		$identifier = $this -> session -> userdata('user_indicator');
 
 		switch ($identifier) {
@@ -33,10 +34,11 @@ class Reports extends MY_Controller
 			case facility :
 				$facility_code = $this -> session -> userdata('facility_id');
 				$data['content_view'] = "facility/facility_reports/reports_v";
-				$view = 'shared_files/template/template';
 				$data['report_view'] = "facility/facility_reports/potential_expiries_v";
 				$data['report_data'] = Facility_stocks::potential_expiries($facility_code);
-
+				
+				$view = 'shared_files/template/template';
+				
 				break;
 			case district_tech :
 				$data['content_view'] = "";
@@ -85,7 +87,66 @@ class Reports extends MY_Controller
 	 |--------------------------------------------------------------------------
 	 */
 	///////////////////GET FACILITY STOCK DATA/////////////////////////////
-	public function facility_stock_data() {
+	public function facility_evaluation_report()
+	{
+		$facility_code = $this -> session -> userdata('facility_id');
+		
+		$data['facilities'] = Facilities::get_facility_name($facility_code);
+		$data['title'] = "Facility Evaluation Form";
+		$data['content_view'] = "facility/facility_reports/facility_evaluation";
+		$data['banner_text'] = "Facility Evaluation Form";
+		$this -> load -> view("shared_files/template/template", $data);
+		
+		
+	}
+	public function save_facility_evaluation() 
+	{
+		$facility_code = $this -> session -> userdata('news');
+		$current_user = $this -> session -> userdata('identity');
+		$date = date('y-m-d');
+		$data_array = $_POST['data_array'];
+		$dataarray = explode("|", $data_array);
+		$f_headno = $dataarray[0];
+		$f_depheadno = $dataarray[1];
+		$nurse_no = $dataarray[2];
+		$store_mgrno = $dataarray[3];
+		$p_techno = $dataarray[4];
+		$trainer = $dataarray[5];
+		$comp_avail = $dataarray[6];
+		$modem_avail = $dataarray[7];
+		$bundles_avail = $dataarray[8];
+		$manuals_avail = $dataarray[9];
+		$satisfaction_lvl = $dataarray[10];
+		$agreed_time = $dataarray[11];
+		$feedback = $dataarray[12];
+		$pharm_supervision = $dataarray[13];
+		$coord_supervision = $dataarray[14];
+		$req_id = $dataarray[15];
+		$req_spec = $dataarray[16];
+		$req_addr = $dataarray[17];
+		$train_remarks = $dataarray[18];
+		$train_recommend = $dataarray[19];
+		$train_useful = $dataarray[20];
+		$comf_issue = $dataarray[21];
+		$comf_order = $dataarray[22];
+		$comf_update = $dataarray[23];
+		$comf_gen = $dataarray[24];
+		$use_freq = $dataarray[25];
+		$freq_spec = $dataarray[26];
+		$improvement = $dataarray[27];
+		$ease_of_use = $dataarray[28];
+		$meet_expect = $dataarray[29];
+		$expect_suggest = $dataarray[30];
+		$retrain = $dataarray[31];
+
+		$mydata = array('facility_code' => $facility_code, 'assessor' => $current_user, 'date' => $date, 'fhead_no' => $f_headno, 'fdep_no' => $f_depheadno, 'nurse_no' => $nurse_no, 'sman_no' => $store_mgrno, 'ptech_no' => $p_techno, 'trainer' => $trainer, 'comp_avail' => $comp_avail, 'modem_avail' => $modem_avail, 'bundles_avail' => $bundles_avail, 'manuals_avail' => $manuals_avail, 'satisfaction_lvl' => $satisfaction_lvl, 'agreed_time' => $agreed_time, 'feedback' => $feedback, 'pharm_supervision' => $pharm_supervision, 'coord_supervision' => $coord_supervision, 'req_id' => $req_id, 'req_spec' => $req_spec, 'req_addr' => $req_addr, 'train_remarks' => $train_remarks, 'train_recommend' => $train_recommend, 'train_useful' => $train_useful, 'comf_issue' => $comf_issue, 'comf_order' => $comf_order, 'comf_update' => $comf_update, 'comf_gen' => $comf_gen, 'use_freq' => $use_freq, 'freq_spec' => $freq_spec, 'improvement' => $improvement, 'ease_of_use' => $ease_of_use, 'meet_expect' => $meet_expect, 'expect_suggest' => $expect_suggest, 'retrain' => $retrain);
+
+		echo Facility_Evaluation::save_facility_evaluation($mydata);
+
+	}
+	
+	public function facility_stock_data() 
+	{
 		$facility_code = $this -> session -> userdata('facility_id');
 		$data['facility_stock_data'] = facility_stocks::get_distinct_stocks_for_this_facility($facility_code, 'batch_data_', 'show_all');
 		$data['title'] = "Facility Stock";
