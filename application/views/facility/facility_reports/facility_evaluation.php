@@ -1,193 +1,3 @@
-<script type="text/javascript">
-
-function checker(jay,chr){
-	//get from which row we are getting the data from which the user is adding data
-	var name= jay;
-	var type=chr;
-	//checking if the quantity is a number
-var num = document.getElementsByName(name)[0].value.replace(/\,/g,'');
-if(!isNaN(num)){
-if(num.indexOf('.') > -1) {
-alert("Decimals are not allowed.");
-document.getElementsByName(name)[0].value = document.getElementsByName(name)[0].value.substring(0,document.getElementsByName(name)[0].value.length-1);
-document.getElementsByName(name)[0].select();
-return;
-}
-} else{
-alert('Enter only numbers');
-document.getElementsByName(name)[0].value= document.getElementsByName(name)[0].value.substring(0,document.getElementsByName(name)[0].value.length-1);
-document.getElementsByName(name)[0].select();	
-return;
-}
-if(num <0){
-	alert('Negatives are not allowed');
-document.getElementsByName(name)[0].value= document.getElementsByName(name)[0].value.substring(0,document.getElementsByName(name)[0].value.length-1);
-document.getElementsByName(name)[0].select();	
-return;	
-}
-}
-
-function textchecker(jay,chr){
-		//get from which row we are getting the data from which the user is adding data
-		var name= jay;
-		var type=chr;
-	var text = document.getElementsByName(name)[0].value.replace(/\,/g,'');
-	var regex = /^([0-9]+)$/;
-if(regex.test(text)){
-	alert('Only text allowed.');
-	document.getElementsByName(name)[0].value= document.getElementsByName(name)[0].value.substring(0,document.getElementsByName(name)[0].value.length-1);
-document.getElementsByName(name)[0].select();
-return;	
-}
-}
-
-$(function() {
-	jQuery(document).ready(function() {
-
-					var $myDialog = $('<div></div>')
-    .html('Please confirm the values before saving')
-    .dialog({
-        autoOpen: false,
-        title: 'Confirmation',
-        buttons: { "Cancel": function() {
-                      $(this).dialog("close");
-                      return false;
-                },
-                "OK": function() { 
-                	/***********creating the request that will update the facility transaction ******/
-                	if ($('#computer').is(']:checked')) {
-					    $('#computer').val('1');
-					} else {
-					    $('#computer').val('0');
-					}
-					if ($('#modem').is(']:checked')) {
-					    $('#modem').val('1');
-					} else {
-					    $('#modem').val('0');
-					}
-					if ($('#i_bundles').is(']:checked')) {
-					    $('#i_bundles').val('1');
-					} else {
-					    $('#i_bundles').val('0');
-					}
-					if ($('#t_manuals').is(']:checked')) {
-					    $('#t_manuals').val('1');
-					} else {
-					    $('#t_manuals').val('0');
-					}
-					if ($('#f_headno').val()=='') {
-					    $('#f_headno').val('N/A');
-					}
-					if ($('#f_depheadno').val()=='') {
-					    $('#f_depheadno').val('0');
-					}
-					if ($('#nurse_no').val()=='') {
-					    $('#nurse_no').val('0');
-					}
-					if ($('#store_mgrno').val()=='') {
-					    $('#store_mgrno').val('0');
-					}
-					if ($('#p_techno').val()=='') {
-					    $('#p_techno').val('0');
-					}
-					if ($('#trainer').val()=='') {
-					    $('#trainer').val('0');
-					}
-				var f_headno = $('#f_headno').val();
-				var f_depheadno = $('#f_depheadno').val();
-				var nurse_no = $('#nurse_no').val();
-				var store_mgrno = $('#store_mgrno').val();
-				var p_techno = $('#p_techno').val();
-				var trainer = $('#trainer').val();
-				var comp_avail = $('#computer').val();
-			
-				var modem_avail = $('#modem').val();
-				var bundles_avail = $('#i_bundles').val();
-				var manuals_avail = $('#t_manuals').val();
-				var satisfaction_lvl = $('[name=qstn_b]:checked').val();
-				var agreed_time = $('[name=qstn_c]:checked').val();
-				var feedback = $('[name=qstn_d]:checked').val();
-				var pharm_supervision = $('[name=qstn_ea]:checked').val();
-				var coord_supervision =$('[name=qstn_eb]:checked').val();
-				var req_id =$('[name=qstn_f]:checked').val();
-				if ($('#f_specify').val()=='') {
-					    $('#f_specify').val('N/A');
-					}
-				var req_spec = $('#f_specify').val();
-				var req_addr = $('[name=qstn_f]:checked').val();
-				if ($('#g_specify').val()=='') {
-					    $('#g_specify').val('N/A');
-					}
-				var train_remarks = $('#g_specify').val();
-				var train_recommend = $('[name=qstn_h]:checked').val();
-				var train_useful = $('[name=qstn_i]:checked').val();
-				var comf_issue = $('[name=qstn_3aone]:checked').val();
-				var comf_order = $('[name=qstn_3atwo]:checked').val();
-				var comf_update = $('[name=qstn_3athree]:checked').val();
-				var comf_gen = $('[name=qstn_3afour]:checked').val();
-				var use_freq = $('[name=qstn_3b]:checked').val();
-				if ($('#threeb_specify').val()=='') {
-					    $('#threeb_specify').val('N/A');
-					}
-				var freq_spec = $('#threeb_specify').val();
-				var improvement = $('[name=qstn_3c]:checked').val();
-				var ease_of_use = $('[name=qstn_3d]:checked').val();
-				var meet_expect = $('[name=qstn_3e]:checked').val();
-				if ($('#3e_specify').val()=='') {
-					    $('#3e_specify').val('N/A');
-					}
-				var expect_suggest = $('#3e_specify').val();
-				var retrain = $('[name=qstn_3f]:checked').val();
-				
-				data_array=f_headno+"|"+f_depheadno+"|"+nurse_no+"|"+store_mgrno+"|"+p_techno+"|"+trainer+"|"+comp_avail+"|"+modem_avail+"|"+bundles_avail+"|"+manuals_avail+"|"+satisfaction_lvl+"|"+agreed_time+"|"+feedback+"|"+pharm_supervision+"|"+coord_supervision+"|"+req_id+"|"+req_spec+"|"+req_addr+"|"+train_remarks+"|"+train_recommend+"|"+train_useful+"|"+comf_issue+"|"+comf_order+"|"+comf_update+"|"+comf_gen+"|"+use_freq+"|"+freq_spec+"|"+improvement+"|"+ease_of_use+"|"+meet_expect+"|"+expect_suggest+"|"+retrain;
-				json_obj={"url":"<?php echo site_url("reports/save_facility_eval/");?>",}
-				var baseUrl=json_obj.url;
-
-			$.ajax({
-			  type: "POST",
-			  url: baseUrl,
-			  data: "data_array="+data_array,
-			  info: function(msg){
-
-			
-				
-			  },
-			  error: function(XMLHttpRequest, textStatus, errorThrown) {
-			       if(textStatus == 'timeout') {}
-			   }
-			}).done(function( msg ) {
-				
-				console.log(msg);
-				
-				window.location="<?php echo site_url('report_management/facility_evaluation_');?>/"+msg;	
-				
-			});
-                	
-                	$(this).dialog("close");
-                    return true;	
-                 }
-        }
-});
-
-		$('#save1')
-		.button()
-			.click(function() {
-			return $myDialog.dialog('open');
-		});
-		
-			$( "#dialog" ).dialog({
-			height: 140,
-			modal: true
-		});
-		
-
-
-
-	});
-});
-
-
-</script>
 <?php 
      $attributes = array( 'name' => 'myform', 'id'=>'myform');
 	
@@ -208,7 +18,7 @@ $(function() {
 		?>
 		<div style="width: 65%; margin-left: auto; margin-right: auto; font-size: 14px;">
 <div id="dialog-form" title="Enter the evaluation information here.">
-	<h2>Kindly provide information in all the fields indicated for proper analysis and assessment to be performed. This evaluation will take at least 15 minutes.</h2>
+	<h4>Kindly provide information in all the fields indicated for proper analysis and assessment to be performed. This evaluation will take at least 15 minutes.</h4>
 	<form>
 		<table id="eval"  width="100%" class="table table-bordered">
 		<input type="hidden" name="facility_name" colspan = "3" style = "color:#000; border:none" value="<?php echo $facility_name?>"></td>
@@ -217,8 +27,8 @@ $(function() {
 		<input type="hidden" name="county" colspan = "3" style = "color:#000; border:none" value="<?php //echo $county?>"></td>
 		
 		<tr class="info"><td colspan="4">1. FACILITY INFORMATION</td></tr>
-		<tr><td>Facility Name: <?php echo $facility_name;?></td>
-			<td>Sub County: <?php echo $district_name['district'];?> </td>
+		<tr><td>Facility Name: <strong><?php echo $facility_name;?></strong></td>
+			<td>Sub County: <strong><?php echo $district_name['district'];?></strong> </td>
 			<td colspan="2"></td>
 		</tr>
 		<tr>
@@ -334,8 +144,7 @@ endswitch; ?>
 		</tr>
 		<tr>
 			<td colspan="2">c) Was the training carried out in agreement to the agreed date and time?</td>
-			<td>
-				
+			<td>	
 				<input type="radio" class="uncheck"  name="qstn_c" id="c_yes" value="1" <?php echo  ($evaluation_data[0]['agreed_time']==1) ?  "checked='checked'": "''" ?>> Yes</td>
 			<td><input type="radio" class="uncheck"  name="qstn_c" id="c_no" value="2" <?php echo  ($evaluation_data[0]['agreed_time']==2) ?  "checked='checked'": "''" ?>> No</td>
 			</tr>
@@ -528,10 +337,192 @@ endswitch; ?>
 				<td colspan="2"></td><td>Date: <?php echo date('d M, Y'); ?></td>
 				</tr>
 		</table>
-		
 	</form>
-
-
 </div>
 <input class="btn btn-primary" type="submit"   id="save1"  value="Save" style="margin-left: 0%; width=100px" >
 </div>
+<script>
+function checker(inputvalue,chrtype)
+	{
+		//get from which row we are getting the data from which the user is adding data
+		var name = inputvalue;
+		var type = chrtype;
+		//checking if the quantity is a number
+		var num = document.getElementsByName(name)[0].value.replace(/\,/g,'');
+		if(!isNaN(num))
+		{
+			if(num.indexOf('.') > -1) 
+			{
+				alert("Decimals are not allowed.");
+				document.getElementsByName(name)[0].value = document.getElementsByName(name)[0].value.substring(0,document.getElementsByName(name)[0].value.length-1);
+				document.getElementsByName(name)[0].select();
+				return;
+			}
+		} else{
+			alert('Enter only numbers');
+			document.getElementsByName(name)[0].value= document.getElementsByName(name)[0].value.substring(0,document.getElementsByName(name)[0].value.length-1);
+			document.getElementsByName(name)[0].select();	
+			return;
+		}
+		if(num <0)
+		{
+			alert('Negatives are not allowed');
+			document.getElementsByName(name)[0].value= document.getElementsByName(name)[0].value.substring(0,document.getElementsByName(name)[0].value.length-1);
+			document.getElementsByName(name)[0].select();	
+			return;	
+		}
+	}
+function textchecker(inputvalue,chrtype)
+	{
+		//get from which row we are getting the data from which the user is adding data
+		var name = inputvalue;
+		var type = chrtype;
+		var text = document.getElementsByName(name)[0].value.replace(/\,/g,'');
+		var regex = /^([0-9]+)$/;
+		if(regex.test(text))
+		{
+			alert('Only text allowed.');
+			document.getElementsByName(name)[0].value= document.getElementsByName(name)[0].value.substring(0,document.getElementsByName(name)[0].value.length-1);
+			document.getElementsByName(name)[0].select();
+			return;	
+		}
+	}
+$(document).ready(function() {
+		var $myDialog = $('<div></div>')
+    	.html('Please confirm the values before saving')
+    	.dialog({
+        autoOpen: false,
+        title: 'Confirmation',
+        buttons: { "Cancel": function() {
+                      $(this).dialog("close");
+                      return false;
+                },
+                "OK": function() { 
+                	/***********creating the request that will update the facility transaction ******/
+                	if ($('#computer').is('checked')) {
+					    $('#computer').val('1');
+					} else {
+					    $('#computer').val('0');
+					}
+					if ($('#modem').is('checked')) {
+					    $('#modem').val('1');
+					} else {
+					    $('#modem').val('0');
+					}
+					if ($('#i_bundles').is('checked')) {
+					    $('#i_bundles').val('1');
+					} else {
+					    $('#i_bundles').val('0');
+					}
+					if ($('#t_manuals').is('checked')) {
+					    $('#t_manuals').val('1');
+					} else {
+					    $('#t_manuals').val('0');
+					}
+					if ($('#f_headno').val()=='') {
+					    $('#f_headno').val('N/A');
+					}
+					if ($('#f_depheadno').val()=='') {
+					    $('#f_depheadno').val('0');
+					}
+					if ($('#nurse_no').val()=='') {
+					    $('#nurse_no').val('0');
+					}
+					if ($('#store_mgrno').val()=='') {
+					    $('#store_mgrno').val('0');
+					}
+					if ($('#p_techno').val()=='') {
+					    $('#p_techno').val('0');
+					}
+					if ($('#trainer').val()=='') {
+					    $('#trainer').val('0');
+					}
+				var f_headno = $('#f_headno').val();
+				var f_depheadno = $('#f_depheadno').val();
+				var nurse_no = $('#nurse_no').val();
+				var store_mgrno = $('#store_mgrno').val();
+				var p_techno = $('#p_techno').val();
+				var trainer = $('#trainer').val();
+				var comp_avail = $('#computer').val();
+			
+				var modem_avail = $('#modem').val();
+				var bundles_avail = $('#i_bundles').val();
+				var manuals_avail = $('#t_manuals').val();
+				var satisfaction_lvl = $('[name=qstn_b]:checked').val();
+				var agreed_time = $('[name=qstn_c]:checked').val();
+				var feedback = $('[name=qstn_d]:checked').val();
+				var pharm_supervision = $('[name=qstn_ea]:checked').val();
+				var coord_supervision =$('[name=qstn_eb]:checked').val();
+				var req_id =$('[name=qstn_f]:checked').val();
+				if ($('#f_specify').val()=='') {
+					    $('#f_specify').val('N/A');
+					}
+				var req_spec = $('#f_specify').val();
+				var req_addr = $('[name=qstn_f]:checked').val();
+				if ($('#g_specify').val()=='') {
+					    $('#g_specify').val('N/A');
+					}
+				var train_remarks = $('#g_specify').val();
+				var train_recommend = $('[name=qstn_h]:checked').val();
+				var train_useful = $('[name=qstn_i]:checked').val();
+				var comf_issue = $('[name=qstn_3aone]:checked').val();
+				var comf_order = $('[name=qstn_3atwo]:checked').val();
+				var comf_update = $('[name=qstn_3athree]:checked').val();
+				var comf_gen = $('[name=qstn_3afour]:checked').val();
+				var use_freq = $('[name=qstn_3b]:checked').val();
+				if ($('#threeb_specify').val()=='') {
+					    $('#threeb_specify').val('N/A');
+					}
+				var freq_spec = $('#threeb_specify').val();
+				var improvement = $('[name=qstn_3c]:checked').val();
+				var ease_of_use = $('[name=qstn_3d]:checked').val();
+				var meet_expect = $('[name=qstn_3e]:checked').val();
+				if ($('#3e_specify').val()=='') {
+					    $('#3e_specify').val('N/A');
+					}
+				var expect_suggest = $('#3e_specify').val();
+				var retrain = $('[name=qstn_3f]:checked').val();
+				
+				data_array=f_headno+"|"+f_depheadno+"|"+nurse_no+"|"+store_mgrno+"|"+p_techno+"|"+trainer+"|"+comp_avail+"|"+modem_avail+"|"+bundles_avail+"|"+manuals_avail+"|"+satisfaction_lvl+"|"+agreed_time+"|"+feedback+"|"+pharm_supervision+"|"+coord_supervision+"|"+req_id+"|"+req_spec+"|"+req_addr+"|"+train_remarks+"|"+train_recommend+"|"+train_useful+"|"+comf_issue+"|"+comf_order+"|"+comf_update+"|"+comf_gen+"|"+use_freq+"|"+freq_spec+"|"+improvement+"|"+ease_of_use+"|"+meet_expect+"|"+expect_suggest+"|"+retrain;
+				json_obj={"url":"<?php echo site_url("reports/save_facility_evaluation/");?>",}
+				var baseUrl=json_obj.url;
+
+			$.ajax({
+			  type: "POST",
+			  url: baseUrl,
+			  data: "data_array="+data_array,
+			  info: function(msg){
+
+			
+				
+			  },
+			  error: function(XMLHttpRequest, textStatus, errorThrown) {
+			       if(textStatus == 'timeout') {}
+			   }
+			}).done(function( msg ) {
+				
+				console.log(msg);
+				
+				window.location="<?php echo site_url('reports/facility_evaluation_');?>/"+msg;	
+				
+			});
+                	
+                	$(this).dialog("close");
+                    return true;	
+                 }
+        }
+});
+
+		$('#save1')
+		.button()
+			.click(function() {
+			return $myDialog.dialog('open');
+		});
+		
+			$( "#dialog" ).dialog({
+			height: 140,
+			modal: true
+		});
+	});
+
+</script>

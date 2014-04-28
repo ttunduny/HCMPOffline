@@ -98,6 +98,87 @@ class Reports extends MY_Controller
 		$this -> load -> view("shared_files/template/template", $data);
 		
 		
+		//New
+
+		//$evaluation = facility_evaluation::getAll($facility_code, $user_id) -> toArray();
+
+		/*$data = (count($evaluation) == 0) ? array(0 => array('fhead_no' => null, 'fdep_no' => null, 'nurse_no' => null, 'sman_no' => null, 'ptech_no' => null, 'trainer' => null, 'comp_avail' => null, 'modem_avail' => null, 'bundles_avail' => null, 'manuals_avail' => null, 'satisfaction_lvl' => null, 'agreed_time' => null, 'feedback' => null, 'pharm_supervision' => null, 'coord_supervision' => null, 'req_id' => null, 'req_spec' => null, 'req_addr' => null, 'train_remarks' => null, 'train_recommend' => null, 'train_useful' => null, 'comf_issue' => null, 'comf_order' => null, 'comf_update' => null, 'comf_gen' => null, 'use_freq' => null, 'freq_spec' => null, 'improvement' => null, 'ease_of_use' => null, 'meet_expect' => null, 'expect_suggest' => null, 'retrain' => null)) : $evaluation;
+
+		$data['title'] = "Facility Training Evaluation";
+		$data['content_view'] = "facility/facility_reports/facility_evaluation";
+		$data['banner_text'] = "Facility Training Evaluation";
+		$data['facilities'] = Facilities::get_one_facility_details($facility_code, $user_id);
+		$data['facility_code'] = $facility_code;
+		$data['user_id'] = $user_id;
+		$data['evaluation_data'] = $data;
+
+		$this -> load -> view("template", $data);*/
+		
+	}
+	public function facility_impact_report()
+	{
+		$facility_code = $this -> session -> userdata('facility_id');
+		$current_user = $this -> session -> userdata('user_id');
+		$report = Facility_Impact_Evaluation::get_all($facility_code, $current_user);
+		isset($report)? $data['filled_report']=$report:$data['filled_report']=NULL;
+		
+		$data['facilities'] = Facilities::get_facility_name($facility_code);
+		$data['title'] = "Facility Impact Report";
+		$data['content_view'] = "facility/facility_reports/facility_impact_evaluation";
+		$data['banner_text'] = "Facility Evaluation Form";
+		$this -> load -> view("shared_files/template/template", $data);
+		
+		
+	}
+	public function save_facility_impact_evaluation() 
+	{
+		$facility_code = $this -> session -> userdata('facility_id');
+		$current_user = $this -> session -> userdata('user_id');
+		$date = date('y-m-d');
+		$save_time = date('Y-m-d H:i:s');
+		
+		//Get data from the form
+		$personnel_no = $_POST['personnel_no'];
+		$no_still_using_tool = $_POST['no_still_using_tool'];
+		$trainee_cadre = $_POST['trainee_cadre'];
+		$weekly_no_of_times = $_POST['weekly_no_of_times'];
+		$no_of_commodity_stock_out = $_POST['no_of_commodity_stock_out'];
+		$duration_of_stock_out = $_POST['duration_of_stock_out'];
+		$total_expired_commodities = $_POST['total_expired_commodities'];
+		$total_overstocked_commodities = $_POST['total_overstocked_commodities'];
+		$date_of_last_order = date('Y-m-d',strtotime($_POST['date_of_last_order']));
+		$quarter_served = $_POST['quarter_served'];
+		$elaborated_discrepancies = $_POST['elaborated_discrepancies'];
+		$expected_date_of_delivery = date('Y-m-d',strtotime($_POST['expected_date_of_delivery']));
+		$general_challenges = $_POST['general_challenges'];
+		//Values from checkboxes
+		$qstn_tally = $_POST['qstn_tally'];
+		$adequate_storage =$_POST['adequate_storage'];
+		$discrepancies = $_POST['discrepancies'];
+				
+		$dbData = array('facility_code'=>$facility_code,
+						'user_id'=>$current_user,
+						'no_of_personnel'=> $personnel_no,
+						'no_still_using_tool'=> $no_still_using_tool,
+						'cadres_of_users'=> $trainee_cadre,
+						'no_of_times_a_week'=> $weekly_no_of_times,
+						'does_physical_count_tally'=> $qstn_tally,
+						'amount_of_commodities_stocked'=> $no_of_commodity_stock_out,
+						'duration_of_stockout'=> $duration_of_stock_out,
+						'amount_of_expired_commodities'=> $total_expired_commodities,
+						'amount_of_overstocked_commodities'=> $total_overstocked_commodities,
+						'adequate_storage'=> $adequate_storage,
+						'date_of_last_order'=> $date_of_last_order,
+						'quarter_served'=> $quarter_served,
+						'discrepancies'=> $discrepancies,
+						'reasons_for_discrepancies'=> $elaborated_discrepancies,
+						'date_of_delivery'=> $expected_date_of_delivery,
+						'general_challenges'=> $general_challenges,
+						'report_time'=> $save_time);
+	
+		$this ->db->insert('facility_impact_evaluation',$dbData);
+		$this->index();
+		
 	}
 	public function save_facility_evaluation() 
 	{
@@ -139,10 +220,57 @@ class Reports extends MY_Controller
 		$expect_suggest = $dataarray[30];
 		$retrain = $dataarray[31];
 
-		$mydata = array('facility_code' => $facility_code, 'assessor' => $current_user, 'date' => $date, 'fhead_no' => $f_headno, 'fdep_no' => $f_depheadno, 'nurse_no' => $nurse_no, 'sman_no' => $store_mgrno, 'ptech_no' => $p_techno, 'trainer' => $trainer, 'comp_avail' => $comp_avail, 'modem_avail' => $modem_avail, 'bundles_avail' => $bundles_avail, 'manuals_avail' => $manuals_avail, 'satisfaction_lvl' => $satisfaction_lvl, 'agreed_time' => $agreed_time, 'feedback' => $feedback, 'pharm_supervision' => $pharm_supervision, 'coord_supervision' => $coord_supervision, 'req_id' => $req_id, 'req_spec' => $req_spec, 'req_addr' => $req_addr, 'train_remarks' => $train_remarks, 'train_recommend' => $train_recommend, 'train_useful' => $train_useful, 'comf_issue' => $comf_issue, 'comf_order' => $comf_order, 'comf_update' => $comf_update, 'comf_gen' => $comf_gen, 'use_freq' => $use_freq, 'freq_spec' => $freq_spec, 'improvement' => $improvement, 'ease_of_use' => $ease_of_use, 'meet_expect' => $meet_expect, 'expect_suggest' => $expect_suggest, 'retrain' => $retrain);
+		$mydata = array('facility_code' => $facility_code, 
+						'assessor' => $current_user, 
+						'date' => $date, 
+						'fhead_no' => $f_headno, 
+						'fdep_no' => $f_depheadno, 
+						'nurse_no' => $nurse_no, 
+						'sman_no' => $store_mgrno, 
+						'ptech_no' => $p_techno, 
+						'trainer' => $trainer, 
+						'comp_avail' => $comp_avail, 
+						'modem_avail' => $modem_avail, 
+						'bundles_avail' => $bundles_avail, 
+						'manuals_avail' => $manuals_avail, 
+						'satisfaction_lvl' => $satisfaction_lvl, 
+						'agreed_time' => $agreed_time, 
+						'feedback' => $feedback, 
+						'pharm_supervision' => $pharm_supervision, 
+						'coord_supervision' => $coord_supervision, 
+						'req_id' => $req_id, 
+						'req_spec' => $req_spec, 
+						'req_addr' => $req_addr, 
+						'train_remarks' => $train_remarks, 
+						'train_recommend' => $train_recommend, 
+						'train_useful' => $train_useful, 
+						'comf_issue' => $comf_issue, 
+						'comf_order' => $comf_order, 
+						'comf_update' => $comf_update, 
+						'comf_gen' => $comf_gen, 
+						'use_freq' => $use_freq, 
+						'freq_spec' => $freq_spec, 
+						'improvement' => $improvement, 
+						'ease_of_use' => $ease_of_use, 
+						'meet_expect' => $meet_expect, 
+						'expect_suggest' => $expect_suggest, 
+						'retrain' => $retrain);
 
 		echo Facility_Evaluation::save_facility_evaluation($mydata);
+		
+		$facility_code = $this -> session -> userdata('facility_id');
+		$data['content_view'] = "facility/facility_reports/reports_v";
+		$data['report_view'] = "facility/facility_reports/potential_expiries_v";
+		$data['report_data'] = Facility_stocks::potential_expiries($facility_code);
+		
+		$view = 'shared_files/template/template';
+				
 
+	}
+	public function facility_evaluation_($message = NULL) 
+	{
+		$this -> session -> set_flashdata('system_success_message', "Facility Training Evaluation Has been " . $message);
+		redirect('reports/facility_evaluation_report');
 	}
 	
 	public function facility_stock_data() 
