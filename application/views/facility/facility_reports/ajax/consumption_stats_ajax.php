@@ -14,13 +14,8 @@
 		margin:auto;	
 	}
 </style>
-<div class="panel-heading">
-   <h3 class="panel-title">Please Select filter Options Below <span class="glyphicon glyphicon-cog"></span> </h3>
-</div>
-
 <div class="filter" id="">
-<h2>
-	
+<h5>
 <select id="commodity_filter" style="width: 10.8em;">
 	<option value="0">Select Commodity</option>
 	
@@ -46,74 +41,53 @@ endforeach;
 </select> 
 	<button class="btn btn-small btn-success" id="filter" name="filter" style="margin-left: 1em;">Filter <i class="icon-filter"></i></button> 
 	
-	</h2>
+</h5>
 </div>
 
-<div class="graph_content ">
+<div class='graph-section' id='graph-section'></div>
 	
 </div>
-
 <script>
-	
 	$(document).ready(function() 
 	{
-		$('#filter').click(function() 
+		<?php echo @$graph_data; ?>
+	
+			$("#filter").click(function() 
 			{
-		    	var fcommodity = $("#commodity_filter").val();
-		    	var year = $("#year_filter").val();
-		    	var plot_value_filter =$("#plot_value_filter").val();
-		    	   	   	
-				if (fcommodity==0) 
-				{
-					alert("Please select Commodity.");
-					return;
-				}
-				if (year==0) 
-				{
-					alert("Please select Year.");
-					return;
-				}
-				if (plot_value_filter==0) 
-				{
-					alert("Please select Plot value.");
-					return;
-				}
-         	var div = ".graph_content";
-			var url = "<?php echo base_url()."reports/consumption_stats_graph"?>";		
-			ajax_supply (url,div);
+				var url = "<?php echo base_url().'reports/filtered_consumption/'?>"+
+				        $("#commodity_filter").val()+
+				        "/"+$("#year_filter").val()+
+				        "/"+$("#plot_value_filter").val();
+        
+				ajax_supply(url,'.graph-section');
 		
-			 
-		});
+          });
+
+		
 		function ajax_supply (url,div)
 		{
-			var url = url;
-			var loading_icon="<?php echo base_url().'assets/img/loadfill.gif' ?>";
-	 		$.ajax(
-	 			{
-	 				type: "POST",
-			        data: 
-			           {
-				           	facilityname:$('#commodity_filter option:selected').html(),
-				           	commodity_filter: $("#commodity_filter").val(),
-				           	year_filter: $("#year_filter").val(),
-				           	plot_value_filter: $("#plot_value_filter").val()
-			           	},
-		          url: url,
-		          beforeSend: function() 
-		          {
-		          	$(div).html("");
-		            $(div).html("<img style='margin-left:20%;margin-top:2%;' src="+loading_icon+">");
-		            
-		          },
-		          success: function(msg) 
-		          {
-		          	$(div).html("");
-		            $(div).html(msg);           
-		          }
-		        });
+
+	    var url = url;
+	    var loading_icon = "<?php echo base_url().'assets/img/loadfill.gif' ?>";
+	    $.ajax({
+          type: "POST",
+          url: url,
+          beforeSend: function() 
+          {
+             $(div).html("");           
+             $(div).html("<img style='margin-top:10%;' src="+loading_icon+">");
+           
+          },
+          success: function(msg) 
+          {
+            $(div).html("");
+            $(div).html(msg);           
+          }
+        });
          
 }
 		
-	
+		
+		
   });
 </script>

@@ -104,8 +104,8 @@
 		<tr>
 			<td colspan="2">No. of commodities that have expired</td>
 			<td colspan="2">
-				<input type="text" name="total_expired_commodities" id="total_expired_commodities" onkeyup="checker('total_expired_commodities', 'num')"value="<?php 
-			echo  isset($filled_report['amount_of_expired_commodities']) ?  $filled_report['amount_of_expired_commodities']: '' ?>"></td>
+				<input type="text"  name="total_expired_commodities" id="total_expired_commodities" onkeyup="checker('total_expired_commodities', 'num')"value="<?php 
+			echo  isset($filled_report['amount_of_expired_commodities'])?  $filled_report['amount_of_expired_commodities']: '' ?>"></td>
 		</tr>
 		<tr>
 			<td colspan="2">No. of commodities that are over stocked in the facility</td>

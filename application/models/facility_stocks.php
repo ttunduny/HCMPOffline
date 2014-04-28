@@ -106,55 +106,56 @@ $group_by ");
 		 and f_s.current_balance>0 and expiry_date <= NOW()");
 		        return $stocks ;
 	}	
-public static function get_facility_drug_consumption_level($facilities_filter,$county_id,$commodity_filter,$year_filter,$plot_value_filter)
+public static function get_facility_drug_consumption_level($facilities_filter,$commodity_filter,$year_filter,$plot_value_filter)
  {
  	switch ($plot_value_filter) :
 		case 'ksh':
-			$computation ="CEIL((fs.qty_issued)*cms.unit_cost ) AS total";
+			$computation ="CEIL((fs.qty_issued)*cms.unit_cost ) AS total_consumption";
             break;
         case 'units':
-           	$computation ="fs.qty_issued AS total" ;
+           	$computation ="fs.qty_issued AS total_consumption" ;
             break;
         case 'packs':
-           	$computation ="fs.qty_issued AS total" ;
+           	$computation ="CEIL(fs.qty_issued/cms.total_commodity_units) AS total_consumption" ;
             break;
         default:
-            $computation ="fs.qty_issued AS total" ;
+            $computation ="fs.qty_issued AS total_consumption" ;
             break;
     endswitch;
     
-    if ($facilities_filter == 0 || $commodity_filter > 0 ) 
-    {
-    	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-		->fetchAll("SELECT MONTH( fs.date_issued ) as monthno, cms.commodity_name as Name,$computation 
+   	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT MONTHNAME( fs.date_issued ) as month, cms.commodity_name as Name,$computation 
 					FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
 					WHERE fs.facility_code = f.facility_code
+					AND f.facility_code = $facilities_filter
+					AND fs.qty_issued > 0
 					AND f.district = di.id
 					AND fs.status =  '1'
-					AND c.id = $county_id
 					AND fs.commodity_id = $commodity_filter
 					AND YEAR( fs.date_issued ) =$year_filter
 					AND cms.id = fs.commodity_id
-					GROUP BY Name");		
+					GROUP BY MONTH( fs.date_issued ) asc");		
 		return $inserttransaction ;
-	}
-	elseif ($facilities_filter > 0) 
-	{
+	
+
+
+ }
+ public static function get_commodity_consumption_level($facilities_code)
+ {
+ 	$year = date("Y");
 		$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-		->fetchAll("SELECT MONTH( fs.date_issued )as monthno, cms.commodity_name as Name, $computation
+		->fetchAll("SELECT MONTHNAME( fs.date_issued )as month, cms.commodity_name as commodity, fs.qty_issued AS total_consumption
 			FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
 			WHERE fs.facility_code = f.facility_code
+			AND fs.qty_issued > 0
 			AND f.district = di.id
 			AND fs.status =  '1'
-			AND c.id = $county_id
-			AND fs.commodity_id = $commodity_filter
-			AND fs.facility_code = $facilities_filter
-			AND YEAR( fs.date_issued ) =$year_filter
+			AND fs.facility_code = $facilities_code
+			AND YEAR( fs.date_issued ) = $year
 			AND cms.id = fs.commodity_id
-			GROUP BY Name ");		
+			GROUP BY MONTH( fs.date_issued ) asc");		
 		return $inserttransaction ;
-	}
-
+	
 
  }
  
@@ -223,14 +224,14 @@ public static function get_facility_drug_consumption_level($facilities_filter,$c
     return  $inserttransaction ;
 			
 	}
-	public static function get_facility_expiries($facility_code,$district_id = NULL, $county_id = NULL, $year=NULL) 
+	public static function get_facility_expiries($facility_code, $district_id = NULL, $county_id = NULL, $year=NULL) 
 	{
 		$year = (isset($year)) ? $year: date("Y");
-		
+	
 		if (!isset($district_id)||!isset($county_id))
 		{
 			$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
-			->fetchAll("select * from  facility_stocks fs 
+			->fetchAll("select fs.current_balance AS total_expiries, MONTHNAME(fs.expiry_date) as month from  facility_stocks fs 
 			LEFT JOIN  commodities c 
 			ON c.id=fs.commodity_id 
 			where facility_code=$facility_code 
@@ -244,7 +245,7 @@ public static function get_facility_drug_consumption_level($facilities_filter,$c
 		else if(isset($district_id))
 		{
 			$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
-			->fetchAll("select * from  districts d, 
+			->fetchAll("select fs.current_balance AS total_expiries, fs.expiry_date as month from  districts d, 
 			facility_stocks fs 
 			LEFT JOIN  commodities c 
 			ON c.id=fs.commodity_id 
@@ -259,7 +260,7 @@ public static function get_facility_drug_consumption_level($facilities_filter,$c
 		else if (isset($county_id))
 		{
 			$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
-			->fetchAll("select * from counties cs,  facility_stocks fs  
+			->fetchAll("select fs.current_balance AS total_expiries, fs.expiry_date as month from counties cs,  facility_stocks fs  
 			LEFT JOIN  commodities c 
 			ON c.id=fs.commodity_id 
 			where facility_code=$facility_code 
@@ -274,24 +275,24 @@ public static function get_facility_drug_consumption_level($facilities_filter,$c
 		
 	
 	}
-	public static function get_filtered_facility_expiries($facility_code, $year, $month, $option) 
+	public static function get_filtered_expiries($facility_code, $year, $month, $option) 
 	{
 		switch ($option) :
 			case 'KSH':
-				$computation ="(CEIL(fs.current_balance)*c.unit_cost ) AS total";
+				$computation ="(CEIL(fs.current_balance)*c.unit_cost ) AS total_expiries";
 	        break;
 	        case 'Units':
 	        	$computation ="fs.current_balance AS total" ;
 	        break;
 	        case 'Packs':
-	        	$computation ="fs.current_balance AS total" ;
+	        	$computation ="(CEIL(fs.current_balance/c.total_commodity_units)) AS total_expiries" ;
 	        break;
 	        default:
-	        	$computation ="fs.current_balance AS total";
+	        	$computation ="fs.current_balance AS total_expiries";
 	        break;
 	    endswitch;
 		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
-			->fetchAll("select $computation, DATE_FORMAT(fs.expiry_date, '%M') as Month from  facility_stocks fs 
+			->fetchAll("select $computation, c.commodity_name as commodity from  facility_stocks fs 
 			LEFT JOIN  commodities c 
 			ON c.id=fs.commodity_id 
 			where facility_code=$facility_code 
@@ -304,7 +305,7 @@ public static function get_facility_drug_consumption_level($facilities_filter,$c
 		
 	
 	}
-	public static function get_commodity_consumption_level($facility_code = null,$commodity_code = null, $county_id = null, $plot_value_filter = null, $year = null)
+	/*public static function get_commodity_consumption_level($facility_code = null,$commodity_code = null, $county_id = null, $plot_value_filter = null, $year = null)
  	{
  		switch ($plot_value_filter) :
 			case 'ksh':
@@ -356,5 +357,5 @@ public static function get_facility_drug_consumption_level($facilities_filter,$c
 
 
  }
- 
+ */
 }

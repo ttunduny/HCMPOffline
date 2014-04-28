@@ -102,17 +102,17 @@
                             <table class="table">
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-remove-sign"></span><a href="<?php echo base_url().'reports/load_facility_cost_of_expiries'?>" >Expiries</a>
+                                        <span class="glyphicon glyphicon-remove-sign"></span><a href="<?php echo base_url().'reports/load_facility_expiries'?>" >Expiries</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-usd"></span><a href="#">Cost of Orders</a>
+                                        <span class="glyphicon glyphicon-usd"></span><a href="<?php echo base_url().'reports/load_cost_of_orders'?>" >Cost of Orders</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-cutlery"></span><a href="<?php echo base_url().'reports/consumption_data'?>" >Consumption</a>
+                                        <span class="glyphicon glyphicon-cutlery"></span><a href="<?php echo base_url().'reports/consumption'?>" >Consumption</a>
                                     </td>
                                 </tr>
                                 <tr>

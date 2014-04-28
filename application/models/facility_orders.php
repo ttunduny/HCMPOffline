@@ -28,7 +28,8 @@ class facility_orders extends Doctrine_Record {
 				$this->hasColumn('status', 'int');	
 	}
 
-	public function setUp() {
+	public function setUp() 
+	{
 		$this -> setTableName('facility_orders');
 		$this->hasMany('facility_order_details as order_detail', array('local' => 'id', 'foreign' => 'order_number_id'));	
 		$this->hasMany('facilities as facility_detail', array('local' => 'facility_code', 'foreign' => 'facility_code'));	
@@ -83,6 +84,38 @@ $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($
 		return $query_results;
 
 		}
-
-		}
+ public static function get_cost_of_orders($facilities_code)
+ {
+ 	$year = date("Y");
+		$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT MONTHNAME( fo.order_date )as month, cms.commodity_name as commodity, CEIL((fo.order_total)*cms.unit_cost) as total_cost
+			FROM facility_orders fo, commodities cms, facilities f 
+			WHERE fo.facility_code = f.facility_code
+			AND fo.status =  '4'
+			AND fo.facility_code = $facilities_code
+			AND YEAR( fo.order_date ) = $year
+			GROUP BY Month( fo.order_date ) asc");		
+		return $inserttransaction ;
+	
+ }
+ public static function get_filtered_cost_of_orders($facility_code, $commodity_code, $month = null, $year = null)
+ {
+ 	if(isset($month) && isset($year))
+ 	{
+ 		$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT MONTHNAME( fo.order_date )as month, cms.commodity_name as commodity, CEIL((fo.order_total)*cms.unit_cost) as total_cost
+			FROM facility_orders fo, commodities cms, facilities f 
+			WHERE fo.facility_code = f.facility_code
+			AND fo.status =  '4'
+			AND fo.facility_code = $facilities_code
+			AND f.facility_code = $commodity_code
+			AND YEAR( fo.order_date ) = $year
+			AND MONTH( fo.order_date ) = $month
+			GROUP BY Month( fo.order_date ) asc");	
+ 	}
+			
+		return $inserttransaction ;
+	
+ }
+}
 	

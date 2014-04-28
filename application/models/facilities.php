@@ -77,7 +77,7 @@ GROUP BY user.facility");
 	{
 	$query = Doctrine_Query::create()->select('facility_name')->from('facilities')->where("facility_code='$facility_code'");
 	$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
-	return $result;
+	return $result[0];
 	}
 	/********************getting the facility owners  count*************/
 	public static function get_owner_count() {

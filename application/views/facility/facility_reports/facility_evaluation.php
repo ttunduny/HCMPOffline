@@ -91,10 +91,10 @@
 		<?php switch ($evaluation_data[0]['satisfaction_lvl']):
 case 1:
 echo <<<HTML_DATA
- <td><input type="radio" class="uncheck"  name="qstn_b" id="v_satisfied" value="1"> Very satisfied</td>
-			<td><input class="uncheck" checked="checked" type="radio"  class="uncheck" name="qstn_b" id="indifferent" value="2"> Indifferent</td>
-			<td><input class="uncheck" type="radio"  class="uncheck" name="qstn_b" id="unsatisfied" value="3"> Unsatisfied</td>
-			<td><input class="uncheck" type="radio"  class="uncheck" name="qstn_b" id="not_understand" value="4"> I did not understand</td>
+ 	<td><input type="radio" class="uncheck"  name="qstn_b" id="v_satisfied" value="1"> Very satisfied</td>
+	<td><input class="uncheck" checked="checked" type="radio"  class="uncheck" name="qstn_b" id="indifferent" value="2"> Indifferent</td>
+	<td><input class="uncheck" type="radio"  class="uncheck" name="qstn_b" id="unsatisfied" value="3"> Unsatisfied</td>
+	<td><input class="uncheck" type="radio"  class="uncheck" name="qstn_b" id="not_understand" value="4"> I did not understand</td>
 HTML_DATA;
 	
 	break;
