@@ -102,7 +102,7 @@
                             <table class="table">
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-remove-sign"></span><a href="<?php echo base_url().'reports/load_facility_expiries'?>" >Expiries</a>
+                                        <span class="glyphicon glyphicon-remove-sign"></span><a href="<?php echo base_url().'reports/load_expiries'?>" >Expiries</a>
                                     </td>
                                 </tr>
                                 <tr>

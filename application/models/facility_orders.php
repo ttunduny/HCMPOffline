@@ -98,7 +98,7 @@ $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($
 		return $inserttransaction ;
 	
  }
- public static function get_filtered_cost_of_orders($facility_code, $commodity_code, $month = null, $year = null)
+ public static function get_filtered_cost_of_orders($facility_code, $month = null, $year = null)
  {
  	if(isset($month) && isset($year))
  	{
@@ -107,11 +107,10 @@ $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($
 			FROM facility_orders fo, commodities cms, facilities f 
 			WHERE fo.facility_code = f.facility_code
 			AND fo.status =  '4'
-			AND fo.facility_code = $facilities_code
-			AND f.facility_code = $commodity_code
+			AND fo.facility_code = $facility_code
 			AND YEAR( fo.order_date ) = $year
 			AND MONTH( fo.order_date ) = $month
-			GROUP BY Month( fo.order_date ) asc");	
+			GROUP BY commodity asc");	
  	}
 			
 		return $inserttransaction ;

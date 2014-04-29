@@ -32,12 +32,11 @@ endforeach;
 		<option value="2014">2014</option>
 		<option value="2013">2013</option>
 </select>
-	
 <select id="plot_value_filter">
 	<option value="0">Select Plot value</option>
-<option value="packs">Packs</option>
-<option value="units">Units</option>
-<option value="ksh">KSH</option>
+	<option value="packs">Packs</option>
+	<option value="units">Units</option>
+	<option value="ksh">KSH</option>
 </select> 
 	<button class="btn btn-small btn-success" id="filter" name="filter" style="margin-left: 1em;">Filter <i class="icon-filter"></i></button> 
 	
@@ -57,7 +56,7 @@ endforeach;
 				var url = "<?php echo base_url().'reports/filtered_consumption/'?>"+
 				        $("#commodity_filter").val()+
 				        "/"+$("#year_filter").val()+
-				        "/"+$("#plot_value_filter").val();
+				         "/"+$("#plot_value_filter").val();
         
 				ajax_supply(url,'.graph-section');
 		

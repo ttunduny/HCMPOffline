@@ -535,7 +535,6 @@ class Reports extends MY_Controller
 		
 		$expired_commodities = Facility_stocks::get_commodity_consumption_level($facility_code);
 		//Holds all the months of the year
-		//$months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
 		//Build the line graph showing the expiries graph
 		$graph_data = array();
 		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
@@ -569,6 +568,7 @@ class Reports extends MY_Controller
 	public function filtered_consumption($commodity_code, $year = null, $option = null) 
 	{
 		$year = (isset($year)) ? $year: date("Y");
+		//$month = (isset($month))? $month: date("m");
 		$option = (isset($option)) ? $option: "Packs" ;
 	
 		$county_id = $this -> session -> userdata('county_id');
@@ -576,7 +576,7 @@ class Reports extends MY_Controller
 		$facility_name = Facilities::get_facility_name2($facilities_filter);
 		
 			
-		$consumption_data = Facility_stocks::get_facility_drug_consumption_level($facilities_filter, $commodity_code, $year, $option);
+		$consumption_data = Facility_stocks::get_filtered_commodity_consumption_level($facilities_filter, $commodity_code, $year, $option);
 		
 		//Build the line graph showing the expiries graph
 		$graph_data = array();
@@ -642,9 +642,10 @@ class Reports extends MY_Controller
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
 		
+		
 	}
 
-	public function filter_cost_of_orders($commodity_code, $month = null, $year = null)
+	public function filter_cost_of_orders($month = null, $year = null)
 	{
 		$year = (isset($year)) ? $year: date("Y");
 		$month = (isset($month))? $month:date("m");
@@ -652,19 +653,20 @@ class Reports extends MY_Controller
 		$county_id = $this -> session -> userdata('county_id');
 		$facility_name = Facilities::get_facility_name2($facility_code);
 		
-		$cost_of_commodities = facility_orders::get_filtered_cost_of_orders($facility_code, $commodity_code, $month, $year);
+		//gets the cost of individual commodities 
+		$cost_of_commodities = facility_orders::get_filtered_cost_of_orders($facility_code, $month, $year);
 		
 		//Build the line graph showing the cost of orders graph
 		$graph_data = array();
 		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
 		$graph_data = array_merge($graph_data,array("graph_title"=>'Total Cost of Orders in '.$facility_name['facility_name']));
-		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
+		$graph_data = array_merge($graph_data,array("graph_type"=>'bar'));
 		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Cost of Orders  (values in KSH)'));
 		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
 		$graph_data = array_merge($graph_data,array("series_data"=>array("Total Cost"=>array())));
 		
 		foreach($cost_of_commodities as $facility_stock_expired):
-			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_stock_expired['month']));	
+			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_stock_expired['commodity']));	
 			$graph_data['series_data']['Total Cost'] = array_merge($graph_data['series_data']['Total Cost'],array($facility_stock_expired['total_cost']));	
 		endforeach;
 			
@@ -676,28 +678,24 @@ class Reports extends MY_Controller
 		$faciliy_stock_data = isset($faciliy_stock_data)? $faciliy_stock_data : "$('#graph-section').html('<img src=$loading_icon>')'" ;
    
    		$data['graph_data'] =	$faciliy_stock_data;
-		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
-		$data['content_view'] = "facility/facility_reports/reports_v";
-		$data['report_view'] = "facility/facility_reports/ajax/cost_of_orders_filter";
-		$view = 'shared_files/template/template';
-		$this -> load -> view($view, $data);
+   		$this -> load -> view("facility/facility_reports/ajax/graph_data_v", $data);
 		
 	}
-	public function load_facility_expiries() 
+	public function load_expiries() 
 	{
 		$facility_code = $this -> session -> userdata('facility_id'); 
 		$county_id = $this -> session -> userdata('county_id');
 		$facility_name = Facilities::get_facility_name2($facility_code);
 		
-		$expired_commodities = Facility_stocks::get_facility_expiries($facility_code);
+		$expired_commodities = Facility_stocks::get_expiries($facility_code);
 		//Holds all the months of the year
-		$months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+		//$months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
 		//Build the line graph showing the expiries graph
 		$graph_data = array();
 		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
 		$graph_data = array_merge($graph_data,array("graph_title"=>'Expired Commodities in '.$facility_name['facility_name']));
 		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
-		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Expired Commodities  (values in packs)'));
+		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Expired Commodities  (values in units)'));
 		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
 		$graph_data = array_merge($graph_data,array("series_data"=>array("Expired Commodities"=>array())));
 		//$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],$months);	
@@ -722,7 +720,7 @@ class Reports extends MY_Controller
 		$this -> load -> view($view, $data);
 		
 	}
-	public function get_facility_expiries($year = null, $month = null,$option = null)
+	public function filter_expiries($year = null, $month = null,$option = null)
 	{
 		$facility_code = $this -> session -> userdata('facility_id'); 
 		$county_id = $this -> session -> userdata('county_id');
@@ -738,7 +736,7 @@ class Reports extends MY_Controller
 		
 		$graph_data = array();
 		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
-		$graph_data = array_merge($graph_data,array("graph_title"=>'Expired Commodities in '.$facility_name[0]['facility_name']));
+		$graph_data = array_merge($graph_data,array("graph_title"=>'Expired Commodities in '.$facility_name['facility_name']));
 		$graph_data = array_merge($graph_data,array("graph_type"=>'column'));
 		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Expired Commodities  (values in '.$option.')'));
 		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));

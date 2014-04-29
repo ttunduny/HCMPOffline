@@ -17,7 +17,6 @@
 
 <div class="filter">
 	<h5>
-
 	<select name="year" id="year_filter" style="width: 7.8em;">
 		<option value="0">Select Year</option>
 		<option value="2014">2014</option>
@@ -53,8 +52,7 @@
 			$("#filter").click(function() 
 			{
 				var url = "<?php echo base_url().'reports/filter_cost_of_orders/'?>"+
-				        $("#commodity_filter").val()+
-				        "/"+$("#month_filter").val()+
+				        $("#month_filter").val()+
 				        "/"+$("#year_filter").val();
         
 				ajax_supply(url,'.graph-section');

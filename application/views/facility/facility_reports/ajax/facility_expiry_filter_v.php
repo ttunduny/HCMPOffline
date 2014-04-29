@@ -56,7 +56,7 @@
 	
 			$("#filter").click(function() 
 			{
-				var url = "<?php echo base_url().'reports/get_facility_expiries/'?>"+
+				var url = "<?php echo base_url().'reports/filter_expiries/'?>"+
 				        $("#year_filter").val()+
 				        "/"+$("#month_filter").val()+
 				        "/"+$("#plot_value_filter").val();
