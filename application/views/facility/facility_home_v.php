@@ -101,10 +101,10 @@
       <div class="panel-body">
 
         <div style="height:auto; margin-bottom: 2px" class="issue message ">	 
-        	<a href="<?php echo base_url()."issues/index/internal" ?>"><h5>Issue Commodities to service points</h5></a>       	 
+        	<a href="<?php echo base_url("issues/index/internal") ?>"><h5>Issue Commodities to service points</h5></a>       	 
         </div>
         <div style="height:auto; margin-bottom: 2px" class="distribute message ">
-        	<a href="<?php echo base_url().'issues/index/external'; ?>"><h5>Redistribute Commodities to other facilities</h5></a>	 
+        	<a href="<?php echo base_url('issues/index/external'); ?>"><h5>Redistribute Commodities to other facilities</h5></a>	 
         </div>
         
  		<div style="height:auto; margin-bottom: 2px" class="distribute message ">
@@ -115,8 +115,9 @@
             <h5>Orders</h5>
         </div>
 
-       <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
-            <a href="<?php echo base_url().'reports/facility_transaction_data/1'; ?>"><h5>KEMSA</h5></a>
+
+         <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
+            <a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>KEMSA</h5></a>
             <a href=""><h5>MEDS</h5></a> 
         </div>   
 
@@ -126,13 +127,17 @@
       </div>
           
          <div style="height:auto; margin-bottom: 2px" class="delivery message ">
-          <a href=""><h5>Update order delivery</h5></a>    
 
-        </div>   
+        	<a href="<?php echo base_url('reports/order_listing/facility')?>"><h5>Update order delivery</h5></a> 
+        	 </div>   	 
         <div style="height:auto; margin-bottom: 2px" class="order message ">
-          <a href="<?php echo base_url()."issues/add_service_points" ?>"><h5>Add Service Points </h5></a>          
+          <a href="<?php echo base_url("issues/add_service_points") ?>"><h5>Add Service Points </h5></a>          
         </div>
-        
+
+         <div style="height:auto; margin-bottom: 2px" class="reports message ">
+          <a href="<?php echo base_url("reports") ?>"><h5>Reports</h5></a>        
+        </div>
+      </div>
         </div>      
 
       </div>    

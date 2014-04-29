@@ -337,6 +337,7 @@ endif;
 /* HCMP PDF creator
 /********/	
 
+<<<<<<< HEAD
 public function create_pdf($pdf_data=NULL)
 {
 
@@ -355,14 +356,32 @@ public function create_pdf($pdf_data=NULL)
 	table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px solid #DDD;height: 30px;margin: 0px;border-bottom: 1px solid #DDD;}
 	</style>';
             $name=$this -> session -> userdata('fname');
+=======
+public function create_pdf($pdf_data=NULL){
+
+if(count($pdf_data)>0):	
+$url=base_url().'assets/img/coat_of_arms.png';
+$html_title="<div align=center><img src='$url' height='70' width='70'style='vertical-align: top;'> </img></div>
+<div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>$pdf_data[pdf_title]</div>
+<div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>
+Ministry of Health</div>
+<div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold;display: block; font-size: 13px;'>
+Health Commodities Management Platform</div><hr/>";
+
+$table_style='<style>table.data-table {border: 1px solid #DDD;margin: 10px auto;border-spacing: 0px;}
+table.data-table th {border: none;color: #036;text-align: center;border: 1px solid #DDD;border-top: none;max-width: 450px;}
+table.data-table td, table th {padding: 4px;}
+table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px solid #DDD;height: 30px;margin: 0px;border-bottom: 1px solid #DDD;}
+</style>';
+            $name=$this -> session -> userdata('full_name');
+>>>>>>> ba8d2bb115025d42d752e160a2ad4ecabdbc4e38
 	        $this->mpdf = new mPDF('', 'A4-L', 0, '', 15, 15, 16, 16, 9, 9, '');
             $this->mpdf->WriteHTML($html_title);
             $this->mpdf->defaultheaderline = 1;  
             $this->mpdf->simpleTables = true;
             $this->mpdf->WriteHTML($table_style.$pdf_data['pdf_html_body']);
-			$this->mpdf->SetHTMLFooter("<div style='width:100%'>
-			<div style='float:right; width: 30%;'>created by:$name|source: HCMP</div>
-			<div style='float:right; width:60%'>{PAGENO} / {nb}</div></div>");
+            $this->mpdf->SetFooter("{DATE D j M Y }|{PAGENO}/{nb}|Prepared by: $name, source HCMP");
+
 			
 	if($pdf_data['pdf_view_option']=='save_file'):
 		 //change the pdf to a binary file then use codeigniter write function to write the file as pdf in a specific folder 
@@ -415,4 +434,152 @@ endif;
 	return $high_chart; 	
   }
 /****************************END************************/
+ public function create_order_delivery_color_coded_table($order_id){
+// get the order and order details here
+$detail_list=facility_order_details::get_order_details($order_id,true);
+$dates=facility_orders::get_order_($order_id)->toArray();
+$facility_name=Facilities::get_facility_name_($dates[0]['facility_code'])->toArray();
+$facility_name=$facility_name[0]['facility_name'];
+//set up the details		
+$table_body="";
+$total_fill_rate=0;
+$order_value =0;
+//get the lead time
+$ts1 = strtotime(date($dates[0]["order_date"]));
+$ts2 = strtotime(date($dates[0]["deliver_date"]));
+$seconds_diff = $ts2 - $ts1; //strtotime($a_date) ? date('d M, Y', strtotime($a_date)) : "N/A";
+$date_diff=strtotime($dates[0]["deliver_date"]) ? floor($seconds_diff/3600/24) : "N/A";
+$order_date=strtotime($dates[0]["order_date"]) ? date('D j M, Y', $ts1) : "N/A";
+$deliver_date=strtotime($dates[0]["deliver_date"]) ? date('D j M, Y', strtotime($ts2)) : "N/A";
+$kemsa_order_no=$dates[0]['kemsa_order_id'];
+$order_total=number_format($dates[0]['order_total'], 2, '.', ','); 
+$actual_order_total=number_format($date[0]['deliver_total'], 2, '.', ',');
+$tester= count($detail_list);
+      if($tester==0){ }
+	  else{
+		foreach($detail_list as $rows){
+			//setting the values to display
+			 $received=$rows['quantity_recieved'];
+			 $price=$rows['unit_cost'];
+			 $ordered=$rows['quantity_ordered_unit'];
+			 $code=$rows['commodity_id'];
+			 $total=$price* $ordered;	
+			 $total_=$price* $received;		 	
+			 $drug_name=$rows['commodity_name'];
+			 $kemsa_code=$rows['commodity_code'];
+			 $unit_size=$rows['unit_size'];
+			 $total_units=$rows['total_commodity_units'];
+			 $cat_name=$rows['sub_category_name'];		
+		     $received=round(@$received/$total_units);
+		     $fill_rate=round(@($received/$ordered)*100);
+	         $total_fill_rate=$total_fill_rate+$fill_rate;			
+		switch (true) {
+		case $fill_rate==0:
+		 $table_body .="<tr style='background-color: #FBBBB9;'>";
+		 $table_body .= "<td>$cat_name</td>";
+	     $table_body .= '<td>'.$drug_name.'</td><td>'. $kemsa_code.'</td>'.'<td>'.$unit_size.'</td>';
+		 $table_body .='<td>'. $price.'</td>';
+		 $table_body .='<td>'.$ordered.'</td>';
+		 $table_body .='<td>'.number_format($total, 2, '.', ',').'</td>';
+		 $table_body .='<td>'.$received.'</td>';	
+         $table_body .='<td>'.number_format($total_, 2, '.', ',').'</td>';
+         $table_body .='<td>'.$fill_rate .'% '.'</td>';
+		 $table_body .='</tr>'; 
+		 break;  					 
+		 case $fill_rate<=60:
+		 $table_body .="<tr style=' background-color: #FAF8CC;'>";
+		 $table_body .= "<td>$cat_name</td>";
+	     $table_body .= '<td>'.$drug_name.'</td><td>'. $kemsa_code.'</td>'.'<td>'.$unit_size.'</td>';
+		 $table_body .='<td>'. $price.'</td>';
+		 $table_body .='<td>'.$ordered.'</td>';
+		 $table_body .='<td>'.number_format($total, 2, '.', ',').'</td>';
+		 $table_body .='<td>'.$received.'</td>';	
+         $table_body .='<td>'.number_format($total_, 2, '.', ',').'</td>';
+         $table_body .='<td>'.$fill_rate .'% '.'</td>';
+		 $table_body .='</tr>'; 
+		 break; 
+         case $fill_rate>100.01: 
+		 case $fill_rate==100.01:
+		 $table_body .="<tr style='background-color: #ea1e17'>";
+		 $table_body .= "<td>$cat_name</td>";
+	     $table_body .= '<td>'.$drug_name.'</td><td>'. $kemsa_code.'</td>'.'<td>'.$unit_size.'</td>';
+		 $table_body .='<td>'. $price.'</td>';
+		 $table_body .='<td>'.$ordered.'</td>';
+		 $table_body .='<td>'.number_format($total, 2, '.', ',').'</td>';
+		 $table_body .='<td>'.$received.'</td>';	
+         $table_body .='<td>'.number_format($total_, 2, '.', ',').'</td>';
+         $table_body .='<td>'.$fill_rate .'% '.'</td>';
+		 $table_body .='</tr>'; 
+		 break;		  
+		 case $fill_rate==100:
+		 $table_body .="<tr style=' background-color: #C3FDB8;'>";
+		 $table_body .= "<td>$cat_name</td>";
+	     $table_body .= '<td>'.$drug_name.'</td><td>'. $kemsa_code.'</td>'.'<td>'.$unit_size.'</td>';
+		 $table_body .='<td>'. $price.'</td>';
+		 $table_body .='<td>'.$ordered.'</td>';
+		 $table_body .='<td>'.number_format($total, 2, '.', ',').'</td>';
+		 $table_body .='<td>'.$received.'</td>';	
+         $table_body .='<td>'.number_format($total_, 2, '.', ',').'</td>';
+        $table_body .='<td>'.$fill_rate .'% '.'</td>';
+		 $table_body .='</tr>'; 
+		 break;				 
+		 default :
+		 $table_body .="<tr>";
+		 $table_body .= "<td>$cat_name</td>";
+	     $table_body .= '<td>'.$drug_name.'</td><td>'. $kemsa_code.'</td>'.'<td>'.$unit_size.'</td>';
+		 $table_body .='<td>'. $price.'</td>';
+		 $table_body .='<td>'.$ordered.'</td>';
+		 $table_body .='<td>'.number_format($total, 2, '.', ',').'</td>';
+		 $table_body .='<td>'.$received.'</td>';	
+         $table_body .='<td>'.number_format($total_, 2, '.', ',').'</td>';
+        $table_body .='<td>'.$fill_rate .'% '.'</td>';
+		 $table_body .='</tr>'; 
+		 break;			
+		 }
+		} 
+	$order_value  = round(($total_fill_rate/count($detail_list)),0,PHP_ROUND_HALF_UP);
+	}	
+	$message=<<<HTML_DATA
+<table id="main1" width="100%" class="row-fluid table table-bordered data-table">
+	<thead>
+		<tr>
+		<th colspan='11'>
+		<p>$facility_name</p>
+		<p>Fill rate(Quantity Ordered/Quantity Received)</p>
+         <p style="letter-spacing: 1px;font-weight: bold;text-shadow: 0 1px rgba(0, 0, 0, 0.1);">
+Facility Order No $order_id| KEMSA Order No $kemsa_order_no | Total ordered value(ksh) $order_total | Total recieved order value(ksh) $actual_order_total |Date Ordered $order_date| Date Delivered $deliver_date| Order lead Time $date_diff; day(s)</p>
+		</th>
+		</tr>
+		<tr>
+		<th width="50px" style="background-color: #C3FDB8; "></th>
+		<th>Full Delivery 100%</th>
+		<th width="50px" style="background-color:#FFFFFF"></th>
+		<th>Ok Delivery 60%-less than 100%</th>
+		<th width="50px" style="background-color:#FAF8CC;"></th> 
+		<th>Partial Delivery less than 60% </th>
+		<th width="50px" style="background-color:#FBBBB9;"></th>
+		<th>Problematic Delivery 0% </th>
+		<th width="50px" style="background-color:#ea1e17;"></th>
+		<th>Problematic Delivery over 100%</th>
+		</tr>
+		<tr>
+		<th><strong>Category</strong></th>
+		<th><strong>Description</strong></th>
+		<th><strong>Commodity Code</strong></th>
+		<th><strong>Unit Size</strong></th>
+		<th><strong>Unit Cost Ksh</strong></th>
+		<th><strong>Quantity Ordered</strong></th>
+		<th><strong>Total Cost</strong></th>
+		<th><strong>Quantity Received</strong></th>
+		<th><strong>Total Cost</strong></th>
+		<th><strong>Fill rate</strong></th>	
+		</tr>
+	</thead>
+	<tbody>	
+		 $table_body	
+	</tbody>
+</table>
+HTML_DATA;
+return array('table'=>$message,'date_ordered'=>$order_date,'date_received'=>$deliver_date,'order_total'=>$order_total,'actual_order_total'=>$actual_order_total,'lead_time'=>$date_diff,'facility_name'=>$facility_name);
+ }
 }

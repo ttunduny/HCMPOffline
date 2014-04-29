@@ -24,7 +24,8 @@ class orders extends MY_Controller {
 	}
 
 	public function index() {
-		//$this -> load -> view("shared_files/login_pages/login_v");
+		//$test= $this -> hcmp_functions -> create_order_delivery_color_coded_table(4);
+		//echo $test['table'];
 	}
 
 	public function facility_order() {
@@ -38,7 +39,6 @@ class orders extends MY_Controller {
 		$data['facility_commodity_list'] = Commodities::get_facility_commodities($facility_code);
 		$this -> load -> view('shared_files/template/template', $data);
 	}
-
 	public function facility_order_($facility_code) {
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
 		$data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";
@@ -266,6 +266,8 @@ class orders extends MY_Controller {
 		$data['content_view'] = "facility/facility_orders/update_order_delivery_from_kemsa_v";
 		$data['title'] = "Facility Update Order Delivery";
 		$data['facility_commodity_list'] = Commodities::get_facility_commodities($facility_code);
+		$data['order_details']=facility_order_details::get_order_details($order_id);
+		$data['general_order_details']=facility_orders::get_order_($order_id);
 		$data['banner_text'] = "Facility Update Order Delivery";
 		$this -> load -> view('shared_files/template/template', $data);
 

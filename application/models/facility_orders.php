@@ -17,6 +17,7 @@ class facility_orders extends Doctrine_Record {
 				$this->hasColumn('bed_capacity', 'int');
 				$this->hasColumn('kemsa_order_id', 'int');
 				$this->hasColumn('order_total', 'varchar',100);
+				$this->hasColumn('deliver_total', 'varchar',100);
 				$this->hasColumn('reciever_id', 'int');
 				$this->hasColumn('drawing_rights', 'varchar',100);
 				$this->hasColumn('reciever_id', 'int');
@@ -32,7 +33,9 @@ class facility_orders extends Doctrine_Record {
 	{
 		$this -> setTableName('facility_orders');
 		$this->hasMany('facility_order_details as order_detail', array('local' => 'id', 'foreign' => 'order_number_id'));	
-		$this->hasMany('facilities as facility_detail', array('local' => 'facility_code', 'foreign' => 'facility_code'));	
+		$this->hasMany('facilities as facility_detail', array('local' => 'facility_code', 'foreign' => 'facility_code'));
+		$this->hasMany('users as ordered_detail', array('local' => 'approved_by', 'foreign' => 'id'));
+		$this->hasMany('users as dispatch_detail', array('local' => 'approved_by', 'foreign' => 'id'));	
 		
 	}
     public static function get_facility_order_summary_count($facility_code=null,$district_id=null,$county_id=null){
