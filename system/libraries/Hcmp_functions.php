@@ -337,26 +337,6 @@ endif;
 /* HCMP PDF creator
 /********/	
 
-<<<<<<< HEAD
-public function create_pdf($pdf_data=NULL)
-{
-
-	if(count($pdf_data)>0):	
-	$url=base_url().'assets/img/coat_of_arms.png';
-	$html_title="<div align=center><img src='$url' height='70' width='70'style='vertical-align: top;'> </img></div>
-	<div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>$pdf_data[pdf_title]</div>
-	<div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>
-	Ministry of Health</div>
-	<div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold;display: block; font-size: 13px;'>
-	Health Commodities Management Platform</div><hr/>";
-	
-	$table_style='<style>table.data-table {border: 1px solid #DDD;margin: 10px auto;border-spacing: 0px;}
-	table.data-table th {border: none;color: #036;text-align: center;background-color: 	#FFF380;border: 1px solid #DDD;border-top: none;max-width: 450px;}
-	table.data-table td, table th {padding: 4px;}
-	table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px solid #DDD;height: 30px;margin: 0px;border-bottom: 1px solid #DDD;}
-	</style>';
-            $name=$this -> session -> userdata('fname');
-=======
 public function create_pdf($pdf_data=NULL){
 
 if(count($pdf_data)>0):	
@@ -374,7 +354,6 @@ table.data-table td, table th {padding: 4px;}
 table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px solid #DDD;height: 30px;margin: 0px;border-bottom: 1px solid #DDD;}
 </style>';
             $name=$this -> session -> userdata('full_name');
->>>>>>> ba8d2bb115025d42d752e160a2ad4ecabdbc4e38
 	        $this->mpdf = new mPDF('', 'A4-L', 0, '', 15, 15, 16, 16, 9, 9, '');
             $this->mpdf->WriteHTML($html_title);
             $this->mpdf->defaultheaderline = 1;  
