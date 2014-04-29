@@ -58,10 +58,10 @@ border-color: #e7e7e7;
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a href="<?php echo base_url().'Home';?>">
-          	<img style="display:inline-block;"  src="<?php echo base_url();?>assets/img/coat_of_arms-resized1.png" class="img-responsive " alt="Responsive image" id="logo" >
-          	</a>
-				<div id="logo_text" style="display:inline-block;">
+         
+            <a href="<?php echo base_url().'Home';?>">   
+            <img style="display:inline-block;"  src="<?php echo base_url();?>assets/img/coat_of_arms-resized1.png" class="img-responsive " alt="Responsive image" id="logo" ></a>
+				    <div id="logo_text" style="display:inline-block;">
 					<span style="font-size: 0.95em;font-weight: bold; ">Ministry of Health</span><br />
 					<span style="font-size: 0.85em;">Health Commodities Management Platform (HCMP)</span>	
 				</div>
