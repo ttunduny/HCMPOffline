@@ -4,7 +4,7 @@
  	}
  </style>
 <?php $att = array("name" => 'myform', 'id' => 'myform');
-echo form_open('', $att);
+echo form_open('stock/update_facility_stock_from_kemsa_order', $att);
  foreach($general_order_details as $general_order_details):
 	 
 	 foreach($general_order_details->ordered_detail as $ordered_detail_){
@@ -358,9 +358,12 @@ calculate_totals();
 
     if($("#myform").valid()){
    	    $('.actual_order_total').delay(500).queue(function (nxt){
+   	$("#myform").submit();
     // Load up a new modal...
     var img='<img src="<?php echo base_url('assets/img/wait.gif') ?>"/>';
-     dialog_box(img+'<h5 style="display: inline-block; font-weight:500;font-size: 18px;padding-left: 2%;"> Please wait as the order is being processed</h5>',
+
+     dialog_box(img+'<h5 style="display: inline-block; font-weight:500;font-size: 18px;padding-left: 2%;"> Please wait as the order is being processed</h5><span class="label label-danger"> Please DO NOT refresh the browser, First confirm if the stock levels have been updated</span>'
+     ,
      '');
     	nxt();
     	

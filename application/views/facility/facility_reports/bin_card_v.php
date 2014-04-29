@@ -52,7 +52,7 @@ $(document).ready(function() {
 	$( "#from" ).datepicker({
       defaultDate: "+1w",
       changeMonth: true,
-      numberOfMonths: 3,
+      numberOfMonths: 2,
       onClose: function( selectedDate ) {
         $( "#to" ).datepicker( "option", "minDate", selectedDate );
       }
@@ -60,7 +60,8 @@ $(document).ready(function() {
     $( "#to" ).datepicker({
       defaultDate: "+1w",
       changeMonth: true,
-      numberOfMonths: 3,
+       maxDate: new Date(),
+      numberOfMonths: 2,
       onClose: function( selectedDate ) {
         $( "#from" ).datepicker( "option", "maxDate", selectedDate );
       }
@@ -70,8 +71,6 @@ $(document).ready(function() {
       
       var div="#reports_display";
       var url = "<?php echo base_url()."reports/stock_control_ajax"?>";
-     
-
       ajax_post_process (url,div);
      
     });

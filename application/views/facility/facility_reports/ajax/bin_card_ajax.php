@@ -1,6 +1,5 @@
  <div style="min-height: 400px; background:#edc1d8">
   <img style="align-content: center;margin-left: 46%; border:0 none;" src="<?php echo base_url();?>assets/img/coat_of_arms-resized1.png" class="img-responsive " alt="Responsive image">
-
         <div id="" style="text-align: center; ">
           <span style="font-size: 0.95em;font-weight: bold; ">Ministry of Health</span><br />
           <span style="font-size: 0.85em;">Health Commodities Management Platform (HCMP)</span> 
@@ -13,23 +12,18 @@
     <th>Commodity Unit Size</th>
     <th>Batch No -Issued</th>
     <th>Expiry Date</th>
-    <th>Receipts/Opening Bal.</th>
+    <th>Opening Bal.</th>
     <th>+ADJ</th>
     <th style="white-space:nowrap;">-ADJ</th>
-    <th>Issues</th>
+    <th>Receipts/Issues</th>
     <th>Closing Bal.</th>
     <th>Service Point</th>
     <th>Issuing/Receiving Officer</th>
-    
-    
   </tr>
-  </thead>
-      
-    <tbody>
-    
+  </thead>    
+    <tbody>   
      <?php   
              foreach ($bin_card as $bin ) { 
-
                 $bin['unit_size'];
                 $formatdate = new DateTime($bin['date_issued']);
                 $formated_date= $formatdate->format('d M Y');
@@ -43,9 +37,6 @@
                 $bin['fname'];
                 $bin['lname'];
                 $bin['service_point_name']; 
-
-               
-
               if ($positive_adj ==0 && $negative_adj == 0) {
 
                 $closing_bal= ($bin['balance_as_of']-$bin['qty_issued']);
@@ -59,15 +50,13 @@
 
                  $closing_bal= ($bin['balance_as_of']+$positive_adj);
                
-              } 
-       
+              }        
                if ($bin['qty_issued'] < 0) {
                  $qty_issued= (string)$bin['qty_issued'];
                  $qty_issued_text= trim($qty_issued, "-");
                  }else{
                    $qty_issued_text= $bin['qty_issued'];
-                 }            
-        
+                 }                   
                 ?>
             <tr>             
               <td><?php echo $formated_date;?> </td>
@@ -97,18 +86,10 @@
               <td><?php echo  $closing_bal;?> </td>
               <td><?php echo $bin['service_point_name']; ?> </td>
               <td><?php echo $bin['fname'].' '.$bin['lname'];?> </td>
-              
-              
-              
-              
             </tr>
           <?php
                }
-                      
-
           ?>  
-     
-    
    </tbody>
 </table>
   </div>

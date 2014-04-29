@@ -196,8 +196,7 @@ $(".add").click(function() { //add row here
 			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_cvs_xls_pdf.swf"
 		}
 	} );
-	$('#example_filter label input').addClass('form-control');
-	$('#example_length label select').addClass('form-control');
+
 		function  clone_the_last_row_of_the_table(){
 	        var selector_object=$('#facility_service_points tr:last');
             var cloned_object = selector_object.clone(true);

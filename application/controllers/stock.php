@@ -341,6 +341,7 @@ endif;
 	$facility_stock_array=$facility_transaction_array=
 	$facility_order_details_push_array=$facility_order_details_array=
 	$facility_issues_array=array();
+	if($this->input->post('commodity_id')):
 	//products
 	$commodity_id=$this->input->post('commodity_id');
 	$commodity_code=$this->input->post('commodity_code');
@@ -371,23 +372,24 @@ endif;
 			'source_of_commodity'=>1,
 			'date_added'=>$date_of_entry );
 	        array_push($facility_stock_array,$mydata);	//insert batch for facility_stocks 
-	        $facility_stock=facility_stocks::get_facility_commodity_total($facility_code,$commodity_id[$i])->toArray();				
-			$mydata_2=array('facility_code'=>$facility,
+	        $facility_stock=facility_stocks::get_facility_commodity_total($facility_code,$commodity_id[$i])->toArray();	
+			$stocks=$actual_quantity[$i]*-1;			
+			$mydata_2=array('facility_code'=>$facility_code,
 			's11_No' => 'Delivery From KEMSA',
 			'commodity_id'=>$commodity_id[$i],
 			'batch_no'=>$batch_no[$i],
 			'expiry_date'=>date('y-m-d', strtotime(str_replace(",", " ",$expiry_date[$i]))),
-			'balance_as_of'=>$facility_stock[0]['balance'],
+			'balance_as_of'=>$facility_stock[0]['commodity_balance'],
 			'date_issued' => date('y-m-d'),
-			'qty_issued' => $actual_quantity[$i],
+			'qty_issued' => $stocks,
 			'issued_to' => 'N/A',
 			'issued_by' => $this -> session -> userdata('user_id'));  
 			 array_push($facility_issues_array,$mydata_2);	//insert batch for facility_issues	
 	}
-   	$this -> db -> insert_batch('facility_stocks', $mydata);
-	$this -> db -> insert_batch('facility_issues', $mydata_2);
+   	$this -> db -> insert_batch('facility_stocks', $facility_stock_array);
+	$this -> db -> insert_batch('facility_issues', $facility_issues_array);
 /*step one move all the closing stock of existing stock to be the new opening balance and compute the total items from kemsa***/
-$get_delivered_items = Doctrine_Manager::getInstance()->getCurrentConnection()
+$get_delivered_items =Doctrine_Manager::getInstance()->getCurrentConnection()
 ->fetchAll("select f_t_t.`closing_stock`,ifnull(f_s.`current_balance`,0) as current_balance ,f_s.commodity_id
 from facility_transaction_table f_t_t 
 left join  facility_stocks f_s on f_s.facility_code= f_t_t.facility_code 
@@ -395,10 +397,9 @@ and f_s.commodity_id=f_t_t.commodity_id and f_s.date_added='$date_of_entry'
 and f_s.status=1
 where  f_t_t.facility_code=$facility_code and f_t_t.status=1   
 group by f_s.commodity_id");
-$step_1_size=count( $get_delivered_items);
+$step_1_size=count($get_delivered_items);
 /******************* step two get items that the facility does not have the in the transaction table ideally pushed items**/
-$get_pushed_items = Doctrine_Manager::getInstance()->getCurrentConnection()
-      ->fetchAll("SELECT ifnull(f_s.`current_balance`,0) AS current_balance, f_s.commodity_id
+$get_pushed_items=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT ifnull(f_s.`current_balance`,0) AS current_balance, f_s.commodity_id
 FROM facility_stocks f_s
 WHERE f_s.current_balance >0
 AND f_s.status =  '1'
@@ -411,11 +412,10 @@ AND status ='1')
 GROUP BY f_s.commodity_id");
 $step_2_size=count($get_pushed_items);	  
 //setting previous cycle's values to 0 then updating a fresh
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection();	
-		$q->execute("UPDATE `facility_transaction_table` SET status =0 WHERE `facility_code`= '$facility'");  
+		$q=Doctrine_Manager::getInstance()->getCurrentConnection()->execute("UPDATE `facility_transaction_table` SET status=0 WHERE `facility_code`= '$facility_code'");  
 //package all the items which existed into one array and save for step one
 			for($i=0;$i<$step_1_size;$i++){
-            $closing_stock=$get_delivered_items[$i]['closing_stock']+$get_delivered_items[$i]['current_balance'];
+            $closing_stock=(int)$get_delivered_items[$i]['closing_stock']+(int)$get_delivered_items[$i]['current_balance'];
 			$order_details_table_id='';
 			$mydata_3=array('facility_code'=>$facility_code,
 			'commodity_id'=>$get_delivered_items[$i]['commodity_id'],
@@ -460,6 +460,7 @@ $step_2_size=count($get_pushed_items);
 			}		
             array_push($facility_transaction_array,$mydata_5);	
 			}
+   
 	    $this -> db -> insert_batch('facility_transaction_table', $facility_transaction_array);
 		$this -> db -> update_batch('facility_order_details', $facility_order_details_array,'id');
 		if(count($facility_order_details_push_array)>0){
@@ -488,12 +489,138 @@ $step_2_size=count($get_pushed_items);
 		$subject='Order Report For '.$order_details['facility_name'];
 		//$this->hcmp_functions ->send_order_delivery_email($message_1,$subject,null);
 		$this->session->set_flashdata('system_success_message', 'Stock details have been Updated');
+endif;
 		redirect('reports/facility_stock_data');	
   	
   }
- /*
+/*
 |--------------------------------------------------------------------------
 | End of update_facility_stock_from_kemsa_order
+|--------------------------------------------------------------------------
+ Next section Decommission
+*/
+public function decommission(){
+	//Change status of commodities to decommissioned
+	   $date= date('y-m-d');
+	   $facility_code=$this -> session -> userdata('facility_id');
+	   $user_id=$this -> session -> userdata('user_id');	
+	   $facility_name_array=Facilities::get_facility_name_($facility_code)->toArray();
+	   $facility_name=$facility_name_array[0]['facility_name'];
+	   $myobj1 = Doctrine::getTable('Districts')->find($facility_name_array[0]['district']);
+	   $disto_name=$myobj1->district;
+		$county=$myobj1->county;
+		$myobj2 = Doctrine::getTable('Counties')->find($county);
+		$county_name=$myobj2->county;
+        $total=0;
+		//Create PDF of Expired Drugs that are to be decommisioned. check here 
+		$decom=Facility_stocks::get_facility_expired_stuff($facility_code);
+		/*****************************setting up the report*******************************************/
+		if(count($decom)>0):
+$html_body ='';		
+$html_body.=
+"<table class='data-table' width=100%>
+<tr>
+<td>MFL No: $facility_code</td> 
+<td>Health Facility Name: $facility_name</td>
+<td>County: $county_name</td> 
+<td>Subcounty: $disto_name</td>
+</tr>
+</table>"
+.'
+<table class="data-table" width=100%>
+<thead>
+			<tr><th><strong>Source</strong></th>
+			<th><strong>Description</strong></th>
+			<th><strong>Commodity Code</strong></th>
+			<th><strong>Unit Size</strong></th>
+			<th><strong>Unit Cost (Ksh)</strong></th>
+			<th><strong>Batch No Affected</strong></th>
+			<th><strong>Manufacturer</strong></th>
+			<th><strong>Expiry Date</strong></th>
+			<th><strong># of Days From Expiry</strong></th>
+			<th><strong>Stock Expired(Pack Size)</strong></th>	
+			<th><strong>Stock Expired(Unit Size)</strong></th>
+			<th><strong>Cost of Expired (Ksh)</strong></th>
+</tr> </thead><tbody>';
+/*******************************begin adding data to the report*****************************************/
+	foreach($decom as $drug){
+		                        $commodity_id=$drug['commodity_id'];
+		                        $batch=$drug['batch_no'];
+								$mau=$drug['manufacture'];
+								$commodity_name=$drug['commodity_name'];
+								$commodity_code=$drug['commodity_code'];								
+					            $unit_size=$drug['unit_size'];
+								$unit_cost=str_replace(",", '',$drug['unit_cost']);								
+								$current_balance=($drug['current_balance']);
+								$total_commodity_units=$drug['total_commodity_units'];
+								$expiry_date=$drug['expiry_date'];
+							    $current_balance_pack=round(($current_balance/$total_commodity_units),1);
+								$cost=$current_balance_pack*$unit_cost;
+								$formatme=new DateTime($expiry_date);
+								$newdate= $formatme->format('d M Y');
+								$facility_stock_id=$drug['facility_stock_id'];	
+								$total=$total+$cost;
+								$source=$drug['source_name'];								
+			//get the current balance of the commodity					
+			$facility_stock=Facility_Stocks::get_facility_commodity_total($facility,$commodity_id)->toArray();					
+			array('facility_code'=>$facility_code,
+			's11_No' => '(Loss) Expiry',
+			'commodity_id'=>$commodity_id,
+			'batch_no'=>$batch,
+			'expiry_date'=>date('y-m-d', strtotime(str_replace(",", " ",$expiry_date))),
+			'balance_as_of'=>$facility_stock[0]['commodity_balance'],
+			'date_issued' => date('y-m-d'),
+			'qty_issued' => 0,
+			'adjustmentnve'=>($current_balance*-1),
+			'issued_to' => 'N/A',
+			'issued_by' => $this -> session -> userdata('user_id'));			
+			 $seconds_diff =strtotime(date("y-m-d"))-strtotime($expiry_date);
+			 $date_diff=floor($seconds_diff/3600/24);			
+			Facility_Issues::update_issues_table($mydata3);
+		   	$inserttransaction= Doctrine_Manager::getInstance()->getCurrentConnection()
+			->execute("UPDATE `facility_transaction_table` SET losses =losses+$current_balance, closing_stock=closing_stock-$current_balance
+              WHERE `commodity_id`= '$commodity_id' and status='1' and facility_code=$facility_code ");	                                           
+             /// update the facility issues and set the commodity to expired                             
+            $inserttransaction=Doctrine_Manager::getInstance()->getCurrentConnection()
+            ->execute("UPDATE `facility_stock` SET status =2
+                      // WHERE `id`= '$facility_stock_id'");
+            if($cost>0):                           								    
+		    $html_body .='<tr><td>'.$source.'</td>
+							<td>'.$commodity_name.'</td>
+							<td>'.$commodity_code.'</td>
+							<td>'.$unit_size.'</td>
+							<td>'.$unit_cost.'</td>
+							<td>'. $batch.'</td>
+							<td>'.$mau.'</td>
+							<td>'.$newdate.'</td>
+							<td>'.$date_diff.'</td>	
+							<td>'.$current_balance_pack.'</td>						
+							<td>'.$current_balance.'</td>
+							<td>'.number_format($cost, 2, '.', ',').'</td>	
+							</tr>';
+			endif;		
+		  }
+		$html_body .='
+		<tr>
+		<td colspan="12">
+		<b style="float: right; margin-right:5.0em">TOTAL cost(Ksh) of Expiries: &nbsp; '.number_format($total, 2, '.', ',').'</b>
+		</tr>
+		</tbody>
+		</table>'; 
+   	$file_name ='Facility_Expired_Commodities_'.$facility_name."_".$facility_code."_".$date;
+	$pdf_data = array("pdf_title" => "Facility Expired Commodities For $facility_name", 'pdf_html_body' => $html_body, 'pdf_view_option' => 'download', 'file_name' => $file_name);
+	$this -> hcmp_functions -> create_pdf($pdf_data);
+   if($this->hcmp_functions->send_stock_decommission_email($html_body,'Decommission Report For '.$facility_name,'./pdf/'.$file_name.'.pdf')){
+   	delete_files('./pdf/'.$file_name.'.pdf');
+   	$this->session->set_flashdata('system_success_message', 'Stocks Have Been Decommissioned');		
+     }
+endif;
+redirect('reports/facility_stock_data');	
+  }
+			
+ /*
+|--------------------------------------------------------------------------
+| End of Decommission
 |--------------------------------------------------------------------------
  Next section Edit facility stock
 */

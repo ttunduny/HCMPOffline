@@ -78,7 +78,7 @@ $(document).ready(function() {
 					"aButtons":    [ "csv", "xls", "pdf" ]
 				}
 			],
-		"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_cvs_xls_pdf.swf"
+		"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
 		}
 	} );
 	$('#example_filter label input').addClass('form-control');

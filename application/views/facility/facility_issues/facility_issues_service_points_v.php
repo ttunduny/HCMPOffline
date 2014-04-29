@@ -13,11 +13,11 @@
 						<th>Description</th>
 						<th>Supplier</th>
 						<th>Unit Size</th>
-						<th>Batch&nbsp;No</th>
+						<th>Batch&nbsp;No&nbsp;&nbsp;</th>
 						<th>Expiry Date</th>
 						<th>Available Batch Stock</th>
 						<th>Issue Date</th>
-						<th>Issue Type</th>
+						<th>Issue&nbsp;Type&nbsp;&nbsp;</th>
 						<th>Issued Quantity</th>
 						<th>Total Balance</th>
 						<th>Action</th>				    
@@ -59,14 +59,14 @@ endforeach;
 						<input type="hidden" name="facility_stock_id[0]" value="0" class="facility_stock_id"/>	
 						<input type="text" class="form-control input-small supplier_name" readonly="readonly" name="supplier_name[]"/></td>
 			            <td><input  type="text" class="form-control input-small unit_size" readonly="readonly"  /></td>
-						<td><select class="form-control input-small batch_no" name="batch_no[0]"></select></td>
+						<td><select class="form-control input-small batch_no big" name="batch_no[0]"></select></td>
 						<td><input type='text' class='form-control input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
 						<td><input class='form-control input-small available_stock' type="text" name="available_stock[0]" readonly="readonly" /></td>
 						<td>
 <input class='form-control input-small clone_datepicker_normal_limit_today' 
 type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
-						<td><select class="form-control commodity_unit_of_issue input-small" name="commodity_unit_of_issue[]">
-			<option value="Pack_Size">Pack Size</option>
+						<td><select  class="form-control commodity_unit_of_issue big" name="commodity_unit_of_issue[]">
+			<option  value="Pack_Size">Pack Size</option>
 			<option value="Unit_Size">Unit Size</option>
 			</select></td>
 						<td><input class='form-control input-small quantity_issued' type="text" value=""  name="quantity_issued[0]"  required="required"/></td>

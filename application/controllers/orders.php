@@ -24,8 +24,8 @@ class orders extends MY_Controller {
 	}
 
 	public function index() {
-		//$test= $this -> hcmp_functions -> create_order_delivery_color_coded_table(4);
-		//echo $test['table'];
+		$test= $this -> hcmp_functions -> create_order_delivery_color_coded_table(1);
+		echo $test['table'];
 	}
 
 	public function facility_order() {
