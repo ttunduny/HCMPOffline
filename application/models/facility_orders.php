@@ -39,7 +39,7 @@ class facility_orders extends Doctrine_Record {
 		
 	}
     public static function get_facility_order_summary_count($facility_code=null,$district_id=null,$county_id=null){
-$where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+$where_clause = isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
 
  $orders = Doctrine_Manager::getInstance()->getCurrentConnection()
 ->fetchAll("SELECT  f_o_s.`status_desc` as status, count(f_o.`id`) as total from facilities f, districts d,facility_order_status f_o_s,
@@ -91,15 +91,14 @@ $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($
  {
  	$year = date("Y");
 		$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-		->fetchAll("SELECT MONTHNAME( fo.order_date )as month, cms.commodity_name as commodity, CEIL((fo.order_total)*cms.unit_cost) as total_cost
+		->fetchAll("SELECT date_format( fo.order_date, '%b %Y' )as month, cms.commodity_name as commodity, CEIL((fo.order_total)*cms.unit_cost) as total_cost
 			FROM facility_orders fo, commodities cms, facilities f 
 			WHERE fo.facility_code = f.facility_code
 			AND fo.status =  '4'
 			AND fo.facility_code = $facilities_code
-			AND YEAR( fo.order_date ) = $year
 			GROUP BY Month( fo.order_date ) asc");		
 		return $inserttransaction ;
-	
+
  }
  public static function get_filtered_cost_of_orders($facility_code, $month = null, $year = null)
  {

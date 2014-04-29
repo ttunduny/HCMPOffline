@@ -321,7 +321,8 @@ class Reports extends MY_Controller
 		$pdf_data = array("pdf_title" => "Order Report For $test[facility_name]", 'pdf_html_body' => $test['table'], 'pdf_view_option' => 'view_file', 'file_name' => $file_name);
 		$this -> hcmp_functions -> create_pdf($pdf_data);
 	}
-	public function order_listing($for) {
+	public function order_listing($for) 
+	{
 		$facility_code =null ;	
 		$district_id=null;
 		$county_id=null;
@@ -581,6 +582,9 @@ class Reports extends MY_Controller
 
 	public function filtered_consumption($commodity_code, $year = null, $option = null) 
 	{
+		
+		
+		
 		$year = (isset($year)) ? $year: date("Y");
 		//$month = (isset($month))? $month: date("m");
 		$option = (isset($option)) ? $option: "Packs" ;
@@ -659,40 +663,24 @@ class Reports extends MY_Controller
 		
 	}
 
-	public function filter_cost_of_orders($month = null, $year = null)
+	public function filter_cost_of_orders()
 	{
-		$year = (isset($year)) ? $year: date("Y");
-		$month = (isset($month))? $month:date("m");
-		$facility_code = $this -> session -> userdata('facility_id'); 
-		$county_id = $this -> session -> userdata('county_id');
+		$facility_code = $this -> session -> userdata('facility_id');
 		$facility_name = Facilities::get_facility_name2($facility_code);
+		$desc = 'Facility Orders';
 		
-		//gets the cost of individual commodities 
-		$cost_of_commodities = facility_orders::get_filtered_cost_of_orders($facility_code, $month, $year);
+		//get order information from the db
+		$facility_order_count_ = facility_orders::get_facility_order_summary_count($facility_code, $district_id, $county_id);
+		$facility_order_count = array();
+		foreach ($facility_order_count_ as $facility_order_count_) {
+		$facility_order_count[$facility_order_count_['status']] = $facility_order_count_['total'];
+		}
 		
-		//Build the line graph showing the cost of orders graph
-		$graph_data = array();
-		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
-		$graph_data = array_merge($graph_data,array("graph_title"=>'Total Cost of Orders in '.$facility_name['facility_name']));
-		$graph_data = array_merge($graph_data,array("graph_type"=>'bar'));
-		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Cost of Orders  (values in KSH)'));
-		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
-		$graph_data = array_merge($graph_data,array("series_data"=>array("Total Cost"=>array())));
+		$data['order_counts'] = $facility_order_count;
+		$data['delivered'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "delivered");
+	
+		$this -> load -> view("facility/facility_reports/ajax/cost_of_orders_listing_v", $data);
 		
-		foreach($cost_of_commodities as $facility_stock_expired):
-			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_stock_expired['commodity']));	
-			$graph_data['series_data']['Total Cost'] = array_merge($graph_data['series_data']['Total Cost'],array($facility_stock_expired['total_cost']));	
-		endforeach;
-			
-			
-		//create the graph here
-		$faciliy_stock_data = $this->hcmp_functions->create_high_chart_graph($graph_data);
-				
-		$loading_icon = base_url().'assests/img/no-record-found.png'; 
-		$faciliy_stock_data = isset($faciliy_stock_data)? $faciliy_stock_data : "$('#graph-section').html('<img src=$loading_icon>')'" ;
-   
-   		$data['graph_data'] =	$faciliy_stock_data;
-   		$this -> load -> view("facility/facility_reports/ajax/graph_data_v", $data);
 		
 	}
 	public function load_expiries() 
@@ -745,8 +733,6 @@ class Reports extends MY_Controller
 		$option = (isset($option)) ? $option: "Packs" ;
 	
 		$expired_commodities = Facility_stocks::get_filtered_expiries($facility_code, $year, $month, $option);
-		//print_r($expired_commodities);
-		//exit;
 		
 		$graph_data = array();
 		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
