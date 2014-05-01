@@ -157,7 +157,7 @@ HTML_DATA;
 
 		//} 
 		?>
-<div class="row container" style="width: 95%; margin: auto;">
+<div class="row container" style="width: 100%; margin: auto;">
 <div class="col-md-2" style="border: 1px solid #DDD;">
 <div class="table-responsive" style="height:100%; overflow-y: auto;">
 	<legend>
@@ -183,7 +183,7 @@ HTML_DATA;
 <div class="col-md-10" style="border: 1px solid #DDD;">
 	   
 	<ul class='nav nav-tabs'>
-      <li class=""><a href="#Rejected" data-toggle="tab">Rejected Orders</a></li>
+      <li class="active"><a href="#Rejected" data-toggle="tab">Rejected Orders</a></li>
       <li class=""><a href="#Approval" data-toggle="tab">Pending Approval</a></li>
       <li class=""><a href="#Delivery" data-toggle="tab">Pending Delivery</a></li>
       <li class=""><a href="#Delivered" data-toggle="tab">Delivered</a></li>
@@ -381,8 +381,8 @@ $(document).ready(function() {
 	$(".order-for").on('click', function() {
 	var body_content='<select id="facility_code" name="facility_code" class="form-control"><option value="0">--Select Facility Name--</option>'+
                     '<?php	foreach($facilities as $facility):
-						     $facility_code=$facility->facility_code;
-							 $facility_name=$facility->facility_name; ?>'+					
+						     $facility_code=$facility['facility_code'];
+							 $facility_name=$facility['facility_name']; ?>'+					
 						'<option <?php echo 'value="'.$facility_code.'">'.$facility_name ;?></option><?php endforeach;?>';
    //hcmp custom message dialog
     dialog_box(body_content,

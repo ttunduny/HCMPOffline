@@ -1,4 +1,4 @@
- <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Potential Expiries</h1>
+ <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Potential Expiries <?php echo $facility_name.' '.date('Y') ;?></h1>
  <div class="filter" style="width=device; height:auto; ">
 <div class="btn-group" data-toggle="buttons">
   <label class="btn btn-primary  btn-xs">
@@ -96,7 +96,7 @@ $(document).ready(function() {
  $(".optioncheck").click(function() {
       
       var div="#reports_display";
-      var url = "<?php echo base_url()."reports/potential_exp_process"?>";
+      var url = "<?php echo base_url()."reports/potential_exp_process/$facility_code"?>";
       var data= $(this).val();   
       ajax_post_process_data (url,div,data); 
      

@@ -2,8 +2,7 @@
 	.filter{
 	width: 100%;
 	/*border: 1px solid black;*/
-	margin:auto;
-	padding-bottom: 2em;	
+	margin:auto;	
 	}
 	.graph_content{
 	padding-top: 2em;
@@ -63,7 +62,6 @@ placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_nor
 <button class="btn btn-sm btn-success filter_"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div> 
 <div class="col-md-1">
-<button class="btn btn-sm btn-success download"><span class="glyphicon glyphicon-save"></span>Download</button> 
 </div>
 </form>
 </div>
@@ -118,28 +116,8 @@ var drop_down='';
         "/"+$("#facility_filter").val()+
         "/"+ $("#plot_value_filter").val()+
         "/"+encodeURI(from)+
-        "/"+encodeURI(to);
+        "/"+encodeURI(to)+"/table_data";
 		ajax_request_replace_div_content(url_,'.graph_content');	
-          });
-          $(".download").on('click',function(e) {
-		e.preventDefault();	
-		var from =$("#from").val();
-		var to =$("#to").val();
-		if(from==''){
-		from="NULL";	
-		}
-		if(to==''){
-		to="NULL";	
-		}
-        var url_ = "reports/consumption_stats_graph/"+
-        $("#commodity_filter").val()+
-        "/"+$("#district_filter").val()+
-        "/"+$("#facility_filter").val()+
-        "/"+ $("#plot_value_filter").val()+
-        "/"+encodeURI(from)+
-        "/"+encodeURI(to)+
-       "/csv_data";	
-		 window.open(url+url_ ,'_blank');	
           });
 
 		});

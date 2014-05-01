@@ -1,12 +1,12 @@
 <style>
 	.filter{
-	width: 98%;
+	width: 100%;
 	height:3em;
 	/*border: 1px solid black;*/
 	margin:auto;	
 	}
 .graph_content{
-	width: 99%;
+	width: 100%;
 	height:400px;
 	-webkit-box-shadow: 1px 1px 1px 1px #DDD3ED;
 box-shadow: 1px 1px 1px 1px #DDD3ED;

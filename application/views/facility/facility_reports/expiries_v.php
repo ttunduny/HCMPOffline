@@ -1,9 +1,4 @@
- <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Expiries</h1>
- <div class="filter" style="width=device; height:auto; ">
-
- </div>
-
-<div class="well">
+ <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Expiries <?php echo $facility_name.' '.date('Y') ;?></h1>
   <div style="min-height: 400px;">
     <table  class="table table-hover table-bordered table-update" id="exp_datatable" >
   <thead style="background-color: white">
@@ -68,9 +63,13 @@
           ?>  
    </tbody>
 </table>
-<?php if($total>0):
- $att = array("name" => 'myform', 'id' => 'myform');
+<?php
+if (!$this -> session -> userdata('facility_id')):
+else: 
+if($total>0):
+$att = array("name" => 'myform', 'id' => 'myform');
 echo form_open('stock/decommission', $att);
+endif;
 ?>		
 </form>
 <hr />
@@ -81,8 +80,7 @@ echo form_open('stock/decommission', $att);
 </div>
 <?php endif; ?>
 </div>
-	
-</div>
+
 <script type="text/javascript">
 $(document).ready(function() {
 	
@@ -108,6 +106,8 @@ $(document).ready(function() {
 			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
 		}
 	} );
+	$('.dataTables_filter label input').addClass('form-control');
+	$('.dataTables_length label select').addClass('form-control');
 $(".remove").on('click',function() {
 dialog_box('<h6 style="display: inline-block; font-weight:500;font-size: 18px;padding-left: 2%;">Please Note this action will remove the expired stock from your store, are you sure you want to continue?</h6>',
 '<button type="button" class="btn btn-primary" data-dismiss="modal">NO</button><button type="button" class="yes btn btn-danger" data-dismiss="modal">YES</button>');
