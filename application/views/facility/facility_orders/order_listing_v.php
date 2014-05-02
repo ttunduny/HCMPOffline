@@ -157,7 +157,7 @@ HTML_DATA;
 
 		//} 
 		?>
-<div class="row container" style="width: 95%; margin: auto;">
+<div class="row container" style="width: 100%; margin: auto;">
 <div class="col-md-2" style="border: 1px solid #DDD;">
 <div class="table-responsive" style="height:100%; overflow-y: auto;">
 	<legend>
@@ -181,15 +181,15 @@ HTML_DATA;
 </div>
  </div>
 <div class="col-md-10" style="border: 1px solid #DDD;">
-	   <div id="myTabContent_">
-	<ul >
-      <li class=""><a href="#Rejected" data-toggle="tab">Rejected Orders</a></li>
+	   
+	<ul class='nav nav-tabs'>
+      <li class="active"><a href="#Rejected" data-toggle="tab">Rejected Orders</a></li>
       <li class=""><a href="#Approval" data-toggle="tab">Pending Approval</a></li>
       <li class=""><a href="#Delivery" data-toggle="tab">Pending Delivery</a></li>
       <li class=""><a href="#Delivered" data-toggle="tab">Delivered</a></li>
     </ul>
- 
-      <div  id="Rejected">
+    <div id="myTabContent" class="tab-content">
+      <div  id="Rejected" class="tab-pane fade active in">
  <table cellpadding="0" cellspacing="0" width="100%" border="0" 
  class="row-fluid table table-hover table-bordered table-update"  id="test1">
 	<thead>
@@ -208,7 +208,7 @@ HTML_DATA;
 </tbody>
 </table> 
       </div>
-      <div  id="Approval">
+      <div  id="Approval" class="tab-pane fade">
         <table width="80%" border="0" 
         class="row-fluid table table-hover table-bordered table-update"  id="test2">
 	<thead>
@@ -381,8 +381,8 @@ $(document).ready(function() {
 	$(".order-for").on('click', function() {
 	var body_content='<select id="facility_code" name="facility_code" class="form-control"><option value="0">--Select Facility Name--</option>'+
                     '<?php	foreach($facilities as $facility):
-						     $facility_code=$facility->facility_code;
-							 $facility_name=$facility->facility_name; ?>'+					
+						     $facility_code=$facility['facility_code'];
+							 $facility_name=$facility['facility_name']; ?>'+					
 						'<option <?php echo 'value="'.$facility_code.'">'.$facility_name ;?></option><?php endforeach;?>';
    //hcmp custom message dialog
     dialog_box(body_content,

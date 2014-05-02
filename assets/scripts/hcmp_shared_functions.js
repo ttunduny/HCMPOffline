@@ -61,6 +61,23 @@ var baseUrl=json_obj.url;
 	changeMonth: true,
 	changeYear: true,
 	buttonImage: baseUrl,       });	
+/*  subcounty functions*/
+
+     function ajax_request_replace_div_content(function_url,div){
+		var function_url =url+function_url;
+		var loading_icon=url+"assets/img/loader.gif";
+		$.ajax({
+		type: "POST",
+		url: function_url,
+		beforeSend: function() {
+		$(div).html("<img style='margin-left:20%;' src="+loading_icon+">");
+		},
+		success: function(msg) {
+		$(div).html(msg);
+		}
+		});
+		}	
+/*******END*******/
 	
 		function refresh_clone_datepicker_normal_limit_today() {
 		var counter = 0;

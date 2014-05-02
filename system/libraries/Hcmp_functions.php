@@ -389,13 +389,17 @@ endif;
 		//echo json_encode($graph_data['graph_categories']);
 		$graph_yaxis_title=$graph_data['graph_yaxis_title'];
 		$graph_series_data=$graph_data['series_data'];
+		//$new_array=$graph_series_data;
+		//return ($graph_series_data[0]); key		
+		//$size_of_graph=sizeof($graph_series_data[key($graph_series_data)])*200;
 		//set up the graph here
 		$high_chart .="
 		$('#$graph_id').highcharts({
-		    chart: { zoomType:'x', type: '$graph_type' },
+		    chart: { zoomType:'x', type: '$graph_type'},
             credits: { enabled:false},
             title: {text: '$graph_title'},
             yAxis: { min: 0, title: {text: '$graph_yaxis_title' }},
+            subtitle: {text: 'Source: HCMP', x: -20 },
             xAxis: { categories: $graph_categories },
             tooltip: { crosshairs: [true,true] },
             series: [";			 
@@ -411,6 +415,33 @@ endif;
 
 	endif;
 	return $high_chart; 	
+  }
+/****************************END************************/
+  public function create_data_table($table_data=null){
+  	$table_data_html='';
+  	if(isset($table_data)):
+		$table_id=$table_data['table_id'];
+		$table_header=$table_data['table_header'];
+		$table_body=$table_data['table_body'];
+		$table_data_html .="<table width='100%' style='margin-top:1em;'  
+		class='row-fluid table table-hover table-bordered table-update'  id='$table_id'>
+	    <thead><tr>";
+		foreach($table_header as $key=> $header_data):
+		foreach($header_data as $header):
+		$table_data_html .="<th>$header</th>";
+		endforeach;	
+		endforeach;
+		$table_data_html .="</tr></thead><tbody>";
+		foreach($table_body as $key=> $row):
+			$table_data_html .="<tr>";
+			foreach($row as $body_data):
+				$table_data_html .="<td>$body_data</td>";
+			endforeach;	
+			$table_data_html .="</tr>";	
+		endforeach;
+       $table_data_html .="</tbody></table>";
+	endif;
+	return $table_data_html; 	
   }
 /****************************END************************/
  public function create_order_delivery_color_coded_table($order_id){
@@ -429,7 +460,7 @@ $ts2 = strtotime(date($dates[0]["deliver_date"]));
 $seconds_diff = $ts2 - $ts1; //strtotime($a_date) ? date('d M, Y', strtotime($a_date)) : "N/A";
 $date_diff=strtotime($dates[0]["deliver_date"]) ? floor($seconds_diff/3600/24) : "N/A";
 $order_date=strtotime($dates[0]["order_date"]) ? date('D j M, Y', $ts1) : "N/A";
-$deliver_date=strtotime($dates[0]["deliver_date"]) ? date('D j M, Y', strtotime($ts2)) : "N/A";
+$deliver_date=strtotime($dates[0]["deliver_date"]) ? date('D j M, Y', $ts2) : "N/A";
 $kemsa_order_no=$dates[0]['kemsa_order_id'];
 $order_total=number_format($dates[0]['order_total'], 2, '.', ','); 
 $actual_order_total=number_format($date[0]['deliver_total'], 2, '.', ',');
@@ -441,9 +472,7 @@ $tester= count($detail_list);
 			 $received=$rows['quantity_recieved'];
 			 $price=$rows['unit_cost'];
 			 $ordered=$rows['quantity_ordered_unit'];
-			 $code=$rows['commodity_id'];
-			 $total=$price* $ordered;	
-			 $total_=$price* $received;		 	
+			 $code=$rows['commodity_id'];	 	
 			 $drug_name=$rows['commodity_name'];
 			 $kemsa_code=$rows['commodity_code'];
 			 $unit_size=$rows['unit_size'];
@@ -451,6 +480,8 @@ $tester= count($detail_list);
 			 $cat_name=$rows['sub_category_name'];		
 		     $received=round(@$received/$total_units);
 		     $fill_rate=round(@($received/$ordered)*100);
+			 $total=$price* $ordered;	
+			 $total_=$price* $received;	
 	         $total_fill_rate=$total_fill_rate+$fill_rate;			
 		switch (true) {
 		case $fill_rate==0:

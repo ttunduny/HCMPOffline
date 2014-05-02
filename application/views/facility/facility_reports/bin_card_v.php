@@ -1,9 +1,8 @@
- <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Bin Card</h1>
+ <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Bin Card <?php echo $facility_name.' '.date('Y') ;?></h1>
  <div class="filter" style="width=device; height:auto; ">
 
 <div class="form-inline" role="form">
-
-   <div class="form-group">
+<div class="form-group">
  <select class="form-control input-sm" id="commodity_select" name="commodity_select" >
 <option>Select Commodity</option>
  
@@ -52,7 +51,7 @@ $(document).ready(function() {
 	$( "#from" ).datepicker({
       defaultDate: "+1w",
       changeMonth: true,
-      numberOfMonths: 3,
+      numberOfMonths: 2,
       onClose: function( selectedDate ) {
         $( "#to" ).datepicker( "option", "minDate", selectedDate );
       }
@@ -60,7 +59,8 @@ $(document).ready(function() {
     $( "#to" ).datepicker({
       defaultDate: "+1w",
       changeMonth: true,
-      numberOfMonths: 3,
+       maxDate: new Date(),
+      numberOfMonths: 2,
       onClose: function( selectedDate ) {
         $( "#from" ).datepicker( "option", "maxDate", selectedDate );
       }
@@ -70,8 +70,6 @@ $(document).ready(function() {
       
       var div="#reports_display";
       var url = "<?php echo base_url()."reports/stock_control_ajax"?>";
-     
-
       ajax_post_process (url,div);
      
     });
