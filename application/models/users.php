@@ -89,12 +89,15 @@ class Users extends Doctrine_Record {
 	{
 					
 			$update = Doctrine_Manager::getInstance()->getCurrentConnection();
-			
 
 			$update->execute("UPDATE user SET status=2  WHERE id='$user_id' ;");
 	}
 	
-
+	public static function get_user_list($user_type_id)
+	{
+					
+			
+	}
 
 
 }

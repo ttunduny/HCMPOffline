@@ -20,8 +20,7 @@ if (!$this -> session -> userdata('user_id')) {
 	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
-  <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
-
+    <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
 	<link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
 
@@ -32,6 +31,7 @@ if (!$this -> session -> userdata('user_id')) {
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <script type="text/javascript">
+    var url="<?php echo base_url(); ?>";
     </script>
     <style>
 .panel-success>.panel-heading {

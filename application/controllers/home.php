@@ -29,7 +29,8 @@ class Home extends MY_Controller
 			$data['facility_dashboard_notifications']=$this->get_facility_dashboard_notifications_graph_data();
 			break;
 			case 'district':
-			$view = 'shared_files/template/dashboard_template_v';
+			$data['content_view'] = "subcounty/subcounty_home_v";	
+			$view = 'shared_files/template/template';
 			break;
 			case 'moh_user':
 			$view = '';

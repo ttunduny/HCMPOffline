@@ -181,15 +181,15 @@ HTML_DATA;
 </div>
  </div>
 <div class="col-md-10" style="border: 1px solid #DDD;">
-	   <div id="myTabContent_">
-	<ul >
+	   
+	<ul class='nav nav-tabs'>
       <li class=""><a href="#Rejected" data-toggle="tab">Rejected Orders</a></li>
       <li class=""><a href="#Approval" data-toggle="tab">Pending Approval</a></li>
       <li class=""><a href="#Delivery" data-toggle="tab">Pending Delivery</a></li>
       <li class=""><a href="#Delivered" data-toggle="tab">Delivered</a></li>
     </ul>
- 
-      <div  id="Rejected">
+    <div id="myTabContent" class="tab-content">
+      <div  id="Rejected" class="tab-pane fade active in">
  <table cellpadding="0" cellspacing="0" width="100%" border="0" 
  class="row-fluid table table-hover table-bordered table-update"  id="test1">
 	<thead>
@@ -208,7 +208,7 @@ HTML_DATA;
 </tbody>
 </table> 
       </div>
-      <div  id="Approval">
+      <div  id="Approval" class="tab-pane fade">
         <table width="80%" border="0" 
         class="row-fluid table table-hover table-bordered table-update"  id="test2">
 	<thead>

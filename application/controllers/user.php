@@ -68,7 +68,7 @@ class User extends MY_Controller {
 			$user_indicator = $access_level['user_indicator'];
 
 			$session_data = array('county_id' => $county_id, 'phone_no' => $phone, 'user_email' => $user_email, 'user_id' => $user_id, 'user_indicator' => $user_indicator, 'fname' => $fname, 'lname' => $lname, 'facility_id' => $facility_id, //facility code
-			'district_id' => $district_id, 'county_name' => $county_name, 'full_name' => $fullname);
+			'district_id' => $district_id, 'user_type_id' => $access_typeid,'county_name' => $county_name, 'full_name' => $fullname);
 
 			$this -> session -> set_userdata($session_data);
 
@@ -289,6 +289,58 @@ class User extends MY_Controller {
 
 		}
 
+	}
+
+	public function user_create() {
+
+		$identifier = $this -> session -> userdata('user_indicator');
+		$user_type_id = $this -> session -> userdata('user_type_id');
+
+		//query to get user listing by type of user
+
+		switch ($identifier):
+			case 'moh':
+			$data['listing']= Users::get_user_list($user_type_id);	
+			$template = 'shared_files/template/dashboard_template_v';
+			break;
+			case 'facility_admin':
+			$data['listing']= Users::get_user_list($user_type_id);	
+			$template = 'shared_files/template/template';
+			break;
+			case 'district':
+			$data['listing']= Users::get_user_list($user_type_id);	
+			$template = 'shared_files/template/template';
+			break;
+			case 'moh_user':
+			$data['listing']= Users::get_user_list($user_type_id);	
+			$template = 'shared_files/template/dashboard_template_v';
+			break;
+			case 'district_tech':
+			$data['listing']= Users::get_user_list($user_type_id);	
+			$template = 'shared_files/template/template';
+			break;
+			case 'rtk_manager':
+			$data['listing']= Users::get_user_list($user_type_id);	
+			$template = 'shared_files/template/template';
+			break;
+			case 'super_admin':
+			$data['listing']= Users::get_user_list($user_type_id);	
+			$template = 'shared_files/template/dashboard_template_v';
+			break;
+			case 'allocation_committee':
+			$data['listing']= Users::get_user_list($user_type_id);	
+			$template = 'shared_files/template/template';
+			break;	
+			case 'county':
+			$data['listing']= Users::get_user_list($user_type_id);	
+			$template = 'shared_files/template/dashboard_template_v';
+			break;	
+        endswitch;
+
+        $data['title'] = "User Management";
+		$data['banner_text'] = "User Management";
+		$data['content_view'] = "shared_files/user_creation_v";
+		$this -> load -> view($template, $data);
 	}
 
 }

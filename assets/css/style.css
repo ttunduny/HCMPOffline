@@ -58,6 +58,9 @@ body {
 	margin-bottom: 1%;
 	/* border: 1px solid #036;*/
 }
+ .active-panel{
+    	border-left: 6px solid #36BB24;
+    }
 @media all and (max-width: 640px) and (min-width: 320px) {
 	#error_contain {
 		width: auto;
@@ -80,15 +83,10 @@ body {
 	#logo_text{
 		margin-left:20px;
 	}
-<<<<<<< HEAD
-=======
-	body{
-		font-size: 1em !important;
-	}
+
 	h5{
 		font-size: 12px !important;
 	}
->>>>>>> 112aeab2173cefcfa5aea7cf64c14b008f777034
 }
 @media all and (min-width: 1025px) {
 	#logo{
@@ -98,7 +96,8 @@ body {
 		margin-left:10px;
 	}
 }
-
+select.big { width: 150px !important; }
+option.big{  width: 150px !important; }
 #main_menu {
 	width: auto;
 	height: 3em;
