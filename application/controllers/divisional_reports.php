@@ -15,7 +15,7 @@ class Divisional_Reports extends MY_Controller
 	
 	public function index()
 	{
-		//echo "Hello Ojenge";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
@@ -42,6 +42,7 @@ class Divisional_Reports extends MY_Controller
 		$data['drug_rows'] = Malaria_Drugs::getName();
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['report_view']="facility/facility_reports/view_malaria_reports_v";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		$data['report_title'] =	"Divisional Malaria Reports";
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
@@ -67,6 +68,8 @@ class Divisional_Reports extends MY_Controller
 		$data['malaria_data'] = $malaria_array;
 		$data['drug_rows'] = Malaria_Drugs::getName();
 		$data['content_view'] = "facility/facility_reports/facility_reports_malaria_reports_v";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
 	}
@@ -81,6 +84,8 @@ class Divisional_Reports extends MY_Controller
 	{
 		//Used to pick the kemsa code and assign it to elements displayed on the report
 		$data['content_view'] = "facility/facility_reports/facility_reports_RH_reports_v";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
 		
@@ -95,6 +100,8 @@ class Divisional_Reports extends MY_Controller
 		$data['drug_rows'] = Malaria_Drugs::getName();
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['report_view']="facility/facility_reports/view_reproductive_health_reports_v";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		
 		$data['report_title'] =	"Divisional Reproductive Health Reports";
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
@@ -141,7 +148,8 @@ class Divisional_Reports extends MY_Controller
 		  }
 
 		$this->db->insert_batch('malaria_data',$dbData);
-		$this->index();
+		
+		$this->view_malaria_report();
 	}
 	public function save_RH_report()
 	{

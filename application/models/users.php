@@ -63,8 +63,8 @@ class Users extends Doctrine_Record {
 	public static function get_user_names($id)
 	{
 		$query = Doctrine_Query::create() -> select("fname, lname") -> from("users")->where("id='$id'");
-		$names = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
-		return $names;
+		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result[0];
 	}
 	
 

@@ -24,9 +24,23 @@ class Facilities extends Doctrine_Record {
 		return $drugs;
 	}
 	public static function getFacilities($district){
-		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");
-		$drugs = $query -> execute();
-		return $drugs;
+		$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+    ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as commodity_id, c.total_commodity_units,
+              c.unit_size,c.unit_cost ,c_s.source_name, c_s_c.sub_category_name
+               FROM commodities c,commodity_sub_category c_s_c, commodity_source c_s
+               WHERE c.commodity_sub_category_id = c_s_c.id
+               AND c.commodity_source_id=$supplier_id
+               AND c.commodity_sub_category_id = c_s_c.id
+               order by c_s_c.id asc,c.commodity_name asc "); 
+return $inserttransaction;
+	}
+	//get the facility codes of facilities in a particular district
+	public static function get_district_facilities($district)
+	{
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT (facility_code)
+			FROM  `facilities` 
+			WHERE district =$district");
+		return $q;	
 	}
 	// getting facilities which are using the system
 	public static function get_facilities_which_are_online($county_id)

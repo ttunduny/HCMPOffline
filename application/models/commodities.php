@@ -40,6 +40,7 @@ class Commodities extends Doctrine_Record {
 		
 		return $commodities;
 	}
+	
 public static function get_all_from_supllier($supplier_id) {
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as commodity_id, c.total_commodity_units,

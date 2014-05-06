@@ -23,57 +23,7 @@
     $('.row-offcanvas').toggleClass('active')
   });
   
-<<<<<<< HEAD
- 	$(window).resize(function() 
- 	{
-	    if (($(window).width() < 768))
-	    {
-	        $( ".col-md-2,.col-md-10" ).css( "position", "" );
-	    };
-	});
-	
-	$(function() 
-	{
-		$("#consumption").click(function()
-		{
-			var url = "<?php echo base_url().'reports/consumption_data/'?>";	
-			ajax_request_special(url,'.graph-section');	
-		});	    
-	         
-	   function ajax_request_special(url,checker)
-	   {
-	   	var url = url;
-		var checker = checker;
-		var loading_icon = "<?php echo base_url().'assets/img/loadfill.gif' ?>";
-		 $.ajax({
-		 		type: "POST",
-	          	url: url,
-	          	beforeSend: function() 
-	          	{
-	          		if(checker==".graph-section")
-	          		{
-	          			$(".graph-section").html("<img style='margin-left:20%;' src="+loading_icon+">");	
-	          		}else
-	          		{
-	          	 		$('.graph-section').html("");	
-	          		}
-	
-	          	},
-	          success: function(msg) 
-	          {
-	          	if(checker==".graph-section")
-	          	{
-	          		$(".graph-section").html(""); 	
-	          		$(".graph-section").html(msg); 
-	          
-	          	}
-	          
-	
-	          }
-	        }); 
-		}
-	});	  
-=======
+
   $(window).resize(function() {
     if (($(window).width() < 768))
     {
@@ -82,7 +32,6 @@
 });
  	$('#dataTables_filter label input').addClass('form-control');
 	$('#dataTables_length label select').addClass('form-control');
->>>>>>> 94e035ca7ca8a8c7be4c08a306d8d3567b06e65c
 $('#exp_datatable,#potential_exp_datatable,#potential_exp_datatable2').dataTable( {
      "sDom": "T lfrtip",
   

@@ -632,10 +632,343 @@ class Reports extends MY_Controller
 	 | COUNTY SUB-COUNTY dashboard
 	 |--------------------------------------------------------------------------
 	 */
-	 public function expiries_dashboard(){
-	$county_id = $this -> session -> userdata('county_id');
-	$data['district_data'] = districts::getDistrict($county_id);
-	return $this -> load -> view("subcounty/ajax/county_expiry_filter_v", $data);	
+	 
+	 //used for both the subcounty and county level program reports
+	 public function program_reports()
+	 {
+	 	$user_indicator = $district_id=$this -> session -> userdata('user_indicator');
+ 		$district_id=$this -> session -> userdata('district_id');
+		$facilities = Facilities::get_district_facilities($district_id);
+		$index = 0;
+			foreach ($facilities as $ids)
+			{
+				$facility_id = $ids['facility_code'];
+				$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
+				$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
+				
+				if ((!empty($report_RH))&&(!empty($report_malaria)))
+				{
+					$report_RH_report[$index] = $report_RH;
+					$report_malaria_report[$index] = $report_malaria;
+					
+				}else{
+					
+				}
+				
+			$index++;
+			}
+			
+			
+			$data['malaria'] = $report_malaria_report;
+			$data['RH'] = $report_RH_report;
+			$data['title'] = "Program Reports";
+			$data['banner_text'] = "Program Reports";
+			$data['content_view'] = "facility/facility_reports/reports_v";
+			$data['report_view'] = "subcounty/reports/program_reports_v";
+			$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
+					 
+			$this -> load -> view('shared_files/template/template', $data);
+		
+	 }
+//generates the pdf for a particular report
+	public function get_facility_report_pdf($report_time = null, $facility_code = null, $report_type) 
+	{
+		if (isset($report_time) && isset($facility_code)) :
+			$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($facility_code);
+			$facility_name = $myobj -> facility_name;
+			
+			// get the order form details here
+			//create the pdf here
+			$pdf_body = $this ->  create_program_report_pdf_template($report_time, $facility_code, $report_type);
+			$file_name = $facility_name . '_facility_program_report_date_created_'. date('d-m-y');
+			$pdf_data = array("pdf_title" => "Program Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'download', 'file_name' => $file_name);
+
+			$this -> hcmp_functions -> create_pdf($pdf_data);
+		endif;
+		redirect();
+	}
+	public function create_program_report_pdf_template($report_time, $facility_code, $report_type) 
+	{
+		if($report_type == "malaria")
+		{
+			$from_malaria_data_table = Malaria_Data::get_facility_report($report_time, $facility_code);
+			$from_malaria_data_table_count = count(Malaria_Data::get_facility_report($report_time, $facility_code));
+			foreach ($from_malaria_data_table as $report_details) 
+			{
+				$mfl = $report_details['facility_id'];
+				$commodity_code = $report_details['Kemsa_Code'];
+				$mydrug_name = Doctrine::getTable('Malaria_drugs') -> findOneBykemsa_code($commodity_code);
+				$commodityname = $mydrug_name -> drug_name;
+				
+				$report_date = $report_details['Report_Date'];
+						
+				$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($mfl);
+				$sub_county_id = $myobj -> district;
+				$facility_name = $myobj -> facility_name;
+				// get the order form details here
+	
+				$myobj1 = Doctrine::getTable('Districts') -> find($sub_county_id);
+				$sub_county_name = $myobj1 -> district;
+				$county = $myobj1 -> county;
+	
+				$myobj2 = Doctrine::getTable('Counties') -> find($county);
+				$county_name = $myobj2 -> county;
+	
+				$myobj_order = Doctrine::getTable('users') -> find($report_details['user_id']);
+				$creator_email = $myobj_order -> email;
+				$creator_name1 = $myobj_order -> fname;
+				$creator_name2 = $myobj_order -> lname;
+				$creator_telephone = $myobj_order -> telephone;
+	
+			}
+	
+		//create the table for displaying the order details
+		$html_body = "<table class='data-table' width=100%>
+			<tr>
+			<td>MFL No: $mfl</td> 
+			<td>Health Facility Name:<br/> $facility_name</td>
+			<td>Level:</td>
+			<td>Dispensary</td>
+			<td>Health Centre</td>
+			</tr>
+			<tr>
+			<td>County: $county_name</td> 
+			<td> District: $sub_county_name</td>
+			<td >Reporting Period <br/>
+			Start Date:  <br/>  End Date: " . date('d M, Y', strtotime($report_date)) . "
+			</td>
+			</tr>
+			</table>";
+		$html_body .= "
+		<table class='data-table'>
+		<thead>
+		<tr>
+			<th><b>KEMSA Code</b></th>
+			<th><b>Commodity Name</b></th>
+			<th ><b>Beginning Balance</b></th>
+			<th ><b>Quantity Received</b></th>
+			<th ><b>Quantity Dispensed</b></th>
+			<th ><b>Losses Excluding Expiries</b></th>
+			<th ><b>Adjustments</b></th>
+			<th ><b>Physical Count</b></th>
+			<th ><b>Expired Drugs</b></th>
+			<th ><b>Days Out of Stock</b></th>
+			<th ><b>Report Total</b></th>
+		</tr> 
+		</thead>
+		<tbody>";
+
+		$html_body .= '<ol type="a">';
+		for ($i = 0; $i < $from_malaria_data_table_count; $i++) 
+		{
+				
+			$mydrug_name = Doctrine::getTable('Malaria_drugs') -> findOneBykemsa_code($from_malaria_data_table[$i]['Kemsa_Code']);
+			//$commodityname[$i] = $mydrug_name -> drug_name;
+			$adjs = $from_malaria_data_table[$i]['Positive_Adjustments'] + $from_malaria_data_table[$i]['Negative_Adjustments'];
+			$html_body .= "<tr>";
+			$html_body .= "<td>" . $from_malaria_data_table[$i]['Kemsa_Code'] . "</td>";
+			$html_body .= "<td>" . $commodityname = $mydrug_name -> drug_name. "</td>";
+			$html_body .= "<td>". $from_malaria_data_table[$i]['Beginning_Balance']."</td>";
+			$html_body .= "<td>" . $from_malaria_data_table[$i]['Quantity_Received'] . "</td>";
+			$html_body .= "<td>" . $from_malaria_data_table[$i]['Quantity_Dispensed'] . "</td>";
+			$html_body .= "<td>" . $from_malaria_data_table[$i]['Losses_Excluding_Expiries'] . "</td>";
+			$html_body .= "<td>" . $adjs. "</td>";
+			$html_body .= "<td>" . $from_malaria_data_table[$i]['Physical_Count'] . "</td>";
+			$html_body .= "<td>" . $from_malaria_data_table[$i]['Expired_Drugs'] . "</td>";
+			$html_body .= "<td>" . $from_malaria_data_table[$i]['Days_Out_Stock'] . "</td>";
+			$html_body .= "<td>" . $from_malaria_data_table[$i]['Report_Total'] . "</td>";
+			$html_body .= "</tr>";
+			
+			
+			
+		}
+	$html_body .= '</tbody></table></ol>';
+	}elseif($report_type == "RH"){
+			
+			$from_RH_data_table = RH_Drugs_Data::get_facility_report($report_time, $facility_code);
+			$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_time, $facility_code));
+			foreach ($from_RH_data_table as $report_details) 
+			{
+				//print_r($report_details);
+				//exit;
+				$mfl = $report_details['facility_id'];
+				$report_date = $report_details['Report_Date'];
+						
+				$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($mfl);
+				$sub_county_id = $myobj -> district;
+				$facility_name = $myobj -> facility_name;
+				
+				$myobj1 = Doctrine::getTable('Districts') -> find($sub_county_id);
+				$sub_county_name = $myobj1 -> district;
+				$county = $myobj1 -> county;
+	
+				$myobj2 = Doctrine::getTable('Counties') -> find($county);
+				$county_name = $myobj2 -> county;
+	
+				$myobj_order = Doctrine::getTable('users') -> find($report_details['user_id']);
+				$creator_email = $myobj_order -> email;
+				$creator_name1 = $myobj_order -> fname;
+				$creator_name2 = $myobj_order -> lname;
+				$creator_telephone = $myobj_order -> telephone;
+	
+			}
+	
+		//create the table for displaying the order details
+		$html_body = "<table class='data-table' width=100%>
+			<tr>
+			<td>MFL No: $mfl</td> 
+			<td>Health Facility Name:<br/> $facility_name</td>
+			<td>Level:</td>
+			<td>Dispensary</td>
+			<td>Health Centre</td>
+			</tr>
+			<tr>
+			<td>County: $county_name</td> 
+			<td> District: $sub_county_name</td>
+			<td >Reporting Period <br/>
+			Start Date:  <br/>  End Date: " . date('d M, Y', strtotime($report_date)) . "
+			</td>
+			</tr>
+			</table>";
+		$html_body .= "
+		<table class='data-table'>
+		<thead>
+		<tr>
+			<th ><b>Beginning Balance</b></th>
+			<th ><b>Quantity Received This Month</b></th>
+			<th ><b>Quantity Dispensed</b></th>
+			<th ><b>Losses</b></th>
+			<th ><b>Adjustments</b></th>
+			<th ><b>Ending Balance</b></th>
+			<th ><b>Quantity Requested</b></th>
+		</tr> 
+		</thead>
+		<tbody>";
+		$html_body .= '<ol type="a">';
+		for ($i = 0; $i < $from_RH_data_table_count; $i++) 
+		{
+			$html_body .= "<tr>";
+			$html_body .= "<td>". $from_RH_data_table[$i]['Beginning_Balance']."</td>";
+			$html_body .= "<td>" . $from_RH_data_table[$i]['Received_This_Month'] . "</td>";
+			$html_body .= "<td>" . $from_RH_data_table[$i]['Dispensed'] . "</td>";
+			$html_body .= "<td>" . $from_RH_data_table[$i]['Losses'] . "</td>";
+			$html_body .= "<td>" . $from_RH_data_table[$i]['Adjustments'] . "</td>";
+			$html_body .= "<td>" . $from_RH_data_table[$i]['Ending_Balance'] . "</td>";
+			$html_body .= "<td>" . $from_RH_data_table[$i]['Quantity_Requested'] . "</td>";
+			$html_body .= "</tr>";
+			
+			
+		}	
+		
+		$html_body .= '</tbody></table></ol>';
+		
+	}
+
+			$html_body1 = '<table class="data-table" width="100%" style="background-color: 	#FFF380;">
+				  <tr style="background-color: 	#FFFFFF;" > 
+				  <td colspan="4" >
+				  <div style="width:100%">
+				  
+				 </div></td></tr>
+				  <tr style="background-color: 	#FFFFFF;"  > 
+				  <td colspan="4" ><div>
+				   </td></tr>
+				  <tr><td>FACILITY TEL NO:</td><td colspan="3">FACILITY EMAIL:</td>
+				  </tr>
+				  <tr><td >Prepared by (Name/Designation) ' . $creator_name1 . ' ' . $creator_name2 . '
+				  <br/>
+				  <br/>Email: ' . $creator_email . '</td><td>Tel: ' . $creator_telephone . '</td><td>Date: ' . date('d M, Y', strtotime($o_date)) . '</td><td>Signature</td>
+				  </tr>
+				  <tr><td>Checked by (Name/DPF/DPHN)  ' . $approver_name1 . ' ' . $approver_name2 . '
+				  <br/>
+				  <br/>Email: ' . $approver_email . '</td><td>Tel: ' . $approver_telephone . '</td><td>Signature</td>
+				  </tr>
+				  <tr><td>Authorised by (Name/DMoH) 
+				  <br/>
+				  <br/>Email:</td><td>Tel: </td><td>Date:</td><td>Signature</td>		   
+				  </tr>
+				  </table>';
+		return $html_body . $html_body1;
+	}
+	public function create_excel_facility_program_report($report_time,$facility_code, $report_type) 
+	{
+		if($report_type == "malaria")
+		{
+			$facility_details = Facilities::get_facility_name_($facility_code) -> toArray();
+			$from_malaria_data_table = Malaria_Data::get_facility_report($report_time, $facility_code);
+			$from_malaria_data_table_count = count(Malaria_Data::get_facility_report($report_time, $facility_code));
+						
+			$excel_data = array('doc_creator' => $facility_details[0]['facility_name'], 
+			'doc_title' => 'facility programm report template ', 'file_name' => $facility_details[0]['facility_name'].'facility programm report template ');
+			$row_data = array();
+			$column_data = array("Product Code","Item description(Name/form/strength)",
+								"Beginning Balance", "Quantity Received",
+								"Quantity Dispensed","Losses Excluding Expiries","Adjustments",
+								"Physical Count", "Amount Expired","Days Out of Stock",
+								"Report Total");
+			$excel_data['column_data'] = $column_data;
+			$from_malaria_data_table_count = count(Malaria_Data::get_facility_report($report_time, $facility_code));
+			for($i=0;$i<$from_malaria_data_table_count;$i++):
+			
+			$adjs = $from_malaria_data_table[$i]['Positive_Adjustments'] + $from_malaria_data_table[$i]['Negative_Adjustments'];
+			$mydrug_name = Doctrine::getTable('Malaria_drugs') -> findOneBykemsa_code($from_malaria_data_table[$i]['Kemsa_Code']);
+			
+			array_push($row_data, array($from_malaria_data_table[$i]["Kemsa_Code"], 
+			$commodityname = $mydrug_name -> drug_name,
+				$from_malaria_data_table[$i]["Beginning_Balance"], 
+				$from_malaria_data_table[$i]["Quantity_Received"], 
+				$from_malaria_data_table[$i]["Quantity_Dispensed"],
+				$from_malaria_data_table[$i]["Losses_Excluding_Expiries"],
+				$adjs,
+				$from_malaria_data_table[$i]["Physical_Count"],
+				$from_malaria_data_table[$i]["Expired_Drugs"],
+				$from_malaria_data_table[$i]["Days_Out_Stock"],
+				$from_malaria_data_table[$i]["Report_Total"])); 
+			endfor;
+			$excel_data['row_data'] = $row_data;
+	
+			$this -> hcmp_functions -> create_excel($excel_data);
+		}elseif($report_type == "RH"){
+			
+			$facility_details = Facilities::get_facility_name_($facility_code) -> toArray();
+			
+			$from_RH_data_table = RH_Drugs_Data::get_facility_report($report_time, $facility_code);
+			$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_time, $facility_code));
+			
+			$excel_data = array('doc_creator' => $facility_details[0]['facility_name'], 
+			'doc_title' => 'facility program report ', 'file_name' => $facility_details[0]['facility_name'].'facility program report template');
+			$row_data = array();
+			$column_data = array("Beginning Balance",
+								"Received This Month", 
+								"Dispensed",
+								"Losses",
+								"Adjustments",
+								"AEnding Balance",
+								"Quantity Requested");
+			$excel_data['column_data'] = $column_data;
+			$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_time, $facility_code));
+			
+			for($i=0;$i<$from_RH_data_table_count;$i++):
+			
+			array_push($row_data, array($from_RH_data_table[$i]["Beginning_Balance"], 
+			$from_RH_data_table[$i]["Received_This_Month"], 
+			$from_RH_data_table[$i]["Dispensed"], 
+			$from_RH_data_table[$i]["Losses"],
+			$from_RH_data_table[$i]["Adjustments"],
+			$from_RH_data_table[$i]["Ending_Balance"],
+			$from_RH_data_table[$i]["Quantity_Requested"])); //
+			endfor;
+			$excel_data['row_data'] = $row_data;
+	
+			$this -> hcmp_functions -> create_excel($excel_data);
+		}
+		
+	}
+	 public function expiries_dashboard()
+	 {
+		$county_id = $this -> session -> userdata('county_id');
+		$data['district_data'] = districts::getDistrict($county_id);
+		return $this -> load -> view("subcounty/ajax/county_expiry_filter_v", $data);	
 	 }
 	 public function get_county_cost_of_expiries_new($year = null, $month = null, $district_id = null, $option = null, $facility_code = null,$report_type=null) {
 	 	//reset the values here

@@ -390,7 +390,7 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 	
 
  }
- 
+ /*
  public static function get_county_cost_of_exipries_new($county_id,$year=null, $month=null,$district_id=null,$option=null,$facility_code=null)
  {
  	if($month=="null")
@@ -455,7 +455,7 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 
     return  $inserttransaction ;
 			
-	}
+	}*/
 	public static function get_expiries($facility_code, $year = NULL) 
 	{
 		$year = (isset($year)) ? $year: date("Y");

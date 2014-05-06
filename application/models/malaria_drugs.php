@@ -32,5 +32,11 @@ class Malaria_Drugs extends Doctrine_Record
 		$malaria = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $malaria;
 	}
+	public static function get_commodity_name($commodity_id)
+	{
+	$query = Doctrine_Query::create()->select("*")->from("malaria_drugs")->where("kemsa_code = $commodity_id");
+	$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+	return $result[0];
+	}
 	
 }
