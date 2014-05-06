@@ -52,6 +52,27 @@ else{
 }	
 			
 	}
+	public static function get_facilities_online_per_district($county_id){
+	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+select d.id, d.district,f.facility_name,f.facility_code, DATE_FORMAT(`date_of_activation`,'%d %b %y') as date 
+from facilities f, districts d 
+where f.district=d.id and d.county='$county_id'
+and unix_timestamp(f.`date_of_activation`) >0 
+order by d.district asc,f.`date_of_activation` asc
+ ");
+return $q;	
+	
+}
+public static function get_facilities_all_per_district($county_id){
+	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+select d.id, d.district,f.facility_name,f.facility_code
+from facilities f, districts d 
+where f.district=d.id and d.county='$county_id'
+order by d.district asc
+ ");
+return $q;	
+	
+}
 	
 	public static function get_d_facility($district){
 		'SELECT unique facilities.facility_name, user.fname, user.lname, user.telephone
@@ -381,17 +402,7 @@ public static function get_facilities_reg_on_($district_id,$date_of_activation){
 		
 		return $facilities;
 	}
-public static function get_facilities_online_per_district($county_id){
-	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-select d.id, d.district,f.facility_name,f.facility_code, DATE_FORMAT(`date_of_activation`,'%d %b %y') as date 
-from facilities f, districts d 
-where f.district=d.id and d.county='$county_id'
-and unix_timestamp(f.`date_of_activation`) >0 
-order by d.district asc,f.`date_of_activation` asc
- ");
-return $q;	
-	
-}
+
 // getting facilities which are using the system
 	
 }

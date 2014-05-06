@@ -5,7 +5,7 @@
   	//default 
   $('.page-header').html('Notifications');
   $('#notifications').parent().parent().parent().addClass('active-panel');
-  
+  ajax_request_replace_div_content('reports/notification_dashboard',"#notification");
  
   $('[data-toggle=offcanvas]').click(function () {
     $('.row-offcanvas').toggleClass('active');
@@ -26,6 +26,7 @@ ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
 //Notifications function
 $("#notifications").on('click', function(){
 active_panel(this);
+ ajax_request_replace_div_content('reports/notification_dashboard',"#notification");
 $('.page-header').html('Notifications');
 });
 //stocking_levels function

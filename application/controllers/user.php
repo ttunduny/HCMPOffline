@@ -295,20 +295,26 @@ class User extends MY_Controller {
 
 		$identifier = $this -> session -> userdata('user_indicator');
 		$user_type_id = $this -> session -> userdata('user_type_id');
+		$district = $this -> session -> userdata('district_id');
+		
 
 		//query to get user listing by type of user
 
 		switch ($identifier):
 			case 'moh':
+			$permissions='moh_permissions';
 			$data['listing']= Users::get_user_list($user_type_id);	
 			$template = 'shared_files/template/dashboard_template_v';
 			break;
 			case 'facility_admin':
+			$permissions='facilityadmin_permissions';
 			$data['listing']= Users::get_user_list($user_type_id);	
 			$template = 'shared_files/template/template';
 			break;
 			case 'district':
-			$data['listing']= Users::get_user_list($user_type_id);	
+			$permissions='district_permissions';
+			$data['listing']= Users::get_user_list_district($district);
+			$data['facilities']=Facilities::getFacilities($district);
 			$template = 'shared_files/template/template';
 			break;
 			case 'moh_user':
@@ -324,6 +330,7 @@ class User extends MY_Controller {
 			$template = 'shared_files/template/template';
 			break;
 			case 'super_admin':
+			$permissions='super_permissions';
 			$data['listing']= Users::get_user_list($user_type_id);	
 			$template = 'shared_files/template/dashboard_template_v';
 			break;
@@ -332,12 +339,14 @@ class User extends MY_Controller {
 			$template = 'shared_files/template/template';
 			break;	
 			case 'county':
-			$data['listing']= Users::get_user_list($user_type_id);	
+			$permissions='county_permissions';
+			$data['listing']= Users::get_user_list_county($county);	
 			$template = 'shared_files/template/dashboard_template_v';
 			break;	
         endswitch;
 
         $data['title'] = "User Management";
+        $data['user_types']=Access_level::get_access_levels($permissions);	
 		$data['banner_text'] = "User Management";
 		$data['content_view'] = "shared_files/user_creation_v";
 		$this -> load -> view($template, $data);

@@ -30,6 +30,7 @@
 	<a class="link" href="<?php echo base_url('stock/facility_stock_first_run/first_run') ?>">Please update your stock details</a> 
 			</p>
         </div>
+            <?php endif; // items_stocked_out_in_facility?>
          <?php if($facility_dashboard_notifications['actual_expiries']>0): ?>
         <div style="height:auto; margin-bottom: 2px" class="warning message ">       	
         <h5>Expired Commodities</h5>
@@ -39,7 +40,6 @@
 			</p> 
         </div>
          <?php endif; // Actual Expiries?>
-         <?php endif; // items_stocked_out_in_facility?>
           <?php if($facility_dashboard_notifications['potential_expiries']>0): ?>
       	 <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         <h5>Potential Expiries</h5> 

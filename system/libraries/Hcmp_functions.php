@@ -414,7 +414,8 @@ endif;
 		$table_id=$table_data['table_id'];
 		$table_header=$table_data['table_header'];
 		$table_body=$table_data['table_body'];
-		$table_data_html .="<table width='98%'  class='row-fluid table table-hover table-bordered table-update'  id='$table_id'>
+		$table_data_html .="<table width='100%' style='margin-top:1em;'  
+		class='row-fluid table table-hover table-bordered table-update'  id='$table_id'>
 	    <thead><tr>";
 		foreach($table_header as $key=> $header_data):
 		foreach($header_data as $header):

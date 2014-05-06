@@ -1,9 +1,8 @@
- <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Bin Card</h1>
+ <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Bin Card <?php echo $facility_name.' '.date('Y') ;?></h1>
  <div class="filter" style="width=device; height:auto; ">
 
 <div class="form-inline" role="form">
-
-   <div class="form-group">
+<div class="form-group">
  <select class="form-control input-sm" id="commodity_select" name="commodity_select" >
 <option>Select Commodity</option>
  

@@ -1,16 +1,17 @@
 <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Stock Level</h1>
 <style>
 	.filter{
-	width: 98%;
-	height:3em;
-	/*border: 1px solid black;*/
-	margin:auto;	
+	width: 100%;
+
+	border-bottom: 1px solid #DDD3ED;
+	margin:auto;
+	padding-bottom: 1em;	
 	}
 	.graph_content{
 	width: 100%;
-	height:400px;
+	height:auto;
 	-webkit-box-shadow: 1px 1px 1px 1px #DDD3ED;
-box-shadow: 1px 1px 1px 1px #DDD3ED;
+    box-shadow: 1px 1px 1px 1px #DDD3ED;
 	margin:auto;	
 	}
 </style>

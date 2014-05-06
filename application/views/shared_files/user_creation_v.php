@@ -25,11 +25,22 @@ color: #fff;
 text-align: center;
 font-size: 1.5em;
 }
+.status_item {
+
+padding: auto;
+color: #fff;
+text-align: center;
+
+}
 .panel{
 	border-radius: 0;
 }
 .panel-body {
 padding: 8px;
+}
+#addModal .modal-dialog
+{
+  width: 50%;/* your width */
 }
 </style>
 
@@ -99,6 +110,7 @@ padding: 8px;
     <th>Health Facility</th>
     <th>User Type</th>
     <th>Status</th>
+    <th>Action</th>
     
   </tr>
   </thead>
@@ -106,25 +118,46 @@ padding: 8px;
     <tbody>
     
      
+           <?php   
+           $total=0;
+        foreach ($listing as $list ) { 
+               
+                ?>    
             <tr>                          
-              <td>asdasds </td>
-              <td>asdsasd</td>
-              <td> asdasd</td>
-              <td>sadasdas</td>
-              <td>sdasdddsqdweqw</td>
-              <td>sdasdddsqdweqw</td>
+              <td><?php echo $list['fname'].' '.$list['lname'];?> </td>
+              <td><?php echo $list['email']; ;?> </td>
+              <td><?php echo $list['telephone'];?> </td>
+              <td><?php echo $list['facility_name'];?> </td>
+              <td><?php echo $list['level'];?> </td>
+              <td>
+                 <?php 
+
+                      if ($list['status']==1) {
+                     
+
+                  ?>
+                  <div class="status_item color_d">
+                        <span>Active</span>
+                  </div>
+                  <?php
+
+                      }else{ ?>
+
+                      <div class=" status_item color_g">
+                        <span>Deactivated</span>
+                      </div>
+
+                      <?php } ?>
+
+
+
+                </td>
+                <td><button class="btn btn-primary btn-xs " data-toggle="modal" id="<?php echo $list['user_id'];?>" data-target="#"><span class="glyphicon glyphicon-edit"></span>Edit</button></td>
               
             </tr>
-             <tr>                          
-              <td>asdasds </td>
-              <td>asdsasd</td>
-              <td> asdasd</td>
-              <td>sadasdas</td>
-              <td>sdasdddsqdweqw</td>
-              <td>sdasdddsqdweqw</td>
-              
-            </tr>
-            
+         <?php
+}
+         ?>
    </tbody>
 </table>
 
@@ -141,10 +174,98 @@ padding: 8px;
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Add User</h4>
+        <h4>Add <small>New user</small></h4>
       </div>
-      <div class="modal-body">
-        ...
+      <div class="modal-body" style="padding-top:0">
+       <div class="row" style="margin:auto">
+    <div class="col-md-12 ">
+    <form role="form">
+      
+      <hr class="colorgraph">
+
+      <fieldset>
+        <legend>User details</legend>
+      <div class="row" >
+
+        <div class="col-md-6">
+          <div class="form-group">
+                        <input type="text" name="first_name" id="first_name" class="form-control input-lg" placeholder="First Name" >
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <input type="text" name="last_name" id="last_name" class="form-control input-lg" placeholder="Last Name" >
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class=" col-md-6">
+          <div class="form-group">
+            <input type="telephone" name="telephone" id="telephone" class="form-control input-lg" placeholder="telephone eg, 254" tabindex="5">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <input type="email" name="email" id="email" class="form-control input-lg" placeholder="email@domain.com" tabindex="6">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class=" col-md-6">
+          <div class="form-group">
+            <input type="email" name="username" id="username" class="form-control input-lg" placeholder="email@domain.com" tabindex="5">
+          </div>
+        </div>
+        <div class="col-md-6">
+          
+        </div>
+      </div>
+    </fieldset>
+    <fieldset>
+        <legend>Other details</legend>
+      <div class="row" >
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <select class="form-control input-lg">
+              <option>Select Facility</option>
+              <?php
+foreach($facilities as $facilities):
+    $id=$facilities->facility_code;
+    $facility_name=$facilities->facility_name;  
+    echo "<option value='$id'>$facility_name</option>";
+endforeach;
+?>
+
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <select class="form-control input-lg">
+              <option>Select User type</option>
+ <?php
+foreach($user_types as $user_types):
+    $id=$user_types->id;
+    $type_name=$user_types->level;  
+    echo "<option value='$id'>$type_name</option>";
+endforeach;
+?>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      
+    </fieldset>
+      
+      
+      <hr class="colorgraph">
+     
+    </form>
+  </div>
+</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
