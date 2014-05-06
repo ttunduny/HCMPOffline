@@ -110,13 +110,14 @@ class Divisional_Reports extends MY_Controller
 	//save the data entered by the user
 	public function save_malaria_report()
 	{
-		$facility = isset($facility_code)? $facility_code :$this -> session -> userdata('news');
+		$facility = $this -> session -> userdata('facility_id');
 		$user_id = $this -> session -> userdata('user_id');
 		//Get the values posted by the form
 		$Beginning_Balance = $this->input->post('Beginning_Balance');
-		
+		$report_id = rand(0, 10000000000);
 		for($x=0; $x<count($Beginning_Balance); $x++)
 		{
+			
 			$Quantity_Received = $this->input->post('Quantity_Received');
 			$Quantity_Dispensed = $this->input->post('Quantity_Dispensed');
 			$Losses_Excluding_Expiries = $this->input->post('Losses_Excluding_Expiries');
@@ -143,7 +144,8 @@ class Divisional_Reports extends MY_Controller
 			'user_id'=>$user_id,
 			'Kemsa_Code'=>$kemsa[$x],
 			'Report_Date'=>$save_time,
-			'facility_id'=>$facility);
+			'facility_id'=>$facility,
+			'report_id'=>$report_id);
 						
 		  }
 
@@ -157,6 +159,7 @@ class Divisional_Reports extends MY_Controller
 		$user_id = $this -> session -> userdata('user_id');
 		//Get the values posted by the form
 		$Beginning_Balance = $this->input->post('Beginning_Balance');
+		$report_id = rand(0, 10000000000);
 		
 		for($x=0; $x<count($Beginning_Balance); $x++)
 		
@@ -178,7 +181,8 @@ class Divisional_Reports extends MY_Controller
 		  	'Adjustments'=>$Adjustments[$x],
 		  	'Ending_Balance'=>$Ending_Balance[$x],
 		  	'Quantity_Requested'=>$Quantity_Requested[$x],
-			'Report_Date'=> $save_time);
+			'Report_Date'=> $save_time,
+			'report_id'=> $report_id);
 						
 		  }
 

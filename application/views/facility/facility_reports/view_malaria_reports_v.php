@@ -17,12 +17,10 @@
 			{
 				$user = $d['user_id'];
 				$name = Users::get_user_names($user);
-				
-				
 						?>
 						<tr>
 				
-							<td><?php echo $name[0]['fname']." ".$name[0]['lname'];?> </td>
+							<td><?php echo $name['fname']." ".$name['lname'];?> </td>
 							<td><?php echo $d['Report_Date'];?></td>
 							<td><a href="<?php echo base_url().'Divisional_Reports/edit_report/'.$d['Report_Date'];?>">
 								<button class="btn btn-primary" >

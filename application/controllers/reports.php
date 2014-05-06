@@ -671,28 +671,28 @@ class Reports extends MY_Controller
 		
 	 }
 //generates the pdf for a particular report
-	public function get_facility_report_pdf($report_time = null, $facility_code = null, $report_type) 
+	public function get_facility_report_pdf($report_id, $facility_code, $report_type) 
 	{
-		if (isset($report_time) && isset($facility_code)) :
+		
 			$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($facility_code);
 			$facility_name = $myobj -> facility_name;
-			
 			// get the order form details here
 			//create the pdf here
-			$pdf_body = $this ->  create_program_report_pdf_template($report_time, $facility_code, $report_type);
+			$pdf_body = $this ->  create_program_report_pdf_template($report_id, $facility_code, $report_type);
 			$file_name = $facility_name . '_facility_program_report_date_created_'. date('d-m-y');
 			$pdf_data = array("pdf_title" => "Program Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'download', 'file_name' => $file_name);
 
 			$this -> hcmp_functions -> create_pdf($pdf_data);
-		endif;
 		redirect();
 	}
-	public function create_program_report_pdf_template($report_time, $facility_code, $report_type) 
+	public function create_program_report_pdf_template($report_id, $facility_code, $report_type) 
 	{
 		if($report_type == "malaria")
 		{
-			$from_malaria_data_table = Malaria_Data::get_facility_report($report_time, $facility_code);
-			$from_malaria_data_table_count = count(Malaria_Data::get_facility_report($report_time, $facility_code));
+			//$report_time= strtotime($report_time);
+			$from_malaria_data_table = Malaria_Data::get_facility_report($report_id, $facility_code);
+			
+			$from_malaria_data_table_count = count(Malaria_Data::get_facility_report($report_id, $facility_code));
 			foreach ($from_malaria_data_table as $report_details) 
 			{
 				$mfl = $report_details['facility_id'];
@@ -785,8 +785,8 @@ class Reports extends MY_Controller
 	$html_body .= '</tbody></table></ol>';
 	}elseif($report_type == "RH"){
 			
-			$from_RH_data_table = RH_Drugs_Data::get_facility_report($report_time, $facility_code);
-			$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_time, $facility_code));
+			$from_RH_data_table = RH_Drugs_Data::get_facility_report($report_id, $facility_code);
+			$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_id, $facility_code));
 			foreach ($from_RH_data_table as $report_details) 
 			{
 				//print_r($report_details);
@@ -890,13 +890,13 @@ class Reports extends MY_Controller
 				  </table>';
 		return $html_body . $html_body1;
 	}
-	public function create_excel_facility_program_report($report_time,$facility_code, $report_type) 
+	public function create_excel_facility_program_report($report_id,$facility_code, $report_type) 
 	{
 		if($report_type == "malaria")
 		{
 			$facility_details = Facilities::get_facility_name_($facility_code) -> toArray();
-			$from_malaria_data_table = Malaria_Data::get_facility_report($report_time, $facility_code);
-			$from_malaria_data_table_count = count(Malaria_Data::get_facility_report($report_time, $facility_code));
+			$from_malaria_data_table = Malaria_Data::get_facility_report($report_id, $facility_code);
+			$from_malaria_data_table_count = count(Malaria_Data::get_facility_report($report_id, $facility_code));
 						
 			$excel_data = array('doc_creator' => $facility_details[0]['facility_name'], 
 			'doc_title' => 'facility programm report template ', 'file_name' => $facility_details[0]['facility_name'].'facility programm report template ');
@@ -907,7 +907,7 @@ class Reports extends MY_Controller
 								"Physical Count", "Amount Expired","Days Out of Stock",
 								"Report Total");
 			$excel_data['column_data'] = $column_data;
-			$from_malaria_data_table_count = count(Malaria_Data::get_facility_report($report_time, $facility_code));
+			$from_malaria_data_table_count = count(Malaria_Data::get_facility_report($report_id, $facility_code));
 			for($i=0;$i<$from_malaria_data_table_count;$i++):
 			
 			$adjs = $from_malaria_data_table[$i]['Positive_Adjustments'] + $from_malaria_data_table[$i]['Negative_Adjustments'];
@@ -932,8 +932,8 @@ class Reports extends MY_Controller
 			
 			$facility_details = Facilities::get_facility_name_($facility_code) -> toArray();
 			
-			$from_RH_data_table = RH_Drugs_Data::get_facility_report($report_time, $facility_code);
-			$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_time, $facility_code));
+			$from_RH_data_table = RH_Drugs_Data::get_facility_report($report_id, $facility_code);
+			$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_id, $facility_code));
 			
 			$excel_data = array('doc_creator' => $facility_details[0]['facility_name'], 
 			'doc_title' => 'facility program report ', 'file_name' => $facility_details[0]['facility_name'].'facility program report template');
@@ -946,7 +946,7 @@ class Reports extends MY_Controller
 								"AEnding Balance",
 								"Quantity Requested");
 			$excel_data['column_data'] = $column_data;
-			$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_time, $facility_code));
+			$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_id, $facility_code));
 			
 			for($i=0;$i<$from_RH_data_table_count;$i++):
 			

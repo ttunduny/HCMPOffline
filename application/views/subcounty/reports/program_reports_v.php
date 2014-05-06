@@ -4,15 +4,14 @@
 		$TB_report_details='';
 	foreach($malaria as $malaria_details1):
 		foreach($malaria_details1 as $malaria_details):
-			
 			$facilityname = Facilities::get_facility_name2($malaria_details['facility_code']);
 			$facility = $facilityname['facility_name'];
 			$user = Users::get_user_names($malaria_details['user']);
 			$username = $user['fname']." ".$user['lname'];
 			$report_date = $malaria_details['report_date'];
 			//Dowwnload links
-			$link = base_url('reports/get_facility_report_pdf/'.$malaria_details['report_timestamp'].'/'.$malaria_details['facility_code'].'/malaria');	
-			$link_excel = base_url('reports/create_excel_facility_program_report/'.$malaria_details['report_timestamp'].'/'.$malaria_details['facility_code'].'/malaria');
+			$link = base_url('reports/get_facility_report_pdf/'.$malaria_details['report_id'].'/'.$malaria_details['facility_code'].'/malaria');	
+			$link_excel = base_url('reports/create_excel_facility_program_report/'.$malaria_details['report_id'].'/'.$malaria_details['facility_code'].'/malaria');
 		    $malaria_report_data .= <<<HTML_DATA
            <tr>           
 				<td>$facility</td>          
@@ -41,8 +40,8 @@ HTML_DATA;
 			$user = Users::get_user_names($RH_details['user']);
 			$username = $user['fname']." ".$user['lname'];
 			$report_date = $RH_details['report_date'];
-			$link = base_url('reports/get_facility_report_pdf/'.$RH_details['report_timestamp'].'/'.$RH_details['facility_code'].'/RH');	
-			$link_excel = base_url('reports/create_excel_facility_program_report/'.$RH_details['report_timestamp'].'/'.$RH_details['facility_code'].'/RH');
+			$link = base_url('reports/get_facility_report_pdf/'.$RH_details['report_id'].'/'.$RH_details['facility_code'].'/RH');	
+			$link_excel = base_url('reports/create_excel_facility_program_report/'.$RH_details['report_id'].'/'.$RH_details['facility_code'].'/RH');
 		    $RH_report_details .= <<<HTML_DATA
             <tr>           
 				<td>$facility</td>          
