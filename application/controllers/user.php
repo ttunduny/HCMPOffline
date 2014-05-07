@@ -293,9 +293,12 @@ class User extends MY_Controller {
 
 	public function user_create() {
 
+		//get user details in session
+
 		$identifier = $this -> session -> userdata('user_indicator');
 		$user_type_id = $this -> session -> userdata('user_type_id');
 		$district = $this -> session -> userdata('district_id');
+		$county = $this -> session -> userdata('county_id');
 		
 
 		//query to get user listing by type of user
@@ -341,7 +344,9 @@ class User extends MY_Controller {
 			case 'county':
 			$permissions='county_permissions';
 			$data['listing']= Users::get_user_list_county($county);	
-			$template = 'shared_files/template/dashboard_template_v';
+			$data['district_data'] = districts::getDistrict($county);
+			$template = 'shared_files/template/template';
+			
 			break;	
         endswitch;
 

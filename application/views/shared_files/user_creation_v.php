@@ -40,7 +40,7 @@ padding: 8px;
 }
 #addModal .modal-dialog
 {
-  width: 50%;/* your width */
+  width: 50%;
 }
 </style>
 
@@ -124,7 +124,7 @@ padding: 8px;
                
                 ?>    
             <tr>                          
-              <td><?php echo $list['fname'].' '.$list['lname'];?> </td>
+              <td class="name"><?php echo $list['fname'].' '.$list['lname'];?> </td>
               <td><?php echo $list['email']; ;?> </td>
               <td><?php echo $list['telephone'];?> </td>
               <td><?php echo $list['facility_name'];?> </td>
@@ -152,7 +152,8 @@ padding: 8px;
 
 
                 </td>
-                <td><button class="btn btn-primary btn-xs " data-toggle="modal" id="<?php echo $list['user_id'];?>" data-target="#"><span class="glyphicon glyphicon-edit"></span>Edit</button></td>
+                <td><button class="btn btn-primary btn-xs edit " data-toggle="modal" id="<?php echo $list['user_id'];?>" 
+                  data-target="#"><span class="glyphicon glyphicon-edit"></span>Edit</button></td>
               
             </tr>
          <?php
@@ -174,7 +175,7 @@ padding: 8px;
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4>Add <small>New user</small></h4>
+        <h5>Add <small>New user</small></h5>
       </div>
       <div class="modal-body" style="padding-top:0">
        <div class="row" style="margin:auto">
@@ -184,17 +185,17 @@ padding: 8px;
       <hr class="colorgraph">
 
       <fieldset>
-        <legend>User details</legend>
+        <legend style="font-size:1.5em">User details</legend>
       <div class="row" >
 
         <div class="col-md-6">
           <div class="form-group">
-                        <input type="text" name="first_name" id="first_name" class="form-control input-lg" placeholder="First Name" >
+                        <input type="text" name="first_name" id="first_name" class="form-control " placeholder="First Name" >
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <input type="text" name="last_name" id="last_name" class="form-control input-lg" placeholder="Last Name" >
+            <input type="text" name="last_name" id="last_name" class="form-control " placeholder="Last Name" >
           </div>
         </div>
       </div>
@@ -202,19 +203,19 @@ padding: 8px;
       <div class="row">
         <div class=" col-md-6">
           <div class="form-group">
-            <input type="telephone" name="telephone" id="telephone" class="form-control input-lg" placeholder="telephone eg, 254" tabindex="5">
+            <input type="telephone" name="telephone" id="telephone" class="form-control " placeholder="telephone eg, 254" tabindex="5">
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <input type="email" name="email" id="email" class="form-control input-lg" placeholder="email@domain.com" tabindex="6">
+            <input type="email" name="email" id="email" class="form-control " placeholder="email@domain.com" tabindex="6">
           </div>
         </div>
       </div>
       <div class="row">
         <div class=" col-md-6">
           <div class="form-group">
-            <input type="email" name="username" id="username" class="form-control input-lg" placeholder="email@domain.com" tabindex="5">
+            <input type="email" name="username" id="username" class="form-control " placeholder="email@domain.com" tabindex="5">
           </div>
         </div>
         <div class="col-md-6">
@@ -223,27 +224,72 @@ padding: 8px;
       </div>
     </fieldset>
     <fieldset>
-        <legend>Other details</legend>
+        <legend style="font-size:1.5em">Other details</legend>
       <div class="row" >
+<?php 
+
+$identifier = $this -> session -> userdata('user_indicator');
+
+if ($identifier=='district') {
+                ?>
 
         <div class="col-md-6">
           <div class="form-group">
-            <select class="form-control input-lg">
+
+            <select class="form-control " id="user_type">
               <option>Select Facility</option>
+
               <?php
 foreach($facilities as $facilities):
     $id=$facilities->facility_code;
     $facility_name=$facilities->facility_name;  
     echo "<option value='$id'>$facility_name</option>";
 endforeach;
-?>
-
+              ?>
             </select>
-          </div>
+            
+                   </div>
+        </div>
+        
+
+       <?php }elseif ($identifier=='county') {
+        
+       ?> 
+<div class="col-md-6">
+          <div class="form-group">
+
+            <select class="form-control " id="district_name">
+              <option>Select Sub-County</option>
+
+             <?php
+foreach($district_data as $district_):
+    $district_id=$district_->id;
+    $district_name=$district_->district;  
+    echo "<option value='$district_id'>$district_name</option>";
+endforeach;
+?>
+            </select>
+            
+                   </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <select class="form-control input-lg">
+           <select class="form-control " id="facility_name">
+              <option value="NULL">Select Facility</option>
+
+              
+            </select>
+          </div>
+        </div>
+         </div>
+        
+         <?php }elseif ($identifier=='facility_admin') {
+        }
+       ?> 
+<div class="row" style="margin:auto">
+      <div class=" col-md-6">
+          <div class="form-group">
+             <select class="form-control " id="user_type" name="user_type">
               <option>Select User type</option>
  <?php
 foreach($user_types as $user_types):
@@ -255,7 +301,12 @@ endforeach;
             </select>
           </div>
         </div>
-      </div>
+        <div class="col-md-6">
+          
+        </div>
+        </div>
+
+     
       
       
     </fieldset>
@@ -300,6 +351,32 @@ $('#datatable').dataTable( {
     }
   } ); 
 
+$("#district_name").change(function() {
+    var option_value=$(this).val();
+    
+    if(option_value=='NULL'){
+    $("#facility_name").hide('slow'); 
+    }
+    else{
+var drop_down='';
+ var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+$("#district_name").val();
+  $.getJSON( hcmp_facility_api ,function( json ) {
+     $("#facility_name").html('<option value="NULL" selected="selected">Select Facility</option>');
+      $.each(json, function( key, val ) {
+        drop_down +="<option value='"+json[key]["facility_code"]+"'>"+json[key]["facility_name"]+"</option>"; 
+      });
+      $("#facility_name").append(drop_down);
+    });
+    $("#facility_name").show('slow');   
+    }
+    }); 
+
+$(".edit").click(function() {
+
+
+
+
+  });
 
 
 });

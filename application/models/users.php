@@ -127,7 +127,8 @@ class Users extends Doctrine_Record {
 				RIGHT JOIN hcmp.access_level a
 				ON
 				a.id=u.usertype_id
-				where u.district=$county");
+				where u.county_id=$county
+				");
 		return $query;
 	}
 

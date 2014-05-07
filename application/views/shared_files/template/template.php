@@ -45,6 +45,10 @@ border-radius:0;
 background-color: white;
 border-color: #e7e7e7;
 }
+.modal-content
+{
+  border-radius: 0 !important;
+}
 </style>
   </head>  
   <body style="" screen_capture_injected="true" onload="set_interval()" onmouseover="reset_interval()" onclick="reset_interval()">

@@ -49,7 +49,7 @@ class Home extends MY_Controller
 			$view = '';
 			break;	
 			case 'county':
-			$view = 'shared_files/template/dashboard_template_v';
+			$view = 'shared_files/template/template';
 			break;	
         endswitch;
 
