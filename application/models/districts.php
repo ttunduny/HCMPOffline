@@ -26,7 +26,7 @@ class Districts extends Doctrine_Record {
 		$drugs = $query -> execute();
 		
 		return $drugs;
-		exit;
+		//exit;
 	}
 	public static function get_county_id($district)
 	{

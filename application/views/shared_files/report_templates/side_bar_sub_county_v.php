@@ -77,7 +77,7 @@
                       <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" id="consumption"><span class="glyphicon glyphicon-sort">
+                            <a data-parent="#accordion" href="<?php echo base_url("reports/get_sub_county_facility_mapping_data"); ?>" id="system_usage"><span class="glyphicon glyphicon-sort">
                             </span>System Usage</a>
                         </h4>
                     </div>
