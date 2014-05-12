@@ -27,6 +27,43 @@ class orders extends MY_Controller {
 		$test= $this -> hcmp_functions -> create_order_delivery_color_coded_table(1);
 		echo $test['table'];
 	}
+	
+	public function test_read_write_excel(){
+
+	$inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx';
+
+    $file_name=time().'.xlsx';
+	$excel2 = PHPExcel_IOFactory::createReader('Excel2007');
+    $excel2=$objPHPExcel= $excel2->load($inputFileName); // Empty Sheet
+    
+    $sheet = $objPHPExcel->getSheet(0); 
+    $highestRow = $sheet->getHighestRow(); 
+	
+    $highestColumn = $sheet->getHighestColumn();
+	
+    $excel2->setActiveSheetIndex(0);
+	
+    $excel2->getActiveSheet()
+    ->setCellValue('H4', '4')
+    ->setCellValue('H5', '5')
+    ->setCellValue('H6', '6')       
+    ->setCellValue('H7', '7')
+	->setCellValue('H8', '7');
+
+   //  Loop through each row of the worksheet in turn
+for ($row = 1; $row <= $highestRow; $row++){ 
+    //  Read a row of data into an array
+    $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);							  
+   if(isset($rowData[0][2]) && $rowData[0][2]!='Product Code'){
+   	$excel2->getActiveSheet()->setCellValue("H$row", '7');
+   }
+
+}
+
+   $objWriter = PHPExcel_IOFactory::createWriter($excel2, 'Excel2007');
+   $objWriter->save("print_docs/excel/excel_files/".$file_name);
+
+	}
 
 	public function facility_order() {
 		$facility_code = $this -> session -> userdata('facility_id');

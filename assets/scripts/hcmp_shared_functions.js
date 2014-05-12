@@ -65,7 +65,7 @@ var baseUrl=json_obj.url;
 
      function ajax_request_replace_div_content(function_url,div){
 		var function_url =url+function_url;
-		var loading_icon=url+"assets/img/loader.gif";
+		var loading_icon=url+"assets/img/loader2.gif";
 		$.ajax({
 		type: "POST",
 		url: function_url,

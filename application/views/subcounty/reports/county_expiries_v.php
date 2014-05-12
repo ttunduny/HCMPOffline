@@ -9,7 +9,7 @@
 .graph_content{
 	padding-top: 2em;
 	width: 100%;
-	height:400px;
+	height:auto;
 	-webkit-box-shadow: 1px 1px 1px 1px #DDD3ED;
 box-shadow: 1px 1px 1px 1px #DDD3ED;
 	margin:auto;

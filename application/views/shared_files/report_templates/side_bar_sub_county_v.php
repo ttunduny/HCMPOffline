@@ -14,6 +14,11 @@
                   <a href="<?php echo base_url("reports") ?>">Actual Stocks</a>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                  <a href="<?php echo base_url("reports/stock_out") ?>">Stock Outs</a>
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                     </div> 
@@ -53,7 +58,7 @@
                  <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" id="consumption"><span class="glyphicon glyphicon-retweet">
+                            <a  data-parent="#accordion" href="<?php echo base_url("reports/county_donation") ?>" ><span class="glyphicon glyphicon-retweet">
                             </span>Donations</a>
                         </h4>
                     </div>
