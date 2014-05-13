@@ -7,6 +7,7 @@ class Users extends Doctrine_Record {
 		$this -> hasColumn('email', 'string', 255, array('unique' => 'true'));
 		$this -> hasColumn('username', 'string', 255, array('unique' => 'true'));
 		$this -> hasColumn('password', 'string', 255);
+		$this -> hasColumn('activation', 'string', 255);
 		$this -> hasColumn('usertype_id', 'integer', 11);
 		$this -> hasColumn('telephone', 'varchar', 255);
 		$this -> hasColumn('district', 'varchar', 255);
@@ -121,7 +122,7 @@ class Users extends Doctrine_Record {
 				RIGHT JOIN hcmp.counties c
 				ON
 				c.id=d.county
-				RIGHT JOIN hcmp.facilities f
+				LEFT JOIN hcmp.facilities f
 				ON
 				u.facility=f.facility_code
 				RIGHT JOIN hcmp.access_level a
@@ -130,6 +131,21 @@ class Users extends Doctrine_Record {
 				where u.county_id=$county
 				");
 		return $query;
+	}
+	
+	public static function get_users_district($district) {
+
+		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users") -> where("district='$district'")
+		->groupBy("status");
+		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result;
+	}
+	public static function get_users_county($county) {
+
+		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users") -> where("county_id='$county'")
+		->groupBy("status");
+		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result;
 	}
 
 }
