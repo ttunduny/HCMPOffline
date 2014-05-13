@@ -627,9 +627,9 @@ class Reports extends MY_Controller
 		echo json_encode(facilities::get_facilities_which_are_online($district_id));
 	}
 	      /*
-	 |--------------------------------------------------------------------------
-	 | COUNTY SUB-COUNTY dashboard
-	 |--------------------------------------------------------------------------
+	 |--------------------------------------------------------------------------|
+	 | COUNTY SUB-COUNTY dashboard											    |
+	 |--------------------------------------------------------------------------|
 	 */
 	 //For system uptake option on SUB-COUNTY dashboard
 	 public function get_sub_county_facility_mapping_data($year = null, $month = NULL) 
@@ -678,6 +678,16 @@ class Reports extends MY_Controller
 				// do nothing
 			}
 		endfor;
+		$graph_data_daily = array();
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_id"=>'container'));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_title"=>'Daily Facility Access log for '.$month." ".$year));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_type"=>'line'));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_yaxis_title"=>'log In'));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_categories"=>array()));
+		$graph_data_daily = array_merge($graph_data_daily,array("series_data"=>$series_data));
+	    $graph_data_daily['graph_categories']=$category_data;	
+		$graph_daily = $this->hcmp_functions->create_high_chart_graph($graph_data_daily);
+		
 
 		for ($i = 0; $i < 12; $i++) :
 			$day = 1 + $i;
@@ -696,19 +706,21 @@ class Reports extends MY_Controller
 			endforeach;
 
 		endfor;
-		//$district = $this -> session -> userdata('district_id');
+	
+		$graph_data = array();
+		$graph_data = array_merge($graph_data,array("graph_id"=>'container_monthly'));
+		$graph_data = array_merge($graph_data,array("graph_title"=>'Monthly Facility Access log for '.$year));
+		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
+		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'log In'));
+		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
+		$graph_data = array_merge($graph_data,array("series_data"=>$series_data_monthly));
+	    $graph_data['graph_categories']=$category_data_monthly;	
+		$graph_monthly = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		
-		$data['year'] = $year;
-		$data['month'] = date("F", strtotime(date($year . "-" . $month)));
-		$data['series_data_monthly'] = $series_data_monthly;
-		$data['category_data_monthly'] = stripslashes(json_encode($category_data_monthly));
-		$data['series_data'] = $series_data;
-		//$data['facilities']=Facilities::getFacilities($district);
-		//$data['active_facilities']=Facility_Issues::get_active_facilities_in_district($district);
-			
-		$data['category_data'] = stripslashes(json_encode($category_data));
+		$data['graph_data_monthly'] =	$graph_monthly;
+		$data['graph_data_daily'] =	$graph_daily;
 		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
-		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
 		$data['report_view'] = "subcounty/ajax/facility_roll_out_at_a_glance_v";
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$view = 'shared_files/template/template';
@@ -798,12 +810,13 @@ class Reports extends MY_Controller
         <li class='active'><a href='#A' data-toggle='tab'>Monthly Break Down</a></li>
         <li class=><a href='#B' data-toggle='tab'>Roll out Summary</a></li>
         </ul>
-         <div  id='#A' class='tab-pane fade active in'>
-		<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" . $district_names . $table_data . $total_facility_list . "<td>$total_facilities_in_county</td></tr>" . $percentage_coverage . "<td>$final_coverage_total %</td></tr></table>
-		 </div>
+         <div  id='A' class='tab-pane fade active in'>
+			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" . $district_names . $table_data . $total_facility_list . "<td>$total_facilities_in_county</td></tr>" . $percentage_coverage . "<td>$final_coverage_total %</td></tr></table>
+		</div>
 		 <div id='B' class='tab-pane fade' >
 		 <table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test2'>" . $district_names . $table_data_summary . $total_facility_list . "<td>$total_facilities_in_county</td></tr>" . $percentage_coverage . "<td>$final_coverage_total %</td></tr></table>
-		 </div></div>";
+		 </div>
+		 </div>";
 
 		if (isset($option)) :
 			return $data_;
@@ -846,7 +859,7 @@ class Reports extends MY_Controller
 				
 			break;
 			case county:
-			 $county_id = $this -> session -> userdata('cointy_id');
+			 $county_id = $this -> session -> userdata('county_id');
 				
 			break;
 		}
