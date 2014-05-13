@@ -319,6 +319,7 @@ class User extends MY_Controller {
 			$permissions='district_permissions';
 			$data['listing']= Users::get_user_list_district($district);
 			$data['facilities']=Facilities::getFacilities($district);
+			$data['counts']=Users::get_users_district($district);
 			$template = 'shared_files/template/template';
 			break;
 			case 'moh_user':
@@ -346,6 +347,7 @@ class User extends MY_Controller {
 			$permissions='county_permissions';
 			$data['listing']= Users::get_user_list_county($county);	
 			$data['district_data'] = districts::getDistrict($county);
+			$data['counts']=Users::get_users_county($county);
 			$template = 'shared_files/template/template';
 			
 			break;	
@@ -356,6 +358,106 @@ class User extends MY_Controller {
 		$data['banner_text'] = "User Management";
 		$data['content_view'] = "shared_files/user_creation_v";
 		$this -> load -> view($template, $data);
+	}
+
+	public function addnew_user(){
+
+		$county = $this -> session -> userdata('county_id');
+		$identifier = $this -> session -> userdata('user_indicator');
+
+		$fname = $_POST['first_name'];
+		$lname = $_POST['last_name'];
+		$telephone = $_POST['telephone'];
+		$email_address = $_POST['email'];
+		$username = $_POST['username'];
+		$facility_id = $_POST['facility_id'];
+		$district_code = $_POST['district_name'];
+		$user_type = $_POST['user_type'];
+		$full_name= $fname .''.$lname; 
+		
+		switch ($identifier):
+			case 'moh':
+			
+			break;
+			case 'facility_admin':
+			
+			break;
+			case 'district':
+				
+			$district_code=$this -> session -> userdata('district_id');
+			
+			break;
+			case 'super_admin':
+			
+			case 'county':
+			
+			
+			break;	
+        endswitch;
+
+		//Generate a activation code
+		
+				$range = microtime(true);
+				$activation = rand(0, $range);
+				//encrypt code to be saved
+				$save_activation_code = md5($activation);
+		
+		//Send registered user email with password and validation link
+		//
+		$subject = "Account Activation";
+				$message = "<html><body>
+		<div style='border-color: #666; margin:auto;'>	
+		Hi " . $full_name . ", </br>
+		<p>
+		You (HCMP Account - " . $email_address . " - ) was recently created.</br>
+		Before we can activate your account one last step must be taken to complete your registration.</br></p>
+		<p>
+		Please note - you must complete this last step to become a registered member.</br></p>
+		<p>
+		You will only need to visit this URL once to activate your account.</br></p> 
+
+		<p>
+		<strong style='font-size:16px;'>" . $link . "</strong>
+		</p>
+		
+		<p>
+		If you are still having problems activating your account please contact your Administrator.
+
+		</p>
+		
+		<p>
+		All the best,</br>
+		</p>
+		<p>
+		The HCMP team.</br>
+		</p>
+		This email can't receive replies. </br> For more information, Contact your Administrator.
+		</body></html>";
+
+				//exit;
+
+				//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
+
+				//exit;
+
+		//log the password recovery requests as a code
+				$savethis =  new Users();
+				$savethis -> fname = $fname;
+				$savethis -> lname = $lname;
+				$savethis -> email = $email_address;
+				$savethis -> username = $username;
+				$savethis -> password = "";
+				$savethis -> activation = $save_activation_code ;
+				$savethis -> usertype_id = $user_type;
+				$savethis -> telephone = $telephone;
+				$savethis -> district = $district_code;
+				$savethis -> facility = $facility_id;
+				$savethis -> status = 0;
+				$savethis -> county_id = $county_id;
+				$savethis -> save();
+		
+
+
 	}
 
 }
