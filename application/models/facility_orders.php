@@ -87,19 +87,18 @@ $where_clause = isset($facility_code)? "f.facility_code=$facility_code ": (isset
 		return $query_results;
 
 		}
- public static function get_cost_of_orders($facilities_code)
- {
- 	$year = date("Y");
-		$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-		->fetchAll("SELECT date_format( fo.order_date, '%b %Y' )as month, cms.commodity_name as commodity, CEIL((fo.order_total)*cms.unit_cost) as total_cost
-			FROM facility_orders fo, commodities cms, facilities f 
-			WHERE fo.facility_code = f.facility_code
-			AND fo.status =  '4'
-			AND fo.facility_code = $facilities_code
-			GROUP BY Month( fo.order_date ) asc");		
-		return $inserttransaction ;
 
+ 
+ public static function get_facility_order_details($order_id){
+ 	    $query_results=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select f.facility_name, 
+ 	    f.facility_code, c.county, f_o.order_date from counties c, districts d, facilities f, 
+ 	    facility_orders f_o where f_o.facility_code=f.facility_code and f.district=d.id 
+ 	    and d.county=c.id and f_o.id=$order_id");
+
+		return $query_results;
  }
+
+
  public static function get_filtered_cost_of_orders($facility_code, $month = null, $year = null)
  {
  	if(isset($month) && isset($year))
