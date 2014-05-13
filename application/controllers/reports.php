@@ -83,10 +83,8 @@ class Reports extends MY_Controller
 		$this -> load -> view('shared_files/template/template', $data);
 	}
 
-	/*
-	 |--------------------------------------------------------------------------
 
-    /*
+
 	
 	public function get_facilities() {
 		$district = $_POST['district'];
@@ -346,12 +344,18 @@ class Reports extends MY_Controller
 		$district_id=null;
 		$county_id=null;
 		if($for=='facility'):
-		$facility_code = $this -> session -> userdata('facility_id');		
-		$desc='Facility Order';
+
+		$facility_code = $this -> session -> userdata('facility_id');
+		$template="shared_files/template/template";		
+		$desc='Facility Orders';
 		elseif($for=='subcounty'):
-		$district_id=(!$this -> session -> userdata('district_id')) ? null:$this -> session -> userdata('district_id');
-		$county_id=(!$this -> session -> userdata('county_id')) ? null:$this -> session -> userdata('county_id');
-		$desc=($this -> session -> userdata('user_indicator')=='district') ? 'Subcounty Order':'County Order';
+		$template="shared_files/template/dashboard_template_v";
+		$district_id=$this -> session -> userdata('district_id');
+		$desc='Subcounty Orders';
+		elseif($for=='county'):
+		$template="shared_files/template/dashboard_template_v";
+		$county_id=$this -> session -> userdata('county_id');
+		$desc='County Orders';
 		endif;		
 		//get order information from the db
 		$facility_order_count_ = facility_orders::get_facility_order_summary_count($facility_code, $district_id, $county_id);
@@ -374,6 +378,8 @@ class Reports extends MY_Controller
 		else:
 		$data['title'] = $desc;
 		$data['banner_text'] = $desc;
+
+		
 		$data['content_view'] = "facility/facility_orders/order_listing_v";	
 		endif;
 		

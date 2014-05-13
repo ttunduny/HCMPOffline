@@ -1,42 +1,41 @@
 <?php
 class Users extends Doctrine_Record {
-/////
+	/////
 	public function setTableDefinition() {
-		$this->hasColumn('fname', 'varchar', 255);
-		$this->hasColumn('lname', 'varchar', 255);
-		$this->hasColumn('email', 'string', 255, array('unique' => 'true'));
-		$this->hasColumn('username', 'string', 255, array('unique' => 'true'));
-		$this->hasColumn('password', 'string', 255);
-		$this->hasColumn('usertype_id', 'integer', 11);
-		$this->hasColumn('telephone', 'varchar', 255);
-		$this->hasColumn('district', 'varchar', 255);
-		$this->hasColumn('facility', 'varchar', 255);
-		$this->hasColumn('status', 'int', 11);
-		$this->hasColumn('county_id', 'int', 11);
-		
+		$this -> hasColumn('fname', 'varchar', 255);
+		$this -> hasColumn('lname', 'varchar', 255);
+		$this -> hasColumn('email', 'string', 255, array('unique' => 'true'));
+		$this -> hasColumn('username', 'string', 255, array('unique' => 'true'));
+		$this -> hasColumn('password', 'string', 255);
+		$this -> hasColumn('usertype_id', 'integer', 11);
+		$this -> hasColumn('telephone', 'varchar', 255);
+		$this -> hasColumn('district', 'varchar', 255);
+		$this -> hasColumn('facility', 'varchar', 255);
+		$this -> hasColumn('status', 'int', 11);
+		$this -> hasColumn('county_id', 'int', 11);
+
 	}
-	
+
 	public function setUp() {
-		$this->setTableName('user');
-		$this->actAs('Timestampable');
-		$this->hasMutator('password', '_encrypt_password');
+		$this -> setTableName('user');
+		$this -> actAs('Timestampable');
+		$this -> hasMutator('password', '_encrypt_password');
 		$this -> hasMany('Facilities as Codes', array('local' => 'facility', 'foreign' => 'facility_code'));
 		$this -> hasMany('access_level as u_type', array('local' => 'usertype_id', 'foreign' => 'id'));
 		$this -> hasMany('facilities as hosi', array('local' => 'facility', 'foreign' => 'facility_code'));
-	    $this -> hasOne('Facility_Issues as idid', array('local' => 'id', 'foreign' => 'issued_by'));
-		
-		
+		$this -> hasOne('Facility_Issues as idid', array('local' => 'id', 'foreign' => 'issued_by'));
+
 	}
 
 	protected function _encrypt_password($value) {
 		$salt = '#*seCrEt!@-*%';
-		$this->_set('password', md5($salt . $value));
-		
+		$this -> _set('password', md5($salt . $value));
+
 	}
-	
+
 	public static function login($username, $password) {
 
-		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username = '" . $username . "'");
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username = '" . $username . "' AND status=1");
 
 		$user = $query -> fetchOne();
 		if ($user) {
@@ -54,20 +53,84 @@ class Users extends Doctrine_Record {
 		}
 
 	}
-	
+
 	public static function getsome($id) {
-		$query = Doctrine_Query::create() -> select("fname") -> from("users")->where("id='$id' ");
+		$query = Doctrine_Query::create() -> select("fname") -> from("users") -> where("id='$id' ");
 		$level = $query -> execute();
 		return $level;
 	}
-	public static function get_user_names($id)
-	{
-		$query = Doctrine_Query::create() -> select("fname, lname") -> from("users")->where("id='$id'");
-		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
-		return $result[0];
+
+
+	public static function get_user_names($id) {
+		$query = Doctrine_Query::create() -> select("fname, lname") -> from("users") -> where("id='$id'");
+		$names = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $names;
 	}
-	
 
+	public static function check_user_exist($email) {
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username='$email' AND status IN(1,2)");
+		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result;
+	}
 
+	public static function reset_password($user_id, $new_password_confirm) {
+
+		//$new_password_confirm;
+		$salt = '#*seCrEt!@-*%';
+		$value = md5($salt . $new_password_confirm);
+
+		$update = Doctrine_Manager::getInstance() -> getCurrentConnection();
+		$update -> execute("UPDATE user SET password='$value',status=1  WHERE id='$user_id' ; ");
+	}
+
+	public static function set_deactivate_for_recovery($user_id) {
+
+		$update = Doctrine_Manager::getInstance() -> getCurrentConnection();
+
+		$update -> execute("UPDATE user SET status=2  WHERE id='$user_id' ;");
+	}
+
+	public static function get_user_list_district($district) {
+
+		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id,d.district,c.id as county_id,c.county,f.facility_code,
+				f.facility_name,f.owner,f.type,f.level,a.level,u.status FROM hcmp.user u 
+				LEFT JOIN hcmp.districts d
+				ON
+				d.id=u.district
+				RIGHT JOIN hcmp.counties c
+				ON
+				c.id=d.county
+				RIGHT JOIN hcmp.facilities f
+				ON
+				u.facility=f.facility_code
+				RIGHT JOIN hcmp.access_level a
+				ON
+				a.id=u.usertype_id
+				where u.district=$district");
+		return $query;
+	}
+
+	public static function get_user_list_county($county) {
+
+		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id,d.district,c.id as county_id,c.county,f.facility_code,
+				f.facility_name,f.owner,f.type,f.level,a.level,u.status FROM hcmp.user u 
+				LEFT JOIN hcmp.districts d
+				ON
+				d.id=u.district
+				RIGHT JOIN hcmp.counties c
+				ON
+				c.id=d.county
+				RIGHT JOIN hcmp.facilities f
+				ON
+				u.facility=f.facility_code
+				RIGHT JOIN hcmp.access_level a
+				ON
+				a.id=u.usertype_id
+				where u.county_id=$county
+				");
+		return $query;
+	}
 
 }

@@ -30,7 +30,8 @@ class Home extends MY_Controller
 			$data['facility_dashboard_notifications']=$this->get_facility_dashboard_notifications_graph_data();
 			break;
 			case 'district':
-			$view = 'shared_files/template/dashboard_template_v';
+			$data['content_view'] = "subcounty/subcounty_home_v";	
+			$view = 'shared_files/template/template';
 			break;
 			case 'moh_user':
 			$view = '';
@@ -42,10 +43,14 @@ class Home extends MY_Controller
 			$view = '';
 			break;
 			case 'super_admin':
-			$view = '';
+			$view = 'shared_files/template/dashboard_v';
+			$data['content_view'] = "shared_files/template/super_admin_template";
 			break;
 			case 'allocation_committee':
 			$view = '';
+			break;	
+			case 'county':
+			$view = 'shared_files/template/template';
 			break;	
         endswitch;
 

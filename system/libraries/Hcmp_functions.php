@@ -215,16 +215,8 @@ $cc_email=($this->test_mode)?'kariukijackson@gmail.com': 'anganga.pmo@gmail.com,
 
 public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL){
   
-		$mail_list=($this->test_mode)?'kariukijackson@gmail.com,kariukijackson@ymail.com': 'rkihoto@clintonhealthaccess.org,
-  		eunicew2000@yahoo.com,
-  		gmacharia@clintonhealthaccess.org,
-  		Jhungu@clintonhealthaccess.org,
-  		nmaingi@strathmore.edu,
-  		bwariari@clintonhealthaccess.org,
-  		kyalocatherine@gmail.com,
-  		ashminneh.mugo@gmail.com,
-  		smutheu@clintonhealthaccess.org,
-  		kariukijackson@gmail.com,
+		$mail_list=($this->test_mode)?'kelvinmwas@gmail.com,kelvinmwas@gmail.com': ',
+  		kelvinmwas@gmail.com,
   		kelvinmwas@gmail.com,';
 			
 		$fromm='hcmpkenya@gmail.com';
