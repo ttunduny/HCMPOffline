@@ -65,7 +65,7 @@ var baseUrl=json_obj.url;
 
      function ajax_request_replace_div_content(function_url,div){
 		var function_url =url+function_url;
-		var loading_icon=url+"assets/img/loader.gif";
+		var loading_icon=url+"assets/img/loader2.gif";
 		$.ajax({
 		type: "POST",
 		url: function_url,
@@ -222,5 +222,11 @@ function confirm_if_the_user_wants_to_save_the_form(form_id){
       $(form_id).submit();   
       });
 }
+
+function active_panel(div_object){
+
+     	 $('.panel').removeClass('active-panel');
+     	 $(div_object).parent().parent().parent().addClass('active-panel');
+     }
 
 

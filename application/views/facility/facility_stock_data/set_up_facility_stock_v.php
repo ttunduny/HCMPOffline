@@ -105,7 +105,7 @@ div = null;
      //save the data in the db          
 	var url = "<?php echo base_url().'stock/save_set_up_facility_stock'?>";	
 
-    ajax_simple_post_with_console_response(url, data,div);	  	
+    ajax_simple_post_with_console_response(url, data);	  	
 	});	//check box movement
 	$(".checkbox").change(function() {
 	var selector_object=$(this);
@@ -113,14 +113,14 @@ div = null;
     var data =get_the_data_from_the_form_to_save(selector_object);	
      //save the data in the db          
 	var url = "<?php echo base_url().'stock/save_set_up_facility_stock'?>";	  
-    ajax_simple_post_with_console_response(url, data,div);	
+    ajax_simple_post_with_console_response(url, data);	
     } else{
     selector_object.closest("tr").find('.actual_units').val(0);
     selector_object.closest("tr").find('.quantity').val(0);
     var data =get_the_data_from_the_form_to_save(selector_object);	
      //save the data in the db          
 	var url = "<?php echo base_url().'stock/save_set_up_facility_stock/delete'?>";	  
-    ajax_simple_post_with_console_response(url, data,div);	  	
+    ajax_simple_post_with_console_response(url, data);	  	
     }
     });
 	function get_the_data_from_the_form_to_save(selector_object){

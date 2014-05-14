@@ -128,7 +128,7 @@ foreach($menus as $menu){?>
       		<div class="col-md-4">     			
       		</div>
       		<div class="col-md-4"  style="text-align: right;">
-      			<?php  echo date('l, dS F Y'); ?>
+      			<?php  echo date('l, jS F Y'); ?>
              <span id="clock" style="font-size:0.85em; " ></span>
       		</div>
       	</div>      	

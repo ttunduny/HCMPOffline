@@ -2,11 +2,12 @@
 class Facilities extends Doctrine_Record {
 	public function setTableDefinition() {
 		$this -> hasColumn('facility_code', 'varchar',30);
+		$this -> hasColumn('targetted', 'int');
 		$this -> hasColumn('facility_name', 'varchar',30);
 		$this -> hasColumn('district', 'varchar',30);
 		$this -> hasColumn('owner', 'varchar',30);
 		$this->hasColumn('drawing_rights','text');
-		$this->hasColumn('using_hcmp','int');
+		$this->hasColumn('using_hcmp','int');//
 		$this->hasColumn('date_of_activation','date');
 	}
 //////////////
@@ -24,20 +25,36 @@ class Facilities extends Doctrine_Record {
 		return $drugs;
 	}
 	public static function getFacilities($district){
-		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");
-		$drugs = $query -> execute();
-		return $drugs;
+		$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+    ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as commodity_id, c.total_commodity_units,
+              c.unit_size,c.unit_cost ,c_s.source_name, c_s_c.sub_category_name
+               FROM commodities c,commodity_sub_category c_s_c, commodity_source c_s
+               WHERE c.commodity_sub_category_id = c_s_c.id
+               AND c.commodity_source_id=$supplier_id
+               AND c.commodity_sub_category_id = c_s_c.id
+               order by c_s_c.id asc,c.commodity_name asc "); 
+return $inserttransaction;
+	}
+	//get the facility codes of facilities in a particular district
+	public static function get_district_facilities($district)
+	{
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT (facility_code)
+			FROM  `facilities` 
+			WHERE district =$district");
+		return $q;	
 	}
 	// getting facilities which are using the system
-	public static function get_facilities_which_are_online($county_id){
-$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT facility_code, facility_name,f.district
-FROM facilities f, districts d
-WHERE f.district = d.id
-AND d.id =$county_id
-AND UNIX_TIMESTAMP(  `date_of_activation` ) >0
-ORDER BY  `facility_name` ASC ");
-return $q;	
+	public static function get_facilities_which_are_online($county_id)
+	{
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT facility_code, facility_name,f.district
+		FROM facilities f, districts d
+		WHERE f.district = d.id
+		AND d.id =$county_id
+		AND UNIX_TIMESTAMP(  `date_of_activation` ) >0
+		ORDER BY  `facility_name` ASC ");
+		return $q;	
 }
+
 	public static function get_facility_name_($facility_code){
 				
 	if($facility_code!=NULL){
@@ -100,12 +117,18 @@ GROUP BY user.facility");
 	}
 	
 	/*************************getting the facility name *******************/
-	public static function get_facility_name($facility_code){
-	$query=Doctrine_Query::create()->select('*')->from('facilities')->where("facility_code='$facility_code'");
-	$result=$query->execute();
-	return $result;
+	public static function get_facility_name($facility_code)
+	{
+		$query = Doctrine_Query::create()->select('*')->from('facilities')->where("facility_code='$facility_code'");
+		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result;
 	}
-	
+	public static function get_facility_name2($facility_code)
+	{
+	$query = Doctrine_Query::create()->select('facility_name')->from('facilities')->where("facility_code='$facility_code'");
+	$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+	return $result[0];
+	}
 	/********************getting the facility owners  count*************/
 	public static function get_owner_count() {
 		$query = Doctrine_Query::create() -> select("COUNT(facility_code) as count , owner ") 

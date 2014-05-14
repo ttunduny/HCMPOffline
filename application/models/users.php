@@ -61,6 +61,7 @@ class Users extends Doctrine_Record {
 		return $level;
 	}
 
+
 	public static function get_user_names($id) {
 		$query = Doctrine_Query::create() -> select("fname, lname") -> from("users") -> where("id='$id'");
 		$names = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
@@ -132,9 +133,14 @@ class Users extends Doctrine_Record {
 				");
 		return $query;
 	}
-	
-	public static function get_users_district($district) {
+	//////get the dpp details 
+public static function get_dpp_details($distirct){
+	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("district=$distirct and usertype_id='3' ");
+		$level = $query -> execute();
+		return $level;
+}
 
+	public static function get_users_district($district) {
 		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users") -> where("district='$district'")
 		->groupBy("status");
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);

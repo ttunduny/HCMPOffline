@@ -307,7 +307,6 @@ if(count($excel_data)>0):
         $rowExec++;
 		}
 
-		//	echo date('H:i:s') . " Rename sheet\n";
 		$objPHPExcel -> getActiveSheet() -> setTitle('Simple');
 
 		// Save Excel 2007 file
@@ -315,16 +314,77 @@ if(count($excel_data)>0):
 		$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
 
 		// We'll be outputting an excel file
-		header('Content-type: application/vnd.ms-excel');
-
+		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header("Cache-Control: no-store, no-cache, must-revalidate");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
 		// It will be called file.xls
-		header("Content-Disposition: attachment; filename=".$excel_data['file_name'].".xls");
+		header("Content-Disposition: attachment; filename=".$excel_data['file_name'].".xlsx");
 
 		// Write file to the browser
-		$objWriter -> save('php://output');
+        $objWriter -> save('php://output');
+       $objPHPExcel -> disconnectWorksheets();
+       unset($objPHPExcel);
 		// Echo done
 endif;
 }
+ public function clone_excel_order_template($order_id,$report_type){
+    $inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx';
+    $facility_details = facility_orders::get_facility_order_details($order_id);
+	if(count($facility_details)==1):
+	$facility_stock_data_item = facility_order_details::get_order_details($order_id);
+
+    $file_name=time().'.xlsx';
+	
+	$excel2 = PHPExcel_IOFactory::createReader('Excel2007');
+    $excel2=$objPHPExcel= $excel2->load($inputFileName); // Empty Sheet
+    
+    $sheet = $objPHPExcel->getSheet(0); 
+    $highestRow = $sheet->getHighestRow(); 
+	
+    $highestColumn = $sheet->getHighestColumn();
+	
+    $excel2->setActiveSheetIndex(0);
+	
+    $excel2->getActiveSheet()
+    ->setCellValue('H4', $facility_details[0]['facility_code'])
+    ->setCellValue('H5', $facility_details[0]['facility_name'])
+    ->setCellValue('H6', '')       
+    ->setCellValue('H7', $facility_details[0]['county'])
+	->setCellValue('H8', $facility_details[0]['order_date']);
+   //  Loop through each row of the worksheet in turn
+for ($row = 1; $row <= $highestRow; $row++){ 
+    //  Read a row of data into an array
+    $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);							  
+   if(isset($rowData[0][2]) && $rowData[0][2]!='Product Code'){
+   	foreach($facility_stock_data_item as $facility_stock_data_item_){
+   	if(in_array($rowData[0][2], $facility_stock_data_item_)){
+   	$key = array_search($rowData[0][2], $facility_stock_data_item_);
+	$excel2->getActiveSheet()->setCellValue("H$row", $facility_stock_data_item_['quantity_ordered_pack']);	
+   	}	
+   	} 	
+   }
+}
+
+   $objWriter = PHPExcel_IOFactory::createWriter($excel2, 'Excel2007');
+   if($report_type=='download_file'){
+   	// We'll be outputting an excel file
+		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header("Cache-Control: no-store, no-cache, must-revalidate");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+		// It will be called file.xls
+		header("Content-Disposition: attachment; filename=$file_name");
+		// Write file to the browser
+        $objWriter -> save('php://output');
+       $objPHPExcel -> disconnectWorksheets();
+       unset($objPHPExcel);
+   } elseif($report_type=='save_file'){
+   	 $objWriter->save("print_docs/excel/excel_files/".$file_name);
+   }
+   endif;
+
+ }
 /*************/	
 /* HCMP PDF creator
 /********/	
@@ -370,7 +430,8 @@ endif;
 }
 /****************************END************************/
  //// /////HCMP Create high chart graph
-  public function create_high_chart_graph($graph_data=null){
+  public function create_high_chart_graph($graph_data=null)
+  {
   	$high_chart='';
   	if(isset($graph_data)):
 		$graph_id=$graph_data['graph_id'];

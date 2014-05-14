@@ -61,5 +61,29 @@ ORDER BY f.date_issued ASC");
 
 			return $transaction;	
 	}
-	
+	public static function get_active_facilities_in_district($district)
+	{
+	 	$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT f.`facility_name` , count( fi.`facility_code` ) AS issue_count
+			FROM facilities f, facility_issues fi
+			WHERE fi.`facility_code` = f.`facility_code`
+			AND fi.`availability` =1
+			AND f.`district` = '$district'
+			GROUP BY fi.`facility_code`
+			ORDER BY issue_count DESC , f.`facility_name` ASC
+			LIMIT 0 , 5 ");
+        return $query ;
+	}
+	public static function get_inactive_facilities_in_district($district)
+	{
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT f.`facility_name`
+			FROM facilities f, user u
+			WHERE u.`facility` != f.`facility_code`
+			AND f.`district` = '$district'
+			GROUP BY f.`facility_code`
+			ORDER BY f.`facility_name` ASC");
+		
+		return $query ;
+	}
 }

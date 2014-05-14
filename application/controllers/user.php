@@ -14,6 +14,7 @@ class User extends MY_Controller {
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
 	}
 
+
 	public function index() {
 		$data['title'] = "Login";
 		$this -> load -> view("shared_files/login_pages/login_v", $data);

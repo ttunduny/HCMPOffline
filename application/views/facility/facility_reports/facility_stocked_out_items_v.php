@@ -8,13 +8,15 @@
 			<th>MLF No.</th>
 			<th>Commodity Name</th>
 			<th>Commodity Code</th>
+			<th>Last day of usage</th>
 			<th>No. days out of stock</th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php
 		foreach($facility_stock_data as $facility_stock_data):
-$ts1 = strtotime($facility_stock_data['last_day']); $ts2 = strtotime(date("Y/m/d")); $seconds_diff = $ts1 - $ts2;
+$day=date('j M, Y ',strtotime($facility_stock_data['last_day']));
+$ts1 = strtotime($facility_stock_data['last_day']); $ts2 = strtotime(date("Y/m/d")); $seconds_diff = $ts2 - $ts1;
 $days= floor($seconds_diff/3600/24);
 			echo "<tr>
 			<td>$facility_stock_data[district]</td>
@@ -22,6 +24,7 @@ $days= floor($seconds_diff/3600/24);
 			<td>$facility_stock_data[facility_code]</td>
 			<td>$facility_stock_data[commodity_name]</td>
 			<td>$facility_stock_data[commodity_code]</td>
+			<td>$day</td>
 			<td>$days</td>
 			</tr>";	
 		endforeach;
