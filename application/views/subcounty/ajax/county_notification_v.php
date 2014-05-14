@@ -38,7 +38,7 @@
         <div style="height:auto; margin-bottom: 2px" class="warning message ">       	
         <h5>Stock Outs</h5>
         	<p>
-			<a class="link" href="<?php echo base_url('reports/facility_stocked_out_items') ?>"> <span class="badge">
+			<a class="link" href="<?php echo base_url('reports/stock_out') ?>"> <span class="badge">
 		<?php echo $county_dashboard_notifications['items_stocked_out_in_facility'] ?></span>facilities have stocked out items</a> 
 			</p> 
         </div>

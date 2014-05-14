@@ -805,7 +805,142 @@ $category_data=array(array("From",'To',"Commodity Name","Commodity Code",
 		return  $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
    	
    }
- 
+     /*
+	 |--------------------------------------------------------------------------
+	 | COUNTY SUB-COUNTY Facility Mapping
+	 |--------------------------------------------------------------------------
+	 */
+     public function mapping(){
+     	$identifier = $this -> session -> userdata('user_indicator');
+		$county_id=$district_id=null;
+		if($identifier=='district'){
+		$district_id=$this -> session -> userdata('district_id');	
+		}else{
+		$county_id=$this -> session -> userdata('county_id');	
+		}     	
+	    $data['district_data'] = districts::getDistrict($county_id,$district_id);
+		$data['title'] = $data['banner_text']="Facility Mapping";
+		$data['content_view'] = "facility/facility_reports/reports_v";
+		$data['report_view'] = "subcounty/reports/facility_mapping_v";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_facility_mapping_v";
+		$this -> load -> view("shared_files/template/template", $data);
+     	
+     }
+	 
+	 	public function get_district_facility_mapping_($district_id) {
+		$facility_data = facilities::getFacilities($district_id);
+		$dpp_details = Users::get_dpp_details($district_id) -> toArray();
+		$district_name = districts::get_district_name($district_id) -> toArray();
+		
+        $table_body = "";
+		$dpp_fname = '';
+		$dpp_lname = '';
+		$dpp_phone = '';
+		$dpp_email = '';
+		$indicator = "SubCounty";
+		$no_of_facility_users = 0;
+		$no_of_facility_users_online = 0;
+		$no_of_facilities = 0;
+		$no_of_facilities_using = 0;
+		$no_of_facilities_using_targetted = 0;
+        $series_data= $graph_data=array();
+		if (count($dpp_details) > 0) {
+
+			$dpp_fname = $dpp_details[0]['fname'];
+			$dpp_lname = $dpp_details[0]['lname'];
+			$dpp_phone = $dpp_details[0]['telephone'];
+			$dpp_email = $dpp_details[0]['email'];
+
+		}
+		
+		foreach ($facility_data as $facility_detail) {
+			$facility_code = $facility_detail -> facility_code;
+			$facility_extra_data = facilities::get_facility_status_no_users_status($facility_code);
+			$no_of_facility_users = $no_of_facility_users + $facility_extra_data[0]['number_of_users'];
+			$no_of_facility_users_online = $no_of_facility_users_online + $facility_extra_data[0]['number_of_users_online'];
+			$no_of_facilities = $no_of_facilities + 1;
+			if ($facility_extra_data[0]['number_of_users'] > 0) {
+				$no_of_facilities_using = $no_of_facilities_using + 1;
+			}
+			$using=$facility_detail->using_hcmp;
+            $status_radio=$facility_detail->targetted==1 ? 'checked="true"'  : null; 
+			$status = null;
+			$temp = $facility_extra_data[0]['status'];
+			$status_using=$using== 1? 'checked="true"'  : null;  
+			$a_date = strtotime($facility_detail->date_of_activation) ? date('d M, Y', strtotime($facility_detail->date_of_activation)) : "N/A";
+			($using== 1) ? $status = "<span class='label label-success'>Active</span>" : $status = "<span class='label label-warning'>Inactive</span>";
+            ($using==1) ? $no_of_facilities_using_targetted=$no_of_facilities_using_targetted+1 : null;
+	   	array_push($series_data, array($district_name[0]['district'],
+	    $facility_detail->facility_name,
+		$facility_code,$facility_detail->owner,$status,
+		"<input id='$facility_detail->id' type='checkbox' name='targetted' class='checkbox'  $status_radio/>",
+		"<input id='$facility_detail->id' name='using_hcmp' type='checkbox' class='checkbox'  $status_using/>",
+		$a_date,
+		$facility_extra_data[0]['number_of_users']
+		));
+		}
+
+		$stats_data = '
+		<table style="float:left">
+		<tr>
+		<td><label style=" font-weight: ">' . $district_name[0]['district'] . ' ' . $indicator . ' Pharmacist :</label></td>
+		<td><a class="badge">' . $dpp_fname . ' ' . $dpp_lname . '</a></td>
+		</tr>
+		<tr>
+		<td><label style="font-weight: ">Phone No.</label></td>
+		<td><a class="badge">' . $dpp_phone . '</a></td>
+		</tr>
+		<tr>
+		<td><label style="font-weight: ">Email Address</label></td>
+		<td><a class="badge">' . $dpp_email . '</a></td>
+		</tr>
+		</table>
+		<table style="float:left">
+		<tr>
+		<td><label style=" font-weight: ">Total No of Facilities</label></td>
+		<td><a class="badge" >' . $no_of_facilities . '</a></td>
+		</tr>
+		<tr>
+		<td><label style="font-weight: ">Total No of Facilities  Taregetted</label></td>
+		<td>	<a class="badge">' . $no_of_facilities_using_targetted. '</a></td>
+		</tr>
+		<tr>
+		<td><label style="font-weight: ">Total No of Facilities Using HCMP </label></td>
+		<td>	<a class="badge">' . $no_of_facilities_using . '</a></td>
+		</tr>
+		</table>
+		<table style="float:left">
+		<tr>
+		<td><label style="font-weight: ">Total No of Users</label></td>
+		<td><a class="badge" >' . $no_of_facility_users . '</a></td>
+		</tr>
+		<tr>
+		<td><label style="font-weight: ">Users online</label></td>
+		<td><a class="badge" >' . $no_of_facility_users_online . '</a></td>
+		</tr>
+		</table></br><p>';
+
+        $category_data=array(array("Sub County",'Facility Name',"MLF No","Owner", "Facility Status","Targetted For Roll Out","Using HCMP","Date Activated", "No. Facility Users"));
+        $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_1'));
+	    $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
+	    $graph_data=array_merge($graph_data,array("table_body"=>$series_data));				
+		$data['table'] = $this->hcmp_functions->create_data_table($graph_data);		
+		$data['table_id'] ="dem_graph_1";
+		$data['stats_data']=$stats_data;
+		return  $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
+
+	}
+       public function set_tragget_facility($facility_id,$status,$type){
+       	//security check	  
+       if($this->input->is_ajax_request()):
+	   $set=($type=='targetted') ? "`targetted` =$status" : "`using_hcmp` =$status";
+       $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
+	   $inserttransaction->execute("UPDATE `Facilities` SET $set
+                                          WHERE `id`=$facility_id"); 
+	   echo "success";
+       endif;
+       }
+	 
        
 	 
 	

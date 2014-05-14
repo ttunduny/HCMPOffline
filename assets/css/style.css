@@ -59,7 +59,7 @@ body {
 	/* border: 1px solid #036;*/
 }
  .active-panel{
-    	border-left: 6px solid #36BB24;
+    	border-left: 6px solid #36BB24 !important;
     }
 @media all and (max-width: 640px) and (min-width: 320px) {
 	#error_contain {

@@ -223,4 +223,10 @@ function confirm_if_the_user_wants_to_save_the_form(form_id){
       });
 }
 
+function active_panel(div_object){
+
+     	 $('.panel').removeClass('active-panel');
+     	 $(div_object).parent().parent().parent().addClass('active-panel');
+     }
+
 

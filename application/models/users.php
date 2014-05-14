@@ -67,6 +67,13 @@ class Users extends Doctrine_Record {
 		return $names;
 	}
 	
+	//////get the dpp details 
+public static function get_dpp_details($distirct){
+	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("district=$distirct and usertype_id='3' ");
+		$level = $query -> execute();
+		return $level;
+}
+	
 
 
 

@@ -2,11 +2,12 @@
 class Facilities extends Doctrine_Record {
 	public function setTableDefinition() {
 		$this -> hasColumn('facility_code', 'varchar',30);
+		$this -> hasColumn('targetted', 'int');
 		$this -> hasColumn('facility_name', 'varchar',30);
 		$this -> hasColumn('district', 'varchar',30);
 		$this -> hasColumn('owner', 'varchar',30);
 		$this->hasColumn('drawing_rights','text');
-		$this->hasColumn('using_hcmp','int');
+		$this->hasColumn('using_hcmp','int');//
 		$this->hasColumn('date_of_activation','date');
 	}
 //////////////
