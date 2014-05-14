@@ -47,7 +47,8 @@ class facility_issues extends Doctrine_Record {
 		$convertto=date('Y-m-d',strtotime($to ));
 
 	$transaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-    ->fetchAll("SELECT f.date_issued,f.expiry_date,f.batch_no,c.unit_size,f.s11_No,f.balance_as_of,f.adjustmentnve,
+
+     ->fetchAll("SELECT f.date_issued,f.expiry_date,f.batch_no,c.unit_size,f.s11_No,f.balance_as_of,f.adjustmentnve,
 f.adjustmentpve,f.qty_issued,u.fname,u.lname, f. issued_to as service_point_name 
 FROM hcmp.facility_issues f INNER JOIN hcmp.commodities c 
 ON c.id=f.commodity_id  INNER JOIN hcmp.user u 
@@ -57,7 +58,32 @@ AND f.date_issued BETWEEN '$convertfrom'
 AND '$convertto' 
 ORDER BY f.date_issued ASC"); 
 
+
 			return $transaction;	
 	}
-	
+	public static function get_active_facilities_in_district($district)
+	{
+	 	$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT f.`facility_name` , count( fi.`facility_code` ) AS issue_count
+			FROM facilities f, facility_issues fi
+			WHERE fi.`facility_code` = f.`facility_code`
+			AND fi.`availability` =1
+			AND f.`district` = '$district'
+			GROUP BY fi.`facility_code`
+			ORDER BY issue_count DESC , f.`facility_name` ASC
+			LIMIT 0 , 5 ");
+        return $query ;
+	}
+	public static function get_inactive_facilities_in_district($district)
+	{
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT f.`facility_name`
+			FROM facilities f, user u
+			WHERE u.`facility` != f.`facility_code`
+			AND f.`district` = '$district'
+			GROUP BY f.`facility_code`
+			ORDER BY f.`facility_name` ASC");
+		
+		return $query ;
+	}
 }

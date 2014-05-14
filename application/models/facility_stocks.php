@@ -18,6 +18,7 @@ class Facility_stocks extends Doctrine_Record {
 				$this->hasColumn('date_added', 'date');
 				$this->hasColumn('date_modified', 'date');
 				$this->hasColumn('status', 'int');	
+			
 	}
 
 	public function setUp() {
@@ -312,6 +313,239 @@ group by f.facility_code");
 /////
 		return $query;
 	}	
+public static function get_facility_drug_consumption_level($facilities_filter,$commodity_filter,$year_filter,$plot_value_filter)
+ {
+ 	switch ($plot_value_filter) :
+		case 'ksh':
+			$computation ="CEIL((fs.qty_issued)*cms.unit_cost ) AS total_consumption";
+            break;
+        case 'units':
+           	$computation ="fs.qty_issued AS total_consumption" ;
+            break;
+        case 'packs':
+           	$computation ="CEIL(fs.qty_issued/cms.total_commodity_units) AS total_consumption" ;
+            break;
+        default:
+            $computation ="fs.qty_issued AS total_consumption" ;
+            break;
+    endswitch;
+    
+   	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT MONTHNAME( fs.date_issued ) as month, cms.commodity_name as Name,$computation 
+					FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
+					WHERE fs.facility_code = f.facility_code
+					AND f.facility_code = $facilities_filter
+					AND fs.qty_issued > 0
+					AND f.district = di.id
+					AND fs.status =  '1'
+					AND fs.commodity_id = $commodity_filter
+					AND YEAR( fs.date_issued ) =$year_filter
+					AND cms.id = fs.commodity_id
+					GROUP BY MONTH( fs.date_issued ) asc");		
+		return $inserttransaction ;
+	
+
+
+ }
+public static function get_filtered_commodity_consumption_level($facilities_filter,$commodity_filter,$year_filter,$plot_value_filter)
+ {
+ 	switch ($plot_value_filter) :
+		case 'ksh':
+			$computation ="CEIL((fs.qty_issued)*cms.unit_cost ) AS total_consumption";
+            break;
+        case 'units':
+           	$computation ="fs.qty_issued AS total_consumption" ;
+            break;
+        case 'packs':
+           	$computation ="CEIL(fs.qty_issued/cms.total_commodity_units) AS total_consumption" ;
+            break;
+        default:
+            $computation ="fs.qty_issued AS total_consumption" ;
+            break;
+    endswitch;
+    
+   	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT MONTHNAME( fs.date_issued ) as month, cms.commodity_name as Name,$computation 
+					FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
+					WHERE fs.facility_code = f.facility_code
+					AND f.facility_code = $facilities_filter
+					AND fs.qty_issued > 0
+					AND f.district = di.id
+					AND fs.status =  '1'
+					AND fs.commodity_id = $commodity_filter
+					AND YEAR( fs.date_issued ) =$year_filter
+					AND cms.id = fs.commodity_id
+					GROUP BY MONTH( fs.date_issued ) asc");		
+		return $inserttransaction ;
+	
+
+
+ }
+ public static function get_commodity_consumption_level($facilities_code)
+ {
+ 	$year = date("Y");
+		$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT MONTHNAME( fs.date_issued )as month, cms.commodity_name as commodity, fs.qty_issued AS total_consumption
+			FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
+			WHERE fs.facility_code = f.facility_code
+			AND fs.qty_issued > 0
+			AND f.district = di.id
+			AND fs.status =  '1'
+			AND fs.facility_code = $facilities_code
+			AND YEAR( fs.date_issued ) = $year
+			AND cms.id = fs.commodity_id
+			GROUP BY MONTH( fs.date_issued ) asc");		
+		return $inserttransaction ;
+	
+
+ }
+ /*
+ public static function get_county_cost_of_exipries_new($county_id,$year=null, $month=null,$district_id=null,$option=null,$facility_code=null)
+ {
+ 	if($month=="null")
+ 	{
+ 		$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("select temp.cal_month, sum(temp.total) as total from (
+		SELECT date_format( fs.expiry_date, '%b' ) as cal_month, 
+		ifnull(CEIL( (SUM(fs.current_balance/ cms.total_commodity_units ))*cms.unit_cost ),0) AS total 
+		FROM facility_stocks fs, facilities f, commodities cms, counties c, districts di 
+		WHERE fs.facility_code = f.facility_code 
+		AND `expiry_date` <= NOW( ) 
+		AND DATE_FORMAT( fs.expiry_date,'%Y') =$year  
+		AND f.district =di.id AND di.county=c.id 
+		AND c.id='$county_id' 
+		AND cms.id = fs.commodity_id 
+		GROUP BY month(expiry_date),di.id) 
+		temp group by temp.cal_month
+		");
+ 	
+ 	}
+ 	else
+ 	{
+ 		$and_data =(isset($district_id)&& ($district_id>0)) ?"AND di.id = '$district_id'" : null;
+	 	$and_data .=(isset($facility_code)&& ($facility_code>0)) ?"AND f.facility_code = '$facility_code'" : null;
+     	
+     	switch ($option) :
+			case 'ksh':
+				$computation ="ifnull(CEIL( (SUM(fs.current_balance/ cms.total_commodity_units ))*cms.unit_cost ),0) AS total";
+	        break;
+	        case 'units':
+	        	$computation ="ifnull(CEIL( SUM(fs.current_balance)),0) AS total" ;
+	        break;
+	        case 'packs':
+	        	$computation ="ifnull(CEIL( SUM(fs.current_balance/ cms.total_commodity_units ) ),0) AS total" ;
+	        break;
+	        default:
+	        	$computation ="ifnull(CEIL( (SUM(fs.current_balance/ cms.total_commodity_units ))*cms.unit_cost ),0)  AS total" ;
+	        break;
+	    endswitch;
+	 $string = "AND date_format( fs.expiry_date, '%m')=$month" ;
+	 $group_by =(($district_id =='all')) ?"GROUP BY month(expiry_date) asc" : null;
+	 $group_by .=(($district_id =='facility')) ?"GROUP BY fs.commodity_id having total>0 " : null;
+     $select_option =($district_id =='facility') ?"cms.drug_name," : null;
+     $select_option .=($district_id =='all')?  "date_format( fs.expiry_date, '%b' ) as cal_month,": null;
+	 $select_option_special = ($district_id=='facility' || $month!="null") ? $string: null;
+     
+     $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT $select_option $computation
+		FROM facility_stock fs, facilities f, commodities cms, counties c, districts di
+		WHERE fs.facility_code = f.facility_code
+		AND `expiry_date` <= NOW( )
+		AND DATE_FORMAT( fs.expiry_date,'%Y') =$year
+		$select_option_special
+		AND f.district =di.id
+		AND di.county=c.id
+		AND c.id='$county_id'
+		$and_data
+		AND cms.id = fs.commodity_id
+		 $group_by
+		");
+ 	}
+
+    return  $inserttransaction ;
+			
+	}*/
+	public static function get_expiries($facility_code, $year = NULL) 
+	{
+		$year = (isset($year)) ? $year: date("Y");
+	
+		if (!isset($district_id)||!isset($county_id))
+		{
+			$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+			->fetchAll("select fs.current_balance AS total_expiries, MONTHNAME(fs.expiry_date) as month from  facility_stocks fs 
+			LEFT JOIN  commodities c 
+			ON c.id=fs.commodity_id 
+			where facility_code=$facility_code 
+			and fs.status =2 
+			AND DATE_FORMAT( fs.expiry_date,'%Y') = $year
+			and expiry_date <= NOW()
+			GROUP BY  MONTH(  `expiry_date` ) ");
+			return $stocks ;
+		}
+		
+		else if(isset($district_id))
+		{
+			$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+			->fetchAll("select fs.current_balance AS total_expiries, fs.expiry_date as month from  districts d, 
+			facility_stocks fs 
+			LEFT JOIN  commodities c 
+			ON c.id=fs.commodity_id 
+			where facility_code=$facility_code 
+			and d.id = $district_id
+			and fs.status =2 
+			AND DATE_FORMAT( fs.expiry_date,'%Y') = $year
+			and expiry_date <= NOW()
+			GROUP BY MONTH(  `expiry_date` ) ");
+			return $stocks ;
+		}
+		else if (isset($county_id))
+		{
+			$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+			->fetchAll("select fs.current_balance AS total_expiries, fs.expiry_date as month from counties cs,  facility_stocks fs  
+			LEFT JOIN  commodities c 
+			ON c.id=fs.commodity_id 
+			where facility_code=$facility_code 
+			and cs.id = $county_id
+			and fs.status =2 
+			AND DATE_FORMAT( fs.expiry_date,'%Y') = $year
+			and expiry_date <= NOW()
+			GROUP BY MONTH(  `expiry_date` ) ");
+			return $stocks ;
+		}
+		
+		
+	
+	}
+	public static function get_filtered_expiries($facility_code, $year, $month, $option) 
+	{
+		switch ($option) :
+			case 'KSH':
+				$computation ="(CEIL(fs.current_balance)*c.unit_cost ) AS total_expiries";
+	        break;
+	        case 'Units':
+	        	$computation ="fs.current_balance AS total_expiries" ;
+	        break;
+	        case 'Packs':
+	        	$computation ="(CEIL(fs.current_balance/c.total_commodity_units)) AS total_expiries" ;
+	        break;
+	        default:
+	        	$computation ="fs.current_balance AS total_expiries";
+	        break;
+	    endswitch;
+		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+			->fetchAll("select $computation, c.commodity_name as commodity from  facility_stocks fs 
+			LEFT JOIN  commodities c 
+			ON c.id=fs.commodity_id 
+			where facility_code=$facility_code 
+			and fs.status =2 
+			and expiry_date <= NOW()
+			AND DATE_FORMAT( fs.expiry_date,'%Y') = $year  
+			AND DATE_FORMAT( fs.expiry_date,'%m') = $month  
+			GROUP BY commodity ");
+			return $stocks ;
+		
+	
+	}
 	
 	
 }

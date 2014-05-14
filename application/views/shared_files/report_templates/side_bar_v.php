@@ -1,3 +1,5 @@
+<?php ?>
+
 <div class="panel-group " id="accordion" style="padding: 0;">
                 
                 
@@ -91,6 +93,41 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour"><span class="glyphicon glyphicon-screenshot">
+                            </span>Facility Statistics</a>
+                        </h4>
+                    </div>
+                    <div id="collapseFour" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        <span class="glyphicon glyphicon-remove-sign"></span><a href="<?php echo base_url().'reports/load_expiries'?>" >Expiries</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="glyphicon glyphicon-usd"></span><a href="<?php echo base_url().'reports/load_cost_of_orders'?>" >Cost of Orders</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="glyphicon glyphicon-cutlery"></span><a href="<?php echo base_url().'reports/consumption'?>" >Consumption</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="glyphicon glyphicon-user"></span><a href="#">User Statistics</a>
+                                    </td>
+                                </tr>
+                                
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour"><span class="glyphicon glyphicon-file">
                             </span>Other Reports</a>
                         </h4>
@@ -124,3 +161,4 @@
 
 
             </div>
+<?php?>

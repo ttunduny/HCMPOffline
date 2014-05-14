@@ -26,27 +26,29 @@ class Districts extends Doctrine_Record {
 		$drugs = $query -> execute();
 		
 		return $drugs;
-		exit;
+		//exit;
 	}
-	public static function get_county_id($district){
+	public static function get_county_id($district)
+	{
 		$query = Doctrine_Query::create() -> select("county") -> from("districts")->where("id='$district'");
-		$drugs = $query -> execute();
-		$drugs=$drugs->toArray();
+		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		//$drugs = $drugs->toArray();
 		
-		return $drugs;
+		return $drugs[0];
 	}
 	
 	public static function get_district_name($district){
 	$query = Doctrine_Query::create() -> select("district") -> from("districts")->where("id='$district'");
-		$drugs = $query -> execute();
-		return $drugs;	
+		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $drugs[0];	
 	}
-public static function get_district_name_($district){
+	public static function get_district_name_($district){
 	$query = Doctrine_Query::create() -> select("district") -> from("districts")->where("id='$district'");
 		$drugs = $query -> execute();
 		$drugs=$drugs->toArray();
 		return $drugs[0];
 	}
+	
 
 
 	public static function get_district_expiries($date,$district){

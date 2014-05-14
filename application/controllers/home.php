@@ -13,6 +13,7 @@ class Home extends MY_Controller
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
 	}
 
+
 	public function index() {	
 		(!$this -> session -> userdata('user_id')) ? redirect('user'): null ;	
 
@@ -29,7 +30,8 @@ class Home extends MY_Controller
 			$data['facility_dashboard_notifications']=$this->get_facility_dashboard_notifications_graph_data();
 			break;
 			case 'district':
-			$view = 'shared_files/template/dashboard_template_v';
+			$data['content_view'] = "subcounty/subcounty_home_v";	
+			$view = 'shared_files/template/template';
 			break;
 			case 'moh_user':
 			$view = '';
@@ -41,10 +43,14 @@ class Home extends MY_Controller
 			$view = '';
 			break;
 			case 'super_admin':
-			$view = '';
+			$view = 'shared_files/template/dashboard_v';
+			$data['content_view'] = "shared_files/template/super_admin_template";
 			break;
 			case 'allocation_committee':
 			$view = '';
+			break;	
+			case 'county':
+			$view = 'shared_files/template/template';
 			break;	
         endswitch;
 
@@ -53,7 +59,8 @@ class Home extends MY_Controller
 		$this -> load -> view($view, $data);
 	}
 
-    public function get_facility_dashboard_notifications_graph_data(){
+    public function get_facility_dashboard_notifications_graph_data()
+    {
     //format the graph here
     $facility_code=$this -> session -> userdata('facility_id'); 
     $facility_stock_=facility_stocks::get_distinct_stocks_for_this_facility($facility_code);
@@ -65,9 +72,10 @@ class Home extends MY_Controller
 	$graph_data=array_merge($graph_data,array("graph_yaxis_title"=>'Total stock level  (values in packs)'));
 	$graph_data=array_merge($graph_data,array("graph_categories"=>array()));
 	$graph_data=array_merge($graph_data,array("series_data"=>array("Current Balance"=>array())));
+	
 	foreach($facility_stock_ as $facility_stock_):
-	$graph_data['graph_categories']=array_merge($graph_data['graph_categories'],array($facility_stock_['commodity_name']));	
-	$graph_data['series_data']['Current Balance']=array_merge($graph_data['series_data']['Current Balance'],array($facility_stock_['pack_balance']));	
+		$graph_data['graph_categories']=array_merge($graph_data['graph_categories'],array($facility_stock_['commodity_name']));	
+		$graph_data['series_data']['Current Balance']=array_merge($graph_data['series_data']['Current Balance'],array($facility_stock_['pack_balance']));	
 	endforeach;
 	//create the graph here
 	$faciliy_stock_data=$this->hcmp_functions->create_high_chart_graph($graph_data);

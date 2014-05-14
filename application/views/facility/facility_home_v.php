@@ -134,7 +134,7 @@
       </div>    
     </div>
 	</div>
-  <div class="col-md-8">
+   <div class="col-md-8">
     <div class="panel panel-success">
       <div class="panel-heading">
         <h3 class="panel-title">Graph <span class="glyphicon glyphicon-stats" style=""></span><span class="glyphicon glyphicon-align-left" style="margin-left: 1%"></span></h3>
@@ -143,12 +143,11 @@
         <div style="/*border: 1px solid #036;*/ ;" id="container"></div>
       </div>
     </div>
-  </div>  
-	</div>		
+  </div>  	
 	</div>	
 	
 </div>
-</div>
+
 <script>
 
 	

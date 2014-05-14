@@ -29,7 +29,8 @@ class facility_orders extends Doctrine_Record {
 				$this->hasColumn('status', 'int');	
 	}
 
-	public function setUp() {
+	public function setUp() 
+	{
 		$this -> setTableName('facility_orders');
 		$this->hasMany('facility_order_details as order_detail', array('local' => 'id', 'foreign' => 'order_number_id'));	
 		$this->hasMany('facilities as facility_detail', array('local' => 'facility_code', 'foreign' => 'facility_code'));
@@ -38,7 +39,7 @@ class facility_orders extends Doctrine_Record {
 		
 	}
     public static function get_facility_order_summary_count($facility_code=null,$district_id=null,$county_id=null){
-$where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+$where_clause = isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
 
  $orders = Doctrine_Manager::getInstance()->getCurrentConnection()
 ->fetchAll("SELECT  f_o_s.`status_desc` as status, count(f_o.`id`) as total from facilities f, districts d,facility_order_status f_o_s,
@@ -86,6 +87,7 @@ $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($
 		return $query_results;
 
 		}
+
  
  public static function get_facility_order_details($order_id){
  	    $query_results=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select f.facility_name, 
@@ -96,5 +98,24 @@ $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($
 		return $query_results;
  }
 
-		}
+
+ public static function get_filtered_cost_of_orders($facility_code, $month = null, $year = null)
+ {
+ 	if(isset($month) && isset($year))
+ 	{
+ 		$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT MONTHNAME( fo.order_date )as month, cms.commodity_name as commodity, CEIL((fo.order_total)*cms.unit_cost) as total_cost
+			FROM facility_orders fo, commodities cms, facilities f 
+			WHERE fo.facility_code = f.facility_code
+			AND fo.status =  '4'
+			AND fo.facility_code = $facility_code
+			AND YEAR( fo.order_date ) = $year
+			AND MONTH( fo.order_date ) = $month
+			GROUP BY commodity asc");	
+ 	}
+			
+		return $inserttransaction ;
+	
+ }
+}
 	
