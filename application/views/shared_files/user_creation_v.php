@@ -110,12 +110,13 @@ padding: 8px;
 						
 
 					</div>
-					<div class="col-md-10" style="border: 1px solid #ddd;padding-top: 1%; ">
+					<div class="col-md-10 dt" style="border: 1px solid #ddd;padding-top: 1%; ">
 
 						<table  class="table table-hover table-bordered table-update" id="datatable"  >
   <thead style="background-color: white">
   <tr>
-    <th>Name</th>
+    <th>First name</th>
+    <th>Last name</th>
     <th>Email </th>
     <th>Phone No</th>
     <th>Sub-County</th>
@@ -136,13 +137,13 @@ padding: 8px;
                
                 ?>    
             <tr >                          
-              <td id"name" data-element="4">
-                <?php echo $list['fname'].' '.$list['lname'];?> </td>
-              <td><?php echo $list['email']; ;?> </td>
-              <td><?php echo $list['telephone'];?> </td>
-              <td><?php echo $list['district'];?> </td>
-              <td><?php echo $list['facility_name'];?> </td>
-              <td><?php echo $list['level'];?> </td>
+              <td id="fname" ><?php echo $list['fname'];?> </td>
+              <td class="lname"><?php echo $list['lname']; ;?> </td>
+              <td class="email"><?php echo $list['email']; ;?> </td>
+              <td class="phone"><?php echo $list['telephone'];?> </td>
+              <td class="district"><?php echo $list['district'];?> </td>
+              <td class="facility_name"><?php echo $list['facility_name'];?> </td>
+              <td class="level"><?php echo $list['level'];?> </td>
               <td>
                  <?php 
 
@@ -166,7 +167,7 @@ padding: 8px;
 
 
                 </td>
-                <td><button class="btn btn-primary btn-xs edit " data-toggle="modal" id="<?php echo $list['user_id'];?>" data-target="#"><span class="glyphicon glyphicon-edit"></span>Edit</button></td>
+                <td><button class="btn btn-primary btn-xs edit " data-toggle="modal" data-target="#myModal" id="<?php echo $list['user_id'];?>" data-target="#"><span class="glyphicon glyphicon-edit"></span>Edit</button></td>
               
             </tr>
          <?php
@@ -374,6 +375,78 @@ endforeach;
     </div>
   </div>
 </div><!-- end Modal new user -->
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <div id="contents">
+        	
+        	
+        	
+        	<form role="form">
+      
+      <hr class="colorgraph">
+
+      <fieldset>
+        <legend style="font-size:1.5em">User details</legend>
+      <div class="row" >
+
+        <div class="col-md-6">
+          <div class="form-group">
+                        <input type="text" required="required" name="fname_edit" id="fname_edit" class="form-control " placeholder="First Name" >
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <input type="text" name="lname_edit" required="required" id="lname_edit" class="form-control " placeholder="Last Name" >
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class=" col-md-6">
+          <div class="form-group">
+            <input type="telephone" name="telephone_edit" required="required" id="telephone_edit" class="form-control " placeholder="telephone eg, 254" tabindex="5">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <input type="email" name="email_edit" id="email_edit" required="required" class="form-control " placeholder="email@domain.com" tabindex="6">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class=" col-md-6">
+          <div class="form-group">
+            <input type="email" name="username_edit" id="username_edit" required="required" class="form-control " placeholder="email@domain.com" tabindex="5" readonly>
+          </div>
+        </div>
+        <div class="col-md-6">
+          
+        </div>
+      </div>
+    </fieldset>
+    
+      <hr class="colorgraph">
+     
+    </form>
+        	
+        	
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div><!-- end Modal edit user -->
 <script>
       $(document).ready(function () {
 	$('.dataTables_filter label input').addClass('form-control');
@@ -420,9 +493,23 @@ var drop_down='';
     }
     }); 
 
-$(".edit").click(function() {
-var firstName = $(this).closest('tr').find('td.name').html();
-console.log(firstName) 
+$(".edit").on('click','#datatable tbody tr',function() {
+	
+var email = $(this).closest('tr').find('email').html();
+var phone = $(this).closest('tr').find('.phone').html();
+var district = $(this).closest('tr').find('.district').html();
+var fname = $(this).closest('tr').find('#fname').html();
+var lname = $(this).closest('tr').find('.lname').html();
+var level = $(this).closest('tr').find('.level').html();
+
+
+$('#email_edit').val(email)
+$('#telephone_edit').val(phone)
+$('#fname_edit').val(fname)
+$('#lname_edit').val(lname)
+
+
+
   });
 
 $('#email').keyup(function() {
@@ -432,8 +519,10 @@ $('#email').keyup(function() {
    $('#username').val(email)
 
     })
-
-$("#create_new").click(function() {
+    
+    
+                  
+ $("#create_new").click(function() {
 
       var first_name = $('#first_name').val()
       var last_name = $('#last_name').val()
@@ -444,8 +533,7 @@ $("#create_new").click(function() {
       var district_name = $('#district_name').val()
       var user_type = $('#user_type').val()
 
-          
-               
+       
       
       var div="#processing";
       var url = "<?php echo base_url()."user/addnew_user";?>";
