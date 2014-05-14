@@ -1620,7 +1620,7 @@ $category_data=array(array("From",'To',"Commodity Name","Commodity Code",
 	 	public function get_district_facility_mapping_($district_id) {
 		$facility_data = facilities::getFacilities($district_id);
 		$dpp_details = Users::get_dpp_details($district_id) -> toArray();
-		$district_name = districts::get_district_name_($district_id);
+		$district_name = districts::getDistrict(null,$district_id)-> toArray();;
 		
         $table_body = "";
 		$dpp_fname = '';
