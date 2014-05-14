@@ -75,7 +75,7 @@ padding: 8px;
 								<div class="panel-body">
 									<div class="stat_item color_d">
 										<i class="ion-chatbubble-working"></i>
-										<span><?php echo($x[1]);?>Active</span>
+										<span><?php echo($x[1])-1;?> Active</span>
 									</div>
 								</div>
 							</div>
@@ -110,7 +110,7 @@ padding: 8px;
 						
 
 					</div>
-					<div class="col-md-10 dt" style="border: 1px solid #ddd;padding-top: 1%; ">
+					<div class="col-md-10 dt" style="border: 1px solid #ddd;padding-top: 1%; " id="test">
 
 						<table  class="table table-hover table-bordered table-update" id="datatable"  >
   <thead style="background-color: white">
@@ -136,14 +136,14 @@ padding: 8px;
         foreach ($listing as $list ) { 
                
                 ?>    
-            <tr >                          
-              <td id="fname" ><?php echo $list['fname'];?> </td>
+            <tr class="edit_tr" >                          
+              <td class="fname" ><?php echo $list['fname'];?> </td>
               <td class="lname"><?php echo $list['lname']; ;?> </td>
               <td class="email"><?php echo $list['email']; ;?> </td>
               <td class="phone"><?php echo $list['telephone'];?> </td>
-              <td class="district"><?php echo $list['district'];?> </td>
-              <td class="facility_name"><?php echo $list['facility_name'];?> </td>
-              <td class="level"><?php echo $list['level'];?> </td>
+              <td class="district" data-attr="<?php echo $list['district_id'];?>"><?php echo $list['district'];?> </td>
+              <td class="facility_name" data-attr="<?php echo $list['facility_code'];?>"><?php echo $list['facility_name'];?> </td>
+              <td class="level" data-attr="<?php echo $list['level_id'];?>"><?php echo $list['level'];?> </td>
               <td>
                  <?php 
 
@@ -398,11 +398,13 @@ endforeach;
       <div class="row" >
 
         <div class="col-md-6">
+        	<label> First Name </label> 
           <div class="form-group">
                         <input type="text" required="required" name="fname_edit" id="fname_edit" class="form-control " placeholder="First Name" >
           </div>
         </div>
         <div class="col-md-6">
+        	<label> Last Name </label> 
           <div class="form-group">
             <input type="text" name="lname_edit" required="required" id="lname_edit" class="form-control " placeholder="Last Name" >
           </div>
@@ -411,11 +413,13 @@ endforeach;
       
       <div class="row">
         <div class=" col-md-6">
+        	<label> Phone No </label> 
           <div class="form-group">
             <input type="telephone" name="telephone_edit" required="required" id="telephone_edit" class="form-control " placeholder="telephone eg, 254" tabindex="5">
           </div>
         </div>
         <div class="col-md-6">
+        	<label> Email </label> 
           <div class="form-group">
             <input type="email" name="email_edit" id="email_edit" required="required" class="form-control " placeholder="email@domain.com" tabindex="6">
           </div>
@@ -423,6 +427,7 @@ endforeach;
       </div>
       <div class="row">
         <div class=" col-md-6">
+        	<label> User Name </label> 
           <div class="form-group">
             <input type="email" name="username_edit" id="username_edit" required="required" class="form-control " placeholder="email@domain.com" tabindex="5" readonly>
           </div>
@@ -493,24 +498,32 @@ var drop_down='';
     }
     }); 
 
-$(".edit").on('click','#datatable tbody tr',function() {
+$("#datatable").on('click','.edit',function() {
 	
-var email = $(this).closest('tr').find('email').html();
+var email = $(this).closest('tr').find('.email').html();
 var phone = $(this).closest('tr').find('.phone').html();
 var district = $(this).closest('tr').find('.district').html();
-var fname = $(this).closest('tr').find('#fname').html();
+var fname = $(this).closest('tr').find('.fname').html();
 var lname = $(this).closest('tr').find('.lname').html();
 var level = $(this).closest('tr').find('.level').html();
 
-
+alert($(".level").attr("data-attr")); 
 $('#email_edit').val(email)
 $('#telephone_edit').val(phone)
 $('#fname_edit').val(fname)
 $('#lname_edit').val(lname)
 
-
+$('#username_edit').val(email)
 
   });
+  
+  $('#email_edit').keyup(function() {
+
+  var email = $('#email_edit').val()
+
+   $('#username_edit').val(email)
+
+    })
 
 $('#email').keyup(function() {
 

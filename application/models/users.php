@@ -94,8 +94,8 @@ class Users extends Doctrine_Record {
 	public static function get_user_list_district($district) {
 
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
-			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id,d.district,c.id as county_id,c.county,f.facility_code,
-				f.facility_name,f.owner,f.type,f.level,a.level,u.status FROM hcmp.user u 
+			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id as district_id,d.district,c.id as county_id,c.county,f.facility_code,
+				f.facility_name,f.owner,f.type,a.id as level_id,f.level,a.level,u.status FROM hcmp.user u 
 				LEFT JOIN hcmp.districts d
 				ON
 				d.id=u.district
@@ -115,8 +115,8 @@ class Users extends Doctrine_Record {
 	public static function get_user_list_county($county) {
 
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
-			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id,d.district,c.id as county_id,c.county,f.facility_code,
-				f.facility_name,f.owner,f.type,f.level,a.level,u.status FROM hcmp.user u 
+			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id as district_id,d.district,c.id as county_id,c.county,f.facility_code,
+				f.facility_name,f.owner,f.type,a.id as level_id,f.level,a.level,u.status FROM hcmp.user u 
 				LEFT JOIN hcmp.districts d
 				ON
 				d.id=u.district
