@@ -317,6 +317,9 @@ if ($list['status']==1) {
 										<div class="form-group">
 											<select class="form-control " id="facility_id" required="required">
 												<option value="">Select Facility</option>
+												<option value=""></option>
+												
+												
 
 											</select>
 										</div>
@@ -508,8 +511,7 @@ if ($list['status']==1) {
 									<div class="col-md-6">
 										<div class="form-group">
 											<select class="form-control " id="facility_id_edit" required="required">
-												<option value="">Select Facility</option>
-
+												
 											</select>
 										</div>
 									</div>
@@ -520,7 +522,7 @@ if ($list['status']==1) {
 											<select class="form-control " id="user_type_edit" name="user_type_edit" required="required">
 												<option value=''>Select User type</option>
 												<?php
-												foreach ($user_types as $user_types) :
+												foreach ($user_type as $user_types) :
 													$id = $user_types -> id;
 													$type_name = $user_types -> level;
 													echo "<option value='$id'>$type_name</option>";
@@ -634,7 +636,7 @@ var drop_down='';
     }); 
     
     
-$("#datatable").on('click','.edit',function() {
+$("#test").on('click','.edit',function() {
 	
 var email = $(this).closest('tr').find('.email').html();
 var phone = $(this).closest('tr').find('.phone').html();
@@ -642,16 +644,32 @@ var district = $(this).closest('tr').find('.district').html();
 var fname = $(this).closest('tr').find('.fname').html();
 var lname = $(this).closest('tr').find('.lname').html();
 
- 
+var drop_down='';
+var facility_id=$(this).closest('tr').find('.facility_name').attr('data-attr');
+ var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+$(this).closest('tr').find('.district').attr('data-attr');
+  $.getJSON( hcmp_facility_api ,function( json ) {
+     $("#facility_id_edit").html('<option value="NULL" selected="selected">Select Facility</option>');
+      $.each(json, function( key, val ) {
+      	
+        drop_down +="<option value='"+json[key]["facility_code"]+"'>"+json[key]["facility_name"]+"</option>"; 
+      });
+      $("#facility_id_edit").append(drop_down);
+      
+      $('#facility_id_edit').val(facility_id)
+    });
+   
 $('#email_edit').val(email)
 $('#telephone_edit').val(phone)
 $('#fname_edit').val(fname)
 $('#lname_edit').val(lname)
 $('#username_edit').val(email)
 
-$('#facility_id_edit').val($(".facility_name").attr("data-attr"))
-$('#user_type_edit').val($(".level").attr("data-attr"))
-$('#district_name_edit').val($(".district").attr("data-attr"))
+
+
+
+
+$('#user_type_edit').val($(this).closest('tr').find('.level').attr('data-attr'))
+$('#district_name_edit').val($(this).closest('tr').find('.district').attr('data-attr'))
 
 
 

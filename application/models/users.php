@@ -108,7 +108,10 @@ class Users extends Doctrine_Record {
 				RIGHT JOIN hcmp.access_level a
 				ON
 				a.id=u.usertype_id
-				where u.district=$district");
+				where u.district=$district
+				and a.id != 3
+				")
+				;
 		return $query;
 	}
 
@@ -130,6 +133,7 @@ class Users extends Doctrine_Record {
 				ON
 				a.id=u.usertype_id
 				where u.county_id=$county
+				and a.id != 10
 				");
 		return $query;
 	}
@@ -141,14 +145,14 @@ public static function get_dpp_details($distirct){
 }
 
 	public static function get_users_district($district) {
-		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users") -> where("district='$district'")
+		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users") -> where("district='$district'") ->andWhere("usertype_id !=3")
 		->groupBy("status");
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
 	}
 	public static function get_users_county($county) {
 
-		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users") -> where("county_id='$county'")
+		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users") -> where("county_id='$county'") ->andWhere("usertype_id !=10")
 		->groupBy("status");
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
