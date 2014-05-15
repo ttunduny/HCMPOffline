@@ -83,12 +83,14 @@ order by d.district asc,f.`date_of_activation` asc
 return $q;	
 	
 }
-public static function get_facilities_all_per_district($county_id){
+public static function get_facilities_all_per_district($county_id,$option=null){
+	$new=isset($option)  ? "and f.facility_code not in (select f.facility_code from facilities f, districts d 
+where f.district=d.id and d.id=$county_id and using_hcmp=1)" : null;
 	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select d.id, d.district,f.facility_name,f.facility_code
 from facilities f, districts d 
-where f.district=d.id and d.county='$county_id'
-order by d.district asc
+where f.district=d.id and d.id='$county_id'  $new
+order by f.facility_name asc
  ");
 return $q;	
 	

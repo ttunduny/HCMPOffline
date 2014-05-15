@@ -31,7 +31,7 @@ class Commodities extends Doctrine_Record {
 		return $commodities;
 	}
 	public static function get_all_2() {
-		$query=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select * from commodities order by commodity_name asc");	
+		$query=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select * from commodities where status=1 order by commodity_name asc");	
 		return $query;
 	}
 	public static function get_details($commodity_id) {

@@ -77,13 +77,15 @@ for ($row = 1; $row <= $highestRow; $row++){
 		$this -> load -> view('shared_files/template/template', $data);
 	}
 	public function facility_order_($facility_code) {
+		// hack to ensure that when you are ordering for a facility that is not using hcmp they have all the items
+		$checker= $this -> session -> userdata('facility_id') ? null : 1; 
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
 		$data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";
 		$data['title'] = "Facility New Order";
 		$data['facility_code'] = $facility_code;
 		$data['banner_text'] = "Facility New Order";
 		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];
-		$data['order_details'] = $data['facility_order'] = Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
+		$data['order_details'] = $data['facility_order'] = Facility_Transaction_Table::get_commodities_for_ordering($facility_code,$checker);
 		$data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
 		$this -> load -> view('shared_files/template/template', $data);
 	}

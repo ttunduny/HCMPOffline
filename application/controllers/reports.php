@@ -82,10 +82,10 @@ class Reports extends MY_Controller
 		$data['commodity_list'] = commodity_sub_category::get_all();
 		$this -> load -> view('shared_files/template/template', $data);
 	}
+   public function force_file_download(){
+   	$this -> hcmp_functions -> download_file($this->input->get('url'));
+   }
 
-
-
-	
 	public function get_facilities() {
 		$district = $_POST['district'];
 		$facilities = Facilities::getFacilities($district);
@@ -368,7 +368,7 @@ class Reports extends MY_Controller
 		$data['pending'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending");
 		$data['approved'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "approved");
 		$data['rejected'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "rejected");
-		$data['facilities']=($for=='subcounty') ? Facilities::get_facilities_all_per_district($this -> session -> userdata('county_id')) : array();
+		$data['facilities']=($for=='subcounty') ? Facilities::get_facilities_all_per_district($this -> session -> userdata('district_id'),'set') : array();
 		if($report=='true'):
 		$data['title'] = "$desc Listing";
 		$data['banner_text'] = "$desc Listing";
@@ -1627,17 +1627,16 @@ $category_data=array(array("From",'To',"Commodity Name","Commodity Code",
 			$no_of_facility_users = $no_of_facility_users + $facility_extra_data[0]['number_of_users'];
 			$no_of_facility_users_online = $no_of_facility_users_online + $facility_extra_data[0]['number_of_users_online'];
 			$no_of_facilities = $no_of_facilities + 1;
-			if ($facility_extra_data[0]['number_of_users'] > 0) {
-				$no_of_facilities_using = $no_of_facilities_using + 1;
-			}
+	
 			$using=$facility_detail->using_hcmp;
             $status_radio=$facility_detail->targetted==1 ? 'checked="true"'  : null; 
+			($using== 1) ? $no_of_facilities_using = $no_of_facilities_using + 1 : 
 			$status = null;
 			$temp = $facility_extra_data[0]['status'];
 			$status_using=$using== 1? 'checked="true"'  : null;  
 			$a_date = strtotime($facility_detail->date_of_activation) ? date('d M, Y', strtotime($facility_detail->date_of_activation)) : "N/A";
 			($using== 1) ? $status = "<span class='label label-success'>Active</span>" : $status = "<span class='label label-warning'>Inactive</span>";
-            ($using==1) ? $no_of_facilities_using_targetted=$no_of_facilities_using_targetted+1 : null;
+            ($facility_detail->targetted==1) ? $no_of_facilities_using_targetted=$no_of_facilities_using_targetted+1 : null;
 	   	array_push($series_data, array($district_name[0]['district'],
 	    $facility_detail->facility_name,
 		$facility_code,$facility_detail->owner,$status,
@@ -1676,17 +1675,12 @@ $category_data=array(array("From",'To',"Commodity Name","Commodity Code",
 		<td><label style="font-weight: ">Total No of Facilities Using HCMP </label></td>
 		<td>	<a class="badge">' . $no_of_facilities_using . '</a></td>
 		</tr>
-		</table>
-		<table style="float:left">
 		<tr>
 		<td><label style="font-weight: ">Total No of Users</label></td>
 		<td><a class="badge" >' . $no_of_facility_users . '</a></td>
 		</tr>
-		<tr>
-		<td><label style="font-weight: ">Users online</label></td>
-		<td><a class="badge" >' . $no_of_facility_users_online . '</a></td>
-		</tr>
-		</table></br><p>';
+		</table>
+        </br><p>';
 
         $category_data=array(array("Sub County",'Facility Name',"MLF No","Owner", "Facility Status","Targetted For Roll Out","Using HCMP","Date Activated", "No. Facility Users"));
         $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_1'));
