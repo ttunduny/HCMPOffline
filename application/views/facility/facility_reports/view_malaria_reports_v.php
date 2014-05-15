@@ -2,7 +2,7 @@
  <table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
 		<tr>
-		<th>Submitted By:</th>
+		<th>Prepared By:</th>
 		<th>Date of Submission</th>
 		<th>Action</th>
 		
@@ -20,7 +20,7 @@
 						?>
 						<tr>
 				
-							<td><?php echo $name['fname']." ".$name['lname'];?> </td>
+							<td><?php echo $name[0]['fname']." ".$name[0]['lname'];?> </td>
 							<td><?php echo $d['Report_Date'];?></td>
 							<td><a href="<?php echo base_url().'Divisional_Reports/edit_report/'.$d['Report_Date'];?>">
 								<button class="btn btn-primary" >
