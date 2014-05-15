@@ -8,7 +8,7 @@ class Hcmp_functions extends MY_Controller {
 	
 		function __construct() {
 		parent::__construct();
-		$this -> load -> helper(array('url','file'));
+		$this -> load -> helper(array('url','file','download'));
 		$this -> load -> library(array('phpexcel/phpexcel','mpdf/mpdf'));
 	}
 
@@ -385,6 +385,13 @@ for ($row = 1; $row <= $highestRow; $row++){
    endif;
 
  }
+/*************/	
+/* HCMP file downloader 
+/********/	
+public function download_file($path){
+$data = file_get_contents($path); // Read the file's contents
+force_download(basename($path), $data);
+}
 /*************/	
 /* HCMP PDF creator
 /********/	

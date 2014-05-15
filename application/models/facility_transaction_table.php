@@ -49,8 +49,30 @@ class facility_transaction_table extends Doctrine_Record {
 	$commodities = $commodities -> count();
 	return $commodities;		}
 
-    public static function get_commodities_for_ordering($facility_code){
-    	//echo ; exit;
+    public static function get_commodities_for_ordering($facility_code,$for_a_facility=null){
+    	if(isset($for_a_facility)): // hack to ensure that when you are ordering for a facility that is not using hcmp they have all the items
+    $items=Commodities::get_all_from_supllier(1);
+	$temp=array();
+	foreach ($items as $data){
+	array_push($temp,array('sub_category_name'=>$data['sub_category_name'],'commodity_name'=>$data['commodity_name']
+	,'unit_size'=>$data['unit_size'],'unit_cost'=>$data['unit_cost'],'commodity_code'=>$data['commodity_code'],'commodity_id'=>$data['commodity_id'],
+	'total_commodity_units'=>$data['total_commodity_units'],'opening_balance'=>0,
+	'total_receipts'=>0,
+	'total_issues'=>0,
+	'quantity_ordered'=>0,
+	'comment'=>'',
+	'closing_stock_'=>0,
+	'closing_stock'=>0,
+	'days_out_of_stock'=>0,
+	'date_added'=>'',
+	'losses'=>0,
+	'status'=>0,
+	'adjustmentpve'=>0,
+	'adjustmentnve'=>0,
+	'historical'=>0));
+	}
+	return $temp;
+endif;
 	 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 ->fetchAll("select `c`.`facility_code` AS `facility_code`,
 `a`.`sub_category_name` AS `sub_category_name`,

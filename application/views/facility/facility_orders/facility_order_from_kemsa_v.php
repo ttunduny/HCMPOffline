@@ -3,7 +3,7 @@
  		width: 55px !important;
  	}
  </style>
- <div class="container" style="width: 96%; margin: auto;">
+ <div style="width: 100%; margin: auto;">
 <span  class='label label-info'>Enter Order Quantity and Comment,
 Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
 <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order',$att); //?>
