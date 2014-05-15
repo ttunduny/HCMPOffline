@@ -846,7 +846,8 @@ class Reports extends MY_Controller
 			break;
 		}
  		
- 		$data['content_view'] = "facility/facility_reports/reports_v";
+ 		
+		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
 		$this -> load -> view('shared_files/template/template', $data);
 		
@@ -964,35 +965,35 @@ class Reports extends MY_Controller
 			
 		}
 	$html_body .= '</tbody></table></ol>';
-	}elseif($report_type == "RH"){
+	
+	}elseif($report_type == "RH")
+	{
+		$from_RH_data_table = RH_Drugs_Data::get_facility_report($report_id, $facility_code);
+		$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_id, $facility_code));
+		
+		foreach ($from_RH_data_table as $report_details) 
+		{
+			$mfl = $report_details['facility_id'];
+			$report_date = $report_details['Report_Date'];
+					
+			$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($mfl);
+			$sub_county_id = $myobj -> district;
+			$facility_name = $myobj -> facility_name;
 			
-			$from_RH_data_table = RH_Drugs_Data::get_facility_report($report_id, $facility_code);
-			$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_id, $facility_code));
-			foreach ($from_RH_data_table as $report_details) 
-			{
-				//print_r($report_details);
-				//exit;
-				$mfl = $report_details['facility_id'];
-				$report_date = $report_details['Report_Date'];
-						
-				$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($mfl);
-				$sub_county_id = $myobj -> district;
-				$facility_name = $myobj -> facility_name;
-				
-				$myobj1 = Doctrine::getTable('Districts') -> find($sub_county_id);
-				$sub_county_name = $myobj1 -> district;
-				$county = $myobj1 -> county;
+			$myobj1 = Doctrine::getTable('Districts') -> find($sub_county_id);
+			$sub_county_name = $myobj1 -> district;
+			$county = $myobj1 -> county;
+
+			$myobj2 = Doctrine::getTable('Counties') -> find($county);
+			$county_name = $myobj2 -> county;
+
+			$myobj_order = Doctrine::getTable('users') -> find($report_details['user_id']);
+			$creator_email = $myobj_order -> email;
+			$creator_name1 = $myobj_order -> fname;
+			$creator_name2 = $myobj_order -> lname;
+			$creator_telephone = $myobj_order -> telephone;
 	
-				$myobj2 = Doctrine::getTable('Counties') -> find($county);
-				$county_name = $myobj2 -> county;
-	
-				$myobj_order = Doctrine::getTable('users') -> find($report_details['user_id']);
-				$creator_email = $myobj_order -> email;
-				$creator_name1 = $myobj_order -> fname;
-				$creator_name2 = $myobj_order -> lname;
-				$creator_telephone = $myobj_order -> telephone;
-	
-			}
+		}
 	
 		//create the table for displaying the order details
 		$html_body = "<table class='data-table' width=100%>
@@ -1045,31 +1046,8 @@ class Reports extends MY_Controller
 		
 	}
 
-			$html_body1 = '<table class="data-table" width="100%" style="background-color: 	#FFF380;">
-				  <tr style="background-color: 	#FFFFFF;" > 
-				  <td colspan="4" >
-				  <div style="width:100%">
-				  
-				 </div></td></tr>
-				  <tr style="background-color: 	#FFFFFF;"  > 
-				  <td colspan="4" ><div>
-				   </td></tr>
-				  <tr><td>FACILITY TEL NO:</td><td colspan="3">FACILITY EMAIL:</td>
-				  </tr>
-				  <tr><td >Prepared by (Name/Designation) ' . $creator_name1 . ' ' . $creator_name2 . '
-				  <br/>
-				  <br/>Email: ' . $creator_email . '</td><td>Tel: ' . $creator_telephone . '</td><td>Date: ' . date('d M, Y', strtotime($o_date)) . '</td><td>Signature</td>
-				  </tr>
-				  <tr><td>Checked by (Name/DPF/DPHN)  ' . $approver_name1 . ' ' . $approver_name2 . '
-				  <br/>
-				  <br/>Email: ' . $approver_email . '</td><td>Tel: ' . $approver_telephone . '</td><td>Signature</td>
-				  </tr>
-				  <tr><td>Authorised by (Name/DMoH) 
-				  <br/>
-				  <br/>Email:</td><td>Tel: </td><td>Date:</td><td>Signature</td>		   
-				  </tr>
-				  </table>';
-		return $html_body . $html_body1;
+			
+		return $html_body;
 	}
 	public function create_excel_facility_program_report($report_id,$facility_code, $report_type) 
 	{
