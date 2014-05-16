@@ -35,7 +35,7 @@
 		padding: 8px;
 	}
 	#addModal .modal-dialog {
-		width: 50%;
+		width: 54%;
 	}
 </style>
 
@@ -67,7 +67,7 @@
 							<div class="panel-body">
 								<div class="stat_item color_d">
 									<i class="ion-chatbubble-working"></i>
-									<span><?php echo($x[1])-1;?>
+									<span><?php echo($x[1]);?>
 										Active</span>
 								</div>
 							</div>
@@ -265,9 +265,9 @@ if ($list['status']==1) {
 												<option value=''>Select Facility</option>
 
 												<?php
-												foreach ($facilities as $facilities) :
-													$id = $facilities -> facility_code;
-													$facility_name = $facilities -> facility_name;
+												foreach ($facilities as $facility) :
+													$id = $facility -> facility_code;
+													$facility_name = $facility -> facility_name;
 													echo "<option value='$id'>$facility_name</option>";
 												endforeach;
 												?>
@@ -361,8 +361,6 @@ if ($list['status']==1) {
 
 							</fieldset>
 
-							<hr class="colorgraph">
-
 						</form>
 					</div>
 				</div>
@@ -382,23 +380,20 @@ if ($list['status']==1) {
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<div class="modal-header">
+			<div class="modal-header" style="padding-bottom:0">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 					&times;
 				</button>
-				<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				<h4 class="modal-title" id="myModalLabel" style="text-align: center;">Modal title</h4>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body" style="padding-top:0">
 				<div id="contents">
 
 					<form role="form">
 
-						<hr class="colorgraph">
-
-						<fieldset>
-							<legend style="font-size:1.5em">
-								User details
-							</legend>
+						<h4>User details</h4>
+						
+							
 							<div class="row" >
 
 								<div class="col-md-6">
@@ -440,11 +435,8 @@ if ($list['status']==1) {
 
 								</div>
 							</div>
-						</fieldset>
-						<fieldset>
-								<legend style="font-size:1.5em">
-									Other details
-								</legend>
+						
+						<h4>Other details</h4>
 								<div class="row" >
 									<?php
 
@@ -454,9 +446,10 @@ if ($list['status']==1) {
 									?>
 
 									<div class="col-md-6">
+										
 										<div class="form-group">
 
-											<select class="form-control " id="facility_id_edit" required="required">
+											<select class="form-control " id="facility_id_edit_district" required="required">
 												<option value=''>Select Facility</option>
 
 												<?php
@@ -472,16 +465,11 @@ if ($list['status']==1) {
 									</div>
 									<div class="row" style="margin:auto">
 										<div class=" col-md-6">
+											
 											<div class="form-group">
-												<select class="form-control " id="user_type_edit" name="user_type_edit" required="required">
-													<option value=''>Select User type</option>
-													<?php
-													foreach ($user_types as $user_type) :
-														$type_id = $user_type -> id;
-														$t_name = $user_type -> level;
-														echo "<option value='$type_id'>$t_name</option>";
-													endforeach;
-													?>
+												<select class="form-control " id="user_type_edit_district" name="user_type_edit_district" required="required">
+													
+													
 												</select>
 											</div>
 										</div>
@@ -491,9 +479,11 @@ if ($list['status']==1) {
 									</div>
 
 									<?php }elseif ($identifier=='county') { ?>
+										
 									<div class="col-md-6">
+										
 										<div class="form-group">
-
+							
 											<select class="form-control " id="district_name_edit" required="required">
 												<option value=''>Select Sub-County</option>
 
@@ -550,10 +540,7 @@ if ($list['status']==1) {
 
 								</div>
 
-							</fieldset>
-						<hr class="colorgraph">
-
-					</form>
+							</form>
 
 				</div>
 			</div>
@@ -664,14 +651,30 @@ $('#fname_edit').val(fname)
 $('#lname_edit').val(lname)
 $('#username_edit').val(email)
 
-
-
-
-
 $('#user_type_edit').val($(this).closest('tr').find('.level').attr('data-attr'))
 $('#district_name_edit').val($(this).closest('tr').find('.district').attr('data-attr'))
 
 
+var drop_down_user='';
+var type_id=$(this).closest('tr').find('.level').attr('data-attr');
+ var get_type_json = "<?php echo base_url(); ?>user/get_user_type_json/";
+ 
+  $.getJSON( get_type_json ,function( json ) {
+     $("#user_type_edit_district").html('<option value="NULL" >Select User Type</option>');
+      $.each(json, function( key, val ) {
+      	
+      	drop_down_user +="<option value='"+json[key]["id"]+"'>"+json[key]["level"]+"</option>";
+      	 
+      });
+      
+      $("#user_type_edit_district").append(drop_down_user);
+      
+      $('#user_type_edit_district').val(type_id)
+    });
+    
+    
+
+$('#facility_id_edit_district').val(facility_id)
 
   });
   

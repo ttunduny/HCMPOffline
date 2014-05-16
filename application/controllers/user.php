@@ -354,12 +354,21 @@ class User extends MY_Controller {
         endswitch;
 
         $data['title'] = "User Management";
-        $data['user_types']=Access_level::get_access_levels($permissions);	
-		$data['user_type']=Access_level::get_access_levels($permissions);	
+        $data['user_type']=Access_level::get_access_levels($permissions);	
+		$data['user_types']=Access_level::get_access_levels($permissions);	
 		$data['banner_text'] = "User Management";
 		$data['content_view'] = "shared_files/user_creation_v";
 		$this -> load -> view($template, $data);
 	}
+
+		public function get_user_type_json()	{
+			
+			$permissions='district_permissions';			
+			echo json_encode(Access_level::get_access_levels($permissions));
+			
+			
+	
+		}
 
 	public function addnew_user(){
 
