@@ -37,6 +37,7 @@
 	#addModal .modal-dialog {
 		width: 54%;
 	}
+	
 </style>
 
 <div class="container-fluid">
@@ -100,7 +101,7 @@
 			<div class="row">
 
 				<div class="col-md-2" style="padding-left: 0;">
-					<button class="btn btn-primary add" data-toggle="modal" data-target="#addModal">
+					<button class="btn btn-primary add" data-toggle="modal" data-target="#addModal" id="add_new">
 						<span class="glyphicon glyphicon-plus"></span>Add User
 					</button>
 
@@ -137,7 +138,7 @@
 									;
 								?>
 								</td>
-								<td class="email"><?php echo $list['email'];
+								<td class="email" data-attr="<?php echo $list['user_id']; ?>"><?php echo $list['email'];
 									;
 								?>
 								</td>
@@ -184,11 +185,12 @@ if ($list['status']==1) {
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="myform">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<div class="modal-header">
+			
+			<div class="modal-header" style="padding-bottom:2px;background: #27ae60;color: white">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 					&times;
 				</button>
-				<h5>Add <small>New user</small></h5>
+				<h4 class="modal-title" id="myModalLabel" style="text-align: center;line-height: 1">Edit User</h4>
 			</div>
 			<div class="row" style="margin:auto" id="error_msg">
 				<div class=" col-md-12">
@@ -202,8 +204,6 @@ if ($list['status']==1) {
 				<div class="row" style="margin:auto">
 					<div class="col-md-12 ">
 						<form role="form">
-
-							<hr class="colorgraph">
 
 							<fieldset>
 								<legend style="font-size:1.5em">
@@ -329,14 +329,7 @@ if ($list['status']==1) {
 									<div class=" col-md-6">
 										<div class="form-group">
 											<select class="form-control " id="user_type" name="user_type" required="required">
-												<option value=''>Select User type</option>
-												<?php
-												foreach ($user_types as $user_types) :
-													$id = $user_types -> id;
-													$type_name = $user_types -> level;
-													echo "<option value='$id'>$type_name</option>";
-												endforeach;
-												?>
+												
 											</select>
 										</div>
 									</div>
@@ -380,11 +373,11 @@ if ($list['status']==1) {
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<div class="modal-header" style="padding-bottom:0">
+			<div class="modal-header" style="padding-bottom:2px;background: #27ae60;color: white">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 					&times;
 				</button>
-				<h4 class="modal-title" id="myModalLabel" style="text-align: center;">Modal title</h4>
+				<h4 class="modal-title" id="myModalLabel" style="text-align: center;line-height: 1">Edit User</h4>
 			</div>
 			<div class="modal-body" style="padding-top:0">
 				<div id="contents">
@@ -509,15 +502,8 @@ if ($list['status']==1) {
 								<div class="row" >
 									<div class=" col-md-6">
 										<div class="form-group">
-											<select class="form-control " id="user_type_edit" name="user_type_edit" required="required">
-												<option value=''>Select User type</option>
-												<?php
-												foreach ($user_type as $user_types) :
-													$id = $user_types -> id;
-													$type_name = $user_types -> level;
-													echo "<option value='$id'>$type_name</option>";
-												endforeach;
-												?>
+											<select class="form-control " id="user_type_edit_district" name="user_type_edit_district" required="required">
+												
 											</select>
 										</div>
 									</div>
@@ -685,6 +671,28 @@ $('#facility_id_edit_district').val(facility_id)
    $('#username_edit').val(email)
 
     })
+    
+    
+   $("#add_new").on('click',function() {
+
+  var drop_down_user='';
+var type_id=$(this).closest('tr').find('.level').attr('data-attr');
+ var get_type_json = "<?php echo base_url(); ?>user/get_user_type_json/";
+ 
+  $.getJSON( get_type_json ,function( json ) {
+     $("#user_type").html('<option value="NULL" selected>Select User Type</option>');
+      $.each(json, function( key, val ) {
+      	
+      	drop_down_user +="<option value='"+json[key]["id"]+"'>"+json[key]["level"]+"</option>";
+      	 
+      });
+      
+      $("#user_type").append(drop_down_user);
+      
+      
+
+    })
+    });
 
 $('#email').keyup(function() {
 

@@ -354,7 +354,6 @@ class User extends MY_Controller {
         endswitch;
 
         $data['title'] = "User Management";
-        $data['user_type']=Access_level::get_access_levels($permissions);	
 		$data['user_types']=Access_level::get_access_levels($permissions);	
 		$data['banner_text'] = "User Management";
 		$data['content_view'] = "shared_files/user_creation_v";
@@ -363,7 +362,14 @@ class User extends MY_Controller {
 
 		public function get_user_type_json()	{
 			
-			$permissions='district_permissions';			
+			$identifier = $this -> session -> userdata('user_indicator');	
+			if ($identifier=="county") {
+				$permissions='county_permissions';	
+			} else {
+				$permissions='district_permissions';	
+			}
+					
+					
 			echo json_encode(Access_level::get_access_levels($permissions));
 			
 			
