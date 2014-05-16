@@ -385,6 +385,56 @@ for ($row = 1; $row <= $highestRow; $row++){
    endif;
 
  }
+/*********KEMSA UPLOADER**********/
+ public function kemsa_excel_order_uploader($inputFileName){
+   // $inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx';
+
+	if(isset($inputFileName)):
+	$item_details = Commodities::get_all_from_supllier(1);
+
+	$excel2 = PHPExcel_IOFactory::createReader('Excel2007');
+    $excel2=$objPHPExcel= $excel2->load($inputFileName); // Empty Sheet
+    
+    $sheet = $objPHPExcel->getSheet(0); 
+    $highestRow = $sheet->getHighestRow(); 
+	
+    $highestColumn = $sheet->getHighestColumn();
+	$temp=array();
+
+   //  Loop through each row of the worksheet in turn
+for ($row = 1; $row <= $highestRow; $row++){ 
+    //  Read a row of data into an array
+    $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);							  
+   if(isset($rowData[0][2]) && $rowData[0][2]!='Product Code'){
+   	foreach($item_details as $key=> $data){
+   	if(in_array($rowData[0][2], $data)){
+array_push($temp,array('sub_category_name'=>$data['sub_category_name'],'commodity_name'=>$data['commodity_name']
+	,'unit_size'=>$data['unit_size'],'unit_cost'=>$data['unit_cost'],'commodity_code'=>$data['commodity_code'],'commodity_id'=>$data['commodity_id'],
+	'total_commodity_units'=>$data['total_commodity_units'],'opening_balance'=>0,
+	'total_receipts'=>0,
+	'total_issues'=>0,
+	'quantity_ordered'=>$rowData[0][7],
+	'comment'=>'',
+	'closing_stock_'=>0,
+	'closing_stock'=>0,
+	'days_out_of_stock'=>0,
+	'date_added'=>'',
+	'losses'=>0,
+	'status'=>0,
+	'adjustmentpve'=>0,
+	'adjustmentnve'=>0,
+	'historical'=>0));
+	unset($item_details[$key]);
+   	}	
+   	} 	
+   }
+}
+$facility_code= $sheet->getCell('H4')->getValue();
+   unset($objPHPExcel);
+  return(array('row_data'=>$temp,'facility_code'=>$facility_code));
+   endif;
+
+ }
 /*************/	
 /* HCMP file downloader 
 /********/	

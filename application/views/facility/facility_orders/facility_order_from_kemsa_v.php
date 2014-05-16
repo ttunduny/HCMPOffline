@@ -6,7 +6,7 @@
  <div style="width: 100%; margin: auto;">
 <span  class='label label-info'>Enter Order Quantity and Comment,
 Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
-<?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order',$att); //?>
+<?php  $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order',$att); //?>
 <div class="row" style="padding-left: 1%;">
 	<div class="col-md-2">
 	<b>*select ordering frequency</b> <select class="form-control" name="order_period" id="order_period">
@@ -120,7 +120,9 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 $(document).ready(function() {
 	var new_count =count;
 	var drawing_rights_balance=$('#actual_drawing_rights').val();
-var $table = $('#example');
+	//auto compute the values
+	calculate_totals();
+    var $table = $('#example');
 //float the headers
   $table.floatThead({ 
 	 scrollingTop: 100,
@@ -235,10 +237,7 @@ var $table = $('#example');
     if(user_input==''){
     	user_input=0;
     }
-	var actual_units=parseInt(total_units)*user_input;
-	var total_cost=parseInt(unit_cost.replace(",", ""))*user_input;
-	$(this).closest("tr").find(".actual_quantity").val(actual_units);
-	$(this).closest("tr").find(".cost").val(total_cost);
+	
 	// set the order total here
 	calculate_totals();	
 	});// process all the order into a summary table for the user to confirm before placing the order 
@@ -279,14 +278,14 @@ var $table = $('#example');
      if (bed_capacity=='') {alert_message+="<li>Indicate In-patient Bed Days</li>";}
      if(isNaN(alert_message)){
      //This event is fired immediately when the hide instance method has been called.
-    $('#workload').delay(1000).queue(function (nxt){
+    $('#workload').delay(500).queue(function (nxt){
     // Load up a new modal...
      dialog_box('fix this items before saving your order <ol>'+alert_message+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;',
      '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
     	nxt();
     });
      }else{
-    $('#workload').delay(1000).queue(function (nxt){
+    $('#workload').delay(500).queue(function (nxt){
     // Load up a new modal...
     var img='<img src="<?php echo base_url('assets/img/wait.gif') ?>"/>';
      dialog_box(img+'<h5 style="display: inline-block; font-weight:500;font-size: 18px;padding-left: 2%;"> Please wait as the order is being processed</h5>',
@@ -306,8 +305,12 @@ var $table = $('#example');
 	 	{ var total=0} 
 	 	else{ var total=$(this).val()
 	 		}//calculate the balances here
-	 	var unit_cost=$(this).closest("tr").find(".unit_cost").val();    	
-        order_total=(parseInt(total)*parseInt(unit_cost.replace(",", "")))+parseInt(order_total);    
+	 	var unit_cost=$(this).closest("tr").find(".unit_cost").val();
+	 	var actual_units=parseInt($(this).closest("tr").find(".total_commodity_units").val())*total;
+	 	var total_cost=parseInt(total)*parseInt(unit_cost.replace(",", ""));    	
+        order_total=(total_cost)+parseInt(order_total); 
+	    $(this).closest("tr").find(".actual_quantity").val(actual_units);
+	    $(this).closest("tr").find(".cost").val(total_cost);   
      });//check if order total is a NAN
     //calculate the balances here
       balance=parseInt(drawing_rights_balance)-order_total;

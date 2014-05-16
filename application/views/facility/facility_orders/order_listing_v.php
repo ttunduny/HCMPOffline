@@ -174,8 +174,10 @@ HTML_DATA;
 <div class="">
 <button class="btn btn-success btn-xs floppy-save"><span class="glyphicon glyphicon-floppy-save"></span>KEMSA template</button>
 <?php  if($identifier==='district'): ?>
+<button class="btn btn-success btn-xs order-for-excel" >
+ <span class="glyphicon glyphicon-floppy-open"></span>Order For Facilities via excel</button>
 <button class="btn btn-success btn-xs order-for" >
- <span class="glyphicon glyphicon-floppy-open"></span>Order For Facilities</button>
+ <span class="glyphicon glyphicon-floppy-open"></span>Order For Facilities online</button>
 <?php  endif; ?>
 
 </div>
@@ -400,6 +402,26 @@ $(document).ready(function() {
      window.location="<?php echo site_url('orders/facility_order_');?>/"+facility_code;		
     }
    	
+    });
+		
+	});
+	$(".order-for-excel").on('click', function() {
+	var body_content='<?php  $att=array("name"=>'myform','id'=>'myform'); 
+	echo form_open_multipart('orders/facility_order_',$att)?>'+
+'<input type="file" name="file" id="file" required="required" class="form-control"><br>'+
+'<input type="submit" name="submit"  value="Upload">'+
+'</form>';
+   //hcmp custom message dialog
+    dialog_box(body_content,
+    ''); 
+    $(".order_for_them").on('click', function() {
+    var facility_code=$('#facility_code').val();
+    if(facility_code==0){
+    alert("Please select a Facility First");
+    	
+    }else{
+     window.location="<?php echo site_url('orders/facility_order_');?>/"+facility_code;		
+    }
     });
 		
 	});
