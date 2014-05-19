@@ -67,6 +67,7 @@
   $('#notifications').parent().parent().parent().addClass('active-panel');
   ajax_request_replace_div_content('reports/notification_dashboard',"#notification");
  
+ 
   $('[data-toggle=offcanvas]').click(function () {
     $('.row-offcanvas').toggleClass('active');
   });
