@@ -57,7 +57,15 @@ return $inserttransaction;*/
 		ORDER BY  `facility_name` ASC ");
 		return $q;	
 }
-
+   public function get_tragetted_rolled_out_facilities($facility_code=null,$district_id=null,$county_id=null){
+       $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+        $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+        SELECT SUM( targetted ) AS targetted, SUM( using_hcmp ) AS using_hcmp, COUNT( facility_code ) AS total
+        FROM districts d, facilities f
+        WHERE f.district = d.id
+        and $where_clause");
+        return $q;    
+   }
 	public static function get_facility_name_($facility_code){
 				
 	if($facility_code!=NULL){
@@ -125,7 +133,7 @@ GROUP BY user.facility");
 	public static function get_facility_name($facility_code)
 	{
 		$query = Doctrine_Query::create()->select('*')->from('facilities')->where("facility_code='$facility_code'");
-		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		$result = $query -> execute();
 		return $result;
 	}
 	public static function get_facility_name2($facility_code)

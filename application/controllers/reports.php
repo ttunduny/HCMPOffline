@@ -608,11 +608,7 @@ class Reports extends MY_Controller
 	public function get_facility_json_data($district_id) {
 		echo json_encode(facilities::get_facilities_which_are_online($district_id));
 	}
-	      /*
-	 |--------------------------------------------------------------------------|
-	 | COUNTY SUB-COUNTY dashboard											    |
-	 |--------------------------------------------------------------------------|
-	 */
+	     
 	 //For system uptake option on SUB-COUNTY dashboard
 	 public function get_sub_county_facility_mapping_data($year = null, $month = NULL) 
 	 {
@@ -1123,6 +1119,11 @@ class Reports extends MY_Controller
 		}
 		
 	}
+ /*
+     |--------------------------------------------------------------------------|
+     | COUNTY SUB-COUNTY dashboard                                              |
+     |--------------------------------------------------------------------------|
+     */
 	 public function expiries_dashboard()
 	 {
 		$county_id = $this -> session -> userdata('county_id');
@@ -1392,14 +1393,31 @@ class Reports extends MY_Controller
     $actual_expiries=count(Facility_stocks::get_county_expiries($county_id,date('Y'),$district_id,$facility_code));
 	//get items they have been donated for
 	$facility_donations=count(redistribution_data::get_redistribution_data($facility_code,$district_id,$county_id,date('Y')));
+    //get the roll out status here
+    $facility_roll_out_status=Facilities::get_tragetted_rolled_out_facilities($facility_code,$district_id,$county_id);
+    
 	$data['county_dashboard_notifications'] = array(
 	'items_stocked_out_in_facility'=>$items_stocked_out_in_facility,
 	'facility_order_count'=>$facility_order_count,
 	'potential_expiries'=>$potential_expiries,
 	'actual_expiries'=>$actual_expiries,
-	'facility_donations'=>$facility_donations);	
-		return $this -> load -> view("subcounty/ajax/county_notification_v", $data);
+	'facility_donations'=>$facility_donations,
+    'facility_roll_out_status'=>$facility_roll_out_status);	
+    
+	return $this -> load -> view("subcounty/ajax/county_notification_v", $data);
 	}
+     public function monitoring(){
+         $category_data=$series_data = $graph_data= $series_data_=array();
+         $category_data=array(array("date last seen","date last issued","sub county","Facility Name","Mfl"));
+        $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_'));
+        $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
+        $graph_data=array_merge($graph_data,array("table_body"=>$series_data));
+                
+        $data['table'] = $this->hcmp_functions->create_data_table($graph_data);
+        $data['table_id'] ="dem_graph_";
+        return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
+         
+     }
     /*
 	 |--------------------------------------------------------------------------
 	 | COUNTY SUB-COUNTY reports
