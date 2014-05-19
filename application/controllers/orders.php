@@ -79,11 +79,10 @@ for ($row = 1; $row <= $highestRow; $row++){
 	public function facility_order_($facility_code=null) {
 		// hack to ensure that when you are ordering for a facility that is not using hcmp they have all the items
 		$checker= $this -> session -> userdata('facility_id') ? null : 1; 
-		$facility_code=null;
 		if(isset($_FILES['file']) && $_FILES['file']['size'] > 0){ 
 			$more_data=$this -> hcmp_functions -> kemsa_excel_order_uploader($_FILES["file"]["tmp_name"]);
 			$data['order_details'] = $data['facility_order'] =$more_data['row_data'];
-			$facility_data = Facilities::get_facility_name($more_data['facility_code']);
+			$facility_data = Facilities::get_facility_name($more_data['facility_code'])->toArray();
 			if(count($facility_data)==0){
 			$this -> session -> set_flashdata('system_error_message', "Kindly upload a file with correct facility MFL code ");
 			redirect("reports/order_listing/subcounty");	
@@ -95,7 +94,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 			}
 		}else{
 		$data['order_details'] = $data['facility_order'] = Facility_Transaction_Table::get_commodities_for_ordering($facility_code,$checker);
-		$facility_data = Facilities::get_facility_name($facility_code);	
+		$facility_data = Facilities::get_facility_name($facility_code)->toArray();	
 		}
 		$data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";
 		$data['title'] = "Facility New Order";
