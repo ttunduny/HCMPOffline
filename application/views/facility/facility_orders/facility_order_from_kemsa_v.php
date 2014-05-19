@@ -268,7 +268,7 @@ $(document).ready(function() {
     +'<button type="button" class="btn btn-primary" id="save_dem_order" data-dismiss="modal">Save</button>');
 	});
       /************save the data here*******************/
-	$('#save_dem_order').on('click', function() {
+	$('#main-content').on('click','#save_dem_order', function() {
      var order_total=$('#total_order_value').val();
      var workload=$('#workload').val();
      var bed_capacity=$('#bed_capacity').val();
