@@ -58,9 +58,7 @@
 					</div>
 					<?php $x = array();
 					foreach ($counts as $key) {
-
 						$x[] = $key['count'];
-
 					}
 					?>
 					<div class="col-md-3">
@@ -104,7 +102,6 @@
 					<button class="btn btn-primary add" data-toggle="modal" data-target="#addModal" id="add_new">
 						<span class="glyphicon glyphicon-plus"></span>Add User
 					</button>
-
 				</div>
 				<div class="col-md-10 dt" style="border: 1px solid #ddd;padding-top: 1%; " id="test">
 
@@ -127,34 +124,19 @@
 						<tbody>
 
 							<?php
-
 							foreach ($listing as $list ) {
-
 							?>
 							<tr class="edit_tr" >
-								<td class="fname" ><?php echo $list['fname']; ?>
-								</td>
-								<td class="lname"><?php echo $list['lname'];
-									;
-								?>
-								</td>
-								<td class="email" data-attr="<?php echo $list['user_id']; ?>"><?php echo $list['email'];
-									;
-								?>
-								</td>
-								<td class="phone"><?php echo $list['telephone']; ?>
-								</td>
-								<td class="district" data-attr="<?php echo $list['district_id']; ?>"><?php echo $list['district']; ?>
-								</td>
-								<td class="facility_name" data-attr="<?php echo $list['facility_code']; ?>"><?php echo $list['facility_name']; ?>
-								</td>
-								<td class="level" data-attr="<?php echo $list['level_id']; ?>"><?php echo $list['level']; ?>
-								</td>
+								<td class="fname" ><?php echo $list['fname']; ?></td>
+								<td class="lname"><?php echo $list['lname']; ?>	</td>
+								<td class="email" data-attr="<?php echo $list['user_id']; ?>"><?php echo $list['email'];?></td>
+								<td class="phone"><?php echo $list['telephone']; ?></td>
+								<td class="district" data-attr="<?php echo $list['district_id']; ?>"><?php echo $list['district']; ?></td>
+								<td class="facility_name" data-attr="<?php echo $list['facility_code']; ?>"><?php echo $list['facility_name']; ?></td>
+								<td class="level" data-attr="<?php echo $list['level_id']; ?>"><?php echo $list['level']; ?></td>
 								<td>
 								<?php
-
-if ($list['status']==1) {
-
+									if ($list['status']==1) {
 								?>
 								<div class="status_item color_d">
 									<span>Active</span>
@@ -318,9 +300,6 @@ if ($list['status']==1) {
 											<select class="form-control " id="facility_id" required="required">
 												<option value="">Select Facility</option>
 												<option value=""></option>
-												
-												
-
 											</select>
 										</div>
 									</div>
@@ -329,29 +308,23 @@ if ($list['status']==1) {
 									<div class=" col-md-6">
 										<div class="form-group">
 											<select class="form-control " id="user_type" name="user_type" required="required">
-												
 											</select>
 										</div>
 									</div>
 									<div class="col-md-6">
-
 									</div>
 								</div>
-
 								<?php }elseif ($identifier=='facility_admin') {
-	//code if facility admin
-	}
+											//code if facility admin
+										}
 								?>
 
 								<div class="row" style="margin:auto" id="processing">
 									<div class=" col-md-12">
 										<div class="form-group">
-
 										</div>
 									</div>
-
 								</div>
-
 							</fieldset>
 
 						</form>
@@ -386,7 +359,6 @@ if ($list['status']==1) {
 
 						<h4>User details</h4>
 						
-							
 							<div class="row" >
 
 								<div class="col-md-6">
@@ -434,7 +406,6 @@ if ($list['status']==1) {
 									<?php
 
 									$identifier = $this -> session -> userdata('user_indicator');
-
 									if ($identifier=='district') {
 									?>
 
@@ -479,7 +450,6 @@ if ($list['status']==1) {
 							
 											<select class="form-control " id="district_name_edit" required="required">
 												<option value=''>Select Sub-County</option>
-
 												<?php
 												foreach ($district_data as $district) :
 													$d_id = $district -> id;
@@ -513,8 +483,8 @@ if ($list['status']==1) {
 								</div>
 
 								<?php }elseif ($identifier=='facility_admin') {
-	//code if facility admin
-	}
+									//code if facility admin
+									}
 								?>
 
 								<div class="row" style="margin:auto" id="processing">
@@ -566,6 +536,8 @@ $('#datatable').dataTable( {
       "sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
     }
   } ); 
+  
+  //populate facilities to drop down depending on district selected
 
 $("#district_name").change(function() {
     var option_value=$(this).val();
@@ -608,15 +580,15 @@ var drop_down='';
     }
     }); 
     
-    
+    //handle edits
 $("#test").on('click','.edit',function() {
-	
+	//capture relevant data
 var email = $(this).closest('tr').find('.email').html();
 var phone = $(this).closest('tr').find('.phone').html();
 var district = $(this).closest('tr').find('.district').html();
 var fname = $(this).closest('tr').find('.fname').html();
 var lname = $(this).closest('tr').find('.lname').html();
-
+//populate dropdown on click and selected current 
 var drop_down='';
 var facility_id=$(this).closest('tr').find('.facility_name').attr('data-attr');
  var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+$(this).closest('tr').find('.district').attr('data-attr');
@@ -630,7 +602,7 @@ var facility_id=$(this).closest('tr').find('.facility_name').attr('data-attr');
       
       $('#facility_id_edit').val(facility_id)
     });
-   
+   //fill inputs with relevant data
 $('#email_edit').val(email)
 $('#telephone_edit').val(phone)
 $('#fname_edit').val(fname)
@@ -664,6 +636,7 @@ $('#facility_id_edit_district').val(facility_id)
 
   });
   
+  //make sure email==username  for edits
   $('#email_edit').keyup(function() {
 
   var email = $('#email_edit').val()
@@ -672,7 +645,7 @@ $('#facility_id_edit_district').val(facility_id)
 
     })
     
-    
+   //Handle adding new users 
    $("#add_new").on('click',function() {
 
   var drop_down_user='';
@@ -693,6 +666,8 @@ var type_id=$(this).closest('tr').find('.level').attr('data-attr');
 
     })
     });
+    
+     //make sure email==username
 
 $('#email').keyup(function() {
 
