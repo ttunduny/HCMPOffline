@@ -2,7 +2,6 @@
 	.filter
 	{
 		width: 98%;
-		/*height:7em;*/
 		margin:auto;	
 	}
 	.graph_content
@@ -60,8 +59,7 @@
 				        $("#year_filter").val()+
 				        "/"+$("#month_filter").val()+
 				        "/"+$("#plot_value_filter").val();
-        
-				ajax_supply(url,'.graph-section');
+        	ajax_supply(url,'.graph-section');
 		
           });
 
