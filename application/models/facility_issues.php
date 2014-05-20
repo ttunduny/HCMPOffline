@@ -40,7 +40,18 @@ class facility_issues extends Doctrine_Record {
 		$o->save();
 		return TRUE;
 	}
+   public static function get_last_time_facility_issued($facility_code){
+        $transaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 
+     ->fetchAll("SELECT u.fname, u.lname, 
+     max(f_i.`created_at`) as last_seen, DATEDIFF(now(),max(f_i.`created_at`)) as days_
+     from user u, facility_issues 
+     f_i where f_i.`issued_by`=u.id 
+     and f_i.facility_code=$facility_code"); 
+
+
+            return $transaction[0];    
+   }
 	public static function get_bin_card($facility_code,$commodity_id,$from,$to){
 
 		$convertfrom=date('Y-m-d',strtotime($from ));
