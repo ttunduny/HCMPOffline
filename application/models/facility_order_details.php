@@ -10,7 +10,8 @@ class facility_order_details extends Doctrine_Record {
 				$this->hasColumn('commodity_id', 'int');
 				$this->hasColumn('quantity_ordered_pack', 'int');
 				$this->hasColumn('quantity_ordered_unit', 'int');
-				$this->hasColumn('quantity_recieved', 'int');
+				$this->hasColumn('quantity_recieved_pack_pack', 'int');
+                $this->hasColumn('quantity_recieved_pack_unit', 'int');
 				$this->hasColumn('price', 'int');
 				$this->hasColumn('o_balance', 'int');
 				$this->hasColumn('t_receipts', 'int');
@@ -23,6 +24,9 @@ class facility_order_details extends Doctrine_Record {
 				$this->hasColumn('s_quantity', 'int');
 				$this->hasColumn('c_stock', 'int');
 				$this->hasColumn('amc', 'int');
+                $this->hasColumn('expiry_date', 'varchar',50);
+                $this->hasColumn('batch_no', 'varchar',50);
+                $this->hasColumn('maun', 'varchar',100);
 				$this->hasColumn('status', 'int');	
 	}
 
@@ -42,7 +46,7 @@ class facility_order_details extends Doctrine_Record {
 	public static function get_order_details($order_id,$fill_rate=false){
 		if($fill_rate){
 		$group_by="fill_rate ASC"; 
-		$fill_rate_compute="ROUND( (`c`.`quantity_ordered_pack`/`c`.`quantity_recieved`) *100 ) AS fill_rate,";
+		$fill_rate_compute="ROUND( (`c`.`quantity_ordered_pack`/`c`.`quantity_recieved_pack`) *100 ) AS fill_rate,";
 		}else{
 		$group_by='a.id asc,b.commodity_name asc';
 		$fill_rate_compute=null;
@@ -60,7 +64,11 @@ $fill_rate_compute
 `c`.`commodity_id` AS `commodity_id`,
 `c`.`quantity_ordered_pack`,
 `c`.`quantity_ordered_unit`,
-`c`.`quantity_recieved`,
+`c`.`quantity_recieved_pack` as quantity_recieved,
+`c`.`quantity_recieved_unit`,
+`c`.`expiry_date`,
+`c`.`batch_no`,
+`c`.`maun`,
 `c`.`o_balance` AS `opening_balance`,
 `c`.`t_receipts` AS `total_receipts`,
 `c`.`t_issues` AS `total_issues`,

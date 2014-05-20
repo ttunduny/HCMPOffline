@@ -224,7 +224,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 
 			for ($i = 0; $i < $number_of_id; $i++) {
 
-				$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("INSERT INTO facility_order_details (  `id`,
+			$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("INSERT INTO facility_order_details (  `id`,
 			`order_number_id`,
 			`commodity_id`,
 			`quantity_ordered_pack`,
@@ -310,6 +310,30 @@ for ($row = 1; $row <= $highestRow; $row++){
 		endif;
 
 	}
+     public function auto_save_order_detail(){
+         //security check     
+    if($this->input->is_ajax_request()):
+            $commodity_id = $this -> input -> post('commodity_id');
+            $order_details_id = $this -> input -> post('order_details_id');
+            $batch_no = $this -> input -> post('batch_no');
+            $manu = $this -> input -> post('manu');
+            $clone_datepicker = $this -> input -> post('clone_datepicker');
+            $quantity = $this -> input -> post('quantity');
+            $actual_quantity = $this -> input -> post('actual_quantity');
+            //build the query to run
+            $orders = Doctrine_Manager::getInstance() -> 
+            getCurrentConnection() -> execute("update facility_order_details 
+             set
+            `batch_no`='$batch_no',
+            `quantity_recieved_pack`=$quantity,
+            `quantity_recieved_unit`=$actual_quantity,
+             `maun`='$manu',
+            `expiry_date`='$clone_datepicker'
+             where
+            `id`=$order_details_id ");
+            echo 'success';
+    endif;
+     }
       	/*
 	 |--------------------------------------------------------------------------
 	 | End of update_facility_new_order
@@ -352,9 +376,6 @@ for ($row = 1; $row <= $highestRow; $row++){
 		endif;
 		redirect();
 	}
-
-
-
 	public function create_order_pdf_template($order_no) {
 		$from_order_table = facility_orders::get_order_($order_no);
 		//get the order data here

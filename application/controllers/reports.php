@@ -308,6 +308,7 @@ class Reports extends MY_Controller
 	public function facility_transaction_data() {
 		$facility_code = $this -> session -> userdata('facility_id');
 		$data['facility_stock_data'] = facility_transaction_table::get_all($facility_code);
+        $data['last_issued_data']=facility_issues::get_last_time_facility_issued($facility_code);
 		$data['title'] = "Facility Stock Summary";
 		$data['content_view'] = "facility/facility_reports/facility_transaction_data_v";
 		$data['banner_text'] = "Facility Stock Summary";
@@ -1429,12 +1430,26 @@ class Reports extends MY_Controller
 	return $this -> load -> view("subcounty/ajax/county_notification_v", $data);
 	}
      public function monitoring(){
-         $category_data=$series_data = $graph_data= $series_data_=array();
-         $category_data=array(array("date last seen","date last issued","sub county","Facility Name","Mfl"));
+        $facility_code=(!$this -> session -> userdata('facility_id')) ? null: $this -> session -> userdata('facility_id');
+        $district_id=(!$this -> session -> userdata('district_id')) ? null:$this -> session -> userdata('district_id');
+        $county_id=(!$this -> session -> userdata('county_id')) ? null:$this -> session -> userdata('county_id');
+        $category_data=$series_data = $graph_data= $series_data_=array();
+        $facility_data=Facilities::get_facilities_monitoring_data( $facility_code,$district_id,$county_id);
+        foreach($facility_data as $facility){
+
+          array_push($series_data,array(
+          date('j M, Y',strtotime($facility['last_seen'])),
+          $facility['days_last_seen'],
+          date('j M, Y',strtotime($facility['last_issued'])) ,
+          $facility['days_last_issued'],
+          $facility['district'],
+          $facility['facility_name'],
+          $facility['facility_code'])) ; 
+        }
+        $category_data=array(array("date last seen","# of days","date last issued","# of days","sub county","Facility Name","Mfl"));
         $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_'));
         $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
-        $graph_data=array_merge($graph_data,array("table_body"=>$series_data));
-                
+        $graph_data=array_merge($graph_data,array("table_body"=>$series_data));                
         $data['table'] = $this->hcmp_functions->create_data_table($graph_data);
         $data['table_id'] ="dem_graph_";
         return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);

@@ -1,4 +1,7 @@
 <div class="container" style="width: 96%; margin: auto;">
+    <span class="label label-success">The Last Stock Update was as at : <?php
+    echo date('j M, Y',strtotime($last_issued_data['last_seen'])). ", $last_issued_data[days_] day(s) ago, $last_issued_data[fname] 
+    $last_issued_data[lname]" ?></span>
 	<?php echo form_open('orders/facility_order'); ?>
  <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
