@@ -1,0 +1,134 @@
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="http://code.highcharts.com/highcharts.js"></script>
+	<title></title>
+	<style type="text/css">
+	#container{
+		float:left;
+	}
+	#container2{
+		float:left;
+	}
+	#container3{
+		float:left;
+	}
+	#container4{
+		float:left;
+	}
+	
+
+	</style>
+</head>
+<body>
+<div id="container" style="width:20%; height:40%"></div>
+<div id="container2" style="width:20%; height:40%"></div>
+<div id="container3" style="width:20%; height:40%"></div>
+<div id="container4" style="width:20%; height:40%"></div>
+<script>
+$(function () { 
+    $('#container').highcharts({
+        chart: {
+            type: 'pie'
+        },
+        title: {
+            text: 'Facility type evaluated'
+        },
+        xAxis: {
+            categories: ['GOK', 'FBO', 'Other public institutions']
+        },
+        yAxis: {
+            title: {
+                text: 'Fruit eaten'
+            }
+        },
+        series: [{
+            name: 'Jane',
+            data: [1, 0, 4]
+        }, {
+            name: 'John',
+            data: [5, 7, 3]
+        }]
+    });
+});
+
+$(function () { 
+    $('#container2').highcharts({
+        chart: {
+            type: 'pie'
+        },
+        title: {
+            text: 'Facility type evaluated'
+        },
+        xAxis: {
+            categories: ['GOK', 'FBO', 'Other public institutions']
+        },
+        yAxis: {
+            title: {
+                text: 'Fruit eaten'
+            }
+        },
+        series: [{
+            name: 'Jane',
+            data: [1, 0, 4]
+        }, {
+            name: 'John',
+            data: [5, 7, 3]
+        }]
+    });
+});
+
+$(function () { 
+    $('#container3').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Facility type evaluated'
+        },
+        xAxis: {
+            categories: ['GOK', 'FBO', 'Other public institutions']
+        },
+        yAxis: {
+            title: {
+                text: 'Fruit eaten'
+            }
+        },
+        series: [{
+            name: 'Jane',
+            data: [1, 0, 4]
+        }, {
+            name: 'John',
+            data: [5, 7, 3]
+        }]
+    });
+});
+
+$(function () { 
+    $('#container4').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Facility type evaluated'
+        },
+        xAxis: {
+            categories: ['GOK', 'FBO', 'Other public institutions']
+        },
+        yAxis: {
+            title: {
+                text: 'Fruit eaten'
+            }
+        },
+        series: [{
+            name: 'Jane',
+            data: [1, 0, 4]
+        }, {
+            name: 'John',
+            data: [5, 7, 3]
+        }]
+    });
+});
+</script>
+</body>
+</html>
