@@ -1,33 +1,10 @@
 <style type="text/css">
-	.color_g {
-		background: #ac193d;
-		color: white;
+	
+	.panel-body,span:hover,.status_item:hover
+	{ 
+		cursor: pointer !important; 
 	}
-	.color_b {
-		background: #008299;
-		color: white;
-	}
-	.color_d {
-		background: #27ae60;
-		color: white;
-	}
-	.color_f {
-		background: #e67e22;
-		color: white;
-	}
-	.stat_item {
-		height: 36px;
-		padding: 0 20px;
-		color: #fff;
-		text-align: center;
-		font-size: 1.5em;
-	}
-	.status_item {
-
-		padding: auto;
-		color: #fff;
-		text-align: center;
-	}
+	
 	.panel {
 		border-radius: 0;
 	}
@@ -42,19 +19,10 @@
 
 <div class="container-fluid">
 	<div class="page_content">
-		<div class="container-fluid">
-			<div class="" style="width:65%;margin:auto;">
+		<div class="" style="width:65%;margin:auto;">
 				<div class="row ">
 					<div class="col-md-3">
-						<div class="panel panel-default">
-							<div class="panel-body">
-								<div class="stat_item ">
-									<span class="glyphicon glyphicon-user"></span>
-									<span> </span>
-
-								</div>
-							</div>
-						</div>
+						
 					</div>
 					<?php $x = array();
 					foreach ($counts as $key) {
@@ -63,9 +31,9 @@
 					?>
 					<div class="col-md-3">
 						<div class="panel panel-default">
-							<div class="panel-body">
+							<div class="panel-body" id="active">
 								<div class="stat_item color_d">
-									<i class="ion-chatbubble-working"></i>
+									<span class="glyphicon glyphicon-user"></span>
 									<span><?php echo($x[1]);?>
 										Active</span>
 								</div>
@@ -74,9 +42,9 @@
 					</div>
 					<div class="col-md-3">
 						<div class="panel panel-default">
-							<div class="panel-body">
+							<div class="panel-body" id="inactive">
 								<div class="stat_item color_g">
-									<i class="ion-android-social"></i>
+									<span class="glyphicon glyphicon-user"></span>
 									<span><?php echo($x[0]); ?>
 										Inactive</span>
 								</div>
@@ -85,17 +53,12 @@
 					</div>
 
 					<div class="col-md-3">
-						<div class="panel panel-default">
-							<div class="panel-body">
-								<div class="stat_item ">
-
-									<span></span>
-								</div>
-							</div>
-						</div>
+						
 					</div>
 				</div>
 			</div>
+		<div class="container-fluid">
+			
 			<div class="row">
 
 				<div class="col-md-2" style="padding-left: 0;">
@@ -134,16 +97,16 @@
 								<td class="district" data-attr="<?php echo $list['district_id']; ?>"><?php echo $list['district']; ?></td>
 								<td class="facility_name" data-attr="<?php echo $list['facility_code']; ?>"><?php echo $list['facility_name']; ?></td>
 								<td class="level" data-attr="<?php echo $list['level_id']; ?>"><?php echo $list['level']; ?></td>
-								<td>
+								<td >
 								<?php
 									if ($list['status']==1) {
 								?>
-								<div class="status_item color_d">
+								<div class="status_item color_d" data-attr="true">
 									<span>Active</span>
 								</div>
 								<?php }else{ ?>
 
-								<div class=" status_item color_g">
+								<div class=" status_item color_g" data-attr="false">
 									<span>Deactivated</span>
 								</div> <?php } ?> </td>
 								<td>
@@ -385,7 +348,7 @@
 								<div class="col-md-6">
 									<label> Email </label>
 									<div class="form-group">
-										<input type="email" name="email_edit" id="email_edit" required="required" class="form-control " placeholder="email@domain.com" tabindex="6">
+										<input type="email" data-id="" name="email_edit" id="email_edit" required="required" class="form-control " placeholder="email@domain.com" tabindex="6">
 									</div>
 								</div>
 							</div>
@@ -438,7 +401,13 @@
 											</div>
 										</div>
 										<div class="col-md-6">
-
+									<div class="onoffswitch">
+									    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+									    <label class="onoffswitch-label" for="myonoffswitch">
+									        <div value="1" class="onoffswitch-inner"></div>
+									        <div class="onoffswitch-switch"></div>
+									    </label>
+									</div>
 										</div>
 									</div>
 
@@ -478,7 +447,13 @@
 										</div>
 									</div>
 									<div class="col-md-6">
-
+									<div class="onoffswitch">
+									    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" >
+									    <label class="onoffswitch-label" for="myonoffswitch">
+									        <div  class="onoffswitch-inner"></div>
+									        <div  class="onoffswitch-switch"></div>
+									    </label>
+									</div>
 									</div>
 								</div>
 
@@ -487,7 +462,7 @@
 									}
 								?>
 
-								<div class="row" style="margin:auto" id="processing">
+								<div class="row" style="margin:auto" id="process">
 									<div class=" col-md-12">
 										<div class="form-group">
 
@@ -504,7 +479,7 @@
 				<button type="button" class="btn btn-default" data-dismiss="modal">
 					Close
 				</button>
-				<button type="button" class="btn btn-primary">
+				<button type="button" class="btn btn-primary edit_user">
 					Save changes
 				</button>
 			</div>
@@ -535,8 +510,10 @@ $('#datatable').dataTable( {
       ],
       "sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
     }
+    
   } ); 
-  
+  $('div.dataTables_filter input').addClass('form-control search');
+  $('div.dataTables_length select').addClass('form-control');
   //populate facilities to drop down depending on district selected
 
 $("#district_name").change(function() {
@@ -604,6 +581,7 @@ var facility_id=$(this).closest('tr').find('.facility_name').attr('data-attr');
     });
    //fill inputs with relevant data
 $('#email_edit').val(email)
+$('#email_edit').attr('data-id',$(this).closest('tr').find('.email').attr('data-attr'))
 $('#telephone_edit').val(phone)
 $('#fname_edit').val(fname)
 $('#lname_edit').val(lname)
@@ -611,6 +589,7 @@ $('#username_edit').val(email)
 
 $('#user_type_edit').val($(this).closest('tr').find('.level').attr('data-attr'))
 $('#district_name_edit').val($(this).closest('tr').find('.district').attr('data-attr'))
+
 
 
 var drop_down_user='';
@@ -630,7 +609,17 @@ var type_id=$(this).closest('tr').find('.level').attr('data-attr');
       $('#user_type_edit_district').val(type_id)
     });
     
-    
+
+
+if($(this).closest('tr').find('.status_item').attr('data-attr')=="false"){
+	$('.onoffswitch-checkbox').prop('checked', false) 	
+}else if($(this).closest('tr').find('.status_item').attr('data-attr')=="true"){
+	$('.onoffswitch-checkbox').prop('checked', true) 
+}
+
+if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
+	$("#facility_id_edit").attr("disabled", "disabled"); 
+}
 
 $('#facility_id_edit_district').val(facility_id)
 
@@ -662,7 +651,6 @@ var type_id=$(this).closest('tr').find('.level').attr('data-attr');
       
       $("#user_type").append(drop_down_user);
       
-      
 
     })
     });
@@ -677,9 +665,8 @@ $('#email').keyup(function() {
 
     })
     
-    
-                  
- $("#create_new").click(function() {
+   
+$("#create_new").click(function() {
 
       var first_name = $('#first_name').val()
       var last_name = $('#last_name').val()
@@ -703,7 +690,7 @@ $('#email').keyup(function() {
 
      //alert(url);
     // return;
-     var loading_icon="<?php echo base_url().'assets/img/loader.gif' ?>";
+     var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";
      $.ajax({
           type: "POST",
           data:{ 'first_name': $('#first_name').val(),'last_name': $('#last_name').val(),
@@ -712,23 +699,95 @@ $('#email').keyup(function() {
           'district_name': $('#district_name').val(),'user_type': $('#user_type').val()},
           url: url,
           beforeSend: function() {
-            $(div).html("");
-            
-             $(div).html("<img style='margin:20% 0 20% 30%;' src="+loading_icon+">");
-            
+           
+            var message = confirm("Are you sure you want to proceed?");
+        if (message){
+            $('.modal-body').html("<img style='margin:30% 0 20% 45%;' src="+loading_icon+">");
+        } else {
+            return false;
+        }
+           
           },
           success: function(msg) {
-          $(div).html("");
-          $(div).html(msg);
-
-          setTimeout(function () {
-            window.location="<?php echo base_url()."user/user_create";?>"; 
-        }, 3000);
+         
+        setTimeout(function () {
+          	$('.modal-body').html("<div class='bg-warning' style='height:30px'>"+
+							"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"+
+							"<h3>Success!!! A new user was added to the system. Please Close to continue</h3></div>")
+				
+        }, 4000);
             
                   
           }
         }); 
 }
+$(".edit_user").click(function() {
 
-});
+      var div="#process";
+      var url = "<?php echo base_url()."user/edit_user";?>";
+      ajax_post (url,div);
+           
+    });
+
+   function ajax_post (url,div){
+    var url =url;
+
+     //alert(url);
+    // return;
+     var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";
+     $.ajax({
+          type: "POST",
+          data:{ 'fname_edit': $('#fname_edit').val(),'lname_edit': $('#lname_edit').val(),
+          'telephone_edit': $('#telephone_edit').val(),'email_edit': $('#email_edit').val(),
+          'username_edit': $('#username_edit').val(),'facility_id_edit_district': $('#facility_id_edit_district').val(),
+          'user_type_edit_district': $('#user_type_edit_district').val(),'district_name_edit': $('#district_name_edit').val(),
+			'facility_id_edit': $('#facility_id_edit').val(),'status': $('.onoffswitch-checkbox').prop('checked'),'user_id':$('#email_edit').attr('data-id')},
+          url: url,
+          beforeSend: function() {
+            //$(div).html("");
+            var answer = confirm("Are you sure you want to proceed?");
+        if (answer){
+            $('.modal-body').html("<img style='margin:30% 0 20% 45%;' src="+loading_icon+">");
+        } else {
+            return false;
+        }
+             
+            
+          },
+          success: function(msg) {
+          //success message
+          
+          setTimeout(function () {
+          	$('.modal-body').html("<div class='bg-warning' style='height:30px'>"+
+							"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"+
+							"<h3>Success Your records were Edited. Please Close to continue</h3></div>")
+				
+        }, 4000);
+        
+              
+          }
+           
+        }); 
+}
+			$('#myModal').on('hidden.bs.modal', function () {
+				$("#datatable").hide().fadeIn('fast');
+				 location.reload();
+			})
+			
+			oTable = $('#datatable').dataTable();
+			
+			$('#active').click(function () {
+				
+				oTable.fnFilter('active');
+			})
+			
+			$('#inactive').click(function () {
+				
+				oTable.fnFilter('deactivated');
+			})
+			
+			
+			
+			
+			});
     </script>

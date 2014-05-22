@@ -469,11 +469,47 @@ class User extends MY_Controller {
 				$savethis -> district = $district_code;
 				$savethis -> facility = $facility_id;
 				$savethis -> status = 0;
-				$savethis -> county_id = $county_id;
+				$savethis -> county_id = $county;
 				$savethis -> save();
 		
 
 
+	}
+	
+	public function edit_user(){
+		$county = $this -> session -> userdata('county_id');
+		$identifier = $this -> session -> userdata('user_indicator');
+
+		$fname = $_POST['fname_edit'];
+		$lname = $_POST['lname_edit'];
+		$status = $_POST['status'];
+		$telephone_edit= $_POST['telephone_edit'];
+		$email_edit = $_POST['email_edit'];
+		$username_edit = $_POST['username_edit'];
+		$facility_id_edit_district = $_POST['facility_id_edit_district'];
+		$user_type_edit_district = $_POST['user_type_edit_district'];
+		$district_name_edit = $_POST['district_name_edit'];
+		$facility_id_edit= $_POST['facility_id_edit'];
+		$user_id= $_POST['user_id'];
+		
+		if ($status=="true") {
+			
+			$status=1;
+			
+		} elseif($status=="false") {
+			
+			$status=0;
+		}
+		
+		
+		
+		$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
+
+
+			$update_user->execute("UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
+									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county'
+                                  	WHERE `id`= '$user_id'");
+		
 	}
 
 }
