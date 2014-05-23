@@ -1,7 +1,3 @@
-<?php $county_id = $this -> session -> userdata('county_id');?>
-<?php
-		
-		?>		
 <div id="dialog"></div>
 	<div class="alert alert-info" >
   <b>Below is the project status in the county</b>
@@ -42,5 +38,33 @@ $(document).ready(function() {
     $('.modal-body').html(''); refreshDatePickers();	})    
    
     });
-	});
+	$(".ajax_call2").click(function(){
+			
+		var url = "<?php echo base_url().'reports/get_district_drill_down_detail'?>";	
+		var id  = $(this).attr("id"); 				
+        var date1=$(this).attr("date"); 
+        var  date=encodeURI(date1);
+      
+	    ajax_request_special_(url+"/"+id+"/"+date, date1);	
+	    
+	    });
+
+    function ajax_request_special_(url,date){
+	var url =url;
+	 $.ajax({
+          type: "POST",
+          url: url,
+          success: function(msg) {
+          	console.log(msg);
+          	
+          	$('.modal-dialog').addClass("modal-lg");
+          	var body_content = msg;
+          	dialog_box(body_content,'<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');
+           	 $('#communication_dialog').on('hidden.bs.modal', function (e) {  $('.modal-dialog').removeClass("modal-lg");
+   			 $('.modal-body').html(''); refreshDatePickers();	})
+         
+          }
+        }); 
+}
+ 	});
 </script>

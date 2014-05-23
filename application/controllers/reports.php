@@ -927,8 +927,10 @@ class Reports extends MY_Controller
 		endswitch;
 		
 		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
+		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
+		
 		/*print "<pre>";
-		print_r($data['get_facility_data']);
+		print_r($get_dates_facility_went_online);
 		print "</pre>";
 		exit;*/
 		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
@@ -943,7 +945,6 @@ class Reports extends MY_Controller
 	{
 		$district_id = $this -> session -> userdata('district_id');
 		$county_id = $this -> session -> userdata('county_id');
-						
 		$district_data = districts::getDistrict($county_id);
 		$table_data = "<tbody>";
 		$table_data_summary = "<tbody>";
@@ -974,13 +975,12 @@ class Reports extends MY_Controller
 				$total = $get_facilities_which_went_online_[0]['total'];
 				$total_facilities = $get_facilities_which_went_online_[0]['total_facilities'];
 				$total_facilities_targetted = $get_facilities_which_went_online_[0]['total_facilities_targetted'];
-				
 				$monthly_total = $monthly_total + $total;
 				$all_facilities = $all_facilities + $total;
 				(array_key_exists($district_name, $district_total)) ? $district_total[$district_name] = $district_total[$district_name] + $total : $district_total = array_merge($district_total, array($district_name => ($total)));
 				(array_key_exists($district_name, $district_total_facilities)) ? $district_total_facilities[$district_name] = $total_facilities : $district_total_facilities = array_merge($district_total_facilities, array($district_name => $total_facilities));
 				(array_key_exists($district_name, $district_total_facilities_targetted)) ? $district_total_facilities_targetted[$district_name] = $total_facilities_targetted : $district_total_facilities_targetted = array_merge($district_total_facilities_targetted, array($district_name => $total_facilities_targetted));
-				$table_data .= ($total > 0) ? "<td><a href='#' id='$district_id' class='ajax_call link' option='monthly' date='$date'> $total</a></td>" : "<td>$total</td>";
+				$table_data .= ($total > 0) ? "<td><a href='#' id='$district_id' class='ajax_call2 link' date='$date'> $total</a></td>" : "<td>$total</td>";
 
 			endforeach;
 
@@ -1014,12 +1014,9 @@ class Reports extends MY_Controller
 		endforeach;
 
 		$table_data .= "<td><a href='#' id='total' class='ajax_call link' option='total' date='total'>$all_facilities</a></td></tr></tbody>";
-		$table_data_summary .= "<td><a href='#' id='total' class='ajax_call link' date='total'>$all_facilities</a></td></tr></tbody>";
+		$table_data_summary .= "<td><a href='#' id='total' class='ajax_call2 link' date='total'>$all_facilities</a></td></tr></tbody>";
 		$district_names .= "<th>TOTAL</th></tr></thead>";
-
 		$final_coverage_total = 0;
-		
-
 		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
 		$data_ = "
 		<div class='tabbable tabs-left'>
@@ -1044,69 +1041,31 @@ class Reports extends MY_Controller
 				
 		
 	}
-	public function get_district_drill_down_detail($district_id, $option, $date_of_activation) {
-
+	public function get_district_drill_down_detail($district_id, $date_of_activation) 
+	{
 		$district_data = "";
 		$county_id = $this -> session -> userdata('county_id');
-
-		if ($option == 'monthly') :
-
-			$get_facility_data = facilities::get_facilities_reg_on_($district_id, urldecode($date_of_activation));
-
-			foreach ($get_facility_data as $facility_data) :
-
-				$facility_code = $facility_data -> facility_code;
-				$facility_user_data = user::get_user_info($facility_code);
-				$facility_name = $facility_data -> facility_name;
-
-				$district_data .= '<span class="label label-info" width="100%">' . $facility_name . '</span>
-	
-				<table class="data-table" width="100%">
+		$get_facility_data = facilities::get_facilities_reg_on_($district_id, urldecode($date_of_activation));
+		
+		foreach ($get_facility_data as $facility_data) :
+			$facility_code = $facility_data -> facility_code;
+			$facility_user_data = users::get_user_info($facility_code);
+			$facility_name = $facility_data -> facility_name;
+			$district_data .= '<span class="" width="100%"><b>' . $facility_name . '</b></span>
+				<table class="row-fluid table table-hover table-bordered table-update" width="100%">
 				<thead>
 				<tr>
 				<th>First Name</th><th>Last Name</th><th>Email </th><th>Phone No.</th>
 				</tr>
 				</thead>
 				<tbody>';
-
-				foreach ($facility_user_data as $user_data_) :
-
-					$district_data .= "<tr>
-	<td>$user_data_->fname</td><td>$user_data_->lname</td><td>$user_data_->email</td><td>$user_data_->telephone</td>
-	<tr>";
-
-				endforeach;
-
-				$district_data .= "</tbody></table>";
-
-			endforeach;
-		elseif ($option = "total") :
-
-			$get_facility_data = facilities::get_facilities_online_per_district($county_id);
-
-			$district_data .= '
-			<table class="data-table" width="100%">
-			<thead>
-			<tr>
-			<th>District Name</th><th>MFL No</th><th>Facility Name</th><th>Date Activated</th>
-			</tr>
-			</thead>
-			<tbody>';
-					foreach ($get_facility_data as $facility_data) :
-
-				$facility_code = $facility_data['facility_code'];
-				$facility_name = $facility_data['facility_name'];
-				$district_name = $facility_data['district'];
-				$date = $facility_data['date'];
-
-				$district_data .= "<tr>
-	<td>$district_name</td><td>$facility_code</td><td>$facility_name</td><td>$date</td>
-	<tr>";
-
+			foreach ($facility_user_data as $user_data_) :
+			$district_data .= "<tr><td>".$user_data_['fname']."</td><td>".$user_data_['lname']."</td><td>".$user_data_['email']."</td><td>".$user_data_['telephone']."</td>
+			<tr>";
 			endforeach;
 			$district_data .= "</tbody></table>";
-
-		endif;
+			endforeach;
+	
 		echo $district_data;
 
 	}
