@@ -341,9 +341,8 @@ class Reports extends MY_Controller
 	}
 
 	public function order_listing($for,$report=null) {
-		$facility_code =null ;	
-		$district_id=null;
-		$county_id=null;
+		$facility_code =$county_id=$district_id=null ;	
+
 		if($for=='facility'):
 
 		$facility_code = $this -> session -> userdata('facility_id');
@@ -392,11 +391,19 @@ class Reports extends MY_Controller
 		$facility_details = Facilities::get_facility_name_($facility_code) -> toArray();
 		$facility_stock_data = Commodities::get_facility_commodities($facility_code, 'sub category data');
 		$excel_data = array('doc_creator' => $facility_details[0]['facility_name'], 'doc_title' => 'facility stock list template ', 'file_name' => 'facility stock list template');
-		$row_data = array();
-		$column_data = array("item HCMP code", "Description", "Supplier", "Commodity Code", "Unit Size", "Batch No", "Manufacturer", "Expiry Date", "Stock Level (Pack)", "Stock Level (Units)");
+		$row_data = array(); 
+		$column_data = array("item HCMP code", "Description", "Supplier","Supplier ID", "Commodity Code", "Unit Size",
+		"Total Units", "Batch No", "Manufacturer", "Expiry Date (month-year)", "Stock Level (Pack)", "Stock Level (Units)");
 		$excel_data['column_data'] = $column_data;
 		foreach ($facility_stock_data as $facility_stock_data_item) :
-		array_push($row_data, array($facility_stock_data_item["commodity_id"], $facility_stock_data_item["commodity_name"], $facility_stock_data_item["source_name"], $facility_stock_data_item["commodity_code"], $facility_stock_data_item["unit_size"], "", "", "", "", ""));
+		array_push($row_data, array($facility_stock_data_item["commodity_id"],
+		$facility_stock_data_item["commodity_name"],
+		$facility_stock_data_item["source_name"],
+		$facility_stock_data_item["supplier_id"],
+		$facility_stock_data_item["commodity_code"],
+		$facility_stock_data_item["unit_size"], 
+		$facility_stock_data_item["total_commodity_units"], 
+		"", "", "", "0", "0"));
 		endforeach;
 		$excel_data['row_data'] = $row_data;
 
