@@ -157,5 +157,18 @@ public static function get_dpp_details($distirct){
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
 	}
+	
+	public static function check_activation($cipher) {
+
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("activation='$cipher'")->andWhere("status = 0");
+		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result;
+		
+	}
+	public static function check_user_exist_activate($email) {
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username='$email' AND status=0");
+		$result = $query -> execute();
+		return $result;
+	}
 
 }

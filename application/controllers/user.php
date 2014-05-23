@@ -420,13 +420,16 @@ class User extends MY_Controller {
 		
 		//Send registered user email with password and validation link
 		//
+		$full_name = $fname.' '.$lname;
+		$link = base_url().'user/activation/'.$activation;
+		
 		$subject = "Account Activation";
 				$message = "<html><body>
 		<div style='border-color: #666; margin:auto;'>	
 		Hi " . $full_name . ", </br>
 		<p>
 		You (HCMP Account - " . $email_address . " - ) was recently created.</br>
-		Before we can activate your account one last step must be taken to complete your registration.</br></p>
+		Before your account can be activated , one last step must be taken to complete your registration.</br></p>
 		<p>
 		Please note - you must complete this last step to become a registered member.</br></p>
 		<p>
@@ -452,7 +455,7 @@ class User extends MY_Controller {
 
 				//exit;
 
-				//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
+				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
 
 				//exit;
 
@@ -502,14 +505,51 @@ class User extends MY_Controller {
 		}
 		
 		
-		
-		$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
-
-
+		//update user
+			$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
 			$update_user->execute("UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
 									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county'
                                   	WHERE `id`= '$user_id'");
 		
 	}
+		public function activation($myurl){
+			
+			$myurl=$this->uri->segment(3);
+			$cipher= md5($myurl);
+						
+			//query to find match 
+			Users::check_activation($cipher);
+			$restrict= count(Users::check_activation($cipher));
+			
+			
+			if ($restrict==0) {
+				
+    				$this -> load -> view('shared_files/404');
+				}else {
+					$this -> load -> view('shared_files/activation');
+				}
+	
+		}
+		
+		public function activation_final_phase(){
+			
+			$email = $_POST['username'];
+			$password = $_POST['new_password'];
+			
+			
+			//confirm user exists and is inactive
+			
+			$data=Users::check_user_exist_activate($email);
+			foreach ($data as $key => $value) {					
+				
+				$user_id=$value->id;
+			}
+			
+			$new_password_confirm=$password ;
+			
+			Users::reset_password($user_id, $new_password_confirm);
+			
+			
+		}
 
 }
