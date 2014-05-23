@@ -59,17 +59,30 @@ class User extends MY_Controller {
 			$user_email = $user_data['email'];
 			$county_id = $user_data['county_id'];
 			$fullname = $fname . ' ' . $lname;
-
-			//get county name
-			$county_name = Counties::get_county_name($county_id);
-			$county_name = $county_name['county'];
-			//exit;
-
+            $banner_name = '';
 			$access_level = Access_level::get_access_level_name($access_typeid);
 			$user_indicator = $access_level['user_indicator'];
-
-			$session_data = array('county_id' => $county_id, 'phone_no' => $phone, 'user_email' => $user_email, 'user_id' => $user_id, 'user_indicator' => $user_indicator, 'fname' => $fname, 'lname' => $lname, 'facility_id' => $facility_id, //facility code
-			'district_id' => $district_id, 'user_type_id' => $access_typeid,'county_name' => $county_name, 'full_name' => $fullname);
+            
+            if ($user_indicator  == 'district') :
+             //get county name
+            $district_name = districts::get_district_name_($district_id);
+            $banner_name = $district_name['district'];
+            elseif ($user_indicator  == 'county') :            
+            //get county name
+            $county_name = Counties::get_county_name($county_id);
+            $banner_name = $county_name['county'];
+            elseif ($user_indicator  == 'facility' || $user_indicator = 'facility_admin') :
+             //get county name
+            $facility_name = Facilities::get_facility_name2($facility_id);
+            $banner_name = $facility_name['facility_name'];
+            endif;
+   
+			$session_data = array('county_id' => $county_id, 'phone_no' => $phone,
+			'user_email' => $user_email, 'user_id' => $user_id, 'user_indicator' => $user_indicator,
+			'fname' => $fname, 'lname' => $lname, 'facility_id' => $facility_id,
+			'district_id' => $district_id, 'user_type_id' => 
+			$access_typeid,'full_name' => $fullname,
+			'banner_name'=>$banner_name);
 
 			$this -> session -> set_userdata($session_data);
 

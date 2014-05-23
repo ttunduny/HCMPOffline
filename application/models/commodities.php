@@ -57,7 +57,7 @@ return $inserttransaction;
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as commodity_id,c.unit_size,c.unit_cost as unit_cost,
     c.total_commodity_units,
-    c_s.source_name, c_s_c.sub_category_name
+    c_s.source_name,c_s.id as supplier_id, c_s_c.sub_category_name
                FROM commodities c, commodity_source c_s, commodity_sub_category c_s_c,facility_monthly_stock f_m_s
                WHERE f_m_s.commodity_id = c.id
                AND c.commodity_sub_category_id = c_s_c.id
