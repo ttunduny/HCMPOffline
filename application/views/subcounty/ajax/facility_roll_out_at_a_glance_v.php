@@ -15,7 +15,7 @@ $(document).ready(function() {
 	<?php echo @$graph_data_daily; ?>
 	<?php echo @$graph_data_monthly; ?>
 	
-	$(".ajax_call").click( function (){
+	$(".ajax_call1").click( function (){
 		
 		$('.modal-dialog').addClass("modal-lg");
 		var body_content='<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
@@ -55,8 +55,6 @@ $(document).ready(function() {
           type: "POST",
           url: url,
           success: function(msg) {
-          	console.log(msg);
-          	
           	$('.modal-dialog').addClass("modal-lg");
           	var body_content = msg;
           	dialog_box(body_content,'<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');

@@ -934,11 +934,16 @@ class Reports extends MY_Controller
 		print "</pre>";
 		exit;*/
 		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
+		if($this->input->is_ajax_request()):
+		return $this -> load -> view('subcounty/ajax/facility_roll_out_at_a_glance_v', $data);
+		else:
+	    $data['report_view'] = "subcounty/ajax/facility_roll_out_at_a_glance_v";		
 		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
-		$data['report_view'] = "subcounty/ajax/facility_roll_out_at_a_glance_v";
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
+		endif;
+		
 
 	}
 	public function get_county_facility_mapping_ajax_request($option = null) 
@@ -1013,7 +1018,7 @@ class Reports extends MY_Controller
 
 		endforeach;
 
-		$table_data .= "<td><a href='#' id='total' class='ajax_call link' option='total' date='total'>$all_facilities</a></td></tr></tbody>";
+		$table_data .= "<td><a href='#' id='total' class='ajax_call1 link' option='total' date='total'>$all_facilities</a></td></tr></tbody>";
 		$table_data_summary .= "<td><a href='#' id='total' class='ajax_call2 link' date='total'>$all_facilities</a></td></tr></tbody>";
 		$district_names .= "<th>TOTAL</th></tr></thead>";
 		$final_coverage_total = 0;
