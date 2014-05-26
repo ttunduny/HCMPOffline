@@ -3,7 +3,7 @@
  		width: 55px !important;
  	}
  </style>
- <div class="container" style="width: 96%; margin: auto;">
+ <div class="container" style="width: 100%; margin: auto;">
 <span  class='label label-info'>Enter Order Quantity and Comment,
 Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
 <?php $identifier = $this -> session -> userdata('user_indicator');
@@ -37,7 +37,7 @@ Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
 <div class="col-md-2">
 <b>Drawing Rights Available Balance :</b>
 <input type="text" class="form-control" name="total_order_balance_value" 
-id="total_order_balance_value" readonly="readonly" value="<?php echo ($order_details[0]['order_total']-$order_details[0]['drawing_rights'])?>" />						
+id="total_order_balance_value" readonly="readonly" value="<?php echo ($order_details[0]['drawing_rights']-$order_details[0]['order_total'])?>" />						
 </div>
 </div>
 <?php $order_number=$order_details[0]['id']; echo "<input type='hidden' name='order_number' value='$order_number'/>
@@ -117,7 +117,7 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo ($order_det
 							 echo '<input type="text" class="form-control input-small cost" name="cost['.$i.']" value="'.$cost.'" readonly="yes"   />';?></td>
 							<td><input class="form-control input-small" type="text" <?php echo 'name="comment['.$i.']"' ?>  value="<?php echo $facility_order[$i]['comment'];?>" /></td>
 			       			</tr>						
-						<?php $i++;  } $i=$i-1; echo form_close()."<script>var count=".$i."</script>"	?>
+						<?php } $i=$i-1; echo form_close()."<script>var count=".$i."</script>"	?>
 </tbody>
 </table>
 
@@ -132,7 +132,7 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo ($order_det
 <?php else:?>
 <?php if($identifier==='district'):	?>
 <button type="button" class="reject btn btn-danger"><span class="glyphicon glyphicon-plus"></span>Reject Order</button>
-<button type="button" class="approve btn btn-success "><span class="glyphicon glyphicon-open"></span>Approve Order</button>
+<button type="button" class="approve btn btn-success"><span class="glyphicon glyphicon-open"></span>Approve Order</button>
 <button type="button" class="add btn btn-sm btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Item</button></div>
 <?php else: ?>
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
@@ -264,34 +264,8 @@ var $table = $('#example');
 	$(this).closest("tr").find(".cost").val(total_cost);
 	// set the order total here
 	calculate_totals();	
-	});// process all the order into a summary table for the user to confirm before placing the order 
-	$(".test").button().click( function (){
-    var table_data='<div class="row" style="padding-left:2em"><div class="col-md-6">Order Summary</div></div>'+
-    '<div class="row" style="padding-left:2em"><div class="col-md-6">Initial Drawing Rights (Ksh)</div><div class="col-md-6">'+number_format(drawing_rights_balance, 2, '.', ',')+'</div></div>'+
-    '<div class="row" style="padding-left:2em"><div class="col-md-6">Total Order Value (Ksh)</div><div class="col-md-6">'+number_format($("#total_order_value").val(), 2, '.', ',')+'</div></div>'+
-    '<div class="row" style="padding-left:2em"><div class="col-md-6">Drawing Rights Balance(Ksh)</div><div class="col-md-6">'+number_format($("#total_order_balance_value").val(), 2, '.', ',')+'</div></div>'+
-    '<table class="table table-hover table-bordered table-update">'+
-					"<thead><tr>"+
-					"<th>Description</th>"+
-					"<th>Commodity Code</th>"+
-					"<th>Order Quantity</th>"+
-					"<th>Unit Cost Ksh</th>"+
-					"<th>Total Ksh</th></tr></thead><tbody>";	 	    			
-         $("input[name^=cost]").each(function(i) { 
-        table_data +="<tr>" +
-							"<td>" +$(this).closest("tr").find(".commodity_name").val()+ "</td>" +
-							"<td>" +$(this).closest("tr").find(".commodity_code").val()+ "</td>" +
-							"<td>" +$(this).closest("tr").find(".quantity").val()+ "</td>" +	
-							"<td>" +number_format($(this).closest("tr").find(".unit_cost").val(), 2, '.', ',')+ "</td>" +	
-							"<td>" +number_format($(this).closest("tr").find(".cost").val(), 2, '.', ',')+ "</td>" +													
-						"</tr>" 
-                    });
-         table_data +="</tbody></table>";
-    //hcmp custom message dialog
-    dialog_box(table_data,'<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>'
-    +'<button type="button" class="btn btn-primary" id="save_dem_order" data-dismiss="modal">Save</button>');
 	});
-      /************save the data here*******************/
+     /************save the data here*******************/
 	$('#save_dem_order').on('click', function() {
     save_the_order_form()
      });
@@ -319,19 +293,43 @@ var $table = $('#example');
      '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
     	nxt();
     });
-     }else{
-   
+     }else{ // save the order here
+         var table_data='<div class="row" style="padding-left:2em"><div class="col-md-6">Order Summary</div></div>'+
+    '<div class="row" style="padding-left:2em"><div class="col-md-6">Initial Drawing Rights (Ksh)</div><div class="col-md-6">'+number_format(drawing_rights_balance, 2, '.', ',')+'</div></div>'+
+    '<div class="row" style="padding-left:2em"><div class="col-md-6">Total Order Value (Ksh)</div><div class="col-md-6">'+number_format($("#total_order_value").val(), 2, '.', ',')+'</div></div>'+
+    '<div class="row" style="padding-left:2em"><div class="col-md-6">Drawing Rights Balance(Ksh)</div><div class="col-md-6">'+number_format($("#total_order_balance_value").val(), 2, '.', ',')+'</div></div>'+
+    '<table class="table table-hover table-bordered table-update">'+
+                    "<thead><tr>"+
+                    "<th>Description</th>"+
+                    "<th>Commodity Code</th>"+
+                    "<th>Order Quantity</th>"+
+                    "<th>Unit Cost Ksh</th>"+
+                    "<th>Total Ksh</th></tr></thead><tbody>";                       
+         $("input[name^=cost]").each(function(i) { 
+        table_data +="<tr>" +
+                            "<td>" +$(this).closest("tr").find(".commodity_name").val()+ "</td>" +
+                            "<td>" +$(this).closest("tr").find(".commodity_code").val()+ "</td>" +
+                            "<td>" +$(this).closest("tr").find(".quantity").val()+ "</td>" +    
+                            "<td>" +number_format($(this).closest("tr").find(".unit_cost").val(), 2, '.', ',')+ "</td>" +   
+                            "<td>" +number_format($(this).closest("tr").find(".cost").val(), 2, '.', ',')+ "</td>" +                                                    
+                        "</tr>" 
+                    });
+      table_data +="</tbody></table>";
+    //hcmp custom message dialog
+    dialog_box(table_data,'<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>'
+    +'<button type="button" class="btn btn-primary" id="save_dem_order" data-dismiss="modal">Save</button>');
+   $('#main-content').on('click','#save_dem_order',function() {
     $('#workload').delay(500).queue(function (nxt){  	
     // Load up a new modal...
     var img='<img src="<?php echo base_url('assets/img/wait.gif') ?>"/>';
      dialog_box(img+'<h5 style="display: inline-block; font-weight:500;font-size: 18px;padding-left: 2%;"> Please wait as the order is being processed</h5>',
      '');
     	nxt();
+    $("#myform").submit();   
     });
-     $("#myform").submit();  	
+     });
      }	
-     }
-     
+     }     
 	function calculate_totals(){
 	var order_total=0;
 	var balance=0
@@ -349,7 +347,8 @@ var $table = $('#example');
      $("#total_order_balance_value").val(balance)
      $("#total_order_value").val(order_total);
 		
-	}		
+	}
+	
     
 });//
 

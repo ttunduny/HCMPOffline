@@ -1,22 +1,23 @@
-<div class="container" style="width: 96%; margin: auto;">
+<div class="container" style="width: 99%; margin: auto;">
 <span  class='label label-info' >Please note this is a one off activity Stock level as of <?php $today= ( date('d M Y')); //get today's date in full?>
 <input type="hidden" name="datepicker" readonly="readonly" value="<?php echo $today;?>"/><?php echo $today;?> 
 To add facility stock data, first do physical stock count</span>
 <hr />
-<?php $att=array("name"=>'myform','id'=>'myform');
+<div class="test" style="height:400px; overflow: auto;">
+    <?php $att=array("name"=>'myform','id'=>'myform');
 echo form_open('stock/add_stock_level',$att); ?>
-<div class="table-responsive" style="height:400px; overflow-y: auto;">
-<table  class="table table-hover table-bordered table-update"  id="facility_stock_table">
+<table  class="table table-hover table-bordered table-update table-responsive"  id="facility_stock_table">
+
 	<thead style="background-color: white">
 		<tr>
 			<th> Description</th>
 			<th> Supplier</th>
 			<th> Unit Size</th>
-			<th> Issue Type</th>
 			<th> Batch No</th>
 			<th> Source of Item</th>
 			<th> Manufacturer</th>
 			<th> Expiry Date</th>
+			<th> Issue Type</th>
 			<th> Stock Level</th>
 			<th> Total Unit Count</th>
 			<th> Options</th>
@@ -49,12 +50,6 @@ echo form_open('stock/add_stock_level',$att); ?>
 			<input type="hidden" class="actual_units"/>
 			</td>
 			<td><input type="text" class="form-control input-small unit_size"   name="commodity_unit_size[]" readonly="readonly"/></td>
-			<td>
-			<select name="commodity_unit_of_issue[]" class="form-control commodity_unit_of_issue input-small">
-			<option value="Pack_Size">Pack Size</option>
-			<option value="Unit_Size">Unit Size</option>
-			</select>	
-			</td>
 			<td><input class='form-control input-small commodity_batch_no' required="required" name='commodity_batch_no[]' type='text'/></td>
 			<td><select class="form-control input-small source_of_item" name="source_of_item[]">
 				<?php foreach($commodity_source as $commodity_source){
@@ -65,6 +60,12 @@ echo form_open('stock/add_stock_level',$att); ?>
 			<td><input id='commodity_manufacture' required="required" class="form-control commodity_manufacture input-small" 
 			name='commodity_manufacture[]' type='text' value="" /></td>
 			<td><input  class='form-control input-small clone_datepicker' required="required"  name='clone_datepicker[]' type='text' /></td>
+			<td>
+            <select name="commodity_unit_of_issue[]" class="form-control commodity_unit_of_issue input-small">
+            <option value="Pack_Size">Pack Size</option>
+            <option value="Unit_Size">Unit Size</option>
+            </select>   
+            </td>
 			<td><input id='commodity_available_stock' name='commodity_available_stock[]' 
 			type='text' class="form-control input-small input-small commodity_available_stock" required="true"/></td>
 			<td><input type='text' class='form-control input-small commodity_total_units' readonly="readonly" name='commodity_total_units[]' value=''/></td>
@@ -72,15 +73,21 @@ echo form_open('stock/add_stock_level',$att); ?>
 		</tr>
 	</tbody>
 </table>
+<?php echo form_close();?>
+
+</div>
 </div>
 <hr />
 <div class="container-fluid">
 <div style="float: right">
+<a href="<?php echo base_url('reports/create_excel_facility_stock_template') ?>" >
+<button type="button" class="btn btn-primary">
+<span class="glyphicon glyphicon-save"></span>download excel template</button>
+</a>
+<button type="button" class="btn btn-success update-via-excel"><span class="glyphicon glyphicon-open"></span>upload</button>
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
 <button class=" save btn btn-sm btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>
-</div>
-</div>
-<?php echo form_close();?>
+
 <script type="text/javascript">
 $(document).ready(function() {		
  var $table = $('table');
@@ -88,8 +95,19 @@ $(document).ready(function() {
   $table.floatThead({ 
 	 scrollingTop: 100,
 	 zIndex: 1001,
-	 scrollContainer: function($table){ return $table.closest('.table-responsive'); }
-	});	
+	 scrollContainer: function($table){ return $table.closest('.test'); }
+	});
+	////upload via excel
+	 $(".update-via-excel").on('click', function() {
+    var body_content='<?php  $att=array("name"=>'myform','id'=>'myform'); 
+    echo form_open_multipart('stock/update_stock_via_excel',$att)?>'+
+    '<input type="file" name="file" id="file" required="required" class="form-control"><br>'+
+    '<input type="submit" name="submit"  value="Upload">'+
+    '</form>';
+   //hcmp custom message dialog
+    dialog_box(body_content,''); 
+
+    });	
 	//Check if drugs were temporarily saved
 		var link="<?php echo base_url().'stock/get_temp_stock_data_json' ?>";
 		$.ajax({
@@ -135,6 +153,7 @@ $(document).ready(function() {
 					if(x==data_count){
 						$('#facility_stock_table tbody tr:first').remove();
 					}
+					 refreshDatePickers();
 					x++;					
 				});
 			}
@@ -170,51 +189,8 @@ $(document).ready(function() {
 			else{
 			 //send data to the temp table
 	        ajax_simple_post_with_console_response(url, temp_data[0]);  /// uncomment this	
-			}     
-	        //Get New Object id's
-			var cloned_object = $('#facility_stock_table tr:last').clone(true);
-			var table_row = cloned_object.attr("table_row");
-			var next_table_row = parseInt(table_row) + 1;
-			cloned_object.attr("drug_row", next_table_row);
-			var commodity_id_id = "commodity_id_" + next_table_row;
-			var commodity_batch_no_id = "commodity_batch_no_" + next_table_row;
-			var source_of_item_id = "source_of_item_" + next_table_row;
-			var commodity_manufacture_id = "commodity_manufacture_" + next_table_row;
-			var clone_datepicker_id = "clone_datepicker_" + next_table_row;
-			var commodity_total_units_id = "commodity_total_units_" + next_table_row;          
-			//Find Old Objects and reset values
-			var desc = cloned_object.find(".desc");
-			var commodity_batch_no = cloned_object.find(".commodity_batch_no");
-			var commodity_id = cloned_object.find(".commodity_id");
-			var source_of_item = cloned_object.find(".source_of_item");
-			var commodity_manufacture = cloned_object.find(".commodity_manufacture");
-			var clone_datepicker = cloned_object.find(".clone_datepicker");
-			var commodity_total_units = cloned_object.find(".commodity_total_units");		
-			var commodity_batch_no = cloned_object.find(".commodity_batch_no");
-			//reset the values
-			cloned_object.find('.commodity_supplier').attr("value",'');
-	        cloned_object.find('.unit_size').attr("value",'');
-	        cloned_object.find('.actual_units').attr("value",'');
-	        cloned_object.find('.commodity_available_stock').attr("value",'');
-			desc.attr("value", "0");
-			commodity_batch_no.attr("id", commodity_batch_no_id);
-			commodity_batch_no.attr("value", "");
-			commodity_id.attr("id", commodity_id_id);
-			commodity_id.attr("value", "");
-			commodity_batch_no.attr("id", commodity_batch_no_id);
-			commodity_batch_no.attr("value", "");
-			commodity_manufacture.attr("id", commodity_manufacture_id);
-			commodity_manufacture.attr("value", "");
-			commodity_total_units.attr("id", commodity_total_units_id);
-			commodity_total_units.attr("value", "");
-			clone_datepicker.attr("id", clone_datepicker_id);	
-			clone_datepicker.attr("value", "");	  
-			 // remove the error class
-            cloned_object.find("label.error").remove();      
-			//insert the data
-			cloned_object.insertAfter('#facility_stock_table tr:last');
-	        // refresh the datepickers
-			refreshDatePickers();
+			}    
+	        clone_the_last_row_of_the_table();
 		});	
 	$('.commodity_available_stock').on('keyup',function(){
    //get the value of the input
@@ -254,13 +230,44 @@ $(document).ready(function() {
     $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();	})
     return; }
     // finally calculate the stock 
+    alert(commodity_unit_of_issue);
     calculate_actual_stock(actual_unit_size,commodity_unit_of_issue,num,".commodity_total_units",selector_object); 
     //update the record 
-    var url = "<?php echo base_url().'stock/autosave_update_stock'?>";	  
+    //var url = "<?php echo base_url().'stock/autosave_update_stock'?>";	  
     //save the infor 
-    var temp_data=send_data_to_the_temp_table(selector_object);	
     ajax_simple_post_with_console_response(url, temp_data[0]);		     
-    });  
+    });
+        $('.remove').on('click',function(){
+    var selector_object=$(this);
+     //hcmp custom message dialog
+    dialog_box("Are you sure you want to delete this record?",'<button type="button" class="btn btn-danger remove_record" >OK</button>'+
+    '<button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>'); 
+    $('.remove_record').on('click',function(){
+    //url for deleting the row
+    var url = "<?php echo base_url().'stock/delete_temp_autosave'?>";
+    //get the data to delete the row
+    var temp_data=send_data_to_the_temp_table(selector_object);    
+    if(temp_data[6]!=0){
+    //data to be used to delete the row
+    var data="commodity_id="+temp_data[6]+"&commodity_batch_no="+temp_data[2];
+    //delete the row on the temp table
+    ajax_simple_post_with_console_response(url, data); }
+     //remove the row
+     var rowCount =0;
+     rowCount = $('#facility_stock_table  >tbody >tr').length;
+     //finally remove the row 
+     if(rowCount==1){
+     clone_the_last_row_of_the_table();
+      selector_object.parent().parent().remove();  }
+     else{ selector_object.parent().parent().remove();  }
+    $('#communication_dialog').modal('hide');
+    })
+    });                     
+    /************save the data here*******************/
+    $("#myform").validate();
+    $('.save').button().click(function() {
+     confirm_if_the_user_wants_to_save_the_form("#myform"); 
+     });  
     function send_data_to_the_temp_table(selector_object){
             	
 			var data_ =$('option:selected', selector_object.closest("tr").find('.desc')).attr('special_data'); 
@@ -307,30 +314,43 @@ $(document).ready(function() {
 			}		
 			return alert_message;
     }
-    $('.remove').on('click',function(){
-    var selector_object=$(this);
-     //hcmp custom message dialog
-    dialog_box("Are you sure you want to delete this record?",'<button type="button" class="btn btn-danger remove_record" >OK</button>'+
-    '<button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>'); 
-    $('.remove_record').on('click',function(){
-    //url for deleting the row
-    var url = "<?php echo base_url().'stock/delete_temp_autosave'?>";
-    //get the data to delete the row
-    var temp_data=send_data_to_the_temp_table(selector_object);    
-	if(temp_data[6]!=0){
-    //data to be used to delete the row
-	var data="commodity_id="+temp_data[6]+"&commodity_batch_no="+temp_data[2];
-	//delete the row on the temp table
-     ajax_simple_post_with_console_response(url, data); }
-     //remove the row
-    selector_object.parent().parent().remove(); 
-    $('#communication_dialog').modal('hide');
-    })
-    });						
-/************save the data here*******************/
-	$("#myform").validate();
-	$('.save').button().click(function() {
-	 confirm_if_the_user_wants_to_save_the_form("#myform"); 
-     });});	
+    function  clone_the_last_row_of_the_table(){
+            //Get New Object id's
+            var cloned_object = $('#facility_stock_table tr:last').clone(true);
+            var table_row = cloned_object.attr("table_row");
+            var next_table_row = parseInt(table_row) + 1;
+            cloned_object.attr("drug_row", next_table_row);
+            var commodity_id_id = "commodity_id_" + next_table_row;
+            var commodity_batch_no_id = "commodity_batch_no_" + next_table_row;
+            var source_of_item_id = "source_of_item_" + next_table_row;
+            var commodity_manufacture_id = "commodity_manufacture_" + next_table_row;
+            var clone_datepicker_id = "clone_datepicker_" + next_table_row;
+            var commodity_total_units_id = "commodity_total_units_" + next_table_row;          
+            //Find Old Objects and reset values
+            var desc = cloned_object.find(".desc");
+            var commodity_batch_no = cloned_object.find(".commodity_batch_no");
+            var commodity_id = cloned_object.find(".commodity_id");
+            var source_of_item = cloned_object.find(".source_of_item");
+            var commodity_manufacture = cloned_object.find(".commodity_manufacture");
+            var clone_datepicker = cloned_object.find(".clone_datepicker");
+            var commodity_total_units = cloned_object.find(".commodity_total_units");       
+            var commodity_batch_no = cloned_object.find(".commodity_batch_no");
+            //reset the values
+            cloned_object.find('input[type=text]').val('');
+
+            commodity_batch_no.attr("id", commodity_batch_no_id);
+            commodity_id.attr("id", commodity_id_id);
+            commodity_batch_no.attr("id", commodity_batch_no_id);
+            commodity_manufacture.attr("id", commodity_manufacture_id);
+            commodity_total_units.attr("id", commodity_total_units_id);
+            clone_datepicker.attr("id", clone_datepicker_id);   
+             // remove the error class
+            cloned_object.find("label.error").remove();      
+            //insert the data
+            cloned_object.insertAfter('#facility_stock_table tr:last');
+            // refresh the datepickers
+            refreshDatePickers(); 
+    }
+});	
 </script>
 

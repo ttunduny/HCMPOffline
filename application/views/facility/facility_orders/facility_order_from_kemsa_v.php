@@ -103,7 +103,7 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 							<td><?php echo '<input type="text" class="form-control input-small cost" name="cost['.$i.']" value="0" readonly="yes"   />';?></td>
 							<td><input class="form-control input-small" type="text" <?php echo 'name="comment['.$i.']"' ?>  value="N/A" /></td>
 			       			</tr>						
-						<?php $i++; } $i=($i==0)? 0: $i=$i-1;
+						<?php } $i=($i==0)? 0: $i=$i-1;
 						 echo form_close()."<script>var count=".$i."</script>"	?>
 </tbody>
 </table>
@@ -268,7 +268,7 @@ $(document).ready(function() {
     +'<button type="button" class="btn btn-primary" id="save_dem_order" data-dismiss="modal">Save</button>');
 	});
       /************save the data here*******************/
-	$('#save_dem_order').on('click', function() {
+	$('#main-content').on('click','#save_dem_order',function() {
      var order_total=$('#total_order_value').val();
      var workload=$('#workload').val();
      var bed_capacity=$('#bed_capacity').val();

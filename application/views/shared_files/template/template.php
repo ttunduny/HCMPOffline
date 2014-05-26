@@ -115,7 +115,7 @@ foreach($menus as $menu){?>
 							<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button><h6>' . $flash_error_data . '</h6></div>';
 							}
 						   elseif (isset($system_error_message)) {
-							echo '<div class="alert alert-danger alert-dismissable" >
+							echo '<div class="alert alert-danger alert-dismissable"  style="width:80%; margin-top:-20px">
 							<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button><h6>' . $system_error_message . '</h6></div>';
 							}
  						?>
@@ -126,7 +126,7 @@ foreach($menus as $menu){?>
       	<div class="row">
       		
       		<div class="col-md-4" style="font-weight:bold; ">
-      		<span style="margin-left:2%;">  <?php echo $banner_text;?> </span>
+      		<span style="margin-left:2%;">  <?php echo $this -> session -> userdata('banner_name')." | ". $banner_text;?> </span>
       		 	
      		</div>
       		<div class="col-md-4">     			

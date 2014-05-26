@@ -57,7 +57,15 @@ return $inserttransaction;*/
 		ORDER BY  `facility_name` ASC ");
 		return $q;	
 }
-
+   public static function get_tragetted_rolled_out_facilities($facility_code=null,$district_id=null,$county_id=null){
+       $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+        $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+        SELECT SUM( targetted ) AS targetted, SUM( using_hcmp ) AS using_hcmp, COUNT( facility_code ) AS total
+        FROM districts d, facilities f
+        WHERE f.district = d.id
+        and $where_clause");
+        return $q;    
+   }
 	public static function get_facility_name_($facility_code){
 				
 	if($facility_code!=NULL){
@@ -72,6 +80,23 @@ else{
 }	
 			
 	}
+	   public static function get_facilities_monitoring_data($facility_code=null,$district_id=null,$county_id=null){
+	$where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+    $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+    SELECT u.fname, u.lname,f.facility_name, f.facility_code,d.district,
+    MAX( f_i.`created_at` ) AS last_issued, ifnull(DATEDIFF( NOW( ) , MAX( f_i.`created_at` ) ),0) AS days_last_issued, 
+    MAX( l.end_time_of_event ) AS last_seen, ifnull(DATEDIFF( NOW( ) , MAX( l.end_time_of_event ) ),0) AS days_last_seen
+    FROM user u, log l, facilities f, districts d, facility_issues f_i
+    WHERE f_i.`issued_by` = u.id
+    and l.user_id=u.id
+    AND u.facility = f.facility_code
+    AND f.district = d.id
+    and $where_clause
+    GROUP BY f.facility_code
+ ");
+return $q;  
+    
+}
 	public static function get_facilities_online_per_district($county_id){
 	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select d.id, d.district,f.facility_name,f.facility_code, DATE_FORMAT(`date_of_activation`,'%d %b %y') as date 
@@ -125,7 +150,7 @@ GROUP BY user.facility");
 	public static function get_facility_name($facility_code)
 	{
 		$query = Doctrine_Query::create()->select('*')->from('facilities')->where("facility_code='$facility_code'");
-		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		$result = $query -> execute();
 		return $result;
 	}
 	public static function get_facility_name2($facility_code)
@@ -154,23 +179,6 @@ return $q;
 
 }
 
-public static function get_total_facilities_rtk($county_id){
-	
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT (
-SELECT COUNT( f.facility_code ) 
-FROM facilities f, counties c, districts d
-WHERE f.`district` = d.id
-AND d.county = c.id
-AND c.id =  '$county_id'
-) AS total_facilities , COUNT( f.facility_code ) AS total_rtk
-FROM facilities f, counties c, districts d
-WHERE rtk_enabled =1
-AND f.`district` = d.id
-AND d.county = c.id
-AND c.id =  '$county_id'
-");
-return $q;
-}
 
 public static function get_total_facilities_in_district($county_id){
 	
@@ -183,19 +191,6 @@ AND d.id =  '$county_id'
 return $q;
 }
 
-public static function get_total_facilities_rtk_ownership($county_id,$owner_type){
-	
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-SELECT COUNT( f.facility_code ) AS ownership_count
-FROM facilities f, counties c, districts d
-WHERE rtk_enabled =1
-AND f.`district` = d.id
-AND d.county = c.id
-AND c.id =  '$county_id'
-AND f.owner like '%$owner_type%'
-");
-return $q;
-}
 
 public static function get_total_facilities_district_ownership($county_id,$owner_type){
 	
@@ -210,68 +205,7 @@ AND f.owner like '%$owner_type%'
 ");
 return $q;
 }
-public static function get_total_facilities_rtk_ownership_in_the_country(){
-	
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-SELECT COUNT( f.facility_code ) AS ownership_count,f.owner
-FROM facilities f
-WHERE f.rtk_enabled =1
-group by f.owner 
-order by f.owner asc");
-return $q;
-}
-public static function get_total_facilities_rtk_in_district($district_id){
-	
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-		SELECT  f.facility_code , f.owner as facility_owner,f.facility_name
-		FROM facilities f, districts d
-		WHERE rtk_enabled =1
-		AND d.id='$district_id'
-		AND f.`district` = '$district_id'");
-return $q;
-}
-public static function get_total_facilities_rtk_ownership_in_a_district($district_id){
-	
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-SELECT COUNT( f.facility_code ) AS ownership_count, f.owner
-FROM facilities f, districts d
-WHERE rtk_enabled =1
-AND d.id='$district_id'
-AND f.`district` = '$district_id'
-group by f.owner 
-order by f.owner asc
-");
-return $q;
-}
-public static function get_total_facilities_rtk_ownership_in_a_county($county_id){
-	
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-SELECT COUNT( f.facility_code ) AS ownership_count, f.owner
-FROM facilities f, counties c, districts d
-WHERE rtk_enabled =1
-AND f.`district` = d.id
-AND d.county = c.id
-AND c.id =  '$county_id'
-group by f.owner 
-order by f.owner asc
-");
-return $q;
-}
 
-public static function get_total_facilities_rtk_in_county($county_id){
-	
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-SELECT  f.facility_code , f.owner as facility_owner,f.facility_name
-FROM facilities f, counties c, districts d
-WHERE rtk_enabled =1
-AND f.`district` = d.id
-AND d.county = c.id
-AND c.id =  '$county_id'");
-return $q;
-}
-
-///////////////////////////////////////////////
-	
 public static function get_facility_details($category){
 		$district = $category;
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
