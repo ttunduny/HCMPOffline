@@ -547,5 +547,4 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 	
 	}
 	
-	
 }

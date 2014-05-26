@@ -126,7 +126,7 @@ foreach($menus as $menu){?>
       	<div class="row">
       		
       		<div class="col-md-4" style="font-weight:bold; ">
-      		<span style="margin-left:2%;">  <?php echo $banner_text;?> </span>
+      		<span style="margin-left:2%;">  <?php echo $this -> session -> userdata('banner_name')." | ". $banner_text;?> </span>
       		 	
      		</div>
       		<div class="col-md-4">     			

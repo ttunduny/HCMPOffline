@@ -325,7 +325,7 @@ var $table = $('#example');
      dialog_box(img+'<h5 style="display: inline-block; font-weight:500;font-size: 18px;padding-left: 2%;"> Please wait as the order is being processed</h5>',
      '');
     	nxt();
-    	   // $("#myform").submit();   
+    $("#myform").submit();   
     });
      });
      }	
@@ -347,7 +347,8 @@ var $table = $('#example');
      $("#total_order_balance_value").val(balance)
      $("#total_order_value").val(order_total);
 		
-	}		
+	}
+	
     
 });//
 

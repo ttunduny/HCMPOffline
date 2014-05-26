@@ -94,8 +94,8 @@
                     '<?php	$facilities=Facilities::get_facilities_online_per_district($this -> session -> userdata('county_id'));
                     foreach($facilities as $facility):
 						    $facility_code=$facility['facility_code'];
-							 $facility_name=$facility['facility_name']; ?>?>'+					
-						'<option <?php echo 'value="'.$facility_code.'">'.$facility_name ;?></option><?php endforeach;?>';
+							 $facility_name= $facility['facility_name']; ?>?>'+					
+						'<option <?php echo 'value="'.$facility_code.'">'.preg_replace("/[^A-Za-z0-9 ]/", "",$facility_name );?></option><?php endforeach;?>';
    //hcmp custom message dialog
     dialog_box(body_content,
     '<button type="button" class="btn btn-primary order_for_them" >View Their Bin Card</button>'

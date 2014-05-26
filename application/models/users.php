@@ -67,6 +67,12 @@ class Users extends Doctrine_Record {
 		$names = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $names;
 	}
+	public static function get_user_info($facility_code) {
+		$query = Doctrine_Query::create() -> select("DISTINCT usertype_id, telephone,district, facility") -> from("users")->where("status='1' and  facility='$facility_code'");
+		$info = $query -> execute();
+		
+		return $info;
+	}
 
 	public static function check_user_exist($email) {
 		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username='$email' AND status IN(1,2)");
