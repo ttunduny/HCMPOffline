@@ -168,6 +168,7 @@ unset($popup);
 		$('#new_password').keyup(function() {
 			$('#result').html(checkStrength($('#new_password').val()))
 		})
+		
 		$('#new_password_confirm').keyup(function() {
 			var newps = $('#new_password').val()
 			var newpsconfirm = $('#new_password_confirm').val()
