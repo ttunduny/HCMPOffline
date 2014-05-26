@@ -1,4 +1,5 @@
 <?php   $identifier = $this -> session -> userdata('user_indicator');
+		$countyname = $this -> session -> userdata('county_name');
 		$malaria_report_data='';
 		$RH_report_details='';
 		$TB_report_details='';
@@ -7,7 +8,7 @@
 			$facilityname = Facilities::get_facility_name2($malaria_details['facility_code']);
 			$facility = $facilityname['facility_name'];
 			$user = Users::get_user_names($malaria_details['user']);
-			$username = $user['fname']." ".$user['lname'];
+			$username = $user[0]['fname']." ".$user[0]['lname'];
 			$report_date = $malaria_details['report_date'];
 			//Dowwnload links
 			$link = base_url('reports/get_facility_report_pdf/'.$malaria_details['report_id'].'/'.$malaria_details['facility_code'].'/malaria');	
@@ -38,7 +39,7 @@ HTML_DATA;
 			$facility = $facilityname['facility_name'];
 			
 			$user = Users::get_user_names($RH_details['user']);
-			$username = $user['fname']." ".$user['lname'];
+			$username = $user[0]['fname']." ".$user[0]['lname'];
 			$report_date = $RH_details['report_date'];
 			$link = base_url('reports/get_facility_report_pdf/'.$RH_details['report_id'].'/'.$RH_details['facility_code'].'/RH');	
 			$link_excel = base_url('reports/create_excel_facility_program_report/'.$RH_details['report_id'].'/'.$RH_details['facility_code'].'/RH');
@@ -62,6 +63,10 @@ HTML_DATA;
 			endforeach;
 		
 		?>
+<h1 class="page-header" style="margin: 0;font-size: 1.6em;">Program Reports</h1>
+<div class="alert alert-info">
+  <b>Below are the program reports for <?php echo $countyname; ?></b>
+</div>
 <div class="row container" style="width: 100%; margin: auto;">
 <div class="col-md-10" style="border: 1px solid #DDD;">
 	<ul class='nav nav-tabs'>
