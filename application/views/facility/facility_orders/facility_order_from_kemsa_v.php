@@ -279,7 +279,7 @@ $(document).ready(function() {
      if (bed_capacity=='') {alert_message+="<li>Indicate In-patient Bed Days</li>";}
      if(isNaN(alert_message)){
      //This event is fired immediately when the hide instance method has been called.
-    $('#workload').delay(1000).queue(function (nxt){
+    $('#workload').delay(500).queue(function (nxt){
     // Load up a new modal...
      dialog_box('fix this items before saving your order <ol>'+alert_message+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;',
      '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');

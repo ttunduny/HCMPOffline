@@ -6,18 +6,18 @@ class Facility_stocks extends Doctrine_Record {
 		
 	public function setTableDefinition()
 	{
-		        $this->hasColumn('id', 'int');
-				$this->hasColumn('facility_code', 'int');
-				$this->hasColumn('commodity_id', 'int');
-				$this->hasColumn('batch_no', 'varchar',50);
-				$this->hasColumn('manufacture', 'varchar',100);
-				$this->hasColumn('initial_quantity', 'int');
-				$this->hasColumn('current_balance', 'int');
-				$this->hasColumn('source_of_commodity', 'int');
-				$this->hasColumn('expiry_date', 'date');
-				$this->hasColumn('date_added', 'date');
-				$this->hasColumn('date_modified', 'date');
-				$this->hasColumn('status', 'int');	
+        $this->hasColumn('id', 'int');
+		$this->hasColumn('facility_code', 'int');
+		$this->hasColumn('commodity_id', 'int');
+		$this->hasColumn('batch_no', 'varchar',50);
+		$this->hasColumn('manufacture', 'varchar',100);
+		$this->hasColumn('initial_quantity', 'int');
+		$this->hasColumn('current_balance', 'int');
+		$this->hasColumn('source_of_commodity', 'int');
+		$this->hasColumn('expiry_date', 'date');
+		$this->hasColumn('date_added', 'date');
+		$this->hasColumn('date_modified', 'date');
+		$this->hasColumn('status', 'int');	
 			
 	}
 
@@ -546,6 +546,5 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 		
 	
 	}
-	
 	
 }

@@ -70,7 +70,32 @@ AND DATE_FORMAT( l.start_time_of_event,'%Y-%m-%d') = '$date'
 ");
 return $q;
 }
+public static function get_subcounty_login_count($county_id,$district_id,$date)
+{
+	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT 
+		ifnull(COUNT(DISTINCT u.facility ),0) AS total
+		FROM log l, user u
+		WHERE u.id = l.user_id
+		AND u.county_id =$county_id
+		AND u.district=$district_id
+		AND DATE_FORMAT( l.start_time_of_event,'%Y-%m-%d') = '$date'
+		
+		");
+	return $q;
+}
+public static function get_subcounty_login_monthly_count($county_id,$district_id,$date)
+{
+	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+	SELECT  IFNULL( COUNT(DISTINCT u.facility) , 0 ) AS total
+	FROM log l, user u
+	WHERE u.id = l.user_id
+	AND u.county_id =$county_id
+	AND u.district =$district_id
+	AND DATE_FORMAT( l.`start_time_of_event` ,'%Y-%m') = '$date'");
+	return $q;
 
+
+}
 public static function get_county_login_monthly_count($county_id,$district_id,$date){	
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 SELECT  IFNULL( COUNT(DISTINCT u.facility) , 0 ) AS total
