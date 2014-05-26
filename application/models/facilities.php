@@ -55,7 +55,7 @@ class Facilities extends Doctrine_Record {
 		ORDER BY  `facility_name` ASC ");
 		return $q;	
 }
-   public function get_tragetted_rolled_out_facilities($facility_code=null,$district_id=null,$county_id=null){
+   public static function get_tragetted_rolled_out_facilities($facility_code=null,$district_id=null,$county_id=null){
        $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
         $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
         SELECT SUM( targetted ) AS targetted, SUM( using_hcmp ) AS using_hcmp, COUNT( facility_code ) AS total
