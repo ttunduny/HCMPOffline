@@ -1242,6 +1242,7 @@ class Reports extends MY_Controller
 	     $county_id = $this -> session -> userdata('county_id');
 	     $data['district_data'] = districts::getDistrict($county_id);
 	     $data['c_data'] = Commodities::get_all_2();
+         $data['tracer_items'] = Commodities::get_tracer_items();
 		 $data['categories']=commodity_sub_category::get_all_pharm();
 	     return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
 	    }
@@ -1327,6 +1328,7 @@ class Reports extends MY_Controller
 		 $county_id = $this -> session -> userdata('county_id');
 	     $data['district_data'] = districts::getDistrict($county_id);
 	     $data['c_data'] = Commodities::get_all_2();
+         $data['tracer_items'] = Commodities::get_tracer_items();
 		 $data['categories']=commodity_sub_category::get_all_pharm();
 		return $this -> load -> view("subcounty/ajax/county_consumption_data_filter_v", $data);
 	}
@@ -1730,7 +1732,7 @@ $category_data=array(array("From",'To',"Commodity Name","Commodity Code",
 		<td><a class="badge" >' . $no_of_facilities . '</a></td>
 		</tr>
 		<tr>
-		<td><label style="font-weight: ">Total No of Facilities  Taregetted</label></td>
+		<td><label style="font-weight: ">Total No of Facilities  Targeted</label></td>
 		<td>	<a class="badge">' . $no_of_facilities_using_targetted. '</a></td>
 		</tr>
 		<tr>
@@ -1744,7 +1746,7 @@ $category_data=array(array("From",'To',"Commodity Name","Commodity Code",
 		</table>
         </br><p>';
 
-        $category_data=array(array("Sub County",'Facility Name',"MLF No","Owner", "Facility Status","Targetted For Roll Out","Using HCMP","Date Activated", "No. Facility Users"));
+        $category_data=array(array("Sub County",'Facility Name',"MLF No","Owner", "Facility Status","Targeted For Roll Out","Using HCMP","Date Activated", "No. Facility Users"));
         $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_1'));
 	    $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
 	    $graph_data=array_merge($graph_data,array("table_body"=>$series_data));				
