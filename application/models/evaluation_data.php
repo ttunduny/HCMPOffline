@@ -276,7 +276,22 @@ AND h_s.facility_code=f.facility_code
  
    return array("total_facilities"=>$query_1[0]['total'],'total_evaluation'=>$query_2[0]['total']);
    }
+
+   	public static function show_req_id($county_id = null, $district_id = null){
+		$where = (isset($county_id) && !isset($district_id)) ? " and d.county=$county_id " : " and d.id=$district_id ";
+		$query17 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+SELECT facility_name, req_spec
+FROM facilities f, districts d, facility_evaluation h_s
+WHERE f.district = d.id
+AND d.county =1
+AND h_s.facility_code = f.facility_code
+AND req_id =1
+$where
+ "); 
+return $query17;
+
 	}
+}
 
 
 	

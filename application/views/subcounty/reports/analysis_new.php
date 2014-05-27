@@ -57,6 +57,12 @@ color: #fff; }
 		$total=@round(($coverage_data['total_facilities']/$coverage_data['total_evaluation'])*100);
 		 echo $total ?>%</div>
 
+				<button id="raw_data_view" class=" btn btn-sm btn-small btn-primary">
+				<span class = "ui-button-text">View Raw Data
+					</span>
+				</button>
+
+
 		 <table width="100%" class="table table-bordered">
 	<tr class="accordion">
     <td colspan="4">1. FACILITY INFORMATION</td></tr>
@@ -96,15 +102,14 @@ color: #fff; }
     				$statusY="#5CB85C";
 					$statusN="#D9534F";
        
-       
-        // print_r($scheduled_training);
-        // $scheduled_total= $scheduled_training[0]['total'];
-        // $scheduled_agreed = $scheduled_training[0]['actual'];
-        // $total_facilities = $facility_total[0]['total'];
-
+ 
     				$percentageY= calculate_percentage($scheduled_training[0]['total'],$scheduled_training[0]['actual']);
 					// $percentageN=100-$percentageY;
 					$percentageN=100 - $percentageY;
+
+    				$progress_bar1 = $percentageY;
+					$progress_bar_1 = $percentageN;
+
     			echo  "<div class='progress'><div class='bar'  style='float:left;width:$percentageY%;background:$statusY'> YES ".$percentageY ."% </div>
 
     				<div class='bar' style='float:right; width:$percentageN%;background:$statusN'> NO ".$percentageN."% </div></div>"; 
@@ -123,6 +128,10 @@ color: #fff; }
         $percentageY= calculate_percentage($feedback_training[0]['total'],$feedback_training[0]['actual']);
                     // $percentageN=100-$percentageY;
                     $percentageN=100 - $percentageY;
+
+                    $progress_bar2 = $percentageY;
+					$progress_bar_2 = $percentageN;
+
 		echo  "<div class='progress'><div class='bar'  style='float:left;width:$percentageY%;background:$statusY'>YES ".$percentageY ."% </div>
     				<div class='bar' style='float:right; width:$percentageN%;background:$statusN'> NO ".$percentageN ."% </div></div>"; 
 		 ?>
@@ -139,6 +148,10 @@ color: #fff; }
         $percentageY= calculate_percentage($pharm_supervision[1]['total'],$pharm_supervision[1]['actual']);
 
                     $percentageN=100 - $percentageY;
+
+                    $progress_bar3 = $percentageY;
+					$progress_bar_3 = $percentageN;
+
 		echo  "<p>District Pharmacist  </p><div class='progress'><div class='bar'  style='float:left;width:$percentageY%; clear:none; background:$statusY'>YES ".$percentageY ."% </div>
     				<div class='bar' style='float:right; width:$percentageN%;background:$statusN'>NO ".$percentageN ."% </div></div>"; 
 		 ?>
@@ -148,8 +161,11 @@ color: #fff; }
 
         $percentageY= calculate_percentage($coord_supervision[1]['total'],$coord_supervision[1]['actual']);
 
-
                     $percentageN=100 - $percentageY;
+
+                    $progress_bar4 = $percentageY;
+					$progress_bar_4 = $percentageN;
+
 		echo  "<p>District Coordinator  </p><div class='progress'><div class='bar'  style='float:left;width:$percentageY%; clear:none; background:$statusY'>YES ".$percentageY ."% </div>
     				<div class='bar' style='float:right; width:$percentageN%;background:$statusN'>NO ".$percentageN ."% </div></div>"; 
 		 ?>
@@ -167,7 +183,11 @@ color: #fff; }
         $percentageY= calculate_percentage($req_id[1]['total'],$req_id[1]['actual']);
                     // $percentageN=100-$percentageY;
                     $percentageN=100 - $percentageY;
-			echo  "<div class='progress'><div class='bar'  style='float:left;width:$percentageY%;background:$statusY'>YES ".$percentageY ."% </div>
+
+                    $progress_bar5 = $percentageY;
+					$progress_bar_5 = $percentageN;
+
+			echo  "<div class='view_requirements progress'><div class='bar'  style='float:left;width:$percentageY%;background:$statusY'>YES ".$percentageY ."% </div>
     				<div class='bar' style='float:right; width:$percentageN%;background:$statusN'>  NO ".$percentageN ."% </div></div></div></td>"; 
     				  
 		 ?>
@@ -183,6 +203,10 @@ color: #fff; }
          $percentageY= calculate_percentage($req_addr[1]['total'],$req_addr[1]['actual']);
                     // $percentageN=100-$percentageY;
                     $percentageN=100 - $percentageY;
+
+                    $progress_bar6 = $percentageY;
+					$progress_bar_6 = $percentageN;
+
 			echo  "<div class='progress'><div class='bar'  style='float:left;width:$percentageY%;background:$statusY'>YES ".$percentageY ."% </div>
     				<div class='bar' style='float:right; width:$percentageN%;background:$statusN'>  NO ".$percentageN ."% </div></div></div></td>"; 
 		 ?>
@@ -200,7 +224,10 @@ color: #fff; }
         // exit;
         $percentageY= calculate_percentage($train_useful[1]['actual'],$train_useful[1]['total']);
                       $percentageN=100-$percentageY;
-        //             $percentageN=100 - $percentageY;
+
+                      $progress_bar7 = $percentageY;
+					$progress_bar_7 = $percentageN;
+
 			echo  "<div class='progress'><div class='bar'  style='float:left;width:$percentageY%;background:$statusY'>YES ".$percentageY ."% </div>
     				<div class='bar' style='float:right; width:$percentageN%;background:$statusN'>  NO ".$percentageN ."% </div></div></div></td>"; 
 		 ?>
@@ -236,6 +263,10 @@ color: #fff; }
                     // $percentageN=100-$percentageY;
                     
                     $percentageN=100 - $percentageY;
+
+                    $progress_bar8 = $percentageY;
+					$progress_bar_8 = $percentageN;
+
 			echo  "<div class='progress'><div class='bar'  style='float:left;width:$percentageY%;background:$statusY'>YES ".$percentageY ."% </div>
     				<div class='bar' style='float:right; width:$percentageN%;background:$statusN'> NO".$percentageN ."% </div></div></div></td>";
 		 ?>
@@ -250,6 +281,10 @@ color: #fff; }
         $percentageY= calculate_percentage($meet_expect[0]['total'],$meet_expect[1]['actual']);
                     // $percentageN=100-$percentageY;
                     $percentageN=100 - $percentageY;
+
+                    $progress_bar9 = $percentageY;
+					$progress_bar_9 = $percentageN;
+
 		echo  "<div class='progress'><div class='bar'  style='float:left; width:$percentageY%;background:$statusY'>YES ".$percentageY ."% </div>
     		<div class='bar' style='float:right; width:$percentageN%;background:$statusN'>  NO ".$percentageN ."% </div></div></div></td>";
 		 ?>
@@ -262,14 +297,19 @@ color: #fff; }
 	<td colspan="2">
 		<?php 
         $percentageY= calculate_percentage($retrain[0]['total'],$retrain[0]['actual']);
-                    // $percentageN=100-$percentageY;
+
                     $percentageN=100 - $percentageY;
+
+                    $progress_bar10 = $percentageY;
+					$progress_bar_10 = $percentageN;
+
 			echo  "
 			<div class='progress'>
 			<div class='bar' style='float:left; width:$percentageY%; background:$statusY'>YES ".$percentageY ."% </div>
     		<div class='bar' style='float:right; width:$percentageN%; background:$statusN'> NO ".$percentageN ."% </div>
     			
     			</div>";
+
 		 ?>
 	</td>
 	</tr>
@@ -284,6 +324,176 @@ color: #fff; }
                echo $training_resource;
          ?>    
 });
+$(".view_requirements").click( function (){
+		
+		$('.modal-dialog').addClass("modal-lg");
+		var body_content='<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
+		'<thead><tr><th>Facility Name</th><th>Requirements to be addressed</th></tr></thead>'+
+		'<tbody>'+			   	    
+		'<?php	foreach($show_req as $detail):
+			     $facilityname = $detail['facility_name'];
+				 $reqspec = $detail['req_spec'];							
+				 
+				 ;?>'+'<tr><td>'+'<?php echo $facilityname ;?>'+'</td>'
+				 
+				 +'<td>'+'<?php echo $reqspec ;?>'+'</td>'
+				 +'</td></tr>'+'<?php endforeach;?>'
+				 +'</tbody></table>';
+        //hcmp custom message dialog
+    dialog_box(body_content,'<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');
+    $('#communication_dialog').on('hidden.bs.modal', function (e) {  $('.modal-dialog').removeClass("modal-lg");
+    $('.modal-body').html(''); 	})    
+   
+    });
+
+
+
+$("#raw_data_view").click( function (){
+
+// first graph data
+		$('.modal-dialog').addClass("modal-lg");
+		var body_content=
+		'<p>Facility Types Evaluated in %</p>'
+		+'<table class="row-fluid table table-hover table-bordered" width="100%">'+
+		'<tbody>'
+		+'<tr>'
+		+'<td> FBO: '+ <?php echo $fbo ?> +'</td>'
+		+'<td> Other Public Institutions: '+ <?php echo $public_institutions ?> +'</td>'
+		+'<td> GOK: '+ <?php echo $gok ?> +'</td>'
+		+'</tr>'
+		+'</tbody></table>'+
+
+// second graph data
+		'<p>Personel Trained </p>'
+		+'<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
+		'<tbody>'
+		+'<tr>'
+		+'<td> Facility Deputy:  '+ <?php echo $fdep ?> +'</td>'
+		+'<td> Nurse: '+ <?php echo $nurse ?> +'</td>'
+		+'<td> Facility Head: '+ <?php echo $fhead ?> +'</td>'
+		+'<td> Personal Technician: '+ <?php echo $ptech ?> +'</td>'
+		+'<td> Store Manager:  '+ <?php echo $sman ?> +'</td>'
+		+'</tr>'
+		+'</tbody></table>'+
+
+// third graph data
+		'<p>Appropriate Resources During Training </p>'
+		+'<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
+		'<tbody>'
+		+'<tr>'
+		+'<td> Computers:  '+ <?php echo $computers ?> +'</td>'
+		+'<td> Modems: '+ <?php echo $modems ?> +'</td>'
+		+'<td> Bundles: '+ <?php echo $bundles ?> +'</td>'
+		+'<td> Manuals: '+ <?php echo $manuals ?> +'</td>'
+		+'</tr>'
+		+'</tbody></table>'+
+// scheduled_training
+		'<p>Was the training carried out in agreement to the agreed date and time? </p>'
+		+'<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
+		'<tbody>'
+		+'<tr>'
+		+'<td> YES:  '+ <?php echo $progress_bar1 ?> +'%</td>'
+		+'<td> NO: '+ <?php echo $progress_bar_1 ?> +'%</td>'
+		+'</tr>'
+		+'</tbody></table>'+
+// feedback and encouragement
+		'<p>Were you given the appropriate feedback and encouragement during training? </p>'
+		+'<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
+		'<tbody>'
+		+'<tr>'
+		+'<td> YES:  '+ <?php echo $progress_bar2 ?> +'%</td>'
+		+'<td> NO: '+ <?php echo $progress_bar_2 ?> +'%</td>'
+		+'</tr>'
+		+'</tbody></table>'+
+// further supervision visits
+		'<p>Did the District Pharmacist or District Coordinator carry out further supervision visits to support you in the use of the tool? </p>'
+		+'<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
+		'<tbody>'
+		+'<tr>'
+		+'<td> <em>District Pharmacist</em></td><td> YES: '+ <?php echo $progress_bar3 ?> +'%</td>'
+		+'<td>NO: '+ <?php echo $progress_bar_3 ?> +'</td>'
+
+		+'<td> <em>District Coordinator</em></td><td> YES: '+ <?php echo $progress_bar4 ?> +'%</td>'
+		+'<td>NO: '+ <?php echo $progress_bar_4 ?> +'</td>'
+		+'</tr>'
+		+'</tbody></table>'+
+// requirements
+		'<p>Did you identify any requirements during training that needed to be addressed? </p>'
+		+'<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
+		'<tbody>'
+		+'<tr>'
+		+'<td> YES:  '+ <?php echo $progress_bar5 ?> +'%</td>'
+		+'<td> NO: '+ <?php echo $progress_bar_5 ?> +'%</td>'
+		+'</tr>'
+		+'</tbody></table>'+
+// requirements addressed
+		'<p>Have the requirements been addressed? </p>'
+		+'<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
+		'<tbody>'
+		+'<tr>'
+		+'<td> YES:  '+ <?php echo $progress_bar6 ?> +'%</td>'
+		+'<td> NO: '+ <?php echo $progress_bar_6 ?> +'%</td>'
+		+'</tr>'
+		+'</tbody></table>'+
+// training useful
+		'<p>Did you find the training useful? </p>'
+		+'<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
+		'<tbody>'
+		+'<tr>'
+		+'<td> YES:  '+ <?php echo $progress_bar7 ?> +'%</td>'
+		+'<td> NO: '+ <?php echo $progress_bar_7 ?> +'%</td>'
+		+'</tr>'
+		+'</tbody></table>'+
+// ease of use
+		'<p>Is the tool easy to use and understand? </p>'
+		+'<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
+		'<tbody>'
+		+'<tr>'
+		+'<td> YES:  '+ <?php echo $progress_bar8 ?> +'%</td>'
+		+'<td> NO: '+ <?php echo $progress_bar_8 ?> +'%</td>'
+		+'</tr>'
+		+'</tbody></table>'+
+// expectations
+		'<p>Is the tool easy to use and understand? </p>'
+		+'<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
+		'<tbody>'
+		+'<tr>'
+		+'<td> YES:  '+ <?php echo $progress_bar9 ?> +'%</td>'
+		+'<td> NO: '+ <?php echo $progress_bar_9 ?> +'%</td>'
+		+'</tr>'
+		+'</tbody></table>'+
+// willingness to retrain
+		'<p>Would you be willing to re-train facility staff on the use and importance of the tool? </p>'
+		+'<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
+		'<tbody>'
+		+'<tr>'
+		+'<td> YES:  '+ <?php echo $progress_bar10 ?> +'%</td>'
+		+'<td> NO: '+ <?php echo $progress_bar_10 ?> +'%</td>'
+		+'</tr>'
+		+'</tbody></table>'
+		;
+
+
+        //hcmp custom message dialog
+    dialog_box(body_content,'<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');
+    $('#communication_dialog').on('hidden.bs.modal', function (e) {  $('.modal-dialog').removeClass("modal-lg");
+    $('.modal-body').html(''); 	})    
+   
+    });
+
+    function ajax_request_special_(url,date){
+	var url =url;
+	 $.ajax({
+          type: "POST",
+          url: url,
+          success: function(msg) {
+          	$('.modal-dialog').addClass("modal-lg");
+          	var body_content = msg;
+          	dialog_box(body_content,'<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');
+           	 $('#communication_dialog').on('hidden.bs.modal', function (e) {  $('.modal-dialog').removeClass("modal-lg");
+   			 $('.modal-body').html(''); })
+         
+          }
+        }); 
+}
 </script>
-
-

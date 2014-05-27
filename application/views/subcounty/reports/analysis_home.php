@@ -19,8 +19,10 @@ endforeach;
 			</td>
 			<td>
 			
-				<button id="subcounty_filter" class="btn btn-sm btn-small btn-success">
-					<span class = "ui-button-text glyphicon glyphicon-filter">Filter</span>
+				<button id="subcounty_filter" class=" btn btn-sm btn-small btn-success">
+				<span class = "ui-button-text">
+					<span class = " glyphicon glyphicon-filter "></span> Filter
+					</span>
 				</button>
 			
 			</td>

@@ -16,7 +16,7 @@ class Evaluation extends MY_Controller {
 		$graph_data =$data= array();
 		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
 		$data['content_view'] = "facility/facility_reports/reports_v";
-		$data['report_view'] = "facility/facility_reports/analysis_new";
+		$data['report_view'] = "subcounty/reports/analysis_new";
 
 		$data['county_id'] = $county_id;
 		$data['banner_text'] = "Facility Training Evaluation Results";
@@ -60,7 +60,7 @@ class Evaluation extends MY_Controller {
 
 		$view = 'shared_files/template/template';
 
-		// $views = 'facility/facility_reports/analysis_new';
+		// $views = 'subcounty/reports/analysis_new';
 		// $this-> load ->view($views,$dataa);
 		$this -> load -> view($view, $data);
 
