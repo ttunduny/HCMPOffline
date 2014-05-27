@@ -4,13 +4,13 @@
  $(document).ready(function () {
   		$('#page-header1').html('Roll out at a glance');
  		$('#roll_out').parent().parent().parent().addClass('active-panel');
-		ajax_request_replace_div_content('reports/get_sub_county_facility_mapping_data',"#notification");
+		ajax_request_replace_div_content('reports/get_sub_county_facility_mapping_data',"#notification_");
  		//roll out function
 		$("#roll_out").on('click', function(){
 		$("#page-header1").html("Roll out at a glance");
 		$('#notification_').html('');
 		active_panel(this);
-		//ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
+		  ajax_request_replace_div_content('reports/get_sub_county_facility_mapping_data',"#notification_");
 		});
 		//expiries function
 		$("#subcounities").on('click', function(){

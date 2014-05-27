@@ -34,7 +34,9 @@ class Access_level extends Doctrine_Record {
 	public static function get_access_levels($permissions) {
 		$query = Doctrine_Query::create() -> select("id,level,user_indicator") -> from("access_level")->
 		 where("$permissions=1");
+		
 		$level = $query -> execute();
+		$level=$level->toArray();
 		return $level;
 	}
 	

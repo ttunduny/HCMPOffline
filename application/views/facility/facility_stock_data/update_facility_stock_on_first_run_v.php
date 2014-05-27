@@ -5,7 +5,7 @@ To add facility stock data, first do physical stock count</span>
 <hr />
 <div class="test" style="height:400px; overflow: auto;">
     <?php $att=array("name"=>'myform','id'=>'myform');
-echo form_open('stock/add_stock_level',$att); ?>
+echo form_open('',$att); ?>
 <table  class="table table-hover table-bordered table-update table-responsive"  id="facility_stock_table">
 
 	<thead style="background-color: white">
@@ -230,14 +230,13 @@ $(document).ready(function() {
     $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();	})
     return; }
     // finally calculate the stock 
-    alert(commodity_unit_of_issue);
     calculate_actual_stock(actual_unit_size,commodity_unit_of_issue,num,".commodity_total_units",selector_object); 
     //update the record 
-    //var url = "<?php echo base_url().'stock/autosave_update_stock'?>";	  
+    var url = "<?php echo base_url().'stock/autosave_update_stock'?>";	  
     //save the infor 
     ajax_simple_post_with_console_response(url, temp_data[0]);		     
     });
-        $('.remove').on('click',function(){
+    $('.remove').on('click',function(){
     var selector_object=$(this);
      //hcmp custom message dialog
     dialog_box("Are you sure you want to delete this record?",'<button type="button" class="btn btn-danger remove_record" >OK</button>'+
@@ -264,7 +263,7 @@ $(document).ready(function() {
     })
     });                     
     /************save the data here*******************/
-    $("#myform").validate();
+   $("#myform").validate();
     $('.save').button().click(function() {
      confirm_if_the_user_wants_to_save_the_form("#myform"); 
      });  
@@ -315,8 +314,8 @@ $(document).ready(function() {
 			return alert_message;
     }
     function  clone_the_last_row_of_the_table(){
-            //Get New Object id's
-            var cloned_object = $('#facility_stock_table tr:last').clone(true);
+
+             var cloned_object = $('#facility_stock_table tr:last').clone(true);
             var table_row = cloned_object.attr("table_row");
             var next_table_row = parseInt(table_row) + 1;
             cloned_object.attr("drug_row", next_table_row);
@@ -336,20 +335,31 @@ $(document).ready(function() {
             var commodity_total_units = cloned_object.find(".commodity_total_units");       
             var commodity_batch_no = cloned_object.find(".commodity_batch_no");
             //reset the values
-            cloned_object.find('input[type=text]').val('');
-
+            
+            cloned_object.find('.commodity_supplier').attr("value",'');
+            cloned_object.find('.unit_size').attr("value",'');
+            cloned_object.find('.actual_units').attr("value",'');
+            cloned_object.find('.commodity_available_stock').attr("value",'');
+            desc.attr("value", "0");
             commodity_batch_no.attr("id", commodity_batch_no_id);
+            commodity_batch_no.attr("value", "");
             commodity_id.attr("id", commodity_id_id);
+            commodity_id.attr("value", "");
             commodity_batch_no.attr("id", commodity_batch_no_id);
+            commodity_batch_no.attr("value", "");
             commodity_manufacture.attr("id", commodity_manufacture_id);
+            commodity_manufacture.attr("value", "");
             commodity_total_units.attr("id", commodity_total_units_id);
+            commodity_total_units.attr("value", "");
             clone_datepicker.attr("id", clone_datepicker_id);   
+            clone_datepicker.attr("value", "");  
+             cloned_object.find('input[type=text]').attr("value", "");
              // remove the error class
-            cloned_object.find("label.error").remove();      
+            cloned_object.find("label.error").remove();     
             //insert the data
             cloned_object.insertAfter('#facility_stock_table tr:last');
             // refresh the datepickers
-            refreshDatePickers(); 
+            refreshDatePickers();
     }
 });	
 </script>

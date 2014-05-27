@@ -367,11 +367,27 @@ class User extends MY_Controller {
         endswitch;
 
         $data['title'] = "User Management";
-        $data['user_types']=Access_level::get_access_levels($permissions);	
+		$data['user_types']=Access_level::get_access_levels($permissions);	
 		$data['banner_text'] = "User Management";
 		$data['content_view'] = "shared_files/user_creation_v";
 		$this -> load -> view($template, $data);
 	}
+
+		public function get_user_type_json()	{
+			
+			$identifier = $this -> session -> userdata('user_indicator');	
+			if ($identifier=="county") {
+				$permissions='county_permissions';	
+			} else {
+				$permissions='district_permissions';	
+			}
+					
+					
+			echo json_encode(Access_level::get_access_levels($permissions));
+			
+			
+	
+		}
 
 	public function addnew_user(){
 
@@ -417,13 +433,16 @@ class User extends MY_Controller {
 		
 		//Send registered user email with password and validation link
 		//
+		$full_name = $fname.' '.$lname;
+		$link = base_url().'user/activation/'.$activation;
+		
 		$subject = "Account Activation";
 				$message = "<html><body>
 		<div style='border-color: #666; margin:auto;'>	
 		Hi " . $full_name . ", </br>
 		<p>
 		You (HCMP Account - " . $email_address . " - ) was recently created.</br>
-		Before we can activate your account one last step must be taken to complete your registration.</br></p>
+		Before your account can be activated , one last step must be taken to complete your registration.</br></p>
 		<p>
 		Please note - you must complete this last step to become a registered member.</br></p>
 		<p>
@@ -449,7 +468,7 @@ class User extends MY_Controller {
 
 				//exit;
 
-				//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
+				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
 
 				//exit;
 
@@ -466,11 +485,84 @@ class User extends MY_Controller {
 				$savethis -> district = $district_code;
 				$savethis -> facility = $facility_id;
 				$savethis -> status = 0;
-				$savethis -> county_id = $county_id;
+				$savethis -> county_id = $county;
 				$savethis -> save();
 		
 
 
 	}
+	
+	public function edit_user(){
+		$county = $this -> session -> userdata('county_id');
+		$identifier = $this -> session -> userdata('user_indicator');
+
+		$fname = $_POST['fname_edit'];
+		$lname = $_POST['lname_edit'];
+		$status = $_POST['status'];
+		$telephone_edit= $_POST['telephone_edit'];
+		$email_edit = $_POST['email_edit'];
+		$username_edit = $_POST['username_edit'];
+		$facility_id_edit_district = $_POST['facility_id_edit_district'];
+		$user_type_edit_district = $_POST['user_type_edit_district'];
+		$district_name_edit = $_POST['district_name_edit'];
+		$facility_id_edit= $_POST['facility_id_edit'];
+		$user_id= $_POST['user_id'];
+		
+		if ($status=="true") {
+			
+			$status=1;
+			
+		} elseif($status=="false") {
+			
+			$status=0;
+		}
+		
+		
+		//update user
+			$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
+			$update_user->execute("UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
+									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county'
+                                  	WHERE `id`= '$user_id'");
+		
+	}
+		public function activation($myurl){
+			
+			$myurl=$this->uri->segment(3);
+			$cipher= md5($myurl);
+						
+			//query to find match 
+			Users::check_activation($cipher);
+			$restrict= count(Users::check_activation($cipher));
+			
+			
+			if ($restrict==0) {
+				
+    				$this -> load -> view('shared_files/404');
+				}else {
+					$this -> load -> view('shared_files/activation');
+				}
+	
+		}
+		
+		public function activation_final_phase(){
+			
+			$email = $_POST['username'];
+			$password = $_POST['new_password'];
+			
+			
+			//confirm user exists and is inactive
+			
+			$data=Users::check_user_exist_activate($email);
+			foreach ($data as $key => $value) {					
+				
+				$user_id=$value->id;
+			}
+			
+			$new_password_confirm=$password ;
+			
+			Users::reset_password($user_id, $new_password_confirm);
+			
+			
+		}
 
 }

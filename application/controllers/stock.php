@@ -54,7 +54,7 @@ class Stock extends MY_Controller {
        $unit_of_issue="Pack_Size";
        $total_units=$rowData[0][11];
        $stock_level=$rowData[0][10];
-    }elseif($rowData[0][10]>1){
+    }elseif($rowData[0][10]>=1){
        $unit_of_issue="Unit_Size";
        $total_units=$rowData[0][10]*$rowData[0][6];
        $stock_level=$rowData[0][10]; 
