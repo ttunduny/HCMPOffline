@@ -30,7 +30,7 @@ class Facilities extends Doctrine_Record {
 		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $drugs;
 	}
-	public static function get_Facilities($district)
+	public static function get_Facilities_using_HCMP($district)
 	{
 		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district' and using_hcmp = 1")->OrderBy("facility_name asc");
 		$drugs = $query -> execute();

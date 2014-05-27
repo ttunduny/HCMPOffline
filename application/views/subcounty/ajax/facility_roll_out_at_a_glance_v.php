@@ -50,7 +50,7 @@ $(document).ready(function() {
 	    });
 
     function ajax_request_special_(url,date){
-	var url =url;
+	var url = url;
 	 $.ajax({
           type: "POST",
           url: url,
@@ -59,7 +59,7 @@ $(document).ready(function() {
           	var body_content = msg;
           	dialog_box(body_content,'<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');
            	 $('#communication_dialog').on('hidden.bs.modal', function (e) {  $('.modal-dialog').removeClass("modal-lg");
-   			 $('.modal-body').html(''); refreshDatePickers();	})
+   			 $('.modal-body').html('');})
          
           }
         }); 
