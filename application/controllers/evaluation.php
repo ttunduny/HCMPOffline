@@ -169,6 +169,7 @@ class Evaluation extends MY_Controller {
 		$data['req_id'] = evaluation_data::get_req_id($county_id, $district_id);
 		$data['req_addr'] = evaluation_data::get_req_addr($county_id, $district_id);
 		$data['retrain'] = evaluation_data::get_retrain($county_id, $district_id);
+		$data['train_recommend'] = evaluation_data::get_train_recommend($county_id,$district);
 		// handled
 
 		$data['get_use_freq'] = evaluation_data::get_use_freq($county_id, $district_id);
@@ -177,7 +178,8 @@ class Evaluation extends MY_Controller {
 		$data['meet_expect'] = evaluation_data::get_meet_expect($county_id, $district_id);
 		$data['train_useful'] = evaluation_data::get_train_useful($county_id, $district_id);
 		$data['coverage_data'] = evaluation_data::get_district_coverage_data($county_id, $district_id);
-
+		$data['show_req'] = evaluation_data::show_req_id($county_id, $district_id);
+		$data['show_suggest'] = evaluation_data::show_expect_suggest($county_id, $district_id);
 
 		 $views = 'facility/facility_reports/analysis_new';
 

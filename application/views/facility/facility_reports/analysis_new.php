@@ -159,7 +159,7 @@ color: #fff; }
         $percentageY= calculate_percentage($req_id[1]['total'],$req_id[1]['actual']);
                     // $percentageN=100-$percentageY;
                     $percentageN=100 - $percentageY;
-			echo  "<div class='progress'><div class='bar'  style='float:left;width:$percentageY%;background:$statusY'>YES ".$percentageY ."% </div>
+			echo  "<div class=' progress'><div class='view_requirements bar'  style='float:left;width:$percentageY%;background:$statusY'>YES ".$percentageY ."% </div>
     				<div class='bar' style='float:right; width:$percentageN%;background:$statusN'>  NO ".$percentageN ."% </div></div></div></td>"; 
     				  
 		 ?>
@@ -173,6 +173,21 @@ color: #fff; }
 	<td colspan="2">
 		<?php 
          $percentageY= calculate_percentage($req_addr[1]['total'],$req_addr[1]['actual']);
+                    // $percentageN=100-$percentageY;
+                    $percentageN=100 - $percentageY;
+			echo  "<div class='progress'><div class='bar'  style='float:left;width:$percentageY%;background:$statusY'>YES ".$percentageY ."% </div>
+    				<div class='bar' style='float:right; width:$percentageN%;background:$statusN'>  NO ".$percentageN ."% </div></div></div></td>"; 
+		 ?>
+	</td>
+	</tr>
+	
+	<tr>
+	<td colspan="2">
+		<p>Would you recommend the trainer to others?</p>
+	</td>
+	<td colspan="2">
+		<?php 
+         $percentageY= calculate_percentage($train_recommend[1]['actual'],$train_recommend[1]['total']);
                     // $percentageN=100-$percentageY;
                     $percentageN=100 - $percentageY;
 			echo  "<div class='progress'><div class='bar'  style='float:left;width:$percentageY%;background:$statusY'>YES ".$percentageY ."% </div>
@@ -243,7 +258,7 @@ color: #fff; }
                     // $percentageN=100-$percentageY;
                     $percentageN=100 - $percentageY;
 		echo  "<div class='progress'><div class='bar'  style='float:left; width:$percentageY%;background:$statusY'>YES ".$percentageY ."% </div>
-    		<div class='bar' style='float:right; width:$percentageN%;background:$statusN'>  NO ".$percentageN ."% </div></div></div></td>";
+    		<div class='expectations bar' style='float:right; width:$percentageN%;background:$statusN'>  NO ".$percentageN ."% </div></div></div></td>";
 		 ?>
 	</td>
 	</tr>
@@ -276,6 +291,80 @@ color: #fff; }
                echo $training_resource;
          ?>    
 });
+$(".view_requirements").click( function (){
+		
+		$('.modal-dialog').addClass("modal-lg");
+		var body_content='<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
+		'<thead><tr><th>Facility Name</th><th>Requirements to be addressed</th></tr></thead>'+
+		'<tbody>'+			   	    
+		'<?php	foreach($show_req as $detail):
+			     $facility = $detail['facility_name'];
+				 $req = $detail['req_spec'];							
+				 
+				 ;?>'+'<tr><td>'+'<?php echo $facility ;?>'+'</td>'
+				 
+				 +'<td>'+'<?php echo $req ;?>'+'</td>'
+				 +'</td></tr>'+'<?php endforeach;?>'
+				 +'</tbody></table>';
+        //hcmp custom message dialog
+    dialog_box(body_content,'<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');
+    $('#communication_dialog').on('hidden.bs.modal', function (e) {  $('.modal-dialog').removeClass("modal-lg");
+    $('.modal-body').html(''); 	})    
+   
+    });
+    function ajax_request_special_(url,date){
+	var url =url;
+	 $.ajax({
+          type: "POST",
+          url: url,
+          success: function(msg) {
+          	$('.modal-dialog').addClass("modal-lg");
+          	var body_content = msg;
+          	dialog_box(body_content,'<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');
+           	 $('#communication_dialog').on('hidden.bs.modal', function (e) {  $('.modal-dialog').removeClass("modal-lg");
+   			 $('.modal-body').html(''); })
+         
+          }
+        }); 
+}
+$(".expectations").click( function (){
+		
+		$('.modal-dialog').addClass("modal-lg");
+		var body_content='<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
+		'<thead><tr><th>Facility Name</th><th>Requirements to be addressed</th></tr></thead>'+
+		'<tbody>'+			   	    
+		'<?php	foreach($show_suggest as $detail):
+			     $facility = $detail['facility_name'];
+				 $suggestions = $detail['expect_suggest'];							
+				 
+				 ;?>'+'<tr><td>'+'<?php echo $facility ;?>'+'</td>'
+				 
+				 +'<td>'+'<?php echo $suggestions ;?>'+'</td>'
+				 +'</td></tr>'+'<?php endforeach;?>'
+				 +'</tbody></table>';
+        //hcmp custom message dialog
+    dialog_box(body_content,'<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');
+    $('#communication_dialog').on('hidden.bs.modal', function (e) {  $('.modal-dialog').removeClass("modal-lg");
+    $('.modal-body').html(''); 	})    
+   
+    });
+    function ajax_request_special_(url,date){
+	var url =url;
+	 $.ajax({
+          type: "POST",
+          url: url,
+          success: function(msg) {
+          	$('.modal-dialog').addClass("modal-lg");
+          	var body_content = msg;
+          	dialog_box(body_content,'<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');
+           	 $('#communication_dialog').on('hidden.bs.modal', function (e) {  $('.modal-dialog').removeClass("modal-lg");
+   			 $('.modal-body').html(''); })
+         
+          }
+        }); 
+}
 </script>
+
+
 
 

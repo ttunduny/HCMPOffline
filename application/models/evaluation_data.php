@@ -167,6 +167,20 @@ group by `req_addr`
 ");
 		return $query9;
 	}
+	
+	public static function get_train_recommend($county_id = null, $district_id = null) {
+		$where = (isset($county_id) && !isset($district_id)) ? " and d.county=$county_id " : " and d.id=$district_id ";
+		$query9 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+select (select count(*) from facilities f, facility_evaluation f_e, districts d 
+where f.facility_code=f_e.facility_code 
+and f.district=d.id and d.county=1 ) as total, count(`train_recommend`) as actual, train_recommend from facilities f, facility_evaluation f_e, districts d 
+where f.facility_code=f_e.facility_code 
+and f.district=d.id and d.county=1 and req_addr>0  
+$where
+group by `train_recommend`
+");
+		return $query9;
+	}
 
 	public static function get_train_useful($county_id = null, $district_id = null) {
 		$where = (isset($county_id) && !isset($district_id)) ? " and d.county=$county_id " : " and d.id=$district_id ";
@@ -324,6 +338,33 @@ $where
 ");
 
 		return array("total_facilities" => $query_1[0]['total'], 'total_evaluation' => $query_2[0]['total']);
+	}
+	
+	public static function show_req_id($county_id = null, $district_id = null){
+		$where = (isset($county_id) && !isset($district_id)) ? " and d.county=$county_id " : " and d.id=$district_id ";
+		$query17 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+SELECT facility_name, req_spec
+FROM facilities f, districts d, facility_evaluation h_s
+WHERE f.district = d.id
+AND d.county = $county_id
+AND h_s.facility_code = f.facility_code
+AND req_id = 1
+$where
+ "); 
+		return $query17;
+	}
+	public static function show_expect_suggest($county_id = null, $district_id = null){
+		$where = (isset($county_id) && !isset($district_id)) ? " and d.county=$county_id " : " and d.id=$district_id ";
+		$query18 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+SELECT facility_name, expect_suggest
+FROM facilities f, districts d, facility_evaluation h_s
+WHERE f.district = d.id
+AND d.county = $county_id
+AND h_s.facility_code = f.facility_code
+AND meet_expect =1
+$where
+ "); 
+		return $query18;
 	}
 
 }
