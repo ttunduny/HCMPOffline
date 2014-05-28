@@ -100,8 +100,8 @@ class Users extends Doctrine_Record {
 	public static function get_user_list_district($district) {
 
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
-			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id,d.district,c.id as county_id,c.county,f.facility_code,
-				f.facility_name,f.owner,f.type,f.level,a.level,u.status FROM hcmp.user u 
+			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id as district_id,d.district,c.id as county_id,c.county,f.facility_code,
+				f.facility_name,f.owner,f.type,a.id as level_id,f.level,a.level,u.status FROM hcmp.user u 
 				LEFT JOIN hcmp.districts d
 				ON
 				d.id=u.district
@@ -114,15 +114,18 @@ class Users extends Doctrine_Record {
 				RIGHT JOIN hcmp.access_level a
 				ON
 				a.id=u.usertype_id
-				where u.district=$district");
+				where u.district=$district
+				and a.id != 3
+				")
+				;
 		return $query;
 	}
 
 	public static function get_user_list_county($county) {
 
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
-			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id,d.district,c.id as county_id,c.county,f.facility_code,
-				f.facility_name,f.owner,f.type,f.level,a.level,u.status FROM hcmp.user u 
+			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id as district_id,d.district,c.id as county_id,c.county,f.facility_code,
+				f.facility_name,f.owner,f.type,a.id as level_id,f.level,a.level,u.status FROM hcmp.user u 
 				LEFT JOIN hcmp.districts d
 				ON
 				d.id=u.district
@@ -136,6 +139,7 @@ class Users extends Doctrine_Record {
 				ON
 				a.id=u.usertype_id
 				where u.county_id=$county
+				and a.id != 10
 				");
 		return $query;
 	}
@@ -147,16 +151,29 @@ public static function get_dpp_details($distirct){
 }
 
 	public static function get_users_district($district) {
-		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users") -> where("district='$district'")
+		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users") -> where("district='$district'") ->andWhere("usertype_id !=3")
 		->groupBy("status");
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
 	}
 	public static function get_users_county($county) {
 
-		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users") -> where("county_id='$county'")
+		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users") -> where("county_id='$county'") ->andWhere("usertype_id !=10")
 		->groupBy("status");
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result;
+	}
+	
+	public static function check_activation($cipher) {
+
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("activation='$cipher'")->andWhere("status = 0");
+		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result;
+		
+	}
+	public static function check_user_exist_activate($email) {
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username='$email' AND status=0");
+		$result = $query -> execute();
 		return $result;
 	}
 

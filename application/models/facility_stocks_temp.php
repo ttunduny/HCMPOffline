@@ -52,9 +52,9 @@ class facility_stocks_temp extends Doctrine_Record {
 	public static function update_facility_temp_data($expiry_date,$batch_no,$manuf,$stock_level,$total_unit_count,
 	$commodity_id,$facility_code,$unit_issue,$total_units,$source_of_item,$supplier){
 	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->execute("
-update facility_stocks_temp set `expiry_date`='$expiry_date',`batch_no`='$batch_no',`manu`='$manuf',`stock_level`='$stock_level',`total_units`='$total_unit_count'
+update facility_stocks_temp set `expiry_date`='$expiry_date',`manu`='$manuf',`stock_level`='$stock_level',`total_units`='$total_unit_count'
 ,`unit_issue`='$unit_issue' and `total_units`=$total_units and `source_of_item`= $source_of_itemand supplier='$supplier'
-where `facility_code`='$facility_code' and `commodity_id`='$commodity_id'
+where `facility_code`='$facility_code' and `commodity_id`='$commodity_id' and `batch_no`='$batch_no'
 ");		
 	}
 	

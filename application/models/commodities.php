@@ -14,6 +14,8 @@ class Commodities extends Doctrine_Record {
 		$this -> hasColumn('date_updated', 'date');
 		$this -> hasColumn('total_commodity_units', 'int');
 		$this -> hasColumn('commodity_source_id', 'int');
+        $this -> hasColumn('tracer_item', 'int');
+        $this -> hasColumn('division', 'int');
 		$this -> hasColumn('status', 'int');
 	}
 
@@ -40,6 +42,12 @@ class Commodities extends Doctrine_Record {
 		
 		return $commodities;
 	}
+    public function get_tracer_items(){
+     $query = Doctrine_Query::create() -> select("*") -> from("commodities")->where("status=1 and tracer_item=1");
+     $commodities = $query -> execute();
+        
+        return $commodities;   
+    }
 	
 public static function get_all_from_supllier($supplier_id) {
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
