@@ -1,27 +1,24 @@
 <?php
 	class Evaluation_data extends Doctrine_Record{
 		
-		public static function get_facility_type($county_id=null,$district_id=null){
-		$where=(isset($county_id) && !isset($district_id)) ? " and d.county=$county_id " : " and d.id=$district_id " ;
+		public static function get_facility_type($county_id){
 		$query1 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		select count(f.facility_code) as total, f.owner 
 		from facilities f, facility_evaluation f_e, districts d 
 		where f.facility_code=f_e.facility_code and f.district=d.id 
-		$where
-		 group by f.owner");
+		and d.county=1 group by f.owner");
 		
 		
 		return $query1;
 		
 	}
 
-
 		public static function get_personel_trained($county_id){
 		$query2 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select sum(f_e.fhead_no) as fhead, sum(f_e.fdep_no) as fdep, sum(f_e.nurse_no) as nurse, sum(f_e.sman_no) as sman, sum(f_e.ptech_no) as ptech
 from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=$county_id");
+and f.district=d.id and d.county=1");
 		
 		
 		return $query2;
@@ -32,7 +29,7 @@ and f.district=d.id and d.county=$county_id");
 		$query3 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select count(f_e.satisfaction_lvl) as level, f_e.satisfaction_lvl
 from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=$county_id group by f_e.satisfaction_lvl
+and f.district=d.id and d.county=1 group by f_e.satisfaction_lvl
 ");	
 		return $query3;
 		
@@ -57,7 +54,7 @@ select count(f_e.bundles_avail) as bundles
 from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
 and f_e.bundles_avail=1
-and f.district=d.id and d.county=$county_id
+and f.district=d.id and d.county=$county_id and f.district=1
  ");	
  $query_4 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select count(f_e.manuals_avail) as manual
@@ -276,22 +273,7 @@ AND h_s.facility_code=f.facility_code
  
    return array("total_facilities"=>$query_1[0]['total'],'total_evaluation'=>$query_2[0]['total']);
    }
-
-   	public static function show_req_id($county_id = null, $district_id = null){
-		$where = (isset($county_id) && !isset($district_id)) ? " and d.county=$county_id " : " and d.id=$district_id ";
-		$query17 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
-SELECT facility_name, req_spec
-FROM facilities f, districts d, facility_evaluation h_s
-WHERE f.district = d.id
-AND d.county =1
-AND h_s.facility_code = f.facility_code
-AND req_id =1
-$where
- "); 
-return $query17;
-
 	}
-}
 
 
 	
