@@ -47,14 +47,6 @@
 </div>
 <script>
 $(document).ready(function() {	
-var $table = $('#example');
-div = null; 
-//float the headers
-  $table.floatThead({ 
-	 scrollingTop: 5,
-	 zIndex: 1002,
-	 scrollContainer: function($table){ return $table.closest('.test'); }
-	});	
 	//datatables settings 
 	$('#example').dataTable( {
 		   "sDom": "T lfrtip",
