@@ -27,8 +27,8 @@ class Counties extends Doctrine_Record {
 	
 	public static function get_county_name($county_id)
 	{
-$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT county, id FROM counties WHERE counties.id='$county_id' ");
-return $q[0];
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT county, id FROM counties WHERE counties.id='$county_id' ");
+		return $q[0];
 	}
 	public static function get_district_expiry_summary($date,$county){
 		$query=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT COUNT(DISTINCT stock.facility_code) as facility_count, stock.facility_code, stock.balance,stock.quantity,stock.status,stock.stock_date,stock.sheet_no, f.facility_name, d.id as district_id, d.district

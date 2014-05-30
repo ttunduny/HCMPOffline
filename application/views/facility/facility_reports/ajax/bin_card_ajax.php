@@ -63,13 +63,8 @@ border: 1px solid #FFF !important;
                  $qty_issued_text= trim($qty_issued, "-");
                  }else{
                    $qty_issued_text= $bin['qty_issued'];
-<<<<<<< HEAD
-<<<<<<< HEAD
-                 }            
-        
-=======
+
                  }   
->>>>>>> 067512c25a6d3daea59ac266f2755a47c0b56a8f
 
                   if ($bin['s11_No']=='initial stock update') {
                 $color="red";
@@ -87,10 +82,6 @@ border: 1px solid #FFF !important;
 
                 
             <tr>             
-<<<<<<< HEAD
->>>>>>> 94e035ca7ca8a8c7be4c08a306d8d3567b06e65c
-=======
->>>>>>> 067512c25a6d3daea59ac266f2755a47c0b56a8f
               <td><?php echo $formated_date;?> </td>
              
               <td ><?php echo $bin['s11_No']; ;?> </td>
@@ -122,20 +113,10 @@ border: 1px solid #FFF !important;
               <td><?php echo $bin['fname'].' '.$bin['lname'];?> </td>
             </tr>
           <?php
-<<<<<<< HEAD
-<<<<<<< HEAD
-              
-              }        
-
-=======
                }
->>>>>>> 94e035ca7ca8a8c7be4c08a306d8d3567b06e65c
-=======
               
-              }        
-
+             
                
->>>>>>> 067512c25a6d3daea59ac266f2755a47c0b56a8f
           ?>  
    </tbody>
 </table>
