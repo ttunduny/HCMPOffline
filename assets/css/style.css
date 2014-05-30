@@ -115,7 +115,7 @@ option.big{  width: 150px !important; }
 }
 
 #navigate {
-	font-size: 0.82em;
+	font-size: 0.88em;
 }
 
 #navigate ul > li > a {
@@ -124,12 +124,12 @@ option.big{  width: 150px !important; }
 }
 
 #navigate ul > li {
-	background: #144d6e !important; /* Old browsers */
+	background: #29527b !important; /* Old browsers */
 	color: white !important;
 }
 
 #navigate ul > li:hover {
-	background: #528f42 !important; /* Old browsers */
+	background: #289909 !important; /* Old browsers */
 	color: white !important;
 }
 
