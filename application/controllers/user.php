@@ -61,6 +61,7 @@ class User extends MY_Controller {
 			$fullname = $fname . ' ' . $lname;
             $banner_name = '';
 			$access_level = Access_level::get_access_level_name($access_typeid);
+
 			$user_indicator = $access_level['user_indicator'];
             
             if ($user_indicator  == 'district') :
@@ -71,7 +72,7 @@ class User extends MY_Controller {
             //get county name
             $county_name = Counties::get_county_name($county_id);
             $banner_name = $county_name['county'];
-            elseif ($user_indicator  == 'facility' || $user_indicator = 'facility_admin') :
+            elseif ($user_indicator  == 'facility' || $user_indicator == 'facility_admin') :
              //get county name
             $facility_name = Facilities::get_facility_name2($facility_id);
             $banner_name = $facility_name['facility_name'];
@@ -85,7 +86,7 @@ class User extends MY_Controller {
 			'banner_name'=>$banner_name);
 
 			$this -> session -> set_userdata($session_data);
-
+				
 			//get menu items
 			$menu_items = Menu::getByUsertype($access_typeid);
 			//Create array that will hold all the accessible menus in the session

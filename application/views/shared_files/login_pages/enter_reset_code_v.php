@@ -120,8 +120,8 @@ unset($popup);
     <input type="text" class="form-control input-lg" name="code" id="code" placeholder="Enter Code Eg 12345" required="required">
   </div>
   
-   <input type="submit" class="btn btn-success " name="reset" id="reset" value="Reset" style="margin-bottom: 3%;">
-  
+   <input type="submit" class="btn btn-primary " name="reset" id="reset" value="Reset" style="margin-bottom: 3%;">
+  <a class="btn btn-success" style="margin-left: 2%;margin-bottom: 3%;" href="<?php echo base_url().'Home'?>" id="modalbox">Home</a>
 		
 </div>
 
