@@ -815,10 +815,12 @@ class Reports extends MY_Controller
 				// do nothing
 			}
 		endfor;
+		//for setting the month name in the graph when filtering
+		$m = date('F',strtotime('2000-'.$month.'-01'));
 				
 		$graph_data_daily = array();
 		$graph_data_daily = array_merge($graph_data_daily,array("graph_id"=>'container'));
-		$graph_data_daily = array_merge($graph_data_daily,array("graph_title"=>'Daily Facility Access log for '.$graph_title));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_title"=>'Daily Facility Access log for '.$m." for ".$graph_title));
 		$graph_data_daily = array_merge($graph_data_daily,array("graph_type"=>'line'));
 		$graph_data_daily = array_merge($graph_data_daily,array("graph_yaxis_title"=>'log In'));
 		$graph_data_daily = array_merge($graph_data_daily,array("graph_categories"=>array()));
@@ -846,7 +848,7 @@ class Reports extends MY_Controller
 			
 		$graph_data = array();
 		$graph_data = array_merge($graph_data,array("graph_id"=>'container_monthly'));
-		$graph_data = array_merge($graph_data,array("graph_title"=>'Monthly Facility Access for '.date("M")." ". $year));
+		$graph_data = array_merge($graph_data,array("graph_title"=>'Monthly Facility Access for '. $year));
 		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
 		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'log In'));
 		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
@@ -877,19 +879,27 @@ class Reports extends MY_Controller
 	{
 		$district_id = $this -> session -> userdata('district_id');
 		$county_id = $this -> session -> userdata('county_id');
+		
 		$district_data = districts::getDistrict($county_id);
+		
 		$table_data = "<tbody>";
 		$table_data_summary = "<tbody>";
 		$district_names = "<thead><tr><th>Monthly Activities</th>";
+		
 		$district_total = array();
 		$district_total_facilities = array();
 		$district_total_facilities_targetted = array();
+		$district_total_facilities_using_hcmp = array();
+		
 		$table_district_totals = "";
 		$all_facilities = 0;
 		$total_facility_list = '';
 		$total_facilities_in_county = 0;
 		$percentage_coverage = "";
 		$percentage_coverage_total = 0;
+		
+		$percentage_coverage_using = "";
+		$percentage_coverage_total_using = 0;
 		
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
 
@@ -904,14 +914,20 @@ class Reports extends MY_Controller
 				$district_id = $district_detail -> id;
 				$district_name = $district_detail -> district;
 				$get_facilities_which_went_online_ = facilities::get_facilities_which_went_online_($district_id, $facility_dates['date_when_facility_went_online']);
+				
 				$total = $get_facilities_which_went_online_[0]['total'];
 				$total_facilities = $get_facilities_which_went_online_[0]['total_facilities'];
 				$total_facilities_targetted = $get_facilities_which_went_online_[0]['total_facilities_targetted'];
+				$total_facilitites_using_hcmp = $get_facilities_which_went_online_[0]['total_using_hcmp'];
+				
 				$monthly_total = $monthly_total + $total;
 				$all_facilities = $all_facilities + $total;
+				
 				(array_key_exists($district_name, $district_total)) ? $district_total[$district_name] = $district_total[$district_name] + $total : $district_total = array_merge($district_total, array($district_name => ($total)));
 				(array_key_exists($district_name, $district_total_facilities)) ? $district_total_facilities[$district_name] = $total_facilities : $district_total_facilities = array_merge($district_total_facilities, array($district_name => $total_facilities));
 				(array_key_exists($district_name, $district_total_facilities_targetted)) ? $district_total_facilities_targetted[$district_name] = $total_facilities_targetted : $district_total_facilities_targetted = array_merge($district_total_facilities_targetted, array($district_name => $total_facilities_targetted));
+				(array_key_exists($district_name, $district_total_facilities_using_hcmp)) ? $district_total_facilities_using_hcmp[$district_name] = $total_facilitites_using_hcmp : $district_total_facilities_using_hcmp = array_merge($district_total_facilities_using_hcmp, array($district_name => $total_facilitites_using_hcmp));
+				
 				$table_data .= ($total > 0) ? "<td><a href='#' id='$district_id' class='ajax_call2 link' date='$date'> $total</a></td>" : "<td>$total</td>";
 
 			endforeach;
@@ -919,15 +935,20 @@ class Reports extends MY_Controller
 			$table_data .= "<td>$monthly_total</td></tr>";
 
 		endforeach;
+		//print_r($total_facilities_targetted);
+		//exit;
 		$table_data .= "<tr>";
 		$table_data_summary .= "<tr>";
 
 		$checker = 1;
 		foreach ($district_total as $key => $value) :
 			$coverage = 0;
+			$using = 0;
+			@$using_percentage = round((($value / $district_total_facilities_using_hcmp[$key])) * 100, 1);
 			@$coverage = round((($value / $district_total_facilities[$key])) * 100, 1);
 
 			$percentage_coverage_total = $percentage_coverage_total + $coverage;
+			$percentage_coverage_total_using = $percentage_coverage_total_using + $using_percentage;
 
 			$district_names .= "<th>$key</th>";
 
@@ -939,16 +960,22 @@ class Reports extends MY_Controller
 			$total_facilities_in_county = $total_facilities_in_county + $district_total_facilities[$key];
 			$targetted_total = $targetted_total + $district_total_facilities_targetted[$key];
 		
-			$percentage_coverage .= ($checker == 1) ? "<tr><td><b>% Coverage</b></td><td>$coverage %</td>" : "<td>$coverage %</td>";
-
+			$percentage_coverage .= ($checker == 1) ? "<tr><td><b>% Coverage</b></td>
+			<td>$coverage %</td>" : "<td>$coverage %</td>";
+			
+			$percentage_coverage_using .= ($checker == 1) ? "<tr><td><b>Targetted vs Using HCMP %</b></td>
+			<td>$using_percentage %</td>" : "<td>$using_percentage %</td>";
+			
 			$checker++;
 
 		endforeach;
-
+		
 		$table_data .= "<td><a href='#' id='total' class='ajax_call1 link' option='total' date='total'>$all_facilities</a></td></tr></tbody>";
 		$table_data_summary .= "<td><a href='#' id='total' class='ajax_call2 link' date='total'>$all_facilities</a></td></tr></tbody>";
 		$district_names .= "<th>TOTAL</th></tr></thead>";
 		$final_coverage_total = 0;
+		$targetted_vs_using_hcmp = 0;
+		//$targetted_vs_using_hcmp = round((($total_facilities_targetted / $total_facilitites_using_hcmp)) * 100, 1);
 		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
 		$data_ = "
 		<div class='tabbable tabs-left'>
@@ -958,10 +985,16 @@ class Reports extends MY_Controller
         <li class=><a href='#B' data-toggle='tab'>Roll out Summary</a></li>
         </ul>
          <div  id='A' class='tab-pane fade active in'>
-			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" . $district_names . $table_data .  $total_targetted_facility_list."<td>$targetted_total</td>" . $total_facility_list ."<td>$total_facilities_in_county</td></tr>" . $percentage_coverage . "<td>$final_coverage_total %</td></tr></table>
+			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" 
+			. $district_names . $table_data .  $total_targetted_facility_list."<td>$targetted_total</td>" 
+			. $total_facility_list ."<td>$total_facilities_in_county</td></tr>" . $percentage_coverage 
+			. "<td>$final_coverage_total %</td></tr>".$percentage_coverage_using."<td>$targetted_vs_using_hcmp %</td></tr></table>
 		</div>
 		<div id='B' class='tab-pane fade' >
-		<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test2'>" . $district_names . $table_data_summary . $total_targetted_facility_list."<td>$targetted_total</td>" . $total_facility_list . "<td>$total_facilities_in_county</td></tr>" . $percentage_coverage . "<td>$final_coverage_total %</td></tr></table>
+		<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test2'>" 
+		. $district_names . $table_data_summary . $total_targetted_facility_list."<td>$targetted_total</td>" 
+		. $total_facility_list . "<td>$total_facilities_in_county</td></tr>" . $percentage_coverage 
+		. "<td>$final_coverage_total %</td></tr>".$percentage_coverage_using."<td>$targetted_vs_using_hcmp %</td></tr></table>
 		 </div>
 		 </div>";
 
