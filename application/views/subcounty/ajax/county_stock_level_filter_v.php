@@ -161,14 +161,24 @@ endforeach;
 </div>
 </div>
 </div>
-<div class="graph_content">	
+
+
+<div class="graph_content" id="graph_default">	
+	<script type="text/javascript">
+       $(function () { 
+<?php echo $default_graph; ?>
+});
+  </script>
 </div>
 
+
 <script>
-	
+
 	$(document).ready(function() {
+
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           $('.graph_content').html('');
+
           })
 		$("#subcounty_facility_filter,#category_facility_filter").hide();
 		$("#subcounty_district_filter").change(function() {
@@ -207,7 +217,9 @@ var drop_down='';
     });
 		$("#category_facility_filter").show('slow');		
 		}
-		});	
+		});			
+		
+
 		//
 		$(".tracer-filter").button().click(function(e) {
         e.preventDefault(); 
@@ -263,7 +275,16 @@ $(".category-filter").button().click(function(e) {
         var url_ = "reports/get_county_stock_level_new/"+
 "NULL/"+$("#category_filter").val()+"/"+$("#category_district_filter").val()+"/"+ $("#category_facility_filter").val()+"/"+$("#category_plot_value_filter").val()+"/csv_data";	
 		 window.open(url+url_ ,'_blank');	
-          });		
+          });
+          
+$(".general_stock_info").on(function(e)
+	 {	
+	 	e.preventDefault();	
+        var url_ = 'evaluation/analysis/'+$("#sub_county_filter").val();
 
+		ajax_request_replace_div_content(url_,'.graphs');		
+           });
+	
+          		
 		});
 </script>

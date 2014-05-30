@@ -1489,13 +1489,111 @@ class Reports extends MY_Controller
 		endif;
 	}
          public function stock_level_dashboard(){
+         	$current_total_level = facility_stocks_temp::get_current_stock_level($district_id);
+
+				$number = count($current_total_level);			
+				for ($i=0; $i <$number; $i++) { 
+					# code...
+					if($current_total_level[$i]['month'] == 'January') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$jan_total = $jan_total + $current_total_level[$i]['stock'];
+						
+
+					}
+					elseif ($current_total_level[$i]['month'] == 'February') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$feb_total = $feb_total + $stock_value;
+						
+					}
+
+					elseif ($current_total_level[$i]['month'] == 'March') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$march_total = $march_total + $stock_value;
+						
+					}
+
+					elseif ($current_total_level[$i]['month'] == 'April') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$april_total = $april_total + $stock_value;
+						
+					}
+
+					elseif ($current_total_level[$i]['month'] == 'May') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$may_total = $may_total + $stock_value;
+						
+					}
+					
+
+				}
+
+
+						// echo $current_total_level[$i]['month'];
+						// echo $jan_total;
+						// echo "January only<br>";
+
+						// echo $current_total_level[$i]['month'];
+						// echo $feb_total;
+						// echo "feb only<br>";
+
+						// echo $current_total_level[$i]['month'];
+						// echo $march_total;
+						// echo "march only<br>";
+
+						// echo $current_total_level[$i]['month'];
+						// echo $april_total;
+						// echo "april only<br>";
+
+						// echo $current_total_level[$i]['month'];
+						// echo $may_total;
+						// echo "may only<br>";
+
+
+
+				$total = $total + $current_total_level[0]['amoxicillin'][$i]['stock'];
+				
+
+
+         	// Getting names of months
+         	$months = array("January","February","March","April","May","June");
+         	$current_month = date('M');
+
+
+         	$graph_data = array();
+       		$graph_data = array_merge($graph_data, array("graph_id" => 'graph_default'));
+		$graph_data = array_merge($graph_data, array("graph_title" => 'Current Stock Level'));
+		$graph_data = array_merge($graph_data, array("graph_type" => 'bar'));
+		$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Amount'));
+		$graph_data = array_merge($graph_data, array("graph_categories" => array(
+
+			"January","February","March","April","May","June"
+
+			)));
+		$graph_data = array_merge($graph_data, array("series_data" => array("Level of Stock" =>
+		 array(array('January',$jan_total),
+		 array('February',$feb_total),
+		 array('March',$march_total),
+		 array('April',$april_total),
+		 array('May',$may_total)
+		 ))));	
+
+		$data['default_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
+
 	     $county_id = $this -> session -> userdata('county_id');
 	     $data['district_data'] = districts::getDistrict($county_id);
 	     $data['c_data'] = Commodities::get_all_2();
          $data['tracer_items'] = Commodities::get_tracer_items();
 		 $data['categories']=commodity_sub_category::get_all_pharm();
+
+		 
 	     return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
 	    }
+		 
      	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null) {
      	//reset the values here
     

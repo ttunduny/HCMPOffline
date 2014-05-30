@@ -46,7 +46,7 @@ $(document).ready(function() {
 	 {	
 	 	e.preventDefault();	
         var url_ = 'evaluation/analysis/'+$("#sub_county_filter").val();
-        // ;  
+
 		ajax_request_replace_div_content(url_,'.graphs');		
            });
 	
