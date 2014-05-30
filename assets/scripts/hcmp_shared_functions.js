@@ -219,8 +219,9 @@ function confirm_if_the_user_wants_to_save_the_form(form_id){
        '<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>';
       dialog_box("Kindly confirm the values before saving",buttons);
       $('.save_issue').on('click', function() {
+          
           if($(form_id).valid()){
-           $(form_id).submit();      
+          // $(form_id).submit();      
           }
       
       });
