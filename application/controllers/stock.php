@@ -15,6 +15,7 @@ class Stock extends MY_Controller {
 	public function index(){
 		
 	}	
+	
 /*
 |--------------------------------------------------------------------------
 | update facility stock 

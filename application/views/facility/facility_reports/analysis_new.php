@@ -258,7 +258,7 @@ color: #fff; }
                     // $percentageN=100-$percentageY;
                     $percentageN=100 - $percentageY;
 		echo  "<div class='progress'><div class='bar'  style='float:left; width:$percentageY%;background:$statusY'>YES ".$percentageY ."% </div>
-    		<div class='expectations bar' style='float:right; width:$percentageN%;background:$statusN'>  NO ".$percentageN ."% </div></div></div></td>";
+    		<div class='view_suggestions bar' style='float:right; width:$percentageN%;background:$statusN'>  NO ".$percentageN ."% </div></div></div></td>";
 		 ?>
 	</td>
 	</tr>
@@ -327,7 +327,7 @@ $(".view_requirements").click( function (){
           }
         }); 
 }
-$(".expectations").click( function (){
+$(".view_suggestions").click( function (){
 		
 		$('.modal-dialog').addClass("modal-lg");
 		var body_content='<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
