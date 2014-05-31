@@ -1532,29 +1532,6 @@ class Reports extends MY_Controller
 
 				}
 
-
-						// echo $current_total_level[$i]['month'];
-						// echo $jan_total;
-						// echo "January only<br>";
-
-						// echo $current_total_level[$i]['month'];
-						// echo $feb_total;
-						// echo "feb only<br>";
-
-						// echo $current_total_level[$i]['month'];
-						// echo $march_total;
-						// echo "march only<br>";
-
-						// echo $current_total_level[$i]['month'];
-						// echo $april_total;
-						// echo "april only<br>";
-
-						// echo $current_total_level[$i]['month'];
-						// echo $may_total;
-						// echo "may only<br>";
-
-
-
 				$total = $total + $current_total_level[0]['amoxicillin'][$i]['stock'];
 				
 
