@@ -164,21 +164,19 @@ endforeach;
 
 
 <div class="graph_content" id="graph_default">	
-	<script type="text/javascript">
-       $(function () { 
-<?php echo $default_graph; ?>
-});
-  </script>
+	
 </div>
 
 
 <script>
-
+	 $(function () { 
+<?php echo $default_graph; ?>
+});
 	$(document).ready(function() {
 
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           $('.graph_content').html('');
-
+          
           })
 		$("#subcounty_facility_filter,#category_facility_filter").hide();
 		$("#subcounty_district_filter").change(function() {

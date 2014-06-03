@@ -1491,41 +1491,109 @@ class Reports extends MY_Controller
          public function stock_level_dashboard(){
          	$current_total_level = facility_stocks_temp::get_current_stock_level($district_id);
 
+
 				$number = count($current_total_level);			
 				for ($i=0; $i <$number; $i++) { 
 					# code...
-					if($current_total_level[$i]['month'] == 'January') {
+					if($current_total_level[$i]['commodity'] == 'Albendazole Tablets 400mg') {
 						# code...
 						$stock_value = $current_total_level[$i]['stock'];
-						$jan_total = $jan_total + $current_total_level[$i]['stock'];
-						
-
+						$albendazole = $albendazole + $current_total_level[$i]['stock'];
 					}
-					elseif ($current_total_level[$i]['month'] == 'February') {
+					// no 2
+					elseif ($current_total_level[$i]['commodity'] == 'Amoxicillin Capsules 250mg') {
 						# code...
 						$stock_value = $current_total_level[$i]['stock'];
-						$feb_total = $feb_total + $stock_value;
-						
-					}
-
-					elseif ($current_total_level[$i]['month'] == 'March') {
-						# code...
-						$stock_value = $current_total_level[$i]['stock'];
-						$march_total = $march_total + $stock_value;
+						$amoxicillin = $amoxicillin + $stock_value;
 						
 					}
+					// no 3
 
-					elseif ($current_total_level[$i]['month'] == 'April') {
+					elseif ($current_total_level[$i]['commodity'] == 'Paracetamol Tablets 500mg') {
 						# code...
 						$stock_value = $current_total_level[$i]['stock'];
-						$april_total = $april_total + $stock_value;
+						$paracetamol = $paracetamol + $stock_value;
+						
+					}
+					// no 4
+
+					elseif ($current_total_level[$i]['commodity'] == 'Zinc sulphate Tablets 20mg ') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$zinc_sulphate = $zinc_sulphate + $stock_value;
+						
+					}
+					// no 5
+
+					elseif ($current_total_level[$i]['commodity'] == 'Amoxicillin oral Suspension 125mg/5 ml') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$amoxicillin_oral = $amoxicillin_oral + $stock_value;
 						
 					}
 
-					elseif ($current_total_level[$i]['month'] == 'May') {
+					// no 6
+
+					elseif ($current_total_level[$i]['commodity'] == 'Cotrimoxazole susp 240mg/5 ml') {
 						# code...
 						$stock_value = $current_total_level[$i]['stock'];
-						$may_total = $may_total + $stock_value;
+						$cotrimoxazole = $cotrimoxazole + $stock_value;
+						
+					}
+
+					// no 7
+					elseif ($current_total_level[$i]['commodity'] == 'Metronidazole susp 200mg/5 ml') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$metronidazole = $metronidazole + $stock_value;
+						
+					}
+
+					// no 8
+					elseif ($current_total_level[$i]['commodity'] == 'ORS sachet (for 500ml) low osmolality') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$ors = $ors + $stock_value;
+						
+					}
+
+					// no 9
+					elseif ($current_total_level[$i]['commodity'] == 'Atropine sulphate inj 1mg/ ml') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$atropine = $atropine + $stock_value;
+						
+					}
+
+					// no 10
+					elseif ($current_total_level[$i]['commodity'] == 'Adrenaline (epinephrine) inj 1mg/1 ml') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$adrenaline = $adrenaline + $stock_value;
+						
+					}
+
+					// no 11
+					elseif ($current_total_level[$i]['commodity'] == 'Benzylpenicillin inj -5mu') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$benzylpenicillin = $benzylpenicillin + $stock_value;
+						
+					}
+
+					// no 12
+					elseif ($current_total_level[$i]['commodity'] == 'Hydrocortisone inj 100mg vial') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$hydrocortisone = $hydrocortisone + $stock_value;
+						
+					}
+
+					// no 13
+					elseif ($current_total_level[$i]['commodity'] == 'Tetracycline eye ointment 1% 5g') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$tetracycline = $tetracycline + $stock_value;
 						
 					}
 					
@@ -1533,35 +1601,46 @@ class Reports extends MY_Controller
 				}
 
 
-						// echo $current_total_level[$i]['month'];
-						// echo $jan_total;
-						// echo "January only<br>";
+						  
+						  // echo $albendazole;
+						  // echo "January only<br>";
 
-						// echo $current_total_level[$i]['month'];
-						// echo $feb_total;
-						// echo "feb only<br>";
+						  
+						  // echo $amoxicillin;
+						  // echo "feb only<br>";
 
-						// echo $current_total_level[$i]['month'];
-						// echo $march_total;
-						// echo "march only<br>";
+						  
+						  // echo $paracetamol;
+						  // echo "march only<br>";
 
-						// echo $current_total_level[$i]['month'];
-						// echo $april_total;
-						// echo "april only<br>";
+						 
+						  // echo $zinc_sulphate;
+						  // echo "april only<br>";
 
-						// echo $current_total_level[$i]['month'];
-						// echo $may_total;
-						// echo "may only<br>";
+						  
+						  // echo $amoxicillin_oral;
+						  // echo "may only<br>";
 
+						  // echo $cotrimoxazole;
+						  // echo "cotrimoxazole only<br>";
 
+						  // echo $metronidazole;
+						  // echo "metronidazole only<br>";
 
-				$total = $total + $current_total_level[0]['amoxicillin'][$i]['stock'];
-				
+						  // echo $atropine;
+						  // echo "atropine only<br>";
 
+						  // echo $adrenaline;
+						  // echo "adrenaline only<br>";
 
-         	// Getting names of months
-         	$months = array("January","February","March","April","May","June");
-         	$current_month = date('M');
+						  // echo $benzylpenicillin;
+						  // echo "benzylpenicillin only<br>";
+
+						  // echo $hydrocortisone;
+						  // echo "hydrocortisone only<br>";
+
+						  // echo $tetracycline;
+						  // echo "tetracycline only<br>";
 
 
          	$graph_data = array();
@@ -1571,15 +1650,34 @@ class Reports extends MY_Controller
 		$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Amount'));
 		$graph_data = array_merge($graph_data, array("graph_categories" => array(
 
-			"January","February","March","April","May","June"
+			"Albendazole Tablets 400mg",
+			"Amoxicillin Capsules 250mg","Paracetamol Tablets 500mg",
+			"Zinc sulphate Tablets 20mg ",
+			"Amoxicillin oral Suspension 125mg/5 ml",
+			"Cotrimoxazole susp 240mg/5 ml",
+			"Metronidazole susp 200mg/5 ml",
+			"ORS sachet (for 500ml) low osmolality",
+			"Atropine sulphate inj 1mg/ ml",
+			"Adrenaline (epinephrine) inj 1mg/1 ml",
+			"Benzylpenicillin inj -5mu",
+			"Hydrocortisone inj 100mg vial",
+			"Tetracycline eye ointment 1% 5g"
 
 			)));
 		$graph_data = array_merge($graph_data, array("series_data" => array("Level of Stock" =>
-		 array(array('January',$jan_total),
-		 array('February',$feb_total),
-		 array('March',$march_total),
-		 array('April',$april_total),
-		 array('May',$may_total)
+		 array(array('Albendazole Tablets 400mg',$albendazole),
+		 array('Amoxicillin Capsules 250mg',$amoxicillin),
+		 array('Paracetamol Tablets 500mg',$paracetamol),
+		 array('Zinc sulphate Tablets 20mg ',$zinc_sulphate),
+		 array('Amoxicillin oral Suspension 125mg/5 ml',$amoxicillin_oral),
+		 array('Cotrimoxazole susp 240mg/5 ml',$cotrimoxazole),
+		 array('Metronidazole susp 200mg/5 ml',$metronidazole),
+		 array('ORS sachet (for 500ml) low osmolality',$ors),
+		 array('Atropine sulphate inj 1mg/ ml',$atropine),
+		 array('Adrenaline (epinephrine) inj 1mg/1 ml',$adrenaline),
+		 array('Benzylpenicillin inj -5mu',$benzylpenicillin),
+		 array('Hydrocortisone inj 100mg vial',$hydrocortisone),
+		 array('Tetracycline eye ointment 1% 5g',$tetracycline)
 		 ))));	
 
 		$data['default_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
@@ -1643,7 +1741,7 @@ class Reports extends MY_Controller
 		else:
 		array_push($category_data, array("Stock level $commodity_name $title $month_ $year","stocks worth in $option_new"));
 		endif;	
-        $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_'));
+        	    $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_'));
 	    $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
 	    $graph_data=array_merge($graph_data,array("table_body"=>$series_data));
 				
@@ -1660,13 +1758,14 @@ class Reports extends MY_Controller
 		$excel_data['row_data'] = $row_data;
 		$this -> hcmp_functions -> create_excel($excel_data);
 		else:
-        $graph_type='column';			
-        $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_'));
+        		$graph_type='column';			
+        		$graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_'));
 	    $graph_data=array_merge($graph_data,array("graph_title"=>"Stock level $commodity_name $title $month_ $year"));
 	    $graph_data=array_merge($graph_data,array("graph_type"=>$graph_type));
 	    $graph_data=array_merge($graph_data,array("graph_yaxis_title"=>"Commodity Stock level in $option_new"));
 	    $graph_data=array_merge($graph_data,array("graph_categories"=>$category_data ));
 	    $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
+
 		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		endif;
