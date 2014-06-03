@@ -1490,11 +1490,14 @@ class Reports extends MY_Controller
 	}
          public function stock_level_dashboard(){
          	$current_total_level = facility_stocks_temp::get_current_stock_level($district_id);
+	$month = date('F');
 
 
-				$number = count($current_total_level);			
-				for ($i=0; $i <$number; $i++) { 
-					# code...
+		$number = count($current_total_level);
+
+		for ($i=0; $i <$number; $i++) { 
+			if ($current_total_level[$i]['month'] == $month) {
+						# code...
 					if($current_total_level[$i]['commodity'] == 'Albendazole Tablets 400mg') {
 						# code...
 						$stock_value = $current_total_level[$i]['stock'];
@@ -1596,6 +1599,11 @@ class Reports extends MY_Controller
 						$tetracycline = $tetracycline + $stock_value;
 						
 					}
+			}
+
+			else{
+
+			}
 					
 
 				}
