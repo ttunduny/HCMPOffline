@@ -36,7 +36,7 @@ class facility_stocks_temp extends Doctrine_Record {
 	}
 	public static function get_current_stock_level($district_id){
 	$query_1 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-	SELECT MONTHNAME (f_s.date_modified) as month ,c.commodity_name as commodity, f_s.current_balance as stock
+	SELECT c.commodity_name as commodity, f_s.current_balance as stock
 	FROM commodities c, facility_stocks f_s 
 	where c.status =1 and tracer_item =1
 	and c.id = f_s.commodity_id
