@@ -219,9 +219,7 @@ color: #fff; }
 	</td>
 	<td colspan="2">
 		<?php 
-        // print_r($train_useful);
 
-        // exit;
         $percentageY= calculate_percentage($train_useful[1]['actual'],$train_useful[1]['total']);
                       $percentageN=100-$percentageY;
 
@@ -257,11 +255,8 @@ color: #fff; }
 	</td>
 	<td>
 		<?php 
-        // print_r($req_addr);
-        
         $percentageY= calculate_percentage($ease_of_use[0]['total'],$ease_of_use[1]['actual']);
-                    // $percentageN=100-$percentageY;
-                    
+       
                     $percentageN=100 - $percentageY;
 
                     $progress_bar8 = $percentageY;
@@ -279,7 +274,7 @@ color: #fff; }
 	<td colspan="2">
 		<?php 
         $percentageY= calculate_percentage($meet_expect[0]['total'],$meet_expect[1]['actual']);
-                    // $percentageN=100-$percentageY;
+
                     $percentageN=100 - $percentageY;
 
                     $progress_bar9 = $percentageY;
