@@ -1490,145 +1490,194 @@ class Reports extends MY_Controller
 	}
          public function stock_level_dashboard(){
          	$current_total_level = facility_stocks_temp::get_current_stock_level($district_id);
-			
-				 $number = count($current_total_level);			
-				 for ($i=0; $i <$number; $i++) { 
-					 # code...
-					 if($current_total_level[$i]['commodity'] == 'Albendazole Tablets 400mg') {
-						 # code...
-						 $stock_value = $current_total_level[$i]['stock'];
-						 //$stock_value1 = $current_total_level[$i]['stock'] + $stock_value;
-						 $albendazole_total = $albendazole_total + $stock_value;
-						// echo "<pre>";
-						// print_r($albendazole_total);
-						// echo "</pre>";
-					 }
-					 elseif ($current_total_level[$i]['commodity'] == 'Amoxicillin Capsules 250mg') {
-						 # code...
-						 $stock_value = $current_total_level[$i]['stock'];
-						 $amoxil_total = $amoxil_total + $stock_value;
- 						 // echo "<pre>";
-						// print_r($amoxil_total);
-						// echo "</pre>";
-					 }
- 
+
+
+				$number = count($current_total_level);			
+				for ($i=0; $i <$number; $i++) { 
+					# code...
+					if($current_total_level[$i]['commodity'] == 'Albendazole Tablets 400mg') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$albendazole = $albendazole + $current_total_level[$i]['stock'];
+					}
+					// no 2
+					elseif ($current_total_level[$i]['commodity'] == 'Amoxicillin Capsules 250mg') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$amoxicillin = $amoxicillin + $stock_value;
+						
+					}
+					// no 3
+
 					elseif ($current_total_level[$i]['commodity'] == 'Paracetamol Tablets 500mg') {
-						 # code...
-						 $stock_value = $current_total_level[$i]['stock'];
-						 $paracetamol_total = $paracetamol_total + $stock_value;
-						 // echo "<pre>";
-						// print_r($paracetamol_total);
-						// echo "</pre>";
-					 }
- 
-					 elseif ($current_total_level[$i]['commodity'] == 'Zinc sulphate Tablets 20mg') {
-						 # code...
-						 $stock_value = $current_total_level[$i]['stock'];
-						 $zinc_sulphate_total = $zinc_sulphate_total + $stock_value;
- 						  // echo "<pre>";
-						 // print_r($zinc_sulphate_total);
-						 // echo "</pre>";
-					 }
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$paracetamol = $paracetamol + $stock_value;
+						
+					}
+					// no 4
 
-					 elseif ($current_total_level[$i]['commodity'] == 'Amoxicillin oral Suspension 125mg/5 ml') {
-						 # code...
-						 $stock_value = $current_total_level[$i]['stock'];
-						 $amoxil_oral_total = $amoxil_oral_total + $stock_value;
-// 						
-					 }
- 					 elseif ($current_total_level[$i]['commodity'] == 'Cotrimoxazole susp 240mg/5 ml') {
-						 # code...
-						 $stock_value = $current_total_level[$i]['stock'];
-						 $cotrimazole_total = $cotrimazole_total + $stock_value;
-// 						
-					 }
- 					 elseif ($current_total_level[$i]['commodity'] == 'Metronidazole susp 200mg/5 ml') {
-						 # code...
-						 $stock_value = $current_total_level[$i]['stock'];
-						 $metronidazole_total = $metronidazole_total + $stock_value;
-// 						
-					 }
-					 elseif ($current_total_level[$i]['commodity'] == 'ORS sachet (for 500ml) low osmolality') {
-						 # code...
-						 $stock_value = $current_total_level[$i]['stock'];
-						 $ors_total = $ors_total + $stock_value;
-// 						
-					 }
-					 elseif ($current_total_level[$i]['commodity'] == 'Atropine sulphate inj 1mg/ ml') {
-						 # code...
-						 $stock_value = $current_total_level[$i]['stock'];
-						 $atropine_total = $atropine_total + $stock_value;
-// 						
-					 }
-					 elseif ($current_total_level[$i]['commodity'] == 'Cotrimoxazole susp 240mg/5 ml') {
-						 # code...
-						 $stock_value = $current_total_level[$i]['stock'];
-						 $cotrimazole_total = $cotrimazole_total + $stock_value;
-// 						
-					 }
-					 elseif ($current_total_level[$i]['commodity'] == 'Adrenaline (epinephrine) inj 1mg/1 ml') {
-						 # code...
-						 $stock_value = $current_total_level[$i]['stock'];
-						 $adrenaline_total = $adrenaline_total + $stock_value;
-// 						
-					 }
-					 elseif ($current_total_level[$i]['commodity'] == 'Benzylpenicillin inj -5mu') {
-						 # code...
-						 $stock_value = $current_total_level[$i]['stock'];
-						 $benzyl_total = $benzyl_total + $stock_value;
-// 						
-					 }
-					 elseif ($current_total_level[$i]['commodity'] == 'Hydrocortisone inj 100mg vial') {
-						 # code...
-						 $stock_value = $current_total_level[$i]['stock'];
-						 $hydro_total = $hydro_total + $stock_value;
-// 						
-					 }
-					 elseif ($current_total_level[$i]['commodity'] == 'Tetracycline eye ointment 1% 5g') {
-						 # code...
-						 $stock_value = $current_total_level[$i]['stock'];
-						 $tetra_total = $tetra_total + $stock_value;
-// 						
-					 }
-					 }
-				 //}
-// 
-				// $total = $total + $current_total_level[0]['amoxicillin'][$i]['stock'];
-				
+					elseif ($current_total_level[$i]['commodity'] == 'Zinc sulphate Tablets 20mg ') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$zinc_sulphate = $zinc_sulphate + $stock_value;
+						
+					}
+					// no 5
+
+					elseif ($current_total_level[$i]['commodity'] == 'Amoxicillin oral Suspension 125mg/5 ml') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$amoxicillin_oral = $amoxicillin_oral + $stock_value;
+						
+					}
+
+					// no 6
+
+					elseif ($current_total_level[$i]['commodity'] == 'Cotrimoxazole susp 240mg/5 ml') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$cotrimoxazole = $cotrimoxazole + $stock_value;
+						
+					}
+
+					// no 7
+					elseif ($current_total_level[$i]['commodity'] == 'Metronidazole susp 200mg/5 ml') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$metronidazole = $metronidazole + $stock_value;
+						
+					}
+
+					// no 8
+					elseif ($current_total_level[$i]['commodity'] == 'ORS sachet (for 500ml) low osmolality') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$ors = $ors + $stock_value;
+						
+					}
+
+					// no 9
+					elseif ($current_total_level[$i]['commodity'] == 'Atropine sulphate inj 1mg/ ml') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$atropine = $atropine + $stock_value;
+						
+					}
+
+					// no 10
+					elseif ($current_total_level[$i]['commodity'] == 'Adrenaline (epinephrine) inj 1mg/1 ml') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$adrenaline = $adrenaline + $stock_value;
+						
+					}
+
+					// no 11
+					elseif ($current_total_level[$i]['commodity'] == 'Benzylpenicillin inj -5mu') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$benzylpenicillin = $benzylpenicillin + $stock_value;
+						
+					}
+
+					// no 12
+					elseif ($current_total_level[$i]['commodity'] == 'Hydrocortisone inj 100mg vial') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$hydrocortisone = $hydrocortisone + $stock_value;
+						
+					}
+
+					// no 13
+					elseif ($current_total_level[$i]['commodity'] == 'Tetracycline eye ointment 1% 5g') {
+						# code...
+						$stock_value = $current_total_level[$i]['stock'];
+						$tetracycline = $tetracycline + $stock_value;
+						
+					}
+					
+
+				}
 
 
-         	// Getting names of months
-         	$months = array("January","February","March","April","May","June");
-         	$current_month = date('M');
+						  
+						  // echo $albendazole;
+						  // echo "January only<br>";
+
+						  
+						  // echo $amoxicillin;
+						  // echo "feb only<br>";
+
+						  
+						  // echo $paracetamol;
+						  // echo "march only<br>";
+
+						 
+						  // echo $zinc_sulphate;
+						  // echo "april only<br>";
+
+						  
+						  // echo $amoxicillin_oral;
+						  // echo "may only<br>";
+
+						  // echo $cotrimoxazole;
+						  // echo "cotrimoxazole only<br>";
+
+						  // echo $metronidazole;
+						  // echo "metronidazole only<br>";
+
+						  // echo $atropine;
+						  // echo "atropine only<br>";
+
+						  // echo $adrenaline;
+						  // echo "adrenaline only<br>";
+
+						  // echo $benzylpenicillin;
+						  // echo "benzylpenicillin only<br>";
+
+						  // echo $hydrocortisone;
+						  // echo "hydrocortisone only<br>";
+
+						  // echo $tetracycline;
+						  // echo "tetracycline only<br>";
 
 
          	$graph_data = array();
        		$graph_data = array_merge($graph_data, array("graph_id" => 'graph_default'));
 		$graph_data = array_merge($graph_data, array("graph_title" => 'Current Stock Level'));
 		$graph_data = array_merge($graph_data, array("graph_type" => 'bar'));
-		$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Amount of stock'));
+		$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Amount'));
 		$graph_data = array_merge($graph_data, array("graph_categories" => array(
 
-			"Albendazole Tablets 400mg","Amoxicillin Capsules 250mg","Paracetamol Tablets 500mg","Zinc sulphate Tablets 20mg",
-			"Amoxicillin oral Suspension 125mg/5 ml","Cotrimoxazole susp 240mg/5 ml","Metronidazole susp 200mg/5 ml",
-			"ORS sachet (for 500ml) low osmolality","Atropine sulphate inj 1mg/ ml","Adrenaline (epinephrine) inj 1mg/1 ml","Benzylpenicillin inj -5mu",
-			"Hydrocortisone inj 100mg vial","Tetracycline eye ointment 1% 5g"
+			"Albendazole Tablets 400mg",
+			"Amoxicillin Capsules 250mg","Paracetamol Tablets 500mg",
+			"Zinc sulphate Tablets 20mg ",
+			"Amoxicillin oral Suspension 125mg/5 ml",
+			"Cotrimoxazole susp 240mg/5 ml",
+			"Metronidazole susp 200mg/5 ml",
+			"ORS sachet (for 500ml) low osmolality",
+			"Atropine sulphate inj 1mg/ ml",
+			"Adrenaline (epinephrine) inj 1mg/1 ml",
+			"Benzylpenicillin inj -5mu",
+			"Hydrocortisone inj 100mg vial",
+			"Tetracycline eye ointment 1% 5g"
 
 			)));
 		$graph_data = array_merge($graph_data, array("series_data" => array("Level of Stock" =>
-		 array(array('Albendazole Tablets 400mg',$albendazole_total),
-		 array('Amoxicillin Capsules 250mg',$amoxil_total),
-		 array('Paracetamol Tablets 500mg',$paracetamol_total),
-		 array('Zinc sulphate Tablets 20mg',$zinc_sulphate_total),
-		 array('Amoxicillin oral Suspension 125mg/5 ml',$amoxil_oral_total),
-		 array('Cotrimoxazole susp 240mg/5 ml',$cotrimazole_total),
-		 array('Metronidazole susp 200mg/5 ml',$metronidazole_total),
-		 array('ORS sachet (for 500ml) low osmolality',$ors_total),
-		 array('Atropine sulphate inj 1mg/ ml',$atropine_total),
-		 array('Adrenaline (epinephrine) inj 1mg/1 ml',$adrenaline_total),
-		 array('Benzylpenicillin inj -5mu',$benzyl_total),
-		 array('Hydrocortisone inj 100mg vial',$hydro_total),
-		 array('Tetracycline eye ointment 1% 5g',$tetra_total)
+		 array(array('Albendazole Tablets 400mg',$albendazole),
+		 array('Amoxicillin Capsules 250mg',$amoxicillin),
+		 array('Paracetamol Tablets 500mg',$paracetamol),
+		 array('Zinc sulphate Tablets 20mg ',$zinc_sulphate),
+		 array('Amoxicillin oral Suspension 125mg/5 ml',$amoxicillin_oral),
+		 array('Cotrimoxazole susp 240mg/5 ml',$cotrimoxazole),
+		 array('Metronidazole susp 200mg/5 ml',$metronidazole),
+		 array('ORS sachet (for 500ml) low osmolality',$ors),
+		 array('Atropine sulphate inj 1mg/ ml',$atropine),
+		 array('Adrenaline (epinephrine) inj 1mg/1 ml',$adrenaline),
+		 array('Benzylpenicillin inj -5mu',$benzylpenicillin),
+		 array('Hydrocortisone inj 100mg vial',$hydrocortisone),
+		 array('Tetracycline eye ointment 1% 5g',$tetracycline)
 		 ))));	
 
 		$data['default_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
@@ -1641,9 +1690,8 @@ class Reports extends MY_Controller
 
 		 
 	     return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
-	    
-	   	
-		}
+	    }
+		 
      	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null) {
      	//reset the values here
     
@@ -1693,7 +1741,7 @@ class Reports extends MY_Controller
 		else:
 		array_push($category_data, array("Stock level $commodity_name $title $month_ $year","stocks worth in $option_new"));
 		endif;	
-        $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_'));
+        	    $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_'));
 	    $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
 	    $graph_data=array_merge($graph_data,array("table_body"=>$series_data));
 				
@@ -1710,13 +1758,14 @@ class Reports extends MY_Controller
 		$excel_data['row_data'] = $row_data;
 		$this -> hcmp_functions -> create_excel($excel_data);
 		else:
-        $graph_type='column';			
-        $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_'));
+        		$graph_type='column';			
+        		$graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_'));
 	    $graph_data=array_merge($graph_data,array("graph_title"=>"Stock level $commodity_name $title $month_ $year"));
 	    $graph_data=array_merge($graph_data,array("graph_type"=>$graph_type));
 	    $graph_data=array_merge($graph_data,array("graph_yaxis_title"=>"Commodity Stock level in $option_new"));
 	    $graph_data=array_merge($graph_data,array("graph_categories"=>$category_data ));
 	    $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
+
 		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		endif;
