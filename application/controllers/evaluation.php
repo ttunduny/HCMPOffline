@@ -360,7 +360,6 @@ class Evaluation extends MY_Controller {
 		$data['coverage_data'] = evaluation_data::get_district_coverage_data($county_id, $district_id);
 
 		$data['show_req'] = evaluation_data::show_req_id($county_id, $district_id);
-		$data['show_suggest'] = evaluation_data::show_meet_expect($county_id, $district_id);
 
 		 $views = 'subcounty/reports/analysis_new';
 
