@@ -36,7 +36,7 @@ class facility_stocks_temp extends Doctrine_Record {
 	}
 	public static function get_current_stock_level($district_id){
 	$query_1 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-	SELECT MONTHNAME (f_s.date_modified) as month, c.commodity_name as commodity, f_s.current_balance as stock, c.id as id
+	SELECT MONTHNAME (f_s.date_modified) as month, c.commodity_name as commodity, f_s.current_balance as stock
 	FROM commodities c, facility_stocks f_s 
 	where c.status =1 and tracer_item =1
 	and c.id = f_s.commodity_id
@@ -51,21 +51,22 @@ class facility_stocks_temp extends Doctrine_Record {
 	and com.status = 1 and com.tracer_item =1
 	and fms.facility_code =15192
 	GROUP BY (fms.commodity_id)
-	");	
+	");
+
 	return $query_1;
 }
-	public static function get_current_amc($district_id){
-		$month = date('F Y');
+	public static function get_months_of_stock($district_id){
 	$query_1 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-	SELECT fms.facility_code, fms.commodity_id, MONTHNAME( f_s.date_modified ) AS month
-	from facility_monthly_stock fms, facility_stocks f_s, commodities c
-	where fms.facility_code = f_s.facility_code
-	and fms.facility_code = 15192
-	and DATE_FORMAT( f_s.date_modified, '%M %Y' ) =  '$month'
-	GROUP BY (fms.commodity_id)
-	");	
-	return $query_1;
-}
+	 SELECT c.commodity_name, round(avg(ifnull(f_s.current_balance,0)/ifnull(f_m_s.total_units,0)),1) as month_stock 
+     from facilities f, facility_monthly_stock f_m_s, districts d, commodities c 
+     left join facility_stocks f_s on c.id=f_s.commodity_id 
+     where f.district=d.id and d.id=14 and c.tracer_item=1 and c.status=1 
+     and c.id=f_m_s.commodity_id and DATE_FORMAT( f_s.date_modified, '%M %Y' ) =  'June 2014'
+     group by c.id,d.id
+	 ");	
+	return $query_1;	
+	}
+
 	public static function get_all_facility($facility_code) {
 		$query = Doctrine_Query::create() -> select("*") -> from("facility_stocks_temp")->where("facility_code=$facility_code");
 		$facility_stocks = $query -> execute();
