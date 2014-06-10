@@ -772,6 +772,7 @@ class Reports extends MY_Controller
 
 		$district_data = districts::getDistrict($county_id);
 		$facility_data = Facilities::get_Facilities_using_HCMP($district_id);
+		$log_data = Log::get_log_data($district_id);
 		
 		$series_data = array();
 		$category_data = array();
@@ -1441,6 +1442,7 @@ class Reports extends MY_Controller
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		endif;
 	}
+
 		
 		
          public function stock_level_dashboard(){
@@ -1503,6 +1505,7 @@ class Reports extends MY_Controller
 		 array('Benzylpenicillin inj -5mu',(int)$benzylpenicillin_final),
 		 array('Hydrocortisone inj 100mg vial',(int)$hydrocortisone_final),
 		 array('Tetracycline eye ointment 1% 5g',(int)$tetracycline_final)
+
 		 ))));	
 
 		$data['default_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
@@ -1517,8 +1520,10 @@ class Reports extends MY_Controller
 	     return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
 	    }
 		 
+
      	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null) {
      	//reset the values here
+
     	
      	$commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
 		$category_id=($category_id=="NULL") ? null :$category_id;
@@ -1543,20 +1548,21 @@ class Reports extends MY_Controller
 		$category_name_=@$commodity_name[0]['commodity_name'];
 		$commodity_name=isset($category_name_)? " for ".$category_name_ : null;
 		$title=isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
-	 isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
-		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code,$district_id,$county_id,
-		 $category_id, 1,  $option_new,$report_type);
+	 	isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
+		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code,$district_id,$county_id,$category_id, $commodity_id, $option_new,$report_type);
+       
+
         foreach ($commodity_array as $data) :
 		if($report_type=="table_data"):
-		if($commodity_id>0):
-		array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"], $data['total']));
+			if($commodity_id>0):
+				array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"], $data['total']));
+			else:
+				array_push($series_data , array($data["name"], $data['total']));
+			endif;						
 		else:
-		array_push($series_data , array($data["name"], $data['total']));
-		endif;						
-		else:
-		$series_data  = array_merge($series_data , array($data["name"] => $data['total']));
-		$series_data_  = array_merge($series_data_ , array($data["name"],$data['total']));
-		$category_data=array_merge($category_data, array($data["name"]));
+			$series_data  = array_merge($series_data , array($data["name"] => $data['total']));
+			$series_data_  = array_merge($series_data_ , array($data["name"],$data['total']));
+			$category_data=array_merge($category_data, array($data["name"]));
 		endif;
 		endforeach;
 		

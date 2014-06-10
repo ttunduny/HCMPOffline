@@ -32,7 +32,10 @@ class Facilities extends Doctrine_Record {
 	}
 	public static function get_Facilities_using_HCMP($district)
 	{
-		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district' and using_hcmp = 1")->OrderBy("facility_name asc");
+		$query = Doctrine_Query::create() ->select("*") 
+											->from("facilities")
+											->where("district='$district' and using_hcmp = 1")
+											->OrderBy("facility_name asc");
 		$drugs = $query -> execute();
 		return $drugs;
 	}

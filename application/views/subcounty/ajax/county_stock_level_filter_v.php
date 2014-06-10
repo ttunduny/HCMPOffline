@@ -166,8 +166,11 @@ endforeach;
 <div class="graph_content" id="graph_default">	
 	
 </div>
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> e5d2c1729998b21f5afcadfe61e161bc0f2e2a8b
 <script>
 	 $(function () { 
 <?php echo $default_graph; ?>

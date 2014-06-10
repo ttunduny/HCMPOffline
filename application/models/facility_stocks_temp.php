@@ -43,6 +43,7 @@ class facility_stocks_temp extends Doctrine_Record {
 	");	
 	return $query_1;
 }
+
 	public static function get_tracer_item_names($district_id){
 	$query_1 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 	select commodity_name from commodities where status=1 and tracer_item =1
@@ -51,6 +52,7 @@ class facility_stocks_temp extends Doctrine_Record {
 		
 		
 	}
+
 	public static function get_months_of_stock($district_id){
 	$query_1 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 	 SELECT c.commodity_name, round(avg(ifnull(f_s.current_balance,0)/ifnull(f_m_s.total_units,0)),1) as month_stock 
