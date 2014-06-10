@@ -578,9 +578,11 @@ class Reports extends MY_Controller
 		$facility_name = $facility_name[0]['facility_name'];
 		//$data['facility_code'] = $facility_code;
 		
+		
 		$expired_commodities = Facility_stocks::get_expiries($facility_code);
 		//Holds all the months of the year
 		//Build the line graph showing the expiries graph
+		
 		$graph_data = array();
 		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
 		$graph_data = array_merge($graph_data,array("graph_title"=>'Total Expiries in '.$facility_name));
@@ -772,8 +774,7 @@ class Reports extends MY_Controller
 
 		$district_data = districts::getDistrict($county_id);
 		$facility_data = Facilities::get_Facilities_using_HCMP($district_id);
-		$log_data = Log::get_log_data($district_id);
-		
+
 		$series_data = array();
 		$category_data = array();
 		$series_data_monthly = array();
@@ -1449,11 +1450,11 @@ class Reports extends MY_Controller
  
          	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id);
 			//$number = count($no_of_months);
+			$tracer_item_names = facility_stocks_temp::get_tracer_item_names($district_id);
+			$month = date('F Y');
 			
-			// echo "<pre>";
-			// print_r($final_graph_data);
-			// echo "</pre>";
-			
+
+
 			// variable values for drugs
 			$albendazole_final= $final_graph_data[0]['month_stock'];
 			$amoxicilin_final = $final_graph_data[1]['month_stock'];
@@ -1474,39 +1475,16 @@ class Reports extends MY_Controller
        		$graph_data = array_merge($graph_data, array("graph_id" => 'graph_default'));
 			$graph_data = array_merge($graph_data, array("graph_title" => 'Current Stock Level'));
 			$graph_data = array_merge($graph_data, array("graph_type" => 'bar'));
-			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Months of stock'));
-			$graph_data = array_merge($graph_data, array("graph_categories" => array(
 
-			"Albendazole Tablets 400mg",
-			"Amoxicillin Capsules 250mg","Paracetamol Tablets 500mg",
-			"Zinc sulphate Tablets 20mg ",
-			"Amoxicillin oral Suspension 125mg/5 ml",
-			"Cotrimoxazole susp 240mg/5 ml",
-			"Metronidazole susp 200mg/5 ml",
-			"ORS sachet (for 500ml) low osmolality",
-			"Atropine sulphate inj 1mg/ ml",
-			"Adrenaline (epinephrine) inj 1mg/1 ml",
-			"Benzylpenicillin inj -5mu",
-			"Hydrocortisone inj 100mg vial",
-			"Tetracycline eye ointment 1% 5g"
+			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Months of Stock'));
+			$graph_data = array_merge($graph_data, array("graph_categories" => array()));
+			$graph_data = array_merge($graph_data, array("series_data" => array("Stock" =>array())));	
+			
+			foreach($final_graph_data as $final_graph_data_):
+			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'], array($final_graph_data_['commodity_name']));
+			$graph_data['series_data']['Stock'] = array_merge($graph_data['series_data']['Stock'],array((int)$final_graph_data_['month_stock']));	
+			endforeach;
 
-			)));
-		$graph_data = array_merge($graph_data, array("series_data" => array("Level of Stock" =>
-		 array(array('Albendazole Tablets 400mg',(int)$albendazole_final),
-		 array('Amoxicillin Capsules 250mg',(int)$amoxicilin_final),
-		 array('Paracetamol Tablets 500mg',(int)$paracetamol_final),
-		 array('Zinc sulphate Tablets 20mg ',(int)$zinc_sulphate),
-		 array('Amoxicillin oral Suspension 125mg/5 ml',(int)$amoxicillin_oral_final),
-		 array('Cotrimoxazole susp 240mg/5 ml',(int)$cotrimazole_final),
-		 array('Metronidazole susp 200mg/5 ml',(int)$metronidazole_final),
-		 array('ORS sachet (for 500ml) low osmolality',(int)$ors_final),
-		 array('Atropine sulphate inj 1mg/ ml',(int)$atropine_final),
-		 array('Adrenaline (epinephrine) inj 1mg/1 ml',(int)$adrenaline_final),
-		 array('Benzylpenicillin inj -5mu',(int)$benzylpenicillin_final),
-		 array('Hydrocortisone inj 100mg vial',(int)$hydrocortisone_final),
-		 array('Tetracycline eye ointment 1% 5g',(int)$tetracycline_final)
-
-		 ))));	
 
 		$data['default_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 
@@ -1515,7 +1493,7 @@ class Reports extends MY_Controller
 	     $data['c_data'] = Commodities::get_all_2();
          $data['tracer_items'] = Commodities::get_tracer_items();
 		 $data['categories']=commodity_sub_category::get_all_pharm();
-
+			
 		 
 	     return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
 	    }
@@ -1549,8 +1527,9 @@ class Reports extends MY_Controller
 		$commodity_name=isset($category_name_)? " for ".$category_name_ : null;
 		$title=isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
 	 	isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
-		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code,$district_id,$county_id,$category_id, $commodity_id, $option_new,$report_type);
-       
+
+		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code,$district_id,$county_id,
+		$category_id, $commodity_id,  $option_new,$report_type);
 
         foreach ($commodity_array as $data) :
 		if($report_type=="table_data"):

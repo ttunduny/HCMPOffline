@@ -58,7 +58,7 @@ endforeach;
 <script>
 	$(function () { 
 		<?php
-	echo $facility_evaluation_default;//first chart
+			   echo $facility_evaluation_default;//first chart
                echo $frequency_of_use;
                echo $trained_personel;
                echo $comfort_level;//sixth chart
