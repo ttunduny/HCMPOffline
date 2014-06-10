@@ -1502,7 +1502,7 @@ class Reports extends MY_Controller
 		$data['graph_data'] = $faciliy_expiry_data;
        	$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		$data['report_view'] = "facility/facility_reports/ajax/facility_expiry_filter_v";
-		$data['content_view'] = "facility/facility_reports/reports_v";
+		$data['content_view'] = "facility/facility_reports/reports_v";//change this
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
 	    }
