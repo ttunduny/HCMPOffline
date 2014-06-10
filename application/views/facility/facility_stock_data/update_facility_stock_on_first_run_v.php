@@ -263,8 +263,9 @@ $(document).ready(function() {
     })
     });                     
     /************save the data here*******************/
-   $("#myform").validate();
+   //$("#myform").validate();
     $('.save').button().click(function() {
+        alert($("#myform").valid()); return;
      confirm_if_the_user_wants_to_save_the_form("#myform"); 
      });  
     function send_data_to_the_temp_table(selector_object){
@@ -353,7 +354,7 @@ $(document).ready(function() {
             commodity_total_units.attr("value", "");
             clone_datepicker.attr("id", clone_datepicker_id);   
             clone_datepicker.attr("value", "");  
-             cloned_object.find('input[type=text]').attr("value", "");
+            // cloned_object.find('input[type=text]').attr("value", "");
              // remove the error class
             cloned_object.find("label.error").remove();     
             //insert the data

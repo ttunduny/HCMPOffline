@@ -43,22 +43,7 @@ class facility_stocks_temp extends Doctrine_Record {
 	");	
 	return $query_1;
 }
-	public static function get_drug_amc($district_id){
-	$query_1 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-	SELECT fms.total_units as amc, commodity_name, com.id
-	from facility_monthly_stock fms, commodities com
-	where com.id = fms.commodity_id
-	and com.status = 1 and com.tracer_item =1
-	and fms.facility_code =15192
-	GROUP BY (fms.commodity_id)
-	");
-	// SELECT fms.total_units AS amc, commodity_name, com.id
-	// FROM facility_monthly_stock fms, commodities com, facilities f
-	// WHERE com.id = fms.commodity_id
-	// AND com.status =1 AND com.tracer_item =1
-	// AND f.district =14	
-	return $query_1;
-}
+	
 	public static function get_months_of_stock($district_id){
 	$query_1 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 	 SELECT c.commodity_name, round(avg(ifnull(f_s.current_balance,0)/ifnull(f_m_s.total_units,0)),1) as month_stock 

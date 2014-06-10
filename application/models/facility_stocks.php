@@ -61,10 +61,35 @@ c.unit_size,sum(fs.current_balance) as commodity_balance, round((SUM(fs.current_
 c.total_commodity_units,fs.manufacture,
 c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commodities c, commodity_source c_s
  where fs.facility_code ='$facility_code' $check_expiry_date 
- and c.id=fs.commodity_id and fs.status='1' $addition   
+ and c.id=fs.commodity_id and fs.status='1' $addition  GROUP BY c.id  
 ");
 return $stocks ;
 }
+    public static function get_facility_stock_amc($facility_code){
+  $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("
+	SELECT c.id AS commodity_id, fs.id AS facility_stock_id, fs.expiry_date, 
+			c.commodity_name, c.commodity_code, c.unit_size, 
+			SUM( fs.current_balance ) AS commodity_balance, 
+			ROUND( (SUM( fs.current_balance ) / c.total_commodity_units ) , 1) AS pack_balance, 
+			c.total_commodity_units, fs.manufacture, c_s.source_name, fs.batch_no, c_s.id AS source_id, 
+				CASE temp.selected_option
+				WHEN  'Pack_Size'
+				THEN ROUND( temp.consumption_level, 1 ) 
+				WHEN  'Unit_Size'
+				THEN ROUND( temp.total_units / temp.consumption_level, 1 ) 
+				ELSE 0 
+				END AS amc
+				FROM commodity_source c_s, facility_stocks fs, commodities c
+				LEFT JOIN facility_monthly_stock temp ON temp.commodity_id = c.id
+				WHERE fs.facility_code =  '$facility_code'
+				AND fs.expiry_date >= NOW( ) 
+				AND c.id = fs.commodity_id
+				AND fs.status =  '1'
+				GROUP BY c.id
+			");
+return $stocks ;      
+    }
 	public static function get_facility_expired_stuff($facility_code){
 $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 ->fetchAll("SELECT  c.id as commodity_id, fs.id as facility_stock_id,fs.expiry_date,c.commodity_name,c.commodity_code,
@@ -190,6 +215,7 @@ $year=null,$month=null,$option=null,$data_for=null)
 	 ($graph_type=='table_data')&& ($commodity_id>0) ?" GROUP BY d.id, f.facility_code having total>0 order by di.district asc, f.facility_name asc" :
 	 " GROUP BY d.id having total>0") ;
 	// echo ; exit;
+	
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll("SELECT  $selection_for_a_month $computation
      FROM facility_stocks fs, facilities f, commodities d,  districts di
