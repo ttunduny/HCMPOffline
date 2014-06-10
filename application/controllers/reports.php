@@ -1442,6 +1442,8 @@ class Reports extends MY_Controller
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		endif;
 	}
+	/*
+<<<<<<< HEAD
          public function stock_level_dashboard()
          {
 		     $county_id = $this -> session -> userdata('county_id');
@@ -1451,6 +1453,63 @@ class Reports extends MY_Controller
 			 $data['categories']=commodity_sub_category::get_all_pharm();
 		     return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
 	     }
+=======*/
+         public function stock_level_dashboard(){
+         	$current_total_level = facility_stocks_temp::get_months_of_stock($district_id);
+
+
+         	$albendazole = $current_total_level[0]['month_stock'];
+
+         	$graph_data = array();
+       		$graph_data = array_merge($graph_data, array("graph_id" => 'graph_default'));
+		$graph_data = array_merge($graph_data, array("graph_title" => 'Current Stock Level'));
+		$graph_data = array_merge($graph_data, array("graph_type" => 'bar'));
+		$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Months of Stock (AMC)'));
+		$graph_data = array_merge($graph_data, array("graph_categories" => array(
+
+			"Albendazole Tablets 400mg",
+			"Amoxicillin Capsules 250mg","Paracetamol Tablets 500mg",
+			"Zinc sulphate Tablets 20mg ",
+			"Amoxicillin oral Suspension 125mg/5 ml",
+			"Cotrimoxazole susp 240mg/5 ml",
+			"Metronidazole susp 200mg/5 ml",
+			"ORS sachet (for 500ml) low osmolality",
+			"Atropine sulphate inj 1mg/ ml",
+			"Adrenaline (epinephrine) inj 1mg/1 ml",
+			"Benzylpenicillin inj -5mu",
+			"Hydrocortisone inj 100mg vial",
+			"Tetracycline eye ointment 1% 5g"
+
+			)));
+		$graph_data = array_merge($graph_data, array("series_data" => array("Level of Stock" =>
+		 array(array('Albendazole Tablets 400mg',$albendazole),
+		 array('Amoxicillin Capsules 250mg',$amoxicillin ),
+		 array('Paracetamol Tablets 500mg',$paracetamol ),
+		 array('Zinc sulphate Tablets 20mg ',$zinc_sulphate ),
+		 array('Amoxicillin oral Suspension 125mg/5 ml',$amoxicillin_oral ),
+		 array('Cotrimoxazole susp 240mg/5 ml',$cotrimoxazole ),
+		 array('Metronidazole susp 200mg/5 ml',$metronidazole ),
+		 array('ORS sachet (for 500ml) low osmolality',$ors ),
+		 array('Atropine sulphate inj 1mg/ ml',$atropine ),
+		 array('Adrenaline (epinephrine) inj 1mg/1 ml',$adrenaline ),
+		 array('Benzylpenicillin inj -5mu',$benzylpenicillin ),
+		 array('Hydrocortisone inj 100mg vial',$hydrocortisone ),
+		 array('Tetracycline eye ointment 1% 5g',$tetracycline )
+		 ))));	
+
+		$data['default_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
+
+	     $county_id = $this -> session -> userdata('county_id');
+	     $data['district_data'] = districts::getDistrict($county_id);
+	     $data['c_data'] = Commodities::get_all_2();
+         $data['tracer_items'] = Commodities::get_tracer_items();
+		 $data['categories']=commodity_sub_category::get_all_pharm();
+
+		 
+	     return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
+	    }
+		 
+>>>>>>> 0a17bae32a2f3b119d38f72668979d75dc9561a9
      	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null) {
      	//reset the values here
     	$commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
@@ -1499,7 +1558,7 @@ class Reports extends MY_Controller
 		else:
 		array_push($category_data, array("Stock level $commodity_name $title $month_ $year","stocks worth in $option_new"));
 		endif;	
-        $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_'));
+        	    $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_'));
 	    $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
 	    $graph_data=array_merge($graph_data,array("table_body"=>$series_data));
 				
@@ -1516,13 +1575,14 @@ class Reports extends MY_Controller
 		$excel_data['row_data'] = $row_data;
 		$this -> hcmp_functions -> create_excel($excel_data);
 		else:
-        $graph_type='column';			
-        $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_'));
+        		$graph_type='column';			
+        		$graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_'));
 	    $graph_data=array_merge($graph_data,array("graph_title"=>"Stock level $commodity_name $title $month_ $year"));
 	    $graph_data=array_merge($graph_data,array("graph_type"=>$graph_type));
 	    $graph_data=array_merge($graph_data,array("graph_yaxis_title"=>"Commodity Stock level in $option_new"));
 	    $graph_data=array_merge($graph_data,array("graph_categories"=>$category_data ));
 	    $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
+
 		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		endif;
