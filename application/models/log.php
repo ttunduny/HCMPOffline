@@ -53,7 +53,67 @@ WHERE  `action` =  'Logged In'
 AND  `start_time_of_event` < NOW( ) - INTERVAL 1  DAY 
 AND UNIX_TIMESTAMP( `end_time_of_event`) =0");		
 }
-
+public static function log_user_action($user_id, $user_action = NULL)
+	{
+		switch ($user_action):
+			case 'issue':
+				$action = 'issued = 1';
+			break;
+			case 'order':
+				$action = 'ordered = 1';
+			break;
+			case 'decommission':
+				$action = 'decommissioned = 1';
+			break;	
+			case 'redistribute':
+				$action = 'redistribute = 1';
+			break;
+			case 'add_stock':
+				$action = 'add_stock = 1';
+			break;
+			default:
+			break;
+			endswitch;
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->execute("
+			update log set $action, 
+			where `user_id`='$user_id'
+			AND action = 'Logged In' 
+			and UNIX_TIMESTAMP( `end_time_of_event`) =0");	
+		 
+	}
+	public static function get_log_data($district_id = null,$county_id = null)
+	{
+		$where_clause = isset($district_id)? "u.district = $district_id ": 
+						(isset($county_id)? "u.county_id = $county_id ":
+						 "d.county=$county_id ") ;
+		$group_by = isset($district_id)? " order by f.facility_name asc" : " order by d.district asc";
+		
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		select count(l.issued) as total_issues, 
+				count(l.ordered) as total_orders,
+				count(l.decommissioned) as total_decommisions,
+				count(l.redistribute) as total_redistributions,
+				count(l.add_stock) as total_stock_added,
+				
+		from log l, user u
+		where l.user_id = u.id
+		AND $where_clause
+		$group_by
+		");
+	}
+	public static function get_subcounty_login_count($county_id,$district_id,$date)
+	{
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT 
+			ifnull(COUNT(DISTINCT u.facility ),0) AS total
+			FROM log l, user u
+			WHERE u.id = l.user_id
+			AND u.county_id = $county_id
+			AND u.district = $district_id
+			AND DATE_FORMAT( l.start_time_of_event,'%Y-%m-%d') = '$date'
+			
+			");
+		return $q;
+	}
 public static function get_county_login_count($county_id,$district_id,$date){	
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT 
 ifnull(COUNT(DISTINCT u.facility ),0) AS total
@@ -66,19 +126,7 @@ AND DATE_FORMAT( l.start_time_of_event,'%Y-%m-%d') = '$date'
 ");
 return $q;
 }
-public static function get_subcounty_login_count($county_id,$district_id,$date)
-{
-	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT 
-		ifnull(COUNT(DISTINCT u.facility ),0) AS total
-		FROM log l, user u
-		WHERE u.id = l.user_id
-		AND u.county_id = $county_id
-		AND u.district = $district_id
-		AND DATE_FORMAT( l.start_time_of_event,'%Y-%m-%d') = '$date'
-		
-		");
-	return $q;
-}
+
 public static function get_subcounty_login_monthly_count($county_id,$district_id,$date)
 {
 	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("

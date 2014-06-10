@@ -373,6 +373,8 @@ endfor;
 		    facility_stocks_temp::delete_facility_temp(null, null,$facility_code);
           //set the notifications
 		  //$this->hcmp_functions->send_stock_update_sms();
+		  $user_action = "add_stock";
+		  Log::log_user_action($this -> session -> userdata('user_id'),$user_action);
 		  $this->session->set_flashdata('system_success_message', "Stock Levels Have Been Updated");
 		  redirect('reports/facility_stock_data');			  
 endif;	
@@ -752,6 +754,8 @@ $html_body.=
    	$this->session->set_flashdata('system_success_message', 'Stocks Have Been Decommissioned');		
      }
 endif;
+$user_action = "decommission";
+Log::log_user_action($this -> session -> userdata('user_id'),$user_action);
 redirect('reports/facility_stock_data');	
   }
 			
