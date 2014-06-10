@@ -757,190 +757,112 @@ class Reports extends MY_Controller
 		$month = isset($month) ? $month : date("m");
 		$county_id = $this -> session -> userdata('county_id');
 		$district_id = $this -> session -> userdata('district_id');
-				
-        switch ($identifier):
-			case 'county':
-				$county_name = Counties::get_county_name($county_id);
-				$county_name = $county_name['county'];
-				
-				$first_day_of_the_month = date("Y-m-1", strtotime(date($year . "-" . $month)));
-				$last_day_of_the_month = date("Y-m-t", strtotime(date($year . "-" . $month)));
 		
-				$date_1 = new DateTime($first_day_of_the_month);
-				$date_2 = new DateTime($last_day_of_the_month);
+		$county_name = Counties::get_county_name($county_id);
+		$county_name = $county_name['county'];
 		
-				$district_data = districts::getDistrict($county_id);
+		$district_name = Districts::get_district_name_($district_id);
+		$district_name = $district_name['district'];
 		
-				$series_data = array();
-				$category_data = array();
-				$series_data_monthly = array();
-				$category_data_monthly = array();
+		$first_day_of_the_month = date("Y-m-1", strtotime(date($year . "-" . $month)));
+		$last_day_of_the_month = date("Y-m-t", strtotime(date($year . "-" . $month)));
+
+		$date_1 = new DateTime($first_day_of_the_month);
+		$date_2 = new DateTime($last_day_of_the_month);
+
+		$district_data = districts::getDistrict($county_id);
+		$facility_data = Facilities::get_Facilities_using_HCMP($district_id);
 		
-				$seconds_diff = strtotime($last_day_of_the_month) - strtotime($first_day_of_the_month);
-				$date_diff = floor($seconds_diff / 3600 / 24);
+		$series_data = array();
+		$category_data = array();
+		$series_data_monthly = array();
+		$category_data_monthly = array();
+
+		$seconds_diff = strtotime($last_day_of_the_month) - strtotime($first_day_of_the_month);
+		$date_diff = floor($seconds_diff / 3600 / 24);	
 		
-				for ($i = 0; $i <= $date_diff; $i++) :
-					$day = 1 + $i;
-					$new_date = "$year-$month-" . $day;
-					$new_date = date('Y-m-d', strtotime($new_date));
-		
-					if (date('N', strtotime($new_date)) < 6) 
-					{
-						$date_ = date('D d', strtotime($new_date));
-						$category_data = array_merge($category_data, array($date_));
-						$temp_1 = array();
-						foreach ($district_data as $district_) :
-							$district_id = $district_ -> id;
-							$district_name = $district_ -> district;
-							$county_data = Log::get_county_login_count($county_id, $district_id, $new_date);
-							(array_key_exists($district_name, $series_data)) ? $series_data[$district_name] = array_merge($series_data[$district_name], array((int)$county_data[0]['total'])) : $series_data = array_merge($series_data, array($district_name => array((int)$county_data[0]['total'])));
-		
-						endforeach;
-		
-					} else {
-						// do nothing
-					}
-				endfor;
-				
-				$graph_data_daily = array();
-				$graph_data_daily = array_merge($graph_data_daily,array("graph_id"=>'container'));
-				$graph_data_daily = array_merge($graph_data_daily,array("graph_title"=>'Daily Facility Access log for '.$county_name." County "));
-				$graph_data_daily = array_merge($graph_data_daily,array("graph_type"=>'line'));
-				$graph_data_daily = array_merge($graph_data_daily,array("graph_yaxis_title"=>'log In'));
-				$graph_data_daily = array_merge($graph_data_daily,array("graph_categories"=>array()));
-				$graph_data_daily = array_merge($graph_data_daily,array("series_data"=>$series_data));
-			    $graph_data_daily['graph_categories']=$category_data;	
-				$graph_daily = $this->hcmp_functions->create_high_chart_graph($graph_data_daily);
+		switch ($identifier):
+		case 'county':
+			$graph_category_data = $district_data;
+			$graph_title = $county_name." County ";
 			
-				for ($i = 0; $i < 12; $i++) :
-					$day = 1 + $i;
-					//changed it to be a month
-					$new_date = "$year-$day";
-					$new_date = date('Y-m', strtotime($new_date));
-					$date_ = date('M', strtotime($new_date));
-					$category_data_monthly = array_merge($category_data_monthly, array($date_));
-		
-					foreach ($district_data as $district_) :
-						$district_id = $district_ -> id;
-						$district_name = $district_ -> district;
-						$county_data = Log::get_county_login_monthly_count($county_id, $district_id, $new_date);
-						(array_key_exists($district_name, $series_data_monthly)) ? $series_data_monthly[$district_name] = array_merge($series_data_monthly[$district_name], array((int)$county_data[0]['total'])) : $series_data_monthly = array_merge($series_data_monthly, array($district_name => array((int)$county_data[0]['total'])));
-		
-					endforeach;
-		
-				endfor;
-			
-				$graph_data = array();
-				$graph_data = array_merge($graph_data,array("graph_id"=>'container_monthly'));
-				$graph_data = array_merge($graph_data,array("graph_title"=>'Monthly Facility Access for '.date("M")." ". $year));
-				$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
-				$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'log In'));
-				$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
-				$graph_data = array_merge($graph_data,array("series_data"=>$series_data_monthly));
-			    $graph_data['graph_categories']=$category_data_monthly;	
-				$graph_monthly = $this->hcmp_functions->create_high_chart_graph($graph_data);
-				
-				$data['graph_data_monthly'] =	$graph_monthly;
-				$data['graph_data_daily'] =	$graph_daily;
-								
-			break;
-			case 'district':
-				$district_name = Districts::get_district_name_($district_id);
-				$district_name = $district_name['district'];
-				
-				$first_day_of_the_month = date("Y-m-1", strtotime(date($year . "-" . $month)));
-				$last_day_of_the_month = date("Y-m-t", strtotime(date($year . "-" . $month)));
-		
-				$date_1 = new DateTime($first_day_of_the_month);
-				$date_2 = new DateTime($last_day_of_the_month);
-		
-				$facility_data = Facilities::get_Facilities($district_id);
-				
-				$series_data = array();
-				$category_data = array();
-				$series_data_monthly = array();
-				$category_data_monthly = array();
-		
-				$seconds_diff = strtotime($last_day_of_the_month) - strtotime($first_day_of_the_month);
-				$date_diff = floor($seconds_diff / 3600 / 24);
-				
-				for ($i = 0; $i <= $date_diff; $i++) :
-					$day = 1 + $i;
-					$new_date = "$year-$month-" . $day;
-						
-					$new_date = date('Y-m-d', strtotime($new_date));
-		
-					if (date('N', strtotime($new_date)) < 6) 
-					{
-						$date_ = date('D d', strtotime($new_date));
-						$category_data = array_merge($category_data, array($date_));
-						$temp_1 = array();
-						foreach ($facility_data as $facility_) :
-							$facility_id = $facility_ -> facility_code;
-							$facility_name = $facility_ -> facility_name;
-							$subcounty_data = Log::get_subcounty_login_count($county_id, $district_id, $new_date);
-							(array_key_exists($facility_name, $series_data)) ? $series_data[$facility_name] = array_merge($series_data[$facility_name], array((int)$subcounty_data[0]['total'])) : $series_data = array_merge($series_data, array($facility_name => array((int)$subcounty_data[0]['total'])));
-			
-						endforeach;
-		
-					} else {
-						// do nothing
-					}
-				endfor;
-				
-				$graph_data_daily = array();
-				$graph_data_daily = array_merge($graph_data_daily,array("graph_id"=>'container'));
-				$graph_data_daily = array_merge($graph_data_daily,array("graph_title"=>'Daily Facility Access log for '.$district_name." SubCounty "));
-				$graph_data_daily = array_merge($graph_data_daily,array("graph_type"=>'line'));
-				$graph_data_daily = array_merge($graph_data_daily,array("graph_yaxis_title"=>'log In'));
-				$graph_data_daily = array_merge($graph_data_daily,array("graph_categories"=>array()));
-				$graph_data_daily = array_merge($graph_data_daily,array("series_data"=>$series_data));
-			    $graph_data_daily['graph_categories']=$category_data;	
-				$graph_daily = $this->hcmp_functions->create_high_chart_graph($graph_data_daily);
-			
-				for ($i = 0; $i < 12; $i++) :
-					$day = 1 + $i;
-					//changed it to be a month
-					$new_date = "$year-$day";
-					$new_date = date('Y-m', strtotime($new_date));
-					$date_ = date('M', strtotime($new_date));
-					$category_data_monthly = array_merge($category_data_monthly, array($date_));
-		
-					foreach ($facility_data as $facility_) :
-						$facility_id = $facility_ -> facility_code;
-						$facility_name = $facility_ -> facility_name;
-						$subcounty_data = Log::get_subcounty_login_monthly_count($county_id, $district_id, $new_date);
-						(array_key_exists($facility_name, $series_data_monthly)) ? $series_data_monthly[$facility_name] = array_merge($series_data_monthly[$facility_name], array((int)$subcounty_data[0]['total'])) : $series_data_monthly = array_merge($series_data_monthly, array($facility_name => array((int)$subcounty_data[0]['total'])));
-		
-					endforeach;
-		
-				endfor;
-			
-				$graph_data = array();
-				$graph_data = array_merge($graph_data,array("graph_id"=>'container_monthly'));
-				$graph_data = array_merge($graph_data,array("graph_title"=>'Monthly Facility Access for '.date("M")." ". $year));
-				$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
-				$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'log In'));
-				$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
-				$graph_data = array_merge($graph_data,array("series_data"=>$series_data_monthly));
-			    $graph_data['graph_categories']=$category_data_monthly;	
-				$graph_monthly = $this->hcmp_functions->create_high_chart_graph($graph_data);
-				
-				$data['graph_data_monthly'] =	$graph_monthly;
-				$data['graph_data_daily'] =	$graph_daily;
-				
-				
-			break;
+		break;
+		case 'district':
+			$graph_category_data = $facility_data;
+			$graph_title = $district_name." SubCounty ";
+		break;	
 		endswitch;
+		for ($i = 0; $i <= $date_diff; $i++) :
+			$day = 1 + $i;
+			$new_date = "$year-$month-" . $day;
+				
+			$new_date = date('Y-m-d', strtotime($new_date));
+
+			if (date('N', strtotime($new_date)) < 6) 
+			{
+				$date_ = date('D d', strtotime($new_date));
+				$category_data = array_merge($category_data, array($date_));
+				$temp_1 = array();
+				foreach ($graph_category_data as $facility_) :
+					$facility_id = $facility_ -> facility_code;
+					$facility_name = $facility_ -> facility_name;
+					$subcounty_data = Log::get_subcounty_login_count($county_id, $district_id, $new_date);
+					(array_key_exists($facility_name, $series_data)) ? $series_data[$facility_name] = array_merge($series_data[$facility_name], array((int)$subcounty_data[0]['total'])) : $series_data = array_merge($series_data, array($facility_name => array((int)$subcounty_data[0]['total'])));
+	
+				endforeach;
+
+			} else {
+				// do nothing
+			}
+		endfor;
+		//for setting the month name in the graph when filtering
+		$m = date('F',strtotime('2000-'.$month.'-01'));
+				
+		$graph_data_daily = array();
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_id"=>'container'));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_title"=>'Daily Facility Access log for '.$m." for ".$graph_title));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_type"=>'line'));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_yaxis_title"=>'log In'));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_categories"=>array()));
+		$graph_data_daily = array_merge($graph_data_daily,array("series_data"=>$series_data));
+	    $graph_data_daily['graph_categories'] = $category_data;	
+		$graph_daily = $this->hcmp_functions->create_high_chart_graph($graph_data_daily);
+			
+		for ($i = 0; $i < 12; $i++) :
+			$day = 1 + $i;
+			//changed it to be a month
+			$new_date = "$year-$day";
+			$new_date = date('Y-m', strtotime($new_date));
+			$date_ = date('M', strtotime($new_date));
+			$category_data_monthly = array_merge($category_data_monthly, array($date_));
+
+			foreach ($graph_category_data as $facility_) :
+				$facility_id = $facility_ -> facility_code;
+				$facility_name = $facility_ -> facility_name;
+				$subcounty_data = Log::get_subcounty_login_monthly_count($county_id, $district_id, $new_date);
+				(array_key_exists($facility_name, $series_data_monthly)) ? $series_data_monthly[$facility_name] = array_merge($series_data_monthly[$facility_name], array((int)$subcounty_data[0]['total'])) : $series_data_monthly = array_merge($series_data_monthly, array($facility_name => array((int)$subcounty_data[0]['total'])));
+
+			endforeach;
+
+		endfor;
+			
+		$graph_data = array();
+		$graph_data = array_merge($graph_data,array("graph_id"=>'container_monthly'));
+		$graph_data = array_merge($graph_data,array("graph_title"=>'Monthly Facility Access for '. $year));
+		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
+		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'log In'));
+		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
+		$graph_data = array_merge($graph_data,array("series_data"=>$series_data_monthly));
+	    $graph_data['graph_categories']=$category_data_monthly;	
+		$graph_monthly = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		
+		$data['graph_data_monthly'] =	$graph_monthly;
+		$data['graph_data_daily'] =	$graph_daily;
+			
 		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
-		
-		/*print "<pre>";
-		print_r($get_dates_facility_went_online);
-		print "</pre>";
-		exit;*/
 		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
+		
 		if($this->input->is_ajax_request()):
 		return $this -> load -> view('subcounty/ajax/facility_roll_out_at_a_glance_v', $data);
 		else:
@@ -957,19 +879,27 @@ class Reports extends MY_Controller
 	{
 		$district_id = $this -> session -> userdata('district_id');
 		$county_id = $this -> session -> userdata('county_id');
+		
 		$district_data = districts::getDistrict($county_id);
+		
 		$table_data = "<tbody>";
 		$table_data_summary = "<tbody>";
 		$district_names = "<thead><tr><th>Monthly Activities</th>";
+		
 		$district_total = array();
 		$district_total_facilities = array();
 		$district_total_facilities_targetted = array();
+		$district_total_facilities_using_hcmp = array();
+		
 		$table_district_totals = "";
 		$all_facilities = 0;
 		$total_facility_list = '';
 		$total_facilities_in_county = 0;
 		$percentage_coverage = "";
 		$percentage_coverage_total = 0;
+		
+		$percentage_coverage_using = "";
+		$percentage_coverage_total_using = 0;
 		
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
 
@@ -984,14 +914,20 @@ class Reports extends MY_Controller
 				$district_id = $district_detail -> id;
 				$district_name = $district_detail -> district;
 				$get_facilities_which_went_online_ = facilities::get_facilities_which_went_online_($district_id, $facility_dates['date_when_facility_went_online']);
+				
 				$total = $get_facilities_which_went_online_[0]['total'];
 				$total_facilities = $get_facilities_which_went_online_[0]['total_facilities'];
 				$total_facilities_targetted = $get_facilities_which_went_online_[0]['total_facilities_targetted'];
+				$total_facilitites_using_hcmp = $get_facilities_which_went_online_[0]['total_using_hcmp'];
+				
 				$monthly_total = $monthly_total + $total;
 				$all_facilities = $all_facilities + $total;
+				
 				(array_key_exists($district_name, $district_total)) ? $district_total[$district_name] = $district_total[$district_name] + $total : $district_total = array_merge($district_total, array($district_name => ($total)));
 				(array_key_exists($district_name, $district_total_facilities)) ? $district_total_facilities[$district_name] = $total_facilities : $district_total_facilities = array_merge($district_total_facilities, array($district_name => $total_facilities));
 				(array_key_exists($district_name, $district_total_facilities_targetted)) ? $district_total_facilities_targetted[$district_name] = $total_facilities_targetted : $district_total_facilities_targetted = array_merge($district_total_facilities_targetted, array($district_name => $total_facilities_targetted));
+				(array_key_exists($district_name, $district_total_facilities_using_hcmp)) ? $district_total_facilities_using_hcmp[$district_name] = $total_facilitites_using_hcmp : $district_total_facilities_using_hcmp = array_merge($district_total_facilities_using_hcmp, array($district_name => $total_facilitites_using_hcmp));
+				
 				$table_data .= ($total > 0) ? "<td><a href='#' id='$district_id' class='ajax_call2 link' date='$date'> $total</a></td>" : "<td>$total</td>";
 
 			endforeach;
@@ -999,15 +935,20 @@ class Reports extends MY_Controller
 			$table_data .= "<td>$monthly_total</td></tr>";
 
 		endforeach;
+		//print_r($total_facilities_targetted);
+		//exit;
 		$table_data .= "<tr>";
 		$table_data_summary .= "<tr>";
 
 		$checker = 1;
 		foreach ($district_total as $key => $value) :
 			$coverage = 0;
+			$using = 0;
+			@$using_percentage = round((($value / $district_total_facilities_using_hcmp[$key])) * 100, 1);
 			@$coverage = round((($value / $district_total_facilities[$key])) * 100, 1);
 
 			$percentage_coverage_total = $percentage_coverage_total + $coverage;
+			$percentage_coverage_total_using = $percentage_coverage_total_using + $using_percentage;
 
 			$district_names .= "<th>$key</th>";
 
@@ -1019,16 +960,22 @@ class Reports extends MY_Controller
 			$total_facilities_in_county = $total_facilities_in_county + $district_total_facilities[$key];
 			$targetted_total = $targetted_total + $district_total_facilities_targetted[$key];
 		
-			$percentage_coverage .= ($checker == 1) ? "<tr><td><b>% Coverage</b></td><td>$coverage %</td>" : "<td>$coverage %</td>";
-
+			$percentage_coverage .= ($checker == 1) ? "<tr><td><b>% Coverage</b></td>
+			<td>$coverage %</td>" : "<td>$coverage %</td>";
+			
+			$percentage_coverage_using .= ($checker == 1) ? "<tr><td><b>Targetted vs Using HCMP %</b></td>
+			<td>$using_percentage %</td>" : "<td>$using_percentage %</td>";
+			
 			$checker++;
 
 		endforeach;
-
+		
 		$table_data .= "<td><a href='#' id='total' class='ajax_call1 link' option='total' date='total'>$all_facilities</a></td></tr></tbody>";
 		$table_data_summary .= "<td><a href='#' id='total' class='ajax_call2 link' date='total'>$all_facilities</a></td></tr></tbody>";
 		$district_names .= "<th>TOTAL</th></tr></thead>";
 		$final_coverage_total = 0;
+		$targetted_vs_using_hcmp = 0;
+		//$targetted_vs_using_hcmp = round((($total_facilities_targetted / $total_facilitites_using_hcmp)) * 100, 1);
 		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
 		$data_ = "
 		<div class='tabbable tabs-left'>
@@ -1038,10 +985,16 @@ class Reports extends MY_Controller
         <li class=><a href='#B' data-toggle='tab'>Roll out Summary</a></li>
         </ul>
          <div  id='A' class='tab-pane fade active in'>
-			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" . $district_names . $table_data .  $total_targetted_facility_list."<td>$targetted_total</td>" . $total_facility_list ."<td>$total_facilities_in_county</td></tr>" . $percentage_coverage . "<td>$final_coverage_total %</td></tr></table>
+			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" 
+			. $district_names . $table_data .  $total_targetted_facility_list."<td>$targetted_total</td>" 
+			. $total_facility_list ."<td>$total_facilities_in_county</td></tr>" . $percentage_coverage 
+			. "<td>$final_coverage_total %</td></tr>".$percentage_coverage_using."<td>$targetted_vs_using_hcmp %</td></tr></table>
 		</div>
 		<div id='B' class='tab-pane fade' >
-		<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test2'>" . $district_names . $table_data_summary . $total_targetted_facility_list."<td>$targetted_total</td>" . $total_facility_list . "<td>$total_facilities_in_county</td></tr>" . $percentage_coverage . "<td>$final_coverage_total %</td></tr></table>
+		<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test2'>" 
+		. $district_names . $table_data_summary . $total_targetted_facility_list."<td>$targetted_total</td>" 
+		. $total_facility_list . "<td>$total_facilities_in_county</td></tr>" . $percentage_coverage 
+		. "<td>$final_coverage_total %</td></tr>".$percentage_coverage_using."<td>$targetted_vs_using_hcmp %</td></tr></table>
 		 </div>
 		 </div>";
 
@@ -1488,18 +1441,36 @@ class Reports extends MY_Controller
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		endif;
 	}
+		
+		
          public function stock_level_dashboard(){
-         	$current_total_level = facility_stocks_temp::get_months_of_stock($district_id);
-
-
-         	$albendazole = $current_total_level[0]['month_stock'];
-
+ 
+         	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id);
+			//$number = count($no_of_months);
+			
+			 
+			// variable values for drugs
+			$albendazole_final= $final_graph_data[0]['month_stock'];
+			$amoxicilin_final = $final_graph_data[1]['month_stock'];
+			$paracetamol_final = $final_graph_data[2]['month_stock'];
+			$zinc_sulphate = $final_graph_data[3]['month_stock'];
+			$amoxicillin_oral_final = $final_graph_data[4]['month_stock'];
+			$cotrimazole_final = $final_graph_data[5]['month_stock'];
+			$metronidazole_final = $final_graph_data[6]['month_stock'];
+			$ors_final = $final_graph_data[7]['month_stock'];
+			$atropine_final = $final_graph_data[8]['month_stock'];
+			$adrenaline_final = $final_graph_data[9]['month_stock'];
+			$benzylpenicillin_final = $final_graph_data[10]['month_stock'];
+			$hydrocortisone_final = $final_graph_data[11]['month_stock'];
+			$tetracycline_final = $final_graph_data[12]['month_stock'];
+			// end of variable values for drugs
+			
          	$graph_data = array();
        		$graph_data = array_merge($graph_data, array("graph_id" => 'graph_default'));
-		$graph_data = array_merge($graph_data, array("graph_title" => 'Current Stock Level'));
-		$graph_data = array_merge($graph_data, array("graph_type" => 'bar'));
-		$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Months of Stock (AMC)'));
-		$graph_data = array_merge($graph_data, array("graph_categories" => array(
+			$graph_data = array_merge($graph_data, array("graph_title" => 'Current Stock Level'));
+			$graph_data = array_merge($graph_data, array("graph_type" => 'bar'));
+			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Months of Stock'));
+			$graph_data = array_merge($graph_data, array("graph_categories" => array(
 
 			"Albendazole Tablets 400mg",
 			"Amoxicillin Capsules 250mg","Paracetamol Tablets 500mg",
@@ -1515,20 +1486,20 @@ class Reports extends MY_Controller
 			"Tetracycline eye ointment 1% 5g"
 
 			)));
-		$graph_data = array_merge($graph_data, array("series_data" => array("Level of Stock" =>
-		 array(array('Albendazole Tablets 400mg',$albendazole),
-		 array('Amoxicillin Capsules 250mg',$amoxicillin ),
-		 array('Paracetamol Tablets 500mg',$paracetamol ),
-		 array('Zinc sulphate Tablets 20mg ',$zinc_sulphate ),
-		 array('Amoxicillin oral Suspension 125mg/5 ml',$amoxicillin_oral ),
-		 array('Cotrimoxazole susp 240mg/5 ml',$cotrimoxazole ),
-		 array('Metronidazole susp 200mg/5 ml',$metronidazole ),
-		 array('ORS sachet (for 500ml) low osmolality',$ors ),
-		 array('Atropine sulphate inj 1mg/ ml',$atropine ),
-		 array('Adrenaline (epinephrine) inj 1mg/1 ml',$adrenaline ),
-		 array('Benzylpenicillin inj -5mu',$benzylpenicillin ),
-		 array('Hydrocortisone inj 100mg vial',$hydrocortisone ),
-		 array('Tetracycline eye ointment 1% 5g',$tetracycline )
+		$graph_data = array_merge($graph_data, array("series_data" => array("Stock" =>
+		 array(array('Albendazole Tablets 400mg',(int)$albendazole_final),
+		 array('Amoxicillin Capsules 250mg',(int)$amoxicilin_final),
+		 array('Paracetamol Tablets 500mg',(int)$paracetamol_final),
+		 array('Zinc sulphate Tablets 20mg ',(int)$zinc_sulphate),
+		 array('Amoxicillin oral Suspension 125mg/5 ml',(int)$amoxicillin_oral_final),
+		 array('Cotrimoxazole susp 240mg/5 ml',(int)$cotrimazole_final),
+		 array('Metronidazole susp 200mg/5 ml',(int)$metronidazole_final),
+		 array('ORS sachet (for 500ml) low osmolality',(int)$ors_final),
+		 array('Atropine sulphate inj 1mg/ ml',(int)$atropine_final),
+		 array('Adrenaline (epinephrine) inj 1mg/1 ml',(int)$adrenaline_final),
+		 array('Benzylpenicillin inj -5mu',(int)$benzylpenicillin_final),
+		 array('Hydrocortisone inj 100mg vial',(int)$hydrocortisone_final),
+		 array('Tetracycline eye ointment 1% 5g',(int)$tetracycline_final)
 		 ))));	
 
 		$data['default_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
@@ -1538,7 +1509,7 @@ class Reports extends MY_Controller
 	     $data['c_data'] = Commodities::get_all_2();
          $data['tracer_items'] = Commodities::get_tracer_items();
 		 $data['categories']=commodity_sub_category::get_all_pharm();
-
+			
 		 
 	     return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
 	    }
@@ -1569,9 +1540,11 @@ class Reports extends MY_Controller
 		$category_name_=@$commodity_name[0]['commodity_name'];
 		$commodity_name=isset($category_name_)? " for ".$category_name_ : null;
 		$title=isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
-	 isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
+	 	isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
+		
 		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code,$district_id,$county_id,
-		 $category_id, $commodity_id,  $option_new,$report_type);
+		$category_id, $commodity_id,  $option_new,$report_type);
+        
         foreach ($commodity_array as $data) :
 		if($report_type=="table_data"):
 		if($commodity_id>0):

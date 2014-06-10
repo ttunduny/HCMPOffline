@@ -291,6 +291,20 @@ $where
 return $query17;
 
 	}
+	public static function show_meet_expect($county_id = null, $district_id = null){
+		$where = (isset($county_id) && !isset($district_id)) ? " and d.county=$county_id " : " and d.id=$district_id ";
+		$query17 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+SELECT facility_name, meet_expect
+FROM facilities f, districts d, facility_evaluation h_s
+WHERE f.district = d.id
+AND d.county =1
+AND h_s.facility_code = f.facility_code
+AND meet_expect =1
+$where
+ "); 
+return $query17;
+
+	}
 }
 
 
