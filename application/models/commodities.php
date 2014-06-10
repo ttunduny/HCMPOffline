@@ -74,7 +74,7 @@ return $inserttransaction;
                AND c.commodity_source_id = c_s.id $order_by"); 
 return $inserttransaction;
 	}// set up the facility stock here
-	public function set_facility_stock_data_amc($facility_code){
+	public static function set_facility_stock_data_amc($facility_code){
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll("SELECT c.id as commodity_id, c.commodity_code, c.commodity_name, c.unit_size, 
     c.commodity_sub_category_id, c_s_c.sub_category_name, c.total_commodity_units, 
