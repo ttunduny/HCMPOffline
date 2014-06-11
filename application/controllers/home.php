@@ -75,8 +75,8 @@ class Home extends MY_Controller
 	$graph_data['stacking']='normal';
 	foreach($facility_stock_ as $facility_stock_):
 		$graph_data['graph_categories']=array_merge($graph_data['graph_categories'],array($facility_stock_['commodity_name']));	
-		$graph_data['series_data']['Current Balance']=array_merge($graph_data['series_data']['Current Balance'],array($facility_stock_['pack_balance']));
-        $graph_data['series_data']['AMC']=array_merge($graph_data['series_data']['AMC'],array($facility_stock_['amc']));	
+		$graph_data['series_data']['Current Balance']=array_merge($graph_data['series_data']['Current Balance'],array((int)$facility_stock_['pack_balance']));
+        $graph_data['series_data']['AMC']=array_merge($graph_data['series_data']['AMC'],array((int)$facility_stock_['amc']));	
 	endforeach;
 	//create the graph here
 	$faciliy_stock_data=$this->hcmp_functions->create_high_chart_graph($graph_data);

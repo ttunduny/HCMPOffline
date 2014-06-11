@@ -37,6 +37,8 @@
 	</div>
 	<div id="container_monthly"  style="height:60%; width: 50%; margin: 0 auto;float: left"></div>	
 	</div>
+	<div id="log_data_graph"  style="height:60%; width: 50%; margin: 0 auto;float: left"></div>	
+	</div>
 	</div>
 <script>
 $(document).ready(function() {
