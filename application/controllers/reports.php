@@ -1498,11 +1498,11 @@ class Reports extends MY_Controller
 
 	    public function tb_report(){
 	    	$data['title'] = "Facility Expiries";
-		$data['banner_text'] = "Facility Expiries";
+		$data['banner_text'] = "Facility Tuberculosis & Leprosy Commodities Consumption Data Report & Request Form";
 		$data['graph_data'] = $faciliy_expiry_data;
-       	$data['sidebar'] = "shared_files/report_templates/side_bar_v";
-		$data['report_view'] = "facility/facility_reports/ajax/facility_expiry_filter_v";
-		$data['content_view'] = "facility/facility_reports/reports_v";//change this
+       //	$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		$data['content_view'] = "subcounty/reports/tb_report";;
+		//$data['content_view'] = "facility/facility_reports/reports_v";
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
 	    }
