@@ -69,7 +69,7 @@ class Facility_stocks extends Doctrine_Record {
 					 $check_expiry_date 
 					 and c.id=fs.commodity_id 
 					 and fs.status='1' 
-					 $addition GROUP BY c.id ");
+					 $addition");
 return $stocks ;
 }
     public static function get_facility_stock_amc($facility_code){
