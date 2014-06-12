@@ -312,7 +312,8 @@ color: #fff; }
 
 <script>
 	$(function () { 
-		<?php echo $facility_evaluation;//first chart
+		<?php 
+			   echo $facility_evaluation;//first chart
                echo $frequency_of_use;
                echo $trained_personel;
                echo $comfort_level;//sixth chart
