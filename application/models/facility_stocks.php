@@ -508,11 +508,9 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 	public static function get_expiries($facility_code, $year = NULL) 
 	{
 		$year = (isset($year)) ? $year: date("Y");
-	
-		if (!isset($district_id)||!isset($county_id))
-		{
+			
 			$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
-			->fetchAll("select fs.current_balance AS total_expiries, MONTHNAME(fs.expiry_date) as month from  facility_stocks fs 
+			->fetchAll("select fs.current_balance AS total, MONTHNAME(fs.expiry_date) as month from  facility_stocks fs 
 			LEFT JOIN  commodities c 
 			ON c.id=fs.commodity_id 
 			where facility_code=$facility_code 
@@ -521,8 +519,7 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 			and expiry_date <= NOW()
 			GROUP BY  MONTH(  `expiry_date` ) ");
 			return $stocks ;
-		}
-		
+		/*
 		else if(isset($district_id))
 		{
 			$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
@@ -553,7 +550,7 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 			return $stocks ;
 		}
 		
-		
+		*/
 	
 	}
 	public static function get_filtered_expiries($facility_code, $year, $month, $option) 
