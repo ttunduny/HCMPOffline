@@ -1118,7 +1118,7 @@ class Reports extends MY_Controller
 				$data['RH'] = $report_RH_report;
 				$data['title'] = "Program Reports";
 				$data['banner_text'] = "Program Reports";
-				$data['report_view'] = "subcounty/reports/program_reports_v";
+			    $data['report_view'] = "subcounty/reports/program_reports_v";
 				
 			break;
 			case county:
@@ -1133,6 +1133,7 @@ class Reports extends MY_Controller
 		$this -> load -> view('shared_files/template/template', $data);
 		
 	 }
+	
 //generates the pdf for a particular report
 	public function get_facility_report_pdf($report_id, $facility_code, $report_type) 
 	{
@@ -1148,6 +1149,7 @@ class Reports extends MY_Controller
 			$this -> hcmp_functions -> create_pdf($pdf_data);
 		redirect();
 	}
+	
 	public function create_program_report_pdf_template($report_id, $facility_code, $report_type) 
 	{
 		if($report_type == "malaria")
