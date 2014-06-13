@@ -75,10 +75,86 @@ class Divisional_Reports extends MY_Controller
 	}
 	
 	//for loading the TB report
-	public function TB_report()
-	{
-		
+public function tb_report(){
+		$facility = $this -> session -> userdata('facility_id');
+		$user_id = $this -> session -> userdata('user_id');
+		$facility_info = tb_data::get_facility_name($facility);
+		$facility_district = $facility_info['district'];
+		$district_name_ = Districts::get_district_name_($facility_district);
+		$district_name = $this -> session -> userdata('district');
+		 // echo "<pre>";
+		 // print_r($facility_info);
+		 // echo "</pre>";exit;
+
+		$data['facility_code'] = $facility_info['facility_code']; 
+		$data['district_region_name'] = $district_name_['district'];
+		$data['facility_name'] = ($facility_info['facility_name']);
+		$data['facility_type_'] = ($facility_info['owner']);
+	    $data['title'] = "Facility Expiries";
+		$data['banner_text'] = "Facility Tuberculosis & Leprosy Commodities Consumption Data Report & Request Form";
+		$data['graph_data'] = $faciliy_expiry_data;
+       //	$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		$data['content_view'] = "subcounty/reports/tb_report";;
+		//$data['content_view'] = "facility/facility_reports/reports_v";
+		$view = 'shared_files/template/template';
+		$this -> load -> view($view, $data);
 	}
+
+public function save_tb_data(){
+	$values = $this->input->post();
+
+	foreach ($values as $key => $value) {
+		$no = count($values['table']);
+
+		for ($i=1; $i < 3; $i++) { 
+		$data = array( 
+		'facility_code'=>$value['facility_code'][0], 
+		'beginning_date'=>$value['beginning_date'][0],
+		'ending_date'=>$value['ending_date'][0], 
+		'beginning_balance'=>$value[$i][1], 
+		'currently_recieved'=>$value[$i][2], 
+		'quantity_dispensed'=>$value[$i][3], 
+		'positive_adjustment'=>$value[$i][4], 
+		'negative_adjustment'=>$value[$i][5], 
+		'losses'=>$value[$i][6],
+		'physical_count'=>$value[$i][7],
+		'physical_count'=>$value[$i][8],
+		'quantity_needed'=>$value[$i][9]
+		);
+		$this->db->insert('tuberculosis_data',$data);
+		}
+		$this->index();
+	
+		/*foreach ($value as $key1 => $value1) {
+
+		for ($i=0; $i < $no; $i++) { 
+			# code...
+		echo "<pre>";
+		print_r($value1[$i]);
+		echo "</pre>";
+		echo "<br>This marks an end";
+		}
+
+		}*/
+		/*for ($i=0; $i < $no; $i++) { 
+		$data = array( 
+		'facility_code'=>$values['facility_code'], 
+		'beginning_date'=>$values['beginning_date'],
+		'ending_date'=>$values['ending_date'], 
+		'beginning_balance'=>$values['a1'], 
+		'currently_recieved'=>$values['a2'], 
+		'quantity_dispensed'=>$values['a3'], 
+		'positive_adjustment'=>$values['a4'], 
+		'negative_adjustment'=>$values['a5'], 
+		'losses'=>$values['a6'],
+		'physical_count'=>$values['a7'],
+		'quantity_needed'=>$values['a10']
+		);
+	
+		}*/
+	}
+}
+
 	//For the RH Report
 	public function RH_report()
 	{
@@ -132,7 +208,7 @@ class Divisional_Reports extends MY_Controller
 			
 		
 		  	$dbData[$x]= array('Beginning_Balance'=>$Beginning_Balance[$x],
-		  	'Quantity_Received'=>$Quantity_Received[$x],
+		  	'Quantity_Received'=>$Quantity_Received[$x],//column names
 		  	'Quantity_Dispensed'=> $Quantity_Dispensed[$x],
 		  	'Losses_Excluding_Expiries'=>$Losses_Excluding_Expiries[$x],
 		  	'Positive_Adjustments'=>$Positive_Adj[$x],
@@ -146,7 +222,6 @@ class Divisional_Reports extends MY_Controller
 			'Report_Date'=>$save_time,
 			'facility_id'=>$facility,
 			'report_id'=>$report_id);
-						
 		  }
 
 		$this->db->insert_batch('malaria_data',$dbData);

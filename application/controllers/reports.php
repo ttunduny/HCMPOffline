@@ -1495,18 +1495,6 @@ class Reports extends MY_Controller
 	     return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
 	    }
 
-
-	    public function tb_report(){
-	    	$data['title'] = "Facility Expiries";
-		$data['banner_text'] = "Facility Tuberculosis & Leprosy Commodities Consumption Data Report & Request Form";
-		$data['graph_data'] = $faciliy_expiry_data;
-       //	$data['sidebar'] = "shared_files/report_templates/side_bar_v";
-		$data['content_view'] = "subcounty/reports/tb_report";;
-		//$data['content_view'] = "facility/facility_reports/reports_v";
-		$view = 'shared_files/template/template';
-		$this -> load -> view($view, $data);
-	    }
-
 		 
      	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null) {
      	//reset the values here
