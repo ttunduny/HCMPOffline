@@ -124,34 +124,6 @@ public function save_tb_data(){
 		$this->db->insert('tuberculosis_data',$data);
 		}
 		$this->index();
-	
-		/*foreach ($value as $key1 => $value1) {
-
-		for ($i=0; $i < $no; $i++) { 
-			# code...
-		echo "<pre>";
-		print_r($value1[$i]);
-		echo "</pre>";
-		echo "<br>This marks an end";
-		}
-
-		}*/
-		/*for ($i=0; $i < $no; $i++) { 
-		$data = array( 
-		'facility_code'=>$values['facility_code'], 
-		'beginning_date'=>$values['beginning_date'],
-		'ending_date'=>$values['ending_date'], 
-		'beginning_balance'=>$values['a1'], 
-		'currently_recieved'=>$values['a2'], 
-		'quantity_dispensed'=>$values['a3'], 
-		'positive_adjustment'=>$values['a4'], 
-		'negative_adjustment'=>$values['a5'], 
-		'losses'=>$values['a6'],
-		'physical_count'=>$values['a7'],
-		'quantity_needed'=>$values['a10']
-		);
-	
-		}*/
 	}
 }
 
