@@ -221,7 +221,7 @@ function confirm_if_the_user_wants_to_save_the_form(form_id){
       $('.save_issue').on('click', function() {
           
           if($(form_id).valid()){
-          // $(form_id).submit();      
+           $(form_id).submit();      
           }
       
       });
