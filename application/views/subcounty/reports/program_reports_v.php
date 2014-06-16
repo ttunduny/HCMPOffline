@@ -3,6 +3,7 @@
 		$malaria_report_data='';
 		$RH_report_details='';
 		$TB_report_details='';
+		
 	foreach($malaria as $malaria_details1):
 		foreach($malaria_details1 as $malaria_details):
 			$facilityname = Facilities::get_facility_name2($malaria_details['facility_code']);
@@ -13,6 +14,7 @@
 			//Dowwnload links
 			$link = base_url('reports/get_facility_report_pdf/'.$malaria_details['report_id'].'/'.$malaria_details['facility_code'].'/malaria');	
 			$link_excel = base_url('reports/create_excel_facility_program_report/'.$malaria_details['report_id'].'/'.$malaria_details['facility_code'].'/malaria');
+		    $link_new_report_malaria = base_url('divisional_reports/malaria_report');
 		    $malaria_report_data .= <<<HTML_DATA
            <tr>           
 				<td>$facility</td>          
@@ -43,6 +45,7 @@ HTML_DATA;
 			$report_date = $RH_details['report_date'];
 			$link = base_url('reports/get_facility_report_pdf/'.$RH_details['report_id'].'/'.$RH_details['facility_code'].'/RH');	
 			$link_excel = base_url('reports/create_excel_facility_program_report/'.$RH_details['report_id'].'/'.$RH_details['facility_code'].'/RH');
+		    $link_new_report_RH = base_url('divisional_reports/RH_report');
 		    $RH_report_details .= <<<HTML_DATA
             <tr>           
 				<td>$facility</td>          
@@ -70,7 +73,8 @@ HTML_DATA;
 				$report_date = $TB_details['report_date'];
 				$link = base_url('reports/get_facility_report_pdf/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/RH');	
 				$link_excel = base_url('reports/create_excel_facility_program_report/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/TB');
-			    $RH_report_details .= <<<HTML_DATA
+			    $link_new_report_TB = base_url('divisional_reports/TB_report');
+		 * $RH_report_details .= <<<HTML_DATA
 	            <tr>           
 					<td>$facility</td>          
 	 				<td>$username</td>
@@ -112,7 +116,7 @@ HTML_DATA;
 			<tbody>
 				<?php echo $malaria_report_data; 
 					echo "<tr>
-							<td colspan='4'><a href='$link_excel' target='_blank'>
+							<td colspan='4'><a href='$link_new_report_malaria' target='_blank'>
 							<button  type='button' class='btn btn-xs btn-primary'>
 		           			<span class='glyphicon glyphicon-save'></span>Submit Report</button></a>
 		           		</td>
@@ -134,7 +138,15 @@ HTML_DATA;
 			</tr>
 		</thead>
 		<tbody>
-			<?php echo $RH_report_details; ?>
+			<?php echo $RH_report_details; 
+			echo "<tr>
+							<td colspan='4'><a href='$link_new_report_RH' target='_blank'>
+							<button  type='button' class='btn btn-xs btn-primary'>
+		           			<span class='glyphicon glyphicon-save'></span>Submit New RH Report</button></a>
+		           		</td>
+						</tr>	
+				";?>
+				
 		</tbody>
 		</table> 
       </div>
@@ -149,7 +161,14 @@ HTML_DATA;
 			</tr>
 		</thead>
 		<tbody>
-			<?php //echo //$TB_report_details; ?>
+			<?php //echo $TB_report_details;
+			echo "<tr>
+							<td colspan='4'><a href='$link_new_report_TB' target='_blank'>
+							<button  type='button' class='btn btn-xs btn-primary'>
+		           			<span class='glyphicon glyphicon-save'></span>Submit New TB Report</button></a>
+		           		</td>
+						</tr>	
+				";?>
 		</tbody>
 		</table> 
       </div>
