@@ -364,13 +364,14 @@
 					<td><input type="text"   name="table[19][]" value="" class='form-control'></td>
 				</tr> 
 
-				</table>
-				<div class="container-fluid">
+				<tr>
+					<td>
+								<div class="container-fluid">
 <div style="float: right">
 <button type="submit" class="save btn btn-sm btn-success" id="save_data"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 </div>
-</div>
-</form>
+					</td>
+				</tr>
 				
 				<tr><td colspan="12" class=""><div class = "alert alert-info">Leprosy Drugs</div></td></tr>
 				<!-- MB Adult Blister  -->
@@ -651,7 +652,10 @@
 				</tr>
 			</table>
 		</tr>
+		</table>
 
+</div>
+</form>
 	</tbody>
 </table>
 </div>
