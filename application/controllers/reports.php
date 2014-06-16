@@ -779,17 +779,13 @@ class Reports extends MY_Controller
 		$district_data = districts::getDistrict($county_id);
 		$facility_data = Facilities::get_Facilities_using_HCMP($district_id);
 
+
 		//$log_data = Log::get_log_data($district_id);
-		
 
 		$series_data = array();
 		$category_data = array();
-		$log_data = array();
-		
 		$series_data_monthly = array();
 		$category_data_monthly = array();
-		$log_data_monthly = array();
-
 		$seconds_diff = strtotime($last_day_of_the_month) - strtotime($first_day_of_the_month);
 		$date_diff = floor($seconds_diff / 3600 / 24);	
 		
@@ -804,7 +800,7 @@ class Reports extends MY_Controller
 			$graph_title = $district_name." SubCounty ";
 		break;	
 		endswitch;
-		//For the whole month
+
 		for ($i = 0; $i <= $date_diff; $i++) :
 			$day = 1 + $i;
 			$new_date = "$year-$month-" . $day;
@@ -840,8 +836,7 @@ class Reports extends MY_Controller
 		$graph_data_daily = array_merge($graph_data_daily,array("series_data"=>$series_data));
 	    $graph_data_daily['graph_categories'] = $category_data;	
 		$graph_daily = $this->hcmp_functions->create_high_chart_graph($graph_data_daily);
-		
-		//for all the months in the year	
+
 		for ($i = 0; $i < 12; $i++) :
 			$day = 1 + $i;
 			//changed it to be a month
@@ -854,10 +849,9 @@ class Reports extends MY_Controller
 				$facility_id = $facility_ -> facility_code;
 				$facility_name = $facility_ -> facility_name;
 				$subcounty_data = Log::get_subcounty_login_monthly_count($county_id, $district_id, $new_date);
-				$subcounty_log_data = Log::get_log_data($district_id, $county_id, $year);
-				(array_key_exists($facility_name, $series_data_monthly)) ? 
-				$series_data_monthly[$facility_name] = array_merge($series_data_monthly[$facility_name], array((int)$subcounty_data[0]['total'])) 
-				: $series_data_monthly = array_merge($series_data_monthly,array($facility_name => array((int)$subcounty_data[0]['total'])));
+
+				(array_key_exists($facility_name, $series_data_monthly)) ? $series_data_monthly[$facility_name] = array_merge($series_data_monthly[$facility_name], array((int)$subcounty_data[0]['total'])) : $series_data_monthly = array_merge($series_data_monthly, array($facility_name => array((int)$subcounty_data[0]['total'])));
+
 
 			endforeach;
 
@@ -872,45 +866,10 @@ class Reports extends MY_Controller
 		$graph_data = array_merge($graph_data,array("series_data"=>$series_data_monthly));
 	    $graph_data['graph_categories']=$category_data_monthly;	
 		$graph_monthly = $this->hcmp_functions->create_high_chart_graph($graph_data);
-		 
-		//For the Log Data Graph
-		//$log_data = Log::get_log_data($district_id, $county_id);
-		/*print "<pre>";
-		 print_r($series_data_monthly);
-		 print "</pre>";
-		 exit;
-		$graph_log_data = array();
-		$graph_log_data = array_merge($graph_log_data,array("graph_id"=>'log_data_graph'));
-		$graph_log_data = array_merge($graph_log_data,array("graph_title"=>'User Activity for  '.$m.' for '. $graph_title));
-		$graph_log_data = array_merge($graph_log_data,array("graph_type"=>'bar'));
-		$graph_log_data = array_merge($graph_log_data,array("graph_yaxis_title"=>'Frequency'));
-		$graph_log_data = array_merge($graph_log_data,array("graph_categories"=>array()));
-		$graph_log_data = array_merge($graph_log_data,array("series_data"=>$log_data));
-		//$graph_data = array_merge($graph_log_data,array("series_data"=>array("Activity"=>array())));
-		$graph_log_data['series_data']['Issues'] = array_merge($graph_log_data['series_data']['Issues'],array((int)$log_data['total_issues']));
-		$graph_log_data['series_data']['Orders'] = array_merge($graph_log_data['series_data']['Orders'],array((int)$log_data['total_orders']));
-		$graph_log_data['series_data']['Decommissions'] = array_merge($graph_log_data['series_data']['Decommissions'],array((int)$log_data['total_decommisions']));
-		$graph_log_data['series_data']['Redistributions'] = array_merge($graph_log_data['series_data']['Redistributions'],array((int)$log_data['total_redistributions']));
-		$graph_log_data['series_data']['Stock'] = array_merge($graph_log_data['series_data']['Stock'],array((int)$log_data['total_stock_added']));
-		
-		for ($x = 0; $x < max($log_data); $x++)
-		{
-			foreach($log_data as $dataarray):
-				
-			endforeach;
-		}
-		/*foreach($log_data as $log_data_):
-			//$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($log_data_['month']));	
-			$graph_log_data['series_data']['Activity'] = array_merge($graph_log_data['series_data']['Activity'],array((int)$log_data_['total_issues']));	
-		endforeach;
-		$log_data_graph = $this ->hcmp_functions-> create_high_chart_graph($graph_log_data);
-		
-		*/
+
 		
 		$data['graph_data_monthly'] =	$graph_monthly;
 		$data['graph_data_daily'] =	$graph_daily;
-		//$data['log_data_graph'] =	$log_data_graph;
-			
 		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
 		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
@@ -1496,8 +1455,6 @@ class Reports extends MY_Controller
 		endif;
 	}
 
-		
-		
          public function stock_level_dashboard(){
  
          	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id);
@@ -1536,7 +1493,6 @@ class Reports extends MY_Controller
 			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'], array($final_graph_data_['commodity_name']));
 			$graph_data['series_data']['Stock'] = array_merge($graph_data['series_data']['Stock'],array((int)$final_graph_data_['month_stock']));	
 			endforeach;
-
 
 		$data['default_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 
@@ -1592,9 +1548,9 @@ class Reports extends MY_Controller
 		$title=isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
 	 	isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
 
+		
 		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code,$district_id,$county_id,
 		$category_id, $commodity_id,  $option_new,$report_type);
-
         foreach ($commodity_array as $data) :
 		if($report_type=="table_data"):
 			if($commodity_id>0):
