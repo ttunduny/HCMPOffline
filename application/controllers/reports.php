@@ -1551,6 +1551,7 @@ class Reports extends MY_Controller
 	    }
 
 
+
 	    public function tb_report(){
 	    	$data['title'] = "Facility Expiries";
 		$data['banner_text'] = "Facility Tuberculosis & Leprosy Commodities Consumption Data Report & Request Form";
