@@ -61,7 +61,9 @@ HTML_DATA;
 HTML_DATA;
 			endforeach;
 			endforeach;
-		/*foreach($TB as $TB_details1):
+
+			
+		foreach($TB as $TB_details1):
 			foreach($TB_details1 as $TB_details):
 				$facilityname = Facilities::get_facility_name2($TB_details['facility_code']);
 				$facility = $facilityname['facility_name'];
@@ -70,7 +72,7 @@ HTML_DATA;
 				$report_date = $TB_details['report_date'];
 				$link = base_url('reports/get_facility_report_pdf/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/RH');	
 				$link_excel = base_url('reports/create_excel_facility_program_report/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/TB');
-			    $RH_report_details .= <<<HTML_DATA
+			    $TB_report_details .= <<<HTML_DATA
 	            <tr>           
 					<td>$facility</td>          
 	 				<td>$username</td>
@@ -87,7 +89,10 @@ HTML_DATA;
            </tr>
 HTML_DATA;
 			endforeach;
-			endforeach;*/
+			endforeach;
+			/*echo "<pre>";
+			print_r($TB_details);
+			echo("</pre>");exit;*/
 		
 		?>
 <h1 class="page-header" style="margin: 0;font-size: 1.6em;"><?php echo $page_header. " for ". date("Y"); ?></h1>
@@ -96,6 +101,7 @@ HTML_DATA;
 	<ul class='nav nav-tabs'>
       <li class="active"><a href="#Malaria" data-toggle="tab">Malaria Reports</a></li>
       <li class=""><a href="#RH" data-toggle="tab">RH Reports</a></li>
+      <li class=""><a href="#TB" data-toggle="tab">TB Reports</a></li>
     </ul>
     <div id="myTabContent" class="tab-content">
  		<div  id="Malaria" class="tab-pane fade active in">
@@ -138,8 +144,8 @@ HTML_DATA;
 		</tbody>
 		</table> 
       </div>
-      <div class="tab-pane fade" id="TB">
-        <table cellpadding="0" cellspacing="0" width="100%" border="0" class="row-fluid table table-bordered"  id="test3">
+     <div class="tab-pane fade" id="TB">
+        <table cellpadding="0" cellspacing="0" width="100%" border="0" class="row-fluid table table-bordered"  id="test2">
 		<thead>
 			<tr>
 				<th>Facility Name</th>
@@ -149,7 +155,7 @@ HTML_DATA;
 			</tr>
 		</thead>
 		<tbody>
-			<?php //echo //$TB_report_details; ?>
+			<?php echo $TB_report_details; ?>
 		</tbody>
 		</table> 
       </div>
