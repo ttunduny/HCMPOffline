@@ -29,10 +29,11 @@ class Evaluation extends MY_Controller {
 
      public function default_graph($district=null){
      	$county_id = isset($district) ? null : 1;
-		$district_id = isset($district) ? $district :null;
+		$district_id = isset($county_id) ? $district :null;
+
+		$county_id = 1;	
 
 		$graph_data =$data= array();
-	
 
 		$data['district_id'] = $district_id;
 
@@ -60,9 +61,9 @@ class Evaluation extends MY_Controller {
 		$data['public_institutions'] = $other_public_institutions;
 		$data['gok'] = $gok;
 
-        $data['facility_evaluation_default']=$this->hcmp_functions->create_high_chart_graph($graph_data);
+        $data['facility_evaluation']=$this->hcmp_functions->create_high_chart_graph($graph_data);
 		// end of chart data
-        $county_id = 1;	
+        
 		//creating the first bar chart
 
 

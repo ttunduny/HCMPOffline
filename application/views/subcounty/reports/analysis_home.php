@@ -58,7 +58,7 @@ endforeach;
 <script>
 	$(function () { 
 		<?php
-	echo $facility_evaluation_default;//first chart
+			   echo $facility_evaluation_default;//first chart
                echo $frequency_of_use;
                echo $trained_personel;
                echo $comfort_level;//sixth chart
@@ -67,7 +67,6 @@ endforeach;
 });
 
 $(document).ready(function() {
-
 	$("#subcounty_filter").click(function(e)
 	 {	
 	 	e.preventDefault();	
@@ -75,6 +74,12 @@ $(document).ready(function() {
 
 		ajax_request_replace_div_content(url_,'.graphs');		
            });
+	window.onload = function(){
+		
+        var url_ = 'evaluation/default_graph/'+$("#sub_county_filter").val();
+
+		ajax_request_replace_div_content(url_,'.graphs');
+	}
 
 	});
 

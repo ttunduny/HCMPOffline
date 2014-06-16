@@ -43,7 +43,7 @@ class Commodities extends Doctrine_Record {
 		return $commodities;
 	}
 
-	
+
     public static function get_tracer_items(){
      $query = Doctrine_Query::create() -> select("*") -> from("commodities")->where("status=1 and tracer_item=1");
      $commodities = $query -> execute();
