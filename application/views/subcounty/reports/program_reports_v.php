@@ -72,6 +72,7 @@ HTML_DATA;
 				$report_date = $TB_details['report_date'];
 				$link = base_url('reports/get_facility_report_pdf/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/RH');	
 				$link_excel = base_url('reports/create_excel_facility_program_report/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/TB');
+			    $link_TB = base_url('divisional_reports/tb_report');
 			    $TB_report_details .= <<<HTML_DATA
 	            <tr>           
 					<td>$facility</td>          
@@ -140,7 +141,16 @@ HTML_DATA;
 			</tr>
 		</thead>
 		<tbody>
-			<?php echo $RH_report_details; ?>
+			<?php echo $RH_report_details; 
+			echo "<tr>
+							<td colspan='4'><a href='$link_excel' target='_blank'>
+							<button  type='button' class='btn btn-xs btn-primary'>
+		           			<span class='glyphicon glyphicon-save'></span>Submit Report</button></a>
+		           		</td>
+						</tr>	
+				";
+			?>
+
 		</tbody>
 		</table> 
       </div>
@@ -155,7 +165,15 @@ HTML_DATA;
 			</tr>
 		</thead>
 		<tbody>
-			<?php echo $TB_report_details; ?>
+			<?php echo $TB_report_details;
+			echo "<tr>
+							<td colspan='4'><a href='$link_TB' target='_blank'>
+							<button  type='button' class='btn btn-xs btn-primary'>
+		           			<span class='glyphicon glyphicon-save'></span>Submit Report</button></a>
+		           		</td>
+						</tr>	
+				";
+			 ?>
 		</tbody>
 		</table> 
       </div>
