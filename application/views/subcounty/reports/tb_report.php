@@ -366,10 +366,7 @@
 
 				<tr>
 					<td>
-								<div class="container-fluid">
-<div style="float: right">
-<button type="submit" class="save btn btn-sm btn-success" id="save_data"><span class="glyphicon glyphicon-open"></span>Save</button></div>
-</div>
+
 					</td>
 				</tr>
 				
@@ -655,10 +652,14 @@
 		</table>
 
 </div>
-</form>
 	</tbody>
 </table>
 </div>
+								<div class="container-fluid">
+<div style="float: right">
+<button type="submit" class="save btn btn-sm btn-success" id="save_data"><span class="glyphicon glyphicon-open"></span>Save</button></div>
+</div>
+</form>
 
 <script>
 

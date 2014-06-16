@@ -102,7 +102,7 @@ public function tb_report(){
 
 public function save_tb_data(){
 	$values = $this->input->post();
-
+	$user_id = $this -> session -> userdata('user_id');
 	foreach ($values as $key => $value) {
 		$no = count($values['table']);
 		/*echo "<pre>";
@@ -121,7 +121,8 @@ public function save_tb_data(){
 		'losses'=>$value[$i][6],
 		'physical_count'=>$value[$i][7],
 		'physical_count'=>$value[$i][8],
-		'quantity_needed'=>$value[$i][9]
+		'quantity_needed'=>$value[$i][9],
+		'user_id' =>$user_id
 		);
 		$this->db->insert('tuberculosis_data',$data);
 		}
