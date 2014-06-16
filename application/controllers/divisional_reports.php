@@ -105,8 +105,10 @@ public function save_tb_data(){
 
 	foreach ($values as $key => $value) {
 		$no = count($values['table']);
-
-		for ($i=1; $i < 3; $i++) { 
+		/*echo "<pre>";
+		print_r($value);
+		echo "</pre>";*/
+		for ($i=1; $i < 4; $i++) { 
 		$data = array( 
 		'facility_code'=>$value['facility_code'][0], 
 		'beginning_date'=>$value['beginning_date'][0],
@@ -123,7 +125,8 @@ public function save_tb_data(){
 		);
 		$this->db->insert('tuberculosis_data',$data);
 		}
-		$this->index();
+		echo "Success";
+		exit;
 	}
 }
 
