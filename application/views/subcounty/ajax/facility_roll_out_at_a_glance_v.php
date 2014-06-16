@@ -44,6 +44,7 @@
 $(document).ready(function() {
 	<?php echo @$graph_data_daily; ?>
 	<?php echo @$graph_data_monthly; ?>
+	<?php echo @$graph_log; ?>
 	
 	$(".ajax_call1").click( function (){
 		

@@ -83,62 +83,23 @@ class Log extends Doctrine_Record {
 			and UNIX_TIMESTAMP( `end_time_of_event`) =0");	
 		 
 	}
-	public static function get_log_data($district_id = null,$county_id = null, $date)
+	public static function get_log_data($district_id,$county_id)
 	{
-		//$year = date("Y");
+		$year = date("Y");
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-		select ifnull(count(l.issued), 0) as total_issues
+		select ifnull(sum(l.issued), 0) as total_issues,
+		ifnull(sum(l.ordered), 0) as total_orders,
+		ifnull(sum(l.decommissioned), 0) as total_decommisions,
+		ifnull(sum(l.redistribute), 0) as total_redistributions,
+		ifnull(sum(l.add_stock), 0) as total_stock_added
 		from log l, user u
 		where l.user_id = u.id
 		AND u.county_id = $county_id
 		AND u.district = $district_id
-		AND l.issued = 1
-		AND DATE_FORMAT( l.`start_time_of_event` ,'%Y') = '$date'
+		AND DATE_FORMAT( l.`start_time_of_event` ,'%Y') = '$year'
 		");
-		$q1 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-		select ifnull(count(l.ordered), 0) as total_orders
-		from log l, user u
-		where l.user_id = u.id
-		AND u.county_id = $county_id
-		AND u.district = $district_id
-		AND l.ordered = 1
-		AND DATE_FORMAT( l.`start_time_of_event` ,'%Y') = '$date'
-		");
-		$q_2 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-		select ifnull(count(l.decommissioned), 0) as total_decommisions
-		from log l, user u
-		where l.user_id = u.id
-		AND u.county_id = $county_id
-		AND u.district = $district_id
-		AND l.decommissioned = 1
-		AND DATE_FORMAT( l.`start_time_of_event` ,'%Y') = '$date'
-		");
-		$q_3 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-		select ifnull(count(l.redistribute), 0) as total_redistributions
-		from log l, user u
-		where l.user_id = u.id
-		AND u.county_id = $county_id
-		AND u.district = $district_id
-		AND l.redistribute = 1
-		AND DATE_FORMAT( l.`start_time_of_event` ,'%Y') = '$date'
-		");
-		$q_4 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-		select ifnull(count(l.add_stock), 0) as total_stock_added
-		from log l, user u
-		where l.user_id = u.id
-		AND u.county_id = $county_id
-		AND u.district = $district_id
-		AND l.add_stock = 1
-		AND DATE_FORMAT( l.`start_time_of_event` ,'%Y') = '$date'
-		");
-		return array(
-		'total_issues'=>$q[0]['total_issues'],
-		'total_orders'=>$q1[0]['total_orders'],
-		'total_decommisions'=>$q_2[0]['total_decommisions'],
-		'total_redistributions'=>$q_3[0]['total_redistributions'],
-		'total_stock_added'=>$q_4[0]['total_stock_added'],
-
-		);
+		
+		return $q;
 	}
 	public static function get_subcounty_login_count($county_id,$district_id,$date)
 	{

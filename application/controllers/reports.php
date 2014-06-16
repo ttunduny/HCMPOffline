@@ -778,7 +778,39 @@ class Reports extends MY_Controller
 
 		$district_data = districts::getDistrict($county_id);
 		$facility_data = Facilities::get_Facilities_using_HCMP($district_id);
+		$log_data = Log::get_log_data($district_id, $county_id);
+	//var_dump($log_data);
+	//	exit;
+	//	
+		$graph_log_data = array();
+		$graph_log_data = array_merge($graph_log_data,array("graph_id"=>'log_data_graph'));
+		$graph_log_data = array_merge($graph_log_data,array("graph_title"=>'User Activity for  '.$m.' for '. $graph_title));
+		$graph_log_data = array_merge($graph_log_data,array("graph_type"=>'column'));
+		$graph_log_data = array_merge($graph_log_data,array("graph_yaxis_title"=>'Frequency'));
+		$graph_log_data = array_merge($graph_log_data,array("graph_categories"=>array()));
+		$graph_log_data['series_data']['Decommissions'] =
+		$graph_log_data['series_data']['Redistributions'] =
+		$graph_log_data['series_data']['Stock'] =
+		$graph_log_data['series_data']['Orders'] = $graph_log_data['series_data']['Issues'] = array();
 		
+		//$graph_log_data  = array_merge($graph_log_data,array("series_data"=>array()));
+		//$graph_log_data = array_merge($graph_log_data,array("series_data"=>$log_data));
+		//$graph_log_data = array_merge($graph_log_data,array("series_data"=>array("Activity"=>array())));
+		foreach($log_data as $log_data_)
+		{
+			$graph_log_data['series_data']['Issues'] = array_merge($graph_log_data['series_data']['Issues'],array((int)$log_data_['total_issues']));
+			$graph_log_data['series_data']['Orders'] = array_merge($graph_log_data['series_data']['Orders'],array((int)$log_data_['total_orders']));
+			$graph_log_data['series_data']['Decommissions'] = array_merge($graph_log_data['series_data']['Decommissions'],array((int)$log_data_['total_decommisions']));
+			$graph_log_data['series_data']['Redistributions'] = array_merge($graph_log_data['series_data']['Redistributions'],array((int)$log_data_['total_redistributions']));
+			$graph_log_data['series_data']['Stock'] = array_merge($graph_log_data['series_data']['Stock'],array((int)$log_data_['total_stock_added']));
+		
+		
+		}
+		$graph_log = $this->hcmp_functions->create_high_chart_graph($graph_log_data);
+		//echo "<br>";
+		//print_r($log_data['total_issues']);
+		//echo "</br>";
+		//exit;
 		$series_data = array();
 		$category_data = array();
 		$series_data_monthly = array();
@@ -866,6 +898,7 @@ class Reports extends MY_Controller
 		
 		$data['graph_data_monthly'] =	$graph_monthly;
 		$data['graph_data_daily'] =	$graph_daily;
+		$data['graph_log'] = $graph_log;
 			
 
 		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
