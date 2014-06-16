@@ -31,7 +31,7 @@ if (!defined('BASEPATH'))
 					break;
 					case 'external':						
 						$data['content_view'] = "facility/facility_issues/facility_redistribute_items_v";						
-						$data['subcounties']= districts::getAll();
+						$data['subcounties']=districts::getAll();
 						$data['banner_text'] = "Redistribute Commodities";
 						$data['title'] ="Redistribute Commodities";						
 					break;									
@@ -40,7 +40,7 @@ if (!defined('BASEPATH'))
 		$data['service_point']=service_points::get_all_active($facility_code);		
 		$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_facility($facility_code,1);
 	    $data['facility_stock_data']=json_encode(facility_stocks::get_distinct_stocks_for_this_facility($facility_code,"batch_data"));	
-     	$this -> load -> view("shared_files/template/template", $data);		
+     	$this -> load -> view("shared_files/template/template", $data);
 	}
 	// facility internal issue
 	public function internal_issue()

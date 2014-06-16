@@ -5,7 +5,7 @@
  </style>
  <div class="container" style="width: 100%; margin: auto;">
 <span  class='label label-info'>Enter Order Quantity and Comment,
-Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
+Order Quantity = (Monthly Consumption * 4) - Closing Stock</span>
 <?php $identifier = $this -> session -> userdata('user_indicator');
  $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/update_facility_new_order',$att); 
 //?>
@@ -13,12 +13,12 @@ Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
 	<div class="col-md-2">
 	<b>*select ordering frequency</b> <select class="form-control" name="order_period" id="order_period" 
 	<?php  echo  ($option_==="readonly_")?  "disabled='true'" : null;?>>
- 	<option>Quaterly</option>	
+ 	<option>Quarterly</option>	
  	<option>Monthly</option>
  	</select> 	
 	</div>
 	<div class="col-md-2">
-     <b>*Oder Form Number:</b> <input type="text" value="<?php echo $order_details[0]['order_no']; ?>" 
+     <b>*Order Form Number:</b> <input type="text" value="<?php echo $order_details[0]['order_no']; ?>" 
      class="form-control input_text" name="order_no" id="order_no" required="required"/>
 	</div>
 <div class="col-md-2">

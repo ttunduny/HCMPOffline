@@ -64,7 +64,7 @@ HTML_DATA;
 HTML_DATA;
 			endforeach;
 			endforeach;
-
+/*
 			
 		foreach($TB as $TB_details1):
 			foreach($TB_details1 as $TB_details):
@@ -94,7 +94,7 @@ HTML_DATA;
            </tr>
 HTML_DATA;
 			endforeach;
-			endforeach;
+			endforeach;*/
 			
 		
 		?>
@@ -169,7 +169,7 @@ HTML_DATA;
 		</thead>
 		<tbody>
 
-			<?php echo $TB_report_details;
+			<?php //echo $TB_report_details;
 			echo "<tr>
 							<td colspan='4'><a href='$link_TB' target='_blank'>
 							<button  type='button' class='btn btn-xs btn-primary'>
