@@ -31,7 +31,7 @@ if (!defined('BASEPATH'))
 					break;
 					case 'external':						
 						$data['content_view'] = "facility/facility_issues/facility_redistribute_items_v";						
-						$data['subcounties']=districts::getAll();
+						$data['subcounties']= districts::getAll();
 						$data['banner_text'] = "Redistribute Commodities";
 						$data['title'] ="Redistribute Commodities";						
 					break;									
@@ -80,29 +80,32 @@ if (!defined('BASEPATH'))
 			`closing_stock`=`closing_stock`-$total_items_issues
             WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");		
 	endfor;
-	         $this->session->set_flashdata('system_success_message', "You have issued $total_items item(s)");
-			 redirect();
+			$user_action = "issue";
+		 	Log::log_user_action($this -> session -> userdata('user_id'),$user_action);
+		 	$this->session->set_flashdata('system_success_message', "You have issued $total_items item(s)");
+			redirect();
 	endif;
 	redirect();		
 	}
-		public function external_issue(){
-//security check
-if($this->input->post('mfl')):
-$facility_code=$this -> session -> userdata('facility_id');
-$service_point=$this->input->post('mfl');
-$commodity_id=$this->input->post('desc');
-$commodity_balance_before=$this->input->post('commodity_balance');
-$facility_stock_id=$this->input->post('facility_stock_id');
-$batch_no=$this->input->post('batch_no');
-$expiry_date=$this->input->post('expiry_date');
-$commodity_unit_of_issue=$this->input->post('commodity_unit_of_issue');
-$quantity_issued=$this->input->post('quantity_issued');
-$clone_datepicker_normal_limit_today=$this->input->post('clone_datepicker_normal_limit_today');
-$total_units=$this->input->post('total_units');
-$total_items=count($facility_stock_id);
-$data_array_issues_table=array();
-$data_array_redistribution_table=array();
-        for($i=0;$i<$total_items;$i++)://compute the actual stock
+		public function external_issue()
+		{
+			//security check
+			if($this->input->post('mfl')):
+			$facility_code=$this -> session -> userdata('facility_id');
+			$service_point=$this->input->post('mfl');
+			$commodity_id=$this->input->post('desc');
+			$commodity_balance_before=$this->input->post('commodity_balance');
+			$facility_stock_id=$this->input->post('facility_stock_id');
+			$batch_no=$this->input->post('batch_no');
+			$expiry_date=$this->input->post('expiry_date');
+			$commodity_unit_of_issue=$this->input->post('commodity_unit_of_issue');
+			$quantity_issued=$this->input->post('quantity_issued');
+			$clone_datepicker_normal_limit_today=$this->input->post('clone_datepicker_normal_limit_today');
+			$total_units=$this->input->post('total_units');
+			$total_items=count($facility_stock_id);
+			$data_array_issues_table=array();
+			$data_array_redistribution_table=array();
+			        for($i=0;$i<$total_items;$i++)://compute the actual stock
         $total_items_issues=($commodity_unit_of_issue[$i]=='Pack_Size')? 
         $quantity_issued[$i]*$total_units[$i] : $quantity_issued[$i]; 
      //prepare the issues data
@@ -129,6 +132,8 @@ $data_array_redistribution_table=array();
 			`closing_stock`=`closing_stock`-$total_items_issues
             WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");		
 endfor;
+		 $user_action = "redistribute";
+		 Log::log_user_action($this -> session -> userdata('user_id'),$user_action);
          $this->db->insert_batch('facility_issues', $data_array_issues_table); 
 		 $this->db->insert_batch('redistribution_data', $data_array_redistribution_table); 
          $this->session->set_flashdata('system_success_message', "You have issued $total_items item(s)");

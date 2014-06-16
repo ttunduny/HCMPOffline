@@ -30,9 +30,12 @@ class Facilities extends Doctrine_Record {
 		$drugs = $query -> execute();
 		return $drugs;
 	}
-	public static function get_Facilities($district)
+	public static function get_Facilities_using_HCMP($district)
 	{
-		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district' and using_hcmp = 1")->OrderBy("facility_name asc");
+		$query = Doctrine_Query::create() ->select("*") 
+											->from("facilities")
+											->where("district='$district' and using_hcmp = 1")
+											->OrderBy("facility_name asc");
 		$drugs = $query -> execute();
 		return $drugs;
 	}
@@ -121,24 +124,27 @@ return $q;
 	
 	public static function get_d_facility($district){
 		'SELECT unique facilities.facility_name, user.fname, user.lname, user.telephone
-FROM facilities, user
-WHERE facilities.district ='.$district.'
-AND user.district ='.$district.'
-AND user.facility = facilities.facility_code
-AND user.usertype_id =2';
+			FROM facilities, user
+			WHERE facilities.district ='.$district.'
+			AND user.district ='.$district.'
+			AND user.facility = facilities.facility_code
+			AND user.usertype_id =2';
 		
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection();
-$result = $q->execute(" SELECT user.email, facilities.facility_code, facilities.facility_name, user.fname, user.lname, user.telephone
-FROM facilities, user
-WHERE facilities.district =  '$district'
-AND user.district =  '$district'
-AND user.facility = facilities.facility_code
-AND user.status =  '1'
-AND (
-user.usertype_id =5
-OR user.usertype_id =2
-)
-GROUP BY user.facility");
+		$result = $q-> execute(" 
+		SELECT user.email, 
+			facilities.facility_code, facilities.facility_name, user.fname, user.lname, 
+			user.telephone
+				FROM facilities, user
+				WHERE facilities.district =  '$district'
+				AND user.district =  '$district'
+				AND user.facility = facilities.facility_code
+				AND user.status =  '1'
+				AND (
+				user.usertype_id =5
+				OR user.usertype_id =2
+				)
+				GROUP BY user.facility");
 
 		return $result;
 		
@@ -274,43 +280,43 @@ AND o.facilityCode=f.facility_code
 
 return array('total_no_of_facilities'=>$q_1[0]['total_no_of_facilities'],'orders_made_data'=>$q[0]['orders_made_data']);	
 }
-public static function get_no_of_facilities_hcmp($county_id=NULL,$district_id=NULL){
-
-if($district_id!=NULL){
+public static function get_no_of_facilities_hcmp($county_id=NULL,$district_id=NULL)
+{
+	if($district_id!=NULL){
 		$q_1 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-SELECT COUNT( f.id ) AS total_no_of_facilities
-FROM facilities f, districts d
-WHERE f.district = d.id
-AND d.id ='$district_id'
-");
+	SELECT COUNT( f.id ) AS total_no_of_facilities
+	FROM facilities f, districts d
+	WHERE f.district = d.id
+	AND d.id ='$district_id'
+	");
 
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-SELECT COUNT( DISTINCT u.`facility` ) AS total_no_of_facilities
-FROM facilities f, districts d, user u
-WHERE f.district = d.id
-AND u.facility = f.facility_code
-AND u.status =  '1'
-AND d.id= '$district_id'
-");
+		SELECT COUNT( DISTINCT u.`facility` ) AS total_no_of_facilities
+		FROM facilities f, districts d, user u
+		WHERE f.district = d.id
+		AND u.facility = f.facility_code
+		AND u.status =  '1'
+		AND d.id= '$district_id'
+		");
 	
-}else{
-	$q_1 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-SELECT count(f.`id`) AS total_no_of_facilities
-FROM facilities f, districts d, counties c
-WHERE f.district = d.id
-AND d.county =c.id
-AND c.id= '$county_id'
-");
+	}else{
+		$q_1 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+	SELECT count(f.`id`) AS total_no_of_facilities
+	FROM facilities f, districts d, counties c
+	WHERE f.district = d.id
+	AND d.county =c.id
+	AND c.id= '$county_id'
+	");
 
-$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-SELECT COUNT( DISTINCT u.`facility` ) AS total_no_of_facilities
-FROM facilities f, districts d, counties c, user u
-WHERE f.district = d.id
-AND u.facility = f.facility_code
-AND d.county = c.id
-AND u.status =  '1'
-AND c.id= '$county_id'
-");
+	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+	SELECT COUNT( DISTINCT u.`facility` ) AS total_no_of_facilities
+	FROM facilities f, districts d, counties c, user u
+	WHERE f.district = d.id
+	AND u.facility = f.facility_code
+	AND d.county = c.id
+	AND u.status =  '1'
+	AND c.id= '$county_id'
+	");
 }
 
 return array('total_no_of_facilities'=>$q_1[0]['total_no_of_facilities'],'total_no_of_facilities_using_hcmp'=>$q[0]['total_no_of_facilities']);
@@ -351,9 +357,18 @@ public static function get_dates_facility_went_online($county_id, $district_id =
 
 public static function get_facilities_which_went_online_($district_id,$date_of_activation){
 $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-SELECT (select count(targetted) from facilities f where f.district='$district_id' and f.targetted = 1) as total_facilities_targetted, count(facility_code) as total ,(select count(id) from facilities f where f.district='$district_id') as total_facilities
- from facilities f, districts d where f.district=d.id and d.id=$district_id and DATE_FORMAT(  `date_of_activation` ,  '%M %Y' ) = '$date_of_activation'");
-return $q;		
+			SELECT (select count(targetted) 
+			from facilities f 
+			where f.district='$district_id' 
+			and f.targetted = 1) as total_facilities_targetted, 
+			(select count(facility_name) from facilities f where f.district = $district_id and using_hcmp=1) as total_using_hcmp,
+			count(facility_code) as total ,
+			(select count(id) from facilities f where f.district='$district_id') as total_facilities 
+				from facilities f, districts d 
+				where f.district=d.id 
+				and d.id=$district_id 
+				and DATE_FORMAT(  `date_of_activation` ,  '%M %Y' ) = '$date_of_activation'");
+		return $q;		
 }
 public static function get_facilities_reg_on_($district_id,$date_of_activation){
 	

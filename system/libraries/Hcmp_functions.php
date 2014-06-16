@@ -494,6 +494,7 @@ endif;
 		$graph_id=$graph_data['graph_id'];
 		$graph_title=$graph_data['graph_title'];
 		$graph_type=$graph_data['graph_type'];
+        $stacking=isset($graph_data['stacking']) ? $graph_data['stacking'] : null;
 		$graph_categories=json_encode($graph_data['graph_categories']);
 		//echo json_encode($graph_data['graph_categories']);
 		$graph_yaxis_title=$graph_data['graph_yaxis_title'];
@@ -511,6 +512,15 @@ endif;
             subtitle: {text: 'Source: HCMP', x: -20 },
             xAxis: { categories: $graph_categories },
             tooltip: { crosshairs: [true,true] },
+               plotOptions: {
+                column: {
+                    stacking: '$stacking',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
+            },
             series: [";			 
 		    foreach($graph_series_data as $key=>$raw_data):
 					$temp_array=array();

@@ -580,6 +580,7 @@ class Reports extends MY_Controller
 		
 		
 		$expired_commodities = Facility_stocks::get_expiries($facility_code);
+		
 		//Holds all the months of the year
 		//Build the line graph showing the expiries graph
 		
@@ -593,9 +594,12 @@ class Reports extends MY_Controller
 		
 		foreach($expired_commodities as $facility_stock_expired):
 			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_stock_expired['month']));	
-			$graph_data['series_data']['Expiries'] = array_merge($graph_data['series_data']['Expiries'],array($facility_stock_expired['total_expiries']));	
+			$graph_data['series_data']['Expiries'] = array_merge($graph_data['series_data']['Expiries'],array((int)$facility_stock_expired['total']));	
 		endforeach;
 		
+		//var_dump($expired_commodities);
+		
+		//exit;
 		$faciliy_expiry_data = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		
 		$data['title'] = "Facility Expiries";
@@ -632,7 +636,7 @@ class Reports extends MY_Controller
 		
 		foreach($expired_commodities as $facility_stock_expired):
 			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_stock_expired['month']));	
-			$graph_data['series_data']['Expiries'] = array_merge($graph_data['series_data']['Expiries'],array($facility_stock_expired['total_expiries']));	
+			$graph_data['series_data']['Expiries'] = array_merge($graph_data['series_data']['Expiries'],array((int)$facility_stock_expired['total_expiries']));	
 		endforeach;
 		
 		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
@@ -659,7 +663,7 @@ class Reports extends MY_Controller
 		
 		foreach($cost_of_orders as $facility_cost_of_orders):
 			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_cost_of_orders['mwaka']));	
-			$graph_data['series_data']['Total Cost'] = array_merge($graph_data['series_data']['Total Cost'],array($facility_cost_of_orders['order_total']));	
+			$graph_data['series_data']['Total Cost'] = array_merge($graph_data['series_data']['Total Cost'],array((int)$facility_cost_of_orders['order_total']));	
 		endforeach;
 		
 		$faciliy_data = $this->hcmp_functions->create_high_chart_graph($graph_data);
@@ -695,7 +699,7 @@ class Reports extends MY_Controller
 		
 		foreach($cost_of_orders as $facility_cost_of_orders):
 			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_cost_of_orders['mwaka']));	
-			$graph_data['series_data']['Total Cost'] = array_merge($graph_data['series_data']['Total Cost'],array($facility_cost_of_orders['order_total']));	
+			$graph_data['series_data']['Total Cost'] = array_merge($graph_data['series_data']['Total Cost'],array((int)$facility_cost_of_orders['order_total']));	
 		endforeach;
 		
 		
@@ -729,7 +733,7 @@ class Reports extends MY_Controller
 		
 		foreach($expired_commodities as $facility_stock_expired):
 			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_stock_expired['month']));	
-			$graph_data['series_data']['Consumption'] = array_merge($graph_data['series_data']['Consumption'],array($facility_stock_expired['total_consumption']));	
+			$graph_data['series_data']['Consumption'] = array_merge($graph_data['series_data']['Consumption'],array((int)$facility_stock_expired['total_consumption']));	
 		endforeach;
 		//create the graph here
 		$faciliy_stock_data = $this->hcmp_functions->create_high_chart_graph($graph_data);
@@ -780,6 +784,7 @@ class Reports extends MY_Controller
 		$series_data_monthly = array();
 		$category_data_monthly = array();
 
+
 		$seconds_diff = strtotime($last_day_of_the_month) - strtotime($first_day_of_the_month);
 		$date_diff = floor($seconds_diff / 3600 / 24);	
 		
@@ -794,6 +799,7 @@ class Reports extends MY_Controller
 			$graph_title = $district_name." SubCounty ";
 		break;	
 		endswitch;
+
 		for ($i = 0; $i <= $date_diff; $i++) :
 			$day = 1 + $i;
 			$new_date = "$year-$month-" . $day;
@@ -861,6 +867,7 @@ class Reports extends MY_Controller
 		$data['graph_data_monthly'] =	$graph_monthly;
 		$data['graph_data_daily'] =	$graph_daily;
 			
+
 		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
 		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
@@ -1443,8 +1450,6 @@ class Reports extends MY_Controller
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		endif;
 	}
-		
-		
          public function stock_level_dashboard(){
  
          	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id);
@@ -1472,6 +1477,7 @@ class Reports extends MY_Controller
 			
          	$graph_data = array();
        		$graph_data = array_merge($graph_data, array("graph_id" => 'graph_default'));
+
 			$graph_data = array_merge($graph_data, array("graph_title" => 'Current Stock Level'));
 			$graph_data = array_merge($graph_data, array("graph_type" => 'bar'));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Months of Stock'));
@@ -1498,8 +1504,7 @@ class Reports extends MY_Controller
 		 
      	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null) {
      	//reset the values here
-    
-     	$commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
+    	$commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
 		$category_id=($category_id=="NULL") ? null :$category_id;
 	 	$district_id=($district_id=="NULL") ? null :$district_id;
 	 	$option=($optionr=="NULL") ? null :$option;
@@ -1529,15 +1534,15 @@ class Reports extends MY_Controller
         
         foreach ($commodity_array as $data) :
 		if($report_type=="table_data"):
-		if($commodity_id>0):
-		array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"], $data['total']));
+			if($commodity_id>0):
+				array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"], $data['total']));
+			else:
+				array_push($series_data , array($data["name"], $data['total']));
+			endif;						
 		else:
-		array_push($series_data , array($data["name"], $data['total']));
-		endif;						
-		else:
-		$series_data  = array_merge($series_data , array($data["name"] => $data['total']));
-		$series_data_  = array_merge($series_data_ , array($data["name"],$data['total']));
-		$category_data=array_merge($category_data, array($data["name"]));
+			$series_data  = array_merge($series_data , array($data["name"] => $data['total']));
+			$series_data_  = array_merge($series_data_ , array($data["name"],$data['total']));
+			$category_data=array_merge($category_data, array($data["name"]));
 		endif;
 		endforeach;
 		

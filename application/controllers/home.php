@@ -63,7 +63,7 @@ class Home extends MY_Controller
     {
     //format the graph here
     $facility_code=$this -> session -> userdata('facility_id'); 
-    $facility_stock_=facility_stocks::get_distinct_stocks_for_this_facility($facility_code);
+    $facility_stock_=facility_stocks::get_facility_stock_amc($facility_code);
 	$facility_stock_count=count($facility_stock_);
     $graph_data=array();
 	$graph_data=array_merge($graph_data,array("graph_id"=>'container'));
@@ -71,11 +71,12 @@ class Home extends MY_Controller
 	$graph_data=array_merge($graph_data,array("graph_type"=>'column'));
 	$graph_data=array_merge($graph_data,array("graph_yaxis_title"=>'Total stock level  (values in packs)'));
 	$graph_data=array_merge($graph_data,array("graph_categories"=>array()));
-	$graph_data=array_merge($graph_data,array("series_data"=>array("Current Balance"=>array())));
-	
+	$graph_data=array_merge($graph_data,array("series_data"=>array("Current Balance"=>array(),"AMC"=>array())));
+	$graph_data['stacking']='normal';
 	foreach($facility_stock_ as $facility_stock_):
 		$graph_data['graph_categories']=array_merge($graph_data['graph_categories'],array($facility_stock_['commodity_name']));	
-		$graph_data['series_data']['Current Balance']=array_merge($graph_data['series_data']['Current Balance'],array($facility_stock_['pack_balance']));	
+		$graph_data['series_data']['Current Balance']=array_merge($graph_data['series_data']['Current Balance'],array((int)$facility_stock_['pack_balance']));
+        $graph_data['series_data']['AMC']=array_merge($graph_data['series_data']['AMC'],array((int)$facility_stock_['amc']));	
 	endforeach;
 	//create the graph here
 	$faciliy_stock_data=$this->hcmp_functions->create_high_chart_graph($graph_data);

@@ -166,8 +166,6 @@ endforeach;
 <div class="graph_content" id="graph_default">	
 	
 </div>
-
-
 <script>
 	 $(function () { 
 <?php echo $default_graph; ?>
