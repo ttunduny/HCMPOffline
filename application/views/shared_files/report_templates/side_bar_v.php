@@ -32,11 +32,11 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapsetwo"><span class="glyphicon glyphicon-file">
+                            <a data-parent="#accordion" href="<?php echo base_url("divisional_reports/facility_program_reports"); ?>" ><span class="glyphicon glyphicon-file">
                             </span>Divisional Reports</a>
                         </h4>
                     </div>
-                    <div id="collapsetwo" class="panel-collapse collapse">
+                   <!-- <div id="collapsetwo" class="panel-collapse collapse">
                         <div class="panel-body">
                             <table class="table">
                                 <tr>
@@ -57,7 +57,7 @@
                                 
                             </table>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <!--Submit Divisional Reports-->
                 <div class="panel panel-default">
@@ -97,27 +97,27 @@
                             </span>Facility Statistics</a>
                         </h4>
                     </div>
-                    <div id="collapseFour" class="panel-collapse collapse in">
+                    <div id="collapseFour" class="panel-collapse collapse">
                         <div class="panel-body">
                             <table class="table">
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-remove-sign"></span><a href="<?php echo base_url().'reports/load_expiries'?>" >Expiries</a>
+                                        <span class="glyphicon"></span><a href="<?php echo base_url().'reports/load_expiries'?>" >Expiries</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-usd"></span><a href="<?php echo base_url().'reports/load_cost_of_orders'?>" >Cost of Orders</a>
+                                        <span class="glyphicon"></span><a href="<?php echo base_url().'reports/load_cost_of_orders'?>" >Cost of Orders</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-cutlery"></span><a href="<?php echo base_url().'reports/consumption'?>" >Consumption</a>
+                                        <span class="glyphicon"></span><a href="<?php echo base_url().'reports/consumption'?>" >Consumption</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-user"></span><a href="#">User Statistics</a>
+                                        <span class="glyphicon"></span><a href="#">User Statistics</a>
                                     </td>
                                 </tr>
                                 

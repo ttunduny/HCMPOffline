@@ -1502,7 +1502,6 @@ class Reports extends MY_Controller
 	    }
 
 		 
-//>>>>>>> 0a17bae32a2f3b119d38f72668979d75dc9561a9
      	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null) {
      	//reset the values here
     	$commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
