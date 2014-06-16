@@ -30,17 +30,22 @@ class Divisional_Reports extends MY_Controller
 				$district_id = $this -> session -> userdata('district_id');
 				$facilities = Facilities::get_district_facilities($district_id);
 				$index = 0;
+
+
 					foreach ($facilities as $ids)
 					{
 						$facility_id = $ids['facility_code'];
 						$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
 						$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
-						
-						if ((!empty($report_RH))&&(!empty($report_malaria)))
+						$report_TB = tb_data::get_facility_report_details($facility_id);
+						if ((!empty($report_RH))&&(!empty($report_malaria))&&(!empty($report_TB)))
 						{
 							$report_RH_report[$index] = $report_RH;
 							$report_malaria_report[$index] = $report_malaria;
-							
+							$report_tuberculosis[$index] = $report_TB;
+						/*echo "<pre>";
+				print_r($report_TB);
+				echo "</pre>";exit;*/
 						}else{
 							
 						}
@@ -50,7 +55,8 @@ class Divisional_Reports extends MY_Controller
 				$data['page_header'] = "Divisional Reports";	
 				$data['malaria'] = $report_malaria_report;
 				$data['RH'] = $report_RH_report;
-				$data['TB'] = $report_TB_report;
+
+				$data['TB'] = $report_tuberculosis;
 				$data['title'] = "Divisional Reports";
 				$data['banner_text'] = "Divisional Reports";
 				$data['report_view'] = "subcounty/reports/program_reports_v";
@@ -65,11 +71,12 @@ class Divisional_Reports extends MY_Controller
 						$facility_id = $ids['facility_code'];
 						$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
 						$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
-						
+						$report_TB = tb_data::get_facility_report_details($facility_id);
 						if ((!empty($report_RH))&&(!empty($report_malaria)))
 						{
 							$report_RH_report[$index] = $report_RH;
 							$report_malaria_report[$index] = $report_malaria;
+							$report_tuberculosis[$index] = $report_TB;
 							
 						}else{
 							
@@ -80,6 +87,7 @@ class Divisional_Reports extends MY_Controller
 					
 				$data['malaria'] = $report_malaria_report;
 				$data['RH'] = $report_RH_report;
+				$data['TB'] = $report_tuberculosis;
 				$data['title'] = "Program Reports";
 				$data['banner_text'] = "Program Reports";
 				$data['report_view'] = "subcounty/reports/program_reports_v";
@@ -171,7 +179,7 @@ public function tb_report(){
 		$data['banner_text'] = "Facility Tuberculosis & Leprosy Commodities Consumption Data Report & Request Form";
 		$data['graph_data'] = $faciliy_expiry_data;
        //	$data['sidebar'] = "shared_files/report_templates/side_bar_v";
-		$data['content_view'] = "subcounty/reports/tb_report";;
+		$data['content_view'] = "facility/facility_reports/tb_report";;
 		//$data['content_view'] = "facility/facility_reports/reports_v";
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
@@ -179,7 +187,7 @@ public function tb_report(){
 
 public function save_tb_data(){
 	$values = $this->input->post();
-
+	$user_id = $this -> session -> userdata('user_id');
 	foreach ($values as $key => $value) {
 		$no = count($values['table']);
 		/*echo "<pre>";
@@ -198,7 +206,8 @@ public function save_tb_data(){
 		'losses'=>$value[$i][6],
 		'physical_count'=>$value[$i][7],
 		'physical_count'=>$value[$i][8],
-		'quantity_needed'=>$value[$i][9]
+		'quantity_needed'=>$value[$i][9],
+		'user_id' =>$user_id
 		);
 		$this->db->insert('tuberculosis_data',$data);
 		}
