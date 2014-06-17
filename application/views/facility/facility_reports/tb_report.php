@@ -19,21 +19,19 @@
 <table width="x0%" class="table table-bordered table-condensed table-responsive row-fluid table-condensed">
 <!-- width="98%" border="0" class="row-fluid table table-hover table-bordered table-update" -->
 	<tbody>
-		<tr>
-		<th colspan="4">Facility Information</th>
-	<table width="x0%" class="table table-bordered table-condensed table-responsive row-fluid table-condensed">
-		</tr>
 <!-- second row -->
 		<tr>
+	
 		<div class="input-group">
+		<tr>
 			<td>Facility Type: </td>
 			<td ><input type="text" name="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" ></td>
 			
 			<td>District/Region:</td>
 			<td><input type= 'text' name="district_name" disabled class="form-control" value="<?php echo $district_region_name; ?>"></td>
 
-			</div>
 		</tr>
+			</div>
 
 		<!-- fourth -->
 		<tr>
@@ -42,7 +40,8 @@
 		
 			<td>Ending Date (of Reporting Period): </td>
 			<td><input type="date"   name="table[ending_date][]" value="" class='form-control'></td>
-		</table>
+		</tr>
+
 		</tr>
 		<tr>
 		<!-- use colspan on a td -->
