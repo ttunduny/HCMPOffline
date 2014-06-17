@@ -156,7 +156,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
         	var form_data=check_if_the_form_has_been_filled_correctly(selector_object);
         	var alert_message='';
         	if (remainder<0) {alert_message+="<li>Can not issue beyond available stock</li>";}
-			if (selector_object.val() <0) { alert_message+="<li>Issued value must be above 0</li>";}
+			//if (selector_object.val() <0) { alert_message+="<li>Issued value must be above 0</li>";}
 		    if (selector_object.val().indexOf('.') > -1) {alert_message+="<li>Decimals are not allowed.</li>";}		
 			if (isNaN(selector_object.val())){alert_message+="<li>Enter only numbers</li>";}				
 			if(isNaN(alert_message) || isNaN(form_data[0])){
