@@ -1544,6 +1544,9 @@ class Reports extends MY_Controller
 		 
      	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null) {
      	//reset the values here
+     	
+     	//echo $commodity_id;
+		//exit;
     	$commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
 		$category_id=($category_id=="NULL") ? null :$category_id;
 	 	$district_id=($district_id=="NULL") ? null :$district_id;
@@ -1569,9 +1572,10 @@ class Reports extends MY_Controller
 		$title=isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
 	 	isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
 		
-		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code,$district_id,$county_id,
-		$category_id, $commodity_id,  $option_new,$report_type);
-        
+		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code, $district_id, $county_id,
+		$category_id, $commodity_id, $option_new, $report_type);
+        print_r($commodity_array);
+		exit;
         foreach ($commodity_array as $data) :
 		if($report_type=="table_data"):
 			if($commodity_id>0):
