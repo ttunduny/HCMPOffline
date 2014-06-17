@@ -594,7 +594,7 @@ class Reports extends MY_Controller
 		
 		foreach($expired_commodities as $facility_stock_expired):
 			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_stock_expired['month']));	
-			$graph_data['series_data']['Expiries'] = array_merge($graph_data['series_data']['Expiries'],array((int)$facility_stock_expired['total']));	
+			$graph_data['series_data']['Expiries'] = array_merge($graph_data['series_data']['Expiries'],array((int)$facility_stock_expired['total_expiries']));	
 		endforeach;
 		
 		//var_dump($expired_commodities);
@@ -629,7 +629,7 @@ class Reports extends MY_Controller
 		$graph_data = array();
 		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
 		$graph_data = array_merge($graph_data,array("graph_title"=>'Total Expiries in '.$facility_name));
-		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
+		$graph_data = array_merge($graph_data,array("graph_type"=>'column'));
 		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Expiries (values in '.$option.')'));
 		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
 		$graph_data = array_merge($graph_data,array("series_data"=>array("Expiries"=>array())));
@@ -1413,6 +1413,8 @@ class Reports extends MY_Controller
 
 	 public function get_county_cost_of_expiries_new($year = null, $month = null, $district_id = null, $option = null, $facility_code = null,$report_type=null) {
 	 	//reset the values here
+	 	//print_r($month);
+		//exit;
 	 	$year=($year=="NULL") ? null :$year;
 	 	$month=($month=="NULL") ? null :$month;
 	 	$district_id=($district_id=="NULL") ? null :$district_id;
@@ -1460,10 +1462,11 @@ class Reports extends MY_Controller
 		if (isset($month) && $month>0) {
 		$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,
 		$county_id, $year, $month,$option ,"all_");
+		
 		foreach ($commodity_array as $data) :
-		$series_data  = array_merge($series_data , array($data["name"] => $data['total']));
+		$series_data  = array_merge($series_data , array($data["name"] => (int) $data['total']));
 		$category_data=array_merge($category_data, array($data["name"]));
-		array_push($series_data_, array($data["name"], $data['total']));
+		array_push($series_data_, array($data["name"], (int) $data['total']));
 		endforeach;
         $graph_type='column';
 		}
@@ -1484,6 +1487,7 @@ class Reports extends MY_Controller
 	    $graph_data=array_merge($graph_data,array("graph_categories"=>$category_data ));
 	    $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
 		$data = array();
+		
 		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		endif;

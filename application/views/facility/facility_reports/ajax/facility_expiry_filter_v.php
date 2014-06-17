@@ -1,18 +1,6 @@
-<style>
-	.filter
-	{
-		width: 98%;
-		margin:auto;	
-	}
-	.graph_content
-	{
-		width: 99%;
-		height:400px;
-		-webkit-box-shadow: 1px 1px 1px 1px #DDD3ED;
-		box-shadow: 1px 1px 1px 1px #DDD3ED;
-		margin:auto;	
-	}
-</style>
+<?php $facility_code=$this -> session -> userdata('facility_id');
+		$district_id=$this -> session -> userdata('district_id');
+		$county_id =$this -> session -> userdata('county_id');  ?>
 <div class="filter">
 <h5>
 	<select name="year" id="year_filter" style="width: 7.8em;">
@@ -22,16 +10,16 @@
 </select>
 	<select name="month" id="month_filter" >
 			<option value="null" selected="selected">Select month</option>
-			<option value="001">Jan</option>
-			<option value="002">Feb</option>
-			<option value="003">Mar</option>
-			<option value="004">Apr</option>
-			<option value="005">May</option>
-			<option value="006">Jun</option>
-			<option value="007">Jul</option>
-			<option value="008">Aug</option>
-			<option value="009">Sep</option>
-			<option value="010">Oct</option>
+			<option value="01">Jan</option>
+			<option value="02">Feb</option>
+			<option value="03">Mar</option>
+			<option value="04">Apr</option>
+			<option value="05">May</option>
+			<option value="06">Jun</option>
+			<option value="07">Jul</option>
+			<option value="08">Aug</option>
+			<option value="09">Sep</option>
+			<option value="10">Oct</option>
 			<option value="11">Nov</option>
 			<option value="12">Dec</option>
 		</select>
@@ -55,10 +43,12 @@
 	
 			$("#filter").click(function() 
 			{
-				var url = "<?php echo base_url().'reports/filter_expiries/'?>"+
+				var url = "<?php echo base_url().'reports/get_county_cost_of_expiries_new/'?>"+
 				        $("#year_filter").val()+
 				        "/"+$("#month_filter").val()+
-				        "/"+$("#plot_value_filter").val();
+				        "/"+"<?php echo $district_id;?>"+
+				        "/"+$("#plot_value_filter").val()+
+				        "/"+"<?php echo $facility_code;?>";
         	ajax_supply(url,'.graph-section');
 		
           });

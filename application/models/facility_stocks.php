@@ -505,11 +505,10 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 		$year = (isset($year)) ? $year: date("Y");
 			
 			$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
-			->fetchAll("select fs.current_balance AS total, MONTHNAME(fs.expiry_date) as month from  facility_stocks fs 
+			->fetchAll("select fs.current_balance AS total_expiries, MONTHNAME(fs.expiry_date) as month from  facility_stocks fs 
 			LEFT JOIN  commodities c 
 			ON c.id=fs.commodity_id 
 			where facility_code=$facility_code 
-			and fs.status =2 
 			AND DATE_FORMAT( fs.expiry_date,'%Y') = $year
 			and expiry_date <= NOW()
 			GROUP BY  MONTH(  `expiry_date` ) ");
