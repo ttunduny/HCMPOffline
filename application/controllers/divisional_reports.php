@@ -20,6 +20,88 @@ class Divisional_Reports extends MY_Controller
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
 	}
+	//used for both the subcounty and county level program reports
+	 public function facility_program_reports()
+	 {
+	 	$user_indicator = $district_id = $this -> session -> userdata('user_indicator');
+	 	switch ($user_indicator) 
+	 	{
+	 		case facility :
+				$district_id = $this -> session -> userdata('district_id');
+				$facilities = Facilities::get_district_facilities($district_id);
+				$index = 0;
+				foreach ($facilities as $ids)
+					{
+						$facility_id = $ids['facility_code'];
+						$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
+						$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
+						//$report_TB = tb_data::get_facility_report_details($facility_id);
+						
+						if ((!empty($report_RH))&&(!empty($report_malaria)))
+						{
+							$report_RH_report[$index] = $report_RH;
+							$report_malaria_report[$index] = $report_malaria;
+							//$report_tuberculosis[$index] = $report_TB;
+						
+						}else{
+							
+						}
+						
+						$index++;
+					}
+				$data['page_header'] = "Divisional Reports";	
+				$data['malaria'] = $report_malaria_report;
+				$data['RH'] = $report_RH_report;
+
+				//$data['TB'] = $report_tuberculosis;
+				$data['title'] = "Divisional Reports";
+				$data['banner_text'] = "Divisional Reports";
+				$data['report_view'] = "subcounty/reports/program_reports_v";
+				
+			break;
+			case district :
+				$district_id = $this -> session -> userdata('district_id');
+				$facilities = Facilities::get_district_facilities($district_id);
+				$index = 0;
+					foreach ($facilities as $ids)
+					{
+						$facility_id = $ids['facility_code'];
+						$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
+						$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
+						//$report_TB = tb_data::get_facility_report_details($facility_id);
+						if ((!empty($report_RH))&&(!empty($report_malaria)))
+						{
+							$report_RH_report[$index] = $report_RH;
+							$report_malaria_report[$index] = $report_malaria;
+							//$report_tuberculosis[$index] = $report_TB;
+							
+						}else{
+							
+						}
+						
+						$index++;
+					}
+					
+				$data['malaria'] = $report_malaria_report;
+				$data['RH'] = $report_RH_report;
+				//$data['TB'] = $report_tuberculosis;
+				$data['title'] = "Program Reports";
+				$data['banner_text'] = "Program Reports";
+				$data['report_view'] = "subcounty/reports/program_reports_v";
+				
+			break;
+			case county:
+			 $county_id = $this -> session -> userdata('county_id');
+				
+			break;
+		}
+ 		
+ 		
+		$data['content_view'] = "facility/facility_reports/reports_v";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		$this -> load -> view('shared_files/template/template', $data);
+		
+	 }
 	//for loading the malaria reports
 	public function view_malaria_report()
 	{
@@ -94,7 +176,7 @@ public function tb_report(){
 		$data['banner_text'] = "Facility Tuberculosis & Leprosy Commodities Consumption Data Report & Request Form";
 		$data['graph_data'] = $faciliy_expiry_data;
        //	$data['sidebar'] = "shared_files/report_templates/side_bar_v";
-		$data['content_view'] = "subcounty/reports/tb_report";;
+		$data['content_view'] = "facility/facility_reports/tb_report";;
 		//$data['content_view'] = "facility/facility_reports/reports_v";
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
@@ -102,11 +184,13 @@ public function tb_report(){
 
 public function save_tb_data(){
 	$values = $this->input->post();
-
+	$user_id = $this -> session -> userdata('user_id');
 	foreach ($values as $key => $value) {
 		$no = count($values['table']);
-
-		for ($i=1; $i < 3; $i++) { 
+		/*echo "<pre>";
+		print_r($value);
+		echo "</pre>";*/
+		for ($i=1; $i < 4; $i++) { 
 		$data = array( 
 		'facility_code'=>$value['facility_code'][0], 
 		'beginning_date'=>$value['beginning_date'][0],
@@ -119,11 +203,13 @@ public function save_tb_data(){
 		'losses'=>$value[$i][6],
 		'physical_count'=>$value[$i][7],
 		'physical_count'=>$value[$i][8],
-		'quantity_needed'=>$value[$i][9]
+		'quantity_needed'=>$value[$i][9],
+		'user_id' =>$user_id
 		);
 		$this->db->insert('tuberculosis_data',$data);
 		}
-		$this->index();
+		echo "Success";
+		exit;
 	}
 }
 
@@ -487,11 +573,57 @@ public function save_tb_data(){
 	public function generate_malaria_report_excel($report_name,$title,$html_data)
 	{
 		$data = $html_data;
- $filename=$report_name;                      
+ 		$filename=$report_name;                      
           header("Content-type: application/excel");
           header("Content-Disposition: attachment; filename=$filename.xls");
           echo "$data"; 
 		
 	}
+	public function sub_county_program_reports()
+	 {
+	 	$user_indicator = $district_id=$this -> session -> userdata('user_indicator');
+	 	switch ($user_indicator) 
+	 	{
+			case district :
+				$district_id = $this -> session -> userdata('district_id');
+				$facilities = Facilities::get_district_facilities($district_id);
+				$index = 0;
+					foreach ($facilities as $ids)
+					{
+						$facility_id = $ids['facility_code'];
+						$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
+						$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
+						
+						if ((!empty($report_RH))&&(!empty($report_malaria)))
+						{
+							$report_RH_report[$index] = $report_RH;
+							$report_malaria_report[$index] = $report_malaria;
+							
+						}else{
+							
+						}
+						
+						$index++;
+					}
+					
+				$data['malaria'] = $report_malaria_report;
+				$data['RH'] = $report_RH_report;
+				$data['title'] = "Program Reports";
+				$data['banner_text'] = "Program Reports";
+				$data['report_view'] = "subcounty/reports/program_reports_v";
+				
+			break;
+			case county:
+			 $county_id = $this -> session -> userdata('county_id');
+				
+			break;
+		}
+ 		
+ 		
+		$data['content_view'] = "facility/facility_reports/reports_v";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
+		$this -> load -> view('shared_files/template/template', $data);
+		
+	 }
 	
 }

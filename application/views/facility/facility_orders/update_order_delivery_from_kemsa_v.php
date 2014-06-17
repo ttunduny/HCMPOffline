@@ -40,7 +40,7 @@ echo form_open('stock/update_facility_stock_from_kemsa_order', $att);
 			<label>Order Sheet No :</label>
 			<input type="text" class="form-control"  name="order"   readonly="readonly" value="<?php echo $general_order_details->order_no  ?>" />
 			
-			<label>Order Total :</label>
+			<label>Order Total (KSH) :</label>
 			<input type="text" class="form-control order_total"  name="order_total"   readonly="readonly" value="<?php echo $general_order_details->order_total  ?>" />
 			
 		</div>
@@ -112,17 +112,17 @@ echo form_open('stock/update_facility_stock_from_kemsa_order', $att);
 				<th>Description</th>
 				<th>Item Code</th>
 				<th>Unit Size</th>
-				<th>Unit Cost</th>
+				<th>Unit Cost(KSH)</th>
 				<th>Ordered Qty (Packs)</th>
 				<th>Ordered Qty (Units)</th>
 				<th>Price Bought</th>
-				<th>Total Cost</th>
+				<th>Total Cost(KSH)</th>
 				<th>Batch No</th>
 				<th>Manufacturer</th>
 				<th>Expiry Date</th>
 				<th>Quantity Received</th>
 				<th>Total Unit Count</th>
-				<th>Total Cost</th>
+				<th>Total Cost(KSH)</th>
 			</tr>
 		</thead>
 		<tbody>

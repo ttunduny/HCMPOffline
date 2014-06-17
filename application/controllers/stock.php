@@ -32,7 +32,7 @@ class Stock extends MY_Controller {
         $data['title'] = "Set up facility stock";
          $data['content_view'] = "facility/facility_stock_data/set_up_facility_stock_v";
         $data['banner_text'] = "Set up facility stock";
-        $data['commodities']=commodities::set_facility_stock_data_amc($facility_code);
+        $data['commodities']= commodities::set_facility_stock_data_amc($facility_code);
         $this -> load -> view("shared_files/template/template", $data);        
      }
      public function save_set_up_facility_stock($checker=null){

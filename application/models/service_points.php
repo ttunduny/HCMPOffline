@@ -23,7 +23,8 @@ class service_points extends Doctrine_Record {
 	}
    public static function get_all_active($facility_code,$request=null) {
    	$status=($request=='all')? null : 'status=1 and '; 
-		$query = Doctrine_Query::create() -> select("*") -> from("service_points")->where("$status (for_all_facilities=1 or facility_code=$facility_code )");
+		$query = Doctrine_Query::create() 
+		-> select("*") -> from("service_points")->where("$status (for_all_facilities=1 or facility_code=$facility_code )");
 		$service_points = $query -> execute();
 		return $service_points;
 	}//save the data on to the table 
