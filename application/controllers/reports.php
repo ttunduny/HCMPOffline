@@ -1511,7 +1511,7 @@ class Reports extends MY_Controller
 
 
 	    public function tb_report(){
-	    	$data['title'] = "Facility Expiries";
+	    $data['title'] = "Facility Expiries";
 		$data['banner_text'] = "Facility Tuberculosis & Leprosy Commodities Consumption Data Report & Request Form";
 		$data['graph_data'] = $faciliy_expiry_data;
        //	$data['sidebar'] = "shared_files/report_templates/side_bar_v";
