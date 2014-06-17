@@ -115,7 +115,7 @@ option.big{  width: 150px !important; }
 }
 
 #navigate {
-	font-size: 0.82em;
+	font-size: 0.88em;
 }
 
 #navigate ul > li > a {
@@ -124,12 +124,12 @@ option.big{  width: 150px !important; }
 }
 
 #navigate ul > li {
-	background: #144d6e !important; /* Old browsers */
+	background: #29527b !important; /* Old browsers */
 	color: white !important;
 }
 
 #navigate ul > li:hover {
-	background: #528f42 !important; /* Old browsers */
+	background: #289909 !important; /* Old browsers */
 	color: white !important;
 }
 
@@ -417,3 +417,15 @@ box-shadow: 1px 1px 1px 1px #DDD3ED;
     -o-transform: rotate(6deg);
 }
 	
+/*     validation */
+form.label.error, label.error {
+	/* remove the next line when you have trouble in IE6 with labels in list */
+	font-size:0.8em;
+	color: red;
+	font-style: italic}
+div.error { display: none; }
+input {	border: 1px solid black; }
+input.checkbox { border: none }
+input:focus { border: 1px dotted black; }
+input.error { border: 1px dotted red; }
+form.gray * { color: gray; }

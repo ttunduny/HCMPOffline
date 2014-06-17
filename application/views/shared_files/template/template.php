@@ -54,7 +54,7 @@ border-color: #e7e7e7;
   <body style="" screen_capture_injected="true" onload="set_interval()" onmouseover="reset_interval()" onclick="reset_interval()">
     <!-- Fixed navbar -->
    <div class="navbar navbar-default navbar-fixed-top" id="">
-   <div class="container" style="width: 100%;">
+   <div class="container" style="width: 100%; padding-right: 0; ">
         <div class="navbar-header " > 
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -70,7 +70,7 @@ border-color: #e7e7e7;
 					<span style="font-size: 0.85em;">Health Commodities Management Platform (HCMP)</span>	
 				</div>
         </div>
-        <div class="navbar-collapse collapse" style="font-weight: bold" id="navigate">
+        <div class="navbar-collapse collapse" style="" id="navigate">
           <ul class="nav navbar-nav navbar-right" >
        <li><a href="<?php echo site_url().'home';?>" class=" ">HOME</a> </li>   
 <?php

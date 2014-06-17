@@ -33,6 +33,7 @@
 			eventtype = mobilecheck() ? 'touchstart' : 'click',
 			resetMenu = function() {
 				classie.remove( container, 'st-menu-open' );
+				//classie.add( container, 'st-menu-open' );
 			},
 			bodyClickFn = function(evt) {
 				if( !hasParentClass( evt.target, 'st-menu' ) ) {
@@ -40,6 +41,7 @@
 					document.removeEventListener( eventtype, bodyClickFn );
 				}
 			};
+
 
 		buttons.forEach( function( el, i ) {
 			var effect = el.getAttribute( 'data-effect' );
@@ -49,9 +51,9 @@
 				ev.preventDefault();
 				
 				container.className = 'st-container'; // clear
-				classie.add( container, effect );
+				classie.toggle( container, effect );
 				setTimeout( function() {
-					classie.add( container, 'st-menu-open' );
+					classie.toggle( container, 'st-menu-open' );
 				}, 25 );
 				document.addEventListener( eventtype, bodyClickFn );
 			});

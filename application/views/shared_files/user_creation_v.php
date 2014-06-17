@@ -702,7 +702,7 @@ $("#create_new").click(function() {
            
             var message = confirm("Are you sure you want to proceed?");
         if (message){
-            $('.modal-body').html("<img style='margin:30% 0 20% 45%;' src="+loading_icon+">");
+            $('.modal-body').html("<img style='margin:30% 0 20% 42%;' src="+loading_icon+">");
         } else {
             return false;
         }
