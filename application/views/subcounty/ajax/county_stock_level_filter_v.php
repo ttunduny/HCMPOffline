@@ -1,8 +1,9 @@
 <div class="alert alert-info" style="width: 100%">
   <b>Below are the Stocking Levels in the County </b> :Select filter Options
 </div>
+<?php $no_of_tracer_items = facility_stocks_temp::get_tracer_item_names($district_id); $no = count($no_of_tracer_items); ?>
 <ul class='nav nav-tabs'>
-	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items</a></li>
+	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items<?php echo "(".$no.")"; ?></a></li>
       <li class=""><a href="#cat" data-toggle="tab">Categories</a></li>
       <li class=""><a href="#county" data-toggle="tab">County View</a></li>
       <li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>
@@ -166,11 +167,7 @@ endforeach;
 <div class="graph_content" id="graph_default">	
 	
 </div>
-<<<<<<< HEAD
 
-
-=======
->>>>>>> e5d2c1729998b21f5afcadfe61e161bc0f2e2a8b
 <script>
 	 $(function () { 
 <?php echo $default_graph; ?>

@@ -1461,9 +1461,11 @@ class Reports extends MY_Controller
 			//$number = count($no_of_months);
 			$tracer_item_names = facility_stocks_temp::get_tracer_item_names($district_id);
 			$month = date('F Y');
+			$district = $this -> session -> userdata('district_id');
+			$district_name = districts::get_district_name_($district);
+			$name = $district_name['district'];
+			$no = count($tracer_item_names); 
 			
-
-
 			// variable values for drugs
 			$albendazole_final= $final_graph_data[0]['month_stock'];
 			$amoxicilin_final = $final_graph_data[1]['month_stock'];
@@ -1482,8 +1484,8 @@ class Reports extends MY_Controller
 			
          	$graph_data = array();
        		$graph_data = array_merge($graph_data, array("graph_id" => 'graph_default'));
-			$graph_data = array_merge($graph_data, array("graph_title" => 'Current Stock Level'));
-			$graph_data = array_merge($graph_data, array("graph_type" => 'bar'));
+			$graph_data = array_merge($graph_data, array("graph_title" => "Months of stock for tracer items in $name subcounty"));
+			$graph_data = array_merge($graph_data, array("graph_type" => 'column'));
 
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Months of Stock'));
 			$graph_data = array_merge($graph_data, array("graph_categories" => array()));
