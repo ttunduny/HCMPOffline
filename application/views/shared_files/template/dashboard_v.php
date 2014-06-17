@@ -44,55 +44,8 @@
  </head>
 
 <body screen_capture_injected="true" >
-
     
-
-<nav class="st-menu st-effect-1" id="menu-1">
-                <h2 class="icon icon-lab">Sidebar</h2>
-                <ul>
-                    <li><a class="icon icon-data" href="#">Data Management</a></li>
-                    <li><a class="icon icon-location" href="#">Location</a></li>
-                    <li><a class="icon icon-study" href="#">Study</a></li>
-                    <li><a class="icon icon-photo" href="#">Collections</a></li>
-                    <li><a class="icon icon-wallet" href="#">Credits</a></li>
-                </ul>
-            </nav>
-    <div id="st-container" class="st-container">
-           
-            <!-- content push wrapper -->
-            <div class="st-pusher">
-                <!--    
-                    example menus 
-                    these menus will be under the push wrapper
-                -->
-              
-                </nav>
-
-                <nav class="st-menu st-effect-7" id="menu-7">
-                    <h2 class="icon icon-lab">Sidebar</h2>
-                    <ul>
-                        <li><a class="icon icon-data" href="#">Data Management</a></li>
-                        <li><a class="icon icon-location" href="#">Location</a></li>
-                        <li><a class="icon icon-study" href="#">Study</a></li>
-                        <li><a class="icon icon-photo" href="#">Collections</a></li>
-                        <li><a class="icon icon-wallet" href="#">Credits</a></li>
-                    </ul>
-                </nav>
-
-                <nav class="st-menu st-effect-8" id="menu-8">
-                    <h2 class="icon icon-stack"></h2>
-                    <ul>
-                        <li><a class="icon icon-data" href="#">Data Management</a></li>
-                        <li><a class="icon icon-location" href="#">Location</a></li>
-                        <li><a class="icon icon-study" href="#">Study</a></li>
-                        <li><a class="icon icon-photo" href="#">Collections</a></li>
-                        <li><a class="icon icon-wallet" href="#">Credits</a></li>
-                    </ul>
-                </nav>
-
-
-                <div class="st-content"><!-- this is the wrapper for the content -->
-                    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+         <div class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header" id="st-trigger-effects">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -116,7 +69,7 @@
         <div class="collapse navbar-collapse">
           
           <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="<?php echo site_url().'Home';?>">Home</a></li>
+           <!-- <li class="active"><a href="<?php echo site_url().'Home';?>">Home</a></li>-->
             
 
             
@@ -135,14 +88,37 @@
 
       </div>
     </div>
+    <div class="container"></div>
+<div id="st-container" class="st-container" style="padding-top: 3.8%;margin-bottom: 60px !important;" >
+           
+            <!-- content push wrapper -->
+            <div class="container-fluid st-pusher">
+                </nav>
+
+                <nav class="st-menu st-effect-7" id="menu-7">
+                    <h2 class="icon icon-lab">Sidebar</h2>
+                    <ul>
+                        <li><a class="icon icon-data" href="<?php echo base_url().'Home';?>">Home</a></li>
+                        <li><a class="icon icon-location" href="#">User Management</a></li>
+                        <li><a class="icon icon-study" href="#">Commodities</a></li>
+                        <li><a class="icon icon-photo" href="#">Facilities</a></li>
+                        <li><a class="icon icon-wallet" href="#">Counties</a></li>
+                        <li><a class="icon icon-wallet" href="#">Sub-Counties</a></li>
+                    </ul>
+                </nav>
+
+                 <div class="container-fluid" style="padding-left: 8px;padding-right: 2px;padding-bottom:42px;"><!-- this is the wrapper for the content -->
+                   <?php $this -> load -> view($content_view);?>
                     
-                    <div class="st-content-inner"><!-- extra div for emulating position:fixed of the menu -->
-                       
-                    </div><!-- /st-content-inner -->
-                </div><!-- /st-content -->
+                    
+                </div><!-- /container-fluid
             </div><!-- /st-pusher -->
         </div><!-- /st-container -->
-       
+        <div id="footer">
+      <div class="container">
+        <p class="text-muted"> Government of Kenya &copy <?php echo date('Y');?>. All Rights Reserved</p>
+      </div>
+    </div>
     
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
