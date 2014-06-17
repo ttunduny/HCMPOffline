@@ -110,6 +110,7 @@ unset($popup);
   </div>
   
    <input type="submit" class="btn btn-primary " name="register" id="register" value="Recover" style="margin-bottom: 3%;">
+   <a class="btn btn-success" style="margin-left: 2%;margin-bottom: 3%;" href="<?php echo base_url().'Home'?>" id="modalbox">Home</a>
   
 		
 </div>

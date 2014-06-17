@@ -65,7 +65,8 @@ for ($row = 1; $row <= $highestRow; $row++){
 
 	}
 
-	public function facility_order() {
+	public function facility_order() 
+	{
 		$facility_code = $this -> session -> userdata('facility_id');
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
 		$data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";

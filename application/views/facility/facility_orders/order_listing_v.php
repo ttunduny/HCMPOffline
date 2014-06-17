@@ -172,7 +172,7 @@ HTML_DATA;
 </table>
 <hr />
 <div class="">
-<button class="btn btn-success btn-xs floppy-save"><span class="glyphicon glyphicon-floppy-save"></span>KEMSA template</button>
+<button class="btn btn-success btn-xs floppy-save"><span class="glyphicon glyphicon-floppy-save"></span>Download KEMSA template</button>
 <?php  if($identifier==='district'): ?>
 <button class="btn btn-success btn-xs order-for-excel" >
  <span class="glyphicon glyphicon-floppy-open"></span>Order For Facilities via excel</button>

@@ -5,17 +5,19 @@
  </style>
  <div style="width: 100%; margin: auto;">
 <span  class='label label-info'>Enter Order Quantity and Comment,
-Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
+Order Quantity (Quarterly) = ((Monthly Consumption * 3) - Closing Stock) + AMC</span><br>
+<span  class='label label-info'>Enter Order Quantity and Comment,
+Order Quantity(Monthly)= (Monthly Consumption * 4) - Closing Stock</span>
 <?php  $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order',$att); //?>
 <div class="row" style="padding-left: 1%;">
 	<div class="col-md-2">
-	<b>*select ordering frequency</b> <select class="form-control" name="order_period" id="order_period">
- 	<option>Quaterly</option>	
+	<b>*Select Ordering Frequency</b> <select class="form-control" name="order_period" id="order_period">
+ 	<option>Quarterly</option>	
  	<option>Monthly</option>
  	</select> 	
 	</div>
 	<div class="col-md-2">
-     <b>*Oder Form Number:</b> <input type="text" class="form-control input_text" name="order_no" id="order_no" required="required"/>
+     <b>*Order Form Number:</b> <input type="text" class="form-control input_text" name="order_no" id="order_no" id="order_no" required="required"/>
 	</div>
 <div class="col-md-2">
 	 <b>*In-patient Bed Days:</b><input type="text" class="form-control  input_text" name="bed_capacity" id="bed_capacity" required="required"/>
@@ -24,7 +26,7 @@ Order Quantity= (Monthly Consumption * 4) - Closing Stock</span>
 	 <b>*Total OPD Visits & Revisits:</b><input type="text" class="form-control input_text" name="workload" id="workload" required="required"/>
 </div>
 <div class="col-md-2">
-<b>Total Order Value</b>
+<b>Total Order Value(Ksh)</b>
 <input type="text" class="form-control" name="total_order_value" id="total_order_value" readonly="readonly" value="0"/>	
 <input type="hidden" id="actual_drawing_rights" name="drawing_rights" value="<?php echo $drawing_rights; ?>" />				
 </div>
@@ -51,7 +53,7 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 					    <th>Losses</th>
 					    <th>No days out of stock</th>
 					    <th>Closing Stock</th>
-					    <th>AMC</th>
+					    <th>AMC (Units)</th>
 					    <th>Suggested Order Quantity</th>
 					    <th>Order Quantity</th>
 					    <th>Actual Units</th>
@@ -164,9 +166,9 @@ $(document).ready(function() {
     });
     // add item modal box
     $("#desc").on("change", function (){
-    var data= $('option:selected', this).attr('special_data');  
-				var code_array=data.split("^");
-				var commodity_id=code_array[0];
+    var data = $('option:selected', this).attr('special_data');  
+				var code_array = data.split("^");
+				var commodity_id = code_array[0];
 				$('input:text[name=commodity_code]').val(code_array[4]);
 				$('input:text[name=commodity_id_]').val(commodity_id);
 				$('input:text[name=unit_size]').val(code_array[2]);
@@ -240,9 +242,13 @@ $(document).ready(function() {
 	
 	// set the order total here
 	calculate_totals();	
-	});// process all the order into a summary table for the user to confirm before placing the order 
+	});// process all the order into a summary table for the user to confirm before placing the order bed_capacity workload
 	$(".test").button().click( function (){
-    var table_data='<div class="row" style="padding-left:2em"><div class="col-md-6">Order Summary</div></div>'+
+    var table_data='<div class="row" style="padding-left:2em"><div class="col-md-6"><h4>Order Summary</h4></div></div>'+
+    '<div class="row" style="padding-left:2em"><div class="col-md-6">Order Form No</div><div class="col-md-6">'+($("#order_no").val())+'</div></div>'+
+    '<div class="row" style="padding-left:2em"><div class="col-md-6">Order Frequency</div><div class="col-md-6">'+($("#order_period").val())+'</div></div>'+
+    '<div class="row" style="padding-left:2em"><div class="col-md-6">In-Patient Bed Days</div><div class="col-md-6">'+($("#bed_capacity").val())+'</div></div>'+
+    '<div class="row" style="padding-left:2em"><div class="col-md-6">Total OPD Visits & Revisits:</div><div class="col-md-6">'+($("#workload").val())+'</div></div>'+
     '<div class="row" style="padding-left:2em"><div class="col-md-6">Initial Drawing Rights (Ksh)</div><div class="col-md-6">'+number_format(drawing_rights_balance, 2, '.', ',')+'</div></div>'+
     '<div class="row" style="padding-left:2em"><div class="col-md-6">Total Order Value (Ksh)</div><div class="col-md-6">'+number_format($("#total_order_value").val(), 2, '.', ',')+'</div></div>'+
     '<div class="row" style="padding-left:2em"><div class="col-md-6">Drawing Rights Balance(Ksh)</div><div class="col-md-6">'+number_format($("#total_order_balance_value").val(), 2, '.', ',')+'</div></div>'+
@@ -274,14 +280,14 @@ $(document).ready(function() {
      var workload=$('#workload').val();
      var bed_capacity=$('#bed_capacity').val();
      var alert_message='';
-     if (order_total==0) {alert_message+="<li>Sorry, cant submit an order value of zero</li>";}
+     if (order_total==0) {alert_message+="<li>Sorry, you can't submit an Order Value of Zero</li>";}
      if (workload=='') {alert_message+="<li>Indicate Total OPD Visits & Revisits</li>";}
      if (bed_capacity=='') {alert_message+="<li>Indicate In-patient Bed Days</li>";}
      if(isNaN(alert_message)){
      //This event is fired immediately when the hide instance method has been called.
     $('#workload').delay(500).queue(function (nxt){
     // Load up a new modal...
-     dialog_box('fix this items before saving your order <ol>'+alert_message+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;',
+     dialog_box('Fix these items before saving your Order <ol>'+alert_message+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;',
      '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
     	nxt();
     });

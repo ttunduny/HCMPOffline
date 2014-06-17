@@ -43,33 +43,26 @@ class Facility_stocks extends Doctrine_Record {
 		return TRUE;
 	}// get the total balance of a specific item within a balance
 	public static function get_facility_commodity_total($facility_code,$commodity_id=null,$date_added=null){
-		$date_checker=isset($date_added)?" and date_added='$date_added'" : null;
+		$date_checker=isset($date_added)?" and date_added like '%$date_added%'" : null;
 		$commodity_id=isset($commodity_id)?"and commodity_id=$commodity_id" : null;
 	    $query = Doctrine_Query::create() -> select("commodity_id,sum(current_balance) as commodity_balance") 
 	-> from("facility_stocks") -> where("facility_code='$facility_code' $commodity_id  $date_checker and status='1'")->groupBy("commodity_id");	
 		$stocks= $query -> execute();
-		return $stocks;
+		return $stocks; 
 	}// get all facility stock commodity id, options check if the user wants batch data or commodity grouped data and return the total 
 	
 	public static function get_distinct_stocks_for_this_facility($facility_code,$checker=null,$exception=null){
-		$addition=isset($checker)? ($checker=='batch_data')? 'and fs.current_balance>0 group by fs.id,c.id order by fs.expiry_date asc' 
-		: 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc' : null ;
-		
-		$check_expiry_date=isset($exception)? null: " and fs.expiry_date >= NOW()" ;
-		
-		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
-		->fetchAll("SELECT DISTINCT c.id as commodity_id, 
-					fs.id as facility_stock_id, fs.expiry_date, c.commodity_name, c.commodity_code,
-					c.unit_size,sum(fs.current_balance) as commodity_balance, 
-					round((SUM(fs.current_balance ) / c.total_commodity_units) ,1) as pack_balance,
-					c.total_commodity_units, fs.manufacture, c_s.source_name, 
-					fs.batch_no, c_s.id as source_id 
-					from facility_stocks fs, commodities c, commodity_source c_s
-					 where fs.facility_code ='$facility_code' 
-					 $check_expiry_date 
-					 and c.id=fs.commodity_id 
-					 and fs.status='1' 
-					 $addition GROUP BY c.id ");
+$addition=isset($checker)? ($checker==='batch_data')? 'and fs.current_balance>0 group by fs.id,c.id order by fs.expiry_date asc' 
+: 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc' : null ;
+$check_expiry_date=isset($exception)? null: " and fs.expiry_date >= NOW()" ;
+$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("SELECT DISTINCT c.id as commodity_id, fs.id as facility_stock_id,fs.expiry_date,c.commodity_name,c.commodity_code,
+c.unit_size,sum(fs.current_balance) as commodity_balance, round((SUM(fs.current_balance ) / c.total_commodity_units) ,1) as pack_balance,
+c.total_commodity_units,fs.manufacture,
+c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commodities c, commodity_source c_s
+ where fs.facility_code ='$facility_code' $check_expiry_date 
+ and c.id=fs.commodity_id and fs.status='1' $addition 
+");
 return $stocks ;
 }
     public static function get_facility_stock_amc($facility_code){
@@ -510,11 +503,10 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 		$year = (isset($year)) ? $year: date("Y");
 			
 			$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
-			->fetchAll("select fs.current_balance AS total, MONTHNAME(fs.expiry_date) as month from  facility_stocks fs 
+			->fetchAll("select fs.current_balance AS total_expiries, MONTHNAME(fs.expiry_date) as month from  facility_stocks fs 
 			LEFT JOIN  commodities c 
 			ON c.id=fs.commodity_id 
 			where facility_code=$facility_code 
-			and fs.status =2 
 			AND DATE_FORMAT( fs.expiry_date,'%Y') = $year
 			and expiry_date <= NOW()
 			GROUP BY  MONTH(  `expiry_date` ) ");
