@@ -55,7 +55,7 @@ class Users extends Doctrine_Record {
 
 	}
 
-	public static function getsome($id) {
+	public static function getuserby_id($id) {
 		$query = Doctrine_Query::create() -> select("fname") -> from("users") -> where("id='$id' ");
 		$level = $query -> execute();
 		return $level;
