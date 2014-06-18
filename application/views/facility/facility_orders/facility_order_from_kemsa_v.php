@@ -5,9 +5,7 @@
  </style>
  <div style="width: 100%; margin: auto;">
 <span  class='label label-info'>Enter Order Quantity and Comment,
-Order Quantity (Quarterly) = ((Monthly Consumption * 3) - Closing Stock) + AMC</span><br>
-<span  class='label label-info'>Enter Order Quantity and Comment,
-Order Quantity(Monthly)= (Monthly Consumption * 4) - Closing Stock</span>
+Order Quantity (Quarterly) = ((Average Monthly Consumption * 3) - Closing Stock) + AMC</span><br>
 <?php  $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order',$att); //?>
 <div class="row" style="padding-left: 1%;">
 	<div class="col-md-2">
@@ -26,12 +24,12 @@ Order Quantity(Monthly)= (Monthly Consumption * 4) - Closing Stock</span>
 	 <b>*Total OPD Visits & Revisits:</b><input type="text" class="form-control input_text" name="workload" id="workload" required="required"/>
 </div>
 <div class="col-md-2">
-<b>Total Order Value(Ksh)</b>
+<b>Total Order Value(KSH)</b>
 <input type="text" class="form-control" name="total_order_value" id="total_order_value" readonly="readonly" value="0"/>	
 <input type="hidden" id="actual_drawing_rights" name="drawing_rights" value="<?php echo $drawing_rights; ?>" />				
 </div>
 <div class="col-md-2">
-<b>Drawing Rights Available Balance :</b>
+<b>Drawing Rights Available Balance(KSH) :</b>
 <input type="text" class="form-control" name="total_order_balance_value" 
 id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_rights; ?>"/>	
 <input name="facility_code" type="hidden" value="<?php echo isset($facility_code)? $facility_code :$this -> session -> userdata('facility_id'); ?>" />					

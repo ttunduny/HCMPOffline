@@ -94,11 +94,11 @@
                                         <span class="glyphicon"></span><a href="<?php echo base_url().'reports/consumption'?>" >Consumption</a>
                                     </td>
                                 </tr>
-                                <tr>
+                                <!--<tr>
                                     <td>
                                         <span class="glyphicon"></span><a href="#">User Statistics</a>
                                     </td>
-                                </tr>
+                                </tr>-->
                                 
                             </table>
                         </div>

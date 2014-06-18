@@ -73,6 +73,15 @@ class Reports extends MY_Controller
 	 | SHARED REPORTS
 	 |--------------------------------------------------------------------------
 	 */
+	//Default function for all non functioning parts of the system
+	public function work_in_progress()
+	{
+		$data['title'] = "Work In Progress";
+		$data['banner_text'] = "Work In Progress";
+		$data['content_view'] = "shared_files/work_in_progress";
+		$view = 'shared_files/template/template';
+		$this -> load -> view($view, $data);
+	}
 	// get the commodity listing here
 	public function commodity_listing() 
 	{
@@ -576,8 +585,6 @@ class Reports extends MY_Controller
         $facility_code = isset($facility_code) ? $facility_code: $this -> session -> userdata('facility_id');
 		$facility_name = Facilities::get_facility_name_($facility_code)->toArray();
 		$facility_name = $facility_name[0]['facility_name'];
-		//$data['facility_code'] = $facility_code;
-		
 		
 		$expired_commodities = Facility_stocks::get_expiries($facility_code);
 		
@@ -597,9 +604,6 @@ class Reports extends MY_Controller
 			$graph_data['series_data']['Expiries'] = array_merge($graph_data['series_data']['Expiries'],array((int)$facility_stock_expired['total_expiries']));	
 		endforeach;
 		
-		//var_dump($expired_commodities);
-		
-		//exit;
 		$faciliy_expiry_data = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		
 		$data['title'] = "Facility Expiries";
@@ -719,7 +723,7 @@ class Reports extends MY_Controller
 		$county_id = $this -> session -> userdata('county_id');
 		$county_name = counties::get_county_name($county_id);
 		
-		$expired_commodities = Facility_stocks::get_commodity_consumption_level($facility_code);
+		$consumption = Facility_stocks::get_commodity_consumption_level($facility_code);
 		//Holds all the months of the year
 		//Build the line graph showing the expiries graph
 		$graph_data = array();
@@ -731,7 +735,7 @@ class Reports extends MY_Controller
 		$graph_data = array_merge($graph_data,array("series_data"=>array("Consumption"=>array())));
 		//$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],$months);	
 		
-		foreach($expired_commodities as $facility_stock_expired):
+		foreach($consumption as $facility_stock_expired):
 			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_stock_expired['month']));	
 			$graph_data['series_data']['Consumption'] = array_merge($graph_data['series_data']['Consumption'],array((int)$facility_stock_expired['total_consumption']));	
 		endforeach;
@@ -741,6 +745,8 @@ class Reports extends MY_Controller
 		$loading_icon = base_url().'assests/img/no-record-found.png'; 
 		$faciliy_stock_data = isset($faciliy_stock_data)? $faciliy_stock_data : "$('#graph-section').html('<img src=$loading_icon>')'" ;
    			
+		$data['title'] = "Consumption"	;
+		$data['banner_text'] = "Facility Consumption"	;
 		$data['c_data'] = Commodities::get_facility_commodities($facility_code);
 		$data['graph_data'] =	$faciliy_stock_data;
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
@@ -750,6 +756,36 @@ class Reports extends MY_Controller
 		$this -> load -> view($view, $data);
 		
 	}	
+	public function filtered_consumption($commodity_id, $year, $option)
+	{
+		$year = (isset($year)) ? $year: date("Y");
+		$option = (isset($option)) ? $option: "units";
+		
+		$facility_code = isset($facility_code) ? $facility_code: $this -> session -> userdata('facility_id');
+		$facility_name = Facilities::get_facility_name_($facility_code)->toArray();
+		$facility_name = $facility_name[0]['facility_name'];
+		
+		$consumption = Facility_stocks::get_facility_consumption_level_new($facility_code, $commodity_id, $year, $option);
+		//Holds all the months of the year
+		//Build the line graph showing the expiries graph
+		$graph_data = array();
+		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
+		$graph_data = array_merge($graph_data,array("graph_title"=>'Consumption for '.$facility_name));
+		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
+		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Consumption'));
+		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
+		$graph_data = array_merge($graph_data,array("series_data"=>array("Consumption"=>array())));
+		
+		foreach($consumption as $facility_consumption):
+			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_consumption['month']));	
+			$graph_data['series_data']['Consumption'] = array_merge($graph_data['series_data']['Consumption'],array((int)$facility_consumption['total_consumption']));	
+		endforeach;
+		
+		
+		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
+		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
+		
+	}
 	 
 	public function get_facility_json_data($district_id) {
 		echo json_encode(facilities::get_facilities_which_are_online($district_id));
@@ -1410,13 +1446,11 @@ class Reports extends MY_Controller
 	 }
 
 	 public function get_county_cost_of_expiries_new($year = null, $month = null, $district_id = null, $option = null, $facility_code = null,$report_type=null) {
-	 	//reset the values here
-	 	//print_r($month);
-		//exit;
+	 		
 	 	$year=($year=="NULL") ? null :$year;
-	 	$month=($month=="NULL") ? null :$month;
+	 	$month=($month=="NULL") ? date("m") :$month;
 	 	$district_id=($district_id=="NULL") ? null :$district_id;
-	 	$option=($optionr=="NULL") ? null :$option;
+	 	$option=($option=="NULL") ? null :$option;
 	 	$facility_code=($facility_code=="NULL") ? null :$facility_code;
 		$option=($option=="NULL" || $option=="null") ? null :$option;
 		//set up the variables 
@@ -1490,7 +1524,8 @@ class Reports extends MY_Controller
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		endif;
 	}
-         public function stock_level_dashboard(){
+         public function stock_level_dashboard()
+         {
  
          	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id);
 			//$number = count($no_of_months);
