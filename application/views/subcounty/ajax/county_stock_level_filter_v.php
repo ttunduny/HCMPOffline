@@ -222,7 +222,9 @@ var drop_down='';
 		$(".tracer-filter").button().click(function(e) {
         e.preventDefault(); 
         var url_ = "reports/get_county_stock_level_new/"+
-$("#tracer_commodity_filter").val()+"/NULL/"+$("#tracer_district_filter").val()+"/NULL/"+$("#tracer_plot_value_filter").val();    
+        $("#tracer_commodity_filter").val()+
+        "/NULL/"+$("#tracer_district_filter").val()+
+        "/NULL/"+$("#tracer_plot_value_filter").val();    
         ajax_request_replace_div_content(url_,'.graph_content');    
           });
           
