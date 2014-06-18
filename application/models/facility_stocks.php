@@ -205,8 +205,6 @@ $year=null,$month=null,$option=null,$data_for=null)
           break;
      endswitch;		
 	 	
-   //  $and_data=($graph_type=='table_data')&& ($commodity_id>0) ?" AND d.drug_category = '$category_id'" : null;
-   //$and_data = "";
      $and_data .=(isset($category_id)&& ($category_id>0)) ?"AND d.commodity_sub_category_id = '$category_id'" : null;
      $and_data .=(isset($commodity_id)&& ($commodity_id>0)) ?"AND d.id = '$commodity_id'" : null;
 	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND di.id = '$district_id'" : null;
@@ -217,19 +215,18 @@ $year=null,$month=null,$option=null,$data_for=null)
 	 (isset($district_id) && !isset($facility_code) ?  " GROUP BY f.facility_code having total>0": 
 	 ($graph_type=='table_data')&& ($commodity_id>0) ?" GROUP BY d.id, f.facility_code having total>0 order by di.district asc, f.facility_name asc" :
 	 " GROUP BY d.id having total > 0") ;
-	 echo "SELECT  $selection_for_a_month $computation
+	// echo ; exit;
+	
+	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+    ->fetchAll("SELECT  $selection_for_a_month $computation
      FROM facility_stocks fs, facilities f, commodities d,  districts di
      WHERE fs.facility_code = f.facility_code
      AND f.district =di.id
      and fs.expiry_date>NOW()
-     AND d.id = fs.commodity_id
      AND fs.status=1
      $and_data
       $group_by_a_month
-     "; exit;
-	
-	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-    ->fetchAll();		
+     ");		
 	
 	 
      return $inserttransaction ;
