@@ -10,12 +10,14 @@
 	<?php $attributes = array('class'=>'form-control','id'=>'tb_form','name'=>'tb_form_'); echo form_open('divisional_reports/save_tb_data'),$att ?>
 	<input type="hidden" name="table[facility_code][]" value= "<?php echo $facility_code ?>">
 
-		<div class="page-header report-info">
+	<!--
+	<div class="page-header report-info">
 	<h2>Tuberculosis Report</h2>
-	<h3><?php echo $facility_name; ?></h3>
-	<h4><?php echo $facility_code; ?></h4>
-	<h5><?php echo $user_names; ?></h5>
+	<h3><?php //echo $facility_name; ?></h3>
+	<h4><?php //echo $facility_code; ?></h4>
+	<h5><?php //echo $user_names; ?></h5>
 	</div>
+	-->
 <table width="x0%" class="table table-bordered table-condensed table-responsive row-fluid table-condensed">
 <!-- width="98%" border="0" class="row-fluid table table-hover table-bordered table-update" -->
 	<tbody>

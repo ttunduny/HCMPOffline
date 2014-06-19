@@ -13,12 +13,14 @@
 		echo form_open('divisional_reports/save_malaria_report',$att); 
 	
 	?>
+	<!--
 	<div class="page-header report-info">
 	<h2>Malaria Report</h2>
-	<h3><?php echo $facility_name; ?></h3>
-	<h4><?php echo $facility_code; ?></h4>
-	<h5><?php echo $user_names; ?></h5>
+	<h3><?php //echo $facility_name; ?></h3>
+	<h4><?php //echo $facility_code; ?></h4>
+	<h5><?php //echo $user_names; ?></h5>
 	</div>
+	-->
 	<table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead style="background-color: white">
 
