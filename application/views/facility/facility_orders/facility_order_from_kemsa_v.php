@@ -51,7 +51,7 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 					    <th>Losses</th>
 					    <th>No days out of stock</th>
 					    <th>Closing Stock</th>
-					    <th>AMC (Units)</th>
+					    <th>AMC (Packs)</th>
 					    <th>Suggested Order Quantity</th>
 					    <th>Order Quantity</th>
 					    <th>Actual Units</th>

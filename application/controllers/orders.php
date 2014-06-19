@@ -178,8 +178,9 @@ for ($row = 1; $row <= $highestRow; $row++){
 				$this -> hcmp_functions -> create_pdf($pdf_data);
 				$order_listing = 'facility';
 			endif;
-		//	$user_action = "order";
-		 //	Log::log_user_action($this -> session -> userdata('user_id'),$user_action);
+			$user = $this -> session -> userdata('user_id');
+			$user_action = "order";
+		 	Log::log_user_action($user, $user_action);
 			$this -> session -> set_flashdata('system_success_message', "Facility Order No $new_order_no has Been Saved");
 			redirect("reports/order_listing/$order_listing");
 

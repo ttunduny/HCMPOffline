@@ -77,10 +77,10 @@ class Log extends Doctrine_Record {
 			break;
 			endswitch;
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->execute("
-			update log set $action, 
-			where `user_id`='$user_id'
+			update log set $action  
+			where `user_id`= $user_id 
 			AND action = 'Logged In' 
-			and UNIX_TIMESTAMP( `end_time_of_event`) =0");	
+			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");	
 		 
 	}
 	public static function get_log_data($district_id,$county_id)

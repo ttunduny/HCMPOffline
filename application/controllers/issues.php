@@ -80,8 +80,9 @@ if (!defined('BASEPATH'))
 			`closing_stock`=`closing_stock`-$total_items_issues
             WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");		
 	endfor;
-			//$user_action = "issue";
-		 //	Log::log_user_action($this -> session -> userdata('user_id'),$user_action);
+			$user = $this -> session -> userdata('user_id');
+			$user_action = "issue";
+			 Log::log_user_action($user, $user_action);
 		 	$this->session->set_flashdata('system_success_message', "You have issued $total_items item(s)");
 			redirect();
 	endif;
@@ -132,8 +133,9 @@ if (!defined('BASEPATH'))
 			`closing_stock`=`closing_stock`-$total_items_issues
             WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");		
 endfor;
-	//	 $user_action = "redistribute";
-	//	 Log::log_user_action($this -> session -> userdata('user_id'),$user_action);
+		$user = $this -> session -> userdata('user_id');
+		 $user_action = "redistribute";
+		 Log::log_user_action($user, $user_action);
          $this->db->insert_batch('facility_issues', $data_array_issues_table); 
 		 $this->db->insert_batch('redistribution_data', $data_array_redistribution_table); 
          $this->session->set_flashdata('system_success_message', "You have issued $total_items item(s)");
