@@ -1,12 +1,11 @@
+<style type="text/css">
+	.report-info{
+		text-align: center;
+
+	};
+</style>
 <div class="container" style="width: 96%; margin: auto;">
-<span  class='label label-info'>
-	Write up on how to use the Report
-	</span><br />
-	<span class="label label-danger">
-		Available Batch Stock is for a specific 
-	batch, Total Balance is the total for the commodity
-	</span>
-	<hr />
+	
 <div class="table-responsive" style="height:400px; overflow-y: auto;">
 	<?php 
 		$att = array("name"=>'myform','id'=>'myform'); 
@@ -14,8 +13,24 @@
 		echo form_open('divisional_reports/save_malaria_report',$att); 
 	
 	?>
+	<div class="page-header report-info">
+	<h2>Malaria Report</h2>
+	<h3><?php echo $facility_name; ?></h3>
+	<h4><?php echo $facility_code; ?></h4>
+	<h5><?php echo $user_names; ?></h5>
+	</div>
 	<table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead style="background-color: white">
+
+<!-- second row -->
+		<tr>
+		<div class="input-group">
+			<td>Report Date:</td>
+			<td colspan="10"><input type= 'date' name="district_name" class="form-control" value=""></td>
+
+			</div>
+		</tr>
+
 		<tr>
 			<th>Drug Name</th>
 			<th>Beginning Balance</th>

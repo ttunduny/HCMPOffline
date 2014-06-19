@@ -685,8 +685,9 @@ $html_body.=
    	$this->session->set_flashdata('system_success_message', 'Stocks Have Been Decommissioned');		
      }
 endif;
+$user = $this -> session -> userdata('user_id');
 $user_action = "decommission";
-Log::log_user_action($this -> session -> userdata('user_id'),$user_action);
+Log::log_user_action($user, $user_action);
 redirect('reports/facility_stock_data');	
   }
 			

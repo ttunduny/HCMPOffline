@@ -32,11 +32,10 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-parent="#accordion" href="<?php echo base_url("divisional_reports/facility_program_reports"); ?>" ><span class="glyphicon glyphicon-file">
+                            <a data-parent="#accordion" href="<?php echo base_url("divisional_reports/facility_program_reports"); ?>" id="facility_program_reports"><span class="glyphicon glyphicon-folder-open">
                             </span>Divisional Reports</a>
                         </h4>
                     </div>
-                  
                 </div>
                 <!--Submit Divisional Reports-->
                 <!--<div class="panel panel-default">
@@ -94,11 +93,11 @@
                                         <span class="glyphicon"></span><a href="<?php echo base_url().'reports/consumption'?>" >Consumption</a>
                                     </td>
                                 </tr>
-                                <tr>
+                                <!--<tr>
                                     <td>
                                         <span class="glyphicon"></span><a href="#">User Statistics</a>
                                     </td>
-                                </tr>
+                                </tr>-->
                                 
                             </table>
                         </div>
