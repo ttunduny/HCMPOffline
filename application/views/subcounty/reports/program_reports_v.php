@@ -111,19 +111,19 @@ HTML_DATA;
 	        <table width="80%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="test1">
 			<thead>
 				<tr>
-					
+					<td colspan='4'>
+						<a href='<?php echo $link_new_report_malaria;?>'>
+							<button  type='button' class='btn btn-xs btn-primary'style="float: right">
+		           			<span class='glyphicon glyphicon-save'></span>Submit Malaria Report</button>
+		           		</a>
+		           		</td>
 		        </tr>
 				<tr>
 					<th>Facility Name</th>
 					<th>Prepared By:</th>
 					<th>Report Date</th>
 					<th>Action</th>
-					<th>
-						<a href='<?php echo $link_new_report_malaria;?>'>
-							<button  type='button' class='btn btn-xs btn-primary'style="float: right">
-		           			<span class='glyphicon glyphicon-save'></span>Submit Malaria Report</button>
-		           		</a>
-		           		</th>
+					
 				</tr>
 				
 			</thead>
