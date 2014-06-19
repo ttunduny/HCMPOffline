@@ -1,33 +1,37 @@
+<style type="text/css">
+	.report-info{
+		text-align: center;
 
-
+	};
+</style>
 <div class="container" style="width: 96%; margin: auto;">
 <div class="table-responsive " style="height:400px; overflow-y: auto;">
 	<!-- <form action="tb_data/save_data" name="" class="form-control" method="POST"> -->
 	<?php $attributes = array('class'=>'form-control','id'=>'tb_form','name'=>'tb_form_'); echo form_open('divisional_reports/save_tb_data'),$att ?>
 	<input type="hidden" name="table[facility_code][]" value= "<?php echo $facility_code ?>">
+
+		<div class="page-header report-info">
+	<h2>Tuberculosis Report</h2>
+	<h3><?php echo $facility_name; ?></h3>
+	<h4><?php echo $facility_code; ?></h4>
+	<h5><?php echo $user_names; ?></h5>
+	</div>
 <table width="x0%" class="table table-bordered table-condensed table-responsive row-fluid table-condensed">
 <!-- width="98%" border="0" class="row-fluid table table-hover table-bordered table-update" -->
 	<tbody>
-		<tr>
-		<th>Facility Information</th>
-	<table width="x0%" class="table table-bordered table-condensed table-responsive row-fluid table-condensed">
-			
-			<td>Facility Name:</td>
-			<td colspan="4"><input type= 'text' name="facility_name" disabled="" class="form-control disabled" value="<?php echo $facility_name; ?>"></td>
-
-
-		</tr>
 <!-- second row -->
 		<tr>
+	
 		<div class="input-group">
+		<tr>
 			<td>Facility Type: </td>
 			<td ><input type="text" name="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" ></td>
 			
 			<td>District/Region:</td>
 			<td><input type= 'text' name="district_name" disabled class="form-control" value="<?php echo $district_region_name; ?>"></td>
 
-			</div>
 		</tr>
+			</div>
 
 		<!-- fourth -->
 		<tr>
@@ -36,7 +40,8 @@
 		
 			<td>Ending Date (of Reporting Period): </td>
 			<td><input type="date"   name="table[ending_date][]" value="" class='form-control'></td>
-		</table>
+		</tr>
+
 		</tr>
 		<tr>
 		<!-- use colspan on a td -->
@@ -655,7 +660,8 @@
 	</tbody>
 </table>
 </div>
-								<div class="container-fluid">
+<hr />
+<div class="container-fluid">
 <div style="float: right">
 <button type="submit" class="save btn btn-sm btn-success" id="save_data"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 </div>

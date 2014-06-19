@@ -1,6 +1,29 @@
 <?php 
 class Tb_data extends Doctrine_Record 
 {
+		public function setTableDefinition() {
+		$this -> hasColumn('id', 'int',11);
+		$this -> hasColumn('facility_code', 'int',11);	
+		$this -> hasColumn('beginning_date', 'date');	
+		$this -> hasColumn('currently_recieved', 'int',11);
+		$this -> hasColumn('ending_date', 'date');
+		$this -> hasColumn('beginning_balance', 'int',11);
+		$this -> hasColumn('quantity_dispensed', 'int',11);
+		$this -> hasColumn('positive_adjustment', 'int',11);
+		$this -> hasColumn('negative_adjustment', 'int',11);
+		$this -> hasColumn('losses', 'int',11);
+		$this -> hasColumn('physical_count', 'int',11);
+		$this -> hasColumn('earliest_expiry', 'date');
+		$this -> hasColumn('quantity_needed', 'int',11);
+		$this -> hasColumn('report_date', 'timestamp');
+		$this -> hasColumn('user_id', 'int',11);
+	}
+
+	public function setUp() {
+		$this -> setTableName('tuberculosis_data');
+	//	$this -> hasMany('user as u_type1', array('local' => 'id', 'foreign' => 'usertype_id'));
+		
+	}
 
 	public static function get_facility_name($facility_code)
 	{

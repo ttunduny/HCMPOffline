@@ -146,9 +146,19 @@ class Divisional_Reports extends MY_Controller
 			
 		}
 		$user_id = $this -> session -> userdata('user_id');
+		$user_names = Users::get_user_names($user_id);
 		$data['user_data'] = Malaria_Data::getall($user_id);
+		$data['user_names'] = ($user_names[0]['fname']." ".$user_names[0]['lname']);
+
+
 		$data['malaria_data'] = $malaria_array;
 		$data['drug_rows'] = Malaria_Drugs::getName();
+		
+		$facility = $this -> session -> userdata('facility_id');
+		$facility_info = tb_data::get_facility_name($facility);
+		$data['facility_code'] = $facility;
+		$data['facility_name'] = ($facility_info['facility_name']);
+
 		$data['content_view'] = "facility/facility_reports/facility_reports_malaria_reports_v";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		
@@ -160,14 +170,12 @@ class Divisional_Reports extends MY_Controller
 public function tb_report(){
 		$facility = $this -> session -> userdata('facility_id');
 		$user_id = $this -> session -> userdata('user_id');
+		$user_names = Users::get_user_names($user_id);
+		$data['user_names'] = ($user_names[0]['fname']." ".$user_names[0]['lname']);
 		$facility_info = tb_data::get_facility_name($facility);
 		$facility_district = $facility_info['district'];
 		$district_name_ = Districts::get_district_name_($facility_district);
 		$district_name = $this -> session -> userdata('district');
-		 // echo "<pre>";
-		 // print_r($facility_info);
-		 // echo "</pre>";exit;
-
 		$data['facility_code'] = $facility_info['facility_code']; 
 		$data['district_region_name'] = $district_name_['district'];
 		$data['facility_name'] = ($facility_info['facility_name']);
@@ -189,8 +197,8 @@ public function save_tb_data(){
 		$no = count($values['table']);
 		/*echo "<pre>";
 		print_r($value);
-		echo "</pre>";*/
-		for ($i=1; $i < 4; $i++) { 
+		echo "</pre>";exit;*/
+		for ($i=1; $i < 3; $i++) {//this loop is limited to three and is undynamic due to the fact that testing is done only with three fields 
 		$data = array( 
 		'facility_code'=>$value['facility_code'][0], 
 		'beginning_date'=>$value['beginning_date'][0],
