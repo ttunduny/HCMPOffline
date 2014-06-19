@@ -16,6 +16,7 @@ class Stock extends MY_Controller {
 	public function index(){
 		
 	}	
+	
 /*
 |--------------------------------------------------------------------------
 | update facility stock 
@@ -31,7 +32,7 @@ class Stock extends MY_Controller {
         $data['title'] = "Set up facility stock";
          $data['content_view'] = "facility/facility_stock_data/set_up_facility_stock_v";
         $data['banner_text'] = "Set up facility stock";
-        $data['commodities']=commodities::set_facility_stock_data_amc($facility_code);
+        $data['commodities']= commodities::set_facility_stock_data_amc($facility_code);
         $this -> load -> view("shared_files/template/template", $data);        
      }
      public function save_set_up_facility_stock($checker=null){
@@ -307,6 +308,7 @@ endfor;
 		  $this->session->set_flashdata('system_success_message', "Stock Levels Have Been Updated");
 		  redirect('reports/facility_stock_data');			  
 endif;
+
 }
 /*
 |------------------------------------------------------------------------
@@ -683,6 +685,9 @@ $html_body.=
    	$this->session->set_flashdata('system_success_message', 'Stocks Have Been Decommissioned');		
      }
 endif;
+$user = $this -> session -> userdata('user_id');
+$user_action = "decommission";
+Log::log_user_action($user, $user_action);
 redirect('reports/facility_stock_data');	
   }
 			

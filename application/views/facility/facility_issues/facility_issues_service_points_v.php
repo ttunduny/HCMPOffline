@@ -1,7 +1,8 @@
 <div class="container" style="width: 96%; margin: auto;">
-<span  class='label label-info'>To Issue commodities i) select commodity to issue 
-	ii) enter the service point and quanitity you wish to issue and select the batch no
-	iii) to add more issues press add row</span><br /><span class="label label-danger">Available Batch Stock is for a specific 
+<span  class='label label-info'>To Issue Commodities 
+	i) Select commodity to issue 
+	ii) Enter the Service Point and Quanitity you wish to issue and select the Batch No
+	iii) To add more Issues press Add Row</span><br /><span class="label label-danger">Available Batch Stock is for a specific 
 	batch, Total Balance is the total for the commodity</span>
 	<hr />
 <div class="table-responsive" style="height:400px; overflow-y: auto;">
@@ -155,7 +156,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
         	var form_data=check_if_the_form_has_been_filled_correctly(selector_object);
         	var alert_message='';
         	if (remainder<0) {alert_message+="<li>Can not issue beyond available stock</li>";}
-			if (selector_object.val() <0) { alert_message+="<li>Issued value must be above 0</li>";}
+			//if (selector_object.val() <0) { alert_message+="<li>Issued value must be above 0</li>";}
 		    if (selector_object.val().indexOf('.') > -1) {alert_message+="<li>Decimals are not allowed.</li>";}		
 			if (isNaN(selector_object.val())){alert_message+="<li>Enter only numbers</li>";}				
 			if(isNaN(alert_message) || isNaN(form_data[0])){

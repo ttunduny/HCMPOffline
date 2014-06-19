@@ -36,7 +36,7 @@
         <h5>Expired Commodities</h5>
         	<p>
 			<a class="link" href="<?php echo base_url('reports') ?>"> <span class="badge"><?php 
-				echo $facility_dashboard_notifications['actual_expiries'];?></span>Expired Commodities awaiting decommisioning.</a> 
+				echo $facility_dashboard_notifications['actual_expiries'];?></span>Expired Commodities Awaiting Decommisioning.</a> 
 			</p> 
         </div>
          <?php endif; // Actual Expiries?>
@@ -54,7 +54,7 @@
         <h5>Stock Outs</h5>
         	<p>
 			<a class="link" href="<?php echo base_url('reports/facility_stocked_out_items') ?>"> <span class="badge">
-		<?php echo $facility_dashboard_notifications['items_stocked_out_in_facility'] ?></span>Item(s) are stocked out </a> 
+		<?php echo $facility_dashboard_notifications['items_stocked_out_in_facility'] ?></span>Item(s) Stocked Out </a> 
 			</p> 
         </div>
         <?php endif; // items_stocked_out_in_facility?>
@@ -74,7 +74,7 @@
         	<h5>Orders Rejected by District Pharmacist</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('reports/order_listing/facility') ?>"><span class="badge"><?php 
-			echo $facility_dashboard_notifications['facility_order_count']['rejected'] ?></span>Order(s) rejected</a> 
+			echo $facility_dashboard_notifications['facility_order_count']['rejected'] ?></span>Order(s) Rejected</a> 
 			</p>
         </div>
         <?php endif; //rejected
@@ -84,7 +84,7 @@
         	<h5>Pending Dispatch</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('reports/order_listing/facility') ?>"><span class="badge"><?php 
-			echo $facility_dashboard_notifications['facility_order_count']['approved'] ?></span>Order(s) pending dispatch from KEMSA</a> 
+			echo $facility_dashboard_notifications['facility_order_count']['approved'] ?></span>Order(s) Pending Dispatch from KEMSA</a> 
 			</p>
         </div>
          <?php endif; //approved?>
@@ -101,10 +101,10 @@
       <div class="panel-body">
 
         <div style="height:auto; margin-bottom: 2px" class="issue message ">	 
-        	<a href="<?php echo base_url("issues/index/internal") ?>"><h5>Issue Commodities to service points</h5></a>       	 
+        	<a href="<?php echo base_url("issues/index/internal") ?>"><h5>Issue Commodities to Service Points</h5></a>       	 
         </div>
         <div style="height:auto; margin-bottom: 2px" class="distribute message ">
-        	<a href="<?php echo base_url('issues/index/external'); ?>"><h5>Redistribute Commodities to other facilities</h5></a>	 
+        	<a href="<?php echo base_url('issues/index/external'); ?>"><h5>Redistribute Commodities to Other Facilities</h5></a>	 
         </div>
         
  		<div style="height:auto; margin-bottom: 2px" class="distribute message ">
@@ -114,14 +114,17 @@
         <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="order message " id="order_tab">
             <h5>Orders</h5>
         </div>
-
          <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
             <a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>KEMSA</h5></a>
             <a href=""><h5>MEDS</h5></a> 
         </div>       
-         <div style="height:auto; margin-bottom: 2px" class="delivery message ">
-        	<a href="<?php echo base_url('reports/order_listing/facility')?>"><h5>Update order delivery</h5></a> 
-        	 </div>   	 
+         <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="delivery message" id = "update_order">
+        	<h5>Update Order Delivery</h5> 
+         </div>  
+        	  <div style="height:auto; margin-bottom: 2px" class="" id="update_order_hide">
+	            <a href="<?php echo base_url('reports/order_listing/facility'); ?>"><h5>KEMSA</h5></a>
+	            <a href="<?php echo base_url('reports/work_in_progress'); ?>"><h5>MEDS</h5></a> 
+        	</div>       	 
         <div style="height:auto; margin-bottom: 2px" class="order message ">
           <a href="<?php echo base_url("issues/add_service_points") ?>"><h5>Add Service Points </h5></a>          
         </div>
@@ -152,11 +155,16 @@
 
 	
    $(document).ready(function() {
+   	$('#update_order_hide').hide() 
        $('#order_hide').hide() 
 
        $('#order_tab').click(function(event) {
            /* Act on the event */
            $('#order_hide').toggle('slow')
+       }); 
+       $('#update_order').click(function(event) {
+           /* Act on the event */
+           $('#update_order_hide').toggle('slow')
        }); 
 
 	

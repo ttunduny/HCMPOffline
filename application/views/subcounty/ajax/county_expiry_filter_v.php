@@ -124,6 +124,7 @@ endforeach;
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           $('.graph_content').html('');
           })
+		
 	    $(".county-filter").on('click',function(e) {
 		e.preventDefault();	
         var url_ = 'reports/get_county_cost_of_expiries_new/'+

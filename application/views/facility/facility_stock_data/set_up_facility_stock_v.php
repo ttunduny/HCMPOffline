@@ -1,18 +1,19 @@
 <div class="test"><div class="container" style="width: 96%; margin: auto;">
-<span  class='label label-info' style="padding-left: 1%"> Select the Commodities that are used in this facility by inputting the AMC or check box</span>
+<span  class='label label-info' style="padding-left: 1%"> Select the Commodities that are used in this facility by inputing the AMC or selecting the check box</span>
 </div>
 <div style="max-height:600px; overflow-y:auto; width: 100%">
 <table width="100%" class="row-fluid table table-hover table-bordered table-update"  id="example">
 <thead>
 <tr style="background-color: white">
+						<th>Select</th>	
 						<th>Category</th>
 						<th>Description</th>
 						<th>Commodity&nbsp;Code</th>
 						<th>Unit Size</th>
 						<th>Issue Type</th>
-					    <th>Average&nbsp;Consumption&nbsp;Quantity </th>
+					    <th>Average&nbsp;Monthly&nbsp;Consumption&nbsp;(Units) </th>
 					    <th>Total&nbsp;Units</th>
-					    <th>Select</th>			    
+					    		    
 </tr>
 </thead>
 <tbody>
@@ -22,6 +23,7 @@
 	   ($facility_commodities['selected_option']=='Pack_Size')? $pack_size='selected="selected"' :$unit_size='selected="selected"'  : null; 
 	   echo "<tr><input type='hidden' name='actual_units[]' class='actual_units' value='$facility_commodities[total_commodity_units]'/>
 	   <input type='hidden' name='commodity_id[]' class='commodity_id' value='$facility_commodities[commodity_id]'/>
+	   <td><input type='checkbox' class='checkbox'  $status/></td>
 	   <td>$facility_commodities[sub_category_name]</td>
 	   <td>$facility_commodities[commodity_name]</td>
 	   <td>$facility_commodities[commodity_code]</td>
@@ -32,7 +34,7 @@
 			</select></td>
 	<td><input class='form-control input-small quantity' type='text' name='quantity[]' value='$facility_commodities[consumption_level]' </td>
 	<td><input class='form-control input-small actual_quantity' type='text' name='actual_quantity[]' value='$facility_commodities[total_units]'</td>
-	<td><input type='checkbox' class='checkbox'  $status/></td>
+	
 	   </tr>"; 
        endforeach; 
 ?>

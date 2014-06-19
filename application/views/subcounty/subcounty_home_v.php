@@ -106,6 +106,7 @@ ajax_request_replace_div_content('reports/consumption_data_dashboard',"#notifica
 $("#system_usage").on('click', function(){
 active_panel(this);
 $('.page-header').html('System Usage');
+ajax_request_replace_div_content('reports/get_sub_county_facility_mapping_data',"#notification");
 });
      
 });

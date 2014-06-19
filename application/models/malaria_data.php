@@ -57,7 +57,8 @@ class Malaria_Data extends Doctrine_Record
 	public static function get_facility_report_details($facility_id)
 	{
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
-   	 	->fetchAll("select distinct(user_id) as user, date_format(Report_Date, '%M %Y')as report_date, report_date as report_timestamp,report_id, facility_id as facility_code from malaria_data where facility_id = $facility_id order by Report_Date desc"); 
+   	 	->fetchAll("select distinct(user_id) as user, date_format(Report_Date, '%M %Y')as report_date, report_date as report_timestamp, report_id, facility_id as facility_code from malaria_data where facility_id = $facility_id 
+   	 	order by Report_Date desc"); 
 		return $query;
 			
 	}

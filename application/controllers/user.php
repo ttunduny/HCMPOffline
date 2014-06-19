@@ -40,9 +40,6 @@ class User extends MY_Controller {
 		$username = $this -> input -> post('username');
 		$returned_user = $user -> login($username, $password);
 
-		//var_dump($returned_user);
-		//echo count($returned_user);
-		//exit;
 		//If user successfully logs in, proceed here
 		if ($returned_user) {
 			//Create basic data to be saved in the session
@@ -115,7 +112,15 @@ class User extends MY_Controller {
 			$this -> session -> set_userdata(array("menus" => $menus));
 			//Save this sub menus array in the session
 			$this -> session -> set_userdata(array("sub_menus" => $sub_menus));
-
+			//creating a new log value
+			Log::update_log_out_action($this -> session -> userdata('user_id'));
+		
+			$u1 = new Log();
+			$action = 'Logged In';
+			$u1->user_id = $this -> session -> userdata('user_id');
+			$u1->action = $action;
+			$u1->save();
+			
 			redirect('Home');
 		} else {
 			$data['popup'] = "errorpopup";
@@ -126,7 +131,7 @@ class User extends MY_Controller {
 
 	public function logout() {
 
-		//Log::update_log_out_action($this -> session -> userdata('identity'));
+		Log::update_log_out_action($this -> session -> userdata('user_id'));
 
 		$this -> session -> sess_destroy();
 		$data['title'] = "Login";
@@ -385,9 +390,7 @@ class User extends MY_Controller {
 					
 					
 			echo json_encode(Access_level::get_access_levels($permissions));
-			
-			
-	
+		
 		}
 
 	public function addnew_user(){
