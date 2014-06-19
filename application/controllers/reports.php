@@ -1481,7 +1481,7 @@ class Reports extends MY_Controller
 		$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,
 		$county_id, $year, null,$option ,"all");       
 		foreach ($commodity_array as $data) :
-		$temp_array = array_merge($temp_array, array($data["cal_month"] => $data['total']));
+		$temp_array = array_merge($temp_array, array($data["cal_month"] => (int)$data['total']));
 		endforeach;
 		foreach ($months as $key => $data) :
 		$val = (array_key_exists($data, $temp_array)) ? (int)$temp_array[$data] : (int)0;
@@ -1550,7 +1550,7 @@ class Reports extends MY_Controller
          	$graph_data = array();
        		$graph_data = array_merge($graph_data, array("graph_id" => 'graph_default'));
 			$graph_data = array_merge($graph_data, array("graph_title" => 'Current Stock Level'));
-			$graph_data = array_merge($graph_data, array("graph_type" => 'bar'));
+			$graph_data = array_merge($graph_data, array("graph_type" => 'column'));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Months of Stock'));
 			$graph_data = array_merge($graph_data, array("graph_categories" => array()));
 			$graph_data = array_merge($graph_data, array("series_data" => array("Stock" =>array())));	
