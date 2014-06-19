@@ -1601,8 +1601,17 @@ class Reports extends MY_Controller
 
 		
 		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code,$district_id,$county_id,
-		$category_id, $commodity_id,  $option_new, $report_type);
-		echo "$commodity_array";
+		$category_id, $commodity_id,  $option_new, $report_type, $option, $graph_type);
+		
+		echo "SELECT  $selection_for_a_month $computation
+     FROM facility_stocks fs, facilities f, commodities d,  districts di
+     WHERE fs.facility_code = f.facility_code
+     AND f.district =di.id
+     and fs.expiry_date>NOW()
+     AND d.id = fs.commodity_id
+     AND fs.status=1
+     $and_data
+      $group_by_a_month";
         foreach ($commodity_array as $data) :
 		if($report_type=="table_data"):
 			if($commodity_id>0):

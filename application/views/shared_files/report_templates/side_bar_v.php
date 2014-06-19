@@ -32,18 +32,10 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-<<<<<<< HEAD
                             <a data-parent="#accordion" href="<?php echo base_url("divisional_reports/facility_program_reports"); ?>" id="facility_program_reports"><span class="glyphicon glyphicon-folder-open">
                             </span>Divisional Reports</a>
                         </h4>
                     </div>
-=======
-                            <a data-parent="#accordion" href="<?php echo base_url("divisional_reports/facility_program_reports"); ?>" ><span class="glyphicon glyphicon-file">
-                            </span>Divisional Reports</a>
-                        </h4>
-                    </div>
-                  
->>>>>>> 2be9ec054a88a53b0860f0f748a13d37595961aa
                 </div>
                 <!--Submit Divisional Reports-->
                 <!--<div class="panel panel-default">
