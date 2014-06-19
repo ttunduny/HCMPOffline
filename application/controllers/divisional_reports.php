@@ -232,6 +232,7 @@ public function save_tb_data(){
 		$this -> load -> view($view, $data);
 		
 	}
+	 
 	public function view_RH_report()
 	{
 				

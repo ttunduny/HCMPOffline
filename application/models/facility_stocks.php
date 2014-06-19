@@ -52,6 +52,7 @@ class Facility_stocks extends Doctrine_Record {
 	}// get all facility stock commodity id, options check if the user wants batch data or commodity grouped data and return the total 
 	
 	public static function get_distinct_stocks_for_this_facility($facility_code,$checker=null,$exception=null){
+
 $addition=isset($checker)? ($checker==='batch_data')? 'and fs.current_balance>0 group by fs.id,c.id order by fs.expiry_date asc' 
 : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc' : null ;
 $check_expiry_date=isset($exception)? null: " and fs.expiry_date >= NOW()" ;
@@ -63,6 +64,7 @@ c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commo
  where fs.facility_code ='$facility_code' $check_expiry_date 
  and c.id=fs.commodity_id and fs.status='1' $addition 
 ");
+
 return $stocks ;
 }
     public static function get_facility_stock_amc($facility_code){

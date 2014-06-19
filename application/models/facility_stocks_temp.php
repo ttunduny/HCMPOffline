@@ -58,7 +58,7 @@ class facility_stocks_temp extends Doctrine_Record {
 	 SELECT c.commodity_name, round(avg(ifnull(f_s.current_balance,0)/ifnull(f_m_s.total_units,0)),1) as month_stock 
      from facilities f, facility_monthly_stock f_m_s, districts d, commodities c 
      left join facility_stocks f_s on c.id=f_s.commodity_id 
-     where f.district=d.id and d.id=14 and c.tracer_item=1 and c.status=1 
+     where f.district=d.id and d.id=$district_id and c.tracer_item=1 and c.status=1 
      and c.id=f_m_s.commodity_id and DATE_FORMAT( f_s.date_modified, '%M %Y' ) = '$month'
      group by c.id,d.id
 	 ");

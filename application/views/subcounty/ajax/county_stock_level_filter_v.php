@@ -1,8 +1,10 @@
 <div class="alert alert-info" style="width: 100%">
   <b>Below are the Stocking Levels in the County </b> :Select filter Options
 </div>
+<?php //This was added by Adima 
+$no_of_tracer_items = facility_stocks_temp::get_tracer_item_names($district_id); $no = count($no_of_tracer_items); ?>
 <ul class='nav nav-tabs'>
-	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items</a></li>
+	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items<?php echo "(".$no.")"; ?></a></li>
       <li class=""><a href="#cat" data-toggle="tab">Categories</a></li>
       <li class=""><a href="#county" data-toggle="tab">County View</a></li>
       <li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>
@@ -166,6 +168,7 @@ endforeach;
 <div class="graph_content" id="graph_default">	
 	
 </div>
+
 <script>
 	 $(function () { 
 <?php echo $default_graph; ?>
@@ -220,7 +223,9 @@ var drop_down='';
 		$(".tracer-filter").button().click(function(e) {
         e.preventDefault(); 
         var url_ = "reports/get_county_stock_level_new/"+
-$("#tracer_commodity_filter").val()+"/NULL/"+$("#tracer_district_filter").val()+"/NULL/"+$("#tracer_plot_value_filter").val();    
+        $("#tracer_commodity_filter").val()+
+        "/NULL/"+$("#tracer_district_filter").val()+
+        "/NULL/"+$("#tracer_plot_value_filter").val();    
         ajax_request_replace_div_content(url_,'.graph_content');    
           });
           
