@@ -84,6 +84,7 @@ border-color: #e7e7e7;
   border-radius: 0 !important;
 }
 
+
 </style>
   </head>  
   <body screen_capture_injected="true" onload="set_interval()" onmouseover="reset_interval()" onclick="reset_interval()">
@@ -203,7 +204,7 @@ foreach($menus as $menu){?>
     
     <!-- Modal -->
 <div class="modal fade" id="changepassModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog" style="width: 35%;">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -439,7 +440,7 @@ return i;
 					if(data.response=='false'){
 						
 						 $('#new_error').html(data.msg);
-						
+							$( "#current_password" ).focus();
 							}else if(data.response=='true'){
 								$("#new_error").empty();
 								$("#current_password").val('');

@@ -580,11 +580,10 @@ class User extends MY_Controller {
 		//echo "</br>";
 		$captured_password=( md5($salt . $old_password));
 		//exit;
-			
 		// $valid_old_password = $this -> correct_current_password($db_password,$captured_password);
 		 
 		 if ($db_password != $captured_password) {
-			$response = array('msg' => 'You have entered a wrong password.','response'=> 'false');
+			$response = array('msg' => '<div class="bg-danger">Your current password does not match.Please try again</div>','response'=> 'false');
 			 
 			echo json_encode($response);
 			//echo "Dont match";
@@ -596,7 +595,7 @@ class User extends MY_Controller {
 			$updatep = Doctrine_Manager::getInstance()->getCurrentConnection();			
 //update password
 			$updatep->execute("UPDATE user SET password='$new_password'  WHERE id='$id'; ");
-			$response = array('msg' => 'Success!!! Your password has been changed.','response'=> 'true');
+			$response = array('msg' => 'Success!!! Your password has been changed. Exit to continue','response'=> 'true');
 			echo json_encode($response);
 		}
 		
