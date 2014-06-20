@@ -64,39 +64,6 @@ HTML_DATA;
 HTML_DATA;
 			endforeach;
 			endforeach;
-/*
-			
-		foreach($TB as $TB_details1):
-			foreach($TB_details1 as $TB_details):
-				$facilityname = Facilities::get_facility_name2($TB_details['facility_code']);
-				$facility = $facilityname['facility_name'];
-				$user = Users::get_user_names($TB_details['user']);
-				$username = $user[0]['fname']." ".$user[0]['lname'];
-				$report_date = $TB_details['report_date'];
-				$link = base_url('reports/get_facility_report_pdf/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/RH');	
-				$link_excel = base_url('reports/create_excel_facility_program_report/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/TB');
-
-			    $link_TB = base_url('divisional_reports/tb_report');
-			    $TB_report_details .= <<<HTML_DATA
-	            <tr>           
-					<td>$facility</td>          
-	 				<td>$username</td>
-	           		<td>$report_date</td>
-	           		<td>
-           			<a href='$link' target="_blank">
-		           	<button  type="button" class="btn btn-xs btn-primary">
-		           	<span class="glyphicon glyphicon-save"></span>Download Report pdf</button></a>
-		           	<a href='$link_excel' target="_blank">
-           			<button  type="button" class="btn btn-xs btn-primary">
-           			<span class="glyphicon glyphicon-save"></span>Download Report excel</button></a>
-		           
-           		</td>
-           </tr>
-HTML_DATA;
-			endforeach;
-			endforeach;*/
-			
-		
 		?>
 <h1 class="page-header" style="margin: 0;font-size: 1.6em;"><?php echo $page_header. " for ". date("Y"); ?></h1>
 <div class="row container" style="width: 100%; margin: auto;">

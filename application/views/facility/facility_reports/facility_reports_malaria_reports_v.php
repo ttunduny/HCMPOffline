@@ -27,6 +27,26 @@
 <!-- second row -->
 		<tr>
 		<div class="input-group">
+
+		<td colspan="4">
+			<label>Facility Name: </label>
+			<input type="text" name="facility_name" class="form-control" disabled value="<?php echo $facility_name; ?>">
+		</td>			
+		
+		<td colspan="3">
+		<label>Facility Code: </label>
+			<input type="text" name="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
+		</td>
+
+		<td colspan="4">
+		<label>User Name: </label>
+			<input type="text" name="facility_code: " class="form-control" disabled value="<?php echo $user_names; ?>">	
+		</td>
+
+		</div>
+		</tr>
+		<tr>
+		<div class="input-group">
 			<td>Report Date:</td>
 			<td colspan="10"><input type= 'date' name="district_name" class="form-control" value=""></td>
 

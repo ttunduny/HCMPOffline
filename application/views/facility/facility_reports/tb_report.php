@@ -23,25 +23,48 @@
 	<tbody>
 <!-- second row -->
 		<tr>
+		<div class="input-group">
+
+		<td colspan="1">
+			<label>Facility Name: </label>
+			<input type="text" name="facility_name" class="form-control" disabled value="<?php echo $facility_name; ?>">
+		</td>			
+		
+		<td colspan="1">
+		<label>Facility Code: </label>
+			<input type="text" name="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
+		</td>
+		</div>
+		</tr>
+
+		<tr>
 	
 		<div class="input-group">
 		<tr>
-			<td>Facility Type: </td>
-			<td ><input type="text" name="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" ></td>
+			<td colspan="1">
+			<label>Facility Type: </label>
+			<input type="text" name="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" >
+			</td>
 			
-			<td>District/Region:</td>
-			<td><input type= 'text' name="district_name" disabled class="form-control" value="<?php echo $district_region_name; ?>"></td>
+			<td>
+			<label>District/Region:</label>
+			<input type= 'text' name="district_name" disabled class="form-control" value="<?php echo $district_region_name; ?>">
+			</td>
 
 		</tr>
 			</div>
 
 		<!-- fourth -->
 		<tr>
-			<td>Beginning Date (of Reporting Period): </td>
-			<td><input type="date"   name="table[beginning_date][]" value="" class='form-control'></td>
+			<td colspan="1">
+			<label>Beginning Date (of Reporting Period): </label>
+			<input type="date"   name="table[beginning_date][]" value="" class='form-control'>
+			</td>
 		
-			<td>Ending Date (of Reporting Period): </td>
-			<td><input type="date"   name="table[ending_date][]" value="" class='form-control'></td>
+			<td colspan="1">
+			<label>Ending Date (of Reporting Period): </label>
+			<input type="date"   name="table[ending_date][]" value="" class='form-control'>
+			</td>
 		</tr>
 
 		</tr>
