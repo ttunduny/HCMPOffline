@@ -46,6 +46,7 @@ HTML_DATA;
 			$link = base_url('reports/get_facility_report_pdf/'.$RH_details['report_id'].'/'.$RH_details['facility_code'].'/RH');	
 			$link_excel = base_url('reports/create_excel_facility_program_report/'.$RH_details['report_id'].'/'.$RH_details['facility_code'].'/RH');
 		    $link_new_report_RH = base_url('divisional_reports/RH_report');
+		    $link_TB = base_url('divisional_reports/tb_report');
 		    $RH_report_details .= <<<HTML_DATA
             <tr>           
 				<td>$facility</td>          
@@ -64,9 +65,7 @@ HTML_DATA;
 HTML_DATA;
 			endforeach;
 			endforeach;
-/*
-			
-		foreach($TB as $TB_details1):
+/*		foreach($TB as $TB_details1):
 			foreach($TB_details1 as $TB_details):
 				$facilityname = Facilities::get_facility_name2($TB_details['facility_code']);
 				$facility = $facilityname['facility_name'];
@@ -94,8 +93,7 @@ HTML_DATA;
            </tr>
 HTML_DATA;
 			endforeach;
-			endforeach;*/
-			
+			endforeach;*/			
 		
 		?>
 <h1 class="page-header" style="margin: 0;font-size: 1.6em;"><?php echo $page_header. " for ". date("Y"); ?></h1>
@@ -143,7 +141,7 @@ HTML_DATA;
 		<thead>
 			<tr>
 				<td colspan='4'>
-					<a href='<?php echo $link_excel;?>' target='_blank' style="float: right">
+					<a href='<?php echo $link_new_report_RH;?>' style="float: right">
 						<button  type='button' class='btn btn-xs btn-primary'>
 	           			<span class='glyphicon glyphicon-save'></span>Submit RH Report</button>
 		           	</a>

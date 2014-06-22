@@ -78,6 +78,7 @@
         $( ".col-md-2,.col-md-10" ).css( "position", "" );
     };
 });
+
 //expiries function
 $("#expiries").on('click', function(){
 $('.page-header').html('Expiries');

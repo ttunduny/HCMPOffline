@@ -91,7 +91,8 @@ class Log extends Doctrine_Record {
 		ifnull(sum(l.ordered), 0) as total_orders,
 		ifnull(sum(l.decommissioned), 0) as total_decommisions,
 		ifnull(sum(l.redistribute), 0) as total_redistributions,
-		ifnull(sum(l.add_stock), 0) as total_stock_added
+		ifnull(sum(l.add_stock), 0) as total_stock_added,
+		ifnull(COUNT(DISTINCT u.facility ),0) AS total_logins
 		from log l, user u
 		where l.user_id = u.id
 		AND u.county_id = $county_id
