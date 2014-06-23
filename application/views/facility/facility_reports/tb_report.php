@@ -30,44 +30,44 @@
 		<div class="input-group">
 		<tr>
 
-		<td colspan="1">
+		<td>
 			<label>Facility Name: </label>
 			<input type="text" name="facility_name" class="form-control" disabled value="<?php echo $facility_name; ?>">
 		</td>			
 		
-		<td>
+		<td class="col-xs-2">
 		<label>Facility Code: </label>
 			<input type="text" name="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
 		</td>
-		</tr>
 		</div>
 		
 
 
 		<div class="input-group">
-		<tr>
-			<td>
+			<td class="col-xs-4">
 			<label>Facility Type: </label>
 			<input type="text" name="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" >
 			</td>
 			
-			<td>
+			<td class="col-xs-2">
 			<label>District/Region:</label>
 			<input type= 'text' name="district_name" disabled class="form-control" value="<?php echo $district_region_name; ?>">
 			</td>
-
-		</tr>
 			</div>
-
+			</tr>
 		<!-- fourth -->
 		<tr>
-			<td>
+			<td style="text-align:right;">
 			<label>Beginning Date (of Reporting Period): </label>
+			</td>
+			<td>
 			<input type="date"   name="table[beginning_date][]" value="" class='form-control'>
 			</td>
 		
-			<td>
+			<td  class="col-xs-2"  style="text-align:right;">
 			<label>Ending Date (of Reporting Period): </label>
+			</td>
+			<td>
 			<input type="date"   name="table[ending_date][]" value="" class='form-control'>
 			</td>
 		</tr>
