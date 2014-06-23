@@ -85,6 +85,8 @@ class Log extends Doctrine_Record {
 	}
 	public static function get_log_data($district_id,$county_id)
 	{
+		// $county_id = isset($district_id) ? null:$county_id;
+		// $district_id = isset($county_id) ? null:$district_id;
 		$year = date("Y");
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		select ifnull(sum(l.issued), 0) as total_issues,
@@ -92,7 +94,7 @@ class Log extends Doctrine_Record {
 		ifnull(sum(l.decommissioned), 0) as total_decommisions,
 		ifnull(sum(l.redistribute), 0) as total_redistributions,
 		ifnull(sum(l.add_stock), 0) as total_stock_added,
-		ifnull(COUNT(DISTINCT u.facility ),0) AS total_logins
+		ifnull(sum(l.issued+l.ordered+l.decommissioned+l.redistribute+l.add_stock), 0) as user_log
 		from log l, user u
 		where l.user_id = u.id
 		AND u.county_id = $county_id

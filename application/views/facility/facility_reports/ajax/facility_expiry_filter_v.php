@@ -25,9 +25,9 @@
 		</select>
 <select id="plot_value_filter">
 	<option value="NULL">Select Plot value</option>
-<option value="Packs">Packs</option>
-<option value="Units">Units</option>
-<option value="KSH">KSH</option>
+<option value="packs">Packs</option>
+<option value="units">Units</option>
+<option value="ksh">KSH</option>
 </select> 
 	<button class="btn btn-small btn-success" id="filter" name="filter" style="margin-left: 1em;">Filter <i class="icon-filter"></i></button> 
 	

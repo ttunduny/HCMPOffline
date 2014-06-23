@@ -101,7 +101,7 @@ $(document).ready(function() {
 				        $("#year_filter").val()+
 				        "/"+$("#month_filter").val();
         	ajax_supply(url,'#container');
-        	ajax_supply(url,'#container_monthly');
+        	ajax_supply(url,'#log_data_graph');
 		
           });
 

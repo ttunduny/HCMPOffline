@@ -173,15 +173,7 @@ public static function get_county_cost_of_exipries_new($facility_code=null,$dist
 	 isset($district_id) && !isset($facility_code) ?  " GROUP BY f.facility_code having total>0": " GROUP BY d.id having total>0") ;
 	 $group_by =($data_for=='all') ?"GROUP BY month(expiry_date) asc":$group_by_a_month;
      	 
-		 return "SELECT $select_option $computation
-     FROM facility_stocks fs, facilities f, commodities d, counties c, districts di
-     WHERE fs.facility_code = f.facility_code
-     AND fs.`expiry_date` <= NOW( )
-     AND f.district =di.id
-     AND di.county=c.id
-     AND d.id = fs.commodity_id
-     $and_data
-     $group_by";
+		 
 	 //exit;
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
      ->fetchAll("SELECT $select_option $computation
@@ -322,6 +314,15 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
              break;
              case 'packs':
            $computation ="ifnull(SUM(ROUND(fs.qty_issued/d.total_commodity_units)),0) AS total" ;
+             break;
+			 case 'mos':
+			echo $district_id;
+           	$r = facility_stocks_temp::get_months_of_stock($district_id, $county_id, $facility_code);
+			return $r;
+			//echo "<pre>";
+			//print_r($r);
+			//echo "</pre>";
+             exit;
              break;
          default:
       $computation ="ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total";

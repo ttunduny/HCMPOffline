@@ -2,6 +2,9 @@
  	.input-small{
  		width: 100px !important;
  	}
+  .filter-row{
+    margin: none;
+  }
  </style>
 <div class="alert alert-info" style="width: 100%">
   <b>Below is the consumption Level in the County </b> :Select filter Options
@@ -14,7 +17,7 @@
 </ul>
     <div id="myTabContent" class="tab-content">
 
-      <div  id="tracer" class="ttab-pane fade active in">
+      <div  id="tracer" class="tab-pane fade active in">
           <br />
                     <form class="form-inline" role="form">
 <select id="tracer_commodity_filter" class="form-control col-md-3">
