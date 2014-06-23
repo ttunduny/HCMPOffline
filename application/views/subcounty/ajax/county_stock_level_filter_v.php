@@ -1,8 +1,7 @@
 <div class="alert alert-info" style="width: 100%">
   <b>Below are the Stocking Levels in the County </b> :Select filter Options
 </div>
-<?php //This was added by Adima 
-$no_of_tracer_items = facility_stocks_temp::get_tracer_item_names($district_id); $no = count($no_of_tracer_items); ?>
+<?php $no_of_tracer_items = facility_stocks_temp::get_months_of_stock($district_id, $county_id, $facility_code); $no = count($no_of_tracer_items); ?>
 <ul class='nav nav-tabs'>
 	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items<?php echo "(".$no.")"; ?></a></li>
       <li class=""><a href="#cat" data-toggle="tab">Categories</a></li>
@@ -39,6 +38,7 @@ endforeach;
 <option value="packs">Packs</option>
 <option value="units">Units</option>
 <option value="ksh">KSH</option>
+<option value="mos">Months of stock</option>
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success tracer-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
@@ -61,7 +61,7 @@ foreach($categories as $data):
 		echo "<option value='$commodity_id'>$commodity_name</option>";
 endforeach;
 ?>
-</select>
+</select> 
 	<select id="category_district_filter" class="form-control col-md-2">
 <option selected="selected" value="NULL">Select Sub-county</option>
 <?php
