@@ -1,3 +1,13 @@
+<style type="text/css">
+	.well{
+		background-color: white;
+	}
+
+	.page-header{
+		border:none;
+	}
+</style>
+
 <?php   $identifier = $this -> session -> userdata('user_indicator');
 		$countyname = $this -> session -> userdata('county_name');
 		$malaria_report_data='';
@@ -65,7 +75,8 @@ HTML_DATA;
 HTML_DATA;
 			endforeach;
 			endforeach;
-/*		foreach($TB as $TB_details1):
+
+		foreach($TB as $TB_details1):
 			foreach($TB_details1 as $TB_details):
 				$facilityname = Facilities::get_facility_name2($TB_details['facility_code']);
 				$facility = $facilityname['facility_name'];
@@ -93,12 +104,11 @@ HTML_DATA;
            </tr>
 HTML_DATA;
 			endforeach;
-			endforeach;*/			
-		
+			endforeach;
 		?>
 <h1 class="page-header" style="margin: 0;font-size: 1.6em;"><?php echo $page_header. " for ". date("Y"); ?></h1>
-<div class="row container" style="width: 100%; margin: auto;">
-<div class="col-md-10" style="border: 1px solid #DDD;">
+<div class="row container" style="width: 100%; margin: auto; background-color: white;">
+<div class="" style="background-color: white;">
 	<ul class='nav nav-tabs'>
       <li class="active"><a href="#Malaria" data-toggle="tab">Malaria Reports</a></li>
       <li class=""><a href="#RH" data-toggle="tab">RH Reports</a></li>
@@ -109,12 +119,7 @@ HTML_DATA;
 	        <table width="80%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="test1">
 			<thead>
 				<tr>
-					<td colspan='4'>
-						<a href='<?php echo $link_new_report_malaria;?>'>
-							<button  type='button' class='btn btn-xs btn-primary'style="float: right">
-		           			<span class='glyphicon glyphicon-save'></span>Submit Malaria Report</button>
-		           		</a>
-		           		</td>
+					
 		        </tr>
 				<tr>
 					<th>Facility Name</th>
@@ -135,17 +140,16 @@ HTML_DATA;
 			</tbody>
 			
 			</table> 
+						<a href='<?php echo $link_new_report_malaria;?>'>
+							<button  type='button' class='btn btn-xs btn-primary'style="float: right">
+		           			<span class='glyphicon glyphicon-save'></span>Submit Malaria Report</button>
+		           		</a>
+		    
       </div>
      <div class="tab-pane fade" id="RH">
         <table cellpadding="0" cellspacing="0" width="100%" border="0" class="row-fluid table table-bordered"  id="test2">
 		<thead>
 			<tr>
-				<td colspan='4'>
-					<a href='<?php echo $link_new_report_RH;?>' style="float: right">
-						<button  type='button' class='btn btn-xs btn-primary'>
-	           			<span class='glyphicon glyphicon-save'></span>Submit RH Report</button>
-		           	</a>
-		        </td>
 			</tr>
 			<tr>
 				<th>Facility Name</th>
@@ -163,17 +167,18 @@ HTML_DATA;
 
 		</tbody>
 		</table> 
+
+		<a href='<?php echo $link_new_report_RH;?>' style="float: right">
+						<button  type='button' class='btn btn-xs btn-primary'>
+	           			<span class='glyphicon glyphicon-save'></span>Submit RH Report</button>
+		           	</a>
+		           	
       </div>
      <div class="tab-pane fade" id="TB">
         <table cellpadding="0" cellspacing="0" width="100%" border="0" class="row-fluid table table-bordered"  id="test2">
 		<thead>
 			<tr>
-				<td colspan='4'>
-					<a href='<?php echo $link_TB;?>' target='_blank'>
-						<button  type='button' class='btn btn-xs btn-primary' style="float: right">
-		       			<span class='glyphicon glyphicon-save'></span>Submit TB Report</button>
-       				</a>
-       			</td>
+				
 						</tr>	
 			<tr>
 				<th>Facility Name</th>
@@ -184,11 +189,15 @@ HTML_DATA;
 		</thead>
 		<tbody>
 			<?php
-			 //echo $TB_report_details;
+			 echo $TB_report_details;
 			
 			 ?>
 		</tbody>
 		</table> 
+		<a href='<?php echo $link_TB;?>' target='_blank'>
+						<button  type='button' class='btn btn-xs btn-primary' style="float: right">
+		       			<span class='glyphicon glyphicon-save'></span>Submit TB Report</button>
+       				</a>
       </div>
     </div>
  	</div>

@@ -35,13 +35,13 @@ class Divisional_Reports extends MY_Controller
 						$facility_id = $ids['facility_code'];
 						$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
 						$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
-						//$report_TB = tb_data::get_facility_report_details($facility_id);
+						$report_TB = tb_data::get_facility_report_details($facility_id);
 						
 						if ((!empty($report_RH))&&(!empty($report_malaria)))
 						{
 							$report_RH_report[$index] = $report_RH;
 							$report_malaria_report[$index] = $report_malaria;
-							//$report_tuberculosis[$index] = $report_TB;
+							$report_tuberculosis_report[$index] = $report_TB;
 						
 						}else{
 							
@@ -52,8 +52,7 @@ class Divisional_Reports extends MY_Controller
 				$data['page_header'] = "Divisional Reports";	
 				$data['malaria'] = $report_malaria_report;
 				$data['RH'] = $report_RH_report;
-
-				//$data['TB'] = $report_tuberculosis;
+				$data['TB'] = $report_tuberculosis_report;
 				$data['title'] = "Divisional Reports";
 				$data['banner_text'] = "Divisional Reports";
 				$data['report_view'] = "subcounty/reports/program_reports_v";
@@ -84,7 +83,6 @@ class Divisional_Reports extends MY_Controller
 					
 				$data['malaria'] = $report_malaria_report;
 				$data['RH'] = $report_RH_report;
-				//$data['TB'] = $report_tuberculosis;
 				$data['title'] = "Program Reports";
 				$data['banner_text'] = "Program Reports";
 				$data['report_view'] = "subcounty/reports/program_reports_v";
