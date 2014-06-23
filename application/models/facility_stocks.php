@@ -52,6 +52,7 @@ class Facility_stocks extends Doctrine_Record {
 	}// get all facility stock commodity id, options check if the user wants batch data or commodity grouped data and return the total 
 	
 	public static function get_distinct_stocks_for_this_facility($facility_code,$checker=null,$exception=null){
+
 $addition=isset($checker)? ($checker==='batch_data')? 'and fs.current_balance>0 group by fs.id,c.id order by fs.expiry_date asc' 
 : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc' : null ;
 $check_expiry_date=isset($exception)? null: " and fs.expiry_date >= NOW()" ;
@@ -63,6 +64,7 @@ c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commo
  where fs.facility_code ='$facility_code' $check_expiry_date 
  and c.id=fs.commodity_id and fs.status='1' $addition 
 ");
+
 return $stocks ;
 }
     public static function get_facility_stock_amc($facility_code){
@@ -157,15 +159,17 @@ $year=null,$month=null,$option=null,$data_for=null)
       $computation ="ifnull((SUM(ROUND(fs.current_balance/ d.total_commodity_units)))*d.unit_cost ,0) AS total";
           break;
      endswitch;		
- 	 $selection_for_a_month=isset($facility_code) && isset($district_id)? " d.commodity_name as name," :( 
+ 	 $selection_for_a_month = isset($facility_code) && isset($district_id)? " d.commodity_name as name," :( 
 	 isset($district_id) && !isset($facility_code) ? " f.facility_name as name,": " di.district as name,") ;
-	 $select_option=($data_for=='all') ?"date_format( fs.expiry_date, '%b' ) as cal_month," : $selection_for_a_month;
+	 
+	 $select_option = ($data_for=='all') ?"date_format( fs.expiry_date, '%b' ) as cal_month," : $selection_for_a_month;
 	 $and_data =($district_id>0) ?" AND di.id = '$district_id'" : null;
 	 $and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
 	 $and_data .=($county_id>0) ?" AND c.id='$county_id'" : null;
 	 $and_data .=($month>0) ? " AND date_format( fs.expiry_date, '%m')=$month"  : null;
 	 $and_data .=($year>0) ? " AND DATE_FORMAT( fs.expiry_date,'%Y') =$year"  : null;  	 
 	 $group_by_a_month=isset($facility_code) && isset($district_id)? " GROUP BY fs.commodity_id having total>0" :( 
+	
 	 isset($district_id) && !isset($facility_code) ?  " GROUP BY f.facility_code having total>0": " GROUP BY d.id having total>0") ;
 	 $group_by =($data_for=='all') ?"GROUP BY month(expiry_date) asc":$group_by_a_month;
      	 
@@ -205,8 +209,6 @@ $year=null,$month=null,$option=null,$data_for=null)
           break;
      endswitch;		
 	 	
-   //  $and_data=($graph_type=='table_data')&& ($commodity_id>0) ?" AND d.drug_category = '$category_id'" : null;
-   //$and_data = "";
      $and_data .=(isset($category_id)&& ($category_id>0)) ?"AND d.commodity_sub_category_id = '$category_id'" : null;
      $and_data .=(isset($commodity_id)&& ($commodity_id>0)) ?"AND d.id = '$commodity_id'" : null;
 	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND di.id = '$district_id'" : null;
@@ -225,7 +227,6 @@ $year=null,$month=null,$option=null,$data_for=null)
      WHERE fs.facility_code = f.facility_code
      AND f.district =di.id
      and fs.expiry_date>NOW()
-     AND d.id = fs.commodity_id
      AND fs.status=1
      $and_data
       $group_by_a_month
@@ -363,6 +364,51 @@ public static function get_facility_drug_consumption_level($facilities_filter,$c
     
    	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 		->fetchAll("SELECT MONTHNAME( fs.date_issued ) as month, cms.commodity_name as Name,$computation 
+					FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
+					WHERE fs.facility_code = f.facility_code
+					AND f.facility_code = $facilities_filter
+					AND fs.qty_issued > 0
+					AND f.district = di.id
+					AND fs.status =  '1'
+					AND fs.commodity_id = $commodity_filter
+					AND YEAR( fs.date_issued ) =$year_filter
+					AND cms.id = fs.commodity_id
+					GROUP BY MONTH( fs.date_issued ) asc");		
+		return $inserttransaction ;
+	
+
+
+ }
+public static function get_facility_consumption_level_new($facilities_filter,$commodity_filter,$year_filter,$plot_value_filter)
+ {
+ 	switch ($plot_value_filter) :
+		case 'ksh':
+			$computation ="CEIL((fs.qty_issued)*cms.unit_cost ) AS total_consumption";
+            break;
+        case 'units':
+           	$computation ="fs.qty_issued AS total_consumption" ;
+            break;
+        case 'packs':
+           	$computation ="CEIL(fs.qty_issued/cms.total_commodity_units) AS total_consumption" ;
+            break;
+        default:
+            $computation ="fs.qty_issued AS total_consumption" ;
+            break;
+    endswitch;
+    /*echo "SELECT MONTHNAME( fs.date_issued ) as month, $computation 
+					FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
+					WHERE fs.facility_code = f.facility_code
+					AND f.facility_code = $facilities_filter
+					AND fs.qty_issued > 0
+					AND f.district = di.id
+					AND fs.status =  '1'
+					AND fs.commodity_id = $commodity_filter
+					AND YEAR( fs.date_issued ) =$year_filter
+					AND cms.id = fs.commodity_id
+					GROUP BY MONTH( fs.date_issued ) asc";
+					exit;*/
+   	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT MONTHNAME( fs.date_issued ) as month, $computation 
 					FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
 					WHERE fs.facility_code = f.facility_code
 					AND f.facility_code = $facilities_filter

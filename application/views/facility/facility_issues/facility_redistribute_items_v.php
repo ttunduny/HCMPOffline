@@ -354,14 +354,14 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 		var service_point=selector_object.closest("tr").find(".service_point").val();
 		var commodity_id=selector_object.closest("tr").find(".desc").val();
 		var issue_date=selector_object.closest("tr").find(".clone_datepicker_normal_limit_today").val();
-		var issue_quantity=selector_object.closest("tr").find(".quantity_issued").val();
+		//var issue_quantity=selector_object.closest("tr").find(".quantity_issued").val();
 		var facility=selector_object.closest("tr").find(".facility").val();
 		//set the message here
 		if (facility==0) {alert_message+="<li>Select a Facility First</li>";}
 		if (service_point==0) {alert_message+="<li>Select a Service Point</li>";}
 	    if (commodity_id==0) {alert_message+="<li>Select a commodity</li>";}
 	    if (issue_date==0 || issue_date=='') {alert_message+="<li>Indicate the date of the issue</li>";}	
-	    if (issue_quantity==0) {alert_message+="<li>Indicate how much you want to issue</li>";}	    
+	   // if (issue_quantity==0) {alert_message+="<li>Indicate how much you want to issue</li>";}	    
 	    return[alert_message,service_point,commodity_id,issue_quantity,issue_date];	
 		}//extract facility_data  from the json object 		
 		function extract_data(commodity_id_,commodity_stock_row_id,type_of_drop_down){

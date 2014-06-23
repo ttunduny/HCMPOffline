@@ -1,19 +1,3 @@
-<style>
-	.filter
-	{
-		width: 98%;
-		height:7em;
-		margin:auto;	
-	}
-	.graph_content
-	{
-		width: 99%;
-		height:400px;
-		-webkit-box-shadow: 1px 1px 1px 1px #DDD3ED;
-		box-shadow: 1px 1px 1px 1px #DDD3ED;
-		margin:auto;	
-	}
-</style>
 <div class="filter" id="">
 <h5>
 <select id="commodity_filter" style="width: 10.8em;">
@@ -67,7 +51,7 @@ endforeach;
 		{
 
 	    var url = url;
-	    var loading_icon = "<?php echo base_url().'assets/img/loadfill.gif' ?>";
+	    var loading_icon = "<?php echo base_url().'assets/img/loader.GIF' ?>";
 	    $.ajax({
           type: "POST",
           url: url,

@@ -77,10 +77,10 @@ class Log extends Doctrine_Record {
 			break;
 			endswitch;
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->execute("
-			update log set $action, 
-			where `user_id`='$user_id'
+			update log set $action  
+			where `user_id`= $user_id 
 			AND action = 'Logged In' 
-			and UNIX_TIMESTAMP( `end_time_of_event`) =0");	
+			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");	
 		 
 	}
 	public static function get_log_data($district_id,$county_id)
@@ -91,7 +91,8 @@ class Log extends Doctrine_Record {
 		ifnull(sum(l.ordered), 0) as total_orders,
 		ifnull(sum(l.decommissioned), 0) as total_decommisions,
 		ifnull(sum(l.redistribute), 0) as total_redistributions,
-		ifnull(sum(l.add_stock), 0) as total_stock_added
+		ifnull(sum(l.add_stock), 0) as total_stock_added,
+		ifnull(COUNT(DISTINCT u.facility ),0) AS total_logins
 		from log l, user u
 		where l.user_id = u.id
 		AND u.county_id = $county_id

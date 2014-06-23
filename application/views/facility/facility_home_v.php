@@ -35,7 +35,7 @@
         <div style="height:auto; margin-bottom: 2px" class="warning message ">       	
         <h5>Expired Commodities</h5>
         	<p>
-			<a class="link" href="<?php echo base_url('reports') ?>"> <span class="badge"><?php 
+			<a class="link" href="<?php echo base_url('reports/expiries') ?>"> <span class="badge"><?php 
 				echo $facility_dashboard_notifications['actual_expiries'];?></span>Expired Commodities Awaiting Decommisioning.</a> 
 			</p> 
         </div>
@@ -114,14 +114,17 @@
         <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="order message " id="order_tab">
             <h5>Orders</h5>
         </div>
-
          <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
             <a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>KEMSA</h5></a>
             <a href=""><h5>MEDS</h5></a> 
         </div>       
-         <div style="height:auto; margin-bottom: 2px" class="delivery message ">
-        	<a href="<?php echo base_url('reports/order_listing/facility')?>"><h5>Update Order Delivery</h5></a> 
-        	 </div>   	 
+         <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="delivery message" id = "update_order">
+        	<h5>Update Order Delivery</h5> 
+         </div>  
+        	  <div style="height:auto; margin-bottom: 2px" class="" id="update_order_hide">
+	            <a href="<?php echo base_url('reports/order_listing/facility'); ?>"><h5>KEMSA</h5></a>
+	            <a href="<?php echo base_url('reports/work_in_progress'); ?>"><h5>MEDS</h5></a> 
+        	</div>       	 
         <div style="height:auto; margin-bottom: 2px" class="order message ">
           <a href="<?php echo base_url("issues/add_service_points") ?>"><h5>Add Service Points </h5></a>          
         </div>
@@ -152,11 +155,16 @@
 
 	
    $(document).ready(function() {
+   	$('#update_order_hide').hide() 
        $('#order_hide').hide() 
 
        $('#order_tab').click(function(event) {
            /* Act on the event */
            $('#order_hide').toggle('slow')
+       }); 
+       $('#update_order').click(function(event) {
+           /* Act on the event */
+           $('#update_order_hide').toggle('slow')
        }); 
 
 	

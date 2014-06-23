@@ -48,7 +48,7 @@
       	<div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         	<h5>Orders Pending Approval by District Pharmacist</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('reports/order_listing/facility') ?>"><span class="badge"><?php 
+			<a class="link" href="<?php echo base_url('reports/order_listing/subcounty') ?>"><span class="badge"><?php 
 			echo $county_dashboard_notifications['facility_order_count']['pending'] ?></span>Order(s) Pending in your area</a> 
 			</p>
         </div>
