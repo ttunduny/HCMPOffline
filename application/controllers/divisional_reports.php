@@ -52,7 +52,6 @@ class Divisional_Reports extends MY_Controller
 				$data['page_header'] = "Divisional Reports";	
 				$data['malaria'] = $report_malaria_report;
 				$data['RH'] = $report_RH_report;
-
 				$data['TB'] = $report_tuberculosis_report;
 				$data['title'] = "Divisional Reports";
 				$data['banner_text'] = "Divisional Reports";
@@ -84,7 +83,6 @@ class Divisional_Reports extends MY_Controller
 					
 				$data['malaria'] = $report_malaria_report;
 				$data['RH'] = $report_RH_report;
-				//$data['TB'] = $report_tuberculosis;
 				$data['title'] = "Program Reports";
 				$data['banner_text'] = "Program Reports";
 				$data['report_view'] = "subcounty/reports/program_reports_v";
