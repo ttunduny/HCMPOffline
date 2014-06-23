@@ -622,32 +622,78 @@ class Reports extends MY_Controller
         
 		
 	}
-	public function filter_expiries($year=null, $month=null, $option=null)
+	public function filter_expiries($year = null, $month = null, $district_id = null, $option = null, $facility_code = null,$report_type=null)
 	{
-		$year = (isset($year)) ? $year: date("Y");
-		$month = (isset($month))? $month: date("m");
-		$option = (isset($option))? $option: "Units";
+		$year = strtolower($year);
+		$month = strtolower($month);
+		//$year = ($year =="NULL")? date("Y"): $year;
+		//$month = ($month =="null")? date("m"): $month;
+		//$year = (isset($year)) ? $year: date("Y");
+		//$month = (isset($month))? $month: date("m");
+		//$option = (isset($option))? $option: "units";
+		$option=($option=="NULL") ? "units" :$option;
 		
 		$facility_code = isset($facility_code) ? $facility_code: $this -> session -> userdata('facility_id');
 		$facility_name = Facilities::get_facility_name_($facility_code)->toArray();
 		$facility_name = $facility_name[0]['facility_name'];
 		
-		//get the filtered expiries
-		$expired_commodities = Facility_stocks::get_filtered_expiries($facility_code, $year, $month, $option);
-		
 		$graph_data = array();
 		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
 		$graph_data = array_merge($graph_data,array("graph_title"=>'Total Expiries in '.$facility_name));
-		$graph_data = array_merge($graph_data,array("graph_type"=>'column'));
+		
 		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Expiries (values in '.$option.')'));
 		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
 		$graph_data = array_merge($graph_data,array("series_data"=>array("Expiries"=>array())));
+		//get the filtered expiries
+		if(($year != 'null') && $month != 'null' && $month>0)
+		{
+			$graph_data = array_merge($graph_data,array("graph_type"=>'column'));
+			$expired_commodities = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,
+			$county_id, $year, $month,$option ,"all_");
+			
+			foreach($expired_commodities as $facility_stock_expired):
+				$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_stock_expired['cal_month']));	
+				$graph_data['series_data']['Expiries'] = array_merge($graph_data['series_data']['Expiries'],array((int)$facility_stock_expired['total']));	
+			endforeach;
 		
-		foreach($expired_commodities as $facility_stock_expired):
-			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_stock_expired['month']));	
-			$graph_data['series_data']['Expiries'] = array_merge($graph_data['series_data']['Expiries'],array((int)$facility_stock_expired['total_expiries']));	
-		endforeach;
+		}elseif(($year == 'null') && $month != 'null' && $month>0)
+		{
+			$year = date("Y");	
+			$graph_data = array_merge($graph_data,array("graph_type"=>'column'));
+			
+			$expired_commodities = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,
+			$county_id, $year, $month,$option ,"all_"); 
+			
+			foreach($expired_commodities as $facility_stock_expired):
+				$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_stock_expired['name']));	
+				$graph_data['series_data']['Expiries'] = array_merge($graph_data['series_data']['Expiries'],array((int)$facility_stock_expired['total']));	
+			endforeach;
+		}
+		elseif($month == 'null' && $year != 'null')
+		{
+			
+			$graph_data = array_merge($graph_data,array("graph_type"=>'column'));
+			
+			$expired_commodities = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,
+			$county_id, $year, null,$option ,"all_"); 
+			
+			foreach($expired_commodities as $facility_stock_expired):
+				$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_stock_expired['name']));	
+				$graph_data['series_data']['Expiries'] = array_merge($graph_data['series_data']['Expiries'],array((int)$facility_stock_expired['total']));	
+			endforeach;
+		}else if ($month == 'null' && $year == 'null'){
+			
+			$graph_data = array_merge($graph_data,array("graph_type"=>'line')); 
+			
+			$expired_commodities = Facility_stocks::get_expiries($facility_code);
+			
+			foreach($expired_commodities as $facility_stock_expired):
+				$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_stock_expired['month']));	
+				$graph_data['series_data']['Expiries'] = array_merge($graph_data['series_data']['Expiries'],array((int)$facility_stock_expired['total_expiries']));	
+			endforeach; 
+		}
 		
+	
 		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		
@@ -1532,7 +1578,7 @@ class Reports extends MY_Controller
 	 }
 
 	 public function get_county_cost_of_expiries_new($year = null, $month = null, $district_id = null, $option = null, $facility_code = null,$report_type=null) {
-	 		
+	 	//get_county_cost_of_expiries_new/0/null/88/0/17401
 	 	$year=($year=="NULL") ? null :$year;
 	 	$month=($month=="NULL") ? date("m") :$month;
 	 	$district_id=($district_id=="NULL") ? null :$district_id;
@@ -1540,7 +1586,7 @@ class Reports extends MY_Controller
 	 	$facility_code=($facility_code=="NULL") ? null :$facility_code;
 		$option=($option=="NULL" || $option=="null") ? null :$option;
 		//set up the variables 
-		$year=isset($year)? $year :date("Y");		
+		$year = isset($year)? $year :date("Y");		
 		$county_id = $this -> session -> userdata('county_id');
 		$district_id_checker = $this -> session -> userdata('district_id');
 		$county_name = counties::get_county_name($county_id);
@@ -1550,61 +1596,73 @@ class Reports extends MY_Controller
 		$graph_data=array();
 		$graph_type='';
 		$title='';
+		
         //months
 		$months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');		
-		$month_=isset($month) ?$months[(int) $month-1] : null ;
+		$month_ = isset($month) ?$months[(int) $month-1] : null ;
         //check if the district is set
 		$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
 		$district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " subcounty" : null;
 		$option_new = isset($option) ? $option : "ksh";
 		$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
-		$facility_name=$facility_code_[0]['facility_name'];
+		$facility_name = $facility_code_[0]['facility_name'];
 		$title=isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
-	 isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
-        //get the expiry for the entire year either for a facility sub-county or county      
-		if ($year==date("Y") && !isset($month)) {
-		$category_data = array_merge($category_data, $months);
-		$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,
-		$county_id, $year, null,$option ,"all");       
-		foreach ($commodity_array as $data) :
-		$temp_array = array_merge($temp_array, array($data["cal_month"] => (int)$data['total']));
-		endforeach;
-		foreach ($months as $key => $data) :
-		$val = (array_key_exists($data, $temp_array)) ? (int)$temp_array[$data] : (int)0;
-		$series_data = array_merge($series_data, array($val));
-		array_push($series_data_, array($data,$val));
-		endforeach;
-		$graph_type='spline';
+	 	isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
+        //get the expiry for the entire year either for a facility sub-county or county     
+         
+		if ($year == date("Y") && $month == null) 
+		{
+			echo "Only year isset";
+			exit;
+			$category_data = array_merge($category_data, $months);
+			$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,
+			$county_id, $year, null,$option ,"all");   
+		
+			foreach ($commodity_array as $data) :
+			$temp_array = array_merge($temp_array, array($data["cal_month"] => (int)$data['total']));
+			endforeach;
+			foreach ($months as $key => $data) :
+			$val = (array_key_exists($data, $temp_array)) ? (int)$temp_array[$data] : (int)0;
+			$series_data = array_merge($series_data, array($val));
+			array_push($series_data_, array($data,$val));
+			endforeach;
+			
+			$graph_type='spline';
 		}
         //get the expiry for a specific month base on the set parameters
-		if (isset($month) && $month>0) {
-		$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,
-		$county_id, $year, $month,$option ,"all_");
+		if (isset($month) && $month>0) 
+		{
+			
+			$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,
+			$county_id, $year, $month,$option ,"all_");
 		
-		foreach ($commodity_array as $data) :
-		$series_data  = array_merge($series_data , array($data["name"] => (int) $data['total']));
-		$category_data=array_merge($category_data, array($data["name"]));
-		array_push($series_data_, array($data["name"], (int) $data['total']));
-		endforeach;
-        $graph_type='column';
+			print_r($commodity_array);
+			exit;
+		
+			foreach ($commodity_array as $data) :
+			$series_data  = array_merge($series_data , array($data["name"] => (int) $data['total']));
+			$category_data=array_merge($category_data, array($data["name"]));
+			array_push($series_data_, array($data["name"], (int) $data['total']));
+			endforeach;
+	        $graph_type='column';
 		}
 		
 		if($report_type=="csv_data"):
-		$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "stock expired in $commodity_name $title $month_ $year", 'file_name' => "Stock_expired_$commodity_name_$title_$month_$year");
-		$row_data = array(array("stock expired in $title $month_ $year","stock expired in $option_new"));
-		$column_data = array("");
-		$excel_data['column_data'] = $column_data;
-		$row_data=array_merge($row_data,$series_data_);
-		$excel_data['row_data'] = $row_data;
-		$this -> hcmp_functions -> create_excel($excel_data);
+			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "stock expired in $commodity_name $title $month_ $year", 'file_name' => "Stock_expired_$commodity_name_$title_$month_$year");
+			$row_data = array(array("stock expired in $title $month_ $year","stock expired in $option_new"));
+			$column_data = array("");
+			$excel_data['column_data'] = $column_data;
+			$row_data=array_merge($row_data,$series_data_);
+			$excel_data['row_data'] = $row_data;
+			$this -> hcmp_functions -> create_excel($excel_data);
 		else:   
-	    $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_'));
-	    $graph_data=array_merge($graph_data,array("graph_title"=>"stock expired in $title $month_ $year"));
-	    $graph_data=array_merge($graph_data,array("graph_type"=>$graph_type));
-	    $graph_data=array_merge($graph_data,array("graph_yaxis_title"=>"stock expired in $option_new"));
-	    $graph_data=array_merge($graph_data,array("graph_categories"=>$category_data ));
-	    $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
-		$data = array();
+		    $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_'));
+		    $graph_data=array_merge($graph_data,array("graph_title"=>"stock expired in $title $month_ $year"));
+		    $graph_data=array_merge($graph_data,array("graph_type"=>$graph_type));
+		    $graph_data=array_merge($graph_data,array("graph_yaxis_title"=>"stock expired in $option_new"));
+		    $graph_data=array_merge($graph_data,array("graph_categories"=>$category_data ));
+		    $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
+			$data = array();
 		
 		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);

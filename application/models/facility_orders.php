@@ -129,7 +129,7 @@ class facility_orders extends Doctrine_Record {
            $computation ="(fod.quantity_ordered_unit) AS total" ;
              break;
              case 'packs':
-           $computation ="(fod.quantity_ordered_unit) AS total" ;
+           $computation ="(fod.quantity_ordered_pack) AS total" ;
              break;
          default:
       $computation ="((fod.quantity_ordered_unit)*d.unit_cost) AS total";
