@@ -25,11 +25,7 @@ class Malaria_Data extends Doctrine_Record
 
 	public function setUp() 
 	{
-		
 		$this -> setTableName('malaria_data');
-		//$this -> hasOne('kemsa_id as Code', array('local' => 'kemsa_code', 'foreign' => 'kemsa_code'));
-		//$this -> hasOne('user_id as id', array('local' => 'user_id', 'foreign' => 'user_id'));
-		
 				
 	}
 	public static function get_user_data($id)
@@ -57,19 +53,21 @@ class Malaria_Data extends Doctrine_Record
 	public static function get_facility_report_details($facility_id)
 	{
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
-   	 	->fetchAll("select distinct(user_id) as user, date_format(Report_Date, '%M %Y')as report_date, report_date as report_timestamp, report_id, facility_id as facility_code from malaria_data where facility_id = $facility_id 
-   	 	order by Report_Date desc"); 
+   	 	->fetchAll("select distinct(user_id) as user, 
+   	 			date_format(Report_Date, '%M %Y')as report_date, 
+   	 			report_date as report_timestamp, report_id, 
+   	 			facility_id as facility_code 
+   	 			from malaria_data 
+   	 			where facility_id = $facility_id 
+   	 			order by Report_Date desc"); 
 		return $query;
 			
 	}
 	//get the malaria report for a particular facility 
 	public static function get_report_submitter($id)
 	{
-		//$query = Doctrine_Query::create() -> select("user_id") -> from("malaria_data")-> where("facility_id = '$id' ")->groupBy("Report_Date");
-		//$all_data = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
-		//return $all_data;
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
-   	 ->fetchAll("select distinct(user_id) as user, facility_id from malaria_data where facility_id = $id order by user_id"); 
+   	 	->fetchAll("select distinct(user_id) as user, facility_id from malaria_data where facility_id = $id order by user_id"); 
 		return $query;
 			
 	}
