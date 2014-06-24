@@ -966,6 +966,7 @@ class Reports extends MY_Controller
 			$date_ = date('M', strtotime($new_date));
 			$category_data_monthly = array_merge($category_data_monthly, array($date_));
 
+
 			foreach ($graph_category_data as $facility_) :
 				$facility_id = $facility_ -> facility_code;
 				$facility_name = $facility_ -> facility_name;
@@ -978,6 +979,10 @@ class Reports extends MY_Controller
 
 		endfor;
 			
+			/*echo "<pre>";
+			print_r($series_data_monthly);
+			echo "</pre>";*/
+
 		$graph_data = array();
 		$graph_data = array_merge($graph_data,array("graph_id"=>'container_monthly'));
 		$graph_data = array_merge($graph_data,array("graph_title"=>'Monthly Facility Access for '. $year));

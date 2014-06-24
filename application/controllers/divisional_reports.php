@@ -67,12 +67,12 @@ class Divisional_Reports extends MY_Controller
 						$facility_id = $ids['facility_code'];
 						$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
 						$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
-						//$report_TB = tb_data::get_facility_report_details($facility_id);
+						$report_TB = tb_data::get_facility_report_details($facility_id);
 						if ((!empty($report_RH))&&(!empty($report_malaria)))
 						{
 							$report_RH_report[$index] = $report_RH;
 							$report_malaria_report[$index] = $report_malaria;
-							//$report_tuberculosis[$index] = $report_TB;
+							$report_tuberculosis[$index] = $report_TB;
 							
 						}else{
 							
