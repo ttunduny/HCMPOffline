@@ -122,6 +122,8 @@
     
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
+   <script src="<?php echo base_url().'assets/scripts/exporting.js'?>" type="text/javascript"></script>
 	<script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>
 	<script type="text/javascript" src="<?php echo base_url().'assets/scripts/jquery.loadingbar.js'?>"></script>
     <script src="<?php echo base_url().'assets/scripts/sidebarEffects.js'?>" type="text/javascript"></script>

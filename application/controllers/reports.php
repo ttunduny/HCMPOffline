@@ -1780,21 +1780,21 @@ class Reports extends MY_Controller
 
 		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code, $district_id, $county_id,
 		$category_id, $commodity_id, $option_new, $report_type);
-       //var_dump($commodity_array);
-		//exit;
 
         foreach ($commodity_array as $data) :
 			if($report_type=="table_data"):
 				if($commodity_id>0):
 					array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"], $data['total']));
 				else:
-					array_push($series_data , array($data["name"], $data['total']));
+					array_push($series_data , array($data["name"],(int) $data['total']));
 				endif;						
 			else:
+
 				$series_data  = array_merge($series_data , array($data["name"] => (int)$data['total']));
 				$series_data_  = array_merge($series_data_ , array($data["name"],(int)$data['total']));
 				$category_data=array_merge($category_data, array($data["name"]));
 			endif;
+
 		endforeach;
 		
 		if($report_type=="table_data"):

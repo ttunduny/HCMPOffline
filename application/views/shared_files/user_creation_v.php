@@ -2,16 +2,21 @@
 	
 	.panel-body,span:hover,.status_item:hover
 	{ 
+		
 		cursor: pointer !important; 
 	}
 	
 	.panel {
+		
 		border-radius: 0;
+		
 	}
 	.panel-body {
+		
 		padding: 8px;
 	}
 	#addModal .modal-dialog {
+		
 		width: 54%;
 	}
 	
@@ -279,6 +284,8 @@
 								</div>
 								<?php }elseif ($identifier=='facility_admin') {
 											//code if facility admin
+											
+											
 										}
 								?>
 
