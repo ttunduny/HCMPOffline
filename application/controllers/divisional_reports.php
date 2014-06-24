@@ -33,11 +33,11 @@ class Divisional_Reports extends MY_Controller
 				$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
 				$report_TB = tb_data::get_facility_report_details($facility_id);
 						
-				if ((!empty($report_RH))&&(!empty($report_malaria)))
+				if ((!empty($report_RH))&&(!empty($report_malaria)&&(!empty($report_TB))))
 				{
 					$report_RH_report[$index] = $report_RH;
 					$report_malaria_report[$index] = $report_malaria;
-					$report_tuberculosis_report[$index] = $report_TB;
+					$report_tuberculosis[$index] = $report_TB;
 				
 				}else{
 					
@@ -46,7 +46,7 @@ class Divisional_Reports extends MY_Controller
 				$data['page_header'] = "Divisional Reports";	
 				$data['malaria'] = $report_malaria_report;
 				$data['RH'] = $report_RH_report;
-				$data['TB'] = $report_tuberculosis_report;
+				$data['TB'] = $report_tuberculosis;
 				$data['title'] = "Facility Divisional Reports";
 				$data['banner_text'] = "Facility Divisional Reports";
 				$data['report_view'] = "subcounty/reports/program_reports_v";
@@ -62,7 +62,7 @@ class Divisional_Reports extends MY_Controller
 					$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
 					$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
 					$report_TB = tb_data::get_facility_report_details($facility_id);
-					if ((!empty($report_RH))&&(!empty($report_malaria)))
+					if ((!empty($report_RH))&&(!empty($report_malaria)&&(!empty($report_TB))))
 					{
 
 						$report_RH_report[$index] = $report_RH;
@@ -95,7 +95,7 @@ class Divisional_Reports extends MY_Controller
 				$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
 				$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
 				$report_TB = tb_data::get_facility_report_details($facility_id);
-				if ((!empty($report_RH))&&(!empty($report_malaria)))
+				if ((!empty($report_RH))&&(!empty($report_malaria))&&(!empty($report_TB)))
 				{
 					$report_RH_report[$index] = $report_RH;
 					$report_malaria_report[$index] = $report_malaria;
@@ -110,6 +110,7 @@ class Divisional_Reports extends MY_Controller
 		
 			 $data['malaria'] = $report_malaria_report;
 			 $data['RH'] = $report_RH_report;
+			 $data['TB'] = $report_tuberculosis;
 			 $data['title'] = "County Program Reports";
 			 $data['banner_text'] = " County Program Reports";
 			 $data['report_view'] = "subcounty/reports/program_reports_v";	
@@ -214,9 +215,9 @@ public function save_tb_data(){
 	$user_id = $this -> session -> userdata('user_id');
 	foreach ($values as $key => $value) {
 		$no = count($values['table']);
-		/*echo "<pre>";
-		print_r($value);
-		echo "</pre>";exit;*/
+		
+		$report_id = rand(0, 10000000000);
+
 		for ($i=1; $i < 3; $i++) {//this loop is limited to three and is undynamic due to the fact that testing is done only with three fields 
 		$data = array( 
 		'facility_code'=>$value['facility_code'][0], 
@@ -231,12 +232,13 @@ public function save_tb_data(){
 		'physical_count'=>$value[$i][7],
 		'physical_count'=>$value[$i][8],
 		'quantity_needed'=>$value[$i][9],
-		'user_id' =>$user_id
+		'user_id' =>$user_id,
+		'report_id' =>$report_id
 		);
 		$this->db->insert('tuberculosis_data',$data);
 		}
-		echo "Success";
-		exit;
+
+		$this -> load -> program_reports();
 	}
 }
 
@@ -555,6 +557,51 @@ public function save_tb_data(){
           echo "$data"; 
 		
 	}
+
+	public function generate_tb_report_pdf($report_name,$title,$html_data)
+	{
+		$current_year = date('Y');
+		$current_month = date('F');
+		$facility_code=$this -> session -> userdata('news');
+		$facility_name_array=Facilities::get_facility_name($facility_code)->toArray();
+		$facility_name=$facility_name_array['facility_name'];
+				
+			/********************************************setting the report title*********************/
+			
+		$html_title="<div ALIGN=CENTER><img src='".base_url()."assets/img/coat_of_arms.png' height='70' width='70'style='vertical-align: top;' > </img></div>
+        <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif; font-size: 14px; display: block; font-weight: bold; '>
+       Ministry of Public Health and Sanitation/Ministry of Medical Services</div>
+        <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold;display: block; font-size: 13px;'>Health Commodities Management Platform</div>
+       <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif; font-size: 12px; display: block; font-weight: bold;'>".$current_month." ".$current_year."</h2>
+       <hr />   ";
+		
+
+		$css_path=base_url().'assets/css/style.css';
+		
+		/**********************************initializing the report **********************/
+            $this->load->library('mpdf');
+            $this->mpdf = new mPDF('', 'A4-L', 0, '', 15, 15, 16, 16, 9, 9, '');
+			//$stylesheet = file_get_contents("$css_path");
+			//$this->mpdf->WriteHTML($stylesheet,1);	// The parameter 1 tells that this is css/style only and no body/html/text
+            $this->mpdf->SetTitle($title);
+            $this->mpdf->WriteHTML($html_title);
+            $this->mpdf->simpleTables = true;
+            $this->mpdf->WriteHTML('<br/>');
+            $this->mpdf->WriteHTML($html_data);
+			$reportname = $report_name.".pdf";
+            $this->mpdf->Output($reportname,'D');
+
+	}
+	public function generate_tb_report_excel($report_name,$title,$html_data)
+	{
+		$data = $html_data;
+ 		$filename=$report_name;                      
+          header("Content-type: application/excel");
+          header("Content-Disposition: attachment; filename=$filename.xls");
+          echo "$data"; 
+		
+	}
+
 	public function sub_county_program_reports()
 	 {
 	 	$user_indicator = $district_id=$this -> session -> userdata('user_indicator');

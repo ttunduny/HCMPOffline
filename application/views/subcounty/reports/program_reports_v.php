@@ -83,9 +83,9 @@ HTML_DATA;
 				$user = Users::get_user_names($TB_details['user']);
 				$username = $user[0]['fname']." ".$user[0]['lname'];
 				$report_date = $TB_details['report_date'];
-				$link = base_url('reports/get_facility_report_pdf/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/RH');	
+				
+				$link = base_url('reports/get_facility_report_pdf/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/TB');	
 				$link_excel = base_url('reports/create_excel_facility_program_report/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/TB');
-
 			    $link_TB = base_url('divisional_reports/tb_report');
 			    $TB_report_details .= <<<HTML_DATA
 	            <tr>           
@@ -124,12 +124,7 @@ HTML_DATA;
 					<th>Prepared By:</th>
 					<th>Report Date</th>
 					<th>Action</th>
-					<th>
-					<a href='<?php echo $link_new_report_malaria;?>'>
-							<button  type='button' class='btn btn-xs btn-primary'style="float: right">
-		           			<span class='glyphicon glyphicon-floppy-disk'></span>Submit Malaria Report</button>
-		           		</a>
-		        </th>
+
 				</tr>
 				
 			</thead>
@@ -143,7 +138,11 @@ HTML_DATA;
 			</tbody>
 			
 			</table> 
-						
+			
+			<a href='<?php echo $link_new_report_malaria;?>'>
+							<button  type='button' class='btn btn-xs btn-primary'style="float: right">
+		           			<span class='glyphicon glyphicon-floppy-disk'></span>Submit Malaria Report</button>
+		           		</a>
 		    
       </div>
      <div class="tab-pane fade" id="RH">

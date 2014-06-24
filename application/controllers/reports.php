@@ -1436,9 +1436,89 @@ class Reports extends MY_Controller
 		$from_RH_data_table = RH_Drugs_Data::get_facility_report($report_id, $facility_code);
 		$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_id, $facility_code));
 		
+
+
 		foreach ($from_RH_data_table as $report_details) 
 		{
 			$mfl = $report_details['facility_id'];
+			$report_date = $report_details['Report_Date'];
+					
+			$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($mfl);
+			$sub_county_id = $myobj -> district;
+			$facility_name = $myobj -> facility_name;
+			
+			$myobj1 = Doctrine::getTable('Districts') -> find($sub_county_id);
+			$sub_county_name = $myobj1 -> district;
+			$county = $myobj1 -> county;
+
+			$myobj2 = Doctrine::getTable('Counties') -> find($county);
+			$county_name = $myobj2 -> county;
+
+			$myobj_order = Doctrine::getTable('users') -> find($report_details['user_id']);
+			$creator_email = $myobj_order -> email;
+			$creator_name1 = $myobj_order -> fname;
+			$creator_name2 = $myobj_order -> lname;
+			$creator_telephone = $myobj_order -> telephone;
+	
+		}
+	
+		//create the table for displaying the order details
+		$html_body = "<table class='data-table' width=100%>
+			<tr>
+			<td>MFL No: $mfl</td> 
+			<td>Health Facility Name:<br/> $facility_name</td>
+			<td>Level:</td>
+			<td>Dispensary</td>
+			<td>Health Centre</td>
+			</tr>
+			<tr>
+			<td>County: $county_name</td> 
+			<td> District: $sub_county_name</td>
+			<td >Reporting Period <br/>
+			Start Date:  <br/>  End Date: " . date('d M, Y', strtotime($report_date)) . "
+			</td>
+			</tr>
+			</table>";
+		$html_body .= "
+		<table class='data-table'>
+		<thead>
+		<tr>
+			<th ><b>Beginning Balance</b></th>
+			<th ><b>Quantity Received This Month</b></th>
+			<th ><b>Quantity Dispensed</b></th>
+			<th ><b>Losses</b></th>
+			<th ><b>Adjustments</b></th>
+			<th ><b>Ending Balance</b></th>
+			<th ><b>Quantity Requested</b></th>
+		</tr> 
+		</thead>
+		<tbody>";
+		$html_body .= '<ol type="a">';
+		for ($i = 0; $i < $from_RH_data_table_count; $i++) 
+		{
+			$html_body .= "<tr>";
+			$html_body .= "<td>". $from_RH_data_table[$i]['Beginning_Balance']."</td>";
+			$html_body .= "<td>" . $from_RH_data_table[$i]['Received_This_Month'] . "</td>";
+			$html_body .= "<td>" . $from_RH_data_table[$i]['Dispensed'] . "</td>";
+			$html_body .= "<td>" . $from_RH_data_table[$i]['Losses'] . "</td>";
+			$html_body .= "<td>" . $from_RH_data_table[$i]['Adjustments'] . "</td>";
+			$html_body .= "<td>" . $from_RH_data_table[$i]['Ending_Balance'] . "</td>";
+			$html_body .= "<td>" . $from_RH_data_table[$i]['Quantity_Requested'] . "</td>";
+			$html_body .= "</tr>";
+			
+			
+		}	
+		
+		$html_body .= '</tbody></table></ol>';
+		
+	}elseif($report_type == "TB")
+	{
+		$from_tb_data_table = tb_data::get_facility_report($report_id, $facility_code);
+		$from_tb_data_table_count = count(tb_data::get_facility_report($report_id, $facility_code));
+
+		foreach ($from_tb_data_table as $report_details) 
+		{
+			$mfl = $report_details['facility_code'];
 			$report_date = $report_details['Report_Date'];
 					
 			$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($mfl);
@@ -1521,7 +1601,9 @@ class Reports extends MY_Controller
 			$facility_details = Facilities::get_facility_name_($facility_code) -> toArray();
 			$from_malaria_data_table = Malaria_Data::get_facility_report($report_id, $facility_code);
 			$from_malaria_data_table_count = count(Malaria_Data::get_facility_report($report_id, $facility_code));
-						
+			
+	
+
 			$excel_data = array('doc_creator' => $facility_details[0]['facility_name'], 
 			'doc_title' => 'facility programm report template ', 'file_name' => $facility_details[0]['facility_name'].'facility programm report template ');
 			$row_data = array();
@@ -1558,7 +1640,10 @@ class Reports extends MY_Controller
 			
 			$from_RH_data_table = RH_Drugs_Data::get_facility_report($report_id, $facility_code);
 			$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_id, $facility_code));
-			
+		
+		echo "<pre>";
+		print_r($from_RH_data_table);
+		echo "</pre>";exit;
 			$excel_data = array('doc_creator' => $facility_details[0]['facility_name'], 
 			'doc_title' => 'facility program report ', 'file_name' => $facility_details[0]['facility_name'].'facility program report template');
 			$row_data = array();
@@ -1573,6 +1658,41 @@ class Reports extends MY_Controller
 			$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_id, $facility_code));
 			
 			for($i=0;$i<$from_RH_data_table_count;$i++):
+			
+			array_push($row_data, array($from_RH_data_table[$i]["Beginning_Balance"], 
+			$from_RH_data_table[$i]["Received_This_Month"], 
+			$from_RH_data_table[$i]["Dispensed"], 
+			$from_RH_data_table[$i]["Losses"],
+			$from_RH_data_table[$i]["Adjustments"],
+			$from_RH_data_table[$i]["Ending_Balance"],
+			$from_RH_data_table[$i]["Quantity_Requested"])); //
+			endfor;
+			$excel_data['row_data'] = $row_data;
+	
+			$this -> hcmp_functions -> create_excel($excel_data);
+		}elseif($report_type == "TB"){
+			
+			$facility_details = Facilities::get_facility_name_($facility_code) -> toArray();
+			
+			$from_TB_data_table = tb_data::get_facility_report($report_id, $facility_code);
+			$from_TB_data_table_count = count(tb_data::get_facility_report($report_id, $facility_code));
+
+			$tb_details = tb_data::get_facility_report($facility_code);
+
+			$excel_data = array('doc_creator' => $facility_details[0]['facility_name'], 
+			'doc_title' => 'facility program report ', 'file_name' => $facility_details[0]['facility_name'].'facility program report template');
+			$row_data = array();
+			$column_data = array("Beginning Balance",
+								"Received This Month", 
+								"Dispensed",
+								"Losses",
+								"Adjustments",
+								"AEnding Balance",
+								"Quantity Requested");
+			$excel_data['column_data'] = $column_data;
+			$from_RH_data_table_count = count(tb_data::get_facility_report($report_id, $facility_code));
+			
+			for($i=0;$i<$from_TB_data_table_count;$i++):
 			
 			array_push($row_data, array($from_RH_data_table[$i]["Beginning_Balance"], 
 			$from_RH_data_table[$i]["Received_This_Month"], 
