@@ -4,7 +4,7 @@
 <div class="filter">
 <h5>
 	<select name="year" id="year_filter" style="width: 7.8em;">
-		<option value="0">Select Year</option>
+		<option value="NULL">Select Year</option>
 		<option value="2014">2014</option>
 		<option value="2013">2013</option>
 </select>
@@ -24,10 +24,10 @@
 			<option value="12">Dec</option>
 		</select>
 <select id="plot_value_filter">
-	<option value="0">Select Plot value</option>
-<option value="Packs">Packs</option>
-<option value="Units">Units</option>
-<option value="KSH">KSH</option>
+	<option value="NULL">Select Plot value</option>
+<option value="packs">Packs</option>
+<option value="units">Units</option>
+<option value="ksh">KSH</option>
 </select> 
 	<button class="btn btn-small btn-success" id="filter" name="filter" style="margin-left: 1em;">Filter <i class="icon-filter"></i></button> 
 	
@@ -43,7 +43,7 @@
 	
 			$("#filter").click(function() 
 			{
-				var url = "<?php echo base_url().'reports/get_county_cost_of_expiries_new/'?>"+
+				var url = "<?php echo base_url().'reports/filter_expiries/'?>"+
 				        $("#year_filter").val()+
 				        "/"+$("#month_filter").val()+
 				        "/"+"<?php echo $district_id;?>"+
@@ -58,7 +58,7 @@
 		{
 
 	    var url = url;
-	    var loading_icon = "<?php echo base_url().'assets/img/loadfill.gif' ?>";
+	    var loading_icon = "<?php echo base_url().'assets/img/loader.GIF' ?>";
 	    $.ajax({
           type: "POST",
           url: url,

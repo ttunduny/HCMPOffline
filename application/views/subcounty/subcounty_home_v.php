@@ -111,4 +111,4 @@ ajax_request_replace_div_content('reports/get_sub_county_facility_mapping_data',
 });
      
 });
-    </script>
+</script>

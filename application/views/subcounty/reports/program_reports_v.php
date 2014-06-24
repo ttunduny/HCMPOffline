@@ -116,17 +116,20 @@ HTML_DATA;
     </ul>
     <div id="myTabContent" class="tab-content">
  		<div  id="Malaria" class="tab-pane fade active in">
-	        <table width="80%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="test1">
+	        <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="test1">
 			<thead>
-				<tr>
-					
-		        </tr>
+				
 				<tr>
 					<th>Facility Name</th>
 					<th>Prepared By:</th>
 					<th>Report Date</th>
 					<th>Action</th>
-					
+					<th>
+					<a href='<?php echo $link_new_report_malaria;?>'>
+							<button  type='button' class='btn btn-xs btn-primary'style="float: right">
+		           			<span class='glyphicon glyphicon-floppy-disk'></span>Submit Malaria Report</button>
+		           		</a>
+		        </th>
 				</tr>
 				
 			</thead>
@@ -140,10 +143,7 @@ HTML_DATA;
 			</tbody>
 			
 			</table> 
-						<a href='<?php echo $link_new_report_malaria;?>'>
-							<button  type='button' class='btn btn-xs btn-primary'style="float: right">
-		           			<span class='glyphicon glyphicon-save'></span>Submit Malaria Report</button>
-		           		</a>
+						
 		    
       </div>
      <div class="tab-pane fade" id="RH">
@@ -170,7 +170,7 @@ HTML_DATA;
 
 		<a href='<?php echo $link_new_report_RH;?>' style="float: right">
 						<button  type='button' class='btn btn-xs btn-primary'>
-	           			<span class='glyphicon glyphicon-save'></span>Submit RH Report</button>
+	           			<span class='glyphicon glyphicon-floppy-disk'></span>Submit RH Report</button>
 		           	</a>
 		           	
       </div>
@@ -196,7 +196,7 @@ HTML_DATA;
 		</table> 
 		<a href='<?php echo $link_TB;?>' target='_blank'>
 						<button  type='button' class='btn btn-xs btn-primary' style="float: right">
-		       			<span class='glyphicon glyphicon-save'></span>Submit TB Report</button>
+		       			<span class='glyphicon glyphicon-floppy-disk'></span>Submit TB Report</button>
        				</a>
       </div>
     </div>
