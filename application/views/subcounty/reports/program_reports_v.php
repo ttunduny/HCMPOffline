@@ -30,7 +30,7 @@
 				<td>$facility</td>          
  				<td>$username</td>
            		<td>$report_date</td>
-           		<td colspan = '2'>
+           		<td colspan = '3'>
            			<a href='$link' target="_blank">
 		           	<button  type="button" class="btn btn-xs btn-primary">
 		           	<span class="glyphicon glyphicon-save"></span>Download Report pdf</button></a>
@@ -62,7 +62,7 @@ HTML_DATA;
 				<td>$facility</td>          
  				<td>$username</td>
            		<td>$report_date</td>
-           		<td>
+           		<td colspan = '3'>
            			<a href='$link' target="_blank">
 		           	<button  type="button" class="btn btn-xs btn-primary">
 		           	<span class="glyphicon glyphicon-save"></span>Download Report pdf</button></a>
@@ -92,7 +92,7 @@ HTML_DATA;
 					<td>$facility</td>          
 	 				<td>$username</td>
 	           		<td>$report_date</td>
-	           		<td>
+	           		<td colspan = '3'>
            			<a href='$link' target="_blank">
 		           	<button  type="button" class="btn btn-xs btn-primary">
 		           	<span class="glyphicon glyphicon-save"></span>Download Report pdf</button></a>
@@ -150,12 +150,14 @@ HTML_DATA;
         <table cellpadding="0" cellspacing="0" width="100%" border="0" class="row-fluid table table-bordered"  id="test2">
 		<thead>
 			<tr>
-			</tr>
-			<tr>
 				<th>Facility Name</th>
 				<th>Prepared By:</th>
 				<th>Report Date</th>
 				<th>Action</th>
+				<th><a href='<?php echo $link_new_report_RH;?>' style="float: right">
+						<button  type='button' class='btn btn-xs btn-primary'>
+	           			<span class='glyphicon glyphicon-floppy-disk'></span>Submit RH Report</button>
+		           	</a></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -168,23 +170,21 @@ HTML_DATA;
 		</tbody>
 		</table> 
 
-		<a href='<?php echo $link_new_report_RH;?>' style="float: right">
-						<button  type='button' class='btn btn-xs btn-primary'>
-	           			<span class='glyphicon glyphicon-floppy-disk'></span>Submit RH Report</button>
-		           	</a>
+		
 		           	
       </div>
      <div class="tab-pane fade" id="TB">
         <table cellpadding="0" cellspacing="0" width="100%" border="0" class="row-fluid table table-bordered"  id="test2">
 		<thead>
 			<tr>
-				
-						</tr>	
-			<tr>
 				<th>Facility Name</th>
 				<th>Prepared By:</th>
 				<th>Report Date</th>
 				<th>Action</th>
+				<th><a href='<?php echo $link_TB;?>' target='_blank'>
+						<button  type='button' class='btn btn-xs btn-primary' style="float: right">
+		       			<span class='glyphicon glyphicon-floppy-disk'></span>Submit TB Report</button>
+       				</a></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -194,10 +194,7 @@ HTML_DATA;
 			 ?>
 		</tbody>
 		</table> 
-		<a href='<?php echo $link_TB;?>' target='_blank'>
-						<button  type='button' class='btn btn-xs btn-primary' style="float: right">
-		       			<span class='glyphicon glyphicon-floppy-disk'></span>Submit TB Report</button>
-       				</a>
+		
       </div>
     </div>
  	</div>

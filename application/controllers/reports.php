@@ -881,16 +881,16 @@ class Reports extends MY_Controller
 	}
 	public function filter_facility_orders($year, $month, $option)
 	{
-		$year = (isset($year)) ? $year: date("Y");
-		$month = (isset($month)) ? $month: date("m");
-		$option = (isset($option)) ? $option: "units";
+		
+		$year = ($year == 0) ? date("Y"): $year;
+		$month = ($month == 0) ? date("m"): $month;
+		$option = ($option == 0) ? "units": $option;
+		
 		//Get the name of the month selected
 		$m = date('F',strtotime('2000-'.$month.'-01'));
 		
 		$facility_code = isset($facility_code) ? $facility_code: $this -> session -> userdata('facility_id');
 		$facility_name = Facilities::get_facility_name2($facility_code);
-		
-		
 		$orders = facility_orders::get_filtered_facility_orders($facility_code, $year, $month, $option);
 		
 		//Holds all the months of the year

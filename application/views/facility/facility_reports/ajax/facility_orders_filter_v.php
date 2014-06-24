@@ -6,7 +6,7 @@
 		<option value="2013">2013</option>
 </select>
 <select name="month" id="month_filter" >
-			<option value="null" selected="selected">Select month</option>
+			<option value="0" selected="selected">Select month</option>
 			<option value="01">Jan</option>
 			<option value="02">Feb</option>
 			<option value="03">Mar</option>
