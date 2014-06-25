@@ -881,16 +881,16 @@ class Reports extends MY_Controller
 	}
 	public function filter_facility_orders($year, $month, $option)
 	{
-		$year = (isset($year)) ? $year: date("Y");
-		$month = (isset($month)) ? $month: date("m");
-		$option = (isset($option)) ? $option: "units";
+		
+		$year = ($year == 0) ? date("Y"): $year;
+		$month = ($month == 0) ? date("m"): $month;
+		$option = ($option == 0) ? "units": $option;
+		
 		//Get the name of the month selected
 		$m = date('F',strtotime('2000-'.$month.'-01'));
 		
 		$facility_code = isset($facility_code) ? $facility_code: $this -> session -> userdata('facility_id');
 		$facility_name = Facilities::get_facility_name2($facility_code);
-		
-		
 		$orders = facility_orders::get_filtered_facility_orders($facility_code, $year, $month, $option);
 		
 		//Holds all the months of the year
@@ -942,9 +942,7 @@ class Reports extends MY_Controller
 		$date_2 = new DateTime($last_day_of_the_month);
 
 		$district_data = districts::getDistrict($county_id);
-		
-		echo "<br/> This: ";
-		echo $district;
+	
 		
 		$facility_data = Facilities::get_Facilities_using_HCMP($district);
 
@@ -1015,7 +1013,6 @@ class Reports extends MY_Controller
 			$date_ = date('M', strtotime($new_date));
 			$category_data_monthly = array_merge($category_data_monthly, array($date_));
 
-
 			foreach ($graph_category_data as $facility_) :
 				$facility_id = $facility_ -> facility_code;
 				$facility_name = $facility_ -> facility_name;
@@ -1028,10 +1025,6 @@ class Reports extends MY_Controller
 
 		endfor;
 			
-			/*echo "<pre>";
-			print_r($series_data_monthly);
-			echo "</pre>";*/
-
 		$graph_data = array();
 		$graph_data = array_merge($graph_data,array("graph_id"=>'container_monthly'));
 		$graph_data = array_merge($graph_data,array("graph_title"=>'Monthly Facility Access for '. $year));
@@ -1157,7 +1150,9 @@ class Reports extends MY_Controller
 				(array_key_exists($district_name, $district_total_facilities_using_hcmp)) ? $district_total_facilities_using_hcmp[$district_name] = $total_facilitites_using_hcmp : $district_total_facilities_using_hcmp = array_merge($district_total_facilities_using_hcmp, array($district_name => $total_facilitites_using_hcmp));
 				
 				$table_data .= ($total > 0) ? "<td><a href='#' id='$district_id' class='ajax_call2 link' date='$date'> $total</a></td>" : "<td>$total</td>";
-
+				 // echo "<pre>";
+				 // print_r($total_facilities_targetted);
+				 // echo "</pre>";
 			endforeach;
 
 			$table_data .= "<td>$monthly_total</td></tr>";
@@ -1189,8 +1184,12 @@ class Reports extends MY_Controller
 			$total_facilities_in_county = $total_facilities_in_county + $district_total_facilities[$key];
 			$targetted_total = $targetted_total + $district_total_facilities_targetted[$key];
 			
+			$total_facilities_targetted = 0;
+			@$targetted_vs_using_hcmp = round((($total_facilitites_using_hcmp /$total_facilities_targetted )) * 100, 1);
+			@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
+			
 			$percentage_coverage_using .= ($checker == 1) ? "<tr><td><b>Using HCMP vs Targetted %</b></td>
-			<td>$using_percentage %</td>" : "<td>$using_percentage %</td>";
+			<td>$targetted_vs_using_hcmp %</td>" : "<td>$using_percentage %</td>";
 			
 			$percentage_coverage .= ($checker == 1) ? "<tr><td><b>% Coverage</b></td>
 			<td>$coverage %</td>" : "<td>$coverage %</td>";
@@ -1205,9 +1204,9 @@ class Reports extends MY_Controller
 		$district_names .= "<th>TOTAL</th></tr></thead>";
 		$final_coverage_total = 0;
 		//$targetted_vs_using_hcmp = 0;
-		$total_facilities_targetted = 1;
-		$targetted_vs_using_hcmp = round((($total_facilitites_using_hcmp /$total_facilities_targetted )) * 100, 1);
-		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
+		// $total_facilities_targetted = 0;
+		// @$targetted_vs_using_hcmp = round((($total_facilitites_using_hcmp /$total_facilities_targetted )) * 100, 1);
+		// @$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
 		$data_ = "
 		<div class='tabbable tabs-left'>
 		<div class='tab-content'>
@@ -1436,89 +1435,9 @@ class Reports extends MY_Controller
 		$from_RH_data_table = RH_Drugs_Data::get_facility_report($report_id, $facility_code);
 		$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_id, $facility_code));
 		
-
-
 		foreach ($from_RH_data_table as $report_details) 
 		{
 			$mfl = $report_details['facility_id'];
-			$report_date = $report_details['Report_Date'];
-					
-			$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($mfl);
-			$sub_county_id = $myobj -> district;
-			$facility_name = $myobj -> facility_name;
-			
-			$myobj1 = Doctrine::getTable('Districts') -> find($sub_county_id);
-			$sub_county_name = $myobj1 -> district;
-			$county = $myobj1 -> county;
-
-			$myobj2 = Doctrine::getTable('Counties') -> find($county);
-			$county_name = $myobj2 -> county;
-
-			$myobj_order = Doctrine::getTable('users') -> find($report_details['user_id']);
-			$creator_email = $myobj_order -> email;
-			$creator_name1 = $myobj_order -> fname;
-			$creator_name2 = $myobj_order -> lname;
-			$creator_telephone = $myobj_order -> telephone;
-	
-		}
-	
-		//create the table for displaying the order details
-		$html_body = "<table class='data-table' width=100%>
-			<tr>
-			<td>MFL No: $mfl</td> 
-			<td>Health Facility Name:<br/> $facility_name</td>
-			<td>Level:</td>
-			<td>Dispensary</td>
-			<td>Health Centre</td>
-			</tr>
-			<tr>
-			<td>County: $county_name</td> 
-			<td> District: $sub_county_name</td>
-			<td >Reporting Period <br/>
-			Start Date:  <br/>  End Date: " . date('d M, Y', strtotime($report_date)) . "
-			</td>
-			</tr>
-			</table>";
-		$html_body .= "
-		<table class='data-table'>
-		<thead>
-		<tr>
-			<th ><b>Beginning Balance</b></th>
-			<th ><b>Quantity Received This Month</b></th>
-			<th ><b>Quantity Dispensed</b></th>
-			<th ><b>Losses</b></th>
-			<th ><b>Adjustments</b></th>
-			<th ><b>Ending Balance</b></th>
-			<th ><b>Quantity Requested</b></th>
-		</tr> 
-		</thead>
-		<tbody>";
-		$html_body .= '<ol type="a">';
-		for ($i = 0; $i < $from_RH_data_table_count; $i++) 
-		{
-			$html_body .= "<tr>";
-			$html_body .= "<td>". $from_RH_data_table[$i]['Beginning_Balance']."</td>";
-			$html_body .= "<td>" . $from_RH_data_table[$i]['Received_This_Month'] . "</td>";
-			$html_body .= "<td>" . $from_RH_data_table[$i]['Dispensed'] . "</td>";
-			$html_body .= "<td>" . $from_RH_data_table[$i]['Losses'] . "</td>";
-			$html_body .= "<td>" . $from_RH_data_table[$i]['Adjustments'] . "</td>";
-			$html_body .= "<td>" . $from_RH_data_table[$i]['Ending_Balance'] . "</td>";
-			$html_body .= "<td>" . $from_RH_data_table[$i]['Quantity_Requested'] . "</td>";
-			$html_body .= "</tr>";
-			
-			
-		}	
-		
-		$html_body .= '</tbody></table></ol>';
-		
-	}elseif($report_type == "TB")
-	{
-		$from_tb_data_table = tb_data::get_facility_report($report_id, $facility_code);
-		$from_tb_data_table_count = count(tb_data::get_facility_report($report_id, $facility_code));
-
-		foreach ($from_tb_data_table as $report_details) 
-		{
-			$mfl = $report_details['facility_code'];
 			$report_date = $report_details['Report_Date'];
 					
 			$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($mfl);
@@ -1601,9 +1520,7 @@ class Reports extends MY_Controller
 			$facility_details = Facilities::get_facility_name_($facility_code) -> toArray();
 			$from_malaria_data_table = Malaria_Data::get_facility_report($report_id, $facility_code);
 			$from_malaria_data_table_count = count(Malaria_Data::get_facility_report($report_id, $facility_code));
-			
-	
-
+						
 			$excel_data = array('doc_creator' => $facility_details[0]['facility_name'], 
 			'doc_title' => 'facility programm report template ', 'file_name' => $facility_details[0]['facility_name'].'facility programm report template ');
 			$row_data = array();
@@ -1640,10 +1557,7 @@ class Reports extends MY_Controller
 			
 			$from_RH_data_table = RH_Drugs_Data::get_facility_report($report_id, $facility_code);
 			$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_id, $facility_code));
-		
-		echo "<pre>";
-		print_r($from_RH_data_table);
-		echo "</pre>";exit;
+			
 			$excel_data = array('doc_creator' => $facility_details[0]['facility_name'], 
 			'doc_title' => 'facility program report ', 'file_name' => $facility_details[0]['facility_name'].'facility program report template');
 			$row_data = array();
@@ -1658,41 +1572,6 @@ class Reports extends MY_Controller
 			$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_id, $facility_code));
 			
 			for($i=0;$i<$from_RH_data_table_count;$i++):
-			
-			array_push($row_data, array($from_RH_data_table[$i]["Beginning_Balance"], 
-			$from_RH_data_table[$i]["Received_This_Month"], 
-			$from_RH_data_table[$i]["Dispensed"], 
-			$from_RH_data_table[$i]["Losses"],
-			$from_RH_data_table[$i]["Adjustments"],
-			$from_RH_data_table[$i]["Ending_Balance"],
-			$from_RH_data_table[$i]["Quantity_Requested"])); //
-			endfor;
-			$excel_data['row_data'] = $row_data;
-	
-			$this -> hcmp_functions -> create_excel($excel_data);
-		}elseif($report_type == "TB"){
-			
-			$facility_details = Facilities::get_facility_name_($facility_code) -> toArray();
-			
-			$from_TB_data_table = tb_data::get_facility_report($report_id, $facility_code);
-			$from_TB_data_table_count = count(tb_data::get_facility_report($report_id, $facility_code));
-
-			$tb_details = tb_data::get_facility_report($facility_code);
-
-			$excel_data = array('doc_creator' => $facility_details[0]['facility_name'], 
-			'doc_title' => 'facility program report ', 'file_name' => $facility_details[0]['facility_name'].'facility program report template');
-			$row_data = array();
-			$column_data = array("Beginning Balance",
-								"Received This Month", 
-								"Dispensed",
-								"Losses",
-								"Adjustments",
-								"AEnding Balance",
-								"Quantity Requested");
-			$excel_data['column_data'] = $column_data;
-			$from_RH_data_table_count = count(tb_data::get_facility_report($report_id, $facility_code));
-			
-			for($i=0;$i<$from_TB_data_table_count;$i++):
 			
 			array_push($row_data, array($from_RH_data_table[$i]["Beginning_Balance"], 
 			$from_RH_data_table[$i]["Received_This_Month"], 
@@ -1810,9 +1689,11 @@ class Reports extends MY_Controller
 		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		endif;
+	
 	}
-   public function stock_level_dashboard(){
- 			$district_id = $this -> session -> userdata('district_id');
+
+	public function load_stock_level_graph(){
+			$district_id = $this -> session -> userdata('district_id');
 			$county_id = $this -> session -> userdata('county_id');
          	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id);
 			$tracer_item_names = facility_stocks_temp::get_tracer_item_names($district_id);
@@ -1842,8 +1723,8 @@ class Reports extends MY_Controller
 			
          	$graph_data = array();
        		$graph_data = array_merge($graph_data, array("graph_id" => 'graph_default'));
-			$graph_data = array_merge($graph_data, array("graph_title" => "Months of stock for tracer items in ". $name." subcounty"));
-			$graph_data = array_merge($graph_data, array("graph_type" => 'column'));
+			$graph_data = array_merge($graph_data, array("graph_title" => "Months Of Stock For Tracer Items In ". $name." Subcounty"));
+			$graph_data = array_merge($graph_data, array("graph_type" => 'bar'));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Months of Stock'));
 			$graph_data = array_merge($graph_data, array("graph_categories" => array()));
 			$graph_data = array_merge($graph_data, array("series_data" => array("Stock" =>array())));	
@@ -1853,16 +1734,20 @@ class Reports extends MY_Controller
 			$graph_data['series_data']['Stock'] = array_merge($graph_data['series_data']['Stock'],array((int)$final_graph_data_['month_stock']));	
 			endforeach;
 			
-		 $data['default_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
-		
-	     
+			$data['default_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
+
+	}
+
+   public function stock_level_dashboard(){
+   	$tracer_item_names = facility_stocks_temp::get_tracer_item_names($district_id);
 	     $data['district_data'] = districts::getDistrict($county_id);
 	     $data['c_data'] = Commodities::get_all_2();
          $data['tracer_items'] = Commodities::get_tracer_items();
 		 $data['categories']= commodity_sub_category::get_all_pharm();
 		 $data['number_of_tracer_items'] = count($tracer_item_names);
+
 	     return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
-	   
+
 	    }
 
 	    public function tb_report(){
@@ -1905,21 +1790,21 @@ class Reports extends MY_Controller
 
 		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code, $district_id, $county_id,
 		$category_id, $commodity_id, $option_new, $report_type);
-       //var_dump($commodity_array);
-		//exit;
 
         foreach ($commodity_array as $data) :
 			if($report_type=="table_data"):
 				if($commodity_id>0):
 					array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"], $data['total']));
 				else:
-					array_push($series_data , array($data["name"], $data['total']));
+					array_push($series_data , array($data["name"],(int) $data['total']));
 				endif;						
 			else:
+
 				$series_data  = array_merge($series_data , array($data["name"] => (int)$data['total']));
 				$series_data_  = array_merge($series_data_ , array($data["name"],(int)$data['total']));
 				$category_data=array_merge($category_data, array($data["name"]));
 			endif;
+
 		endforeach;
 		
 		if($report_type=="table_data"):
@@ -1948,7 +1833,7 @@ class Reports extends MY_Controller
 		else:
     		$graph_type = 'column';			
     		$graph_data = array_merge($graph_data,array("graph_id"=>'dem_graph_'));
-		    $graph_data = array_merge($graph_data,array("graph_title"=>"Stock level $commodity_name $title $month_ $year"));
+		    $graph_data = array_merge($graph_data,array("graph_title"=>"Months Of Stock $commodity_name $title $month_ $year"));
 		    $graph_data = array_merge($graph_data,array("graph_type"=>$graph_type));
 		    $graph_data = array_merge($graph_data,array("graph_yaxis_title"=>"Commodity Stock level in $option_new"));
 		    $graph_data = array_merge($graph_data,array("graph_categories"=>$category_data ));
