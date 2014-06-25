@@ -456,22 +456,26 @@ public static function get_facility_consumption_level_new($facilities_filter,$co
         case 'packs':
            	$computation ="CEIL(fs.qty_issued/cms.total_commodity_units) AS total_consumption" ;
             break;
-        default:
-            $computation ="fs.qty_issued AS total_consumption" ;
-            break;
-    endswitch;
-    /*echo "SELECT MONTHNAME( fs.date_issued ) as month, $computation 
+        case 'service_point':
+           
+           	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+			->fetchAll("SELECT fs.qty_issued AS total_consumption, fs.issued_to as service_name
 					FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
 					WHERE fs.facility_code = f.facility_code
 					AND f.facility_code = $facilities_filter
 					AND fs.qty_issued > 0
 					AND f.district = di.id
 					AND fs.status =  '1'
-					AND fs.commodity_id = $commodity_filter
 					AND YEAR( fs.date_issued ) =$year_filter
 					AND cms.id = fs.commodity_id
-					GROUP BY MONTH( fs.date_issued ) asc";
-					exit;*/
+					GROUP BY service_name asc");		
+			return $inserttransaction ;
+		break;
+        default:
+            $computation ="fs.qty_issued AS total_consumption" ;
+            break;
+    endswitch;
+    
    	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 		->fetchAll("SELECT MONTHNAME( fs.date_issued ) as month, $computation 
 					FROM facility_issues fs, commodities cms, facilities f, districts di, counties c

@@ -21,6 +21,7 @@ endforeach;
 	<option value="packs">Packs</option>
 	<option value="units">Units</option>
 	<option value="ksh">KSH</option>
+	<option value="service_point">Per Service Point</option>
 </select> 
 	<button class="btn btn-small btn-success" id="filter" name="filter" style="margin-left: 1em;">Filter <i class="icon-filter"></i></button> 
 	
@@ -37,39 +38,15 @@ endforeach;
 	
 			$("#filter").click(function() 
 			{
-				var url = "<?php echo base_url().'reports/filtered_consumption/'?>"+
+				var url = "reports/filtered_consumption/"+
 				        $("#commodity_filter").val()+
 				        "/"+$("#year_filter").val()+
 				         "/"+$("#plot_value_filter").val();
         
-				ajax_supply(url,'.graph-section');
+				ajax_request_replace_div_content(url,'.graph-section');
 		
           });
 
-		
-		function ajax_supply (url,div)
-		{
-
-	    var url = url;
-	    var loading_icon = "<?php echo base_url().'assets/img/loader.GIF' ?>";
-	    $.ajax({
-          type: "POST",
-          url: url,
-          beforeSend: function() 
-          {
-             $(div).html("");           
-             $(div).html("<img style='margin-top:10%;' src="+loading_icon+">");
-           
-          },
-          success: function(msg) 
-          {
-            $(div).html("");
-            $(div).html(msg);           
-          }
-        });
-         
-}
-		
 		
 		
   });

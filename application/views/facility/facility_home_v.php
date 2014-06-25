@@ -84,7 +84,7 @@
         	<h5>Pending Dispatch</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('reports/order_listing/facility') ?>"><span class="badge"><?php 
-			echo $facility_dashboard_notifications['facility_order_count']['approved'] ?></span>Order(s) Pending Dispatch from KEMSA</a> 
+			echo $facility_dashboard_notifications['facility_order_count']['approved'] ?></span>Order(s) Pending Dispatch</a> 
 			</p>
         </div>
          <?php endif; //approved?>

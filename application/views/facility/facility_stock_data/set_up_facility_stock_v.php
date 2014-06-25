@@ -5,10 +5,10 @@
 <table width="100%" class="row-fluid table table-hover table-bordered table-update"  id="example">
 <thead>
 <tr style="background-color: white">
-						<th>Select</th>	
 						<th>Category</th>
 						<th>Description</th>
 						<th>Commodity&nbsp;Code</th>
+						<th>In Use?</th>	
 						<th>Unit Size</th>
 						<th>Issue Type</th>
 					    <th>Average&nbsp;Monthly&nbsp;Consumption&nbsp;(Units) </th>
@@ -23,10 +23,10 @@
 	   ($facility_commodities['selected_option']=='Pack_Size')? $pack_size='selected="selected"' :$unit_size='selected="selected"'  : null; 
 	   echo "<tr><input type='hidden' name='actual_units[]' class='actual_units' value='$facility_commodities[total_commodity_units]'/>
 	   <input type='hidden' name='commodity_id[]' class='commodity_id' value='$facility_commodities[commodity_id]'/>
-	   <td><input type='checkbox' class='checkbox'  $status/></td>
 	   <td>$facility_commodities[sub_category_name]</td>
 	   <td>$facility_commodities[commodity_name]</td>
 	   <td>$facility_commodities[commodity_code]</td>
+	   <td><input type='checkbox' class='checkbox'  $status/></td>
 	   <td>$facility_commodities[unit_size]</td>
 	   <td><select class='form-control commodity_unit_of_issue input-small' name='commodity_unit_of_issue[]'>
 			<option value='Pack_Size'>Pack Size</option>

@@ -43,40 +43,16 @@
 	
 			$("#filter").click(function() 
 			{
-				var url = "<?php echo base_url().'reports/filter_expiries/'?>"+
+				var url = "reports/filter_expiries/"+
 				        $("#year_filter").val()+
 				        "/"+$("#month_filter").val()+
 				        "/"+"<?php echo $district_id;?>"+
 				        "/"+$("#plot_value_filter").val()+
 				        "/"+"<?php echo $facility_code;?>";
-        	ajax_supply(url,'.graph-section');
+        	ajax_request_replace_div_content(url,'.graph-section');
 		
           });
 
-		
-		function ajax_supply (url,div)
-		{
-
-	    var url = url;
-	    var loading_icon = "<?php echo base_url().'assets/img/loader.GIF' ?>";
-	    $.ajax({
-          type: "POST",
-          url: url,
-          beforeSend: function() 
-          {
-             $(div).html("");           
-             $(div).html("<img style='margin-top:10%;' src="+loading_icon+">");
-           
-          },
-          success: function(msg) 
-          {
-            $(div).html("");
-            $(div).html(msg);           
-          }
-        });
-         
-}
-		
 		
 		
   });

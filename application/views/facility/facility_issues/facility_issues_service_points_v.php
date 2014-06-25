@@ -171,8 +171,8 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
    	selector_object.closest("tr").find(".balance").val(remainder1);	
         });// adding a new row 
         $(".add").click(function() {
-        var selector_object=$('#facility_issues_table tr:last');
-        var form_data=check_if_the_form_has_been_filled_correctly(selector_object);
+        var selector_object = $('#facility_issues_table tr:last');
+        var form_data = check_if_the_form_has_been_filled_correctly(selector_object);
         if(isNaN(form_data[0])){
         var notification='<ol>'+form_data[0]+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
            //hcmp custom message dialog
@@ -308,13 +308,13 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 		var service_point=selector_object.closest("tr").find(".service_point").val();
 		var commodity_id=selector_object.closest("tr").find(".desc").val();
 		var issue_date=selector_object.closest("tr").find(".clone_datepicker_normal_limit_today").val();
-		var issue_quantity=selector_object.closest("tr").find(".quantity_issued").val();
+		//var issue_quantity=selector_object.closest("tr").find(".quantity_issued").val();
 		//set the message here
 		if (service_point==0) {alert_message+="<li>Select a Service Point</li>";}
 	    if (commodity_id==0) {alert_message+="<li>Select a commodity first</li>";}
 	    if (issue_date==0) {alert_message+="<li>Indicate the date of the issue</li>";}	
-	    if (issue_quantity==0) {alert_message+="<li>Indicate how much you want to issue</li>";}	    
-	    return[alert_message,service_point,commodity_id,issue_quantity,issue_date];	
+	    //if (issue_quantity==0) {alert_message+="<li>Indicate how much you want to issue</li>";}	    
+	    return[alert_message,service_point,commodity_id,issue_date];	
 		}//extract facility_data  from the json object 		
 		function extract_data(commodity_id_,commodity_stock_row_id,type_of_drop_down){
 			var row_id=0; var dropdown='';var facility_stock_id_='';  var total_stock_bal=0; var expiry_date='';

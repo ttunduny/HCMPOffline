@@ -105,12 +105,13 @@ class facility_orders extends Doctrine_Record {
 
 		return $query_results;
  }
- public static function get_facility_orders($facility_code, $commodity_code = NULL, $year = NULL, $option = NULL)
+ public static function get_facility_orders($facility_code, $year)
  {
- 	$year = (isset($year)) ? $year: date("Y");
- 	    $query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
+ 	$year = date("Y");
+ 	   	
+ 	$query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
  	    ->fetchAll("
- 	    select MONTHNAME( f_o.order_date) as month, f_o.order_total as total_orders 
+ 	    select MONTHNAME( f_o.order_date) as month, f_o.order_total as total 
 		from facilities f, facility_orders f_o 
 		where f_o.facility_code=f.facility_code 
 		and f_o.facility_code = $facility_code
@@ -123,18 +124,19 @@ class facility_orders extends Doctrine_Record {
  {
  	switch ($option) :
          case 'ksh':
-           $computation ="(fod.quantity_ordered_unit*d.unit_cost) as total";
+           $computation ="sum(fod.quantity_ordered_unit*d.unit_cost) as total";
              break;
          case 'units':
-           $computation ="(fod.quantity_ordered_unit) AS total" ;
+           $computation ="sum((fod.quantity_ordered_unit)) AS total" ;
              break;
              case 'packs':
-           $computation ="(fod.quantity_ordered_pack) AS total" ;
+           $computation ="sum(fod.quantity_ordered_pack) AS total" ;
              break;
          default:
-      $computation ="((fod.quantity_ordered_unit)*d.unit_cost) AS total";
+      $computation ="sum((fod.quantity_ordered_unit)*d.unit_cost) AS total";
           break;
-     endswitch;		
+     endswitch;	
+	 $month = ($month == 0) ? $and_data = null: $and_data = "AND DATE_FORMAT( fo.order_date,'%m') = $month";	
 	$query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
  	    ->fetchAll("
  	    SELECT d.commodity_name as name, $computation
@@ -144,7 +146,8 @@ class facility_orders extends Doctrine_Record {
 		 AND d.id = fod.commodity_id
 		 AND fo.facility_code = '$facility_code'
 		AND DATE_FORMAT( fo.order_date,'%Y') =$year
-		AND DATE_FORMAT( fo.order_date,'%m') =$month
+		$and_data
+		GROUP BY name
 		 ");
 
 		return $query_results;
