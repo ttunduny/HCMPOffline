@@ -457,8 +457,7 @@ public static function get_facility_consumption_level_new($facilities_filter,$co
            	$computation ="CEIL(fs.qty_issued/cms.total_commodity_units) AS total_consumption" ;
             break;
         case 'service_point':
-           
-           	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+          	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 			->fetchAll("SELECT fs.qty_issued AS total_consumption, fs.issued_to as service_name
 					FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
 					WHERE fs.facility_code = f.facility_code
@@ -466,6 +465,7 @@ public static function get_facility_consumption_level_new($facilities_filter,$co
 					AND fs.qty_issued > 0
 					AND f.district = di.id
 					AND fs.status =  '1'
+					AND fs.commodity_id = $commodity_filter
 					AND YEAR( fs.date_issued ) =$year_filter
 					AND cms.id = fs.commodity_id
 					GROUP BY service_name asc");		
