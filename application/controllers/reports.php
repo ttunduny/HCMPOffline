@@ -815,9 +815,7 @@ class Reports extends MY_Controller
 		$date_2 = new DateTime($last_day_of_the_month);
 
 		$district_data = districts::getDistrict($county_id);
-		
-		echo "<br/> This: ";
-		echo $district;
+	
 		
 		$facility_data = Facilities::get_Facilities_using_HCMP($district);
 
@@ -1074,8 +1072,8 @@ class Reports extends MY_Controller
 		$district_names .= "<th>TOTAL</th></tr></thead>";
 		$final_coverage_total = 0;
 		//$targetted_vs_using_hcmp = 0;
-		$total_facilities_targetted = 1;
-		$targetted_vs_using_hcmp = round((($total_facilitites_using_hcmp /$total_facilities_targetted )) * 100, 1);
+		$total_facilities_targetted = 0;
+		@$targetted_vs_using_hcmp = round((($total_facilitites_using_hcmp /$total_facilities_targetted )) * 100, 1);
 		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
 		$data_ = "
 		<div class='tabbable tabs-left'>
