@@ -275,6 +275,10 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
 	 (isset($district_id) && !isset($facility_code) ?  " GROUP BY f.facility_code having total>0": 
 	 ($graph_type=='table_data')&& ($commodity_id>0) ?" GROUP BY d.id, f.facility_code having total>0 order by di.district asc, f.facility_name asc" :
 	 " GROUP BY d.id having total > 0") ;
+<<<<<<< HEAD
+=======
+
+>>>>>>> ad4682fe6d397b35c5d9cd9fe6caad6e4f49b38b
 	
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll("SELECT  $selection_for_a_month $computation
@@ -474,7 +478,18 @@ public static function get_facility_consumption_level_new($facilities_filter,$co
             $computation ="fs.qty_issued AS total_consumption" ;
             break;
     endswitch;
-    
+    /*echo "SELECT MONTHNAME( fs.date_issued ) as month, $computation 
+					FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
+					WHERE fs.facility_code = f.facility_code
+					AND f.facility_code = $facilities_filter
+					AND fs.qty_issued > 0
+					AND f.district = di.id
+					AND fs.status =  '1'
+					AND fs.commodity_id = $commodity_filter
+					AND YEAR( fs.date_issued ) =$year_filter
+					AND cms.id = fs.commodity_id
+					GROUP BY MONTH( fs.date_issued ) asc";
+					exit;*/
    	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 		->fetchAll("SELECT MONTHNAME( fs.date_issued ) as month, $computation 
 					FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
