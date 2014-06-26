@@ -1585,6 +1585,40 @@ class Reports extends MY_Controller
 	
 			$this -> hcmp_functions -> create_excel($excel_data);
 		}
+		elseif($report_type == "TB"){
+			
+			$facility_details = Facilities::get_facility_name_($facility_code) -> toArray();
+			
+			$from_RH_data_table = RH_Drugs_Data::get_facility_report($report_id, $facility_code);
+			$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_id, $facility_code));
+			
+			$excel_data = array('doc_creator' => $facility_details[0]['facility_name'], 
+			'doc_title' => 'facility program report ', 'file_name' => $facility_details[0]['facility_name'].'facility program report template');
+			$row_data = array();
+			$column_data = array("Beginning Balance",
+								"Received This Month", 
+								"Dispensed",
+								"Losses",
+								"Adjustments",
+								"AEnding Balance",
+								"Quantity Requested");
+			$excel_data['column_data'] = $column_data;
+			$from_RH_data_table_count = count(RH_Drugs_Data::get_facility_report($report_id, $facility_code));
+			
+			for($i=0;$i<$from_RH_data_table_count;$i++):
+			
+			array_push($row_data, array($from_RH_data_table[$i]["Beginning_Balance"], 
+			$from_RH_data_table[$i]["Received_This_Month"], 
+			$from_RH_data_table[$i]["Dispensed"], 
+			$from_RH_data_table[$i]["Losses"],
+			$from_RH_data_table[$i]["Adjustments"],
+			$from_RH_data_table[$i]["Ending_Balance"],
+			$from_RH_data_table[$i]["Quantity_Requested"])); //
+			endfor;
+			$excel_data['row_data'] = $row_data;
+	
+			$this -> hcmp_functions -> create_excel($excel_data);
+		}
 		
 	}
  /*
@@ -1734,12 +1768,17 @@ class Reports extends MY_Controller
 			$graph_data['series_data']['Stock'] = array_merge($graph_data['series_data']['Stock'],array((int)$final_graph_data_['month_stock']));	
 			endforeach;
 			
-			$data['default_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
-
+			$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
+			return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 	}
 
    public function stock_level_dashboard(){
-   	$tracer_item_names = facility_stocks_temp::get_tracer_item_names($district_id);
+   	$district_id = $this -> session -> userdata('district_id');
+			$county_id = $this -> session -> userdata('county_id');
+         	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id);
+			$tracer_item_names = facility_stocks_temp::get_tracer_item_names($district_id);
+   			$tracer_item_names = facility_stocks_temp::get_tracer_item_names($district_id);
+
 	     $data['district_data'] = districts::getDistrict($county_id);
 	     $data['c_data'] = Commodities::get_all_2();
          $data['tracer_items'] = Commodities::get_tracer_items();
@@ -1762,14 +1801,14 @@ class Reports extends MY_Controller
      	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null) 
      	{
      	//reset the values here
-
       	$commodity_id = ($commodity_id=="NULL") ? null :$commodity_id;
-		$category_id = ($category_id=="NULL") ? null :$category_id;
 	 	$district_id = ($district_id=="NULL") ? null :$district_id;
 	 	$option = ($optionr=="NULL") ? null :$option;
+		$category_id = ($category_id=="NULL") ? null :$category_id;
 	 	$facility_code = ($facility_code=="NULL") ? null :$facility_code;
 		$option = ($option=="NULL" || $option=="null") ? null :$option;	
      	//setting up the data
+
 		$county_id = $this -> session -> userdata('county_id');
 		$county_name = counties::get_county_name($county_id);
 		$category_data = $series_data = $series_data_ =  $graph_data = $data =array();

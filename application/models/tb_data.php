@@ -13,7 +13,6 @@ class Tb_data extends Doctrine_Record
 		$this -> hasColumn('negative_adjustment', 'int',11);
 		$this -> hasColumn('losses', 'int',11);
 		$this -> hasColumn('physical_count', 'int',11);
-		$this -> hasColumn('earliest_expiry', 'date');
 		$this -> hasColumn('quantity_needed', 'int',11);
 		$this -> hasColumn('report_date', 'timestamp');
 		$this -> hasColumn('user_id', 'int',11);
@@ -32,7 +31,45 @@ class Tb_data extends Doctrine_Record
 		return $result[0];
 	}
 
+	public static function getall($facility_id)
+	{
+		//$query = Doctrine_Query::create() -> select("*") -> from("tuberculosis_data")-> where("facility_code = '$facility_id' ")->groupBy("report_date");
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+   	 	->fetchAll(
+   	 		"select * from tuberculosis_data where facility_code = $facility_id order by report_date"
+   	 		);
+		//$all_data = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $query;
+			
+	}
+
+	public static function getallother($facility_id)
+	{
+		//$query = Doctrine_Query::create() -> select("*") -> from("tuberculosis_data")-> where("facility_code = '$facility_id' ")->groupBy("report_date");
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+   	 	->fetchAll(
+   	 		"select * from tuberculosis_report_info where facility_code = $facility_id order by report_date"
+   	 		);
+		//$all_data = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $query;
+			
+	}	
+
 	public static function get_facility_report_details($facility_id)
+	{
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+   	 	->fetchAll("select distinct(user_id) as user, 
+   	 				date_format(report_date, '%M %Y')as report_date, 
+   	 				report_date as report_timestamp,id, 
+   	 				facility_code as facility_code 
+   	 				from tuberculosis_data 
+   	 				where facility_code = $facility_id 
+   	 				order by Report_Date desc"); 
+		return $query;
+			
+	}
+
+		public static function get_facility_report_details_for_view($facility_id)
 	{
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
    	 	->fetchAll("select distinct(user_id) as user, 

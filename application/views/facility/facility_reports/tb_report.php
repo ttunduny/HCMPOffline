@@ -613,7 +613,7 @@
 		</tr>
 		<tr>
 			<th>Quantity Requested</th>
-			<td><input type="text" required  name="50pg" value="" class='form-control'></td>
+			<td><input type="text" required  name="qtt" value="" class='form-control'></td>
 			<td><input type="text" required  name="x0pg" value="" class='form-control'></td>
 			<td><input type="text" required  name="FCDRR" value="" class='form-control'></td>
 		</tr>

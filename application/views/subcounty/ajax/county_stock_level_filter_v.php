@@ -13,16 +13,6 @@
       <div  id="tracer" class="tab-pane fade active in">
               <br>
           <form class="form-inline" role="form">
-<select id="tracer_commodity_filter" class="form-control col-md-3">
-<option value="NULL">Select tracer item</option>
-<?php
-foreach($tracer_items as $data):
-        $commodity_name=$data->commodity_name;   
-        $commodity_id=$data->id;
-        echo "<option value='$commodity_id'>$commodity_name</option>";
-endforeach;
-?>
-</select>
     <select id="tracer_district_filter" class="form-control col-md-2">
 <option selected="selected" value="NULL">Select Sub-county</option>
 <?php
@@ -220,7 +210,7 @@ var drop_down='';
 		//
 		$(".tracer-filter").button().click(function(e) {
         e.preventDefault(); 
-        var url_ = "reports/get_county_stock_level_new/"+
+        var url_ = "reports/load_stock_level_graph/"+
         $("#tracer_commodity_filter").val()+
         "/NULL/"+$("#tracer_district_filter").val()+
         "/NULL/"+$("#tracer_plot_value_filter").val();    

@@ -1,13 +1,7 @@
 <div class="container" style="width: 96%; margin: auto;">
-<span  class='label label-info'>
-	Write up on how to use the Report
-	</span><br />
-	<span class="label label-danger">
-		Available Batch Stock is for a specific 
-	batch, Total Balance is the total for the commodity
-	</span>
-	<hr />
 <div class="table-responsive" style="height:400px; overflow-y: auto;">
+<?php echo $report_data; ?>
+
 	<?php 
 		$att = array("name"=>'myform','id'=>'myform'); 
 		//add a function for saving the data

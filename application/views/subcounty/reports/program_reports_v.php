@@ -34,13 +34,16 @@
            			<a href='$link' target="_blank">
 		           	<button  type="button" class="btn btn-xs btn-primary">
 		           	<span class="glyphicon glyphicon-save"></span>Download Report pdf</button></a>
+
 		           	<a href='$link_excel' target="_blank">
            			<button  type="button" class="btn btn-xs btn-primary">
            			<span class="glyphicon glyphicon-save"></span>Download Report excel</button></a> 
+		           	
            		</td>
            </tr>
            
 HTML_DATA;
+//echo $link;
 			endforeach;	
 			endforeach;	
 			
@@ -76,6 +79,9 @@ HTML_DATA;
 			endforeach;
 			endforeach;
 
+
+
+
 		foreach($TB as $TB_details1):
 			foreach($TB_details1 as $TB_details):
 				$facilityname = Facilities::get_facility_name2($TB_details['facility_code']);
@@ -83,8 +89,8 @@ HTML_DATA;
 				$user = Users::get_user_names($TB_details['user']);
 				$username = $user[0]['fname']." ".$user[0]['lname'];
 				$report_date = $TB_details['report_date'];
-				$link = base_url('reports/get_facility_report_pdf/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/RH');	
-				$link_excel = base_url('reports/create_excel_facility_program_report/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/TB');
+				$link = base_url('reports/get_facility_report_pdf/'.$TB_details['id'].'/'.$TB_details['facility_code'].'/TB');	
+				$link_excel = base_url('reports/create_excel_facility_program_report/'.$TB_details['id'].'/'.$TB_details['facility_code'].'/TB');
 
 			    $link_TB = base_url('divisional_reports/tb_report');
 			    $TB_report_details .= <<<HTML_DATA
@@ -99,7 +105,7 @@ HTML_DATA;
 		           	<a href='$link_excel' target="_blank">
            			<button  type="button" class="btn btn-xs btn-primary">
            			<span class="glyphicon glyphicon-save"></span>Download Report excel</button></a>
-		           
+		            
            		</td>
            </tr>
 HTML_DATA;
