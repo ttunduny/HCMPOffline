@@ -93,21 +93,15 @@ HTML_DATA;
 	 				<td>$username</td>
 	           		<td>$report_date</td>
 	           		<td colspan = '3'>
-<<<<<<< HEAD
-           			
-=======
+
            			<a href='$link' target="_blank">
 		           	<button  type="button" class="btn btn-xs btn-primary">
 		           	<span class="glyphicon glyphicon-save"></span>Download Report pdf</button></a>
 		           	<a href='$link_excel' target="_blank">
            			<button  type="button" class="btn btn-xs btn-primary">
-           			<span class="glyphicon glyphicon-save"></span>Download Report excel</button></a>
-		           
->>>>>>> ad4682fe6d397b35c5d9cd9fe6caad6e4f49b38b
-           		</td>
-           </tr>
+           			<span class="glyphicon glyphicon-save"></span>Download Report excel</button></a></td></tr>
 HTML_DATA;
-			endforeach;
+			 endforeach;
 			endforeach;
 		?>
 <h1 class="page-header" style="margin: 0;font-size: 1.6em;"><?php echo $page_header. " for ". date("Y"); ?></h1>
@@ -203,8 +197,4 @@ HTML_DATA;
     </div>
  	</div>
   </div>
-<script>
-$(document).ready(function() {
-	
-} );
-</script>
+

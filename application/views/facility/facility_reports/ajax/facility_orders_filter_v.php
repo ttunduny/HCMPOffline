@@ -41,21 +41,24 @@
 	
 			$("#filter").click(function() 
 			{
-<<<<<<< HEAD
+
 				var url = "reports/filter_facility_orders/"+
-=======
+
 				var url = "<?php echo base_url().'reports/filter_facility_orders/'?>"+
->>>>>>> ad4682fe6d397b35c5d9cd9fe6caad6e4f49b38b
+
 				        $("#year_filter").val()+
 				        "/"+$("#month_filter").val()+
 				         "/"+$("#plot_value_filter").val();
-        
-<<<<<<< HEAD
+
+				var url = "reports/filter_facility_orders/"+
+				        $("#year_filter").val()+
+				        "/"+$("#month_filter").val()+
+				         "/"+$("#plot_value_filter").val();
+
 				ajax_request_replace_div_content(url,'.graph-section');
 		
           });
-	
-=======
+
 				ajax_supply(url,'.graph-section');
 		
           });
@@ -83,9 +86,6 @@
         });
          
 }
-		
-		
->>>>>>> ad4682fe6d397b35c5d9cd9fe6caad6e4f49b38b
-		
+
   });
 </script>

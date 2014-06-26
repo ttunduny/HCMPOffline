@@ -47,9 +47,6 @@ endforeach;
 		
           });
 
-		
-<<<<<<< HEAD
-=======
 		function ajax_supply (url,div)
 		{
 
@@ -71,10 +68,6 @@ endforeach;
           }
         });
          
-}
-		
-		
->>>>>>> ad4682fe6d397b35c5d9cd9fe6caad6e4f49b38b
-		
+}		
   });
 </script>

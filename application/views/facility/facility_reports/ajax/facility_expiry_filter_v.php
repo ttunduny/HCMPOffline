@@ -43,11 +43,10 @@
 	
 			$("#filter").click(function() 
 			{
-<<<<<<< HEAD
+
 				var url = "reports/filter_expiries/"+
-=======
+
 				var url = "<?php echo base_url().'reports/filter_expiries/'?>"+
->>>>>>> ad4682fe6d397b35c5d9cd9fe6caad6e4f49b38b
 				        $("#year_filter").val()+
 				        "/"+$("#month_filter").val()+
 				        "/"+"<?php echo $district_id;?>"+
@@ -56,10 +55,6 @@
         	ajax_request_replace_div_content(url,'.graph-section');
 		
           });
-
-		
-<<<<<<< HEAD
-=======
 		function ajax_supply (url,div)
 		{
 
@@ -81,10 +76,6 @@
           }
         });
          
-}
-		
-		
->>>>>>> ad4682fe6d397b35c5d9cd9fe6caad6e4f49b38b
-		
+}	
   });
 </script>

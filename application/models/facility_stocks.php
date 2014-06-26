@@ -275,11 +275,7 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
 	 (isset($district_id) && !isset($facility_code) ?  " GROUP BY f.facility_code having total>0": 
 	 ($graph_type=='table_data')&& ($commodity_id>0) ?" GROUP BY d.id, f.facility_code having total>0 order by di.district asc, f.facility_name asc" :
 	 " GROUP BY d.id having total > 0") ;
-<<<<<<< HEAD
-=======
 
->>>>>>> ad4682fe6d397b35c5d9cd9fe6caad6e4f49b38b
-	
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll("SELECT  $selection_for_a_month $computation
      FROM facility_stocks fs, facilities f, commodities d,  districts di
@@ -447,7 +443,7 @@ public static function get_facility_drug_consumption_level($facilities_filter,$c
 
 
  }
-public static function get_facility_consumption_level_new($facilities_filter,$commodity_filter,$year_filter,$plot_value_filter)
+public static function get_facility_consumption_level_new($facilities_filter,$commodity_filter = null,$year_filter,$plot_value_filter)
  {
  	switch ($plot_value_filter) :
 		case 'ksh':
@@ -468,7 +464,6 @@ public static function get_facility_consumption_level_new($facilities_filter,$co
 					AND fs.qty_issued > 0
 					AND f.district = di.id
 					AND fs.status =  '1'
-					AND fs.commodity_id = $commodity_filter
 					AND YEAR( fs.date_issued ) =$year_filter
 					AND cms.id = fs.commodity_id
 					GROUP BY service_name asc");		
@@ -532,7 +527,7 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 					AND fs.qty_issued > 0
 					AND f.district = di.id
 					AND fs.status =  '1'
-					AND fs.commodity_id = $commodity_filter
+					
 					AND YEAR( fs.date_issued ) =$year_filter
 					AND cms.id = fs.commodity_id
 					GROUP BY MONTH( fs.date_issued ) asc");		

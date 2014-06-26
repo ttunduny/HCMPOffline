@@ -35,16 +35,14 @@
 
 		<td>
 			<label>Facility Name: </label>
-<<<<<<< HEAD
-			<input type="text" name="facility_name" class="form-control" disabled value="<?php echo $facility_name; ?>">
-=======
+
 			<input type="text" requiredname="facility_name" class="form-control" disabled value="<?php echo $facility_name; ?>">
->>>>>>> ad4682fe6d397b35c5d9cd9fe6caad6e4f49b38b
+
 		</td>			
 		
 		<td class="col-xs-2">
 		<label>Facility Code: </label>
-<<<<<<< HEAD
+
 			<input type="text" name="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
 		</td>
 		</div>
@@ -55,7 +53,7 @@
 			<td class="col-xs-4">
 			<label>Facility Type: </label>
 			<input type="text" name="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" >
-=======
+
 			<input type="text" requiredname="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
 		</td>
 		</div>
@@ -66,7 +64,7 @@
 			<td class="col-xs-4">
 			<label>Facility Type: </label>
 			<input type="text" requiredname="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" >
->>>>>>> ad4682fe6d397b35c5d9cd9fe6caad6e4f49b38b
+
 			</td>
 			
 			<td class="col-xs-2">
@@ -81,24 +79,20 @@
 			<label>Beginning Date (of Reporting Period): </label>
 			</td>
 			<td>
-<<<<<<< HEAD
-			<input type="date"   name="table[beginning_date][]" value="" class='form-control'>
-=======
+
 			<!-- <input type="date"   name="table[beginning_date][]" value="" class='form-control'> -->
 			<input type="text" required class="form-control clone_datepicker_normal_limit_today" required name="table[beginning_date][]" value="<?php echo date('d M Y'); ?>" />
->>>>>>> ad4682fe6d397b35c5d9cd9fe6caad6e4f49b38b
+
 			</td>
 		
 			<td  class="col-xs-2"  style="text-align:right;">
 			<label>Ending Date (of Reporting Period): </label>
 			</td>
 			<td>
-<<<<<<< HEAD
-			<input type="date"   name="table[ending_date][]" value="" class='form-control'>
-=======
+
 			<!-- <input type="date"   name="table[ending_date][]" value="" class='form-control'> -->
 			<input type="text" required class="form-control clone_datepicker_normal_limit_today" required name="table[ending_date][]" value="<?php echo date('d M Y'); ?>" />
->>>>>>> ad4682fe6d397b35c5d9cd9fe6caad6e4f49b38b
+
 			</td>
 		</tr>
 

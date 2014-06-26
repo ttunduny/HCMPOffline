@@ -204,6 +204,7 @@ public function tb_report(){
 		$data['facility_name'] = ($facility_info['facility_name']);
 		$data['facility_type_'] = ($facility_info['owner']);
 
+
 	    $data['title'] = "Tuberculosis Report";
 		$data['banner_text'] = "Facility Tuberculosis & Leprosy Commodities";
 

@@ -104,6 +104,26 @@ class Log extends Doctrine_Record {
 		
 		return $q;
 	}
+	public static function get_facility_log_data($facility_code)
+	{
+		// $county_id = isset($district_id) ? null:$county_id;
+		// $district_id = isset($county_id) ? null:$district_id;
+		$year = date("Y");
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		select ifnull(sum(l.issued), 0) as total_issues,
+		ifnull(sum(l.ordered), 0) as total_orders,
+		ifnull(sum(l.decommissioned), 0) as total_decommisions,
+		ifnull(sum(l.redistribute), 0) as total_redistributions,
+		ifnull(sum(l.add_stock), 0) as total_stock_added,
+		ifnull(sum(l.issued+l.ordered+l.decommissioned+l.redistribute+l.add_stock), 0) as user_log
+		from log l, user u
+		where l.user_id = u.id
+		AND u.facility = $facility_code
+		AND DATE_FORMAT( l.`start_time_of_event` ,'%Y') = '$year'
+		");
+		
+		return $q;
+	}
 	public static function get_subcounty_login_count($county_id,$district_id,$date)
 	{
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT 
@@ -112,6 +132,18 @@ class Log extends Doctrine_Record {
 			WHERE u.id = l.user_id
 			AND u.county_id = $county_id
 			AND u.district = $district_id
+			AND DATE_FORMAT( l.start_time_of_event,'%Y-%m-%d') = '$date'
+			
+			");
+		return $q;
+	}
+	public static function get_facility_login_count($facility_code, $date)
+	{
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT 
+			ifnull(COUNT(DISTINCT u.facility ),0) AS total
+			FROM log l, user u
+			WHERE u.id = l.user_id
+			AND u.facility = $facility_code
 			AND DATE_FORMAT( l.start_time_of_event,'%Y-%m-%d') = '$date'
 			
 			");
@@ -140,6 +172,18 @@ class Log extends Doctrine_Record {
 		WHERE u.id = l.user_id
 		AND u.county_id =$county_id
 		AND u.district = $district_id
+		AND DATE_FORMAT( l.`start_time_of_event` ,'%Y-%m') = '$date'");
+		return $q;
+	
+	
+	}
+	public static function get_facility_login_monthly_count($facility_code,$date)
+	{
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT  IFNULL( COUNT(DISTINCT u.facility) , 0 ) AS total
+		FROM log l, user u
+		WHERE u.id = l.user_id
+		AND u.facility =$facility_code
 		AND DATE_FORMAT( l.`start_time_of_event` ,'%Y-%m') = '$date'");
 		return $q;
 	
