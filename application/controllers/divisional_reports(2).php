@@ -23,8 +23,6 @@ class Divisional_Reports extends MY_Controller
 	//used for both the subcounty and county level program reports
 	 public function program_reports()
 	 {
-	 	//echo $data['active_tab'];
-//exit;
 	 	$user_indicator = $district_id = $this -> session -> userdata('user_indicator');
 	 	switch ($user_indicator) 
 	 	{
@@ -39,7 +37,7 @@ class Divisional_Reports extends MY_Controller
 				{
 					$report_RH_report[$index] = $report_RH;
 					$report_malaria_report[$index] = $report_malaria;
-					$report_tuberculosis_report[$index] = $report_TB;
+					$report_tuberculosis[$index] = $report_TB;
 				
 				}else{
 					
@@ -48,7 +46,7 @@ class Divisional_Reports extends MY_Controller
 				$data['page_header'] = "Divisional Reports";	
 				$data['malaria'] = $report_malaria_report;
 				$data['RH'] = $report_RH_report;
-				$data['TB'] = $report_tuberculosis_report;
+				$data['TB'] = $report_tuberculosis;
 				$data['title'] = "Facility Divisional Reports";
 				$data['banner_text'] = "Facility Divisional Reports";
 				$data['report_view'] = "subcounty/reports/program_reports_v";
@@ -64,14 +62,16 @@ class Divisional_Reports extends MY_Controller
 					$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
 					$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
 					$report_TB = tb_data::get_facility_report_details($facility_id);
-					if ((!empty($report_RH))&&(!empty($report_malaria)))
+
+					
+					if ((!empty($report_RH))&&(!empty($report_malaria))&&(!empty($report_TB)))
 					{
 						$report_RH_report[$index] = $report_RH;
 						$report_malaria_report[$index] = $report_malaria;
 						$report_tuberculosis[$index] = $report_TB;
 						
 					}else{
-						
+						echo "Empty Variable";
 					}
 					
 					$index++;
@@ -79,6 +79,7 @@ class Divisional_Reports extends MY_Controller
 			
 				$data['malaria'] = $report_malaria_report;
 				$data['RH'] = $report_RH_report;
+				$data['TB'] = $report_tuberculosis;
 				$data['title'] = "District Program Reports";
 				$data['banner_text'] = "District Program Reports";
 				$data['report_view'] = "subcounty/reports/program_reports_v";
@@ -109,6 +110,7 @@ class Divisional_Reports extends MY_Controller
 		
 			 $data['malaria'] = $report_malaria_report;
 			 $data['RH'] = $report_RH_report;
+			 $data['TB'] = $report_tuberculosis;
 			 $data['title'] = "County Program Reports";
 			 $data['banner_text'] = " County Program Reports";
 			 $data['report_view'] = "subcounty/reports/program_reports_v";	
@@ -204,66 +206,25 @@ public function tb_report(){
 		$data['facility_name'] = ($facility_info['facility_name']);
 		$data['facility_type_'] = ($facility_info['owner']);
 
-
 	    $data['title'] = "Tuberculosis Report";
 		$data['banner_text'] = "Facility Tuberculosis & Leprosy Commodities";
 		$data['graph_data'] = $faciliy_expiry_data;
-		$data['content_view'] = "facility/facility_reports/tb_report";
+		$data['content_view'] = "facility/facility_reports/tb_report";;
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
-	}
-
-// for loading TB form with data
-public function view_tb_report()
-	{
-		//Used to pick the kemsa code and assign it to elements displayed on the report
-		$facility = $this -> session -> userdata('facility_id');
-		/*echo "<pre>";
-		print_r(tb_data::getall($facility));
-		echo "</pre>";exit;*/
-		$facility = $this -> session -> userdata('facility_id');
-		$user_id = $this -> session -> userdata('user_id');
-		$user_names = Users::get_user_names($user_id);
-		$data['user_names'] = ($user_names[0]['fname']." ".$user_names[0]['lname']);
-		
-		$facility_info = tb_data::get_facility_name($facility);
-		$facility_district = $facility_info['district'];
-		$district_name_ = Districts::get_district_name_($facility_district);
-		$district_name = $this -> session -> userdata('district');
-		
-		$data['facility_code'] = $facility_info['facility_code']; 
-		$data['district_region_name'] = $district_name_['district'];
-		$data['facility_name'] = ($facility_info['facility_name']);
-		$data['facility_type_'] = ($facility_info['owner']);
-
-
-		$data['report_data'] = tb_data::getall($facility);
-
-		$data['title'] = "Tuberculosis Report Update";
-		$data['banner_text'] = "Facility Tuberculosis & Leprosy Commodities";
-		$data['content_view'] = "facility/facility_reports/edit_tb_report";
-		$view = 'shared_files/template/template';
-		$this -> load -> view($view, $data);
-		
 	}
 
 public function save_tb_data(){
 	$values = $this->input->post();
-
-
 	$user_id = $this -> session -> userdata('user_id');
-	$facility = $this -> session -> userdata('facility_id');
-
 	foreach ($values as $key => $value) {
 		$no = count($values['table']);
-		$report_id = rand(0, 10000000000);
-		$save_time = date('Y-m-d H:i:s');
-		$data = array();
-		$data_ = array();
-
-		for ($i=1; $i < 10; $i++) {//30 drugs thus loop limitation 
+		/*echo "<pre>";
+		print_r($value);
+		echo "</pre>";exit;*/
+		for ($i=1; $i < 3; $i++) {//this loop is limited to three and is undynamic due to the fact that testing is done only with three fields 
 		$data = array( 
-		'facility_code'=>$facility, 
+		'facility_code'=>$value['facility_code'][0], 
 		'beginning_date'=>$value['beginning_date'][0],
 		'ending_date'=>$value['ending_date'][0], 
 		'beginning_balance'=>$value[$i][1], 
@@ -274,48 +235,14 @@ public function save_tb_data(){
 		'losses'=>$value[$i][6],
 		'physical_count'=>$value[$i][7],
 		'physical_count'=>$value[$i][8],
-		'report_date' => $save_time,
-		'user_id' =>$user_id,
-		
+		'quantity_needed'=>$value[$i][9],
+		'user_id' =>$user_id
 		);
 		$this->db->insert('tuberculosis_data',$data);
 		}
-	}
-	$data_ = array(
-			'quantity_requested_50' => $qtt,
-			'quantity_requested_x0' => $x0pg,
-			'FCDRR' => $FCDRR,
-			'adult_new' => $summary_adult_new,
-			'adult_retreatment' => $summary_adult_retreatment,
-			'adult_leprosy' => $summary_adult_leprosy,
-			'adult_MDR' => $summary_adult_mdr,
-			'adult_IPT' => $summary_adult_ipt,
-			'adult_Rifabetia' => $summary_adult_rifabetia,
-			'adult_CPT' => $summary_adult_cpt,
-			'children_new' => $summary_children_new,
-			'children_retreatment' => $summary_children_retreatment,
-			'children_leprosy' => $summary_children_leprosy,
-			'children_MDR' => $summary_children_mdr,
-			'children_IPT' => $summary_children_ipt,
-			'children_rifabetia' => $summary_children_rifabetia,
-			'children_CPT' => $summary_children_cpt,
-
-			'rhze_beginning_balance' => $rhzeB,
-			'rhze_in_supply_box' => $rhzeC,
-			'rhze_out_supply_box' => $rhzeD,
-			'rhze_withdrawn' => $rhzeE,
-			'rhze_ending_balance' => $rhzeF,
-
-			'rh_beginning_balance' => $rhB,
-			'rh_in_supply_box' => $rhC,
-			'rh_out_supply_box' => $rhD,
-			'rh_withdrawn' => $rhE,
-			'rh_ending_balance' => $rhF
-
-			);
-$this->db->insert('tuberculosis_report_info',$data_);
-	echo "Success";
+		echo "Success";
 		exit;
+	}
 }
 
 	//For the RH Report

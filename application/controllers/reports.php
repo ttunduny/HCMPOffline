@@ -1413,7 +1413,10 @@ class Reports extends MY_Controller
 		$table_datas_summary .= "<td><a href='#' id='total' class='ajax_call2 link' date='total'>$all_facilities</a></td>";
 		$district_names .= "<th>TOTAL</th></tr></thead>";
 		$final_coverage_total = 0;
-		
+		//$targetted_vs_using_hcmp = 0;
+		// $total_facilities_targetted = 0;
+		// @$targetted_vs_using_hcmp = round((($total_facilitites_using_hcmp /$total_facilities_targetted )) * 100, 1);
+		// @$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
 		$data_ = "
 		<div class='tabbable tabs-left'>
 		<div class='tab-content'>
