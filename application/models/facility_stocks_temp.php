@@ -44,7 +44,7 @@ class facility_stocks_temp extends Doctrine_Record {
 		return $query_1;
 	}
 
-	public static function get_tracer_item_names($district_id) {
+	public static function get_tracer_item_names($district_id, $county_id, $facility_code) {
 		$query_1 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
 		SELECT commodity_name from commodities where status = 1 and tracer_item = 1
 		");
@@ -52,16 +52,19 @@ class facility_stocks_temp extends Doctrine_Record {
 		return $query_1;
 	}
 
-	public static function get_months_of_stock($district_id) {
+	public static function get_months_of_stock($district_id = NULL, $county_id = NULL, $facility_code = NULL) {
+		//echo $district_id . ' facility: '. $facility_code;die;
 		$month = date('F Y');
+		$and_data = (isset($district_id)? " and d.id=$district_id ":  NULL);
 		$query_1 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
 	 SELECT c.commodity_name, round(avg(ifnull(f_s.current_balance,0)/ifnull(f_m_s.total_units,0)),1) as month_stock 
      from facilities f, facility_monthly_stock f_m_s, districts d, commodities c 
      left join facility_stocks f_s on c.id=f_s.commodity_id 
-     where f.district=d.id and d.id=$district_id and c.tracer_item=1 and c.status=1 
+     where f.district = d.`id`". $and_data." and c.tracer_item=1 and c.status=1 
      and c.id=f_m_s.commodity_id and DATE_FORMAT( f_s.date_modified, '%M %Y' ) = '$month'
      group by c.id,d.id
 	 ");
+	// print_r($query_1);die;
 		return $query_1;
 	}
 

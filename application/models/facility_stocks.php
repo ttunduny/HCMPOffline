@@ -256,6 +256,15 @@ $year=null,$month=null,$option=null,$data_for=null)
              case 'packs':
            $computation ="ifnull(SUM(ROUND(fs.qty_issued/d.total_commodity_units)),0) AS total" ;
              break;
+			 case 'mos':
+			echo $district_id;
+           	$r = facility_stocks_temp::get_months_of_stock($district_id, $county_id, $facility_code);
+			return $r;
+			//echo "<pre>";
+			//print_r($r);
+			//echo "</pre>";
+             exit;
+             break;
          default:
       $computation ="ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total";
           break;

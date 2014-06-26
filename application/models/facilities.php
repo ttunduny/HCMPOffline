@@ -355,7 +355,10 @@ public static function get_dates_facility_went_online($county_id, $district_id =
 		
 }
 
-public static function get_facilities_which_went_online_($district_id,$date_of_activation){
+public static function get_facilities_which_went_online_($district_id, $date_of_activation){
+// $district_id = isset($county_id)? null: $district_id;
+// $county_id = isset($district_id)? null: $county_id;
+
 $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 			SELECT (select count(targetted) 
 			from facilities f 
