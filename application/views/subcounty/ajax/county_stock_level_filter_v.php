@@ -13,16 +13,6 @@
       <div  id="tracer" class="tab-pane fade active in">
               <br>
           <form class="form-inline" role="form">
-<select id="tracer_commodity_filter" class="form-control col-md-3">
-<option value="NULL">Select Commodity Category</option>
-<?php
-foreach($tracer_items as $data):
-        $commodity_name=$data->commodity_name;   
-        $commodity_id=$data->id;
-        echo "<option value='$commodity_id'>$commodity_name</option>";
-endforeach;
-?>
-</select>
     <select id="tracer_district_filter" class="form-control col-md-2">
 <option selected="selected" value="NULL">Select Sub-county</option>
 <?php
@@ -33,6 +23,9 @@ foreach($district_data as $district_):
 endforeach;
 ?>
 </select> 
+<select id="tracer_facility_filter" class="form-control col-md-3">
+<option value="NULL">Select facility</option>
+</select>	
 <select id="tracer_plot_value_filter" class="form-control col-md-2">
 <option selected="selected" value="NULL">Select Plot value</option>
 <option value="packs">Packs</option>
@@ -80,6 +73,7 @@ endforeach;
 <option value="packs">Packs</option>
 <option value="units">Units</option>
 <option value="ksh">KSH</option>
+<option value="mos">Months Of Stock</option>
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success category-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
@@ -110,6 +104,7 @@ endforeach;
 <option value="packs">Packs</option>
 <option value="units">Units</option>
 <option value="ksh">KSH</option>
+<option value="mos">Months Of Stock</option>
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success county-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
@@ -152,6 +147,7 @@ endforeach;
 <option value="packs">Packs</option>
 <option value="units">Units</option>
 <option value="ksh">KSH</option>
+<option value="mos">Months Of Stock</option>
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success subcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
@@ -177,7 +173,7 @@ endforeach;
           $('.graph_content').html('');
           
           })
-		$("#subcounty_facility_filter,#category_facility_filter").hide();
+		$("#subcounty_facility_filter,#category_facility_filter,#tracer_facility_filter").hide();
 		$("#subcounty_district_filter").change(function() {
 		var option_value=$(this).val();
 		
@@ -216,14 +212,29 @@ var drop_down='';
 		}
 		});			
 		
-
+//////////
+		$("#tracer_district_filter").change(function() {
+		var option_value=$(this).val();
+		if(option_value=='NULL'){
+		$("#tracer_facility_filter").hide('slow');	
+		}
+		else{
+var drop_down='';
+ var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+option_value;
+  $.getJSON( hcmp_facility_api ,function( json ) {
+     $("#tracer_facility_filter").html('<option value="NULL" selected="selected">--select facility--</option>');
+      $.each(json, function( key, val ) {
+      	drop_down +="<option value='"+json[key]["facility_code"]+"'>"+json[key]["facility_name"]+"</option>";	
+      });
+      $("#tracer_facility_filter").append(drop_down);
+    });
+		$("#tracer_facility_filter").show('slow');		
+		}
+		});		
 		//
-		$(".tracer-filter").button().click(function(e) {
+		$(".tracer-filter").button().click(function(e) {//
         e.preventDefault(); 
-        var url_ = "reports/get_county_stock_level_new/"+
-        $("#tracer_commodity_filter").val()+
-        "/NULL/"+$("#tracer_district_filter").val()+
-        "/NULL/"+$("#tracer_plot_value_filter").val();    
+        var url_ = "reports/load_stock_level_graph/"+$("#tracer_district_filter").val()+"/NULL/"+$("#tracer_facility_filter").val()+"/NULL";    
         ajax_request_replace_div_content(url_,'.graph_content');    
           });
           

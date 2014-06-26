@@ -178,6 +178,8 @@ class Divisional_Reports extends MY_Controller
 		$data['facility_code'] = $facility;
 		$data['facility_name'] = ($facility_info['facility_name']);
 
+		$data['title'] = "Malaria Report";
+		$data['banner_text'] = "Facility Malaria Commodities Order";
 		$data['content_view'] = "facility/facility_reports/facility_reports_malaria_reports_v";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		
@@ -191,6 +193,7 @@ public function tb_report(){
 		$user_id = $this -> session -> userdata('user_id');
 		$user_names = Users::get_user_names($user_id);
 		$data['user_names'] = ($user_names[0]['fname']." ".$user_names[0]['lname']);
+		
 		$facility_info = tb_data::get_facility_name($facility);
 		$facility_district = $facility_info['district'];
 		$district_name_ = Districts::get_district_name_($facility_district);
@@ -200,8 +203,10 @@ public function tb_report(){
 		$data['district_region_name'] = $district_name_['district'];
 		$data['facility_name'] = ($facility_info['facility_name']);
 		$data['facility_type_'] = ($facility_info['owner']);
-	    $data['title'] = "Facility Reports";
-		$data['banner_text'] = "Facility Tuberculosis & Leprosy Commodities Consumption Data Report & Request Form";
+
+
+	    $data['title'] = "Tuberculosis Report";
+		$data['banner_text'] = "Facility Tuberculosis & Leprosy Commodities";
 		$data['graph_data'] = $faciliy_expiry_data;
 		$data['content_view'] = "facility/facility_reports/tb_report";;
 		$view = 'shared_files/template/template';
@@ -243,9 +248,22 @@ public function save_tb_data(){
 	public function RH_report()
 	{
 		//Used to pick the kemsa code and assign it to elements displayed on the report
+		$facility = $this -> session -> userdata('facility_id');
+		$user_id = $this -> session -> userdata('user_id');
+		$facility_info = tb_data::get_facility_name($facility);
+		$district_name_ = Districts::get_district_name_($facility_district);
+		$district_name = $this -> session -> userdata('district');
+
+		$data['facility_code'] = $facility_info['facility_code']; 
+		$data['district_region_name'] = $district_name_['district'];
+		$data['facility_name'] = ($facility_info['facility_name']);
+		$data['facility_type_'] = ($facility_info['owner']);
+
 		$data['content_view'] = "facility/facility_reports/facility_reports_RH_reports_v";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
-		
+		$data['title'] = "RH Report";
+		$data['banner_text'] = "Facility RH Commodities Order";
+
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
 		

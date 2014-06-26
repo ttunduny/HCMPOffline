@@ -808,13 +808,9 @@ class Reports extends MY_Controller
 	}	
 	public function filtered_consumption($commodity_id, $year = null, $option = null)
 	{
-			
-		//print_r($option);
-		//exit;
+		
 		$year = ($year == 0)? date("Y"):$year ;
-		//$option = ($option == 0)? "units": $option;
-		//print_r($year);
-		//exit;
+		
 		$facility_code = isset($facility_code) ? $facility_code: $this -> session -> userdata('facility_id');
 		$facility_name = Facilities::get_facility_name_($facility_code)->toArray();
 		$facility_name = $facility_name[0]['facility_name'];
@@ -823,10 +819,12 @@ class Reports extends MY_Controller
 		
 		
 		//Build the line graph showing the expiries graph
+		
 		$graph_data = array();
 		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
 		$graph_data = array_merge($graph_data,array("graph_title"=>'Consumption for '.$facility_name));
-		
+
+		$graph_data = array_merge($graph_data,array("graph_type"=>'column'));
 		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Consumption'));
 		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
 		$graph_data = array_merge($graph_data,array("series_data"=>array("Consumption"=>array())));
@@ -961,6 +959,79 @@ class Reports extends MY_Controller
 		
 		
 		
+		
+		
+		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
+		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
+		
+	}
+	public function order_report()
+	{
+		$facility_code = $this -> session -> userdata('facility_id'); 
+		$facility_name = Facilities::get_facility_name2($facility_code);
+		$year = date("Y");
+						
+		$orders = facility_orders::get_facility_orders($facility_code);
+		
+		//Holds all the months of the year
+		//Build the line graph showing the expiries graph
+		$graph_data = array();
+		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
+		$graph_data = array_merge($graph_data,array("graph_title"=>'Total Orders for '.$facility_name['facility_name'].' for '.$year));
+		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
+		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Orders (values in KSHS)'));
+		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
+		$graph_data = array_merge($graph_data,array("series_data"=>array("Total Orders"=>array())));
+		//$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],$months);	
+		
+		foreach($orders as $facility_orders):
+			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_orders['month']));	
+			$graph_data['series_data']['Total Orders'] = array_merge($graph_data['series_data']['Total Orders'],array((int)$facility_orders['total_orders']));	
+		endforeach;
+		//create the graph here
+		$facility_order_data = $this->hcmp_functions->create_high_chart_graph($graph_data);
+				
+		$loading_icon = base_url().'assets/img/loader.GIF'; 
+		$facility_order_data = isset($facility_order_data)? $facility_order_data : "$('#graph-section').html('<img src=$loading_icon>')'" ;
+   			
+		$data['title'] = "Facility Orders"	;
+		$data['banner_text'] = "Facility Orders"	;
+		$data['graph_data'] = $facility_order_data;
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		$data['report_view']="facility/facility_reports/ajax/facility_orders_filter_v";
+		$data['content_view']="facility/facility_reports/reports_v";
+		$view = 'shared_files/template/template';
+		$this -> load -> view($view, $data);
+		
+	}
+	public function filter_facility_orders($year, $month, $option)
+	{
+		
+		$year = ($year == 0) ? date("Y"): $year;
+		$month = ($month == 0) ? date("m"): $month;
+		$option = ($option == 0) ? "units": $option;
+		
+		//Get the name of the month selected
+		$m = date('F',strtotime('2000-'.$month.'-01'));
+		
+		$facility_code = isset($facility_code) ? $facility_code: $this -> session -> userdata('facility_id');
+		$facility_name = Facilities::get_facility_name2($facility_code);
+		$orders = facility_orders::get_filtered_facility_orders($facility_code, $year, $month, $option);
+		
+		//Holds all the months of the year
+		//Build the line graph showing the expiries graph
+		$graph_data = array();
+		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
+		$graph_data = array_merge($graph_data,array("graph_title"=>'Total Orders for '.$facility_name['facility_name'].' in '.$m.' '. $year));
+		$graph_data = array_merge($graph_data,array("graph_type"=>'column'));
+		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Orders (values in '.$option.')'));
+		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
+		$graph_data = array_merge($graph_data,array("series_data"=>array("Total Orders"=>array())));
+		
+		foreach($orders as $facility_orders):
+			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_orders['name']));	
+			$graph_data['series_data']['Total Orders'] = array_merge($graph_data['series_data']['Total Orders'],array((int)$facility_orders['total']));	
+		endforeach;
 		
 		
 		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
@@ -1370,7 +1441,9 @@ class Reports extends MY_Controller
 				(array_key_exists($district_name, $district_total_facilities_using_hcmp)) ? $district_total_facilities_using_hcmp[$district_name] = $total_facilitites_using_hcmp : $district_total_facilities_using_hcmp = array_merge($district_total_facilities_using_hcmp, array($district_name => $total_facilitites_using_hcmp));
 				
 				$table_data .= ($total > 0) ? "<td><a href='#' id='$district_id' class='ajax_call2 link' date='$date'> $total</a></td>" : "<td>$total</td>";
-
+				 // echo "<pre>";
+				 // print_r($total_facilities_targetted);
+				 // echo "</pre>";
 			endforeach;
 
 			$table_data .= "<td>$monthly_total</td></tr>";
@@ -1401,8 +1474,12 @@ class Reports extends MY_Controller
 			$total_facilities_in_county = $total_facilities_in_county + $district_total_facilities[$key];
 			$targetted_total = $targetted_total + $district_total_facilities_targetted[$key];
 			
+			$total_facilities_targetted = 0;
+			@$targetted_vs_using_hcmp = round((($total_facilitites_using_hcmp /$total_facilities_targetted )) * 100, 1);
+			@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
+			
 			$percentage_coverage_using .= ($checker == 1) ? "<tr><td><b>Using HCMP vs Targetted %</b></td>
-			<td>$using_percentage %</td>" : "<td>$using_percentage %</td>";
+			<td>$targetted_vs_using_hcmp %</td>" : "<td>$using_percentage %</td>";
 			
 			$percentage_coverage .= ($checker == 1) ? "<tr><td><b>% Coverage</b></td>
 			<td>$coverage %</td>" : "<td>$coverage %</td>";
@@ -1417,9 +1494,9 @@ class Reports extends MY_Controller
 		$district_names .= "<th>TOTAL</th></tr></thead>";
 		$final_coverage_total = 0;
 		//$targetted_vs_using_hcmp = 0;
-		$total_facilities_targetted = 1;
-		$targetted_vs_using_hcmp = round((($total_facilitites_using_hcmp /$total_facilities_targetted )) * 100, 1);
-		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
+		// $total_facilities_targetted = 0;
+		// @$targetted_vs_using_hcmp = round((($total_facilitites_using_hcmp /$total_facilities_targetted )) * 100, 1);
+		// @$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
 		$data_ = "
 		<div class='tabbable tabs-left'>
 		<div class='tab-content'>
@@ -1905,40 +1982,57 @@ class Reports extends MY_Controller
 		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		endif;
+	
 	}
-   public function stock_level_dashboard(){
- 			$district_id = $this -> session -> userdata('district_id');
-			$county_id = $this -> session -> userdata('county_id');
-         	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id);
-			$tracer_item_names = facility_stocks_temp::get_tracer_item_names($district_id);
+
+	public function load_stock_level_graph($district_id=NULL, $county_id=NULL, $facility_code=NULL,$commodity_id=null){
+		   $name =null;
+		   $title=null;
+		 // echo $commodity_id;exit;
+           if ($this -> session -> userdata('user_indicator') == 'district') :
+			   
+			$county_id= isset($county_id) && ($county_id!='NULL') ? $district_id: null;
+			$district_id = isset($district_id) && ($district_id!='NULL') ? $district_id:$this -> session -> userdata('district_id');
+			$facility_code = isset($facility_code) && ($facility_code!='NULL') ? $facility_code :null;
+			elseif ($this -> session -> userdata('user_indicator') == 'county') :
+			$county_id= isset($county_id) ? $district_id: $this -> session -> userdata('county_id');
+			$district_id = isset($district_id) ? $district_id:null;
+			$facility_code = isset($facility_code) ? $facility_code :null;
+			elseif ($this -> session -> userdata('user_indicator') == 'facility') :
+			$county_id= isset($county_id) ? $district_id: null;
+			$district_id = isset($district_id) ? $district_id:null;
+			$facility_code = isset($facility_code) ? $facility_code :$this -> session -> userdata('facility_code');
+			else :
+				
+			endif;
+			
+         	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id);
 			
 			$month = date('F Y');
+			if (isset($commodity_id)){
+				 $commodity_name = Commodities::get_details($commodity_id)->toArray();
+				$title .=' '.@$commodity_name[0]['commodity_name'];
+		}
+			 else{
+				 $commodity_name = null;
+			 }
 
-			$district = $this -> session -> userdata('district_id');
-			$district_name = districts::get_district_name_($district);
-			$name = $district_name['district'];
-			 
-
-			// variable values for drugs
-			$albendazole_final= $final_graph_data[0]['month_stock'];
-			$amoxicilin_final = $final_graph_data[1]['month_stock'];
-			$paracetamol_final = $final_graph_data[2]['month_stock'];
-			$zinc_sulphate = $final_graph_data[3]['month_stock'];
-			$amoxicillin_oral_final = $final_graph_data[4]['month_stock'];
-			$cotrimazole_final = $final_graph_data[5]['month_stock'];
-			$metronidazole_final = $final_graph_data[6]['month_stock'];
-			$ors_final = $final_graph_data[7]['month_stock'];
-			$atropine_final = $final_graph_data[8]['month_stock'];
-			$adrenaline_final = $final_graph_data[9]['month_stock'];
-			$benzylpenicillin_final = $final_graph_data[10]['month_stock'];
-			$hydrocortisone_final = $final_graph_data[11]['month_stock'];
-			$tetracycline_final = $final_graph_data[12]['month_stock'];
-			// end of variable values for drugs
 			
+			 if (isset($facility_code)){
+				 $facility_name = Facilities::get_facility_name2($facility_code);
+				 $title .=' '.$facility_name['facility_name'];
+		}
+
+			 if (isset($district_id)){
+				 $district_name = districts::get_district_name_($district_id);
+				 $title .=' '.$district_name['district']." Sub-County ";
+			 }
+
          	$graph_data = array();
        		$graph_data = array_merge($graph_data, array("graph_id" => 'graph_default'));
-			$graph_data = array_merge($graph_data, array("graph_title" => "Months of stock for tracer items in ". $name." subcounty"));
-			$graph_data = array_merge($graph_data, array("graph_type" => 'column'));
+
+			$graph_data = array_merge($graph_data, array("graph_title" => "Months Of Stock For ".$title.""));
+			$graph_data = array_merge($graph_data, array("graph_type" => 'bar'));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Months of Stock'));
 			$graph_data = array_merge($graph_data, array("graph_categories" => array()));
 			$graph_data = array_merge($graph_data, array("series_data" => array("Stock" =>array())));	
@@ -1948,16 +2042,20 @@ class Reports extends MY_Controller
 			$graph_data['series_data']['Stock'] = array_merge($graph_data['series_data']['Stock'],array((int)$final_graph_data_['month_stock']));	
 			endforeach;
 			
-		 $data['default_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
-		
-	     
-	     $data['district_data'] = districts::getDistrict($county_id);
+
+			$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
+			return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
+	}
+
+   public function stock_level_dashboard(){
+	     $data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
 	     $data['c_data'] = Commodities::get_all_2();
          $data['tracer_items'] = Commodities::get_tracer_items();
 		 $data['categories']= commodity_sub_category::get_all_pharm();
-		 $data['number_of_tracer_items'] = count($tracer_item_names);
+		 $data['number_of_tracer_items'] = count(facility_stocks_temp::get_tracer_item_names());
+
 	     return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
-	   
+
 	    }
 
 	    public function tb_report(){
@@ -1974,12 +2072,15 @@ class Reports extends MY_Controller
      	//reset the values here
 
       	$commodity_id = ($commodity_id=="NULL") ? null :$commodity_id;
-		$category_id = ($category_id=="NULL") ? null :$category_id;
 	 	$district_id = ($district_id=="NULL") ? null :$district_id;
 	 	$option = ($optionr=="NULL") ? null :$option;
+		$category_id = ($category_id=="NULL") ? null :$category_id;
 	 	$facility_code = ($facility_code=="NULL") ? null :$facility_code;
 		$option = ($option=="NULL" || $option=="null") ? null :$option;	
      	//setting up the data
+        if($option=="mos"){
+        	$this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id);
+        }
 		$county_id = $this -> session -> userdata('county_id');
 		$county_name = counties::get_county_name($county_id);
 		$category_data = $series_data = $series_data_ =  $graph_data = $data =array();
@@ -2043,7 +2144,7 @@ class Reports extends MY_Controller
 		else:
     		$graph_type = 'column';			
     		$graph_data = array_merge($graph_data,array("graph_id"=>'dem_graph_'));
-		    $graph_data = array_merge($graph_data,array("graph_title"=>"Stock level $commodity_name $title $month_ $year"));
+		    $graph_data = array_merge($graph_data,array("graph_title"=>"Stock Level $commodity_name $title $month_ $year"));
 		    $graph_data = array_merge($graph_data,array("graph_type"=>$graph_type));
 		    $graph_data = array_merge($graph_data,array("graph_yaxis_title"=>"Commodity Stock level in $option_new"));
 		    $graph_data = array_merge($graph_data,array("graph_categories"=>$category_data ));

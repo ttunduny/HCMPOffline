@@ -21,7 +21,7 @@
 		<tr>
 		<div class="input-group">
 			<td>Facility Type: </td>
-			<td ><input type="text" name="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" ></td>
+			<td ><input type="text" requiredname="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" ></td>
 			
 			<td>District/Region:</td>
 			<td><input type= 'text' name="district_name" disabled class="form-control" value="<?php echo $district_region_name; ?>"></td>
@@ -63,16 +63,16 @@
 				<tr>
 					<td>TB Patient Packs Category</td>
 					<td>Packs</td>
-					<td><input type="text"   name="table[1][]" value="" class='form-control' class=""></td>
-					<td><input type="text"   name="table[1][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[1][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[1][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[1][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[1][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[1][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[1][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[1][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[1][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[1][]" value="" class='form-control' class=""></td>
+					<td><input type="text" required  name="table[1][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[1][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[1][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[1][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[1][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[1][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[1][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[1][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[1][]" value="" class='form-control'></td>
 
 				</tr>
 
@@ -80,288 +80,288 @@
 				<tr>
 					<td>R/H/Z/E 150/75/400/275 mg</td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[2][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[2][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[2][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[2][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[2][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[2][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[2][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[2][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[2][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[2][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[2][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[2][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[2][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[2][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[2][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[2][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[2][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[2][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[2][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[2][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- R/H/Z/E 150/75/275 mg -->
 				<tr>
 					<td>R/H/Z/E 150/75/275 mg</td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[3][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[3][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[3][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[3][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[3][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[3][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[3][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[3][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[3][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[3][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[3][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[3][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[3][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[3][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[3][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[3][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[3][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[3][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[3][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[3][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- Streptomycin Injection -->
 				<tr>
 					<td>Streptomycin Injection 1Gm</td>
 					<td>Vials</td>
-					<td><input type="text"   name="table[4][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[4][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[4][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[4][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[4][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[4][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[4][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[4][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[4][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[4][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[4][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[4][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[4][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[4][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[4][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[4][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[4][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[4][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[4][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[4][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- R/H 150/75 mg  -->
 				<tr>
 					<td>R/H 150/75 mg </td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[5][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[5][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[5][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[5][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[5][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[5][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[5][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[5][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[5][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[5][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[5][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[5][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[5][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[5][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[5][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[5][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[5][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[5][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[5][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[5][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- R/H/Z 60/30/150 mg  -->
 				<tr>
 					<td>R/H/Z 60/30/150 mg  </td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[6][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[6][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[6][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[6][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[6][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[6][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[6][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[6][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[6][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[6][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[6][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[6][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[6][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[6][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[6][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[6][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[6][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[6][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[6][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[6][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- R/H 60/30 mg  -->
 				<tr>
 					<td>R/H 60/30 mg </td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[7][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[7][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[7][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[7][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[7][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[7][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[7][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[7][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[7][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[7][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[7][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[7][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[7][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[7][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[7][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[7][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[7][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[7][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[7][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[7][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- 60mg -->
 				<tr>
 					<td>R/H 60/60 mg </td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[8][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[8][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[8][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[8][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[8][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[8][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[8][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[8][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[8][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[8][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[8][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[8][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[8][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[8][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[8][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[8][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[8][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[8][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[8][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[8][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- Ethambutol 400 mg  -->
 				<tr>
 					<td>Ethambutol 400 mg</td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[9][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[9][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[9][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[9][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[9][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[9][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[9][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[9][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[9][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[9][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[9][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[9][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[9][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[9][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[9][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[9][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[9][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[9][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[9][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[9][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- H, 300 mg -->
 				<tr>
 					<td>H, 300 mg</td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[10][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[10][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[10][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[10][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[10][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[10][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[10][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[10][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[10][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[10][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[10][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[10][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[10][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[10][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[10][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[10][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[10][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[10][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[10][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[10][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- H,x0mg -->
 				<tr>
 					<td>H, x0 mg</td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[11][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[11][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[11][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[11][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[11][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[11][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[11][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[11][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[11][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[11][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[11][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[11][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[11][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[11][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[11][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[11][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[11][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[11][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[11][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[11][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- Rifabutin 150mg  -->
 				<tr>
 					<td>Rifabutin 150mg </td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[12][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[12][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[12][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[12][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[12][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[12][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[12][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[12][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[12][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[12][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[12][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[12][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[12][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[12][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[12][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[12][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[12][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[12][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[12][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[12][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- Pyrazinamide 500mg -->
 				<tr>
 					<td>Pyrazinamide 500mg</td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[13][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[13][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[13][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[13][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[13][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[13][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[13][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[13][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[13][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[13][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[13][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[13][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[13][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[13][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[13][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[13][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[13][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[13][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[13][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[13][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- Rifampicin 600mg -->
 				<tr>
 					<td>Rifampicin 600mg</td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[14][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[14][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[14][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[14][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[14][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[14][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[14][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[14][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[14][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[14][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[14][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[14][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[14][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[14][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[14][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[14][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[14][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[14][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[14][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[14][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- Pyridoxine 50mg -->
 				<tr>
 					<td>Pyridoxine 50mg</td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[15][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[15][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[15][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[15][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[15][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[15][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[15][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[15][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[15][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[15][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[15][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[15][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[15][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[15][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[15][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[15][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[15][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[15][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[15][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[15][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- Co-trimoxazole 960 Mg -->
 				<tr>
 					<td>Co-trimoxazole 960 Mg</td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[16][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[16][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[16][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[16][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[16][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[16][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[16][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[16][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[16][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[16][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[16][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[16][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[16][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[16][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[16][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[16][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[16][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[16][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[16][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[16][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- Co-trimoxazole, 480  mg -->
 				<tr>
 					<td>Co-trimoxazole, 480  mg</td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[17][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[17][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[17][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[17][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[17][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[17][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[17][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[17][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[17][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[17][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[17][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[17][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[17][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[17][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[17][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[17][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[17][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[17][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[17][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[17][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- Co-trimoxazole suspension, 240 mg/5ml -->
 				<tr>
 					<td>Co-trimoxazole suspension, 240 mg/5ml</td>
 					<td>Bottles</td>
-					<td><input type="text"   name="table[18][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[18][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[18][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[18][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[18][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[18][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[18][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[18][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[18][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[18][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[18][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[18][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[18][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[18][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[18][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[18][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[18][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[18][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[18][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[18][]" value="" class='form-control'></td>
 				</tr>  
 
 				<!-- Dapsone x0mg -->
 				<tr>
 					<td>Dapsone x0mg</td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[19][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[19][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[19][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[19][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[19][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[19][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[19][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[19][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[19][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[19][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[19][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[19][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[19][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[19][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[19][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[19][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[19][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[19][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[19][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[19][]" value="" class='form-control'></td>
 				</tr> 
 
 				<tr>
@@ -375,64 +375,64 @@
 				<tr>
 					<td>MB Adult Blister </td>
 					<td>Packs</td>
-					<td><input type="text"   name="table[20][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[20][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[20][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[20][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[20][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[20][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[20][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[20][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[20][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[20][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[20][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[20][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[20][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[20][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[20][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[20][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[20][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[20][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[20][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[20][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- MB Child Blister Packs -->
 				<tr>
 					<td>MB Child Blister Packs</td>
 					<td>Packs</td>
-					<td><input type="text"   name="table[21][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[21][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[21][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[21][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[21][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[21][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[21][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[21][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[21][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[21][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[21][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[21][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[21][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[21][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[21][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[21][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[21][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[21][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[21][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[21][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- PB Adult Blister Packs -->
 				<tr>
 					<td>PB Adult Blister Packs</td>
 					<td>Packs</td>
-					<td><input type="text"   name="table[22][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[22][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[22][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[22][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[22][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[22][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[22][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[22][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[22][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[22][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[22][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[22][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[22][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[22][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[22][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[22][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[22][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[22][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[22][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[22][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- PB Child Blister Packs -->
 				<tr>
 					<td>PB Child Blister Packs</td>
 					<td>Packs</td>
-					<td><input type="text"   name="table[23][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[23][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[23][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[23][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[23][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[23][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[23][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[23][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[23][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[23][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[23][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[23][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[23][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[23][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[23][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[23][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[23][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[23][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[23][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[23][]" value="" class='form-control'></td>
 				</tr>
 
 				<tr><td colspan="12" class=""><div class = "alert alert-info">MDR TB drugs</div></td></tr>
@@ -441,112 +441,112 @@
 				<tr>
 					<td>Capreomycin 1gm vial</td>
 					<td>Vial</td>
-					<td><input type="text"   name="table[24][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[24][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[24][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[24][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[24][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[24][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[24][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[24][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[24][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[24][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[24][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[24][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[24][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[24][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[24][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[24][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[24][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[24][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[24][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[24][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- Cycloserine 250mg  -->
 				<tr>
 					<td>Cycloserine 250mg </td>
 					<td>Tablet</td>
-					<td><input type="text"   name="table[25][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[25][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[25][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[25][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[25][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[25][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[25][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[25][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[25][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[25][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[25][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[25][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[25][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[25][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[25][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[25][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[25][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[25][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[25][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[25][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- Kanamycin 1gm vial  -->
 				<tr>
 					<td>Kanamycin 1gm vial </td>
 					<td>Vial</td>
-					<td><input type="text"   name="table[26][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[26][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[26][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[26][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[26][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[26][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[26][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[26][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[26][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[26][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[26][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[26][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[26][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[26][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[26][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[26][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[26][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[26][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[26][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[26][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- Levofloxacin 250mg   -->
 				<tr>
 					<td>Levofloxacin 250mg  </td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[27][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[27][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[27][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[27][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[27][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[27][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[27][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[27][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[27][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[27][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[27][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[27][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[27][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[27][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[27][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[27][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[27][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[27][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[27][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[27][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- Levofloxacin 500mg   -->
 				<tr>
 					<td>Levofloxacin 500mg  </td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[28][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[28][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[28][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[28][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[28][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[28][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[28][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[28][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[28][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[28][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[28][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[28][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[28][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[28][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[28][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[28][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[28][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[28][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[28][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[28][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- Para-aminosalicylic acid 4mg    -->
 				<tr>
 					<td>Para-aminosalicylic acid 4mg   </td>
 					<td>Satchets</td>
-					<td><input type="text"   name="table[29][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[29][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[29][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[29][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[29][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[29][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[29][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[29][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[29][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[29][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[29][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[29][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[29][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[29][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[29][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[29][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[29][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[29][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[29][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[29][]" value="" class='form-control'></td>
 				</tr>
 
 				<!-- Prothionamide 250mg    -->
 				<tr>
 					<td>Prothionamide 250mg   </td>
 					<td>Tablets</td>
-					<td><input type="text"   name="table[30][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[30][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[30][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[30][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[30][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[30][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[30][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[30][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[30][]" value="" class='form-control'></td>
-					<td><input type="text"   name="table[30][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[30][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[30][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[30][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[30][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[30][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[30][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[30][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[30][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[30][]" value="" class='form-control'></td>
+					<td><input type="text" required  name="table[30][]" value="" class='form-control'></td>
 				</tr>
 			</table>
 		</tr>
@@ -567,9 +567,9 @@
 		</tr>
 		<tr>
 			<th>Quantity Requested</th>
-			<td><input type="text"   name="50pg" value="" class='form-control'></td>
-			<td><input type="text"   name="x0pg" value="" class='form-control'></td>
-			<td><input type="text"   name="FCDRR" value="" class='form-control'></td>
+			<td><input type="text" required  name="50pg" value="" class='form-control'></td>
+			<td><input type="text" required  name="x0pg" value="" class='form-control'></td>
+			<td><input type="text" required  name="FCDRR" value="" class='form-control'></td>
 		</tr>
 			</table>
 			</td>
@@ -590,24 +590,24 @@
 					</tr>
 					<tr>
 						<th>Adult</th>
-						<td><input type="text"   name="summary_adult_new" value="" class='form-control'></td>
-						<td><input type="text"   name="summary_adult_retreatment" value="" class='form-control'></td>
-						<td><input type="text"   name="summary_adult_leprosy" value="" class='form-control'></td>
-						<td><input type="text"   name="summary_adult_mdr" value="" class='form-control'></td>
-						<td><input type="text"   name="summary_adult_ipt" value="" class='form-control'></td>
-						<td><input type="text"   name="summary_adult_rifabetia" value="" class='form-control'></td>
-						<td><input type="text"   name="summary_adult_cpt" value="" class='form-control'></td>
+						<td><input type="text" required  name="summary_adult_new" value="" class='form-control'></td>
+						<td><input type="text" required  name="summary_adult_retreatment" value="" class='form-control'></td>
+						<td><input type="text" required  name="summary_adult_leprosy" value="" class='form-control'></td>
+						<td><input type="text" required  name="summary_adult_mdr" value="" class='form-control'></td>
+						<td><input type="text" required  name="summary_adult_ipt" value="" class='form-control'></td>
+						<td><input type="text" required  name="summary_adult_rifabetia" value="" class='form-control'></td>
+						<td><input type="text" required  name="summary_adult_cpt" value="" class='form-control'></td>
 					</tr>
 
 					<tr>
 						<th>Children</th>
-						<td><input type="text"   name="summary_children_new" value="" class='form-control'></td>
-						<td><input type="text"   name="summary_children_retreatment" value="" class='form-control'></td>
-						<td><input type="text"   name="summary_children_leprosy" value="" class='form-control'></td>
-						<td><input type="text"   name="summary_children_mdr" value="" class='form-control'></td>
-						<td><input type="text"   name="summary_children_ipt" value="" class='form-control'></td>
-						<td><input type="text"   name="summary_children_rifabetia" value="" class='form-control'></td>
-						<td><input type="text"   name="summary_children_cpt" value="" class='form-control'></td>
+						<td><input type="text" required  name="summary_children_new" value="" class='form-control'></td>
+						<td><input type="text" required  name="summary_children_retreatment" value="" class='form-control'></td>
+						<td><input type="text" required  name="summary_children_leprosy" value="" class='form-control'></td>
+						<td><input type="text" required  name="summary_children_mdr" value="" class='form-control'></td>
+						<td><input type="text" required  name="summary_children_ipt" value="" class='form-control'></td>
+						<td><input type="text" required  name="summary_children_rifabetia" value="" class='form-control'></td>
+						<td><input type="text" required  name="summary_children_cpt" value="" class='form-control'></td>
 					</tr>
 				</table>
 		</tr>
@@ -633,19 +633,19 @@
 				</tr>
 				<tr>
 					<th>RHZE Tablets</th>
-					<td><input type="text"   name="rhzeB" value="" class='form-control'></td>
-					<td><input type="text"   name="rhzeC" value="" class='form-control'></td>
-					<td><input type="text"   name="rhzeD" value="" class='form-control'></td>
-					<td><input type="text"   name="rhzeE" value="" class='form-control'></td>
-					<td><input type="text"   name="rhzeF" value="" class='form-control'></td>
+					<td><input type="text" required  name="rhzeB" value="" class='form-control'></td>
+					<td><input type="text" required  name="rhzeC" value="" class='form-control'></td>
+					<td><input type="text" required  name="rhzeD" value="" class='form-control'></td>
+					<td><input type="text" required  name="rhzeE" value="" class='form-control'></td>
+					<td><input type="text" required  name="rhzeF" value="" class='form-control'></td>
 				</tr>
 				<tr>
 					<th>RH Tablets</th>
-					<td><input type="text"   name="rhB" value="" class='form-control'></td>
-					<td><input type="text"   name="rhC" value="" class='form-control'></td>
-					<td><input type="text"   name="rhD" value="" class='form-control'></td>
-					<td><input type="text"   name="rhE" value="" class='form-control'></td>
-					<td><input type="text"   name="rhF" value="" class='form-control'></td>
+					<td><input type="text" required  name="rhB" value="" class='form-control'></td>
+					<td><input type="text" required  name="rhC" value="" class='form-control'></td>
+					<td><input type="text" required  name="rhD" value="" class='form-control'></td>
+					<td><input type="text" required  name="rhE" value="" class='form-control'></td>
+					<td><input type="text" required  name="rhF" value="" class='form-control'></td>
 				</tr>
 			</table>
 		</tr>

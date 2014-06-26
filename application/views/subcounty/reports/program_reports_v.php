@@ -93,7 +93,14 @@ HTML_DATA;
 	 				<td>$username</td>
 	           		<td>$report_date</td>
 	           		<td colspan = '3'>
-           			
+
+           			<a href='$link' target="_blank">
+		           	<button  type="button" class="btn btn-xs btn-primary">
+		           	<span class="glyphicon glyphicon-save"></span>Download Report pdf</button></a>
+		           	<a href='$link_excel' target="_blank">
+           			<button  type="button" class="btn btn-xs btn-primary">
+           			<span class="glyphicon glyphicon-save"></span>Download Report excel</button></a>
+		           
            		</td>
            </tr>
 HTML_DATA;

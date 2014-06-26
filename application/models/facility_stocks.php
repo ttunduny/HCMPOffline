@@ -474,7 +474,18 @@ public static function get_facility_consumption_level_new($facilities_filter,$co
             $computation ="fs.qty_issued AS total_consumption" ;
             break;
     endswitch;
-    
+    /*echo "SELECT MONTHNAME( fs.date_issued ) as month, $computation 
+					FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
+					WHERE fs.facility_code = f.facility_code
+					AND f.facility_code = $facilities_filter
+					AND fs.qty_issued > 0
+					AND f.district = di.id
+					AND fs.status =  '1'
+					AND fs.commodity_id = $commodity_filter
+					AND YEAR( fs.date_issued ) =$year_filter
+					AND cms.id = fs.commodity_id
+					GROUP BY MONTH( fs.date_issued ) asc";
+					exit;*/
    	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 		->fetchAll("SELECT MONTHNAME( fs.date_issued ) as month, $computation 
 					FROM facility_issues fs, commodities cms, facilities f, districts di, counties c

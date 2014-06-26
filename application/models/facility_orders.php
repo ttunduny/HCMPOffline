@@ -105,6 +105,8 @@ class facility_orders extends Doctrine_Record {
 
 		return $query_results;
  }
+ 
+/*<<<<<<< HEAD
  public static function get_facility_orders($facility_code, $year)
  {
  	$year = date("Y");
@@ -112,6 +114,13 @@ class facility_orders extends Doctrine_Record {
  	$query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
  	    ->fetchAll("
  	    select MONTHNAME( f_o.order_date) as month, f_o.order_total as total 
+=======*/
+ public static function get_facility_orders($facility_code, $commodity_code = NULL, $year = NULL, $option = NULL)
+ {
+ 	$year = (isset($year)) ? $year: date("Y");
+ 	    $query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
+ 	    ->fetchAll("
+ 	    select MONTHNAME( f_o.order_date) as month, f_o.order_total as total_orders 
 		from facilities f, facility_orders f_o 
 		where f_o.facility_code=f.facility_code 
 		and f_o.facility_code = $facility_code
@@ -124,6 +133,7 @@ class facility_orders extends Doctrine_Record {
  {
  	switch ($option) :
          case 'ksh':
+/*<<<<<<< HEAD
            $computation ="sum(fod.quantity_ordered_unit*d.unit_cost) as total";
              break;
          case 'units':
@@ -137,6 +147,20 @@ class facility_orders extends Doctrine_Record {
           break;
      endswitch;	
 	 $month = ($month == 0) ? $and_data = null: $and_data = "AND DATE_FORMAT( fo.order_date,'%m') = $month";	
+=======*/
+           $computation ="(fod.quantity_ordered_unit*d.unit_cost) as total";
+             break;
+         case 'units':
+           $computation ="(fod.quantity_ordered_unit) AS total" ;
+             break;
+             case 'packs':
+           $computation ="(fod.quantity_ordered_pack) AS total" ;
+             break;
+         default:
+      $computation ="((fod.quantity_ordered_unit)*d.unit_cost) AS total";
+          break;
+     endswitch;		
+//>>>>>>> ad4682fe6d397b35c5d9cd9fe6caad6e4f49b38b
 	$query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
  	    ->fetchAll("
  	    SELECT d.commodity_name as name, $computation
@@ -146,8 +170,7 @@ class facility_orders extends Doctrine_Record {
 		 AND d.id = fod.commodity_id
 		 AND fo.facility_code = '$facility_code'
 		AND DATE_FORMAT( fo.order_date,'%Y') =$year
-		$and_data
-		GROUP BY name
+		AND DATE_FORMAT( fo.order_date,'%m') =$month
 		 ");
 
 		return $query_results;

@@ -45,11 +45,9 @@
 				        $("#year_filter").val()+
 				        "/"+$("#month_filter").val()+
 				         "/"+$("#plot_value_filter").val();
-        
 				ajax_request_replace_div_content(url,'.graph-section');
 		
           });
 	
-		
   });
 </script>
