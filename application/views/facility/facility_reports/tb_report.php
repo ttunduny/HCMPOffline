@@ -42,6 +42,17 @@
 		<td class="col-xs-2">
 		<label>Facility Code: </label>
 
+			<input type="text" name="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
+		</td>
+		</div>
+		
+
+
+		<div class="input-group">
+			<td class="col-xs-4">
+			<label>Facility Type: </label>
+			<input type="text" name="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" >
+
 			<input type="text" requiredname="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
 		</td>
 		</div>

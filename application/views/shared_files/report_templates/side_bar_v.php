@@ -1,4 +1,3 @@
-
 <div class="panel-group " id="accordion" style="padding: 0;">
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -97,8 +96,10 @@
             </div>
         </div>
     </div>
+    
 </div>
 <script>
+
 	$(document).ready(function() 
 	{
 		$("#expiries").on('click', function(){
@@ -127,4 +128,5 @@
 			});
 	});
 </script>
+
 

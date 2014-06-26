@@ -105,8 +105,9 @@ class facility_orders extends Doctrine_Record {
 
 		return $query_results;
  }
- 
+
 /*<<<<<<< HEAD
+>>>>>>> 0952fd935660b0c95ff50f5ecaa046b1c14de6a4
  public static function get_facility_orders($facility_code, $year)
  {
  	$year = date("Y");
@@ -133,21 +134,6 @@ class facility_orders extends Doctrine_Record {
  {
  	switch ($option) :
          case 'ksh':
-/*<<<<<<< HEAD
-           $computation ="sum(fod.quantity_ordered_unit*d.unit_cost) as total";
-             break;
-         case 'units':
-           $computation ="sum((fod.quantity_ordered_unit)) AS total" ;
-             break;
-             case 'packs':
-           $computation ="sum(fod.quantity_ordered_pack) AS total" ;
-             break;
-         default:
-      $computation ="sum((fod.quantity_ordered_unit)*d.unit_cost) AS total";
-          break;
-     endswitch;	
-	 $month = ($month == 0) ? $and_data = null: $and_data = "AND DATE_FORMAT( fo.order_date,'%m') = $month";	
-=======*/
            $computation ="(fod.quantity_ordered_unit*d.unit_cost) as total";
              break;
          case 'units':
@@ -160,10 +146,8 @@ class facility_orders extends Doctrine_Record {
       $computation ="((fod.quantity_ordered_unit)*d.unit_cost) AS total";
           break;
      endswitch;		
-//>>>>>>> ad4682fe6d397b35c5d9cd9fe6caad6e4f49b38b
  ($month == 0) ? $and_data = null: $and_data = "AND DATE_FORMAT( fo.order_date,'%m') = $month";	
-	
-	$query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
+$query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
  	    ->fetchAll("
  	    SELECT d.commodity_name as name, $computation
 		 FROM facilities f, commodities d, facility_orders fo, facility_order_details fod
@@ -173,7 +157,7 @@ class facility_orders extends Doctrine_Record {
 		 AND fo.facility_code = '$facility_code'
 		$and_data
 		GROUP BY name
-		 ");
+				 ");
 
 		return $query_results;
  }

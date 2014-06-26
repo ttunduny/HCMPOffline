@@ -52,7 +52,7 @@
         	ajax_request_replace_div_content(url,'.graph-section');
 		
           });
+	
 
-			
   });
 </script>
