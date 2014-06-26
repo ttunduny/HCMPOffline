@@ -43,10 +43,7 @@
 	
 			$("#filter").click(function() 
 			{
-
 				var url = "reports/filter_expiries/"+
-
-				var url = "<?php echo base_url().'reports/filter_expiries/'?>"+
 				        $("#year_filter").val()+
 				        "/"+$("#month_filter").val()+
 				        "/"+"<?php echo $district_id;?>"+
@@ -56,8 +53,6 @@
 		
           });
 
-		
-
-		
+			
   });
 </script>
