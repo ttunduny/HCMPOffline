@@ -35,7 +35,7 @@
         <div style="height:auto; margin-bottom: 2px" class="warning message ">       	
         <h5>Expired Commodities</h5>
         	<p>
-			<a class="link" href="<?php echo base_url('reports') ?>"> <span class="badge"><?php 
+			<a class="link" href="<?php echo base_url('reports/expiries') ?>"> <span class="badge"><?php 
 				echo $facility_dashboard_notifications['actual_expiries'];?></span>Expired Commodities Awaiting Decommisioning.</a> 
 			</p> 
         </div>
@@ -84,7 +84,7 @@
         	<h5>Pending Dispatch</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('reports/order_listing/facility') ?>"><span class="badge"><?php 
-			echo $facility_dashboard_notifications['facility_order_count']['approved'] ?></span>Order(s) Pending Dispatch from KEMSA</a> 
+			echo $facility_dashboard_notifications['facility_order_count']['approved'] ?></span>Order(s) Pending Dispatch</a> 
 			</p>
         </div>
          <?php endif; //approved?>

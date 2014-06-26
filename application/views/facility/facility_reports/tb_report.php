@@ -3,9 +3,14 @@
 		text-align: center;
 
 	};
+
+	table .fixed{
+		position: fixed;
+	}
+
 </style>
 <div class="container" style="width: 96%; margin: auto;">
-<div class="table-responsive " style="height:400px; overflow-y: auto;">
+<!-- <div class="table-responsive" style="height:400px; "> -->
 	<!-- <form action="tb_data/save_data" name="" class="form-control" method="POST"> -->
 	<?php $attributes = array('class'=>'form-control','id'=>'tb_form','name'=>'tb_form_'); echo form_open('divisional_reports/save_tb_data'),$att ?>
 	<input type="hidden" name="table[facility_code][]" value= "<?php echo $facility_code ?>">
@@ -18,38 +23,64 @@
 	<h5><?php //echo $user_names; ?></h5>
 	</div>
 	-->
-<table width="x0%" class="table table-bordered table-condensed table-responsive row-fluid table-condensed">
+<table width="x0%" class="table table-bordered table-condensed row-fluid">
 <!-- width="98%" border="0" class="row-fluid table table-hover table-bordered table-update" -->
 	<tbody>
 <!-- second row -->
-		<tr>
-	
 		<div class="input-group">
 		<tr>
-			<td>Facility Type: </td>
-			<td ><input type="text" name="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" ></td>
+
+		<td>
+			<label>Facility Name: </label>
+			<input type="text" name="facility_name" class="form-control" disabled value="<?php echo $facility_name; ?>">
+		</td>			
+		
+		<td class="col-xs-2">
+		<label>Facility Code: </label>
+			<input type="text" name="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
+		</td>
+		</div>
+		
+
+
+		<div class="input-group">
+			<td class="col-xs-4">
+			<label>Facility Type: </label>
+			<input type="text" name="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" >
+			</td>
 			
-			<td>District/Region:</td>
-			<td><input type= 'text' name="district_name" disabled class="form-control" value="<?php echo $district_region_name; ?>"></td>
-
-		</tr>
+			<td class="col-xs-2">
+			<label>District/Region:</label>
+			<input type= 'text' name="district_name" disabled class="form-control" value="<?php echo $district_region_name; ?>">
+			</td>
 			</div>
-
+			</tr>
 		<!-- fourth -->
 		<tr>
-			<td>Beginning Date (of Reporting Period): </td>
-			<td><input type="date"   name="table[beginning_date][]" value="" class='form-control'></td>
+			<td style="text-align:right;">
+			<label>Beginning Date (of Reporting Period): </label>
+			</td>
+			<td>
+			<input type="date"   name="table[beginning_date][]" value="" class='form-control'>
+			</td>
 		
-			<td>Ending Date (of Reporting Period): </td>
-			<td><input type="date"   name="table[ending_date][]" value="" class='form-control'></td>
+			<td  class="col-xs-2"  style="text-align:right;">
+			<label>Ending Date (of Reporting Period): </label>
+			</td>
+			<td>
+			<input type="date"   name="table[ending_date][]" value="" class='form-control'>
+			</td>
 		</tr>
 
-		</tr>
-		<tr>
+		</tbody>
+	</table>
 		<!-- use colspan on a td -->
-			<table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update">
-				<thead>
+			<table width="98%" border="0" class="table-fixed-header row-fluid table table-hover table-bordered table-update">
 				<tr>
+				<div id="container">
+				
+				<thead>
+				<div id="header-fixed" class="header-fixed"  style="position:fixed;">
 					<th>Commodity</th>
 					<th>Unit</th>
 					<th>Beginning Balance (at the start of the month)</th>
@@ -61,8 +92,11 @@
 					<th>Physical Count</th>
 					<th colspan="2">Earliest Expiry Date (6 months)</th>
 					<th>Quantity Needed</th>
-				</tr>
+				</div>
 				</thead>
+				
+				</div>
+				</tr>
 				<tr>
 					<td colspan="12" class=""><div class = "alert alert-info">TB drugs</div></td>
 				</tr>
@@ -656,17 +690,21 @@
 				</tr>
 			</table>
 		</tr>
-		</table>
-
+		<tr>
+			<td>
+			<hr/>
+	<div class="container-fluid" style="float:right">
+	<button type="submit" class="save btn btn-sm btn-success" id="save_data"><span class="glyphicon glyphicon-open"></span>Save</button>
 </div>
+			</td>
+		</tr>
+
+<!-- </div> -->
 	</tbody>
 </table>
-</div>
-<hr />
-<div class="container-fluid">
-<div style="float: right">
-<button type="submit" class="save btn btn-sm btn-success" id="save_data"><span class="glyphicon glyphicon-open"></span>Save</button></div>
-</div>
+</div> 
+
+
 </form>
 
 <script>
@@ -707,7 +745,6 @@ $('#exp_datatable,#potential_exp_datatable,#potential_exp_datatable2').dataTable
       "sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
     }
   } ); 
-    
-
+   
 });
     </script>

@@ -1,3 +1,8 @@
+<?php
+$year = date("Y");
+$county_id = $this -> session -> userdata('county_id');
+$district_id =  $this -> session -> userdata('district_id');
+?>
 <div class="row" style="margin-left: 1%">
 	<div class="col-md-4">
 		<div class="row">			
@@ -9,12 +14,12 @@
             <div class="panel-body">
     <?php if($county_dashboard_notifications['facility_donations']>0): ?>
       	 <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
-        <h5>Inter Facility Donation</h5> 
+       	 <h5>Inter Facility Donation</h5> 
         	<p>
-			<a class="link" href=""><span class="badge"><?php 
+			<a class="link" href="<?php echo base_url('reports/county_donation/')?>"><span class="badge"><?php 
 				echo $county_dashboard_notifications['facility_donations'];?></span> Items have been donated in your area</a> 
 			</p>
-			 </div>
+ 		 </div>
 		  <?php endif; // Potential Expiries?>
          <?php if($county_dashboard_notifications['actual_expiries']>0): ?>
         <div style="height:auto; margin-bottom: 2px" class="warning message ">       	
@@ -48,7 +53,7 @@
       	<div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         	<h5>Orders Pending Approval by District Pharmacist</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('reports/order_listing/facility') ?>"><span class="badge"><?php 
+			<a class="link" href="<?php echo base_url('reports/order_listing/subcounty') ?>"><span class="badge"><?php 
 			echo $county_dashboard_notifications['facility_order_count']['pending'] ?></span>Order(s) Pending in your area</a> 
 			</p>
         </div>

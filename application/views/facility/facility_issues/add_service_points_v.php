@@ -80,7 +80,7 @@ ii)Click save when done</span><br>
 
  </div>
   <div class="col-md-9"  style="border: 1px solid #DDD;">
-  	<table cellpadding="0" cellspacing="0" width="80%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
+  	<table cellpadding="0" cellspacing="0" width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
 		<tr>
 			<th>Service Point Name</th>

@@ -569,4 +569,43 @@ class User extends MY_Controller {
 			
 		}
 
+
+		public function save_new_password() {
+			
+		$id=$this -> session -> userdata('user_id');		
+		$old_password=$_POST['current_password'];
+		$new_passw=$_POST['new_password_confirm'];
+		$salt = '#*seCrEt!@-*%';
+		//retrieve password and compare
+		
+		$getdata=Users::getuserby_id($id);
+		$db_password=$getdata[0]['password'];
+		//echo "</br>";
+		$captured_password=( md5($salt . $old_password));
+		//exit;
+		// $valid_old_password = $this -> correct_current_password($db_password,$captured_password);
+		 
+		 if ($db_password != $captured_password) {
+			$response = array('msg' => '<div class="bg-danger">Your current password does not match.Please try again</div>','response'=> 'false');
+			 
+			echo json_encode($response);
+			//echo "Dont match";
+		} else {
+			
+			$salt = '#*seCrEt!@-*%';
+		
+			$new_password=( md5($salt . $new_passw));						
+			$updatep = Doctrine_Manager::getInstance()->getCurrentConnection();			
+//update password
+			$updatep->execute("UPDATE user SET password='$new_password'  WHERE id='$id'; ");
+			$response = array('msg' => 'Success!!! Your password has been changed. Exit to continue','response'=> 'true');
+			echo json_encode($response);
+		}
+		
+		
+
+	}
+
+
+
 }

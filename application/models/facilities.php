@@ -194,7 +194,16 @@ AND d.id =  '$county_id'
 ");
 return $q;
 }
-
+public static function get_all_facilities_in_county($county_id){
+	
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+SELECT DISTINCT( f.facility_code ) as facilities
+FROM facilities f, districts d
+WHERE f.`district` = d.id
+AND d.id =  '$county_id'
+");
+return $q;
+}
 
 public static function get_total_facilities_district_ownership($county_id,$owner_type){
 	
