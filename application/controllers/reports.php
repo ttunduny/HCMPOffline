@@ -826,7 +826,7 @@ class Reports extends MY_Controller
 		$graph_data = array();
 		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
 		$graph_data = array_merge($graph_data,array("graph_title"=>'Consumption for '.$facility_name));
-		$graph_data = array_merge($graph_data,array("graph_type"=>'column'));
+		
 		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Consumption'));
 		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
 		$graph_data = array_merge($graph_data,array("series_data"=>array("Consumption"=>array())));
@@ -834,13 +834,15 @@ class Reports extends MY_Controller
 		
 		if($option == "service_point")
 		{
-			//$consumption = Facility_stocks::get_facility_consumption_level_new($facility_code, $commodity_id, $year, $option);
+			$graph_data = array_merge($graph_data,array("graph_type"=>'column'));
+			$consumption = Facility_stocks::get_facility_consumption_level_new($facility_code, $commodity_id, $year, $option);
 			foreach($consumption as $facility_consumption):
 				$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_consumption['service_name']));	
 				$graph_data['series_data']['Consumption'] = array_merge($graph_data['series_data']['Consumption'],array((int)$facility_consumption['total_consumption']));	
 			endforeach;
 		}else{
-			$consumption = Facility_stocks::get_facility_consumption_level_new($facility_code, $commodity_id, $year, $option);
+			$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
+			$consumption = Facility_stocks::get_filtered_commodity_consumption_level($facility_code, $commodity_id, $year, $option);
 			foreach($consumption as $facility_consumption):
 				$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_consumption['month']));	
 				$graph_data['series_data']['Consumption'] = array_merge($graph_data['series_data']['Consumption'],array((int)$facility_consumption['total_consumption']));	
@@ -969,7 +971,165 @@ class Reports extends MY_Controller
 	public function get_facility_json_data($district_id) {
 		echo json_encode(facilities::get_facilities_which_are_online($district_id));
 	}
-	     
+	public function get_facility_mapping_data($year = null, $month = NULL) 
+	 {
+	 	$identifier = $this -> session -> userdata('user_indicator');
+		$year = isset($year) ? $year : date("Y");
+		$month = isset($month) ? $month : date("m");
+		$facility_code = $this -> session -> userdata('facility_id');
+		
+		$county_id = $this -> session -> userdata('county_id');
+		$district_id = $this -> session -> userdata('district_id');
+		$district = $this -> session -> userdata('district_id');
+			
+		
+		$first_day_of_the_month = date("Y-m-1", strtotime(date($year . "-" . $month)));
+		$last_day_of_the_month = date("Y-m-t", strtotime(date($year . "-" . $month)));
+
+		$date_1 = new DateTime($first_day_of_the_month);
+		$date_2 = new DateTime($last_day_of_the_month);
+
+		$district_data = districts::getDistrict($county_id);
+		
+		$facility_data = Facilities::get_Facilities_using_HCMP($district);
+		$log_data = Log::get_facility_log_data($facility_code);
+		$graph_title = Facilities::get_facility_name2($facility_code);
+		$graph_title = $graph_title['facility_name'];
+		
+		
+		$series_data = array();
+		$category_data = array();
+		$series_data_monthly = array();
+		$category_data_monthly = array();
+		$seconds_diff = strtotime($last_day_of_the_month) - strtotime($first_day_of_the_month);
+		$date_diff = floor($seconds_diff / 3600 / 24);	
+		
+		
+		$graph_category_data = $facility_data;
+
+		for ($i = 0; $i <= $date_diff; $i++) :
+			$day = 1 + $i;
+			$new_date = "$year-$month-" . $day;
+				
+			$new_date = date('Y-m-d', strtotime($new_date));
+
+			if (date('N', strtotime($new_date)) < 6) 
+			{
+				$date_ = date('D d', strtotime($new_date));
+				$category_data = array_merge($category_data, array($date_));
+				$temp_1 = array();
+				
+				$subcounty_data = Log::get_facility_login_count($facility_code, $new_date);
+				
+				(array_key_exists("User Log In", $series_data)) ? $series_data["User Log In"] = array_merge($series_data["User Log In"], array((int)$subcounty_data[0]['total'])) : 
+				$series_data = array_merge($series_data, array("User Log In" => array((int)$subcounty_data[0]['total'])));
+	
+				
+
+			} else {
+				// do nothing
+			}
+		endfor;
+		//for setting the month name in the graph when filtering
+		$m = date('F',strtotime('2000-'.$month.'-01'));
+				
+		$graph_data_daily = array();
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_id"=>'container'));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_title"=>'Daily Facility Access log for '.$m." for ".$graph_title));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_type"=>'line'));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_yaxis_title"=>'Log In'));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_categories"=>array()));
+		$graph_data_daily = array_merge($graph_data_daily,array("series_data"=>$series_data));
+	    $graph_data_daily['graph_categories'] = $category_data;	
+		$graph_daily = $this->hcmp_functions->create_high_chart_graph($graph_data_daily);
+
+		for ($i = 0; $i < 12; $i++) :
+			$day = 1 + $i;
+			//changed it to be a month
+			$new_date = "$year-$day";
+			$new_date = date('Y-m', strtotime($new_date));
+			$date_ = date('M', strtotime($new_date));
+			$category_data_monthly = array_merge($category_data_monthly, array($date_));
+			$subcounty_data = Log::get_facility_login_monthly_count($facility_code, $new_date);
+			(array_key_exists("User Log In", $series_data_monthly)) ? 
+			$series_data_monthly["User Log In"] = array_merge($series_data_monthly["User Log In"], array((int)$subcounty_data[0]['total'])) : 
+			$series_data_monthly = array_merge($series_data_monthly, array("User Log In" => array((int)$subcounty_data[0]['total'])));
+
+
+			
+		endfor;
+			
+		$graph_data = array();
+		$graph_data = array_merge($graph_data,array("graph_id"=>'container_monthly'));
+		$graph_data = array_merge($graph_data,array("graph_title"=>'Monthly Facility Access for '. $year.' for '.$graph_title));
+		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
+		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Log In'));
+		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
+		$graph_data = array_merge($graph_data,array("series_data"=>$series_data_monthly));
+	    $graph_data['graph_categories'] = $category_data_monthly;	
+		$graph_monthly = $this->hcmp_functions->create_high_chart_graph($graph_data);
+
+		
+		$graph_log_data = array();
+		$graph_log_data = array_merge($graph_log_data,array("graph_id"=>'log_data_graph'));
+		$graph_log_data = array_merge($graph_log_data,array("graph_title"=>'System Activity for  '.$m.' for '. $graph_title));
+		$graph_log_data = array_merge($graph_log_data,array("graph_type"=>'column'));
+		$graph_log_data = array_merge($graph_log_data,array("graph_yaxis_title"=>'User Activities'));
+		$graph_log_data = array_merge($graph_log_data,array("graph_categories"=>array()));
+		$graph_log_data['series_data']['Decommissions'] =
+		$graph_log_data['series_data']['Redistributions'] =
+		$graph_log_data['series_data']['Stock'] =
+		$graph_log_data['series_data']['Orders'] = 
+		$graph_log_data['series_data']['Issues'] =
+		$graph_log_data['series_data']['User Log'] = array();
+		
+		
+		foreach($log_data as $log_data_)
+		{
+			$sum = array_sum($log_data_);
+			$issues = round(($log_data_['total_issues']/$sum)*100);
+			$orders = round(($log_data_['total_orders']/$sum)*100);
+			$decommissions = round(($log_data_['total_decommisions']/$sum)*100);
+			$redistributions = round(($log_data_['total_redistributions']/$sum)*100);
+			$stock = round(($log_data_['total_stock_added']/$sum)*100);
+			$user = round(($log_data_['user_log']/$sum)*100);
+			
+			$graph_log_data['series_data']['Issues'] = array_merge($graph_log_data['series_data']['Issues'],array($issues));
+			$graph_log_data['series_data']['Orders'] = array_merge($graph_log_data['series_data']['Orders'],array($orders));
+			$graph_log_data['series_data']['Decommissions'] = array_merge($graph_log_data['series_data']['Decommissions'],array($decommissions));
+			$graph_log_data['series_data']['Redistributions'] = array_merge($graph_log_data['series_data']['Redistributions'],array($redistributions));
+			$graph_log_data['series_data']['Stock'] = array_merge($graph_log_data['series_data']['Stock'],array($stock));
+			$graph_log_data['series_data']['User Log'] = array_merge($graph_log_data['series_data']['User Log'],array($user));
+		
+		
+		}
+
+		$graph_log = $this->hcmp_functions->create_high_chart_graph($graph_log_data);
+	
+				//echo "<pre>";
+				//print_r($graph_log_data['series_data']);
+				//echo "</pre>";
+				//exit;
+		$data['graph_data_monthly'] =	$graph_monthly;
+		$data['graph_data_daily'] =	$graph_daily;
+		$data['graph_log'] = $graph_log;
+
+		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
+		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
+		if($this->input->is_ajax_request()):
+			return $this -> load -> view('facility/facility_reports/ajax/facility_user_log_v', $data);
+		else:
+		$data['title'] = "User Logs";
+		$data['banner_text'] = "System Use Statistics";
+	    $data['report_view'] = "facility/facility_reports/ajax/facility_user_log_v";		
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		$data['content_view'] = "facility/facility_reports/reports_v";
+		$view = 'shared_files/template/template';
+		$this -> load -> view($view, $data);
+		endif;
+		
+
+	}     
 	 //For system uptake option on SUB-COUNTY dashboard
 	 public function get_sub_county_facility_mapping_data($year = null, $month = NULL) 
 	 {
@@ -1072,8 +1232,6 @@ class Reports extends MY_Controller
 				$subcounty_data = Log::get_subcounty_login_monthly_count($county_id, $district_id, $new_date);
 
 				(array_key_exists($facility_name, $series_data_monthly)) ? $series_data_monthly[$facility_name] = array_merge($series_data_monthly[$facility_name], array((int)$subcounty_data[0]['total'])) : $series_data_monthly = array_merge($series_data_monthly, array($facility_name => array((int)$subcounty_data[0]['total'])));
-
-
 			endforeach;
 
 		endfor;
@@ -1125,6 +1283,7 @@ class Reports extends MY_Controller
 		
 		$graph_log = $this->hcmp_functions->create_high_chart_graph($graph_log_data);
 		
+
 		
 		$data['graph_data_monthly'] =	$graph_monthly;
 		$data['graph_data_daily'] =	$graph_daily;
@@ -1148,6 +1307,12 @@ class Reports extends MY_Controller
 		
 
 	}
+	//public function download_manual()
+	//{
+		//$this -> load ('assets/manual/Manual.pdf');
+			
+		//base_url().'assets/manual/Manual.pdf';
+	//}
 	public function get_county_facility_mapping_ajax_request($option = null) 
 	{
 		$district_id = $this -> session -> userdata('district_id');

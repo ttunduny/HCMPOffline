@@ -86,11 +86,11 @@
                             </span><a href="<?php echo base_url().'reports/commodities_issue' ?>">Commodities Issued</a>
                         </td>
                     </tr>
-                  <!--  <tr>
+                    <tr>
                         <td>
-                            <span class="glyphicon"></span><a href="<?php echo base_url().'reports/get_sub_county_facility_mapping_data'?>" >User Statistics</a>
+                            <span class="glyphicon"></span><a href="<?php echo base_url().'reports/get_facility_mapping_data'?>" >User Statistics</a>
                         </td>
-                    </tr>-->
+                    </tr>
                     
                 </table>
             </div>
