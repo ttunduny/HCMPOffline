@@ -1,9 +1,9 @@
 <div class="alert alert-info" style="width: 100%">
   <b>Below are the Stocking Levels in the County </b> :Select filter Options
 </div>
-<?php $no_of_tracer_items = facility_stocks_temp::get_months_of_stock($district_id, $county_id, $facility_code); $no = count($no_of_tracer_items); ?>
+
 <ul class='nav nav-tabs'>
-	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items<?php echo "(".$no.")"; ?></a></li>
+	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items <?php echo " ($number_of_tracer_items)"; ?></a></li>
       <li class=""><a href="#cat" data-toggle="tab">Categories</a></li>
       <li class=""><a href="#county" data-toggle="tab">County View</a></li>
       <li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>
@@ -13,16 +13,6 @@
       <div  id="tracer" class="tab-pane fade active in">
               <br>
           <form class="form-inline" role="form">
-<select id="tracer_commodity_filter" class="form-control col-md-3">
-<option value="NULL">Select Commodity Category</option>
-<?php
-foreach($tracer_items as $data):
-        $commodity_name=$data->commodity_name;   
-        $commodity_id=$data->id;
-        echo "<option value='$commodity_id'>$commodity_name</option>";
-endforeach;
-?>
-</select>
     <select id="tracer_district_filter" class="form-control col-md-2">
 <option selected="selected" value="NULL">Select Sub-county</option>
 <?php
@@ -80,6 +70,7 @@ endforeach;
 <option value="packs">Packs</option>
 <option value="units">Units</option>
 <option value="ksh">KSH</option>
+<option value="mos">Months Of Stock</option>
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success category-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
@@ -110,6 +101,7 @@ endforeach;
 <option value="packs">Packs</option>
 <option value="units">Units</option>
 <option value="ksh">KSH</option>
+<option value="mos">Months Of Stock</option>
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success county-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
@@ -152,6 +144,7 @@ endforeach;
 <option value="packs">Packs</option>
 <option value="units">Units</option>
 <option value="ksh">KSH</option>
+<option value="mos">Months Of Stock</option>
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success subcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
@@ -163,8 +156,6 @@ endforeach;
 </div>
 </div>
 </div>
-
-
 <div class="graph_content" id="graph_default">	
 	
 </div>
@@ -222,10 +213,7 @@ var drop_down='';
 		//
 		$(".tracer-filter").button().click(function(e) {
         e.preventDefault(); 
-        var url_ = "reports/get_county_stock_level_new/"+
-        $("#tracer_commodity_filter").val()+
-        "/NULL/"+$("#tracer_district_filter").val()+
-        "/NULL/"+$("#tracer_plot_value_filter").val();    
+        var url_ = "reports/load_stock_level_graph/"+$("#tracer_district_filter").val()+"/NULL/"+"/NULL/NULL";    
         ajax_request_replace_div_content(url_,'.graph_content');    
           });
           

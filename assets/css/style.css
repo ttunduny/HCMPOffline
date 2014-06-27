@@ -273,12 +273,24 @@ box-shadow: 1px 1px 1px 1px #DDD3ED;
 	margin:auto;
 
 	}
+	.color_a {
+		background: #ed7a53;
+		color: white;
+	}
+	.color_b {
+		background: #18a689;
+		color: white;
+	}
+	.color_c {
+		background: #B57EE0;
+		color: white;
+	}
 
 	.color_g {
 		background: #ac193d;
 		color: white;
 	}
-	.color_b {
+	.color_e {
 		background: #008299;
 		color: white;
 	}

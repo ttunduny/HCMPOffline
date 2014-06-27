@@ -78,6 +78,7 @@
         $( ".col-md-2,.col-md-10" ).css( "position", "" );
     };
 });
+
 //expiries function
 $("#expiries").on('click', function(){
 $('.page-header').html('Expiries');
@@ -110,4 +111,4 @@ ajax_request_replace_div_content('reports/get_sub_county_facility_mapping_data',
 });
      
 });
-    </script>
+</script>

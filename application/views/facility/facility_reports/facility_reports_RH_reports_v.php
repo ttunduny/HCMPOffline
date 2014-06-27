@@ -1,19 +1,46 @@
 <div class="container" style="width: 96%; margin: auto;">
-<span  class='label label-info'>
-	Write up on how to use the Report
-	</span><br />
-	<span class="label label-danger">
-		Available Batch Stock is for a specific 
-	batch, Total Balance is the total for the commodity
-	</span>
-	<hr />
+
 <div class="table-responsive" style="height:400px; overflow-y: auto;">
+	<div style="margin:5px 0;">
+		<p class="label label-info" >Enter appropriate values in all fields as indicated: </p>
+	</div>
 	<?php 
 		$att = array("name"=>'myform','id'=>'myform'); 
 		//add a function for saving the data
 		echo form_open('divisional_reports/save_RH_report',$att); 
 	
 	?>
+
+
+		<table  class="table table-hover table-bordered table-update" id="reproductive_health_reports_table" >
+	<tr>
+
+		<td>
+			<label>Facility Name: </label>
+			<input type="text" name="facility_name" class="form-control" disabled value="<?php echo $facility_name; ?>">
+		</td>			
+		
+		<td class="col-xs-2">
+		<label>Facility Code: </label>
+			<input type="text" name="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
+		</td>
+		</div>
+		
+
+
+		<div class="input-group">
+			<td class="col-xs-4">
+			<label>Facility Type: </label>
+			<input type="text" name="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" >
+			</td>
+			
+			<td class="col-xs-2">
+			<label>District/Region:</label>
+			<input type= 'text' name="district_name" disabled class="form-control" value="<?php echo $district_region_name; ?>">
+			</td>
+			</div>
+			</tr>
+			</table>
 	<table  class="table table-hover table-bordered table-update" id="reproductive_health_reports_table" >
 	<thead style="background-color: white">
 		<tr>
@@ -31,142 +58,142 @@
 	<tbody>
 		<tr row_id='0'>
 			<td>Combined Oral contraceptive Pills</td>
-			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[1]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Received_This_Month[1]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Dispensed[1]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Losses[1]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Positive[1]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Negative[1]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Ending_Balance[1]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[1]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Beginning_Balance[1]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Received_This_Month[1]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Dispensed[1]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Losses[1]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Positive[1]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Negative[1]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Ending_Balance[1]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Quantity_Requested[1]'/></td>
 			
 			</tr>
 		<tr row_id='0'>
 			<td>Progestin only pills</td>
-			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[2]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Received_This_Month[2]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Dispensed[2]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Losses[2]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Positive[2]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Negative[2]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Ending_Balance[2]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[2]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Beginning_Balance[2]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Received_This_Month[2]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Dispensed[2]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Losses[2]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Positive[2]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Negative[2]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Ending_Balance[2]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Quantity_Requested[2]'/></td>
 			
 			</tr>
 			<tr row_id='0'>
 			<td>Injectables</td>
-			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[3]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Received_This_Month[3]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Dispensed[3]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Losses[3]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Positive[3]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Negative[3]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Ending_Balance[3]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[1]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Beginning_Balance[3]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Received_This_Month[3]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Dispensed[3]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Losses[3]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Positive[3]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Negative[3]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Ending_Balance[3]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Quantity_Requested[1]'/></td>
 			
 			</tr>
 			<tr row_id='0'>
 			<td>Implants (1-Rod)</td>
-			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[4]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Received_This_Month[4]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Dispensed[4]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Losses[4]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Positive[4]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Negative[4]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Ending_Balance[4]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[4]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Beginning_Balance[4]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Received_This_Month[4]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Dispensed[4]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Losses[4]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Positive[4]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Negative[4]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Ending_Balance[4]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Quantity_Requested[4]'/></td>
 			
 			</tr>
 			<tr row_id='0'>
 			<td>Implants (2-Rod)</td>
-			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[5]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Received_This_Month[5]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Dispensed[5]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Losses[5]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Positive[5]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Negative[5]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Ending_Balance[5]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[5]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Beginning_Balance[5]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Received_This_Month[5]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Dispensed[5]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Losses[5]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Positive[5]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Negative[5]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Ending_Balance[5]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Quantity_Requested[5]'/></td>
 			
 			</tr>
 			<tr row_id='0'>
 			<td>Emergency Contraceptive pills</td>
-			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[6]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Received_This_Month[6]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Dispensed[6]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Losses[6]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Positive[6]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Negative[6]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Ending_Balance[6]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[6]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Beginning_Balance[6]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Received_This_Month[6]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Dispensed[6]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Losses[6]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Positive[6]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Negative[6]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Ending_Balance[6]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Quantity_Requested[6]'/></td>
 			
 			</tr>
 			<tr row_id='0'>
 			<td>IUCDs</td>
-			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[7]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Received_This_Month[7]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Dispensed[7]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Losses[7]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Positive[7]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Negative[7]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Ending_Balance[7]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[1]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Beginning_Balance[7]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Received_This_Month[7]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Dispensed[7]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Losses[7]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Positive[7]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Negative[7]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Ending_Balance[7]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Quantity_Requested[1]'/></td>
 			
 			</tr>
 			<tr row_id='0'>
 			<td>Male Condoms</td>
-			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[8]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Received_This_Month[8]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Dispensed[8]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Losses[8]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Positive[8]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Negative[8]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Ending_Balance[8]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[8]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Beginning_Balance[8]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Received_This_Month[8]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Dispensed[8]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Losses[8]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Positive[8]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Negative[8]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Ending_Balance[8]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Quantity_Requested[8]'/></td>
 			
 			</tr>
 			<tr row_id='0'>
 			<td>Female Condoms</td>
-			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[9]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Received_This_Month[9]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Dispensed[9]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Losses[9]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Positive[9]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Negative[9]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Ending_Balance[9]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[9]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Beginning_Balance[9]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Received_This_Month[9]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Dispensed[9]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Losses[9]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Positive[9]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Negative[9]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Ending_Balance[9]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Quantity_Requested[9]'/></td>
 			
 			</tr>
 			<tr row_id='0'>
 			<td>Cycle Beads</td>
-			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[10]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Received_This_Month[10]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Dispensed[10]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Losses[10]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Positive[10]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Negative[10]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Ending_Balance[10]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[10]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Beginning_Balance[10]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Received_This_Month[10]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Dispensed[10]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Losses[10]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Positive[10]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Negative[10]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Ending_Balance[10]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Quantity_Requested[10]'/></td>
 			
 			</tr>
 			<tr row_id='0'>
 			<td>Others</td>
-			<td><input type='text' class='form-control input-small ' name='Beginning_Balance[11]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Received_This_Month[11]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Dispensed[11]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Losses[11]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Positive[11]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Negative[11]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Ending_Balance[11]'/></td>
-			<td><input type='text' class='form-control input-small ' name='Quantity_Requested[11]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Beginning_Balance[11]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Received_This_Month[11]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Dispensed[11]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Losses[11]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Positive[11]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Negative[11]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Ending_Balance[11]'/></td>
+			<td><input type='text' class='form-control input-small ' required name='Quantity_Requested[11]'/></td>
 			
 			</tr>
 			<tr row_id='0'>
 				<th colspan="5">SERVICE STATISTICS (Indicate only the number of Clients issued with Contraceptives</th>
 				<td>New Clients</td>
-				<td><input type='text' class='form-control input-small ' name=''/></td>
+				<td><input type='text' class='form-control input-small ' required name=''/></td>
 				<td>Natural FP Counseling</td>
-				<td><input type='text' class='form-control input-small ' /></td>
+				<td><input type='text' class='form-control input-small ' required /></td>
 			</tr>
 			<tr row_id='0' rowspan="2">
 				<td>&nbsp;</td>
@@ -176,110 +203,110 @@
 				<td>From</td>
 				<td>To</td>
 				<td>Revisits</td>
-				<td><input type='text' class='form-control input-small ' /></td>
+				<td><input type='text' class='form-control input-small ' required /></td>
 				<td>Natural FP Referrals</td>
-				<td><input type='text' class='form-control input-small ' /></td>
+				<td><input type='text' class='form-control input-small ' required /></td>
 			</tr>
 			<tr row_id='0'>
 			<td>Combined Oral contraceptive Pills</td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
 			<td colspan="4">&nbsp;</td>
 			
 			</tr>
 		<tr row_id='0'>
 			<td>Progestin only pills</td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
 			<td colspan="4">HIV COUNSELING AND TESTING</td>
 		</tr>
 		
 		<tr row_id='0'>
 			<td>Injectables</td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
 			<td rowspan="2">Counseled and Tested</td>
 			<td rowspan="2">Referred for Counseling and Testing</td>
 			<td colspan="2">Known HIV Status</td>
 		</tr>
 		<tr row_id='0'>
 			<td>Implants (1-Rod)</td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
 			<td>1</td>
 			<td>2</td>
 			
 		</tr>
 		<tr row_id='0'>
 			<td>Implants (2-Rod)</td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
 			
 		</tr>
 		<tr row_id='0'>
 			<td>IUCDs</td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
 			<td rowspan="4">&nbsp;</td>
 			<td colspan="3">Sterilization</td>
 			
 		</tr>
 		<tr row_id='0'>
 			<td>Male Condoms</td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
 			<td>Males</td>
-			<td colspan="2"><input type='text' class='form-control input-small ' /></td>
+			<td colspan="2"><input type='text' class='form-control input-small ' required /></td>
 			
 			
 			
 		</tr>
 		<tr row_id='0'>
 			<td>Female Condoms</td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
 			<td>Females</td>
-			<td colspan="2"><input type='text' class='form-control input-small ' /></td>
+			<td colspan="2"><input type='text' class='form-control input-small ' required /></td>
 			
 		</tr>
 		<tr row_id='0'>
 			<td>Cycle Beads</td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
 			<td>Referrals</td>
-			<td colspan="2"><input type='text' class='form-control input-small ' /></td>
+			<td colspan="2"><input type='text' class='form-control input-small ' required /></td>
 			
 		</tr>
 		<tr row_id='0'>
 			<td>Others</td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
-			<td><input type='text' class='form-control input-small ' /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
+			<td><input type='text' class='form-control input-small ' required /></td>
 			<td colspan="2">Cases for Emergency Pills</td>
-			<td colspan="2"><input type='text' class='form-control input-small ' /></td>
+			<td colspan="2"><input type='text' class='form-control input-small ' required /></td>
 			
 		</tr>
      </tbody>

@@ -6,7 +6,7 @@
 </style>
 <div class="container" style="width: 96%; margin: auto;">
 	
-<div class="table-responsive" style="height:400px; overflow-y: auto;">
+<div class="table-responsive">
 	<?php 
 		$att = array("name"=>'myform','id'=>'myform'); 
 		//add a function for saving the data
@@ -14,24 +14,52 @@
 	
 	?>
 	<!--
-	<div class="page-header report-info">
+	<div class="report-info">
 	<h2>Malaria Report</h2>
 	<h3><?php //echo $facility_name; ?></h3>
 	<h4><?php //echo $facility_code; ?></h4>
 	<h5><?php //echo $user_names; ?></h5>
 	</div>
 	-->
+
+	<div  style="margin:5px 0;">
+		<p class="label label-info">Enter appropriate values in all fields as indicated: </p>
+	</div>
+
+	<table width="98%" border="0" class="table-condensed row-fluid table table-hover table-bordered table-update"  id="example">
+		<tr>
+		<div class="input-group">
+
+		<td  class="col-xs-3">
+			<label>Facility Name: </label>
+			<input type="text" name="facility_name" class="form-control" disabled value="<?php echo $facility_name; ?>">
+		</td>			
+		
+		<td  class="col-xs-2">
+		<label>Facility Code: </label>
+			<input type="text" name="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
+		</td>
+
+		<td class="col-xs-3">
+		<label>User Name: </label>
+			<input type="text" name="facility_code: " class="form-control" disabled value="<?php echo $user_names; ?>">	
+		</td>
+
+		<td  class="col-xs-1">
+			<label>Report Date:</label>
+			<!-- <input type= 'date' name="district_name" class="form-control" value=""> -->
+			<input type="text" class="form-control clone_datepicker_normal_limit_today"  name="district_name" value="<?php echo date('d M Y'); ?>" />
+			</td>
+		</div>
+
+		</tr>
+	</table>
+
 	<table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead style="background-color: white">
 
 <!-- second row -->
-		<tr>
-		<div class="input-group">
-			<td>Report Date:</td>
-			<td colspan="10"><input type= 'date' name="district_name" class="form-control" value=""></td>
-
-			</div>
-		</tr>
+		
 
 		<tr>
 			<th>Drug Name</th>
@@ -106,7 +134,7 @@
 		   </table>
 </div>
 <hr />
-<div class="container-fluid">
+<div class="container-fluid" style="clear:both;">
 <div style="float: right">
 <button class="save btn btn-sm btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 </div>
