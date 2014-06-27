@@ -1694,16 +1694,13 @@ class Reports extends MY_Controller
 
 	public function load_stock_level_graph($district_id=NULL, $county_id=NULL, $facility_code=NULL,$commodity_id=null){
 		   $name =null;
+		   $title=null;
+		 // echo $commodity_id;exit;
            if ($this -> session -> userdata('user_indicator') == 'district') :
 			   
 			$county_id= isset($county_id) && ($county_id!='NULL') ? $district_id: null;
 			$district_id = isset($district_id) && ($district_id!='NULL') ? $district_id:$this -> session -> userdata('district_id');
 			$facility_code = isset($facility_code) && ($facility_code!='NULL') ? $facility_code :null;
-			
-			$district_name = districts::get_district_name_($district_id);
-			$name = $district_name['district'];
-			 
-			
 			elseif ($this -> session -> userdata('user_indicator') == 'county') :
 			$county_id= isset($county_id) ? $district_id: $this -> session -> userdata('county_id');
 			$district_id = isset($district_id) ? $district_id:null;
@@ -1716,13 +1713,30 @@ class Reports extends MY_Controller
 				
 			endif;
 			
-         	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code );
-
+         	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id);
+			
 			$month = date('F Y');
+			if (isset($commodity_id)){
+				 $commodity_name = Commodities::get_details($commodity_id)->toArray();
+				$title .=' '.@$commodity_name[0]['commodity_name'];
+		}
+			 else{
+				 $commodity_name = null;
+			 }
+			
+			 if (isset($facility_code)){
+				 $facility_name = Facilities::get_facility_name2($facility_code);
+				 $title .=' '.$facility_name['facility_name'];
+		}
+
+			 if (isset($district_id)){
+				 $district_name = districts::get_district_name_($district_id);
+				 $title .=' '.$district_name['district']." Sub-County ";
+			 }
 
          	$graph_data = array();
        		$graph_data = array_merge($graph_data, array("graph_id" => 'graph_default'));
-			$graph_data = array_merge($graph_data, array("graph_title" => "Months Of Stock For Tracer Items In ". $name." Subcounty"));
+			$graph_data = array_merge($graph_data, array("graph_title" => "Months Of Stock For ".$title.""));
 			$graph_data = array_merge($graph_data, array("graph_type" => 'bar'));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Months of Stock'));
 			$graph_data = array_merge($graph_data, array("graph_categories" => array()));
@@ -1767,7 +1781,9 @@ class Reports extends MY_Controller
 	 	$facility_code = ($facility_code=="NULL") ? null :$facility_code;
 		$option = ($option=="NULL" || $option=="null") ? null :$option;	
      	//setting up the data
-
+        if($option=="mos"){
+        	$this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id);
+        }
 		$county_id = $this -> session -> userdata('county_id');
 		$county_name = counties::get_county_name($county_id);
 		$category_data = $series_data = $series_data_ =  $graph_data = $data =array();
@@ -1831,7 +1847,7 @@ class Reports extends MY_Controller
 		else:
     		$graph_type = 'column';			
     		$graph_data = array_merge($graph_data,array("graph_id"=>'dem_graph_'));
-		    $graph_data = array_merge($graph_data,array("graph_title"=>"Months Of Stock $commodity_name $title $month_ $year"));
+		    $graph_data = array_merge($graph_data,array("graph_title"=>"Stock Level $commodity_name $title $month_ $year"));
 		    $graph_data = array_merge($graph_data,array("graph_type"=>$graph_type));
 		    $graph_data = array_merge($graph_data,array("graph_yaxis_title"=>"Commodity Stock level in $option_new"));
 		    $graph_data = array_merge($graph_data,array("graph_categories"=>$category_data ));

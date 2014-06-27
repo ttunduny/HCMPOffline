@@ -23,6 +23,9 @@ foreach($district_data as $district_):
 endforeach;
 ?>
 </select> 
+<select id="tracer_facility_filter" class="form-control col-md-3">
+<option value="NULL">Select facility</option>
+</select>	
 <select id="tracer_plot_value_filter" class="form-control col-md-2">
 <option selected="selected" value="NULL">Select Plot value</option>
 <option value="packs">Packs</option>
@@ -170,7 +173,7 @@ endforeach;
           $('.graph_content').html('');
           
           })
-		$("#subcounty_facility_filter,#category_facility_filter").hide();
+		$("#subcounty_facility_filter,#category_facility_filter,#tracer_facility_filter").hide();
 		$("#subcounty_district_filter").change(function() {
 		var option_value=$(this).val();
 		
@@ -209,11 +212,29 @@ var drop_down='';
 		}
 		});			
 		
-
+//////////
+		$("#tracer_district_filter").change(function() {
+		var option_value=$(this).val();
+		if(option_value=='NULL'){
+		$("#tracer_facility_filter").hide('slow');	
+		}
+		else{
+var drop_down='';
+ var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+option_value;
+  $.getJSON( hcmp_facility_api ,function( json ) {
+     $("#tracer_facility_filter").html('<option value="NULL" selected="selected">--select facility--</option>');
+      $.each(json, function( key, val ) {
+      	drop_down +="<option value='"+json[key]["facility_code"]+"'>"+json[key]["facility_name"]+"</option>";	
+      });
+      $("#tracer_facility_filter").append(drop_down);
+    });
+		$("#tracer_facility_filter").show('slow');		
+		}
+		});		
 		//
-		$(".tracer-filter").button().click(function(e) {
+		$(".tracer-filter").button().click(function(e) {//
         e.preventDefault(); 
-        var url_ = "reports/load_stock_level_graph/"+$("#tracer_district_filter").val()+"/NULL/"+"/NULL/NULL";    
+        var url_ = "reports/load_stock_level_graph/"+$("#tracer_district_filter").val()+"/NULL/"+$("#tracer_facility_filter").val()+"/NULL";    
         ajax_request_replace_div_content(url_,'.graph_content');    
           });
           
