@@ -1959,9 +1959,10 @@ class Reports extends MY_Controller
 			$graph_data = array_merge($graph_data, array("graph_categories" => array()));
 			$graph_data = array_merge($graph_data, array("series_data" => array("Stock" =>array())));	
 	
+	
 			foreach($final_graph_data as $final_graph_data_):
 			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'], array($final_graph_data_['commodity_name']));
-			$graph_data['series_data']['Stock'] = array_merge($graph_data['series_data']['Stock'],array((int)$final_graph_data_['month_stock']));	
+			$graph_data['series_data']['Stock'] = array_merge($graph_data['series_data']['Stock'],array((int)$final_graph_data_['total']));	
 			endforeach;
 
 	     $data['district_data'] = districts::getDistrict($county_id);
@@ -2007,6 +2008,7 @@ class Reports extends MY_Controller
 		$option = ($option=="NULL" || $option=="null") ? null :$option;	
      	//setting up the data
         if($option=="mos"){
+        	
         	$this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id);
         }
 		$county_id = $this -> session -> userdata('county_id');

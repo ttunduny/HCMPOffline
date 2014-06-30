@@ -211,8 +211,7 @@ var drop_down='';
 		$("#category_facility_filter").show('slow');		
 		}
 		});			
-		
-//////////
+
 		$("#tracer_district_filter").change(function() {
 		var option_value=$(this).val();
 		if(option_value=='NULL'){
@@ -247,8 +246,7 @@ var drop_down='';
 $("#tracer_commodity_filter").val()+"/NULL/"+$("#tracer_district_filter").val()+"/NULL/"+$("#tracer_plot_value_filter").val()+"/csv_data";   
          window.open(url+url_ ,'_blank');   
           });
-          
-		//
+   
 		$(".county-filter").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+

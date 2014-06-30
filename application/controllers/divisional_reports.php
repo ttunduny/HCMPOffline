@@ -52,6 +52,7 @@ class Divisional_Reports extends MY_Controller
 				$data['title'] = "Facility Divisional Reports";
 				$data['banner_text'] = "Facility Divisional Reports";
 				$data['report_view'] = "subcounty/reports/program_reports_v";
+				$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 				
 			break;
 			case district :
@@ -76,12 +77,16 @@ class Divisional_Reports extends MY_Controller
 					
 					$index++;
 				}
-			
+			//print_r($report_TB);
+			//exit;
+				$data['page_header'] = "Program Reports";
 				$data['malaria'] = $report_malaria_report;
 				$data['RH'] = $report_RH_report;
+				$data['TB'] = $report_tuberculosis;
 				$data['title'] = "District Program Reports";
 				$data['banner_text'] = "District Program Reports";
 				$data['report_view'] = "subcounty/reports/program_reports_v";
+				$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
 				
 			break;
 			case county:
@@ -106,18 +111,20 @@ class Divisional_Reports extends MY_Controller
 				
 				$index++;
 			 }
-		
+			 $data['page_header'] = "County Program Reports";	
 			 $data['malaria'] = $report_malaria_report;
 			 $data['RH'] = $report_RH_report;
+			 $data['TB'] = $report_tuberculosis;
 			 $data['title'] = "County Program Reports";
 			 $data['banner_text'] = " County Program Reports";
 			 $data['report_view'] = "subcounty/reports/program_reports_v";	
+			 $data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
 		 break;
 		}
  		
  		
 		$data['content_view'] = "facility/facility_reports/reports_v";
-		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		
 		$this -> load -> view('shared_files/template/template', $data);
 		
 	 }

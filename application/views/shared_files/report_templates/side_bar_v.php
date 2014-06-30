@@ -80,12 +80,12 @@
                             </span><a href="<?php echo base_url().'reports/stock_control' ?>">Stock Control Card</a>
                         </td>
                     </tr>
-                    <tr>
+                   <!-- <tr>
                         <td>
                             <span class="glyphicon">
                             </span><a href="<?php echo base_url().'reports/commodities_issue' ?>">Commodities Issued</a>
                         </td>
-                    </tr>
+                    </tr>-->
                     <tr>
                         <td>
                             <span class="glyphicon"></span><a href="<?php echo base_url().'reports/get_facility_mapping_data'?>" >User Statistics</a>
