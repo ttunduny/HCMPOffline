@@ -33,7 +33,7 @@ class Divisional_Reports extends MY_Controller
 				$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
 				$report_TB = tb_data::get_facility_report_details($facility_id);
 						
-				if ((!empty($report_RH))&&(!empty($report_malaria)))
+				if ((!empty($report_RH))&&(!empty($report_malaria))&&(!empty($report_TB)))
 				{
 					$report_RH_report[$index] = $report_RH;
 					$report_malaria_report[$index] = $report_malaria;
@@ -247,72 +247,82 @@ public function view_tb_report()
 public function save_tb_data(){
 	$values = $this->input->post();
 
+	    $beginning_date = $values['table']['beginning_date'][0];
+	    $ending_date = $values['table']['ending_date'][0];
+
 
 	$user_id = $this -> session -> userdata('user_id');
 	$facility = $this -> session -> userdata('facility_id');
+	$report_id = rand(0, 10000000000);
 
-	foreach ($values as $key => $value) {
-		$no = count($values['table']);
-		$report_id = rand(0, 10000000000);
-		$save_time = date('Y-m-d H:i:s');
+	// SAVING data
+	$save_time = date('Y-m-d H:i:s');
 		$data = array();
 		$data_ = array();
 
-		for ($i=1; $i < 10; $i++) {//30 drugs thus loop limitation 
+
+		for ($i=1; $i < 31; $i++) {//30 drugs thus loop limitation 
 		$data = array( 
 		'facility_code'=>$facility, 
-		'beginning_date'=>$value['beginning_date'][0],
-		'ending_date'=>$value['ending_date'][0], 
-		'beginning_balance'=>$value[$i][1], 
-		'currently_recieved'=>$value[$i][2], 
-		'quantity_dispensed'=>$value[$i][3], 
-		'positive_adjustment'=>$value[$i][4], 
-		'negative_adjustment'=>$value[$i][5], 
-		'losses'=>$value[$i][6],
-		'physical_count'=>$value[$i][7],
-		'physical_count'=>$value[$i][8],
+		'beginning_date'=>$beginning_date,
+		'ending_date'=>$ending_date, 
+		'beginning_balance'=>$values['table'][$i][1], 
+		'currently_recieved'=>$values['table'][$i][2], 
+		'quantity_dispensed'=>$values['table'][$i][3], 
+		'positive_adjustment'=>$values['table'][$i][4], 
+		'negative_adjustment'=>$values['table'][$i][5], 
+		'losses'=>$values['table'][$i][6],
+		'physical_count'=>$values['table'][$i][7],
+		'earliest_expiry'=>$values['table'][$i][8],
+		'quantity_needed'=>$values['table'][$i][9],
 		'report_date' => $save_time,
 		'user_id' =>$user_id,
-		
+		'report_id' =>$report_id,
 		);
 		$this->db->insert('tuberculosis_data',$data);
 		}
-	}
 	$data_ = array(
-			'quantity_requested_50' => $qtt,
-			'quantity_requested_x0' => $x0pg,
-			'FCDRR' => $FCDRR,
-			'adult_new' => $summary_adult_new,
-			'adult_retreatment' => $summary_adult_retreatment,
-			'adult_leprosy' => $summary_adult_leprosy,
-			'adult_MDR' => $summary_adult_mdr,
-			'adult_IPT' => $summary_adult_ipt,
-			'adult_Rifabetia' => $summary_adult_rifabetia,
-			'adult_CPT' => $summary_adult_cpt,
-			'children_new' => $summary_children_new,
-			'children_retreatment' => $summary_children_retreatment,
-			'children_leprosy' => $summary_children_leprosy,
-			'children_MDR' => $summary_children_mdr,
-			'children_IPT' => $summary_children_ipt,
-			'children_rifabetia' => $summary_children_rifabetia,
-			'children_CPT' => $summary_children_cpt,
+			'quantity_requested_50' => $values['qtt'],
+			'quantity_requested_x0' => $values['x0pg'],
+			'FCDRR' => $values['FCDRR'],
+			'adult_new' => $values['summary_adult_new'],
+			'adult_retreatment' => $values['summary_adult_retreatment'],
+			'adult_leprosy' => $values['summary_adult_leprosy'],
+			'adult_MDR' => $values['summary_adult_mdr'],
+			'adult_IPT' => $values['summary_adult_ipt'],
+			'adult_Rifabetia' => $values['summary_adult_rifabetia'],
+			'adult_CPT' => $values['summary_adult_cpt'],
+			'children_new' => $values['summary_children_new'],
+			'children_retreatment' => $values['summary_children_retreatment'],
+			'children_leprosy' => $values['summary_children_leprosy'],
+			'children_MDR' => $values['summary_children_mdr'],
+			'children_IPT' => $values['summary_children_ipt'],
+			'children_rifabetia' => $values['summary_children_rifabetia'],
+			'children_CPT' => $values['summary_children_cpt'],
 
-			'rhze_beginning_balance' => $rhzeB,
-			'rhze_in_supply_box' => $rhzeC,
-			'rhze_out_supply_box' => $rhzeD,
-			'rhze_withdrawn' => $rhzeE,
-			'rhze_ending_balance' => $rhzeF,
+			'rhze_beginning_balance' => $values['rhzeB'],
+			'rhze_in_supply_box' => $values['rhzeC'],
+			'rhze_out_supply_box' => $values['rhzeD'],
+			'rhze_withdrawn' => $values['rhzeE'],
+			'rhze_ending_balance' => $values['rhzeF'],
 
-			'rh_beginning_balance' => $rhB,
-			'rh_in_supply_box' => $rhC,
-			'rh_out_supply_box' => $rhD,
-			'rh_withdrawn' => $rhE,
-			'rh_ending_balance' => $rhF
-
+			'rh_beginning_balance' => $values['rhB'],
+			'rh_in_supply_box' => $values['rhC'] ,
+			'rh_out_supply_box' => $values['rhD'],
+			'rh_withdrawn' => $values['rhE'],
+			'rh_ending_balance' => $values['rhF'],
+			'report_id' => $report_id,
+			'report_date' => $save_time
 			);
 $this->db->insert('tuberculosis_report_info',$data_);
 	echo "Success";
 		exit;
+	// END OF SAVING data
+
+	foreach ($values as $key => $value) {
+		$no = count($values['table']);
+		
+}
 }
 
 	//For the RH Report

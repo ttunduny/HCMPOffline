@@ -89,8 +89,8 @@ HTML_DATA;
 				$user = Users::get_user_names($TB_details['user']);
 				$username = $user[0]['fname']." ".$user[0]['lname'];
 				$report_date = $TB_details['report_date'];
-				$link = base_url('reports/get_facility_report_pdf/'.$TB_details['id'].'/'.$TB_details['facility_code'].'/TB');	
-				$link_excel = base_url('reports/create_excel_facility_program_report/'.$TB_details['id'].'/'.$TB_details['facility_code'].'/TB');
+				$link = base_url('reports/get_facility_report_pdf/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/TB');	
+				$link_excel = base_url('reports/create_excel_facility_program_report/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/TB');
 
 			    $link_TB = base_url('divisional_reports/tb_report');
 			    $TB_report_details .= <<<HTML_DATA
@@ -196,7 +196,7 @@ HTML_DATA;
 		<tbody>
 			<?php
 			 echo $TB_report_details;
-			
+
 			 ?>
 		</tbody>
 		</table> 
