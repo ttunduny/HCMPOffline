@@ -39,18 +39,20 @@ and f.district=d.id and d.county=$county_id group by f_e.satisfaction_lvl
 	}
 		public static function get_training_resource($county_id){
 		$query_1 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-select  count(f_e.comp_avail) as comp
+select count(f_e.comp_avail) as comp
 from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
 and f_e.comp_avail=1
-and f.district=d.id and d.county=1
+and f.district=d.id and d.county=$county_id
+AND UNIX_TIMESTAMP( f.`date_of_activation` ) >0
  ");	
  $query_2 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select count(f_e.modem_avail) as modem
 from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
 and f_e.modem_avail=1
-and f.district=d.id and d.county=1
+and f.district=d.id and d.county=$county_id
+AND UNIX_TIMESTAMP( f.`date_of_activation` ) >0
  ");	
  $query_3 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select count(f_e.bundles_avail) as bundles
@@ -58,19 +60,22 @@ from facilities f, facility_evaluation f_e, districts d
 where f.facility_code=f_e.facility_code 
 and f_e.bundles_avail=1
 and f.district=d.id and d.county=$county_id
+AND UNIX_TIMESTAMP( f.`date_of_activation` ) >0
  ");	
  $query_4 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select count(f_e.manuals_avail) as manual
 from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
 and f_e.manuals_avail=1
-and f.district=d.id and d.county=1
+and f.district=d.id and d.county=$county_id
+AND UNIX_TIMESTAMP( f.`date_of_activation` ) >0
  ");	
   $query_5 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select COUNT( f_e.id ) AS total
 from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1
+and f.district=d.id and d.county=$county_id
+AND UNIX_TIMESTAMP( f.`date_of_activation` ) >0
  ");	
 		return array(0=>array('total'=>$query_5[0]['total'],'comp'=>$query_1[0]['comp'],'modem'=>$query_2[0]['modem'],'bundles'=>$query_3[0]['bundles'],'manual'=>$query_4[0]['manual']));
 		
@@ -81,9 +86,9 @@ and f.district=d.id and d.county=1
 		$query4 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select (select count(*) from facilities f, districts d ,facility_evaluation f_e
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1 ) as total, count(`agreed_time`) as actual, agreed_time from facilities f, districts d ,facility_evaluation f_e 
+and f.district=d.id and d.county=$county_id ) as total, count(`agreed_time`) as actual, agreed_time from facilities f, districts d ,facility_evaluation f_e 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1  group by `agreed_time`
+and f.district=d.id and d.county=$county_id  group by `agreed_time`
 ");	
 		return $query4;	
 	}
@@ -92,9 +97,9 @@ and f.district=d.id and d.county=1  group by `agreed_time`
 		$query5 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select (select count(*) from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1 ) as total, count(`feedback`) as actual, feedback from facilities f, facility_evaluation f_e, districts d 
+and f.district=d.id and d.county=$county_id ) as total, count(`feedback`) as actual, feedback from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1  group by `feedback`
+and f.district=d.id and d.county=$county_id  group by `feedback`
 ");	
 		return $query5;
 	}
@@ -103,9 +108,9 @@ and f.district=d.id and d.county=1  group by `feedback`
 		$query6 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select (select count(*) from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1 ) as total, count(`pharm_supervision`) as actual, pharm_supervision from facilities f, facility_evaluation f_e, districts d 
+and f.district=d.id and d.county=$county_id ) as total, count(`pharm_supervision`) as actual, pharm_supervision from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1  group by `pharm_supervision`
+and f.district=d.id and d.county=$county_id  group by `pharm_supervision`
 ");	
 		return $query6;
 		
@@ -114,9 +119,9 @@ and f.district=d.id and d.county=1  group by `pharm_supervision`
 		$query7 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select (select count(*) from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1 ) as total, count(`coord_supervision`) as actual, coord_supervision from facilities f, facility_evaluation f_e, districts d 
+and f.district=d.id and d.county=$county_id ) as total, count(`coord_supervision`) as actual, coord_supervision from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1  group by `coord_supervision`
+and f.district=d.id and d.county=$county_id  group by `coord_supervision`
 ");	
 		return $query7;
 	}
@@ -125,9 +130,9 @@ and f.district=d.id and d.county=1  group by `coord_supervision`
 		$query8 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select (select count(*) from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1 ) as total, count(`req_id`) as actual, req_id from facilities f, facility_evaluation f_e, districts d 
+and f.district=d.id and d.county=$county_id ) as total, count(`req_id`) as actual, req_id from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1  group by `req_id`
+and f.district=d.id and d.county=$county_id  group by `req_id`
 ");	
 		return $query8;
 	}
@@ -137,9 +142,9 @@ and f.district=d.id and d.county=1  group by `req_id`
 		$query9 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select (select count(*) from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1 ) as total, count(`req_addr`) as actual, req_addr from facilities f, facility_evaluation f_e, districts d 
+and f.district=d.id and d.county=$county_id ) as total, count(`req_addr`) as actual, req_addr from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1  group by `req_addr`
+and f.district=d.id and d.county=$county_id  group by `req_addr`
 ");	
 		return $query9;
 	}
@@ -149,9 +154,9 @@ and f.district=d.id and d.county=1  group by `req_addr`
 		$query10 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select (select count(*) from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1 ) as total, count(`train_useful`) as actual, train_useful from facilities f, facility_evaluation f_e, districts d 
+and f.district=d.id and d.county=$county_id ) as total, count(`train_useful`) as actual, train_useful from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1  group by `train_useful`
+and f.district=d.id and d.county=$county_id  group by `train_useful`
 ");	
 		return $query11;
 		
@@ -160,9 +165,9 @@ and f.district=d.id and d.county=1  group by `train_useful`
 		$query12 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select (select count(*) from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1 ) as total, count(`use_freq`) as level, use_freq from facilities f, facility_evaluation f_e, districts d 
+and f.district=d.id and d.county=$county_id ) as total, count(`use_freq`) as level, use_freq from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1  group by `use_freq`
+and f.district=d.id and d.county=$county_id  group by `use_freq`
 ");	
 		return $query12;
 		
@@ -172,9 +177,9 @@ and f.district=d.id and d.county=1  group by `use_freq`
 		$query13 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select (select count(*) from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1 ) as total, count(`improvement`) as actual, improvement from facilities f, facility_evaluation f_e, districts d 
+and f.district=d.id and d.county=$county_id ) as total, count(`improvement`) as actual, improvement from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1  group by `improvement`
+and f.district=d.id and d.county=$county_id  group by `improvement`
 ");	
 		return $query13;
 		
@@ -183,9 +188,9 @@ and f.district=d.id and d.county=1  group by `improvement`
 		$query14 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select (select count(*) from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1 ) as total, count(`ease_of_use`) as actual, ease_of_use from facilities f, facility_evaluation f_e, districts d 
+and f.district=d.id and d.county=$county_id ) as total, count(`ease_of_use`) as actual, ease_of_use from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1  group by `ease_of_use`
+and f.district=d.id and d.county=$county_id  group by `ease_of_use`
 ");	
 		return $query14;
 		
@@ -196,9 +201,9 @@ and f.district=d.id and d.county=1  group by `ease_of_use`
 		$query15 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select (select count(*) from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1 ) as total, count(`meet_expect`) as actual, meet_expect from facilities f, facility_evaluation f_e, districts d 
+and f.district=d.id and d.county=$county_id ) as total, count(`meet_expect`) as actual, meet_expect from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1  group by `meet_expect`
+and f.district=d.id and d.county=$county_id  group by `meet_expect`
 ");	
 		return $query15;
 		
@@ -207,9 +212,9 @@ and f.district=d.id and d.county=1  group by `meet_expect`
 		$query16 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select (select count(*) from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1 ) as total, count(`retrain`) as actual, retrain from facilities f, facility_evaluation f_e, districts d 
+and f.district=d.id and d.county=$county_id ) as total, count(`retrain`) as actual, retrain from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=1  group by `retrain`
+and f.district=d.id and d.county=$county_id  group by `retrain`
 ");	
 		return $query16;
 		
@@ -221,6 +226,7 @@ from facilities f, facility_evaluation f_e, districts d
 where f.facility_code=f_e.facility_code 
 and f_e.comf_issue=1
 and f.district=d.id and d.county=$county_id
+AND UNIX_TIMESTAMP( f.`date_of_activation` ) >0
  ");	
  $query_2 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select count(f_e.comf_order) as modem
@@ -228,6 +234,7 @@ from facilities f, facility_evaluation f_e, districts d
 where f.facility_code=f_e.facility_code 
 and f_e.comf_order=1
 and f.district=d.id and d.county=$county_id
+AND UNIX_TIMESTAMP( f.`date_of_activation` ) >0
  ");	
  $query_3 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select count(f_e.comf_update) as bundles
@@ -235,6 +242,7 @@ from facilities f, facility_evaluation f_e, districts d
 where f.facility_code=f_e.facility_code 
 and f_e.comf_update=1
 and f.district=d.id and d.county=$county_id
+AND UNIX_TIMESTAMP( f.`date_of_activation` ) >0
  ");	
  $query_4 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select count(f_e.comf_gen) as manual
@@ -242,12 +250,14 @@ from facilities f, facility_evaluation f_e, districts d
 where f.facility_code=f_e.facility_code 
 and f_e.comf_gen=1
 and f.district=d.id and d.county=$county_id
+AND UNIX_TIMESTAMP( f.`date_of_activation` ) >0
  ");	
   $query_5 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select COUNT( f_e.id ) AS total
 from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
 and f.district=d.id and d.county=$county_id
+AND UNIX_TIMESTAMP( f.`date_of_activation` ) >0
  ");	
 		return array(0=>array('total'=>$query_5[0]['total'],'comp'=>$query_1[0]['comp'],'modem'=>$query_2[0]['modem'],'bundles'=>$query_3[0]['bundles'],'manual'=>$query_4[0]['manual']));
 	
@@ -269,11 +279,7 @@ FROM facilities f, districts d, facility_evaluation h_s
 WHERE f.district = d.id
 AND d.county ='$county_id'
 AND h_s.facility_code=f.facility_code
-
-
  ");
- 
- 
    return array("total_facilities"=>$query_1[0]['total'],'total_evaluation'=>$query_2[0]['total']);
    }
 
@@ -283,7 +289,7 @@ AND h_s.facility_code=f.facility_code
 SELECT facility_name, req_spec
 FROM facilities f, districts d, facility_evaluation h_s
 WHERE f.district = d.id
-AND d.county =1
+AND d.county =$county_id
 AND h_s.facility_code = f.facility_code
 AND req_id =1
 $where
@@ -294,14 +300,14 @@ return $query17;
 	public static function show_meet_expect($county_id = null, $district_id = null){
 		$where = (isset($county_id) && !isset($district_id)) ? " and d.county=$county_id " : " and d.id=$district_id ";
 		$query17 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
-SELECT facility_name, meet_expect
-FROM facilities f, districts d, facility_evaluation h_s
-WHERE f.district = d.id
-AND d.county =1
-AND h_s.facility_code = f.facility_code
-AND meet_expect =1
-$where
- "); 
+		SELECT facility_name, expect_suggest
+		FROM facilities f, districts d, facility_evaluation h_s
+		WHERE f.district = d.id
+		AND d.county =$county_id
+		AND h_s.facility_code = f.facility_code
+		AND meet_expect =1
+		$where
+		 "); 
 return $query17;
 
 	}
