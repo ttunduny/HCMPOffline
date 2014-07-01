@@ -9,6 +9,10 @@
 -moz-box-shadow:    3px 0px 5px 0px rgba(51, 50, 50, 0.59);
 box-shadow:         3px 0px 5px 0px rgba(51, 50, 50, 0.59);
 	}	
+	
+	#footer{
+		position: relative
+	}
 </style>
 
 <div class="container">

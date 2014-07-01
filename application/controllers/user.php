@@ -469,11 +469,11 @@ class User extends MY_Controller {
 
 				//exit;
 
-				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
+				//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
 
 				//exit;
 
-		//log the password recovery requests as a code
+		//save user
 				$savethis =  new Users();
 				$savethis -> fname = $fname;
 				$savethis -> lname = $lname;
@@ -487,7 +487,7 @@ class User extends MY_Controller {
 				$savethis -> facility = $facility_id;
 				$savethis -> status = 0;
 				$savethis -> county_id = $county;
-				$savethis -> save();
+				//$savethis -> save();
 		
 
 

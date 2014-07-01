@@ -102,4 +102,11 @@ facilities f where district=$district_id and using_hcmp=1) as total_2 from distr
 		return $query;
 	}	
 	
+	public static function get_districts($county_id){
+	
+		$query=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT d.id,d.district FROM districts d ,counties c where d.county=c.id AND d.county='$county_id'");	
+		return $query;
+	}
+	
 }

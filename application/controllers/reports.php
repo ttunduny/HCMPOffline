@@ -748,6 +748,13 @@ class Reports extends MY_Controller
 	public function get_facility_json_data($district_id) {
 		echo json_encode(facilities::get_facilities_which_are_online($district_id));
 	}
+	public function get_facility_json($district) {
+		echo json_encode(Facilities::getFacilities($district));
+				
+	}
+	public function get_sub_county_json_data($county_id) {
+		echo json_encode(Districts::get_districts($county_id));
+	}
 	     
 	 //For system uptake option on SUB-COUNTY dashboard
 	 public function get_sub_county_facility_mapping_data($year = null, $month = NULL) 
