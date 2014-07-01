@@ -32,6 +32,7 @@
         margin-bottom: 60px !important;
         }
         .panel,.page-header
+        
 {
   border-radius: 0 !important;
 }

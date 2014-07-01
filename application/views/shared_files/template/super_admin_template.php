@@ -129,6 +129,25 @@ box-shadow:         3px 0px 5px 0px rgba(51, 50, 50, 0.59);
   <!-- Default panel contents -->
   <div class="panel-heading">Panel heading</div>
 
+  
+  <div class="panel-body">
+    <div id="container2">
+    	
+    </div>
+  </div>
+  
+	
+	</div>
+	
+	</div>
+	
+	<div class="row" style="margin-left: 0px;"> 
+	<div class="col-md-12" style="border: 0px solid #036;">
+		
+		<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Panel heading</div>
+
   <div class="panel-body">
     <div id="container3">
     	
