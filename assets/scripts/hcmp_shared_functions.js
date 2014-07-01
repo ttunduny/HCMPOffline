@@ -18,6 +18,8 @@ var baseUrl=json_obj.url;
         $(this).attr("id", new_id); // change to new id
         $(this).removeClass('hasDatepicker'); // remove hasDatepicker class
         $(this).datepicker({ 
+        	dateFormat: 'd M yy', 
+    minDate: 0,
         	beforeShowDay: function(date)
     {
         // getDate() returns the day [ 0 to 31 ]
@@ -28,8 +30,7 @@ var baseUrl=json_obj.url;
         }
 
         return [false, ''];
-    },
-        	        dateFormat: 'd M yy', 
+    },              
         	        buttonImage: baseUrl,
 					changeMonth: true,
 			        changeYear: true
@@ -39,6 +40,8 @@ var baseUrl=json_obj.url;
   }
   //	-- Datepicker	showing just the last day of the month 			
 	$(".clone_datepicker").datepicker({
+dateFormat: 'd M yy', 
+    minDate: 0,
 	beforeShowDay: function(date)
     {
         // getDate() returns the day [ 0 to 31 ]
@@ -49,7 +52,6 @@ var baseUrl=json_obj.url;
         }
         return [false, ''];
     },				
-	dateFormat: 'd M yy', 
 	changeMonth: true,
 	changeYear: true,
 	buttonImage: baseUrl,       });	

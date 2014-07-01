@@ -45,7 +45,7 @@
                 $unitS=$stock_commodity->unit_size; 
                 $unitC=$stock_commodity->unit_cost;
                 $total_units=$stock_commodity->total_commodity_units;
-                $calculated=$potential_exp->initial_quantity;
+                $calculated=$potential_exp->current_balance;
                 $expired_packs=round($calculated/$total_units,1);
                 $total_exp_cost=  $expired_packs*$unitC;             
                 $formatdate = new DateTime($potential_exp->expiry_date);

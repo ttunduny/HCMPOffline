@@ -2052,16 +2052,10 @@ class Reports extends MY_Controller
 	
 			foreach($final_graph_data as $final_graph_data_):
 			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'], array($final_graph_data_['commodity_name']));
-			$graph_data['series_data']['Stock'] = array_merge($graph_data['series_data']['Stock'],array((int)$final_graph_data_['month_stock']));	
+			$graph_data['series_data']['Stock'] = array_merge($graph_data['series_data']['Stock'],array((int)$final_graph_data_['total']));	
 			endforeach;
 
-	     $data['district_data'] = districts::getDistrict($county_id);
-	     $data['c_data'] = Commodities::get_all_2();
-         $data['tracer_items'] = Commodities::get_tracer_items();
-		 $data['categories']= commodity_sub_category::get_all_pharm();
-		 $data['number_of_tracer_items'] = count($tracer_item_names);
-
-		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
+		    $data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 
 			return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 	}

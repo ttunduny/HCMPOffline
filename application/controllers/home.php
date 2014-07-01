@@ -108,14 +108,14 @@ class Home extends MY_Controller
 	$graph_data['stacking']='normal';
 	foreach($facility_stock_ as $facility_stock_):
 		$graph_data['graph_categories']=array_merge($graph_data['graph_categories'],array($facility_stock_['commodity_name']));	
-		$graph_data['series_data']['Current Balance']=array_merge($graph_data['series_data']['Current Balance'],array((int)$facility_stock_['pack_balance']));
+		$graph_data['series_data']['Current Balance']=array_merge($graph_data['series_data']['Current Balance'],array((float) $facility_stock_['pack_balance']));
         $graph_data['series_data']['AMC']=array_merge($graph_data['series_data']['AMC'],array((int) $facility_stock_['amc']));	
 
 	endforeach;
 	//create the graph here
 	$faciliy_stock_data=$this->hcmp_functions->create_high_chart_graph($graph_data);
-	$loading_icon=base_url().'assests/img/no-record-found.png'; 
-	$faciliy_stock_data=isset($faciliy_stock_data)? $faciliy_stock_data : "$('#container').html('<img src=$loading_icon>')'" ;
+	$loading_icon=base_url('assets/img/no-record-found.png'); 
+	$faciliy_stock_data=($facility_stock_count>0)? $faciliy_stock_data : "$('#container').html('<img src=$loading_icon>');" ;
     //compute stocked out items
     $items_stocked_out_in_facility=count(facility_stocks::get_items_that_have_stock_out_in_facility($facility_code));
 	//get order information from the db

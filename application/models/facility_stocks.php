@@ -45,7 +45,7 @@ class Facility_stocks extends Doctrine_Record {
 	public static function get_facility_commodity_total($facility_code,$commodity_id=null,$date_added=null){
 		$date_checker=isset($date_added)?" and date_added like '%$date_added%'" : null;
 		$commodity_id=isset($commodity_id)?"and commodity_id=$commodity_id" : null;
-	    $query = Doctrine_Query::create() -> select("commodity_id,sum(current_balance) as commodity_balance") 
+	    $query = Doctrine_Query::create() -> select("commodity_id,ifnull(sum(current_balance),0) as commodity_balance") 
 	-> from("facility_stocks") -> where("facility_code='$facility_code' $commodity_id  $date_checker and status='1'")->groupBy("commodity_id");	
 		$stocks= $query -> execute();
 		return $stocks; 
@@ -72,7 +72,7 @@ return $stocks ;
 	->fetchAll("
 	SELECT c.id AS commodity_id, fs.id AS facility_stock_id, fs.expiry_date, 
 			c.commodity_name, c.commodity_code, c.unit_size, 
-			SUM( fs.current_balance ) AS commodity_balance, 
+			ROUND(SUM( fs.current_balance ),1) AS commodity_balance, 
 			ROUND( (SUM( fs.current_balance ) / c.total_commodity_units ) , 1) AS pack_balance, 
 			c.total_commodity_units, fs.manufacture, c_s.source_name, fs.batch_no, c_s.id AS source_id, 
 				CASE temp.selected_option

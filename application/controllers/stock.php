@@ -236,16 +236,18 @@ endif;
 { // $facility_code=$this -> session -> userdata('news');  //security check 
 if($this->input->post('commodity_id')):
 	     $facility_code=$this -> session -> userdata('facility_id'); 
-         $form_type=$this -> session -> userdata('form_type'); 
-	     $commodity_id=$this->input->post('desc');       
-		 $expiry_date=$this->input->post('clone_datepicker');
-		 $batch_no=$this->input->post('commodity_batch_no');
-		 $manu=$this->input->post('commodity_manufacture');
-		 $total_unit_count=$this->input->post('commodity_total_units');		
-		 $source_of_item=$this->input->post('source_of_item');
+         $form_type=$this->input->post('form_type'); 
+	     $commodity_id=array_values($this->input->post('desc'));  //this rearranges the array such that the index starts at 0     
+		 $expiry_date=array_values($this->input->post('clone_datepicker'));
+		 $batch_no=array_values($this->input->post('commodity_batch_no'));
+		 $manu=array_values($this->input->post('commodity_manufacture'));
+		 $total_unit_count=array_values($this->input->post('commodity_total_units'));		
+		 $source_of_item=array_values($this->input->post('source_of_item'));
+		 $date_of_entry=($form_type=='first_run') ? date('y-m-d H:i:s') : array_values($this->input->post('date_received'));
+		 
          $count=count($commodity_id);
-		 $commodity_id_array=$data_array_facility_issues=$data_array_facility_transaction=array();
-		 $date_of_entry=($form_type=='first_run') ? date('y-m-d H:i:s') : $this->input->post('date_received'); 
+		 $commodity_id_array=$data_array_facility_issues=$data_array_facility_transaction=array(); 
+
          //collect n set the data in the array
 		for($i=0;$i<$count;$i++):
             $date_of_entry=($form_type=='first_run') ? $date_of_entry :date('Y-m-d',strtotime($date_of_entry[$i])) ;
@@ -266,21 +268,22 @@ if($this->input->post('commodity_id')):
 			$facility_has_commodity=facility_transaction_table::get_if_commodity_is_in_table($facility_code,$commodity_id[$i]);
      
 			$total_unit_count_=$total_unit_count[$i]*-1;
-            $mydata=array('facility_code'=>$facility_code,
+            $mydata_=array('facility_code'=>$facility_code,
             's11_No' =>  ($form_type=='first_run') ? 'initial stock update' : '(+ve Adj) Stock Addition',
-            'commodity_id'=>$facility_stock_[0]['commodity_id'],
+            'commodity_id'=>$commodity_id[$i],
             'batch_no'=>($form_type=='first_run') ? "N/A" : $batch_no[$i],
-            'expiry_date'=>  ($form_type=='first_run') ? null : date('y-m-d', strtotime(str_replace(",", " ",$expiry_date[$i]))),
-            'balance_as_of'=>$facility_stock_[0]['commodity_balance'],
+            'expiry_date'=>  ($form_type=='first_run') ? 'N/A' : date('y-m-d', strtotime(str_replace(",", " ",$expiry_date[$i]))),
+            'balance_as_of'=>isset($facility_stock_[0]['commodity_balance']) ? $facility_stock_[0]['commodity_balance']: 0,
             'qty_issued' => $total_unit_count_,
             'date_issued' => date('y-m-d'),
             'issued_to' => 'N/A',
             'issued_by' =>$this -> session -> userdata('user_id') ); 
              //create the array to push to the db
-            array_push($data_array_facility_issues, $mydata);		
+            array_push($data_array_facility_issues, $mydata_);		
           if($facility_has_commodity>0): //update the opening balance for the transaction table 
 		   	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
-			$inserttransaction->execute("UPDATE `facility_transaction_table` SET `opening_balance` =`opening_balance`+$total_unit_count[$i]
+			$inserttransaction->execute("UPDATE `facility_transaction_table` SET `opening_balance` =`opening_balance`+$total_unit_count[$i],
+			`closing_stock` =`closing_stock`+$total_unit_count[$i]
                                         WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code=$facility_code");                                                  		   
 else:       //get the data to send to the facility_transaction_table
 		   	$mydata2=array('facility_code'=>$facility_code,
@@ -746,6 +749,10 @@ $this->session->set_flashdata('system_success_message', "Facility Stock data has
 redirect('reports/facility_stock_data');	
 endif;	
 redirect();
+}
+public function amc(){
+	$this->session->set_flashdata('system_success_message', "AMC Details Have Been Saved");
+	redirect('home');
 }
 }
 
