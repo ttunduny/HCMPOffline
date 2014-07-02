@@ -2,7 +2,10 @@
  	.input-small{
  		width: 60px !important;
  	}
- </style>
+ 	<style>
+	.big{ width: 150px !important; }
+</style>
+
 <div class="container" style="width: 96%; margin: auto;">
 	<span  class='label label-info'>To avoid adding items to your stock, leave the values as zero</span>
  <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('stock/add_more_stock_level_external',$att); ?>

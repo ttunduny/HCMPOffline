@@ -556,9 +556,10 @@ class Reports extends MY_Controller
 		$facility_code = $this -> session -> userdata('facility_id');
 		$commodity_id = $_POST['commodity_select'];
 		$to = $_POST['to'];
-		$from = $_POST['from'];			
-		$data['bin_card'] = Facility_issues::get_bin_card($facility_code,$commodity_id,$from,$to);
-		$count_records=count(Facility_issues::get_bin_card($facility_code,$commodity_id,$from,$to));
+		$from = $_POST['from'];	
+		$data=	Facility_issues::get_bin_card($facility_code,$commodity_id,$from,$to);	
+		$data['bin_card'] =$data ;
+		$count_records=count($data);
 		
 		if ($count_records<=0) {
 

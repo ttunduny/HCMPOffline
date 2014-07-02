@@ -72,12 +72,13 @@ endif;
      }
 
 	 public function facility_stock_first_run($checker){
+	 	 $facility_code=$this -> session -> userdata('facility_id'); 
 	 	$which_view_to_load=($checker=='first_run')?"facility/facility_stock_data/update_facility_stock_on_first_run_v" :
 		"facility/facility_stock_data/update_facility_stock_v";
 	    $data['title'] = "Update Stock Level";
      	$data['content_view'] = $which_view_to_load;
 		$data['banner_text'] = "Update Stock Level";
-		$data['commodities'] = Commodities::get_all();
+		$data['commodities'] = Commodities::get_facility_commodities($facility_code);
 		$data['commodity_source']=commodity_source::get_all();
 		$this -> load -> view("shared_files/template/template", $data);	
 		
@@ -323,13 +324,13 @@ endif;
 	    if($this->input->post('facility_stock_id')):	
 		 $facility_stock_id=$this->input->post('facility_stock_id');
 	     $facility_code=$this -> session -> userdata('facility_id'); 
-	     $commodity_id=$this->input->post('commodity_id');
-		 $expiry_date=$this->input->post('clone_datepicker');
-		 $batch_no=$this->input->post('commodity_batch_no');
-		 $manu=$this->input->post('commodity_manufacture');
-		 $total_unit_count=$this->input->post('actual_quantity');				 
-		 $service_point=$this->input->post('service_point');
-		 $source_of_item=$this->input->post('source_of_item');
+	     $commodity_id=array_values($this->input->post('commodity_id'));
+		 $expiry_date=array_values($this->input->post('clone_datepicker'));
+		 $batch_no=array_values($this->input->post('commodity_batch_no'));
+		 $manu=array_values($this->input->post('commodity_manufacture'));
+		 $total_unit_count=array_values($this->input->post('actual_quantity'));				 
+		 $service_point=array_values($this->input->post('service_point'));
+		 $source_of_item=array_values($this->input->post('source_of_item'));
          $count=count($commodity_id);
 		 $date_of_entry=date('y-m-d H:i:s');
          //collect n set the data in the array

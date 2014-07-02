@@ -18,7 +18,7 @@ var baseUrl=json_obj.url;
         $(this).attr("id", new_id); // change to new id
         $(this).removeClass('hasDatepicker'); // remove hasDatepicker class
         $(this).datepicker({ 
-        	dateFormat: 'd M yy', 
+        	dateFormat: 'd My', 
     minDate: 0,
         	beforeShowDay: function(date)
     {
@@ -40,7 +40,7 @@ var baseUrl=json_obj.url;
   }
   //	-- Datepicker	showing just the last day of the month 			
 	$(".clone_datepicker").datepicker({
-dateFormat: 'd M yy', 
+dateFormat: 'd My', 
     minDate: 0,
 	beforeShowDay: function(date)
     {
@@ -59,7 +59,7 @@ dateFormat: 'd M yy',
 	  //	-- Datepicker	limit today		
 	$(".clone_datepicker_normal_limit_today").datepicker({
     maxDate: new Date(),				
-	dateFormat: 'd M yy', 
+	dateFormat: 'dM y', 
 	changeMonth: true,
 	changeYear: true,
 	buttonImage: baseUrl,       });	
@@ -90,7 +90,7 @@ dateFormat: 'd M yy',
         $(this).removeClass('hasDatepicker'); // remove hasDatepicker class
         $(this).datepicker({ 
         	        maxDate: new Date(),
-        	        dateFormat: 'd M yy', 
+        	        dateFormat: 'd My', 
         	        buttonImage: baseUrl,
 					changeMonth: true,
 			        changeYear: true
@@ -158,7 +158,7 @@ function dialog_box(body_html_data,footer_html_data){
         }
         return [false, ''];
     },				
-	dateFormat: 'd M yy', 
+	dateFormat: 'd My', 
 	changeMonth: true,
 	changeYear: true,
 	buttonImage: baseUrl,       });	

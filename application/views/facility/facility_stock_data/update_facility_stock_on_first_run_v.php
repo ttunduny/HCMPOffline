@@ -34,22 +34,19 @@
 					<input type="hidden" class="commodity_id" value=""  name="commodity_id[]"/>
 					<select  name="desc[]" class="form-control desc">
 						<option special_data="0" value="0">-Select One--</option>
-						<?php
-                        foreach ($commodities as $commodities) {
-
-                            $id = $commodities -> id;
-                            $commodities_name = $commodities -> commodity_name;
-                            $unit_size = $commodities -> unit_size;
-                            $commodity_code = $commodities -> commodity_code;
-                            $total_units = $commodities -> total_commodity_units;
-                            foreach ($commodities->supplier_name as $supplier_name) :
-                                $name = $supplier_name -> source_name;
-                            endforeach;
-
-                            echo "<option special_data='" . $id . "^" . $name . "^" . $commodity_code . "^" . $unit_size . "^" . $total_units . "'
-value='$id'>" . $commodities_name . "</option>";
-                        }
-						?>
+						 <?php
+                foreach ($commodities as $commodities) {
+                    $id = $commodities['commodity_id'] ;
+                    $commodities_name = $commodities['commodity_name'];
+                    $unit_size = $commodities['unit_size'];
+                    $commodity_code = $commodities['commodity_code'];
+                    $total_units = $commodities['total_commodity_units'];                  
+                    $name =$commodities['source_name'];
+              
+                    echo "<option special_data='" . $id . "^" . $name . "^" . $commodity_code . "^" . $unit_size . "^" . $total_units . "' 
+                    value='$id'>" . $commodities_name . "</option>";
+                }
+                ?>
 					</select></td>
 					<td>
 					<input type="text" class="form-control input-small commodity_supplier" name="commodity_supplier[]" readonly="readonly"/>
@@ -172,6 +169,7 @@ value='$id'>" . $commodities_name . "</option>";
             cloned_object.attr("table_row", next_table_row);
             cloned_object.find(".remove").show();
             cloned_object.find(".desc").val(commodity_id);
+           
             cloned_object.find(".unit_size").attr('value',unit_size);
             cloned_object.find(".commodity_batch_no").attr('value',batch_no);
             cloned_object.find(".commodity_batch_no").attr('name',"commodity_batch_no["+next_table_row+"]");
@@ -181,7 +179,7 @@ value='$id'>" . $commodities_name . "</option>";
             cloned_object.find(".clone_datepicker").attr('name',"clone_datepicker["+next_table_row+"]");
             cloned_object.find(".commodity_available_stock").attr('value',stock_level);
             cloned_object.find(".commodity_available_stock").attr('name',"commodity_available_stock["+next_table_row+"]");
-            cloned_object.find(".commodity_total_units").attr('value',total_unit_count);
+            cloned_object.find(".commodity_total_units").attr('value',total_units);
             cloned_object.find(".commodity_unit_of_issue").attr('value',unit_issue);
             cloned_object.find(".actual_units").attr('value',total_units);
             cloned_object.find(".source_of_item").attr('value',source_of_item);
@@ -355,6 +353,7 @@ value='$id'>" . $commodities_name . "</option>";
             function  clone_the_last_row_of_the_table(){
 
             var cloned_object = $('#facility_stock_table tr:last').clone(true);
+            cloned_object.find('input[type=text]').attr("value", "");
             var table_row = cloned_object.attr("table_row");
             var next_table_row = parseInt(table_row) + 1;
             var commodity_id_id = "commodity_id_" + next_table_row;
@@ -375,23 +374,29 @@ value='$id'>" . $commodities_name . "</option>";
             var commodity_batch_no = cloned_object.find(".commodity_batch_no");
             //reset the values
             cloned_object.attr("table_row", next_table_row );
-            cloned_object.find('input[type=text]').attr("value", "");
             desc.attr("value", "0");
             commodity_batch_no.attr("id", commodity_batch_no_id);
+
             commodity_id.attr("id", commodity_id_id);
+
             commodity_batch_no.attr("id", commodity_batch_no_id);
+
             commodity_batch_no.attr("name", "commodity_batch_no["+next_table_row+"]");
             commodity_manufacture.attr("id", commodity_manufacture_id);
+
             commodity_manufacture.attr("name", "commodity_manufacture["+next_table_row+"]");
             commodity_total_units.attr("id", commodity_total_units_id);
+
             commodity_available_stock.attr("id", commodity_available_stock_id);
             commodity_available_stock.attr("name", "commodity_available_stock["+next_table_row+"]");
+
             clone_datepicker.attr("id", clone_datepicker_id);
             clone_datepicker.attr("name", "clone_datepicker["+next_table_row+"]");
+
             // remove the error class
             cloned_object.find("label.error").remove();
             //insert the data
-            cloned_object.insertAfter('#facility_stock_table tr:last');
+            cloned_object.insertAfter('#facility_stock_table tr:last').find('input').val('');
             // refresh the datepickers
             refreshDatePickers();
             }
