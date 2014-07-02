@@ -81,10 +81,10 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                      <!--  <td>
                             <span class="glyphicon">
                             </span><a href="<?php echo base_url().'reports/commodities_issue' ?>">Commodities Issued</a>
-                        </td>
+                      </td>-->
                     </tr>
                     <tr>
                         <td>

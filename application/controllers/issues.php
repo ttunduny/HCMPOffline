@@ -48,17 +48,17 @@ if (!defined('BASEPATH'))
 		//security check
 		if($this->input->post('service_point')):
 		$facility_code=$this -> session -> userdata('facility_id');
-		$service_points=$this->input->post('service_point');
+		$service_points=array_values($this->input->post('service_point'));
 		
-		$commodity_id=$this->input->post('desc');
-		$commodity_balance_before=$this->input->post('commodity_balance');
-		$facility_stock_id=$this->input->post('facility_stock_id');
-		$batch_no=$this->input->post('batch_no');
-		$expiry_date=$this->input->post('expiry_date');
-		$commodity_unit_of_issue=$this->input->post('commodity_unit_of_issue');
-		$quantity_issued=$this->input->post('quantity_issued');
-		$clone_datepicker_normal_limit_today=$this->input->post('clone_datepicker_normal_limit_today');
-		$total_units=$this->input->post('total_units');
+		$commodity_id=array_values($this->input->post('desc'));
+		$commodity_balance_before=array_values($this->input->post('commodity_balance'));
+		$facility_stock_id=array_values($this->input->post('facility_stock_id'));
+		$batch_no=array_values($this->input->post('batch_no'));
+		$expiry_date=array_values($this->input->post('expiry_date'));
+		$commodity_unit_of_issue=array_values($this->input->post('commodity_unit_of_issue'));
+		$quantity_issued=array_values($this->input->post('quantity_issued'));
+		$clone_datepicker_normal_limit_today=array_values($this->input->post('clone_datepicker_normal_limit_today'));
+		$total_units=array_values($this->input->post('total_units'));
 		$total_items=count($facility_stock_id);
 
         for($i=0;$i<$total_items;$i++)://compute the actual stock
@@ -96,16 +96,16 @@ if (!defined('BASEPATH'))
 			//security check
 			if($this->input->post('mfl')):
 			$facility_code=$this -> session -> userdata('facility_id');
-			$service_point=$this->input->post('mfl');
-			$commodity_id=$this->input->post('desc');
-			$commodity_balance_before=$this->input->post('commodity_balance');
-			$facility_stock_id=$this->input->post('facility_stock_id');
-			$batch_no=$this->input->post('batch_no');
-			$expiry_date=$this->input->post('expiry_date');
-			$commodity_unit_of_issue=$this->input->post('commodity_unit_of_issue');
-			$quantity_issued=$this->input->post('quantity_issued');
-			$clone_datepicker_normal_limit_today=$this->input->post('clone_datepicker_normal_limit_today');
-			$total_units=$this->input->post('total_units');
+			$service_point=array_values($this->input->post('mfl'));
+			$commodity_id=array_values($this->input->post('desc'));
+			$commodity_balance_before=array_values($this->input->post('commodity_balance'));
+			$facility_stock_id=array_values($this->input->post('facility_stock_id'));
+			$batch_no=array_values($this->input->post('batch_no'));
+			$expiry_date=array_values($this->input->post('expiry_date'));
+			$commodity_unit_of_issue=array_values($this->input->post('commodity_unit_of_issue'));
+			$quantity_issued=array_values($this->input->post('quantity_issued'));
+			$clone_datepicker_normal_limit_today=array_values($this->input->post('clone_datepicker_normal_limit_today'));
+			$total_units=array_values($this->input->post('total_units'));
 			$total_items=count($facility_stock_id);
 			$data_array_issues_table=array();
 			$data_array_redistribution_table=array();
