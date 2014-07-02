@@ -25,6 +25,9 @@ class Home extends MY_Controller
 		$reset_facility_issues_table = Doctrine_Manager::getInstance()->getCurrentConnection();
 	    $reset_facility_issues_table->execute("DELETE FROM `facility_issues` WHERE  facility_code=$facility_code;");
 		
+		$reset_facility_issues_table = Doctrine_Manager::getInstance()->getCurrentConnection();
+	    $reset_facility_issues_table->execute("DELETE FROM `redistribution_data` WHERE  source_facility_code=$facility_code or receive_facility_code=$facility_code;");
+		
 		$facility_order_details_table = Doctrine_Manager::getInstance()->getCurrentConnection();
 	    $facility_order_details_table->fetchAll("select id from `facility_orders` WHERE  facility_code=$facility_code;");
 		

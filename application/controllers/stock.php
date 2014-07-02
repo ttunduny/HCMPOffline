@@ -636,7 +636,7 @@ $html_body.=
 								$source=$drug['source_name'];								
 			//get the current balance of the commodity					
 			$facility_stock=Facility_Stocks::get_facility_commodity_total($facility,$commodity_id)->toArray();					
-			array('facility_code'=>$facility_code,
+			$mydata3=array('facility_code'=>$facility_code,
 			's11_No' => '(Loss) Expiry',
 			'commodity_id'=>$commodity_id,
 			'batch_no'=>$batch,
@@ -655,8 +655,7 @@ $html_body.=
               WHERE `commodity_id`= '$commodity_id' and status='1' and facility_code=$facility_code ");	                                           
              /// update the facility issues and set the commodity to expired                             
             $inserttransaction=Doctrine_Manager::getInstance()->getCurrentConnection()
-            ->execute("UPDATE `facility_stock` SET status =2
-                      // WHERE `id`= '$facility_stock_id'");
+            ->execute("UPDATE `facility_stocks` SET status =2 WHERE `id`= '$facility_stock_id'");
             if($cost>0):                           								    
 		    $html_body .='<tr><td>'.$source.'</td>
 							<td>'.$commodity_name.'</td>
