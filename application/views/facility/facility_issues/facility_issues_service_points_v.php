@@ -1,3 +1,6 @@
+<style>
+	.big{ width: 150px !important; }
+</style>
 <div class="container" style="width: 96%; margin: auto;">
 <span  class='label label-info'>To Issue Commodities 
 	i) Select commodity to issue 
@@ -62,16 +65,16 @@ endforeach;
 			            <td><input  type="text" class="form-control input-small unit_size" readonly="readonly"  /></td>
 						<td><select class="form-control input-small batch_no big" name="batch_no[0]"></select></td>
 						<td><input type='text' class='form-control input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
-						<td><input class='form-control input-small available_stock' type="text" name="available_stock[0]" readonly="readonly" /></td>
+						<td><input class='form-control available_stock big' type="text" name="available_stock[0]" readonly="readonly" /></td>
 						<td>
 <input class='form-control input-small clone_datepicker_normal_limit_today' 
 type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
-						<td><select  class="form-control commodity_unit_of_issue big" name="commodity_unit_of_issue[]">
+						<td><select  class="form-control commodity_unit_of_issue input-small" name="commodity_unit_of_issue[]">
 			<option  value="Pack_Size">Pack Size</option>
 			<option value="Unit_Size">Unit Size</option>
 			</select></td>
-						<td><input class='form-control input-small quantity_issued' type="text" value=""  name="quantity_issued[0]"  required="required"/></td>
-						<td><input class='form-control input-small balance' type="text" value="" readonly="readonly" /></td>
+						<td><input class='form-control  quantity_issued big' type="text" value=""  name="quantity_issued[0]"  required="required"/></td>
+						<td><input class='form-control  balance big' type="text" value="" readonly="readonly" /></td>
 						<td><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Remove Row</button></td>
 			</tr>
 		           </tbody>
@@ -85,6 +88,7 @@ type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="re
 </div>
 </div>
 <?php echo form_close();?>
+
 <script>
 $(document).ready(function() {	
  var $table = $('table');
@@ -281,6 +285,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 		    cloned_object.attr("row_id", next_table_row);
 			cloned_object.find(".service_point").attr('name','service_point['+next_table_row+']'); 
 			cloned_object.find(".commodity_id").attr('name','commodity_id['+next_table_row+']'); 
+			cloned_object.find(".total_units").attr('name','total_units['+next_table_row+']'); 
 			cloned_object.find(".commodity_id").attr('id',next_table_row); 
 			cloned_object.find(".quantity_issued").attr('name','quantity_issued['+next_table_row+']'); 	
 			cloned_object.find(".clone_datepicker_normal_limit_today").attr('name','clone_datepicker_normal_limit_today['+next_table_row+']'); 
@@ -298,7 +303,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			cloned_object.find(".available_stock").val(new_value);	
 			cloned_object.find(".balance").val(new_value);			
 			cloned_object.find(".clone_datepicker_normal_limit_today").val(new_value);
-            cloned_object.find("input[type=text]").attr('value',"");     
+           
             //cloned_object.find("input").attr('text',""); 
             //cloned_object.find(".quantity_issued").attr('value',"");   
             cloned_object.find(".quantity_issued").removeAttr('readonly');  
@@ -309,7 +314,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
             cloned_object.find(".batch_no").html("");
             // remove the error class
             cloned_object.find("label.error").remove();             
-			cloned_object.insertAfter('#facility_issues_table tr:last');	
+			cloned_object.insertAfter('#facility_issues_table tr:last').find('input').val('');	
 			refresh_clone_datepicker_normal_limit_today();	
         }
 		function check_if_the_form_has_been_filled_correctly(selector_object){
@@ -338,7 +343,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			  		 "^"+facility_stock_data[i]['commodity_balance']+
 			  		 "^"+facility_stock_data[i]['facility_stock_id']+
 			  		 "^"+facility_stock_data[i]['commodity_balance']+">";
-			  				 expiry_date=$.datepicker.formatDate('d M yy', new Date(facility_stock_data[i]['expiry_date']));
+			  				 expiry_date=$.datepicker.formatDate('dMy', new Date(facility_stock_data[i]['expiry_date']));
 			  				 bal=facility_stock_data[i]['commodity_balance'];
 			  				 facility_stock_id_=facility_stock_data[i]['facility_stock_id'];
 			  				 total_stock_bal=facility_stock_data[i]['commodity_balance'];

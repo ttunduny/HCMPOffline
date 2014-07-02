@@ -67,7 +67,7 @@ class facility_issues extends Doctrine_Record {
 		AND f.status =1 AND f.commodity_id=$commodity_id
 		AND f.date_issued BETWEEN '$convertfrom' 
 		AND '$convertto' 
-		ORDER BY f.date_issued ASC"); 
+		ORDER BY f.date_issued asc"); 
 
 
 			return $transaction;	

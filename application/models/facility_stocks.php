@@ -70,25 +70,42 @@ return $stocks ;
     public static function get_facility_stock_amc($facility_code){
   $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 	->fetchAll("
-	SELECT c.id AS commodity_id, fs.id AS facility_stock_id, fs.expiry_date, 
-			c.commodity_name, c.commodity_code, c.unit_size, 
-			ROUND(SUM( fs.current_balance ),1) AS commodity_balance, 
-			ROUND( (SUM( fs.current_balance ) / c.total_commodity_units ) , 1) AS pack_balance, 
-			c.total_commodity_units, fs.manufacture, c_s.source_name, fs.batch_no, c_s.id AS source_id, 
-				CASE temp.selected_option
-				WHEN  'Pack_Size'
-				THEN ROUND( temp.consumption_level, 1 ) 
-				WHEN  'Unit_Size'
-				THEN ROUND( temp.total_units / temp.consumption_level, 1 ) 
-				ELSE 0 
-				END AS amc
-				FROM commodity_source c_s, facility_stocks fs, commodities c
-				LEFT JOIN facility_monthly_stock temp ON temp.commodity_id = c.id
-				WHERE fs.facility_code =  '$facility_code'
-				AND fs.expiry_date >= NOW( ) 
-				AND c.id = fs.commodity_id
-				AND fs.status =  '1'
-				GROUP BY c.id
+			SELECT 
+    c.id AS commodity_id,
+    fs.id AS facility_stock_id,
+    fs.expiry_date,
+    c.commodity_name,
+    c.commodity_code,
+    c.unit_size,
+    ROUND(SUM(fs.current_balance), 1) AS commodity_balance,
+    ROUND((SUM(fs.current_balance) / c.total_commodity_units),
+            1) AS pack_balance,
+    c.total_commodity_units,
+    fs.manufacture,
+    c_s.source_name,
+    fs.batch_no,
+    c_s.id AS source_id,
+    CASE temp.selected_option
+        WHEN 'Pack_Size' THEN ROUND(temp.consumption_level, 1)
+        WHEN
+            'Unit_Size'
+        THEN
+            ROUND(temp.total_units / temp.consumption_level,
+                    1)
+        ELSE 0
+    END AS amc
+FROM
+    commodity_source c_s,
+    facility_stocks fs,
+    commodities c
+        LEFT JOIN
+    facility_monthly_stock temp ON temp.commodity_id = c.id and temp.facility_code=$facility_code
+WHERE
+    fs.facility_code = '$facility_code'
+        AND fs.expiry_date >= NOW()
+        AND c.id = fs.commodity_id
+        AND fs.status = '1'
+GROUP BY c.id
 			");
 return $stocks ;      
     }
@@ -122,7 +139,8 @@ $group_by ");
 	  }
 	
  		public static function potential_expiries($facility_code){
-		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code'");
+		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date 
+		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code' and current_balance>0");
 		
 		$stocks= $query -> execute();
 		return $stocks;
@@ -130,7 +148,8 @@ $group_by ");
 
 	public static function specify_period_potential_expiry($facility_code,$interval){
 		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks")
-		 -> where("expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL $interval MONTH) AND facility_code='$facility_code' AND current_balance>0");
+		 -> where("expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL $interval MONTH) 
+		 AND facility_code='$facility_code' AND current_balance>0");
 		
 		$stocks= $query -> execute();
 		return $stocks;

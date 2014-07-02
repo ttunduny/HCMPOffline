@@ -60,9 +60,9 @@ if (!defined('BASEPATH'))
 		$clone_datepicker_normal_limit_today=array_values($this->input->post('clone_datepicker_normal_limit_today'));
 		$total_units=array_values($this->input->post('total_units'));
 		$total_items=count($facility_stock_id);
-
+	    print_r($total_units);
         for($i=0;$i<$total_items;$i++)://compute the actual stock
-        $total_items_issues=($commodity_unit_of_issue[$i]=='Pack_Size')? 
+       $total_items_issues=($commodity_unit_of_issue[$i]=='Pack_Size')? 
         $quantity_issued[$i]*$total_units[$i] : $quantity_issued[$i]; 
      //prepare the issues data
     
@@ -73,19 +73,22 @@ if (!defined('BASEPATH'))
 				     'date_issued'=>date('y-m-d',strtotime($clone_datepicker_normal_limit_today[$i])),'issued_by'=>$this -> session -> userdata('user_id'));				
 			
 			// update the issues table 
-			 facility_issues::update_issues_table($mydata); 
+			facility_issues::update_issues_table($mydata); 
             // reduce the stock levels 
 			$a = Doctrine_Manager::getInstance()->getCurrentConnection();
 			$a->execute("UPDATE `facility_stocks` SET `current_balance` = `current_balance`-$total_items_issues where id='$facility_stock_id[$i]'");
             //update the transaction table here 
+
 			$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
-			$inserttransaction->execute("UPDATE `facility_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
+			$inserttransaction->execute(" UPDATE `facility_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
 			`closing_stock`=`closing_stock`-$total_items_issues
             WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");		
+         
 	endfor;
+
 			$user = $this -> session -> userdata('user_id');
 			$user_action = "issue";
-			 Log::log_user_action($user, $user_action);
+			Log::log_user_action($user, $user_action);
 		 	$this->session->set_flashdata('system_success_message', "You have issued $total_items item(s)");
 			redirect();
 	endif;
@@ -113,10 +116,12 @@ if (!defined('BASEPATH'))
         $total_items_issues=($commodity_unit_of_issue[$i]=='Pack_Size')? 
         $quantity_issued[$i]*$total_units[$i] : $quantity_issued[$i]; 
      //prepare the issues data
+     $facility_name=isset($service_point[$i]) ? Facilities::get_facility_name2($service_point[$i]) : null;
+	 $facility_name=isset($facility_name)? $facility_name['facility_name']: 'N/A';
 	                 $mydata = array('facility_code' => $facility_code,	 
 	                 's11_No'=>'(-ve Adj) Stock Deduction', 'batch_no' => $batch_no[$i] ,'commodity_id' => $commodity_id[$i],
 				     'expiry_date' => date('y-m-d',strtotime($expiry_date[$i])),'qty_issued'=> $total_items_issues ,
-				     'issued_to'=>"inter-facility donation: MFL NO ".$service_point[$i],'balance_as_of'=>$commodity_balance_before[$i], 
+				     'issued_to'=>"inter-facility donation:".$facility_name,'balance_as_of'=>$commodity_balance_before[$i], 
 				     'date_issued'=>date('y-m-d',strtotime($clone_datepicker_normal_limit_today[$i])),'issued_by'=>$this -> session -> userdata('user_id'));
 					 
 					  $mydata_2 = array('source_facility_code' => $facility_code,	 
