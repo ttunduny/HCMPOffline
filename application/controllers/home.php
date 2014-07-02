@@ -102,7 +102,7 @@ class Home extends MY_Controller
     $graph_data=array();
 	$graph_data=array_merge($graph_data,array("graph_id"=>'container'));
 	$graph_data=array_merge($graph_data,array("graph_title"=>'Facility stock level'));
-	$graph_data=array_merge($graph_data,array("graph_type"=>'column'));
+	$graph_data=array_merge($graph_data,array("graph_type"=>'bar'));
 	$graph_data=array_merge($graph_data,array("graph_yaxis_title"=>'Total stock level  (values in packs)'));
 	$graph_data=array_merge($graph_data,array("graph_categories"=>array()));
 	$graph_data=array_merge($graph_data,array("series_data"=>array("Current Balance"=>array(),"AMC"=>array())));
