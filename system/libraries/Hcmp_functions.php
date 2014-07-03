@@ -505,7 +505,11 @@ endif;
 		//set up the graph here
 		if($graph_type=="bar"){
 		$data_=" series: {
-                    stacking: '$stacking'
+                    stacking: '$stacking',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
                 }";	
 		}else{
 			$data_="column: {
