@@ -3,7 +3,7 @@
  		width: 60px !important;
  	}
  	<style>
-	.big{ width: 150px !important; }
+	.big{ width: 80px !important; }
 </style>
 
 <div class="container" style="width: 96%; margin: auto;">

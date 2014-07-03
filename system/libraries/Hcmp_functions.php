@@ -503,6 +503,19 @@ endif;
 		//return ($graph_series_data[0]); key		
 		//$size_of_graph=sizeof($graph_series_data[key($graph_series_data)])*200;
 		//set up the graph here
+		if($graph_type=="bar"){
+		$data_=" series: {
+                    stacking: '$stacking'
+                }";	
+		}else{
+			$data_="column: {
+                    stacking: '$stacking',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }";	
+		}
 		$high_chart .="
 		$('#$graph_id').highcharts({
 		    chart: { zoomType:'x', type: '$graph_type'},
@@ -513,13 +526,7 @@ endif;
             xAxis: { categories: $graph_categories },
             tooltip: { crosshairs: [true,true] },
                plotOptions: {
-                column: {
-                    stacking: '$stacking',
-                    dataLabels: {
-                        enabled: true,
-                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
-                    }
-                }
+                $data_
             },
             series: [";			 
 		    foreach($graph_series_data as $key=>$raw_data):
