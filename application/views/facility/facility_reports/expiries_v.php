@@ -69,7 +69,7 @@ else:
 if($total>0):
 $att = array("name" => 'myform', 'id' => 'myform');
 echo form_open('stock/decommission', $att);
-endif;
+
 ?>		
 </form>
 <hr />
@@ -78,7 +78,7 @@ endif;
 <button class="remove btn btn-danger"><span class="glyphicon glyphicon-remove"></span>Decommission Items</button></div>
 
 </div>
-<?php endif; ?>
+<?php endif; endif;?>
 </div>
 
 <script type="text/javascript">

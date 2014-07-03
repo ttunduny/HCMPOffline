@@ -52,7 +52,7 @@ To add facility stock data, first do physical stock count</span>
             </td>
             <td><input type="text" class="form-control input-small unit_size"   name="commodity_unit_size[0]" readonly="readonly"/></td>
             <td><input class='form-control input-small commodity_batch_no' required="required" name='commodity_batch_no[0]' type='text'/></td>
-            <td><input class='form-control input-small date_received clone_datepicker_normal_limit_today' 
+            <td><input class='form-control input-small date_received clone_datepicker_normal_limit_today big' 
             required="required" name='date_received[0]' type='text' value="<?php echo $today; ?>"/></td>
             <td><select class="form-control input-small source_of_item" name="source_of_item[0]" required="required">
                 <?php
@@ -361,7 +361,7 @@ To add facility stock data, first do physical stock count</span>
         //insert the data
         cloned_object.insertAfter('#facility_stock_table tr:last');
         // refresh the datepickers
-        refreshDatePickers();
+       // refreshDatePickers();
         refresh_clone_datepicker_normal_limit_today();
         }
         });
