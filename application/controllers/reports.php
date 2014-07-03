@@ -1939,8 +1939,7 @@ class Reports extends MY_Controller
          
 		if ($year == date("Y") && $month == null) 
 		{
-			echo "Only year isset";
-			exit;
+			
 			$category_data = array_merge($category_data, $months);
 			$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,
 			$county_id, $year, null,$option ,"all");   
