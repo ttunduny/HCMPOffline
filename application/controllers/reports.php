@@ -1961,10 +1961,7 @@ class Reports extends MY_Controller
 			
 			$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,
 			$county_id, $year, $month,$option ,"all_");
-		
-		//	print_r($commodity_array);
-		//	exit;
-		
+
 			foreach ($commodity_array as $data) :
 			$series_data  = array_merge($series_data , array($data["name"] => (int) $data['total']));
 			$category_data=array_merge($category_data, array($data["name"]));

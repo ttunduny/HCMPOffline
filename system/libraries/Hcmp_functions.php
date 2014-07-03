@@ -530,7 +530,13 @@ endif;
             xAxis: { categories: $graph_categories },
             tooltip: { crosshairs: [true,true] },
                plotOptions: {
-                $data_
+                 series: {
+                    stacking: '$stacking',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
             },
             series: [";			 
 		    foreach($graph_series_data as $key=>$raw_data):
