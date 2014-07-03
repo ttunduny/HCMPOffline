@@ -1,5 +1,5 @@
 <style>
-	.big{ width: 150px !important; }
+	.big{ width: 80px !important; }
 </style>
 <div class="container" style="width: 96%; margin: auto;">
 <span  class='label label-info'>To Issue Commodities 
@@ -64,10 +64,10 @@ endforeach;
 						<input type="text" class="form-control input-small supplier_name" readonly="readonly" name="supplier_name[]"/></td>
 			            <td><input  type="text" class="form-control input-small unit_size" readonly="readonly"  /></td>
 						<td><select class="form-control input-small batch_no big" name="batch_no[0]"></select></td>
-						<td><input type='text' class='form-control input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
+						<td><input type='text' class='form-control big input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
 						<td><input class='form-control available_stock big' type="text" name="available_stock[0]" readonly="readonly" /></td>
 						<td>
-<input class='form-control input-small clone_datepicker_normal_limit_today' 
+<input class='form-control input-small clone_datepicker_normal_limit_today big' 
 type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
 						<td><select  class="form-control commodity_unit_of_issue input-small" name="commodity_unit_of_issue[]">
 			<option  value="Pack_Size">Pack Size</option>
