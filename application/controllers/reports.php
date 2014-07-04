@@ -1907,7 +1907,7 @@ class Reports extends MY_Controller
 	 public function get_county_cost_of_expiries_new($year = null, $month = null, $district_id = null, $option = null, $facility_code = null,$report_type=null) {
 	 	//get_county_cost_of_expiries_new/0/null/88/0/17401
 	 	$year=($year=="NULL") ? null :$year;
-	 	$month=($month=="NULL") ? date("m") :$month;
+	 	$month=($month=="NULL") ? NULL :$month;
 	 	$district_id=($district_id=="NULL") ? null :$district_id;
 	 	$option=($option=="NULL") ? null :$option;
 	 	$facility_code=($facility_code=="NULL") ? null :$facility_code;
@@ -1937,7 +1937,7 @@ class Reports extends MY_Controller
 	 	isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
         //get the expiry for the entire year either for a facility sub-county or county     
          
-		if ($year == date("Y") && $month == null) 
+		if (!isset($month)) 
 		{
 			
 			$category_data = array_merge($category_data, $months);

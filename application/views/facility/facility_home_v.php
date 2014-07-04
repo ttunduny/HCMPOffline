@@ -8,15 +8,24 @@
         		<h3 class="panel-title">Notification <span class="glyphicon glyphicon-bell"></span> </h3>
       		</div>
       <div class="panel-body">
-    <?php if($facility_dashboard_notifications['facility_donations']>0): ?>
+    <?php if($facility_dashboard_notifications['facility_donations_pending']>0): ?>
       	 <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         <h5>Inter Facility Donation</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('issues/confirm_external_issue') ?>"><span class="badge"><?php 
-				echo $facility_dashboard_notifications['facility_donations'];?></span> Items have been donated</a> 
+			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/pending') ?>"><span class="badge"><?php 
+				echo $facility_dashboard_notifications['facility_donations_pending'];?></span> Items have been donated and are pending receipt</a> 
 			</p>
 			 </div>
-		  <?php endif; // Potential Expiries?>
+		  <?php endif; //donations_pending?>
+		      <?php if($facility_dashboard_notifications['facility_donations']>0): ?>
+      	 <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
+        <h5>Inter Facility Donation</h5> 
+        	<p>
+			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/to-me') ?>"><span class="badge"><?php 
+				echo $facility_dashboard_notifications['facility_donations'];?></span> Items have been donated to you</a> 
+			</p>
+			 </div>
+		  <?php endif; //donations_pending?>
    <?php if($facility_dashboard_notifications['facility_stock_count']==0): ?>
       	<div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         <h5> 1) Set up facility stock</h5> 
