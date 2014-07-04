@@ -54,6 +54,7 @@ class facility_stocks_temp extends Doctrine_Record {
 
 	public static function get_months_of_stock($district_id = NULL, $county_id = NULL, $facility_code = NULL,$commodity_id=null) 
 	{ 
+
 		$month = date('F Y');
 		$district_id=($district_id=="NULL") ? null :$district_id;
     	$graph_type=($graph_type=="NULL") ? null :$graph_type;
@@ -90,6 +91,7 @@ class facility_stocks_temp extends Doctrine_Record {
         		and f_m_s.facility_code = f.facility_code
         		$and_data
 				group by cm.id
+
 		 ");
 	
 		return $query_1;

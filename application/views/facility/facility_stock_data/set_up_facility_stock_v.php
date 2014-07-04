@@ -5,10 +5,10 @@
 <table width="100%" class="row-fluid table table-hover table-bordered table-update"  id="example">
 <thead>
 <tr style="background-color: white">
-						<th>Select</th>	
 						<th>Category</th>
 						<th>Description</th>
 						<th>Commodity&nbsp;Code</th>
+						<th>In Use?</th>	
 						<th>Unit Size</th>
 						<th>Issue Type</th>
 					    <th>Average&nbsp;Monthly&nbsp;Consumption&nbsp;(Units) </th>
@@ -23,10 +23,10 @@
 	   ($facility_commodities['selected_option']=='Pack_Size')? $pack_size='selected="selected"' :$unit_size='selected="selected"'  : null; 
 	   echo "<tr><input type='hidden' name='actual_units[]' class='actual_units' value='$facility_commodities[total_commodity_units]'/>
 	   <input type='hidden' name='commodity_id[]' class='commodity_id' value='$facility_commodities[commodity_id]'/>
-	   <td><input type='checkbox' class='checkbox'  $status/></td>
 	   <td>$facility_commodities[sub_category_name]</td>
 	   <td>$facility_commodities[commodity_name]</td>
 	   <td>$facility_commodities[commodity_code]</td>
+	   <td><input type='checkbox' class='checkbox'  $status/></td>
 	   <td>$facility_commodities[unit_size]</td>
 	   <td><select class='form-control commodity_unit_of_issue input-small' name='commodity_unit_of_issue[]'>
 			<option value='Pack_Size'>Pack Size</option>
@@ -44,7 +44,8 @@
 <hr />
 <div class="container-fluid">
 <div style="float: right">
-<button class="save btn btn-success"><span class="glyphicon glyphicon-open"></span>Update</button></div>
+<button class="save btn btn-success">
+<span class="glyphicon glyphicon-open"></span>Update</button></div>
 </div>
 </div>
 <script>
@@ -86,7 +87,10 @@ $(document).ready(function() {
     }  
 	// finally calculate the stock 
     calculate_actual_stock(actual_unit_size,commodity_unit_of_issue,num,".actual_quantity",selector_object);
-    get_the_data_from_the_form_to_save(selector_object);
+   var data= get_the_data_from_the_form_to_save(selector_object);
+     //save the data in the db          
+	var url = "<?php echo base_url().'stock/save_set_up_facility_stock'?>";	  
+    ajax_simple_post_with_console_response(url, data);	
 	});	
 	$('.commodity_unit_of_issue').on('change',function(){
     var selector_object=$(this);
@@ -128,6 +132,11 @@ $(document).ready(function() {
 	return data;
 	   	
 	}
+	$('.save').button().click(function() {
+		//alert();
+		//window.
+		window.open("<?php echo base_url('stock/amc')?>",'_parent');
+	});
 })
  
 </script>

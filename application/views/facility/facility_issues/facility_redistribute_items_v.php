@@ -1,3 +1,6 @@
+<style>
+	.big{ width: 150px !important; }
+</style>
 <div class="container" style="width: 94%; margin: auto;">
 <span  class='label label-info'>To Issue Commodities 
 	i) Select commodity to issue 
@@ -66,7 +69,7 @@ endforeach;
 						<input type="hidden" name="facility_stock_id[0]" value="0" class="facility_stock_id"/>	
 						<input type="text" class="form-control input-small supplier_name" readonly="readonly" name="supplier_name[]"/></td>
 			            <td><input  type="text" class="form-control input-small unit_size" readonly="readonly"  /></td>
-						<td><select class="form-control input-small batch_no big" name="batch_no[0]"></select></td>
+						<td><select class="form-control big batch_no big" name="batch_no[0]"></select></td>
 						<td><input type='text' class='form-control input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
 												<td>
 <input class='form-control input-small clone_datepicker_normal_limit_today' 
@@ -77,8 +80,8 @@ type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="re
 			<option value="Pack_Size">Pack Size</option>
 			<option value="Unit_Size">Unit Size</option>
 			</select></td>
-						<td><input class='form-control input-small quantity_issued' type="text" value="0"  name="quantity_issued[0]"  required="required"/></td>
-						<td><input class='form-control input-small balance' type="text" value="" readonly="readonly" /></td>
+						<td><input class='form-control big quantity_issued' type="text" value="0"  name="quantity_issued[0]"  required="required"/></td>
+						<td><input class='form-control big input-small balance' type="text" value="" readonly="readonly" /></td>
 
 						<td><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Remove Row</button></td>
 			</tr>
@@ -217,8 +220,8 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
    	selector_object.closest("tr").find(".balance").val(remainder1);	
         });// adding a new row 
         $(".add").click(function() {
-        var selector_object=$('#facility_issues_table tr:last');
-        var form_data=check_if_the_form_has_been_filled_correctly(selector_object);
+        var selector_object = $('#facility_issues_table tr:last');
+        var form_data = check_if_the_form_has_been_filled_correctly(selector_object);
         if(isNaN(form_data[0])){
         var notification='<ol>'+form_data[0]+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
            //hcmp custom message dialog
@@ -351,10 +354,16 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
         }
 		function check_if_the_form_has_been_filled_correctly(selector_object){
 		var alert_message='';
+		var service_point = selector_object.closest("tr").find(".service_point").val();
+		var commodity_id = selector_object.closest("tr").find(".desc").val();
+		var issue_date = selector_object.closest("tr").find(".clone_datepicker_normal_limit_today").val();
+		//var issue_quantity = selector_object.closest("tr").find(".quantity_issued").val();
+
 		var service_point=selector_object.closest("tr").find(".service_point").val();
 		var commodity_id=selector_object.closest("tr").find(".desc").val();
 		var issue_date=selector_object.closest("tr").find(".clone_datepicker_normal_limit_today").val();
 		//var issue_quantity=selector_object.closest("tr").find(".quantity_issued").val();
+
 		var facility=selector_object.closest("tr").find(".facility").val();
 		//set the message here
 		if (facility==0) {alert_message+="<li>Select a Facility First</li>";}
@@ -362,7 +371,9 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 	    if (commodity_id==0) {alert_message+="<li>Select a commodity</li>";}
 	    if (issue_date==0 || issue_date=='') {alert_message+="<li>Indicate the date of the issue</li>";}	
 	   // if (issue_quantity==0) {alert_message+="<li>Indicate how much you want to issue</li>";}	    
-	    return[alert_message,service_point,commodity_id,issue_quantity,issue_date];	
+
+	    return[alert_message,service_point,commodity_id,issue_date];	
+
 		}//extract facility_data  from the json object 		
 		function extract_data(commodity_id_,commodity_stock_row_id,type_of_drop_down){
 			var row_id=0; var dropdown='';var facility_stock_id_='';  var total_stock_bal=0; var expiry_date='';
@@ -377,7 +388,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			  		 "^"+facility_stock_data[i]['commodity_balance']+
 			  		 "^"+facility_stock_data[i]['facility_stock_id']+
 			  		 "^"+facility_stock_data[i]['commodity_balance']+">";
-			  				 expiry_date=$.datepicker.formatDate('d M yy', new Date(facility_stock_data[i]['expiry_date']));
+			  				 expiry_date=$.datepicker.formatDate('dMy', new Date(facility_stock_data[i]['expiry_date']));
 			  				 bal=facility_stock_data[i]['commodity_balance'];
 			  				 facility_stock_id_=facility_stock_data[i]['facility_stock_id'];
 			  				 total_stock_bal=facility_stock_data[i]['commodity_balance'];

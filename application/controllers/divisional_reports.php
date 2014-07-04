@@ -23,6 +23,8 @@ class Divisional_Reports extends MY_Controller
 	//used for both the subcounty and county level program reports
 	 public function program_reports()
 	 {
+	 	//echo $data['active_tab'];
+//exit;
 	 	$user_indicator = $district_id = $this -> session -> userdata('user_indicator');
 	 	switch ($user_indicator) 
 	 	{
@@ -202,8 +204,10 @@ public function tb_report(){
 		$data['facility_name'] = ($facility_info['facility_name']);
 		$data['facility_type_'] = ($facility_info['owner']);
 
+
 	    $data['title'] = "Tuberculosis Report";
 		$data['banner_text'] = "Facility Tuberculosis & Leprosy Commodities";
+
 		$data['graph_data'] = $faciliy_expiry_data;
 		$data['content_view'] = "facility/facility_reports/tb_report";;
 		$view = 'shared_files/template/template';

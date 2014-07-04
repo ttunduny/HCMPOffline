@@ -35,11 +35,25 @@
 
 		<td>
 			<label>Facility Name: </label>
+
 			<input type="text" requiredname="facility_name" class="form-control" disabled value="<?php echo $facility_name; ?>">
+
 		</td>			
 		
 		<td class="col-xs-2">
 		<label>Facility Code: </label>
+
+			<input type="text" name="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
+		</td>
+		</div>
+		
+
+
+		<div class="input-group">
+			<td class="col-xs-4">
+			<label>Facility Type: </label>
+			<input type="text" name="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" >
+
 			<input type="text" requiredname="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
 		</td>
 		</div>
@@ -50,6 +64,7 @@
 			<td class="col-xs-4">
 			<label>Facility Type: </label>
 			<input type="text" requiredname="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" >
+
 			</td>
 			
 			<td class="col-xs-2">
@@ -64,16 +79,20 @@
 			<label>Beginning Date (of Reporting Period): </label>
 			</td>
 			<td>
+
 			<!-- <input type="date"   name="table[beginning_date][]" value="" class='form-control'> -->
 			<input type="text" required class="form-control clone_datepicker_normal_limit_today" required name="table[beginning_date][]" value="<?php echo date('d M Y'); ?>" />
+
 			</td>
 		
 			<td  class="col-xs-2"  style="text-align:right;">
 			<label>Ending Date (of Reporting Period): </label>
 			</td>
 			<td>
+
 			<!-- <input type="date"   name="table[ending_date][]" value="" class='form-control'> -->
 			<input type="text" required class="form-control clone_datepicker_normal_limit_today" required name="table[ending_date][]" value="<?php echo date('d M Y'); ?>" />
+
 			</td>
 		</tr>
 

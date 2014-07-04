@@ -41,11 +41,24 @@
 	
 			$("#filter").click(function() 
 			{
+
+				var url = "reports/filter_facility_orders/"+
+
 				var url = "<?php echo base_url().'reports/filter_facility_orders/'?>"+
+
 				        $("#year_filter").val()+
 				        "/"+$("#month_filter").val()+
 				         "/"+$("#plot_value_filter").val();
-        
+
+				var url = "reports/filter_facility_orders/"+
+				        $("#year_filter").val()+
+				        "/"+$("#month_filter").val()+
+				         "/"+$("#plot_value_filter").val();
+
+				ajax_request_replace_div_content(url,'.graph-section');
+		
+          });
+
 				ajax_supply(url,'.graph-section');
 		
           });
@@ -73,8 +86,6 @@
         });
          
 }
-		
-		
-		
+
   });
 </script>

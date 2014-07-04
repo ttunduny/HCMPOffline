@@ -34,14 +34,13 @@ To add facility stock data, first do physical stock count</span>
     <option special_data="0" value="0">-Select One--</option>
                 <?php
                 foreach ($commodities as $commodities) {
-                    $id = $commodities -> id;
-                    $commodities_name = $commodities -> commodity_name;
-                    $unit_size = $commodities -> unit_size;
-                    $commodity_code = $commodities -> commodity_code;
-                    $total_units = $commodities -> total_commodity_units;
-                    foreach ($commodities->supplier_name as $supplier_name) :
-                        $name = $supplier_name -> source_name;
-                    endforeach;
+                    $id = $commodities['commodity_id'] ;
+                    $commodities_name = $commodities['commodity_name'];
+                    $unit_size = $commodities['unit_size'];
+                    $commodity_code = $commodities['commodity_code'];
+                    $total_units = $commodities['total_commodity_units'];                  
+                    $name =$commodities['source_name'];
+              
                     echo "<option special_data='" . $id . "^" . $name . "^" . $commodity_code . "^" . $unit_size . "^" . $total_units . "' 
                     value='$id'>" . $commodities_name . "</option>";
                 }

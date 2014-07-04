@@ -21,6 +21,7 @@
                     </tr>
                     
                 </table>
+
             </div>
         </div>
     </div>
@@ -50,7 +51,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <span class="glyphicon"></span><a href="<?php echo base_url().'reports/load_cost_of_orders'?>" >Cost of Orders</a>
+                            <span class="glyphicon"></span><a href="<?php echo base_url().'reports/order_report'?>" >Orders</a>
                         </td>
                     </tr>
                     <tr>
@@ -58,6 +59,7 @@
                             <span class="glyphicon"></span><a href="<?php echo base_url().'reports/consumption'?>" >Consumption</a>
                         </td>
                     </tr>
+                    
                </table>
             </div>
         </div>
@@ -72,22 +74,21 @@
         <div id="collapseFive" class="panel-collapse collapse">
             <div class="panel-body">
                 <table class="table">
-                    <tr>
-                        <td>
-                            <span class="glyphicon ">
-                            </span><a href="<?php echo base_url().'reports/order_report' ?>">Order Report</a>
-                        </td>
-                    </tr>
-                    <tr>
+                  	 <tr>
                         <td>
                             <span class="glyphicon ">
                             </span><a href="<?php echo base_url().'reports/stock_control' ?>">Stock Control Card</a>
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                      <!--  <td>
                             <span class="glyphicon">
                             </span><a href="<?php echo base_url().'reports/commodities_issue' ?>">Commodities Issued</a>
+                      </td>-->
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="glyphicon"></span><a href="<?php echo base_url().'reports/get_facility_mapping_data'?>" >User Statistics</a>
                         </td>
                     </tr>
                     
@@ -95,4 +96,5 @@
             </div>
         </div>
     </div>
+    
 </div>

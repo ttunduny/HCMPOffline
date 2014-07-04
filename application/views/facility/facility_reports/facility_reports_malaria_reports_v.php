@@ -25,7 +25,6 @@
 	<div  style="margin:5px 0;">
 		<p class="label label-info">Enter appropriate values in all fields as indicated: </p>
 	</div>
-
 	<table width="98%" border="0" class="table-condensed row-fluid table table-hover table-bordered table-update"  id="example">
 		<tr>
 		<div class="input-group">
@@ -47,8 +46,10 @@
 
 		<td  class="col-xs-1">
 			<label>Report Date:</label>
+
 			<!-- <input type= 'date' name="district_name" class="form-control" value=""> -->
 			<input type="text" class="form-control clone_datepicker_normal_limit_today"  name="district_name" value="<?php echo date('d M Y'); ?>" />
+
 			</td>
 		</div>
 
