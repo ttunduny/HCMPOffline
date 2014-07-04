@@ -2,8 +2,8 @@
  	.input-small{
  		width: 60px !important;
  	}
- 	<style>
-	.big{ width: 80px !important; }
+
+	.big{ width: 100px !important; }
 </style>
 
 <div class="container" style="width: 96%; margin: auto;">
@@ -13,24 +13,27 @@
 	<thead>
 		<tr>
 			<th>From</th>
+			<th>To</th>
 			<th>Commodity Name</th>
 			<th>Commodity Code</th>
 			<th>Unit Size</th>
 			<th>Batch No</th>
 			<th>Expiry Date</th>
 			<th>Manufacturer</th>
-			<th>Quantity Sent(units)</th>
 			<th>Quantity Sent(packs)</th>
+			<th>Quantity Sent(units)</th>
 			<th>Issue Type</th>
 			<th>Quantity Received</th>
 			<th>Total Units</th>
 		</tr>
 	</thead>
 	<tbody>
-		<?php
+		<?php $edit=($editable!='to-me') ? "readonly='readonly'": null;	
 		foreach($redistribution_data as $redistribution_data){
 			foreach($redistribution_data->facility_detail_source as $facility){
-					$name_=$facility->facility_name;}
+					$name_=$facility->facility_name." MFL ".$facility->facility_code; $mfl=$facility->facility_code;}
+			foreach($redistribution_data->facility_detail_receive as $facility){
+					$name_facility_detail_receive=$facility->facility_name." MFL ".$facility->facility_code;}
 			foreach($redistribution_data->stock_detail as $stock_detail){			
 				$manu=$stock_detail->manufacture;
 				foreach($stock_detail->commodity_detail as $commodity_detail){
@@ -40,35 +43,38 @@
 				$total_commodity_units=$commodity_detail->total_commodity_units;
 				$source_of_item=$commodity_detail->commodity_source_id;	
 				}
-				$packs=round($total_commodity_units/$redistribution_data->quantity_sent,1);				
+				$packs=round($total_commodity_units/$redistribution_data->quantity_sent,1);	
+				$date=date('d My',strtotime($redistribution_data->expiry_date));
+						
 			}
 		echo "<tr>
 		<td>
 		<input type='hidden' name='source_of_item[]' class='source_of_item' value='$source_of_item'>
-		<input type='hidden' name='service_point[]' class='service_point' value='$redistribution_data->facility_detail_source'>
+		<input type='hidden' name='service_point[]' class='service_point' value='$mfl'>
 		<input type='hidden' name='total_commodity_units[]' class='total_commodity_units' value='$total_commodity_units'>
 		<input type='hidden' name='commodity_id[]' class='commodity_id' value='$redistribution_data->commodity_id'>
 		<input type='hidden' name='facility_stock_id[]' class='facility_stock_id' value='$redistribution_data->id'>
 		$name_</td>
+		<td>$name_facility_detail_receive</td>
 		<td>$name</td>
 		<td>$code</td>
 		<td>$unit_size</td>
 		<td><input type='text' 
-		name='commodity_batch_no[]' class='form-control input-small commodity_batch_no' value='$redistribution_data->batch_no'></td>
+		name='commodity_batch_no[]' class='form-control input-small commodity_batch_no' value='$redistribution_data->batch_no' $edit></td>
 		<td><input type='text' 
-		name='clone_datepicker[]' class=' form-control input-small clone_datepicker' value='$redistribution_data->expiry_date'></td>
+		name='clone_datepicker[]' class=' form-control big clone_datepicker' value='$date' $edit></td>
 		<td><input type='text' 
-		name='commodity_manufacture[]' class='form-control input-small  commodity_manufacture' value='$manu'></td>
+		name='commodity_manufacture[]' class='form-control input-small  commodity_manufacture' value='$manu' $edit></td>
 		<td><input type='text' readonly='readonly' 
 		name='commodity_total_units[]' class='form-control input-small commodity_total_units' value='$redistribution_data->quantity_sent'></td>
-		<td><input class='form-control input-small commodity_total_units' type='text' readonly='readonly' value='$packs'></td>
+		<td><input class='form-control big commodity_total_units' type='text' readonly='readonly' value='$packs'></td>
 		<td><select class='form-control  commodity_unit_of_issue ' name='commodity_unit_of_issue[]'>
 			<option value='Pack_Size'>Pack Size</option>
 			<option value='Unit_Size'>Unit Size</option>
 			</select></td>
-		<td><input class='form-control input-small quantity' 
-		type='text' 'name='quantity[]' value='0'/></td>
-		<td><input class='form-control input-small actual_quantity' 
+		<td><input class='form-control big quantity' 
+		type='text' 'name='quantity[]' value='0' $edit/></td>
+		<td><input class='form-control big actual_quantity' 
 		type='text' name='actual_quantity[]' readonly='readonly' value='0'/></td>
 		</tr>";			
 		}
@@ -78,13 +84,14 @@
 </tbody>
 </table> 
 <?php echo form_close();?> 
+<?php if(isset($edit)){ } else{ ?>
 <hr />
 <div class="container-fluid">
 <div style="float: right">
 <button class="btn btn-success save" ><span class="glyphicon glyphicon-open"></span>Update</button></div>
 </div>
 </div>
-  
+ <?php };?>  
 <script>
 $(document).ready(function() {
 	//datatables settings 

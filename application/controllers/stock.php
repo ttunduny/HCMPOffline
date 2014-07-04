@@ -354,6 +354,8 @@ endif;
 			 //get the closing stock of the given item           
             $facility_stock=facility_stocks::get_facility_commodity_total($facility_code,$commodity_id[$i])->toArray();	
             // save this infor in the issues table
+            $facility_name=isset($service_point[$i]) ? Facilities::get_facility_name2($service_point[$i]) : null;
+	 $facility_name=isset($facility_name)? $facility_name['facility_name']: 'N/A';
             $total_unit_count_=$total_unit_count[$i]*-1;
 			$mydata=array('facility_code'=>$facility_code,
 			's11_No' => '(+ve Adj) Stock Addition',
@@ -362,7 +364,7 @@ endif;
 			'expiry_date'=> date('y-m-d', strtotime(str_replace(",", " ",$expiry_date[$i]))),
 			'balance_as_of'=>$facility_stock[0]['commodity_balance'],
 			'date_issued' => date('y-m-d'),
-			'issued_to'=>"inter-facility donation: MFL NO ".$service_point[$i],
+			'issued_to'=>"inter-facility donation: ".$facility_name,
 			'qty_issued' => $total_unit_count_,
 			'issued_by' =>$this -> session -> userdata('user_id') ); //$this -> session -> userdata('identity')
 			 // update the issues table 

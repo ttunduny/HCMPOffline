@@ -96,7 +96,7 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="days['.$i.']"'; ?> value="<?php echo $facility_order[$i]['days_out_of_stock'];?>" /></td>
 							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="closing['.$i.']"'; ?> value="<?php echo $facility_order[$i]['closing_stock'];?>" /></td>
 							<td><input class="form-control input-small" readonly="readonly" type="text" <?php echo 'name="amc['.$i.']"'; ?> value="<?php echo $facility_order[$i]['historical'];?>" /></td>
-							<td><input class="form-control input-small" readonly="readonly" type="text" <?php echo 'name="suggested['.$i.']"';?> value="0"/></td>
+							<td><input class="form-control input-small suggested" readonly="readonly" type="text" <?php echo 'name="suggested['.$i.']"';?> value="0"/></td>
 							<td><input class="form-control input-small quantity" type="text" <?php echo 'name="quantity['.$i.']"';?> value="<?php $qty=$facility_order[$i]['quantity_ordered'];
 							if($qty>0){echo $qty;} else echo 0;?>"/></td>
 							<td><input class="form-control input-small actual_quantity" readonly="readonly" type="text" <?php echo 'name="actual_quantity['.$i.']"';?> value="0"/></td>
@@ -322,6 +322,10 @@ $(document).ready(function() {
      //set the balances here
      $("#total_order_balance_value").val(balance)
      $("#total_order_value").val(order_total);
+		
+	}
+	
+	function calculate_suggested_value(){
 		
 	}		
     

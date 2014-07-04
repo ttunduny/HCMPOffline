@@ -108,6 +108,8 @@ if (!defined('BASEPATH'))
 			$commodity_unit_of_issue=array_values($this->input->post('commodity_unit_of_issue'));
 			$quantity_issued=array_values($this->input->post('quantity_issued'));
 			$clone_datepicker_normal_limit_today=array_values($this->input->post('clone_datepicker_normal_limit_today'));
+			$manufacture=array_values($this->input->post('manufacture'));
+
 			$total_units=array_values($this->input->post('total_units'));
 			$total_items=count($facility_stock_id);
 			$data_array_issues_table=array();
@@ -124,7 +126,8 @@ if (!defined('BASEPATH'))
 				     'issued_to'=>"inter-facility donation:".$facility_name,'balance_as_of'=>$commodity_balance_before[$i], 
 				     'date_issued'=>date('y-m-d',strtotime($clone_datepicker_normal_limit_today[$i])),'issued_by'=>$this -> session -> userdata('user_id'));
 					 
-					  $mydata_2 = array('source_facility_code' => $facility_code,	 
+					  $mydata_2 = array('manufacture'=>$manufacture[$i],
+					  'source_facility_code' => $facility_code,	 
 	                 'batch_no' => $batch_no[$i] ,'commodity_id' => $commodity_id[$i],
 				     'expiry_date' => date('y-m-d',strtotime($expiry_date[$i])),'quantity_sent'=> $total_items_issues ,
 				     'receive_facility_code'=>$service_point[$i],'facility_stock_ref_id'=>$facility_stock_id[$i], 
@@ -151,11 +154,12 @@ endfor;
 endif;
 redirect();		
 	}//confirm the external issue
-	public function confirm_external_issue(){
+	public function confirm_external_issue($editable=null){
 	$facility_code=$this -> session -> userdata('facility_id');
 	$data['title'] ="Confirm Redistribution";	
 	$data['banner_text'] = "Confirm Redistribution";
-	$data['redistribution_data']=redistribution_data::get_all_active($facility_code,'all');	
+	$data['redistribution_data']=redistribution_data::get_all_active($facility_code,$editable);	
+	$data['editable']=$editable;
 	$data['content_view'] = "facility/facility_issues/facility_redistribute_items_confirmation_v";
 	$this -> load -> view("shared_files/template/template", $data);		
 	}

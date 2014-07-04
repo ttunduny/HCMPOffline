@@ -83,6 +83,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 		if(isset($_FILES['file']) && $_FILES['file']['size'] > 0){ 
 			$more_data=$this -> hcmp_functions -> kemsa_excel_order_uploader($_FILES["file"]["tmp_name"]);
 			$data['order_details'] = $data['facility_order'] =$more_data['row_data'];
+			
 			$facility_data = Facilities::get_facility_name($more_data['facility_code'])->toArray();
 			if(count($facility_data)==0){
 			$this -> session -> set_flashdata('system_error_message', "Kindly upload a file with correct facility MFL code ");
@@ -382,18 +383,40 @@ for ($row = 1; $row <= $highestRow; $row++){
 	public function create_order_pdf_template($order_no) {
 		$from_order_table = facility_orders::get_order_($order_no);
 		//get the order data here
-		$from_order_details_table = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT a.sub_category_name, 
-	    b.commodity_name, b.commodity_code, b.unit_size, b.unit_cost, 
-		c.quantity_ordered_pack,c.quantity_ordered_unit, c.price,  c.quantity_recieved,
-		c.o_balance, c.t_receipts, c.t_issues, c.adjustnve, c.adjustpve,
-        c.losses, c.days, c.comment, c.c_stock,c.s_quantity
-        FROM  commodity_sub_category a, commodities b, facility_order_details c
-        WHERE c.order_number_id =$order_no
+		$from_order_details_table = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT 
+
+    a.sub_category_name,
+    b.commodity_name,
+    b.commodity_code,
+    b.unit_size,
+    b.unit_cost,
+    c.quantity_ordered_pack,
+    c.quantity_ordered_unit,
+    c.price,
+    c.quantity_recieved,
+    c.o_balance,
+    c.t_receipts,
+    c.t_issues,
+    c.adjustnve,
+    c.adjustpve,
+    c.losses,
+    c.days,
+    c.comment,
+    c.c_stock,
+    c.s_quantity
+    
+FROM
+    commodity_sub_category a,
+    commodities b,
+    facility_order_details c
+WHERE
+    c.order_number_id = $order_no
         AND b.id = c.commodity_id
         AND a.id = b.commodity_sub_category_id
-        ORDER BY a.id ASC , b.commodity_name ASC ");
+group by b.id
+ORDER BY a.id ASC , b.commodity_name ASC  ");
 		// get the order details here
-		$from_order_details_table_count = count(from_order_details_table);
+		$from_order_details_table_count = count($from_order_details_table);
 		foreach ($from_order_table as $order) {
 			$o_no = $order -> order_no;
 			$o_bed_capacity = $order -> bed_capacity;
