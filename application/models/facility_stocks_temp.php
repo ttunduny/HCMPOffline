@@ -54,7 +54,6 @@ class facility_stocks_temp extends Doctrine_Record {
 
 	public static function get_months_of_stock($district_id = NULL, $county_id = NULL, $facility_code = NULL,$commodity_id=null) 
 	{ 
-
 		$month = date('F Y');
 		$district_id=($district_id=="NULL") ? null :$district_id;
     	$graph_type=($graph_type=="NULL") ? null :$graph_type;
@@ -66,7 +65,7 @@ class facility_stocks_temp extends Doctrine_Record {
     	$and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
    		$and_data .=($county_id>0) ?" AND c.id='$county_id'" : null;
     	$and_data =isset( $and_data) ?  $and_data:null;
-		
+
     	$and_data .=isset($commodity_id) ? " AND cm.id =$commodity_id " : " AND cm.tracer_item =1";
     	//echo $and_data ; exit;
 		//echo .$commodity_id; exit;
@@ -93,9 +92,10 @@ class facility_stocks_temp extends Doctrine_Record {
 				group by cm.id
 
 		 ");
-	
+
 		return $query_1;
 	}
+
 
 	public static function get_all_facility($facility_code) {
 		$query = Doctrine_Query::create() -> select("*") -> from("facility_stocks_temp") -> where("facility_code=$facility_code");

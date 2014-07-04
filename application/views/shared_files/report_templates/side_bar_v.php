@@ -80,12 +80,14 @@
                             </span><a href="<?php echo base_url().'reports/stock_control' ?>">Stock Control Card</a>
                         </td>
                     </tr>
-                    <tr>
-                      <!--  <td>
+
+                   <!-- <tr>
+                        <td>
                             <span class="glyphicon">
                             </span><a href="<?php echo base_url().'reports/commodities_issue' ?>">Commodities Issued</a>
-                      </td>-->
-                    </tr>
+                        </td>
+                    </tr>-->
+
                     <tr>
                         <td>
                             <span class="glyphicon"></span><a href="<?php echo base_url().'reports/get_facility_mapping_data'?>" >User Statistics</a>
@@ -98,3 +100,38 @@
     </div>
     
 </div>
+<<<<<<< HEAD
+=======
+<script>
+
+	$(document).ready(function() 
+	{
+		$("#expiries").on('click', function(){
+			//$('.page-header').html('Expiries');
+			active_panel(this);
+			//ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
+			});
+			
+		$("#divisional_reports").on('click', function(){
+			//$('.page-header').html('Expiries');
+			active_panel(this);
+			
+			//ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
+			});	
+			
+		$("#facility_statistics").on('click', function(){
+			//$('.page-header').html('Expiries');
+			active_panel(this);
+			//ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
+			});	
+			
+		$("#other_reports").on('click', function(){
+			//$('.page-header').html('Expiries');
+			active_panel(this);
+			//ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
+			});
+	});
+</script>
+
+
+>>>>>>> 89e48469412e89eda8061b699da2825b83c81c87

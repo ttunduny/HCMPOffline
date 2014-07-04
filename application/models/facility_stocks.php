@@ -295,6 +295,7 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
 	 ($graph_type=='table_data')&& ($commodity_id>0) ?" GROUP BY d.id, f.facility_code having total>0 order by di.district asc, f.facility_name asc" :
 	 " GROUP BY d.id having total > 0") ;
 
+
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll("SELECT  $selection_for_a_month $computation
      FROM facility_stocks fs, facilities f, commodities d,  districts di
@@ -462,7 +463,7 @@ public static function get_facility_drug_consumption_level($facilities_filter,$c
 
 
  }
-public static function get_facility_consumption_level_new($facilities_filter,$commodity_filter = null,$year_filter,$plot_value_filter)
+public static function get_facility_consumption_level_new($facilities_filter,$commodity_filter,$year_filter,$plot_value_filter)
  {
  	switch ($plot_value_filter) :
 		case 'ksh':
@@ -492,18 +493,8 @@ public static function get_facility_consumption_level_new($facilities_filter,$co
             $computation ="fs.qty_issued AS total_consumption" ;
             break;
     endswitch;
-    /*echo "SELECT MONTHNAME( fs.date_issued ) as month, $computation 
-					FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
-					WHERE fs.facility_code = f.facility_code
-					AND f.facility_code = $facilities_filter
-					AND fs.qty_issued > 0
-					AND f.district = di.id
-					AND fs.status =  '1'
-					AND fs.commodity_id = $commodity_filter
-					AND YEAR( fs.date_issued ) =$year_filter
-					AND cms.id = fs.commodity_id
-					GROUP BY MONTH( fs.date_issued ) asc";
-					exit;*/
+	($commodity_filter == 0)? $and_data = null: $and_data = "AND fs.commodity_id = $commodity_filter" ;
+    
    	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 		->fetchAll("SELECT MONTHNAME( fs.date_issued ) as month, $computation 
 					FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
@@ -512,7 +503,7 @@ public static function get_facility_consumption_level_new($facilities_filter,$co
 					AND fs.qty_issued > 0
 					AND f.district = di.id
 					AND fs.status =  '1'
-					AND fs.commodity_id = $commodity_filter
+					$and_data
 					AND YEAR( fs.date_issued ) =$year_filter
 					AND cms.id = fs.commodity_id
 					GROUP BY MONTH( fs.date_issued ) asc");		
@@ -546,7 +537,6 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 					AND fs.qty_issued > 0
 					AND f.district = di.id
 					AND fs.status =  '1'
-					
 					AND YEAR( fs.date_issued ) =$year_filter
 					AND cms.id = fs.commodity_id
 					GROUP BY MONTH( fs.date_issued ) asc");		

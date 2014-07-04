@@ -1,4 +1,4 @@
-<div class="filter" id="">
+<div class="filter">
 <h5>
 <select name="year" id="year_filter" style="width: 7.8em;">
 		<option value="0">Select Year</option>
@@ -41,15 +41,6 @@
 	
 			$("#filter").click(function() 
 			{
-
-				var url = "reports/filter_facility_orders/"+
-
-				var url = "<?php echo base_url().'reports/filter_facility_orders/'?>"+
-
-				        $("#year_filter").val()+
-				        "/"+$("#month_filter").val()+
-				         "/"+$("#plot_value_filter").val();
-
 				var url = "reports/filter_facility_orders/"+
 				        $("#year_filter").val()+
 				        "/"+$("#month_filter").val()+
@@ -59,33 +50,6 @@
 		
           });
 
-				ajax_supply(url,'.graph-section');
-		
-          });
-
-		
-		function ajax_supply (url,div)
-		{
-
-	    var url = url;
-	    var loading_icon = "<?php echo base_url().'assets/img/loader.GIF' ?>";
-	    $.ajax({
-          type: "POST",
-          url: url,
-          beforeSend: function() 
-          {
-             $(div).html("");           
-             $(div).html("<img style='margin-top:10%;' src="+loading_icon+">");
-           
-          },
-          success: function(msg) 
-          {
-            $(div).html("");
-            $(div).html(msg);           
-          }
-        });
-         
-}
-
+	
   });
 </script>

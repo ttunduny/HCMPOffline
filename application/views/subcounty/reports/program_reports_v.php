@@ -30,17 +30,20 @@
 				<td>$facility</td>          
  				<td>$username</td>
            		<td>$report_date</td>
-           		<td colspan = '3'>
+           		<td colspan = '2'>
            			<a href='$link' target="_blank">
 		           	<button  type="button" class="btn btn-xs btn-primary">
 		           	<span class="glyphicon glyphicon-save"></span>Download Report pdf</button></a>
+
 		           	<a href='$link_excel' target="_blank">
            			<button  type="button" class="btn btn-xs btn-primary">
            			<span class="glyphicon glyphicon-save"></span>Download Report excel</button></a> 
+		           	
            		</td>
            </tr>
            
 HTML_DATA;
+//echo $link;
 			endforeach;	
 			endforeach;	
 			
@@ -62,7 +65,7 @@ HTML_DATA;
 				<td>$facility</td>          
  				<td>$username</td>
            		<td>$report_date</td>
-           		<td colspan = '3'>
+           		<td colspan = '2'>
            			<a href='$link' target="_blank">
 		           	<button  type="button" class="btn btn-xs btn-primary">
 		           	<span class="glyphicon glyphicon-save"></span>Download Report pdf</button></a>
@@ -75,7 +78,6 @@ HTML_DATA;
 HTML_DATA;
 			endforeach;
 			endforeach;
-
 		foreach($TB as $TB_details1):
 			foreach($TB_details1 as $TB_details):
 				$facilityname = Facilities::get_facility_name2($TB_details['facility_code']);
@@ -83,8 +85,8 @@ HTML_DATA;
 				$user = Users::get_user_names($TB_details['user']);
 				$username = $user[0]['fname']." ".$user[0]['lname'];
 				$report_date = $TB_details['report_date'];
-				$link = base_url('reports/get_facility_report_pdf/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/RH');	
-				$link_excel = base_url('reports/create_excel_facility_program_report/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/TB');
+				$link = base_url('reports/get_facility_report_pdf/'.$TB_details['id'].'/'.$TB_details['facility_code'].'/TB');	
+				$link_excel = base_url('reports/create_excel_facility_program_report/'.$TB_details['id'].'/'.$TB_details['facility_code'].'/TB');
 
 			    $link_TB = base_url('divisional_reports/tb_report');
 			    $TB_report_details .= <<<HTML_DATA
@@ -92,14 +94,18 @@ HTML_DATA;
 					<td>$facility</td>          
 	 				<td>$username</td>
 	           		<td>$report_date</td>
-	           		<td colspan = '3'>
+	           		<td colspan = '2'>
 
            			<a href='$link' target="_blank">
 		           	<button  type="button" class="btn btn-xs btn-primary">
 		           	<span class="glyphicon glyphicon-save"></span>Download Report pdf</button></a>
 		           	<a href='$link_excel' target="_blank">
            			<button  type="button" class="btn btn-xs btn-primary">
-           			<span class="glyphicon glyphicon-save"></span>Download Report excel</button></a></td></tr>
+
+           			<span class="glyphicon glyphicon-save"></span>Download Report excel</button></a>
+		            
+           		</td>
+           </tr>
 HTML_DATA;
 			 endforeach;
 			endforeach;
@@ -121,13 +127,11 @@ HTML_DATA;
 					<th>Facility Name</th>
 					<th>Prepared By:</th>
 					<th>Report Date</th>
-					<th>Action</th>
-					<th>
-					<a href='<?php echo $link_new_report_malaria;?>'>
+					<th>Action <a href='<?php echo $link_new_report_malaria;?>'>
 							<button  type='button' class='btn btn-xs btn-primary'style="float: right">
 		           			<span class='glyphicon glyphicon-floppy-disk'></span>Submit Malaria Report</button>
-		           		</a>
-		        </th>
+		           		</a></th>
+					
 				</tr>
 				
 			</thead>
@@ -151,11 +155,11 @@ HTML_DATA;
 				<th>Facility Name</th>
 				<th>Prepared By:</th>
 				<th>Report Date</th>
-				<th>Action</th>
-				<th><a href='<?php echo $link_new_report_RH;?>' style="float: right">
+				<th>Action <a href='<?php echo $link_new_report_RH;?>' style="float: right">
 						<button  type='button' class='btn btn-xs btn-primary'>
 	           			<span class='glyphicon glyphicon-floppy-disk'></span>Submit RH Report</button>
 		           	</a></th>
+			
 			</tr>
 		</thead>
 		<tbody>
@@ -178,11 +182,11 @@ HTML_DATA;
 				<th>Facility Name</th>
 				<th>Prepared By:</th>
 				<th>Report Date</th>
-				<th>Action</th>
-				<th><a href='<?php echo $link_TB;?>' target='_blank'>
+				<th>Action <a href='<?php echo $link_TB;?>' target='_blank'>
 						<button  type='button' class='btn btn-xs btn-primary' style="float: right">
 		       			<span class='glyphicon glyphicon-floppy-disk'></span>Submit TB Report</button>
-       				</a></th>
+       				</a>
+				</th>
 			</tr>
 		</thead>
 		<tbody>

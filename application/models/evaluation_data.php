@@ -197,7 +197,7 @@ group by `train_useful`
 		$where=(isset($county_id) && !isset($district_id)) ? " and d.county=$county_id " : " and d.id=$district_id " ;
 		$query12 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select (select count(*) from facilities f, facility_evaluation f_e, districts d 
-where f.facility_code=f_e.facility_code 
+where f.facility_code=f_e.facility_code
 and f.district=d.id and d.county=$county_id ) as total, count(`use_freq`) as level, use_freq from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
 and f.district=d.id and d.county=$county_id

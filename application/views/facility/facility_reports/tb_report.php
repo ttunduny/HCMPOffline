@@ -37,24 +37,11 @@
 			<label>Facility Name: </label>
 
 			<input type="text" requiredname="facility_name" class="form-control" disabled value="<?php echo $facility_name; ?>">
-
 		</td>			
 		
 		<td class="col-xs-2">
 		<label>Facility Code: </label>
-
-			<input type="text" name="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
-		</td>
-		</div>
-		
-
-
-		<div class="input-group">
-			<td class="col-xs-4">
-			<label>Facility Type: </label>
-			<input type="text" name="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" >
-
-			<input type="text" requiredname="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
+	<input type="text" requiredname="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
 		</td>
 		</div>
 		
@@ -64,7 +51,6 @@
 			<td class="col-xs-4">
 			<label>Facility Type: </label>
 			<input type="text" requiredname="dispensary" disabled class="form-control" value="<?php echo $facility_type_; ?>" >
-
 			</td>
 			
 			<td class="col-xs-2">
@@ -82,7 +68,6 @@
 
 			<!-- <input type="date"   name="table[beginning_date][]" value="" class='form-control'> -->
 			<input type="text" required class="form-control clone_datepicker_normal_limit_today" required name="table[beginning_date][]" value="<?php echo date('d M Y'); ?>" />
-
 			</td>
 		
 			<td  class="col-xs-2"  style="text-align:right;">
@@ -92,7 +77,6 @@
 
 			<!-- <input type="date"   name="table[ending_date][]" value="" class='form-control'> -->
 			<input type="text" required class="form-control clone_datepicker_normal_limit_today" required name="table[ending_date][]" value="<?php echo date('d M Y'); ?>" />
-
 			</td>
 		</tr>
 
@@ -632,7 +616,11 @@
 		</tr>
 		<tr>
 			<th>Quantity Requested</th>
+<<<<<<< HEAD
 			<td><input type="text" required  name="50pg" value="" class='form-control'></td>
+=======
+			<td><input type="text" required  name="qtt" value="" class='form-control'></td>
+>>>>>>> d3fda188de9f6bd7687d68ff44753d02fa50e603
 			<td><input type="text" required  name="x0pg" value="" class='form-control'></td>
 			<td><input type="text" required  name="FCDRR" value="" class='form-control'></td>
 		</tr>
