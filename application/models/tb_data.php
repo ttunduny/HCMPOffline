@@ -16,6 +16,7 @@ class Tb_data extends Doctrine_Record
 		$this -> hasColumn('quantity_needed', 'int',11);
 		$this -> hasColumn('report_date', 'timestamp');
 		$this -> hasColumn('user_id', 'int',11);
+		$this -> hasColumn('report_id', 'int',11);
 	}
 
 	public function setUp() {
@@ -33,34 +34,48 @@ class Tb_data extends Doctrine_Record
 
 	public static function getall($facility_id)
 	{
-		//$query = Doctrine_Query::create() -> select("*") -> from("tuberculosis_data")-> where("facility_code = '$facility_id' ")->groupBy("report_date");
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
    	 	->fetchAll(
    	 		"select * from tuberculosis_data where facility_code = $facility_id order by report_date"
    	 		);
-		//$all_data = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $query;
 			
 	}
 
-	public static function getallother($facility_id)
+	public static function get_all_other_2($report_id)
 	{
-		//$query = Doctrine_Query::create() -> select("*") -> from("tuberculosis_data")-> where("facility_code = '$facility_id' ")->groupBy("report_date");
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
    	 	->fetchAll(
-   	 		"select * from tuberculosis_report_info where facility_code = $facility_id order by report_date"
+   	 		"select * from tuberculosis_report_info where report_id = $report_id order by report_date"
    	 		);
-		//$all_data = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $query;
+			
+	}
+
+	public static function get_all_other($report_id)
+	{
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+   	 	->fetchAll(
+   	 		"select * from tuberculosis_data where report_id = $report_id order by report_date"
+   	 		);
 		return $query;
 			
 	}	
+
+	public static function get_tb_drug_names(){
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+   	 	->fetchAll(
+   	 		"select * from tuberculosis_drugs"
+   	 		); 
+		return $query;
+	}
 
 	public static function get_facility_report_details($facility_id)
 	{
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
    	 	->fetchAll("select distinct(user_id) as user, 
    	 				date_format(report_date, '%M %Y')as report_date, 
-   	 				report_date as report_timestamp,id, 
+   	 				report_date as report_timestamp,report_id, 
    	 				facility_code as facility_code 
    	 				from tuberculosis_data 
    	 				where facility_code = $facility_id 
