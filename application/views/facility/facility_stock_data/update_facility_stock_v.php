@@ -52,8 +52,8 @@ To add facility stock data, first do physical stock count</span>
             </td>
             <td><input type="text" class="form-control input-small unit_size"   name="commodity_unit_size[0]" readonly="readonly"/></td>
             <td><input class='form-control input-small commodity_batch_no' required="required" name='commodity_batch_no[0]' type='text'/></td>
-            <td><input class='form-control input-small date_received clone_datepicker_normal_limit_today big' 
-            required="required" name='date_received[0]' type='text' value="<?php echo $today; ?>"/></td>
+            <td><input class='form-control input-small date_received big' 
+            required="required" name='date_received[0]' type='date' value="<?php echo $today; ?>"/></td>
             <td><select class="form-control input-small source_of_item" name="source_of_item[0]" required="required">
                 <?php
                 foreach ($commodity_source as $commodity_source) {
@@ -89,8 +89,10 @@ To add facility stock data, first do physical stock count</span>
 </div>
 </div>
 <?php echo form_close(); ?>
+
 <script type="text/javascript">
-    $(document).ready(function() {      
+    $(document).ready(function() {  
+
  var $table = $('table');
 //float the headers
   $table.floatThead({ 
@@ -339,6 +341,7 @@ To add facility stock data, first do physical stock count</span>
         var clone_datepicker = cloned_object.find(".clone_datepicker");
         var commodity_total_units = cloned_object.find(".commodity_total_units");
         var commodity_batch_no = cloned_object.find(".commodity_batch_no");
+        var date_received= cloned_object.find(".date_received");
         //reset the values
         cloned_object.attr("table_row", next_table_row );
         cloned_object.find('input[type=text]').attr("value", "");
@@ -354,16 +357,25 @@ To add facility stock data, first do physical stock count</span>
         commodity_total_units.attr("id", commodity_total_units_id);
         commodity_available_stock.attr("id", commodity_available_stock_id);
         commodity_available_stock.attr("name", "commodity_available_stock["+next_table_row+"]");
-        clone_datepicker.attr("id", clone_datepicker_id);
-        clone_datepicker.attr("name", "clone_datepicker["+next_table_row+"]");
+
+        date_received.attr("name", "date_received["+next_table_row+"]");
+        date_received.attr("id", next_table_row);
+        date_received.removeClass('hasDatepicker');
+			
+	    clone_datepicker.attr("name", "clone_datepicker["+next_table_row+"]");
+        clone_datepicker.attr("id", next_table_row);
+        clone_datepicker.removeClass('hasDatepicker');
+  
         // remove the error class
         cloned_object.find("label.error").remove();
         //insert the data
         cloned_object.insertAfter('#facility_stock_table tr:last').find('input').val('');;
         // refresh the datepickers
-        refreshDatePickers();
-        refresh_clone_datepicker_normal_limit_today();
+       // refresh_clone_datepicker_normal_limit_today(); 
+       refreshDatePickers();
+      
         }
+        
         });
 </script>
 

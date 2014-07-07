@@ -187,7 +187,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
               }
                });		        
 		        var remaining_items=total_stock_bal-total_issues_for_this_item;	
-		        alert(stock_data[4])
+		
 		        locator.closest("tr").find(".manufacture").val(stock_data[4]);
 		        locator.closest("tr").find(".facility_stock_id").val(stock_data[1]);	        
 				locator.closest("tr").find(".batch_no").html(dropdown);
