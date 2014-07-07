@@ -47,7 +47,7 @@ class Reports extends MY_Controller
 				$data['report_view'] = "facility/facility_reports/potential_expiries_v";
 				$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 				$data['report_data'] = Facility_stocks::potential_expiries($facility_code);
-
+                $data['active_panel']='expiries';
 				break;
 			case district_tech :
 				$data['content_view'] = "";
@@ -290,7 +290,7 @@ class Reports extends MY_Controller
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['report_view'] = "facility/facility_reports/potential_expiries_v";
 		$data['report_data'] = Facility_stocks::potential_expiries($facility_code);
-		
+		$data['active_panel']='expiries';
 		$view = 'shared_files/template/template';
 				
 
@@ -509,7 +509,7 @@ class Reports extends MY_Controller
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['expiry_data'] = Facility_stocks::All_expiries($facility_code);
 		$data['report_view'] = "facility/facility_reports/expiries_v";
-
+        $data['active_panel']='expiries';
 		$this -> load -> view("shared_files/template/template", $data);
 
 	}
@@ -548,6 +548,7 @@ class Reports extends MY_Controller
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['commodities']=Commodities::get_facility_commodities($facility_code);
 		$data['report_view'] = "facility/facility_reports/bin_card_v";
+		$data['active_panel']='other';
 		$this -> load -> view("shared_files/template/template", $data);
 
 	}
@@ -619,6 +620,7 @@ class Reports extends MY_Controller
 		$data['report_view'] = "facility/facility_reports/ajax/facility_expiry_filter_v";
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$view = 'shared_files/template/template';
+		$data['active_panel']='statistics';
 		$this -> load -> view($view, $data);
         
 		
@@ -804,6 +806,7 @@ class Reports extends MY_Controller
 		$data['report_view']="facility/facility_reports/ajax/consumption_stats_ajax";
 		$data['content_view']="facility/facility_reports/reports_v";
 		$view = 'shared_files/template/template';
+		$data['active_panel']='statistics';
 		$this -> load -> view($view, $data);
 		
 	}	
@@ -879,7 +882,7 @@ class Reports extends MY_Controller
 		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
 		$graph_data = array_merge($graph_data,array("graph_title"=>'Total Orders for '.$facility_name['facility_name'].' for '.$year));
 		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
-		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Orders (values in KSHS)'));
+		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Orders (values in KSH)'));
 		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
 		$graph_data = array_merge($graph_data,array("series_data"=>array("Total Orders"=>array())));
 		
@@ -900,6 +903,7 @@ class Reports extends MY_Controller
 		$data['report_view']="facility/facility_reports/ajax/facility_orders_filter_v";
 		$data['content_view']="facility/facility_reports/reports_v";
 		$view = 'shared_files/template/template';
+		$data['active_panel']='statistics';
 		$this -> load -> view($view, $data);
 		
 	}
@@ -1207,6 +1211,7 @@ class Reports extends MY_Controller
 	    $data['report_view'] = "facility/facility_reports/ajax/facility_user_log_v";		
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		$data['content_view'] = "facility/facility_reports/reports_v";
+		$data['active_panel']='other';
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
 		endif;

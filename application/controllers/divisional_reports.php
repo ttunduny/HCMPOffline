@@ -115,7 +115,7 @@ class Divisional_Reports extends MY_Controller
 		 break;
 		}
  		
- 		
+ 		$data['active_panel']='divisional';
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		$this -> load -> view('shared_files/template/template', $data);

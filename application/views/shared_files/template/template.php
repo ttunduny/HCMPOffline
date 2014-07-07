@@ -20,7 +20,7 @@ if (!$this -> session -> userdata('user_id')) {
 	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
-	 <link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
+	<link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
     <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
 	<link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
@@ -43,8 +43,7 @@ if (!$this -> session -> userdata('user_id')) {
   } // 
   
 };
-  </script>
-    <script>
+ 
     function load(time){
       var x = new XMLHttpRequest()
       x.open('GET', document.URL , true);
@@ -60,11 +59,9 @@ if (!$this -> session -> userdata('user_id')) {
     },4500);
 
     Pace.on('hide', function(){
-      console.log('done');
+   //   console.log('done');
     });
 
-  </script>
-    <script type="text/javascript">
     var url="<?php echo base_url(); ?>";
     </script>
     <style>
@@ -272,7 +269,7 @@ foreach($menus as $menu){?>
  */
 var timer = 0;
 function set_interval() {
-  showTime()
+  showTime();
   // the interval 'timer' is set as soon as the page loads
   timer = setInterval("auto_logout()", 3600000);
   // the figure '1801000' above indicates how many milliseconds the timer be set to.
@@ -281,7 +278,7 @@ function set_interval() {
 }
 
 function reset_interval() {
-  showTime()
+  showTime();
   //resets the timer. The timer is reset on each of the below events:
   // 1. mousemove   2. mouseclick   3. key press 4. scroliing
   //first step: clear the existing timer
@@ -296,9 +293,9 @@ function reset_interval() {
 }
 
 function auto_logout() {
-
+alert("logged");
   // this function will redirect the user to the logout script
-  window.location = "<?php echo base_url(); ?>user/logout";
+ // window.location = "<?php echo base_url(); ?>user/logout";
 }
 
 /*
