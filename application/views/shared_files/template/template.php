@@ -293,9 +293,9 @@ function reset_interval() {
 }
 
 function auto_logout() {
-alert("logged");
+
   // this function will redirect the user to the logout script
- // window.location = "<?php echo base_url(); ?>user/logout";
+  window.location = "<?php echo base_url(); ?>user/logout";
 }
 
 /*
