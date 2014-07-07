@@ -361,7 +361,7 @@ To add facility stock data, first do physical stock count</span>
         //insert the data
         cloned_object.insertAfter('#facility_stock_table tr:last').find('input').val('');;
         // refresh the datepickers
-       // refreshDatePickers();
+        refreshDatePickers();
         refresh_clone_datepicker_normal_limit_today();
         }
         });
