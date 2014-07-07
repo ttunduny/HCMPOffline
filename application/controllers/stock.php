@@ -245,7 +245,7 @@ if($this->input->post('commodity_id')):
 		 $total_unit_count=array_values($this->input->post('commodity_total_units'));		
 		 $source_of_item=array_values($this->input->post('source_of_item'));
 		 $date_of_entry_=($form_type=='first_run') ? date('y-m-d H:i:s') : array_values($this->input->post('date_received'));
-	  print_r($date_of_entry_);
+	
          $count=count($commodity_id);
 		 $commodity_id_array=$data_array_facility_issues=$data_array_facility_transaction=array(); 
 
