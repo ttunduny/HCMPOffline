@@ -531,6 +531,9 @@ endif;
             subtitle: {text: 'Source: HCMP', x: -20 },
             xAxis: { categories: $graph_categories },
             tooltip: { crosshairs: [true,true] },
+                scrollbar: {
+               enabled: true
+               },
                plotOptions: {
                  series: {
                     stacking: '$stacking',
