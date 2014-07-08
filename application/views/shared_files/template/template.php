@@ -79,7 +79,7 @@ border-radius:0;
 background-color: white;
 border-color: #e7e7e7;
 }
-.modal-content
+.modal-content,.form-control
 {
   border-radius: 0 !important;
 }
