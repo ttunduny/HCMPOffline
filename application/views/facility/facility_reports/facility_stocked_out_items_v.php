@@ -18,6 +18,7 @@
 $day=date('j M, Y ',strtotime($facility_stock_data['last_day']));
 $ts1 = strtotime($facility_stock_data['last_day']); $ts2 = strtotime(date("Y/m/d")); $seconds_diff = $ts2 - $ts1;
 $days= floor($seconds_diff/3600/24);
+$days=$days<0 ? 0: $days;
 			echo "<tr>
 			<td>$facility_stock_data[district]</td>
 			<td>$facility_stock_data[facility_name]</td>

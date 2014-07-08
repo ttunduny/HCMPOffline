@@ -9,7 +9,7 @@
 		<option value="2013">2013</option>
 </select>
 	<select name="month" id="month_filter" >
-			<option value="null" selected="selected">Select month</option>
+			<option value="NULL" selected="selected">Select month</option>
 			<option value="01">Jan</option>
 			<option value="02">Feb</option>
 			<option value="03">Mar</option>
@@ -43,16 +43,18 @@
 	
 			$("#filter").click(function() 
 			{
-				var url = "reports/filter_expiries/"+
-				        $("#year_filter").val()+
-				        "/"+$("#month_filter").val()+
-				        "/"+"<?php echo $district_id;?>"+
-				        "/"+$("#plot_value_filter").val()+
-				        "/"+"<?php echo $facility_code;?>";
+
+				//var url = "reports/filter_expiries/"+
+				var url = "reports/get_county_cost_of_expiries_new/"+
+		        $("#year_filter").val()+
+		        "/"+$("#month_filter").val()+
+		        "/"+"<?php echo $district_id;?>"+
+		        "/"+$("#plot_value_filter").val()+
+		        "/"+"<?php echo $facility_code;?>";
         	ajax_request_replace_div_content(url,'.graph-section');
 		
           });
-	
+
 
   });
 </script>

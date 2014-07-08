@@ -136,7 +136,7 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo ($order_det
 <button type="button" class="add btn btn-sm btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Item</button></div>
 <?php else: ?>
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
-<button type="button" class="btn btn-success test"><span class="glyphicon glyphicon-open"></span>Edit Order</button></div>
+<button type="button" class="btn btn-success reject_fixed"><span class="glyphicon glyphicon-open"></span>Edit Order</button></div>
 <?php endif; endif?>
 </div>
 </form>  
@@ -277,6 +277,11 @@ var $table = $('#example');
      $('#rejected_admin').val(1);
      save_the_order_form()
      });
+     $('.reject_fixed').on('click', function() {
+     $('#rejected').val(1);
+     save_the_order_form()
+     });
+
      function save_the_order_form(){
      var order_total=$('#total_order_value').val();
      var workload=$('#workload').val();

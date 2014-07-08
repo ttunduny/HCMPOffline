@@ -353,10 +353,10 @@ endif;
     ->setCellValue('H7', $facility_details[0]['county'])
 	->setCellValue('H8', $facility_details[0]['order_date']);
    //  Loop through each row of the worksheet in turn
-for ($row = 1; $row <= $highestRow; $row++){ 
+for ($row = 17; $row <= $highestRow; $row++){ 
     //  Read a row of data into an array
     $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);							  
-   if(isset($rowData[0][2]) && $rowData[0][2]!='Product Code'){
+   if(isset($rowData[0][2])){
    	foreach($facility_stock_data_item as $facility_stock_data_item_){
    	if(in_array($rowData[0][2], $facility_stock_data_item_)){
    	$key = array_search($rowData[0][2], $facility_stock_data_item_);
@@ -400,7 +400,8 @@ for ($row = 1; $row <= $highestRow; $row++){
 	
     $highestColumn = $sheet->getHighestColumn();
 	$temp=array();
-
+    $facility_code= $sheet->getCell('H4')->getValue();
+	
    //  Loop through each row of the worksheet in turn
 for ($row = 1; $row <= $highestRow; $row++){ 
     //  Read a row of data into an array
@@ -429,7 +430,7 @@ array_push($temp,array('sub_category_name'=>$data['sub_category_name'],'commodit
    	} 	
    }
 }
-$facility_code= $sheet->getCell('H4')->getValue();
+
    unset($objPHPExcel);
   return(array('row_data'=>$temp,'facility_code'=>$facility_code));
    endif;
@@ -464,6 +465,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
 </style>';
             $name=$this -> session -> userdata('full_name');
 	        $this->mpdf = new mPDF('', 'A4-L', 0, '', 15, 15, 16, 16, 9, 9, '');
+			$this->mpdf->ignore_invalid_utf8 = true;
             $this->mpdf->WriteHTML($html_title);
             $this->mpdf->defaultheaderline = 1;  
             $this->mpdf->simpleTables = true;
@@ -503,6 +505,23 @@ endif;
 		//return ($graph_series_data[0]); key		
 		//$size_of_graph=sizeof($graph_series_data[key($graph_series_data)])*200;
 		//set up the graph here
+		if($graph_type=="bar"){
+		$data_=" series: {
+                    stacking: '$stacking',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }";	
+		}else{
+			$data_="column: {
+                    stacking: '$stacking',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }";	
+		}
 		$high_chart .="
 		$('#$graph_id').highcharts({
 		    chart: { zoomType:'x', type: '$graph_type'},
@@ -512,8 +531,11 @@ endif;
             subtitle: {text: 'Source: HCMP', x: -20 },
             xAxis: { categories: $graph_categories },
             tooltip: { crosshairs: [true,true] },
+                scrollbar: {
+               enabled: true
+               },
                plotOptions: {
-                column: {
+                 series: {
                     stacking: '$stacking',
                     dataLabels: {
                         enabled: true,

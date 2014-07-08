@@ -1,3 +1,6 @@
+<style>
+	.big{ width: 150px !important; }
+</style>
 <div class="container" style="width: 94%; margin: auto;">
 <span  class='label label-info'>To Issue Commodities 
 	i) Select commodity to issue 
@@ -63,10 +66,11 @@ endforeach;
 						<input type="hidden" id="0" name="commodity_id[0]" value="" class="commodity_id"/>
 						<input type="hidden" id="0" name="total_units[0]" value="" class="total_units"/>
 						<input type="hidden" name="commodity_balance[0]" value="0" class="commodity_balance"/>
-						<input type="hidden" name="facility_stock_id[0]" value="0" class="facility_stock_id"/>	
+						<input type="hidden" name="facility_stock_id[0]" value="0" class="facility_stock_id"/>
+						<input type="hidden" name="manufacture[0]" value="0" class="manufacture"/>	
 						<input type="text" class="form-control input-small supplier_name" readonly="readonly" name="supplier_name[]"/></td>
 			            <td><input  type="text" class="form-control input-small unit_size" readonly="readonly"  /></td>
-						<td><select class="form-control input-small batch_no big" name="batch_no[0]"></select></td>
+						<td><select class="form-control big batch_no big" name="batch_no[0]"></select></td>
 						<td><input type='text' class='form-control input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
 												<td>
 <input class='form-control input-small clone_datepicker_normal_limit_today' 
@@ -77,8 +81,8 @@ type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="re
 			<option value="Pack_Size">Pack Size</option>
 			<option value="Unit_Size">Unit Size</option>
 			</select></td>
-						<td><input class='form-control input-small quantity_issued' type="text" value="0"  name="quantity_issued[0]"  required="required"/></td>
-						<td><input class='form-control input-small balance' type="text" value="" readonly="readonly" /></td>
+						<td><input class='form-control big quantity_issued' type="text" value="0"  name="quantity_issued[0]"  required="required"/></td>
+						<td><input class='form-control big input-small balance' type="text" value="" readonly="readonly" /></td>
 
 						<td><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Remove Row</button></td>
 			</tr>
@@ -144,10 +148,12 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 		});	
             ///when changing the commodity combobox
       		$(".desc").on('change',function(){
+      			
       		var row_id=$(this).closest("tr").index();	
       		var locator=$('option:selected', this);
 			var data =$('option:selected', this).attr('special_data'); 
-	       	var data_array=data.split("^");	       	
+	       	var data_array=data.split("^");	 
+	           	
 	        locator.closest("tr").find(".unit_size").val(data_array[1]);
 	     	locator.closest("tr").find(".supplier_name").val(data_array[2]);
 	     	locator.closest("tr").find(".commodity_id").val(data_array[0]);
@@ -155,8 +161,8 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 	     	locator.closest("tr").find(".total_units").val(data_array[3]);
 	     	locator.closest("tr").find(".expiry_date").val("");
 	     	locator.closest("tr").find(".quantity_issued").val("0");
-	     	locator.closest("tr").find(".clone_datepicker_normal_limit_today").val("");	     	
-
+	     	locator.closest("tr").find(".clone_datepicker_normal_limit_today").val("");	  
+	     	    	
 			var commodity_id=data_array[0];
 			var stock_data=extract_data(data_array[0],commodity_id,'batch_data');
             var dropdown="<option special_data=''>--select Batch--</option>"+stock_data[0];
@@ -181,6 +187,8 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
               }
                });		        
 		        var remaining_items=total_stock_bal-total_issues_for_this_item;	
+		
+		        locator.closest("tr").find(".manufacture").val(stock_data[4]);
 		        locator.closest("tr").find(".facility_stock_id").val(stock_data[1]);	        
 				locator.closest("tr").find(".batch_no").html(dropdown);
 				locator.closest("tr").find(".expiry_date").val(""+stock_data[3]+"" );
@@ -238,11 +246,13 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			var data =$('option:selected', this).attr('special_data'); 
 	       	var data_array=data.split("^");	
 	       if(data_array[0]!=''){
+	       	alert(data_array[4]);
 	       	var new_date=$.datepicker.formatDate('d M yy', new Date(data_array[0]));
 	       	var total_issues=0;
 	      	var total_stock_bal=data_array[1];	
             var commodity_stock_id_old=parseInt($("input[name='commodity_id["+row_id+"]']").val());
             var facility_stock_id_current=parseInt(data_array[2]);
+            	
             $("input[name='facility_stock_id["+row_id+"]']").val(data_array[2]);     	
 		        /* Check for all commodities that have the same id as the current item selected
 		         * then sum up all the issues above the given item
@@ -259,11 +269,13 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 		        locator.closest("tr").find(".expiry_date").val(""+new_date+"");	        		
 			    locator.closest("tr").find(".quantity_issued").val("0");
 			    locator.closest("tr").find(".balance").val(locator.closest("tr").find(".commodity_balance").val());
+			    locator.closest("tr").find(".manufacture").val(data_array[5]);
 			    }else{
-			      locator.closest("tr").find(".expiry_date").val("");
+			    locator.closest("tr").find(".expiry_date").val("");
 			    locator.closest("tr").find(".balance").val("");
 			    locator.closest("tr").find(".available_stock").val("0");
 			    locator.closest("tr").find(".quantity_issued").val("0");	
+			    //locator.closest("tr").find(".manufacture").val(data_array[5]);
 			    }
 			  			
       }); // change issue type
@@ -335,7 +347,8 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			cloned_object.find(".commodity_unit_of_issue").attr('name','commodity_unit_of_issue['+next_table_row+']');
 			cloned_object.find(".expiry_date").attr('name','expiry_date['+next_table_row+']');
 			cloned_object.find(".desc").attr('name','desc['+next_table_row+']');
-			cloned_object.find(".commodity_balance").attr('name','commodity_balance['+next_table_row+']');					
+			cloned_object.find(".commodity_balance").attr('name','commodity_balance['+next_table_row+']');	
+			cloned_object.find(".manufacture").attr('name','manufacture['+next_table_row+']');					
             cloned_object.find("input").attr('value',"");     
             cloned_object.find(".quantity_issued").attr('value',"0");   
             cloned_object.find(".quantity_issued").removeAttr('readonly');  
@@ -346,7 +359,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
             cloned_object.find(".batch_no").html("");  
             // remove the error class
             cloned_object.find("label.error").remove();           
-			cloned_object.insertAfter('#facility_issues_table tr:last');	
+			cloned_object.insertAfter('#facility_issues_table tr:last').find('input').val('');;	
 			refresh_clone_datepicker_normal_limit_today();	
         }
 		function check_if_the_form_has_been_filled_correctly(selector_object){
@@ -373,36 +386,46 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 
 		}//extract facility_data  from the json object 		
 		function extract_data(commodity_id_,commodity_stock_row_id,type_of_drop_down){
-			var row_id=0; var dropdown='';var facility_stock_id_='';  var total_stock_bal=0; var expiry_date='';
+			var row_id=0; var dropdown='';var facility_stock_id_='';  var total_stock_bal=0; var expiry_date=manu='';
 			$.each(facility_stock_data, function(i, jsondata) {
 			var commodity_id=facility_stock_data[i]['commodity_id'];
 			if(parseInt(commodity_id)==commodity_id_){
 				if(type_of_drop_down=='batch_data'){//check if the user option is to create a batch combobox
+				
 					if(row_id==0){//if the row is 0, create a selected default value
+						
 					var facility_stock_id=facility_stock_data[i]['facility_stock_id'];	
-			  		dropdown+="<option selected='selected'"+
+					
+			  		dropdown+="<option selected='selected' "+
 			  		 "special_data="+facility_stock_data[i]['expiry_date']+
 			  		 "^"+facility_stock_data[i]['commodity_balance']+
 			  		 "^"+facility_stock_data[i]['facility_stock_id']+
-			  		 "^"+facility_stock_data[i]['commodity_balance']+">";
-			  				 expiry_date=$.datepicker.formatDate('d M yy', new Date(facility_stock_data[i]['expiry_date']));
+			  		 "^"+facility_stock_data[i]['commodity_balance']+
+			  		 "^"+facility_stock_data[i]['manufacture']+">";
+			  				 expiry_date=$.datepicker.formatDate('dMy', new Date(facility_stock_data[i]['expiry_date']));
 			  				 bal=facility_stock_data[i]['commodity_balance'];
 			  				 facility_stock_id_=facility_stock_data[i]['facility_stock_id'];
 			  				 total_stock_bal=facility_stock_data[i]['commodity_balance'];
-			  				 drug_id_current=commodity_id_;			  				 
+			  				 drug_id_current=commodity_id_;	
+			  				manu=facility_stock_data[i]['manufacture'];		  				 
 			  			}else{
+			  			
 			  		dropdown+="<option "+
 			  		 "special_data="+facility_stock_data[i]['expiry_date']+
 			  		 "^"+facility_stock_data[i]['commodity_balance']+
 			  		 "^"+facility_stock_data[i]['facility_stock_id']+
-			  		 "^"+facility_stock_data[i]['commodity_balance']+">";	 
-			  			total_stock_bal=facility_stock_data[i]['commodity_balance'];}			  			
+			  		 "^"+facility_stock_data[i]['commodity_balance']+
+			  		 "^"+facility_stock_data[i]['manufacture']+">";	 
+			  			total_stock_bal=facility_stock_data[i]['commodity_balance'];
+			  			 manu=facility_stock_data[i]['manufacture'];
+			  			}			  			
 						dropdown+=facility_stock_data[i]['batch_no'];						
-						dropdown+="</option>";}
+						dropdown+="</option>";
+						}
 			row_id++; //auto-increment the checker
 			}
 				});
-			return 	[dropdown,facility_stock_id_,total_stock_bal,expiry_date];
+			return 	[dropdown,facility_stock_id_,total_stock_bal,expiry_date,manu];
 		}
 	});	
 </script>

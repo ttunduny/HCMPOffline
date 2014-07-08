@@ -90,6 +90,7 @@ class facility_stocks_temp extends Doctrine_Record {
         		and f_m_s.facility_code = f.facility_code
         		$and_data
 				group by cm.id
+
 		 ");
 
 		return $query_1;

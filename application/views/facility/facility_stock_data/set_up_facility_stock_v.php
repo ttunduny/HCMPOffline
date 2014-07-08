@@ -44,7 +44,8 @@
 <hr />
 <div class="container-fluid">
 <div style="float: right">
-<button class="save btn btn-success"><span class="glyphicon glyphicon-open"></span>Update</button></div>
+<button class="save btn btn-success">
+<span class="glyphicon glyphicon-open"></span>Update</button></div>
 </div>
 </div>
 <script>
@@ -86,7 +87,10 @@ $(document).ready(function() {
     }  
 	// finally calculate the stock 
     calculate_actual_stock(actual_unit_size,commodity_unit_of_issue,num,".actual_quantity",selector_object);
-    get_the_data_from_the_form_to_save(selector_object);
+   var data= get_the_data_from_the_form_to_save(selector_object);
+     //save the data in the db          
+	var url = "<?php echo base_url().'stock/save_set_up_facility_stock'?>";	  
+    ajax_simple_post_with_console_response(url, data);	
 	});	
 	$('.commodity_unit_of_issue').on('change',function(){
     var selector_object=$(this);
@@ -128,6 +132,11 @@ $(document).ready(function() {
 	return data;
 	   	
 	}
+	$('.save').button().click(function() {
+		//alert();
+		//window.
+		window.open("<?php echo base_url('stock/amc')?>",'_parent');
+	});
 })
  
 </script>
