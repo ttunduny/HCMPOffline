@@ -1068,7 +1068,7 @@ class Reports extends MY_Controller
 	}
 	     
 	 //For system uptake option on SUB-COUNTY dashboard
-	 public function get_sub_county_facility_mapping_data($year = null, $month = NULL) 
+	/* public function get_sub_county_facility_mapping_data($year = null, $month = NULL) 
 	 {
 	 	$identifier = $this -> session -> userdata('user_indicator');
 		$year = isset($year) ? $year : date("Y");
@@ -1227,7 +1227,7 @@ class Reports extends MY_Controller
 		endif;
 		
 
-	}     
+	}    */ 
 	 //For system uptake option on SUB-COUNTY dashboard
 	 public function get_sub_county_facility_mapping_data($year = null, $month = NULL) 
 	 {
