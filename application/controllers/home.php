@@ -86,7 +86,7 @@ class Home extends MY_Controller
 			break;	
 			case 'county':
 			$view = 'shared_files/template/template';
-			$data['content_view'] = "shared_files/404";
+			$data['content_view'] = "subcounty/subcounty_home_v";
 			break;	
         endswitch;
 

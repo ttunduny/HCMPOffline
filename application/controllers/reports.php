@@ -23,6 +23,7 @@ class Reports extends MY_Controller
 				$data['content_view'] = "";
 				$view = 'shared_files/template/dashboard_template_v';
 				break;
+		    case county :
 			case district :
 				$county_id = $this -> session -> userdata('county_id');
 	            $data['district_data'] = districts::getDistrict($county_id);
