@@ -4,14 +4,14 @@
  	}
  </style>
  <div style="width: 100%; margin: auto;">
-<span  class='label label-info'>Enter Order Quantity and Comment,
-Order Quantity (Quarterly) = ((Average Monthly Consumption * 3) - Closing Stock) + AMC</span><br>
+<span  class='label label-info' style="display: inline">Enter Order Quantity and Comment,
+Order Quantity (Quarterly) = ((Average Monthly Consumption * <div id="month" style="display: inline"> 3</div>) - Closing Stock) + AMC</span><br>
 <?php  $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order',$att); //?>
 <div class="row" style="padding-left: 1%;">
 	<div class="col-md-2">
 	<b>*Select Ordering Frequency</b> <select class="form-control" name="order_period" id="order_period">
- 	<option>Quarterly</option>	
- 	<option>Monthly</option>
+ 	<option value="3" selected="selected">Quarterly</option>	
+ 	<option value="1">Monthly</option>
  	</select> 	
 	</div>
 	<div class="col-md-2">
@@ -94,9 +94,10 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 				<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="adjustmentpve['.$i.']"'; ?> value="<?php echo $facility_order[$i]['adjustmentpve']?>" /></td>
 							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="losses['.$i.']"'; ?> value="<?php echo $facility_order[$i]['losses'] ?>" /></td>
 							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="days['.$i.']"'; ?> value="<?php echo $facility_order[$i]['days_out_of_stock'];?>" /></td>
-							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="closing['.$i.']"'; ?> value="<?php echo $facility_order[$i]['closing_stock'];?>" /></td>
-							<td><input class="form-control input-small" readonly="readonly" type="text" <?php echo 'name="amc['.$i.']"'; ?> value="<?php echo $facility_order[$i]['historical'];?>" /></td>
-							<td><input class="form-control input-small" readonly="readonly" type="text" <?php echo 'name="suggested['.$i.']"';?> value="0"/></td>
+							<td><input class="form-control input-small closing" readonly="readonly" type="text"<?php echo 'name="closing['.$i.']"'; ?>
+								 value="<?php echo ($facility_order[$i]['closing_stock']<0)? 0:$facility_order[$i]['closing_stock'] ;?>" /></td>
+							<td><input class="form-control input-small amc" readonly="readonly" type="text" <?php echo 'name="amc['.$i.']"'; ?> value="<?php echo $facility_order[$i]['historical'];?>" /></td>
+							<td><input class="form-control input-small suggested" readonly="readonly" type="text" <?php echo 'name="suggested['.$i.']"';?> value="0"/></td>
 							<td><input class="form-control input-small quantity" type="text" <?php echo 'name="quantity['.$i.']"';?> value="<?php $qty=$facility_order[$i]['quantity_ordered'];
 							if($qty>0){echo $qty;} else echo 0;?>"/></td>
 							<td><input class="form-control input-small actual_quantity" readonly="readonly" type="text" <?php echo 'name="actual_quantity['.$i.']"';?> value="0"/></td>
@@ -122,16 +123,12 @@ $(document).ready(function() {
 	var drawing_rights_balance=$('#actual_drawing_rights').val();
 	//auto compute the values
 	calculate_totals();
-    var $table = $('#example');
-//float the headers
-  $table.floatThead({ 
-	 scrollingTop: 100,
-	 zIndex: 1001,
-	 scrollContainer: function($table){ return $table.closest('.col-md-3'); }
-	});	
+	calculate_suggested_value(3);
 	//datatables settings 
 	$('#example').dataTable( {
        "sPaginationType": "bootstrap",
+       "sScrollY": "310px",
+	     "sScrollX": "100%",
         "oLanguage": {
                         "sLengthMenu": "_MENU_ Records per page",
                         "sInfo": "Showing _START_ to _END_ of _TOTAL_ records"},
@@ -142,7 +139,7 @@ $(document).ready(function() {
     $(".add").button().click( function (){
 	var body_content='<table class="table-update"><thead><tr><th>Description</th><th>Commodity Code</th><th>Order Unit Size</th><th>Order Unit Cost (Ksh)</th>'+				   	    
 					'</tr></thead><tbody><tr><td>'+
-                    '<select id="desc" name="desc" class="form-control"><option value="0">--Select Commodity Name--</option>'+
+                    '<select name="desc" class="form-control desc"><option value="0">--Select Commodity Name--</option>'+
                     '<?php	foreach($facility_commodity_list as $commodity):
 						     $commodity_id=$commodity['commodity_id'];
 							 $commodity_code=$commodity['commodity_code'];							
@@ -163,7 +160,7 @@ $(document).ready(function() {
         '<button type="button" class="btn btn-primary add_item"><span class="glyphicon glyphicon-plus"></span>Add</button>');
     });
     // add item modal box
-    $("#desc").on("change", function (){
+    $('#main-content').on("change", ".desc", function (){
     var data = $('option:selected', this).attr('special_data');  
 				var code_array = data.split("^");
 				var commodity_id = code_array[0];
@@ -244,7 +241,7 @@ $(document).ready(function() {
 	$(".test").button().click( function (){
     var table_data='<div class="row" style="padding-left:2em"><div class="col-md-6"><h4>Order Summary</h4></div></div>'+
     '<div class="row" style="padding-left:2em"><div class="col-md-6">Order Form No</div><div class="col-md-6">'+($("#order_no").val())+'</div></div>'+
-    '<div class="row" style="padding-left:2em"><div class="col-md-6">Order Frequency</div><div class="col-md-6">'+($("#order_period").val())+'</div></div>'+
+    '<div class="row" style="padding-left:2em"><div class="col-md-6">Order Frequency</div><div class="col-md-6">'+($("#order_period option:selected").text())+'</div></div>'+
     '<div class="row" style="padding-left:2em"><div class="col-md-6">In-Patient Bed Days</div><div class="col-md-6">'+($("#bed_capacity").val())+'</div></div>'+
     '<div class="row" style="padding-left:2em"><div class="col-md-6">Total OPD Visits & Revisits:</div><div class="col-md-6">'+($("#workload").val())+'</div></div>'+
     '<div class="row" style="padding-left:2em"><div class="col-md-6">Initial Drawing Rights (Ksh)</div><div class="col-md-6">'+number_format(drawing_rights_balance, 2, '.', ',')+'</div></div>'+
@@ -301,6 +298,13 @@ $(document).ready(function() {
      	
      }
      });
+     //change ordeing cycle
+     $('#main-content').on('change','#order_period',function() {
+     var month=$(this).val(); 
+     $("#month").html(month);
+     calculate_suggested_value(month);
+     	
+     });
 	function calculate_totals(){
 	var order_total=0;
 	var balance=0
@@ -323,8 +327,20 @@ $(document).ready(function() {
      $("#total_order_balance_value").val(balance)
      $("#total_order_value").val(order_total);
 		
+	}
+	
+	function calculate_suggested_value(month){
+		$("input[name^=suggested]").each(function() {
+        var amc=parseInt($(this).closest("tr").find(".amc").val());
+	 	var closing_stock=parseInt($(this).closest("tr").find(".closing").val());
+        var suggested=0;       
+        if(closing_stock<0) {closing_stock=0;}
+        suggested=((amc*month)-closing_stock)+amc;
+        if(suggested<0) {suggested=0;}
+        $(this).val(suggested)
+     });//check if order total is a NAN
 	}		
     
-});//
+});
 
 </script>

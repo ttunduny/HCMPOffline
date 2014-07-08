@@ -244,14 +244,14 @@ if($this->input->post('commodity_id')):
 		 $manu=array_values($this->input->post('commodity_manufacture'));
 		 $total_unit_count=array_values($this->input->post('commodity_total_units'));		
 		 $source_of_item=array_values($this->input->post('source_of_item'));
-		 $date_of_entry=($form_type=='first_run') ? date('y-m-d H:i:s') : array_values($this->input->post('date_received'));
-		 
+		 $date_of_entry_=($form_type=='first_run') ? date('y-m-d H:i:s') : array_values($this->input->post('date_received'));
+	
          $count=count($commodity_id);
 		 $commodity_id_array=$data_array_facility_issues=$data_array_facility_transaction=array(); 
 
          //collect n set the data in the array
 		for($i=0;$i<$count;$i++):
-            $date_of_entry=($form_type=='first_run') ? $date_of_entry :date('Y-m-d',strtotime($date_of_entry[$i])) ;
+            $date_of_entry=($form_type=='first_run') ? date('y-m-d H:i:s') :date('Y-m-d',strtotime($date_of_entry_[$i])) ;
 			$mydata=array('facility_code'=>$facility_code,
 			'commodity_id'=>$commodity_id[$i],
 			'batch_no'=>$batch_no[$i],
@@ -261,6 +261,7 @@ if($this->input->post('commodity_id')):
 			'current_balance'=>$total_unit_count[$i],
 			'source_of_commodity'=>$source_of_item[$i],
 			'date_added'=>$date_of_entry );
+			
              //get the closing stock of the given item  
             $facility_stock_=facility_stocks::get_facility_commodity_total($facility_code,$commodity_id[$i], $date_of_entry)->toArray();
 			//update the facility stock table
@@ -354,6 +355,8 @@ endif;
 			 //get the closing stock of the given item           
             $facility_stock=facility_stocks::get_facility_commodity_total($facility_code,$commodity_id[$i])->toArray();	
             // save this infor in the issues table
+            $facility_name=isset($service_point[$i]) ? Facilities::get_facility_name2($service_point[$i]) : null;
+	 $facility_name=isset($facility_name)? $facility_name['facility_name']: 'N/A';
             $total_unit_count_=$total_unit_count[$i]*-1;
 			$mydata=array('facility_code'=>$facility_code,
 			's11_No' => '(+ve Adj) Stock Addition',
@@ -362,7 +365,7 @@ endif;
 			'expiry_date'=> date('y-m-d', strtotime(str_replace(",", " ",$expiry_date[$i]))),
 			'balance_as_of'=>$facility_stock[0]['commodity_balance'],
 			'date_issued' => date('y-m-d'),
-			'issued_to'=>"inter-facility donation: MFL NO ".$service_point[$i],
+			'issued_to'=>"inter-facility donation: ".$facility_name,
 			'qty_issued' => $total_unit_count_,
 			'issued_by' =>$this -> session -> userdata('user_id') ); //$this -> session -> userdata('identity')
 			 // update the issues table 
