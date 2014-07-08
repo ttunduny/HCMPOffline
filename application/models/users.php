@@ -143,6 +143,27 @@ class Users extends Doctrine_Record {
 				");
 		return $query;
 	}
+	
+	public static function get_user_list_all() {
+
+		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id as district_id,d.district,c.id as county_id,c.county,f.facility_code,
+				f.facility_name,f.owner,f.type,a.id as level_id,f.level,a.level,u.status FROM hcmp.user u 
+				LEFT JOIN hcmp.districts d
+				ON
+				d.id=u.district
+				LEFT JOIN hcmp.counties c
+				ON
+				c.id=d.county
+				LEFT JOIN hcmp.facilities f
+				ON
+				u.facility=f.facility_code
+				LEFT JOIN hcmp.access_level a
+				ON
+				a.id=u.usertype_id
+				");
+		return $query;
+	}
 	//////get the dpp details 
 public static function get_dpp_details($distirct){
 	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("district=$distirct and usertype_id='3' ");
@@ -164,6 +185,12 @@ public static function get_dpp_details($distirct){
 		return $result;
 	}
 	
+	public static function get_users_count() {
+
+		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users")  ->Where("usertype_id !=9") -> groupBy("status");
+		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result;
+	}
 	public static function check_activation($cipher) {
 
 		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("activation='$cipher'")->andWhere("status = 0");
