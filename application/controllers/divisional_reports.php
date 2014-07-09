@@ -23,6 +23,8 @@ class Divisional_Reports extends MY_Controller
 	//used for both the subcounty and county level program reports
 	 public function program_reports()
 	 {
+	 	//echo $data['active_tab'];
+//exit;
 	 	$user_indicator = $district_id = $this -> session -> userdata('user_indicator');
 	 	switch ($user_indicator) 
 	 	{
@@ -113,7 +115,7 @@ class Divisional_Reports extends MY_Controller
 		 break;
 		}
  		
- 		
+ 		$data['active_panel']='divisional';
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		$this -> load -> view('shared_files/template/template', $data);
@@ -202,8 +204,10 @@ public function tb_report(){
 		$data['facility_name'] = ($facility_info['facility_name']);
 		$data['facility_type_'] = ($facility_info['owner']);
 
+
 	    $data['title'] = "Tuberculosis Report";
 		$data['banner_text'] = "Facility Tuberculosis & Leprosy Commodities";
+
 		$data['graph_data'] = $faciliy_expiry_data;
 		$data['content_view'] = "facility/facility_reports/tb_report";
 		$view = 'shared_files/template/template';
@@ -315,14 +319,8 @@ public function save_tb_data(){
 			'report_date' => $save_time
 			);
 $this->db->insert('tuberculosis_report_info',$data_);
-	echo "Success";
-		exit;
-	// END OF SAVING data
 
-	foreach ($values as $key => $value) {
-		$no = count($values['table']);
-		
-}
+$this->program_reports();
 }
 
 	//For the RH Report
