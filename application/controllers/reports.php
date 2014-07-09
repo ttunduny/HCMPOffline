@@ -508,7 +508,41 @@ class Reports extends MY_Controller
 		$data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v": "shared_files/report_templates/side_bar_v" ;
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['expiry_data'] = Facility_stocks::All_expiries($facility_code);
+
+		echo "<pre>";
+		print_r($data['expiry_data']);
+		echo "</pre>";exit;
+
 		$data['report_view'] = "facility/facility_reports/expiries_v";
+        $data['active_panel']='expiries';
+		$this -> load -> view("shared_files/template/template", $data);
+
+	}
+
+	public function expiry_tracking($facility_code=null){
+		$facility_code=isset($facility_code) ? $facility_code: $this -> session -> userdata('facility_id');
+		$facility = $this -> session -> userdata('facility_id');
+		$user_id = $this -> session -> userdata('user_id');
+		$user_names = Users::get_user_names($user_id);
+		$data['user_names'] = ($user_names[0]['fname']." ".$user_names[0]['lname']);
+		
+		$facility_info = tb_data::get_facility_name($facility);
+		$facility_district = $facility_info['district'];
+		$district_name_ = Districts::get_district_name_($facility_district);
+		$district_name = $this -> session -> userdata('district');
+		
+		$data['facility_code'] = $facility_info['facility_code']; 
+		$data['district_region_name'] = $district_name_['district'];
+		$data['facility_name'] = ($facility_info['facility_name']);
+		$data['facility_type_'] = ($facility_info['owner']);
+		$data['expiry_data'] = Facility_stocks::All_expiries($facility_code);
+		$facility_name=Facilities::get_facility_name_($facility_code)->toArray();
+		$data['facility_name']=$facility_name[0]['facility_name'];
+		$data['title'] = "Expiriy Tracking Chart";
+		$data['banner_text'] = "Expiriy Tracking Chart";
+		//$data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v": "shared_files/report_templates/side_bar_v" ;
+		$data['content_view'] = "facility/facility_reports/expiries_tracking_chart";
+		//$data['report_view'] = "facility/facility_reports/expiries_tracking_chart";
         $data['active_panel']='expiries';
 		$this -> load -> view("shared_files/template/template", $data);
 
@@ -2306,9 +2340,7 @@ class Reports extends MY_Controller
 		 $data['categories']= commodity_sub_category::get_all_pharm();
 		 $data['number_of_tracer_items'] = count(facility_stocks_temp::get_tracer_item_names());
 
-
 	     return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
-
 	    }
 
 	    public function tb_report(){
