@@ -502,7 +502,7 @@ endif;
 		$graph_yaxis_title=$graph_data['graph_yaxis_title'];
 		$graph_series_data=$graph_data['series_data'];
 		$array_size=sizeof($graph_data['series_data'][key($graph_data['series_data'])]);			
-		$height=$array_size<12? null :$array_size*40;
+		$height=$array_size<12? null :$array_size*30;
 		$height=isset($height) ? ", height:$height" : null;
 		//set up the graph here
 		if($graph_type=="bar"){
