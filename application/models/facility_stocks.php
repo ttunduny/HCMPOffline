@@ -185,7 +185,7 @@ public static function get_county_cost_of_exipries_new($facility_code=null,$dist
 	 $and_data =($district_id>0) ?" AND di.id = '$district_id'" : null;
 	 $and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
 	 $and_data .=($county_id>0) ?" AND c.id='$county_id'" : null;
-	 $and_data .=($month>0) ? " AND date_format( fs.expiry_date, '%m')=$month"  : null;
+	 //$and_data .=($month>0) ? " AND date_format( fs.expiry_date, '%m')=$month"  : null;
 	 $and_data .=($year>0) ? " AND DATE_FORMAT( fs.expiry_date,'%Y') =$year"  : null;  	 
 	 $group_by_a_month=isset($facility_code) && isset($district_id)? " GROUP BY fs.commodity_id having total>0" :( 
 	

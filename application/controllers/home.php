@@ -86,7 +86,7 @@ class Home extends MY_Controller
 			break;	
 			case 'county':
 			$view = 'shared_files/template/template';
-			$data['content_view'] = "shared_files/404";
+			$data['content_view'] = "subcounty/subcounty_home_v";
 			break;	
         endswitch;
 
@@ -133,14 +133,18 @@ class Home extends MY_Controller
     //get actual Expiries infor here
     $actual_expiries=count(Facility_stocks::All_expiries($facility_code));
 	//get items they have been donated for
-	$facility_donations=redistribution_data::get_all_active($facility_code)->count();
+	$facility_donations=redistribution_data::get_all_active($facility_code,"to-me")->count();
+	//get items they have been donated and are pending
+	$facility_donations_pending=redistribution_data::get_all_active($facility_code)->count();
 	return array('facility_stock_count'=>$facility_stock_count,
 	'faciliy_stock_graph'=>$faciliy_stock_data,
 	'items_stocked_out_in_facility'=>$items_stocked_out_in_facility,
 	'facility_order_count'=>$facility_order_count,
 	'potential_expiries'=>$potential_expiries,
 	'actual_expiries'=>$actual_expiries,
-	'facility_donations'=>$facility_donations);	
+	'facility_donations'=>$facility_donations,
+	'facility_donations_pending'=>$facility_donations_pending
+	);	
     }
 	
 }
