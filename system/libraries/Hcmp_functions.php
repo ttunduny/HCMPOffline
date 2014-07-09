@@ -497,13 +497,13 @@ endif;
 		$graph_title=$graph_data['graph_title'];
 		$graph_type=$graph_data['graph_type'];
         $stacking=isset($graph_data['stacking']) ? $graph_data['stacking'] : null;
-		$graph_categories=json_encode($graph_data['graph_categories']);
+		$graph_categories=json_encode(array_map('utf8_encode',$graph_data['graph_categories'])); 
 		//echo json_encode($graph_data['graph_categories']);
 		$graph_yaxis_title=$graph_data['graph_yaxis_title'];
 		$graph_series_data=$graph_data['series_data'];
-		//$new_array=$graph_series_data;
-		//return ($graph_series_data[0]); key		
-		//$size_of_graph=sizeof($graph_series_data[key($graph_series_data)])*200;
+		$array_size=sizeof($graph_data['series_data'][key($graph_data['series_data'])]);			
+		$height=$array_size<12? null :$array_size*40;
+		$height=isset($height) ? ", height:$height" : null;
 		//set up the graph here
 		if($graph_type=="bar"){
 		$data_=" series: {
@@ -524,7 +524,7 @@ endif;
 		}
 		$high_chart .="
 		$('#$graph_id').highcharts({
-		    chart: { zoomType:'x', type: '$graph_type'},
+		    chart: { zoomType:'x', type: '$graph_type' $height },
             credits: { enabled:false},
             title: {text: '$graph_title'},
             yAxis: { min: 0, title: {text: '$graph_yaxis_title' }},
