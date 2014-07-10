@@ -1437,7 +1437,7 @@ class Reports extends MY_Controller
 	//}
 	public function get_county_facility_mapping_ajax_request($option = null) 
 	{
-		$district_id = $this -> session -> userdata('district_id');
+		//$district_id = $this -> session -> userdata('district_id');
 		$county_id = $this -> session -> userdata('county_id');
 		
 		$district_data = districts::getDistrict($county_id);
@@ -1475,8 +1475,11 @@ class Reports extends MY_Controller
 			foreach ($district_data as $district_detail) :
 
 				$district_id = $district_detail -> id;
+			
+			// echo "<pre>";print_r($district_id);echo "</pre>";
+		
 				$district_name = $district_detail -> district;
-				$get_facilities_which_went_online_ = facilities::get_facilities_which_went_online_($district_id, $facility_dates['date_when_facility_went_online']);
+				$get_facilities_which_went_online_ = facilities::get_facilities_which_went_online_(88, $facility_dates['date_when_facility_went_online']);
 				
 				$total = $get_facilities_which_went_online_[0]['total'];
 				$total_facilities = $get_facilities_which_went_online_[0]['total_facilities'];
@@ -1505,6 +1508,7 @@ class Reports extends MY_Controller
 		$table_data_summary .= "<tr>";
 
 		$checker = 1;
+
 		foreach ($district_total as $key => $value) :
 			$coverage = 0;
 			$using = 0;
@@ -1520,7 +1524,7 @@ class Reports extends MY_Controller
 			
 			$table_summary .= ($checker == 1) ? "<td><b>TOTAL: Facilities using HCMP</b></td><td>$value</td>" : "<td>$value</td>";
 			
-			$total_targetted_facility_list .= ($checker == 1) ? "<tr><td><b>TOTAL: Targetted Facilities in District</b></td><td>$district_total_facilities_targetted[$key]</td>":"<td>$district_total_facilities_targetted[$key]</td>";
+			$total_targetted_facility_list .= ($checker == 1) ? "<tr><td><b>TOTAL: Targetted Facilities in District</b></td><td>$district_total_facilities_using_hcmp[$key]</td>":"<td>$district_total_facilities_using_hcmp[$key]</td>";
 
 			$total_facilities_in_county = $total_facilities_in_county + $district_total_facilities[$key];
 			$targetted_total = $targetted_total + $district_total_facilities_targetted[$key];
@@ -1528,6 +1532,8 @@ class Reports extends MY_Controller
 			$total_facilities_targetted = 0;
 			@$targetted_vs_using_hcmp = round((($total_facilitites_using_hcmp /$total_facilities_targetted )) * 100, 1);
 			@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
+			
+			//echo "<pre> Value: ".$value." District ID: ".$district_id." DistName: ".$key."  Total Percentage: ".$total_facilitites_using_hcmp."   ";print_r($get_facilities_which_went_online_);echo "</pre>";
 			
 			$percentage_coverage_using .= ($checker == 1) ? "<tr><td><b>Using HCMP vs Targetted %</b></td>
 			<td>$targetted_vs_using_hcmp %</td>" : "<td>$using_percentage %</td>";
