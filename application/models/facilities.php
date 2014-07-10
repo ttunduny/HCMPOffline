@@ -67,18 +67,17 @@ class Facilities extends Doctrine_Record {
         and $where_clause");
         return $q;    
    }
-	public static function get_facility_name_($facility_code){
-				
-	if($facility_code!=NULL){
-		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("facility_code='$facility_code'");
-		$drugs = $query -> execute();
-		
-		
-		return $drugs;	
-	}	
-else{
-	return NULL;
-}	
+	public static function get_facility_name_($facility_code)
+	{			
+		if($facility_code!=NULL)
+		{
+			$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("facility_code='$facility_code'");
+			$drugs = $query -> execute();
+			return $drugs;	
+		}	
+		else{
+			return NULL;
+		}	
 			
 	}
 	   public static function get_facilities_monitoring_data($facility_code=null,$district_id=null,$county_id=null){

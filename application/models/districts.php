@@ -37,7 +37,8 @@ class Districts extends Doctrine_Record {
 		return $drugs[0];
 	}
 	
-	public static function get_district_name($district){
+	public static function get_district_name($district)
+	{
 	$query = Doctrine_Query::create() -> select("district") -> from("districts")->where("id='$district'");
 		$drugs = $query -> execute();
 		return $drugs;	
