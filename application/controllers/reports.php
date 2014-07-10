@@ -963,46 +963,7 @@ class Reports extends MY_Controller
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		
 	}
-	public function order_report()
-	{
-		$facility_code = $this -> session -> userdata('facility_id'); 
-		$facility_name = Facilities::get_facility_name2($facility_code);
-		$year = date("Y");
-						
-		$orders = facility_orders::get_facility_orders($facility_code);
-		
-		//Holds all the months of the year
-		//Build the line graph showing the expiries graph
-		$graph_data = array();
-		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
-		$graph_data = array_merge($graph_data,array("graph_title"=>'Total Orders for '.$facility_name['facility_name'].' for '.$year));
-		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
-		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Orders (values in KSHS)'));
-		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
-		$graph_data = array_merge($graph_data,array("series_data"=>array("Total Orders"=>array())));
-		//$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],$months);	
-		
-		foreach($orders as $facility_orders):
-			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_orders['month']));	
-			$graph_data['series_data']['Total Orders'] = array_merge($graph_data['series_data']['Total Orders'],array((int)$facility_orders['total_orders']));	
-		endforeach;
-		//create the graph here
-		$facility_order_data = $this->hcmp_functions->create_high_chart_graph($graph_data);
-				
-		$loading_icon = base_url().'assets/img/loader.GIF'; 
-		$facility_order_data = isset($facility_order_data)? $facility_order_data : "$('#graph-section').html('<img src=$loading_icon>')'" ;
-   			
-		$data['title'] = "Facility Orders";
-		$data['banner_text'] = "Facility Orders";
-		$data['graph_data'] = $facility_order_data;
-		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
-		$data['report_view']="facility/facility_reports/ajax/facility_orders_filter_v";
-		$data['content_view']="facility/facility_reports/reports_v";
-		$view = 'shared_files/template/template';
-		$this -> load -> view($view, $data);
-		
-
-	}
+	
 	
 	public function get_facility_json_data($district_id) {
 		echo json_encode(facilities::get_facilities_which_are_online($district_id));
@@ -2049,47 +2010,52 @@ class Reports extends MY_Controller
 	}
 
 	public function load_stock_level_graph($district_id=NULL, $county_id=NULL, $facility_code=NULL,$commodity_id=null){
-		   $name =null;
-		   $title=null;
-		 // echo $commodity_id;exit;
-           if ($this -> session -> userdata('user_indicator') == 'district') :
-			   
-			$county_id= isset($county_id) && ($county_id!='NULL') ? $district_id: null;
-			$district_id = isset($district_id) && ($district_id!='NULL') ? $district_id:$this -> session -> userdata('district_id');
-			$facility_code = isset($facility_code) && ($facility_code!='NULL') ? $facility_code :null;
-			elseif ($this -> session -> userdata('user_indicator') == 'county') :
-			$county_id= isset($county_id) ? $district_id: $this -> session -> userdata('county_id');
-			$district_id = isset($district_id) ? $district_id:null;
-			$facility_code = isset($facility_code) ? $facility_code :null;
-			elseif ($this -> session -> userdata('user_indicator') == 'facility') :
-			$county_id= isset($county_id) ? $district_id: null;
-			$district_id = isset($district_id) ? $district_id:null;
-			$facility_code = isset($facility_code) ? $facility_code :$this -> session -> userdata('facility_code');
-			else :
-				
-			endif;
+			$county_id=$county_id=='NULL'? 
+			($this -> session -> userdata('user_indicator') == 'county' ? 
+			$this -> session -> userdata('county_id'): null) :$county_id;
+			$district_id=$district_id=='NULL'? 
+			($this -> session -> userdata('user_indicator') == 'district' ? 
+			$this -> session -> userdata('district_id'): null) :$district_id;
+			$facility_code=$facility_code=='NULL'? 
+			($this -> session -> userdata('user_indicator') == 'facility' ? 
+			$this -> session -> userdata('facility_code'): null) :$facility_code;
+            $commodity_id=$commodity_id=='NULL'? null: $commodity_id;
 			
          	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id);
-			
 			$month = date('F Y');
+			
 			if (isset($commodity_id)){
-				 $commodity_name = Commodities::get_details($commodity_id)->toArray();
+				$commodity_name = Commodities::get_details($commodity_id)->toArray();
 				$title .=' '.@$commodity_name[0]['commodity_name'];
 		}
 			 else{
 				 $commodity_name = null;
 			 }
 
-			
-			 if (isset($facility_code)){
+			if (isset($county_id)){
+				$county_name = counties::get_county_name($county_id);
+				$title .=' '.$county_name['county']." County ";
+		}
+			 else{
+				 $county_name = null;
+			 }
+			 
+			 if (isset($district_id)){
+			 	$district_name = districts::get_district_name_($district_id);
+				 $title .=' '.$district_name['district']." Sub-County ";
+			 }
+			  else{
+				 $district_name = null;
+			 }
+			  
+			  if (isset($facility_code)){
 				 $facility_name = Facilities::get_facility_name2($facility_code);
 				 $title .=' '.$facility_name['facility_name'];
 		}
-
-			 if (isset($district_id)){
-				 $district_name = districts::get_district_name_($district_id);
-				 $title .=' '.$district_name['district']." Sub-County ";
+			  else{
+				 $facility_name = null;
 			 }
+
 
          	$graph_data = array();
        		$graph_data = array_merge($graph_data, array("graph_id" => 'graph_default'));
