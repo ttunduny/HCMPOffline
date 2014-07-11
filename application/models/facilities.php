@@ -58,8 +58,23 @@ class Facilities extends Doctrine_Record {
 		ORDER BY  `facility_name` ASC ");
 		return $q;	
 }
-   public static function get_tragetted_rolled_out_facilities($facility_code=null,$district_id=null,$county_id=null){
-       $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+   public static function get_tragetted_rolled_out_facilities($facility_code=null,$district_id=null,$county_id=null,$identifier=null){
+        switch ($identifier){
+        	case county:
+			 $where_clause= "d.county=$county_id " ;	
+			break;	
+			case district:
+			 $where_clause= "d.id=$district_id" ;	
+			break;	
+			case facility:
+			case facility_admin:
+			 $where_clause= "f.facility_code=$facility_code " ;	
+			break;	
+           default:
+			 $where_clause=isset($facility_code)? "f.facility_code=$facility_code ":
+			  (isset($district_id) && !isset($county_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+			break;	
+        }
         $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
         SELECT SUM( targetted ) AS targetted, SUM( using_hcmp ) AS using_hcmp, COUNT( facility_code ) AS total
         FROM districts d, facilities f
@@ -81,8 +96,23 @@ else{
 }	
 			
 	}
-	   public static function get_facilities_monitoring_data($facility_code=null,$district_id=null,$county_id=null){
-	$where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+	   public static function get_facilities_monitoring_data($facility_code=null,$district_id=null,$county_id=null,$identifier=null){
+        switch ($identifier){
+        	case county:
+			 $where_clause= "d.county=$county_id " ;	
+			break;	
+			case district:
+			 $where_clause= "d.id=$district_id" ;	
+			break;	
+			case facility:
+			case facility_admin:
+			 $where_clause= "f.facility_code=$facility_code " ;	
+			break;	
+           default:
+			 $where_clause=isset($facility_code)? "f.facility_code=$facility_code ":
+			  (isset($district_id) && !isset($county_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+			break;	
+        }
     $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
     SELECT u.fname, u.lname,f.facility_name, f.facility_code,d.district,
     MAX( f_i.`created_at` ) AS last_issued, ifnull(DATEDIFF( NOW( ) , MAX( f_i.`created_at` ) ),0) AS days_last_issued, 
