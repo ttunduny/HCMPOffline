@@ -20,8 +20,8 @@
 			<th>Batch No</th>
 			<th>Expiry Date</th>
 			<th>Manufacturer</th>
-			<th>Quantity Sent(packs)</th>
 			<th>Quantity Sent(units)</th>
+			<th>Quantity Sent(packs)</th>
 			<th>Issue Type</th>
 			<th>Quantity Received</th>
 			<th>Total Units</th>
@@ -30,12 +30,13 @@
 	<tbody>
 		<?php $edit=($editable!='to-me') ? "readonly='readonly'": null;	
 		foreach($redistribution_data as $redistribution_data){
+			$manu=$redistribution_data->manufacturer;
 			foreach($redistribution_data->facility_detail_source as $facility){
 					$name_=$facility->facility_name." MFL ".$facility->facility_code; $mfl=$facility->facility_code;}
 			foreach($redistribution_data->facility_detail_receive as $facility){
 					$name_facility_detail_receive=$facility->facility_name." MFL ".$facility->facility_code;}
 			foreach($redistribution_data->stock_detail as $stock_detail){			
-				$manu=$stock_detail->manufacture;
+				
 				foreach($stock_detail->commodity_detail as $commodity_detail){
 				$name=$commodity_detail->commodity_name;
 				$code=$commodity_detail->commodity_code;
@@ -43,7 +44,7 @@
 				$total_commodity_units=$commodity_detail->total_commodity_units;
 				$source_of_item=$commodity_detail->commodity_source_id;	
 				}
-				$packs=round($total_commodity_units/$redistribution_data->quantity_sent,1);	
+				$packs=round($redistribution_data->quantity_sent/$total_commodity_units,1);	
 				$date=date('d My',strtotime($redistribution_data->expiry_date));
 						
 			}
@@ -126,11 +127,14 @@ $(document).ready(function() {
 	var user_input=$(this).val();
 	var total_units=$(this).closest("tr").find(".total_commodity_units").val();
 	var pack_unit_option=$(this).closest("tr").find(".commodity_unit_of_issue").val();
+	var donated_items=$(this).closest("tr").find(".commodity_total_units").val();
+	var total_units=calculate_actual_stock (total_units,pack_unit_option,user_input,"return",selector_object,null);
 	// check the user input value here
 	var alert_message='';
 			if (selector_object.val() <0) { alert_message+="<li>Value must be above 0</li>";}
 		    if (selector_object.val().indexOf('.') > -1) {alert_message+="<li>Decimals are not allowed.</li>";}		
-			if (isNaN(selector_object.val())){alert_message+="<li>Enter only numbers</li>";}				
+			if (isNaN(selector_object.val())){alert_message+="<li>Enter only numbers</li>";}	
+			if(total_units>donated_items){alert_message+="<li>You cannot receive more than was given to you</li>";}			
 			if(isNaN(alert_message)){
 	//reset the text field and the message dialog box 
     selector_object.val(""); var notification='<ol>'+alert_message+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -138,11 +142,11 @@ $(document).ready(function() {
     dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
     //This event is fired immediately when the hide instance method has been called.
     $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();	})
-
-    $(this).closest("tr").find(".actual_quantity").val("");
+    selector_object.closest("tr").find(".actual_quantity").val("");
+    selector_object.val("");
     return;   } 
  
-   calculate_actual_stock (total_units,pack_unit_option,user_input,".actual_quantity",selector_object,null)
+   calculate_actual_stock (total_units,pack_unit_option,user_input,".actual_quantity",selector_object,null);
 	});
 	
 	$(".commodity_unit_of_issue").on('change', function (){
