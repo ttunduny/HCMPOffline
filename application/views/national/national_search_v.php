@@ -124,7 +124,29 @@ border-color: #e7e7e7;
 {
   border-radius: 0 !important;
 }
-
+#navigate ul {
+	text-align: left;
+	display: inline;
+	margin: 0;
+	padding: 13px 4px 17px 0;
+	list-style: none;
+}
+/*
+ * For National Outlook only as it doesnt display properly
+ */
+#navigate ul li {
+	display: inline-block;
+	margin-right: -4px;
+	position: relative;
+	padding: 13px 18px;
+	background: #29527b; /* Old browsers */
+	cursor: pointer;
+	-webkit-transition: all 0.2s;
+	-moz-transition: all 0.2s;
+	-ms-transition: all 0.2s;
+	-o-transition: all 0.2s;
+	transition: all 0.2s;
+}
 </style>
   </head> 
 
@@ -465,7 +487,15 @@ placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_nor
  <input type="hidden" name="facility_id" id="facility_id" value="NULL"/>  
 </body>
 <script>
-
+ jQuery.browser = {};
+    (function () {
+        jQuery.browser.msie = false;
+        jQuery.browser.version = 0;
+        if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+            jQuery.browser.msie = true;
+            jQuery.browser.version = RegExp.$1;
+        }
+    })();
             var substringMatcher = function(strs) {
             return function findMatches(q, cb) {
                 var matches, substringRegex;
@@ -742,7 +772,6 @@ placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_nor
 	    changeYear: true,
 	    buttonImage: baseUrl,  });   
 </script>
-
+<script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
 </html>
 
-</html>

@@ -117,73 +117,26 @@ option.big{  width: 150px !important; }
 #navigate {
 	font-size: 0.88em;
 }
-#navigate {
 
-	margin-right: 0.3em;
-	font-size:0.8em;
-}
-#navigate a {
+#navigate ul > li > a {
+
 	color: white;
-	font-size: 0.85em;
-	text-transform: uppercase;
-	text-decoration: none;
 }
 
-#navigate ul {
-	text-align: left;
-	display: inline;
-	margin: 0;
-	padding: 13px 4px 17px 0;
-	list-style: none;
+#navigate ul > li {
+	background: #29527b !important; /* Old browsers */
+	color: white !important;
 }
-#navigate ul li {
-	display: inline-block;
-	margin-right: -4px;
-	position: relative;
-	padding: 13px 18px;
-	background: #29527b; /* Old browsers */
-	cursor: pointer;
-	-webkit-transition: all 0.2s;
-	-moz-transition: all 0.2s;
-	-ms-transition: all 0.2s;
-	-o-transition: all 0.2s;
-	transition: all 0.2s;
+
+#navigate ul > li:hover {
+	background: #289909 !important; /* Old browsers */
+	color: white !important;
 }
-#navigate ul li:hover {
-	background: #289909; /* Old browsers */
-	color: #fff;
-}
-#navigate ul li ul {
-	padding: 0;
-	position: absolute;
-	top: 45px;
-	right: 0.5px;
-	width: 150px;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
-	display: none;
-	opacity: 0;
-	visibility: hidden;
-	-webkit-transiton: opacity 0.2s;
-	-moz-transition: opacity 0.2s;
-	-ms-transition: opacity 0.2s;
-	-o-transition: opacity 0.2s;
-	-transition: opacity 0.2s;
-}
-#navigate ul li ul li {
-	background: #29527b;
-	display: block;
-	text-shadow: 0 -1px 0 #000;
-	font-size: 0.8em;
-}
-#navigate ul li ul li:hover {
-	background: #289909;
-}
-#navigate ul li:hover ul {
-	display: block;
-	opacity: 1;
-	visibility: visible;
+
+#navigate ul > li:hover ul {
+	display: block !important;
+	opacity: 1 !important;
+	visibility: visible !important;
 }
 .divide {
 	width: 100%;

@@ -99,38 +99,3 @@
     </div>
     
 </div>
-<<<<<<< HEAD
-<script>
-
-	$(document).ready(function() 
-	{
-		$("#expiries").on('click', function(){
-			//$('.page-header').html('Expiries');
-			active_panel(this);
-			//ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
-			});
-			
-		$("#divisional_reports").on('click', function(){
-			//$('.page-header').html('Expiries');
-			active_panel(this);
-			
-			//ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
-			});	
-			
-		$("#facility_statistics").on('click', function(){
-			//$('.page-header').html('Expiries');
-			active_panel(this);
-			//ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
-			});	
-			
-		$("#other_reports").on('click', function(){
-			//$('.page-header').html('Expiries');
-			active_panel(this);
-			//ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
-			});
-	});
-</script>
-
-
-=======
->>>>>>> ea693e5a760f0029057bd3ce63bae37207c1b269
