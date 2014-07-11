@@ -115,8 +115,10 @@ if (!defined('BASEPATH'))
 			$data_array_issues_table=array();
 			$data_array_redistribution_table=array();
 			        for($i=0;$i<$total_items;$i++)://compute the actual stock
+			        
         $total_items_issues=($commodity_unit_of_issue[$i]=='Pack_Size')? 
         $quantity_issued[$i]*$total_units[$i] : $quantity_issued[$i]; 
+		
      //prepare the issues data
      $facility_name=isset($service_point[$i]) ? Facilities::get_facility_name2($service_point[$i]) : null;
 	 $facility_name=isset($facility_name)? $facility_name['facility_name']: 'N/A';
@@ -126,7 +128,7 @@ if (!defined('BASEPATH'))
 				     'issued_to'=>"inter-facility donation:".$facility_name,'balance_as_of'=>$commodity_balance_before[$i], 
 				     'date_issued'=>date('y-m-d',strtotime($clone_datepicker_normal_limit_today[$i])),'issued_by'=>$this -> session -> userdata('user_id'));
 					 
-					  $mydata_2 = array('manufacture'=>$manufacture[$i],
+					  $mydata_2 = array('manufacturer'=>$manufacture[$i],
 					  'source_facility_code' => $facility_code,	 
 	                 'batch_no' => $batch_no[$i] ,'commodity_id' => $commodity_id[$i],
 				     'expiry_date' => date('y-m-d',strtotime($expiry_date[$i])),'quantity_sent'=> $total_items_issues ,
