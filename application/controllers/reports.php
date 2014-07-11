@@ -23,6 +23,7 @@ class Reports extends MY_Controller
 				$data['content_view'] = "";
 				$view = 'shared_files/template/dashboard_template_v';
 				break;
+		    case county :
 			case district :
 				$county_id = $this -> session -> userdata('county_id');
 	            $data['district_data'] = districts::getDistrict($county_id);
@@ -2285,9 +2286,9 @@ class Reports extends MY_Controller
 	    $actual_expiries = count(Facility_stocks::get_county_expiries($county_id,date('Y'),$district_id,$facility_code));
 		//get items they have been donated for
 		$facility_donations = count(redistribution_data::get_redistribution_data($facility_code,$district_id,$county_id,date('Y')));
-	    
+	    $identifier = $this -> session -> userdata('user_indicator');
 	    //get the roll out status here
-	    $facility_roll_out_status = Facilities::get_tragetted_rolled_out_facilities($facility_code,$district_id,$county_id);
+	    $facility_roll_out_status = Facilities::get_tragetted_rolled_out_facilities($facility_code,$district_id,$county_id,$identifier);
 	    
 		$data['county_dashboard_notifications'] = array(
 		'items_stocked_out_in_facility'=>$items_stocked_out_in_facility,
@@ -2304,7 +2305,8 @@ class Reports extends MY_Controller
         $district_id=(!$this -> session -> userdata('district_id')) ? null:$this -> session -> userdata('district_id');
         $county_id=(!$this -> session -> userdata('county_id')) ? null:$this -> session -> userdata('county_id');
         $category_data=$series_data = $graph_data= $series_data_=array();
-        $facility_data=Facilities::get_facilities_monitoring_data( $facility_code,$district_id,$county_id);
+		$identifier = $this -> session -> userdata('user_indicator');
+        $facility_data=Facilities::get_facilities_monitoring_data( $facility_code,$district_id,$county_id,$identifier);
         foreach($facility_data as $facility){
 
           array_push($series_data,array(

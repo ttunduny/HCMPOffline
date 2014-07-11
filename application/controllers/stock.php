@@ -350,10 +350,10 @@ endif;
 			'current_balance'=>$total_unit_count[$i],
 			'source_of_commodity'=>$source_of_item[$i],
 			'date_added'=>$date_of_entry );
-			//update the facility stock table
-			facility_stocks::update_facility_stock($mydata);
 			 //get the closing stock of the given item           
             $facility_stock=facility_stocks::get_facility_commodity_total($facility_code,$commodity_id[$i])->toArray();	
+			//update the facility stock table
+			facility_stocks::update_facility_stock($mydata);
             // save this infor in the issues table
             $facility_name=isset($service_point[$i]) ? Facilities::get_facility_name2($service_point[$i]) : null;
 	 $facility_name=isset($facility_name)? $facility_name['facility_name']: 'N/A';
@@ -390,7 +390,7 @@ else:       //get the data to send to the facility_transaction_table
 			'status'=>1);	//send the data to the facility_transaction_table		
 			facility_transaction_table::update_facility_table($mydata2);			
 endif;		
-endif;	
+
 	//update the redistribution data
 	$myobj = Doctrine::getTable('redistribution_data')->find($facility_stock_id[$i]);
     $myobj->quantity_received=$total_unit_count[$i];
@@ -398,6 +398,7 @@ endif;
     $myobj->date_received=date('y-m-d');
     $myobj->status=1;
     $myobj->save();
+    endif;	
     endif;						
 endfor;	     
           //set the notifications
