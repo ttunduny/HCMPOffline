@@ -7,10 +7,10 @@
 <div class="container-fluid" style="">
 
 	<div class="row">
-		<div class="col-md-4" id=""><p class="bg-info">1)Enter the Service point and Commodity you wish to issue and select the Commodity</p></div>
-		<div class="col-md-5" id=""><p class="bg-info">2) Select Batch No,input date issued,select issue type and quantity issued</p></div>
-		<div class="col-md-3" id=""><p class="bg-info">3) To add more issues press add row
-			<span class="glyphicon glyphicon-question-sign" href="javascript:void(0);" onclick="startIntro();" style="margin-left:20%;"></span></p>
+		<div class="col-md-4" id=""><p class="bg-info"><span class="badge ">1</span>Enter the Service point and Commodity you wish to issue and select the Commodity</p></div>
+		<div class="col-md-5" id=""><p class="bg-info"><span class="badge ">2</span> Select Batch No,input date issued,select issue type and quantity issued</p></div>
+		<div class="col-md-3" id=""><p class="bg-info"><span class="badge ">3</span>To add more issues press add row
+			<span class="glyphicon glyphicon-question-sign toolt" data-toggle="tooltip" data-placement="left" title="click for help" href="javascript:void(0);" onclick="startIntro();" style="margin-left:20%;"></span></p>
 		
 	</div>
 	</div>
@@ -29,14 +29,14 @@
 						<th>Description</th>
 						<th>Supplier</th>
 						<th>Unit Size</th>
-						<th>Batch&nbsp;No&nbsp;&nbsp;</th>
+						<th>Batch&nbsp;No</th>
 						<th>Expiry Date</th>
 						<th>Available Batch Stock</th>
 						<th>Issue Date</th>
-						<th>Issue&nbsp;Type&nbsp;&nbsp;</th>
+						<th>Issue&nbsp;Type</th>
 						<th>Issued Quantity</th>
 						<th>Total Balance</th>
-						<th>Action</th>				    
+						<th>Action</th>			    
 					</tr>
 					</thead>
 					<tbody>
@@ -54,7 +54,7 @@ endforeach;
 						</td>
 						<td id="step2">
 	<select class="form-control input-small service desc" name="desc[0]" >
-    <option special_data="0" value="0" selected="selected">Select Commodity</option>
+    <option special_data="0" value="0" selected="selected" style="width:auto !important;">Select Commodity</option>
 		<?php 
 foreach ($commodities as $commodities) :						
 			$commodity_name=$commodities['commodity_name'];
@@ -73,21 +73,21 @@ endforeach;
 						<input type="hidden" id="0" name="total_units[0]" value="" class="total_units"/>
 						<input type="hidden" name="commodity_balance[0]" value="0" class="commodity_balance"/>
 						<input type="hidden" name="facility_stock_id[0]" value="0" class="facility_stock_id"/>	
-						<input type="text" class="form-control input-small supplier_name" readonly="readonly" name="supplier_name[]"/></td>
+						<input style="width:80px !important;" type="text" class="form-control input-small supplier_name" readonly="readonly" name="supplier_name[]"/></td>
 			            <td><input  type="text" class="form-control input-small unit_size" readonly="readonly"  /></td>
-						<td id="step3"><select class="form-control input-small batch_no big" name="batch_no[0]"></select></td>
-						<td><input type='text' class='form-control input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
+						<td id="step3"><select style="width:80px !important;" class="form-control input-small batch_no big" name="batch_no[0]"></select></td>
+						<td><input style="width:110px !important;" type='text' class='form-control input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
 						<td><input class='form-control input-small available_stock' type="text" name="available_stock[0]" readonly="readonly" /></td>
 						<td id="step4">
-<input class='form-control input-small clone_datepicker_normal_limit_today' 
+<input  class='form-control input-small clone_datepicker_normal_limit_today' 
 type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
-						<td id="step5"><select  class="form-control commodity_unit_of_issue big" name="commodity_unit_of_issue[]">
+						<td id="step5"><select style="width:80px !important;" class="form-control commodity_unit_of_issue big" name="commodity_unit_of_issue[]">
 			<option  value="Pack_Size">Pack Size</option>
 			<option value="Unit_Size">Unit Size</option>
 			</select></td>
 						<td id="step6"><input class='form-control input-small quantity_issued' type="text" value=""  name="quantity_issued[0]"  required="required"/></td>
 						<td><input class='form-control input-small balance' type="text" value="" readonly="readonly" /></td>
-						<td id="step8" ><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Remove Row</button></td>
+						<td style="width:50px !important;" id="step8" ><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Row</button></td>
 			</tr>
 		           </tbody>
 		           </table>
@@ -363,6 +363,9 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 				});
 			return 	[dropdown,facility_stock_id_,total_stock_bal,expiry_date];
 		}
+		 $('.toolt').tooltip({
+        placement: 'left'
+    }); 
 	});	
 </script>
  <script type="text/javascript">
@@ -372,16 +375,16 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
             steps: [
               {
                 element: '#step1',
-                intro: "Enter the <i>Service point</i> <b>here.</b> ."
+                intro: "Select <i>Service point</i> <b>here.</b> ."
               },
               {
                 element: '#step2',
-                intro: "Enter, <i>Commodity</i> <b>here.</b> ",
+                intro: "Select, <i>Commodity</i> <b>here.</b>This will populate the batch no. ",
                 position: 'right'
               },
               {
                 element: '#step3',
-                intro: "Enter, <i>Batch No</i> <b>here.</b> ",
+                intro: "Select, <i>Batch No</i> <b>here.</b>This will populate the Expiry date. ",
                 position: 'right'
               },
               {
@@ -401,12 +404,12 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
               },
               {
                 element: '#step7',
-                intro: "<span style='font-family: Tahoma'>Click here to add row</span>",
+                intro: "<span style='font-family: Tahoma'>Click here to Issue more commodities</span>",
                 position: 'left'
               },
               {
                 element: '#step8',
-                intro: "<span style='font-family: Tahoma'>Click here to remove row</span>",
+                intro: "<span style='font-family: Tahoma'>Click here to remove commodities</span>",
                 position: 'left'
               },
               {
