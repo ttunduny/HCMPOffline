@@ -1,12 +1,24 @@
-<style>
-	.big{ width: 80px !important; }
+<style type="text/css">
+.row div p{
+	padding:10px;
+}
 </style>
-<div class="container" style="width: 96%; margin: auto;">
-<span  class='label label-info'>To Issue Commodities 
-	i) Select commodity to issue 
-	ii) Enter the Service Point and Quanitity you wish to issue and select the Batch No
-	iii) To add more Issues press Add Row</span><br /><span class="label label-danger">Available Batch Stock is for a specific 
-	batch, Total Balance is the total for the commodity</span>
+<link href="<?php echo base_url().'assets/bower_components/intro.js/introjs.css'?>" type="text/css" rel="stylesheet"/>
+<div class="container-fluid" style="">
+
+	<div class="row">
+		<div class="col-md-4" id=""><p class="bg-info"><span class="badge ">1</span>Enter the Service point and Commodity you wish to issue and select the Commodity</p></div>
+		<div class="col-md-5" id=""><p class="bg-info"><span class="badge ">2</span> Select Batch No,input date issued,select issue type and quantity issued</p></div>
+		<div class="col-md-3" id=""><p class="bg-info"><span class="badge ">3</span>To add more issues press add row
+			<span class="glyphicon glyphicon-question-sign toolt" data-toggle="tooltip" data-placement="left" title="click for help" href="javascript:void(0);" onclick="startIntro();" style="margin-left:20%;"></span></p>
+		
+	</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6"><p class="text-danger">*Available Batch Stock is for a specific 
+	batch, Total Balance is the total for the commodity</p></div>
+		
+	</div>
 	<hr />
 <div class="table-responsive" style="height:400px; overflow-y: auto;">
  <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/internal_issue',$att); ?>
@@ -17,21 +29,21 @@
 						<th>Description</th>
 						<th>Supplier</th>
 						<th>Unit Size</th>
-						<th>Batch&nbsp;No&nbsp;&nbsp;</th>
+						<th>Batch&nbsp;No</th>
 						<th>Expiry Date</th>
 						<th>Available Batch Stock</th>
 						<th>Issue Date</th>
-						<th>Issue&nbsp;Type&nbsp;&nbsp;</th>
+						<th>Issue&nbsp;Type</th>
 						<th>Issued Quantity</th>
 						<th>Total Balance</th>
-						<th>Action</th>				    
+						<th>Action</th>			    
 					</tr>
 					</thead>
 					<tbody>
 						<tr row_id='0'>
-						<td>
-						<select  name="service_point[0]" class="form-control input-small service_point">
-							<option value="0" >- select service point -</option>
+						<td id="step1">
+						<select  name="service_point[0]" class="form-control input-small service_point" >
+							<option value="0" >Select service point</option>
 								<?php 
 foreach ($service_point as $service_point) :						
 			$service_point_name=$service_point->service_point_name;			
@@ -40,9 +52,9 @@ endforeach;
 		?> 
 						</select>
 						</td>
-						<td>
-	<select class="form-control input-small service desc" name="desc[0]">
-    <option special_data="0" value="0" selected="selected">-Select Commodity -</option>
+						<td id="step2">
+	<select class="form-control input-small service desc" name="desc[0]" >
+    <option special_data="0" value="0" selected="selected" style="width:auto !important;">Select Commodity</option>
 		<?php 
 foreach ($commodities as $commodities) :						
 			$commodity_name=$commodities['commodity_name'];
@@ -61,21 +73,21 @@ endforeach;
 						<input type="hidden" id="0" name="total_units[0]" value="" class="total_units"/>
 						<input type="hidden" name="commodity_balance[0]" value="0" class="commodity_balance"/>
 						<input type="hidden" name="facility_stock_id[0]" value="0" class="facility_stock_id"/>	
-						<input type="text" class="form-control input-small supplier_name" readonly="readonly" name="supplier_name[]"/></td>
+						<input style="width:80px !important;" type="text" class="form-control input-small supplier_name" readonly="readonly" name="supplier_name[]"/></td>
 			            <td><input  type="text" class="form-control input-small unit_size" readonly="readonly"  /></td>
-						<td><select class="form-control input-small batch_no big" name="batch_no[0]"></select></td>
-						<td><input type='text' class='form-control big input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
-						<td><input class='form-control available_stock big' type="text" name="available_stock[0]" readonly="readonly" /></td>
-						<td>
-<input class='form-control input-small clone_datepicker_normal_limit_today big' 
+						<td id="step3"><select style="width:80px !important;" class="form-control input-small batch_no big" name="batch_no[0]"></select></td>
+						<td><input style="width:110px !important;" type='text' class='form-control input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
+						<td><input class='form-control input-small available_stock' type="text" name="available_stock[0]" readonly="readonly" /></td>
+						<td id="step4">
+<input  class='form-control input-small clone_datepicker_normal_limit_today' 
 type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
-						<td><select  class="form-control commodity_unit_of_issue input-small" name="commodity_unit_of_issue[]">
+						<td id="step5"><select style="width:80px !important;" class="form-control commodity_unit_of_issue big" name="commodity_unit_of_issue[]">
 			<option  value="Pack_Size">Pack Size</option>
 			<option value="Unit_Size">Unit Size</option>
 			</select></td>
-						<td><input class='form-control  quantity_issued big' type="text" value=""  name="quantity_issued[0]"  required="required"/></td>
-						<td><input class='form-control  balance big' type="text" value="" readonly="readonly" /></td>
-						<td><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Remove Row</button></td>
+						<td id="step6"><input class='form-control input-small quantity_issued' type="text" value=""  name="quantity_issued[0]"  required="required"/></td>
+						<td><input class='form-control input-small balance' type="text" value="" readonly="readonly" /></td>
+						<td style="width:50px !important;" id="step8" ><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Row</button></td>
 			</tr>
 		           </tbody>
 		           </table>
@@ -83,12 +95,11 @@ type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="re
 <hr />
 <div class="container-fluid">
 <div style="float: right">
-<button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
-<button class="save btn btn-success" id=""><span class="glyphicon glyphicon-open"></span>Save</button></div>
+<button type="button" id="step7" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
+<button class="save btn btn-success" id="step9"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 </div>
 </div>
 <?php echo form_close();?>
-
 <script>
 $(document).ready(function() {	
  var $table = $('table');
@@ -160,7 +171,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
         	var form_data=check_if_the_form_has_been_filled_correctly(selector_object);
         	var alert_message='';
         	if (remainder<0) {alert_message+="<li>Can not issue beyond available stock</li>";}
-			//if (selector_object.val() <0) { alert_message+="<li>Issued value must be above 0</li>";}
+			if (selector_object.val() <0) { alert_message+="<li>Issued value must be above 0</li>";}
 		    if (selector_object.val().indexOf('.') > -1) {alert_message+="<li>Decimals are not allowed.</li>";}		
 			if (isNaN(selector_object.val())){alert_message+="<li>Enter only numbers</li>";}				
 			if(isNaN(alert_message) || isNaN(form_data[0])){
@@ -175,8 +186,8 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
    	selector_object.closest("tr").find(".balance").val(remainder1);	
         });// adding a new row 
         $(".add").click(function() {
-        var selector_object = $('#facility_issues_table tr:last');
-        var form_data = check_if_the_form_has_been_filled_correctly(selector_object);
+        var selector_object=$('#facility_issues_table tr:last');
+        var form_data=check_if_the_form_has_been_filled_correctly(selector_object);
         if(isNaN(form_data[0])){
         var notification='<ol>'+form_data[0]+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
            //hcmp custom message dialog
@@ -279,13 +290,11 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
         function clone_the_last_row_of_the_table(){
             var last_row = $('#facility_issues_table tr:last');
             var cloned_object = last_row.clone(true);
-            var new_value = "";
             var table_row = cloned_object.attr("row_id");
             var next_table_row = parseInt(table_row) + 1;           
 		    cloned_object.attr("row_id", next_table_row);
 			cloned_object.find(".service_point").attr('name','service_point['+next_table_row+']'); 
 			cloned_object.find(".commodity_id").attr('name','commodity_id['+next_table_row+']'); 
-			cloned_object.find(".total_units").attr('name','total_units['+next_table_row+']'); 
 			cloned_object.find(".commodity_id").attr('id',next_table_row); 
 			cloned_object.find(".quantity_issued").attr('name','quantity_issued['+next_table_row+']'); 	
 			cloned_object.find(".clone_datepicker_normal_limit_today").attr('name','clone_datepicker_normal_limit_today['+next_table_row+']'); 
@@ -295,17 +304,9 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			cloned_object.find(".commodity_unit_of_issue").attr('name','commodity_unit_of_issue['+next_table_row+']');
 			cloned_object.find(".expiry_date").attr('name','expiry_date['+next_table_row+']');
 			cloned_object.find(".desc").attr('name','desc['+next_table_row+']');
-			cloned_object.find(".commodity_balance").attr('name','commodity_balance['+next_table_row+']');		
-			cloned_object.find(".quantity_issued").val(new_value);	
-			cloned_object.find(".supplier_name").val(new_value);	
-			cloned_object.find(".unit_size").val(new_value);
-			cloned_object.find(".expiry_date").val(new_value);	
-			cloned_object.find(".available_stock").val(new_value);	
-			cloned_object.find(".balance").val(new_value);			
-			cloned_object.find(".clone_datepicker_normal_limit_today").val(new_value);
-           
-            //cloned_object.find("input").attr('text',""); 
-            //cloned_object.find(".quantity_issued").attr('value',"");   
+			cloned_object.find(".commodity_balance").attr('name','commodity_balance['+next_table_row+']');					
+            cloned_object.find("input").attr('value',"");     
+            cloned_object.find(".quantity_issued").attr('value',"");   
             cloned_object.find(".quantity_issued").removeAttr('readonly');  
             cloned_object.find(".batch_no").removeAttr('disabled');
             cloned_object.find(".commodity_unit_of_issue").removeAttr('disabled'); 
@@ -314,7 +315,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
             cloned_object.find(".batch_no").html("");
             // remove the error class
             cloned_object.find("label.error").remove();             
-			cloned_object.insertAfter('#facility_issues_table tr:last').find('input').val('');	
+			cloned_object.insertAfter('#facility_issues_table tr:last');	
 			refresh_clone_datepicker_normal_limit_today();	
         }
 		function check_if_the_form_has_been_filled_correctly(selector_object){
@@ -322,13 +323,13 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 		var service_point=selector_object.closest("tr").find(".service_point").val();
 		var commodity_id=selector_object.closest("tr").find(".desc").val();
 		var issue_date=selector_object.closest("tr").find(".clone_datepicker_normal_limit_today").val();
-		//var issue_quantity=selector_object.closest("tr").find(".quantity_issued").val();
+		var issue_quantity=selector_object.closest("tr").find(".quantity_issued").val();
 		//set the message here
 		if (service_point==0) {alert_message+="<li>Select a Service Point</li>";}
 	    if (commodity_id==0) {alert_message+="<li>Select a commodity first</li>";}
 	    if (issue_date==0) {alert_message+="<li>Indicate the date of the issue</li>";}	
-	    //if (issue_quantity==0) {alert_message+="<li>Indicate how much you want to issue</li>";}	    
-	    return[alert_message,service_point,commodity_id,issue_date];	
+	    if (issue_quantity==0) {alert_message+="<li>Indicate how much you want to issue</li>";}	    
+	    return[alert_message,service_point,commodity_id,issue_quantity,issue_date];	
 		}//extract facility_data  from the json object 		
 		function extract_data(commodity_id_,commodity_stock_row_id,type_of_drop_down){
 			var row_id=0; var dropdown='';var facility_stock_id_='';  var total_stock_bal=0; var expiry_date='';
@@ -343,7 +344,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			  		 "^"+facility_stock_data[i]['commodity_balance']+
 			  		 "^"+facility_stock_data[i]['facility_stock_id']+
 			  		 "^"+facility_stock_data[i]['commodity_balance']+">";
-			  				 expiry_date=$.datepicker.formatDate('dMy', new Date(facility_stock_data[i]['expiry_date']));
+			  				 expiry_date=$.datepicker.formatDate('d M yy', new Date(facility_stock_data[i]['expiry_date']));
 			  				 bal=facility_stock_data[i]['commodity_balance'];
 			  				 facility_stock_id_=facility_stock_data[i]['facility_stock_id'];
 			  				 total_stock_bal=facility_stock_data[i]['commodity_balance'];
@@ -362,5 +363,64 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 				});
 			return 	[dropdown,facility_stock_id_,total_stock_bal,expiry_date];
 		}
+		 $('.toolt').tooltip({
+        placement: 'left'
+    }); 
 	});	
 </script>
+ <script type="text/javascript">
+      function startIntro(){
+        var intro = introJs();
+          intro.setOptions({
+            steps: [
+              {
+                element: '#step1',
+                intro: "Select <i>Service point</i> <b>here.</b> ."
+              },
+              {
+                element: '#step2',
+                intro: "Select, <i>Commodity</i> <b>here.</b>This will populate the batch no. ",
+                position: 'right'
+              },
+              {
+                element: '#step3',
+                intro: "Select, <i>Batch No</i> <b>here.</b>This will populate the Expiry date. ",
+                position: 'right'
+              },
+              {
+                element: '#step4',
+                intro: "Select, <i>Issue date</i> <b>here.</b> ",
+                position: 'right'
+              },
+              {
+                element: '#step5',
+                intro: "Select, <i>Issue type</i> <b>here.</b> ",
+                position: 'right'
+              },
+              {
+                element: '#step6',
+                intro: 'Enter, <i>Issue Quantity</i> <b>here.</b>',
+                position: 'bottom'
+              },
+              {
+                element: '#step7',
+                intro: "<span style='font-family: Tahoma'>Click here to Issue more commodities</span>",
+                position: 'left'
+              },
+              {
+                element: '#step8',
+                intro: "<span style='font-family: Tahoma'>Click here to remove commodities</span>",
+                position: 'left'
+              },
+              {
+                element: '#step9',
+                intro: "<span style='font-family: Tahoma'>Click here to Complete  activity</span> ",
+                position: 'left'
+              }
+            ]
+          });
+
+          intro.start();
+      }
+    </script>
+   <script src="<?php echo base_url().'assets/bower_components/intro.js/intro.js'?>" type="text/javascript"></script>

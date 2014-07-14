@@ -441,3 +441,4 @@ input.checkbox { border: none }
 input:focus { border: 1px dotted black; }
 input.error { border: 1px dotted red; }
 form.gray * { color: gray; }
+

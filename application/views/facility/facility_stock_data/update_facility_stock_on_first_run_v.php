@@ -1,12 +1,29 @@
-<div class="container" style="width: 99%; margin: auto;">
-	<span  class='label label-info' >Please note this is a one off activity Stock level as of <?php $today = ( date('d M Y'));
+<style type="text/css">
+#note{
+      padding:10px;
+}
+</style>
+<div class="container-fluid" >
+
+      <div class="row">
+            <div class="col-md-7" id=""><p class="bg-info" id="note">
+                 <b> Please  note this is a one off activity Stock level as of <?php $today = ( date('d M Y'));
     //get today's date in full
 ?>
-		<input type="hidden" name="datepicker" readonly="readonly" value="<?php echo $today; ?>"/>
-		<?php echo $today; ?>
-		To add facility stock data, first do physical stock count</span>
+            <input type="hidden" name="datepicker" readonly="readonly" value="<?php echo $today; ?>"/>
+            <?php echo $today; ?>
+            To add facility stock data, first do physical stock count
+</b>
+            </p></div>
+
+            <div class="col-md-5" id=""></div>
+            
+      </div>
+	
+            
 	<hr />
-	<div class="test" style="height:400px; overflow: auto;">
+      <div class="row " style="min-height:400px; overflow: auto;"><div class="col-md-12">
+	
 		<?php $att = array("name" => 'myform', 'id' => 'myform');
         echo form_open('stock/add_stock_level', $att);
  ?>
@@ -49,17 +66,17 @@
                 ?>
 					</select></td>
 					<td>
-					<input type="text" class="form-control input-small commodity_supplier" name="commodity_supplier[]" readonly="readonly"/>
+					<input style="width:70px !important;" type="text" class="form-control input-small commodity_supplier" name="commodity_supplier[]" readonly="readonly"/>
 					<input type="hidden" class="actual_units"/>
 					</td>
 					<td>
-					<input type="text" class="form-control input-small unit_size"   name="commodity_unit_size[]" readonly="readonly"/>
+					<input style="width:70px !important;" type="text" class="form-control input-small unit_size"   name="commodity_unit_size[]" readonly="readonly"/>
 					</td>
 					<td>
 					<input class='form-control input-small commodity_batch_no' required="required" data-val="true" name='commodity_batch_no[]' type='text'/>
 					</td>
 					<td>
-					<select class="form-control input-small source_of_item" name="source_of_item[]">
+					<select style="width:95px !important;" class="form-control input-small source_of_item" name="source_of_item[]">
 						<?php
                         foreach ($commodity_source as $commodity_source) {
                             $id = $commodity_source -> id;
@@ -69,14 +86,14 @@
 						?>
 					</select></td>
 					<td>
-					<input id='commodity_manufacture' required="required" class="form-control commodity_manufacture input-small"
+					<input style="width:70px !important;" id='commodity_manufacture' required="required" class="form-control commodity_manufacture input-small"
 					name='commodity_manufacture[]' type='text' value=""  data-val="true"/>
 					</td>
 					<td>
 					<input  class='form-control input-small clone_datepicker' required="required"  data-val="true" name='clone_datepicker[]' type='text' />
 					</td>
 					<td>
-					<select name="commodity_unit_of_issue[]" class="form-control commodity_unit_of_issue input-small">
+					<select style="width:105px !important;"name="commodity_unit_of_issue[]" class="form-control commodity_unit_of_issue input-small">
 						<option value="Pack_Size">Pack Size</option>
 						<option value="Unit_Size">Unit Size</option>
 					</select></td>
@@ -89,14 +106,14 @@
 					</td>
 					<td>
 					<button type="button" class="remove btn btn-danger btn-xs">
-						<span class="glyphicon glyphicon-minus"></span>Remove Row
+						<span class="glyphicon glyphicon-minus"></span>Row
 					</button></td>
 				</tr>
 			</tbody>
 		</table>
 		<?php echo form_close(); ?>
 
-	</div>
+	</div></div>
 </div>
 <hr />
 <div class="container-fluid">
@@ -115,6 +132,7 @@
 			<span class="glyphicon glyphicon-open"></span>Save
 		</button>
 	</div>
+</div>
 
 	<script type="text/javascript">
 		$(document).ready(function() {

@@ -27,7 +27,7 @@ class Log_monitor extends Doctrine_Record {
 	public static function check_code_exist($code,$user_id) {
 		
 		$query = Doctrine_Query::create() -> select("*") -> from("Log_monitor") -> where("user_id ='$user_id' AND forgetpw_code='$code' AND status=1");
-		$data = $query -> execute();
+		$data = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $data;
 			
 	}
