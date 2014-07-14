@@ -894,6 +894,7 @@ class Reports extends MY_Controller
 		$this -> load -> view($view, $data);
 		
 	}
+
 	public function filter_facility_orders($year, $month, $option)
 	{
 		
@@ -1740,6 +1741,107 @@ class Reports extends MY_Controller
 		$html_body .= '</tbody></table></ol>';
 		
 	}
+	elseif($report_type == "TB")
+	{
+		$from_TB_data_table = tb_data::get_all_other($report_id);
+		$from_TB_data_table_s2 = tb_data::get_all_other_2($report_id);
+		$from_TB_data_table_count = count(tb_data::get_all_other($report_id));
+
+		
+		$tb_drug_names = tb_data::get_tb_drug_names();
+		/*
+		echo "<pre>";
+		print_r($from_TB_data_table2);
+		echo "</pre>";exit;
+		*/
+		foreach ($from_TB_data_table as $report_details) 
+		{
+			$mfl = $report_details['facility_code'];
+			$report_date = $report_details['report_date'];
+					
+			$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($mfl);
+			$sub_county_id = $myobj -> district;
+			$facility_name = $myobj -> facility_name;
+			
+			$myobj1 = Doctrine::getTable('Districts') -> find($sub_county_id);
+			$sub_county_name = $myobj1 -> district;
+			$county = $myobj1 -> county;
+
+			$myobj2 = Doctrine::getTable('Counties') -> find($county);
+			$county_name = $myobj2 -> county;
+
+			$myobj_order = Doctrine::getTable('users') -> find($report_details['user_id']);
+			$creator_email = $myobj_order -> email;
+			$creator_name1 = $myobj_order -> fname;
+			$creator_name2 = $myobj_order -> lname;
+			$creator_telephone = $myobj_order -> telephone;
+	
+		}
+	
+		//create the table for displaying the order details
+		$html_body = "<table class='data-table' width=100%>
+			<tr>
+			<td>MFL No: $mfl</td> 
+			<td>Health Facility Name:<br/> $facility_name</td>
+			<td>Level:</td>
+			<td>Dispensary</td>
+			<td>Health Centre</td>
+			</tr>
+			<tr>
+			<td>County: $county_name</td> 
+			<td> District: $sub_county_name</td>
+			<td >Reporting Period <br/>
+			Start Date:  <br/>  End Date: " . date('d M, Y', strtotime($report_date)) . "
+			</td>
+			</tr>
+			</table>";
+		$html_body .= "
+		<table class='data-table'>
+		<thead>
+		<tr>
+			<th ><b>Drug Name</b></th>
+			<th ><b>Pack</b></th>
+			<th ><b>Beginning Date</b></th>
+			<th ><b>Quantity Received This Month</b></th>
+			<th ><b>Ending Date</b></th>
+			<th ><b>Beginning Balance</b></th>
+			<th ><b>Quantity Dispensed</b></th>
+			<th ><b>Positive_Adjustments</b></th>
+			<th ><b>Negative_Adjustments</b></th>
+			<th ><b>Losses</b></th>
+			<th ><b>Physical Count</b></th>
+			<th ><b>Earliest Expiry</b></th>
+			<th ><b>Quantity Requested</b></th>
+			<th ><b>Report Date</b></th>
+		</tr> 
+		</thead>
+		<tbody>";
+		$html_body .= '<ol type="a">';
+		for ($i = 0; $i < $from_TB_data_table_count; $i++) 
+		{
+			$html_body .= "<tr>";
+			$html_body .= "<td>". $tb_drug_names[$i]['drug_name']."</td>";
+			$html_body .= "<td>". $tb_drug_names[$i]['unit_size']."</td>";
+			$html_body .= "<td>". $from_TB_data_table[$i]['beginning_date']."</td>";
+			$html_body .= "<td>". $from_TB_data_table[$i]['currently_recieved']."</td>";
+			$html_body .= "<td>". $from_TB_data_table[$i]['ending_date']."</td>";
+			$html_body .= "<td>" . $from_TB_data_table[$i]['beginning_balance'] . "</td>";
+			$html_body .= "<td>" . $from_TB_data_table[$i]['quantity_dispensed'] . "</td>";
+			$html_body .= "<td>". $from_TB_data_table[$i]['positive_adjustment']."</td>";
+			$html_body .= "<td>". $from_TB_data_table[$i]['negative_adjustment']."</td>";
+			$html_body .= "<td>" . $from_TB_data_table[$i]['losses'] . "</td>";
+			$html_body .= "<td>" . $from_TB_data_table[$i]['physical_count'] . "</td>";
+			$html_body .= "<td>" . $from_TB_data_table[$i]['earliest_expiry'] . "</td>";
+			$html_body .= "<td>" . $from_TB_data_table[$i]['quantity_needed'] . "</td>";
+			$html_body .= "<td>" . $from_TB_data_table[$i]['report_date'] . "</td>";
+			$html_body .= "</tr>";
+			
+			
+		}
+
+		$html_body .= '</tbody></table></ol>';
+		
+	}
 
 			
 		return $html_body;
@@ -1920,47 +2022,52 @@ class Reports extends MY_Controller
 	}
 
 	public function load_stock_level_graph($district_id=NULL, $county_id=NULL, $facility_code=NULL,$commodity_id=null){
-		   $name =null;
-		   $title=null;
-		 // echo $commodity_id;exit;
-           if ($this -> session -> userdata('user_indicator') == 'district') :
-			   
-			$county_id= isset($county_id) && ($county_id!='NULL') ? $district_id: null;
-			$district_id = isset($district_id) && ($district_id!='NULL') ? $district_id:$this -> session -> userdata('district_id');
-			$facility_code = isset($facility_code) && ($facility_code!='NULL') ? $facility_code :null;
-			elseif ($this -> session -> userdata('user_indicator') == 'county') :
-			$county_id= isset($county_id) ? $district_id: $this -> session -> userdata('county_id');
-			$district_id = isset($district_id) ? $district_id:null;
-			$facility_code = isset($facility_code) ? $facility_code :null;
-			elseif ($this -> session -> userdata('user_indicator') == 'facility') :
-			$county_id= isset($county_id) ? $district_id: null;
-			$district_id = isset($district_id) ? $district_id:null;
-			$facility_code = isset($facility_code) ? $facility_code :$this -> session -> userdata('facility_code');
-			else :
-				
-			endif;
+			$county_id=$county_id=='NULL'? 
+			($this -> session -> userdata('user_indicator') == 'county' ? 
+			$this -> session -> userdata('county_id'): null) :$county_id;
+			$district_id=$district_id=='NULL'? 
+			($this -> session -> userdata('user_indicator') == 'district' ? 
+			$this -> session -> userdata('district_id'): null) :$district_id;
+			$facility_code=$facility_code=='NULL'? 
+			($this -> session -> userdata('user_indicator') == 'facility' ? 
+			$this -> session -> userdata('facility_code'): null) :$facility_code;
+            $commodity_id=$commodity_id=='NULL'? null: $commodity_id;
 			
          	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id);
-			
 			$month = date('F Y');
+			
 			if (isset($commodity_id)){
-				 $commodity_name = Commodities::get_details($commodity_id)->toArray();
+				$commodity_name = Commodities::get_details($commodity_id)->toArray();
 				$title .=' '.@$commodity_name[0]['commodity_name'];
 		}
 			 else{
 				 $commodity_name = null;
 			 }
 
-			
-			 if (isset($facility_code)){
+			if (isset($county_id)){
+				$county_name = counties::get_county_name($county_id);
+				$title .=' '.$county_name['county']." County ";
+		}
+			 else{
+				 $county_name = null;
+			 }
+			 
+			 if (isset($district_id)){
+			 	$district_name = districts::get_district_name_($district_id);
+				 $title .=' '.$district_name['district']." Sub-County ";
+			 }
+			  else{
+				 $district_name = null;
+			 }
+			  
+			  if (isset($facility_code)){
 				 $facility_name = Facilities::get_facility_name2($facility_code);
 				 $title .=' '.$facility_name['facility_name'];
 		}
-
-			 if (isset($district_id)){
-				 $district_name = districts::get_district_name_($district_id);
-				 $title .=' '.$district_name['district']." Sub-County ";
+			  else{
+				 $facility_name = null;
 			 }
+
 
          	$graph_data = array();
        		$graph_data = array_merge($graph_data, array("graph_id" => 'graph_default'));

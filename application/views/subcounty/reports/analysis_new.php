@@ -1,5 +1,5 @@
-<?php 
- function calculate_percentage($val1,$val2){
+<?php
+function calculate_percentage($val1,$val2){
  		if(!isset($val1)) {
 			 $val1 = 1;
 		 }
@@ -280,8 +280,10 @@ color: #fff; }
                     $progress_bar9 = $percentageY;
 					$progress_bar_9 = $percentageN;
 
-		echo  "<div class='progress'><div class='bar'  style='float:left; width:$percentageY%;background:$statusY'>YES ".$percentageY ."% </div>
-    		<div class='bar' style='float:right; width:$percentageN%;background:$statusN'>  NO ".$percentageN ."% </div></div></div></td>";
+		echo  "<div class='progress'>
+			<div class='bar'  style='float:left; width:$percentageY%;background:$statusY'>YES ".$percentageY ."% </div>
+    		<div class='view_expectations bar'><div class='bar' style='float:right; width:$percentageN%;background:$statusN'>  NO ".$percentageN ."% </div></div>
+    		</div></td>";
 		 ?>
 	</td>
 	</tr>
@@ -342,7 +344,27 @@ $(".view_requirements").click( function (){
    
     });
 
-
+// $(".view_expectations").click( function (){
+// 		
+		// $('.modal-dialog').addClass("modal-lg");
+		// var body_content='<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
+		// '<thead><tr><th>Facility Name</th><th>Requirements to be addressed</th></tr></thead>'+
+		// '<tbody>'+		   	    
+		// '<?php	foreach($show_expect as $detail):
+			      // $facility = $detail['facility_name'];
+				  // $suggest = $detail['expect_suggest'];							
+// 
+				 // ;?>'+'<tr><td>'+'<?php echo $detail['facility_name'] ;?>'+'</td>'
+// 				 
+				 // +'<td>'+'<?php echo $detail['expect_suggest'] ;?>'+'</td>'
+				 // +'</td></tr>'+'<?php endforeach;?>'
+				 // +'</tbody></table>';
+        // //hcmp custom message dialog
+    // dialog_box(body_content,'<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');
+    // $('#communication_dialog').on('hidden.bs.modal', function (e) {  $('.modal-dialog').removeClass("modal-lg");
+    // $('.modal-body').html(''); 	})    
+//    
+    // });
 
 $("#raw_data_view").click( function (){
 

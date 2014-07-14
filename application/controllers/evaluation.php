@@ -94,7 +94,7 @@ class Evaluation extends MY_Controller {
 		$trained_personel = evaluation_data::get_personel_trained($county_id, $district_id);
 
 		$graph_data = array_merge($graph_data, array("graph_id" => 'chart_2'));
-		$graph_data = array_merge($graph_data, array("graph_title" => 'Personel Trained'));
+		$graph_data = array_merge($graph_data, array("graph_title" => 'Number Of Personel Trained'));
 		$graph_data = array_merge($graph_data, array("graph_type" => 'pie'));
 		$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Total personel'));
 		$graph_data = array_merge($graph_data, array("graph_categories" => array('Facility Deputy','Nurse','Facility Head','Pharmacy Technologist','Store Manager')));
@@ -193,6 +193,7 @@ class Evaluation extends MY_Controller {
 		$data['coverage_data'] = evaluation_data::get_district_coverage_data($county_id, $district_id);
 
 		$data['show_req'] = evaluation_data::show_req_id($county_id, $district_id);
+		$data['show_expect'] = evaluation_data::show_meet_expect($county_id, $district_id);
 
 		 $views = 'subcounty/reports/analysis_new';
 
@@ -361,6 +362,7 @@ class Evaluation extends MY_Controller {
 		$data['coverage_data'] = evaluation_data::get_district_coverage_data($county_id, $district_id);
 
 		$data['show_req'] = evaluation_data::show_req_id($county_id, $district_id);
+		$data['show_expect'] = evaluation_data::show_meet_expect($county_id, $district_id);
 
 		 $views = 'subcounty/reports/analysis_new';
 

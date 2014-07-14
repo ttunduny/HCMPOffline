@@ -23,6 +23,7 @@ foreach($district_data as $district_):
 endforeach;
 ?>
 </select> 
+
 <select id="tracer_facility_filter" class="form-control col-md-3">
 <option value="NULL">Select facility</option>
 </select>	
@@ -232,11 +233,14 @@ var drop_down='';
 		});		
 		//
 		$(".tracer-filter").button().click(function(e) {//
-        e.preventDefault(); 
+        e.preventDefault();
+      
         var url_ = "reports/load_stock_level_graph/"+
-        $("#tracer_commodity_filter").val()+
-        "/NULL/"+$("#tracer_district_filter").val()+
-        "/NULL/"+$("#tracer_plot_value_filter").val();    
+        $("#tracer_district_filter").val()+
+        "/NULL/"+$("#tracer_facility_filter").val()+
+        "/NULL";
+         
+       
         ajax_request_replace_div_content(url_,'.graph_content');    
           });
           
