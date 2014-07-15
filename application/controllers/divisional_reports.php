@@ -214,6 +214,7 @@ public function tb_report(){
 
 	    $data['title'] = "Tuberculosis Report";
 		$data['banner_text'] = "Facility Tuberculosis & Leprosy Commodities";
+
 		$data['graph_data'] = $faciliy_expiry_data;
 		$data['content_view'] = "facility/facility_reports/tb_report";
 		$view = 'shared_files/template/template';
@@ -325,14 +326,8 @@ public function save_tb_data(){
 			'report_date' => $save_time
 			);
 $this->db->insert('tuberculosis_report_info',$data_);
-	echo "Success";
-		exit;
-	// END OF SAVING data
 
-	foreach ($values as $key => $value) {
-		$no = count($values['table']);
-		
-}
+$this->program_reports();
 }
 
 	//For the RH Report
