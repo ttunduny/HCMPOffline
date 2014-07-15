@@ -1009,6 +1009,7 @@ class Reports extends MY_Controller
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		
 	}
+
 	/*public function order_report()
 	{
 		$facility_code = $this -> session -> userdata('facility_id'); 
@@ -1016,8 +1017,7 @@ class Reports extends MY_Controller
 		$year = date("Y");
 						
 		$orders = facility_orders::get_facility_orders($facility_code);
->>>>>>> 908445d1add3c3d161b2acadd54736673177647a
-		
+
 		//Holds all the months of the year
 		//Build the line graph showing the expiries graph
 		$graph_data = array();
@@ -1048,14 +1048,8 @@ class Reports extends MY_Controller
 		$data['active_panel']='statistics';
 		$this -> load -> view($view, $data);
 		
-<<<<<<< HEAD
-	}
-
-	public function filter_facility_orders($year, $month, $option)
-=======
 	}*/
 	/*public function filter_facility_orders($year, $month, $option)
->>>>>>> 908445d1add3c3d161b2acadd54736673177647a
 	{
 		
 		$facility_code = isset($facility_code) ? $facility_code: $this -> session -> userdata('facility_id');
@@ -1121,18 +1115,23 @@ class Reports extends MY_Controller
 		
 		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
-		
-<<<<<<< HEAD
-	}
-	
-	
-=======
+
 	}*/
 
 	public function get_facility_json_data($district_id) {
 		echo json_encode(facilities::get_facilities_which_are_online($district_id));
 	}
-	public function get_facility_mapping_data($year = null, $month = NULL) 
+
+		public function get_facility_json($district) {
+		echo json_encode(Facilities::getFacilities($district));
+				
+	}
+	public function get_sub_county_json_data($county_id) {
+		echo json_encode(Districts::get_districts($county_id));
+	}
+	     
+	 //For system uptake option on SUB-COUNTY dashboard
+	/* public function get_sub_county_facility_mapping_data($year = null, $month = NULL) 
 	 {
 	 	$identifier = $this -> session -> userdata('user_indicator');
 		$year = isset($year) ? $year : date("Y");
@@ -1291,20 +1290,19 @@ class Reports extends MY_Controller
 		endif;
 		
 
-	}     
+	}    */ 
 	 //For system uptake option on SUB-COUNTY dashboard
-	 public function get_sub_county_facility_mapping_data($year = null, $month = NULL) 
+	 public function get_sub_county_facility_mapping_data() 
 	 {
 	 	$identifier = $this -> session -> userdata('user_indicator');
-		$year = isset($year) ? $year : date("Y");
-		$month = isset($month) ? $month : date("m");
 		$county_id = $this -> session -> userdata('county_id');
 		$district_id = $this -> session -> userdata('district_id');
 		$district = $this -> session -> userdata('district_id');
 	
+		//Get the name of the county
 		$county_name = Counties::get_county_name($county_id);
 		$county_name = $county_name['county'];
-		
+		//get the name of the district
 		$district_name = Districts::get_district_name_($district_id);
 		$district_name = $district_name['district'];
 		
@@ -1315,6 +1313,10 @@ class Reports extends MY_Controller
 		$date_2 = new DateTime($last_day_of_the_month);
 
 		$district_data = districts::getDistrict($county_id);
+		//echo "<pre>";
+		//print_r($district_data);
+		//echo "</pre>";
+		//exit;
 
 		$facility_data = Facilities::get_Facilities_using_HCMP($district);
 		$log_data = Log::get_log_data($district_id,$county_id);
@@ -1469,19 +1471,12 @@ class Reports extends MY_Controller
 		
 
 	}
-	//public function download_manual()
-	//{
-		//$this -> load ('assets/manual/Manual.pdf');
-			
-		//base_url().'assets/manual/Manual.pdf';
-	//}
+	
 	public function get_county_facility_mapping_ajax_request($option = null) 
 	{
 		//$district_id = $this -> session -> userdata('district_id');
 		$county_id = $this -> session -> userdata('county_id');
-		
 		$district_data = districts::getDistrict($county_id);
-		
 		$table_data = "<tbody>";
 		$table_data_summary = "<tbody>";
 		$district_names = "<thead><tr><th>Monthly Activities</th>";
@@ -1496,11 +1491,12 @@ class Reports extends MY_Controller
 		
 		$table_district_totals = "";
 		$all_facilities = 0;
+		$total_using_hcmp = 0;
 		$total_facility_list = '';
 		$total_facilities_in_county = 0;
+		$total_facilities_targetted = 0;
 		$percentage_coverage = "";
 		$percentage_coverage_total = 0;
-		
 		$percentage_coverage_using = "";
 		$percentage_coverage_total_using = 0;
 		
@@ -1537,11 +1533,9 @@ class Reports extends MY_Controller
 				(array_key_exists($district_name, $district_total_facilities_using_hcmp)) ? $district_total_facilities_using_hcmp[$district_name] = $total_facilitites_using_hcmp : $district_total_facilities_using_hcmp = array_merge($district_total_facilities_using_hcmp, array($district_name => $total_facilitites_using_hcmp));
 				//echo "<pre>";print_r($district_total_facilities_targetted);echo "</pre>";
 				$table_data .= ($total > 0) ? "<td><a href='#' id='$district_id' class='ajax_call2 link' date='$date'> $total</a></td>" : "<td>$total</td>";
-				 // echo "<pre>";
-				 // print_r($total_facilities_targetted);
-				 // echo "</pre>";
+				 
 			endforeach;
-
+	
 			$table_data .= "<td>$monthly_total</td></tr>";
 
 		endforeach;
@@ -1550,7 +1544,6 @@ class Reports extends MY_Controller
 		$table_data_summary .= "<tr>";
 
 		$checker = 1;
-
 		foreach ($district_total as $key => $value) :
 			$coverage = 0;
 			$using = 0;
@@ -1570,8 +1563,9 @@ class Reports extends MY_Controller
 
 			$total_facilities_in_county = $total_facilities_in_county + $district_total_facilities[$key];
 			$targetted_total = $targetted_total + $district_total_facilities_targetted[$key];
+			$total_using_hcmp = $total_using_hcmp + $district_total_facilities_using_hcmp[$key];
 			
-			$total_facilities_targetted = 0;
+			
 			@$targetted_vs_using_hcmp = round((($total_facilitites_using_hcmp /$total_facilities_targetted )) * 100, 1);
 			@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
 			//echo "<pre>";print_r($total_facilitites_using_hcmp);echo "</pre>";
@@ -1581,7 +1575,7 @@ class Reports extends MY_Controller
 			// search them after you uncomment and you'll understand what they were for
 			//echo "<pre> Value: ".$value." District ID: ".$district_id." DistName: ".$key."  Total Percentage: ".$total_facilitites_using_hcmp."   ";print_r($get_facilities_which_went_online_);echo "</pre>";
 			
-			$percentage_coverage_using .= ($checker == 1) ? "<tr><td><b>Using HCMP vs Targetted %</b></td>
+			$percentage_coverage_using .= ($checker == 1) ? "<tr><td><b>TOTAL: Using HCMP vs Targetted %</b></td>
 			<td>$targetted_vs_using_hcmp %</td>" : "<td>$using_percentage %</td>";
 			
 			$percentage_coverage .= ($checker == 1) ? "<tr><td><b>% Coverage</b></td>
@@ -1592,16 +1586,25 @@ class Reports extends MY_Controller
 			$checker++;
 
 		endforeach;
-		
+	 // echo "<pre>";
+	 // print_r($district_total);
+	// // echo "</pre>";
+	// exit;
 		$table_data .= "<td><a href='#' id='total' class='ajax_call1 link' option='total' date='total'>$all_facilities</a></td></tr></tbody>";
 		$table_data_summary .= "<td><a href='#' id='total' class='ajax_call2 link' date='total'>$all_facilities</a></td></tr></tbody>";
 		$table_datas_summary .= "<td><a href='#' id='total' class='ajax_call2 link' date='total'>$all_facilities</a></td>";
 		$district_names .= "<th>TOTAL</th></tr></thead>";
+		
 		$final_coverage_total = 0;
-		//$targetted_vs_using_hcmp = 0;
+		$targetted_vs_using_hcmp = 0;
+		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
+		@$targetted_vs_using_hcmp = round((($all_facilities / $targetted_total)) * 100, 1);
+		
+		//echo $all_facilities;
+		//exit;
 		// $total_facilities_targetted = 0;
 		// @$targetted_vs_using_hcmp = round((($total_facilitites_using_hcmp /$total_facilities_targetted )) * 100, 1);
-		// @$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
+		 
 		$data_ = "
 		<div class='tabbable tabs-left'>
 		<div class='tab-content'>
@@ -1625,10 +1628,6 @@ class Reports extends MY_Controller
 		 </div>
 		 </div>";
 		
-		//echo "<pre>";
-		//print_r($final_coverage_total);
-		//echo "</pre>";
-		// exit;
 		if (isset($option)) :
 			return $data_;
 		else : echo $data_;

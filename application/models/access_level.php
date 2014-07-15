@@ -36,7 +36,7 @@ class Access_level extends Doctrine_Record {
 		 where("$permissions=1");
 		
 		$level = $query -> execute();
-		$level=$level->toArray();
+		//$level=$level->toArray();
 		return $level;
 	}
 	

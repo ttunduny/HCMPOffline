@@ -37,7 +37,8 @@ class Districts extends Doctrine_Record {
 		return $drugs[0];
 	}
 	
-	public static function get_district_name($district){
+	public static function get_district_name($district)
+	{
 	$query = Doctrine_Query::create() -> select("district") -> from("districts")->where("id='$district'");
 		$drugs = $query -> execute();
 		return $drugs;	
@@ -101,5 +102,12 @@ SELECT d.district, (select count(id) from facilities f where district=$district_
 facilities f where district=$district_id and using_hcmp=1) as total_2 from districts d where d.id=$district_id");	
 		return $query;
 	}	
+	
+	public static function get_districts($county_id){
+	
+		$query=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT d.id,d.district FROM districts d ,counties c where d.county=c.id AND d.county='$county_id'");	
+		return $query;
+	}
 	
 }

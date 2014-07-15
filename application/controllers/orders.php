@@ -64,6 +64,40 @@ for ($row = 1; $row <= $highestRow; $row++){
    $objWriter->save("print_docs/excel/excel_files/".$file_name);
 
 	}
+	public function getDistrict()
+	{
+		//for ajax
+		$county = $_POST['county'];
+		$districts = Districts::getDistrict($county);
+		$list = "";
+		
+		foreach ($districts as $districts) 
+		{
+			$list.=$districts->id;
+			$list.="*";
+			$list.=$districts->district;
+			$list.="_";
+		}
+		
+		echo $list;
+	}
+	public function getFacilities()
+	{
+		//for ajax
+		$district=$_POST['district'];
+		$facilities=Facilities::getFacilities($district);
+		$list="";
+		
+		foreach ($facilities as $facilities) 
+		{
+			$list.=$facilities->facility_code;
+			$list.="*";
+			$list.=$facilities->facility_name;
+			$list.="_";
+		}
+		
+		echo $list;
+	}
 
 	public function facility_order() 
 	{

@@ -81,6 +81,7 @@
                         </td>
                     </tr>
 
+<<<<<<< HEAD
                    <!-- <tr>
                         <td>
                             <span class="glyphicon">
@@ -88,6 +89,14 @@
                         </td>
                     </tr>-->
 
+=======
+                    <tr>
+                      <!--  <td>
+                            <span class="glyphicon">
+                            </span><a href="<?php echo base_url().'reports/commodities_issue' ?>">Commodities Issued</a>
+                      </td>-->
+                    </tr>
+>>>>>>> 5e0c8f53abfb0e2fefc12b626b22a38a755470f6
                     <tr>
                         <td>
                             <span class="glyphicon"></span><a href="<?php echo base_url().'reports/get_facility_mapping_data'?>" >User Statistics</a>
@@ -100,6 +109,7 @@
     </div>
     
 </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 <script>
@@ -135,3 +145,5 @@
 
 
 >>>>>>> 89e48469412e89eda8061b699da2825b83c81c87
+=======
+>>>>>>> 5e0c8f53abfb0e2fefc12b626b22a38a755470f6

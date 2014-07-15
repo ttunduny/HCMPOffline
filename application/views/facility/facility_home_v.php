@@ -3,7 +3,7 @@
 	<div class="col-md-4">
 		<div class="row">			
 			<div class="col-md-12">
-				<div class="panel panel-success">
+				<div class="panel panel-success" id="notify">
       		<div class="panel-heading">
         		<h3 class="panel-title">Notification <span class="glyphicon glyphicon-bell"></span> </h3>
       		</div>
@@ -27,7 +27,13 @@
 			 </div>
 		  <?php endif; //donations_pending?>
    <?php if($facility_dashboard_notifications['facility_stock_count']==0): ?>
-      	<div style="height:auto; margin-bottom: 2px" class="warning message ">      	
+   	    <div style="height:auto; margin-bottom: 2px" class="warning message " id="">      	
+        <h5> 0) Import facility stock from version 1 </h5> 
+        	<p>
+			<a class="link" href="<?php echo base_url('stock/set_up_facility_stock') ?>">facility stock can be imported to version 2</a> 
+			</p>
+        </div>
+      	<div style="height:auto; margin-bottom: 2px" class="warning message " id="">      	
         <h5> 1) Set up facility stock</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('stock/set_up_facility_stock') ?>">Select the Commodities which are used in the facility</a> 
@@ -103,7 +109,7 @@
 		</div>
 	<div class="row">			
 			<div class="col-md-12">				
-			<div class="panel panel-success">
+			<div class="panel panel-success" id="actions">
       		<div class="panel-heading">
         		<h3 class="panel-title">Actions <span class="glyphicon glyphicon-list-alt"></span></h3>
       </div>
@@ -165,6 +171,10 @@
 
 	
    $(document).ready(function() {
+   	if('<?php echo ($facility_dashboard_notifications['facility_stock_count']==0)? "true": "false"; ?>'=='true'){
+   		startIntro();
+   	}
+   	
    	$('#update_order_hide').hide() 
        $('#order_hide').hide() 
 
@@ -182,3 +192,46 @@
 
     });
 </script>
+
+<script type="text/javascript">
+      function startIntro(){
+        var intro = introJs();
+          intro.setOptions({
+            steps: [
+              {
+                element: 'welcome',
+                intro: "<b>WELCOME TO HCMP. Let us explore.</b>"
+              },
+              {
+                element: '#nav-here',
+                intro: "<b>Navigation Bar</b> ",
+                position: 'left'
+              },
+              {
+                element: '#notify',
+                intro: "Notification panel ",
+                position: 'bottom'
+              },
+              {
+                element: '#actions',
+                intro: "Actions panel ",
+                position: 'bottom'
+              },
+              {
+                element: '#container',
+                intro: "<b>Stocks graph here.</b> ",
+                position: 'bottom'
+              },
+              {
+                element: '#drop-step',
+                intro: "<b>Logout Here.</b> ",
+                position: 'left'
+              }
+              
+            ]
+          });
+
+          intro.start();
+      }
+    </script>
+   
