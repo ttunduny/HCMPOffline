@@ -26,9 +26,9 @@ class Facilities extends Doctrine_Record {
 	}
 	public static function getFacilities($district){
 		
-	$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");
+		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");
 		$drugs = $query -> execute();
-		$drugs=$drugs->toArray();
+		$drugs = $drugs->toArray();
 		return $drugs;
 	}
 	public static function get_Facilities_using_HCMP($district)
@@ -58,7 +58,7 @@ class Facilities extends Doctrine_Record {
 		AND UNIX_TIMESTAMP(  `date_of_activation` ) >0
 		ORDER BY  `facility_name` ASC ");
 		return $q;	
-}
+	}
    public static function get_tragetted_rolled_out_facilities($facility_code=null,$district_id=null,$county_id=null,$identifier=null){
         switch ($identifier){
         	case county:

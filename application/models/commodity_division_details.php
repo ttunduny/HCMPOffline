@@ -2,11 +2,12 @@
 /**
  * @author Collins
  */
-class commodity_sub_category extends Doctrine_Record {
+class commodity_division_details extends Doctrine_Record {
 	
 	public function setTableDefinition() {
 		$this -> hasColumn('id', 'int');
 		$this -> hasColumn('division_name ', 'varchar', 255);
+		$this -> hasColumn('status', 'int');
 		
 	}
 
@@ -17,6 +18,12 @@ class commodity_sub_category extends Doctrine_Record {
 
 	public static function get_all() {
 		$query = Doctrine_Query::create() -> select("*") -> from("commodity_division_details");
+		$commodities = $query -> execute();
+		return $commodities;
+	}
+	public static function get_all_divisions() 
+	{
+		$query = Doctrine_Query::create() -> select("*") -> from("commodity_division_details")->where("status=1 and id !=1");
 		$commodities = $query -> execute();
 		return $commodities;
 	}
