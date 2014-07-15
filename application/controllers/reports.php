@@ -1313,11 +1313,6 @@ class Reports extends MY_Controller
 		$date_2 = new DateTime($last_day_of_the_month);
 
 		$district_data = districts::getDistrict($county_id);
-		//echo "<pre>";
-		//print_r($district_data);
-		//echo "</pre>";
-		//exit;
-
 		$facility_data = Facilities::get_Facilities_using_HCMP($district);
 		$log_data = Log::get_log_data($district_id,$county_id);
 	
@@ -1510,13 +1505,8 @@ class Reports extends MY_Controller
 	    <td>" . $date . "</td>";
 			foreach ($district_data as $district_detail) :
 
-				$district_id = $district_detail -> id;
-			// ADIMA
-			// Printed the district_id and saw it was assigning it only the final id in the result array from the query
-			  //echo "<pre>";print_r($district_id);echo "</pre>";
-		
+				$district_id = $district_detail -> id;		
 				$district_name = $district_detail -> district;
-				//echo "<pre>";print_r($district_name);echo "</pre>";
 				$get_facilities_which_went_online_ = facilities::get_facilities_which_went_online_($district_id, $facility_dates['date_when_facility_went_online']);
 				
 				$total = $get_facilities_which_went_online_[0]['total'];
@@ -1531,7 +1521,6 @@ class Reports extends MY_Controller
 				(array_key_exists($district_name, $district_total_facilities)) ? $district_total_facilities[$district_name] = $total_facilities : $district_total_facilities = array_merge($district_total_facilities, array($district_name => $total_facilities));
 				(array_key_exists($district_name, $district_total_facilities_targetted)) ? $district_total_facilities_targetted[$district_name] = $total_facilities_targetted : $district_total_facilities_targetted = array_merge($district_total_facilities_targetted, array($district_name => $total_facilities_targetted));
 				(array_key_exists($district_name, $district_total_facilities_using_hcmp)) ? $district_total_facilities_using_hcmp[$district_name] = $total_facilitites_using_hcmp : $district_total_facilities_using_hcmp = array_merge($district_total_facilities_using_hcmp, array($district_name => $total_facilitites_using_hcmp));
-				//echo "<pre>";print_r($district_total_facilities_targetted);echo "</pre>";
 				$table_data .= ($total > 0) ? "<td><a href='#' id='$district_id' class='ajax_call2 link' date='$date'> $total</a></td>" : "<td>$total</td>";
 				 
 			endforeach;
@@ -1556,7 +1545,6 @@ class Reports extends MY_Controller
 
 			$total_facility_list .= ($checker == 1) ? "<tr><td><b>TOTAL: Facilities in District</b></td><td>$district_total_facilities[$key]</td>" : "<td>$district_total_facilities[$key]</td>";
 			$table_data .= ($checker == 1) ? "<td><b>TOTAL: Facilities using HCMP</b></td><td>$value</td>" : "<td>$value</td>";
-			//echo "<pre>";print_r($coverage);echo "</pre>";
 			$table_summary .= ($checker == 1) ? "<td><b>TOTAL: Facilities using HCMP</b></td><td>$value</td>" : "<td>$value</td>";
 			
 			$total_targetted_facility_list .= ($checker == 1) ? "<tr><td><b>TOTAL: Targetted Facilities in District</b></td><td>$district_total_facilities_using_hcmp[$key]</td>":"<td>$district_total_facilities_using_hcmp[$key]</td>";
@@ -1568,28 +1556,15 @@ class Reports extends MY_Controller
 			
 			@$targetted_vs_using_hcmp = round((($total_facilitites_using_hcmp /$total_facilities_targetted )) * 100, 1);
 			@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
-			//echo "<pre>";print_r($total_facilitites_using_hcmp);echo "</pre>";
-			
-			// ADIMA
-			// printed data with labels to see whether various variables had values
-			// search them after you uncomment and you'll understand what they were for
-			//echo "<pre> Value: ".$value." District ID: ".$district_id." DistName: ".$key."  Total Percentage: ".$total_facilitites_using_hcmp."   ";print_r($get_facilities_which_went_online_);echo "</pre>";
-			
 			$percentage_coverage_using .= ($checker == 1) ? "<tr><td><b>TOTAL: Using HCMP vs Targetted %</b></td>
 			<td>$targetted_vs_using_hcmp %</td>" : "<td>$using_percentage %</td>";
 			
 			$percentage_coverage .= ($checker == 1) ? "<tr><td><b>% Coverage</b></td>
 			<td>$coverage %</td>" : "<td>$coverage %</td>";
-			
-			@$total_percentage_coverage = round((($targetted_total /$all_facilities )) * 100, 1);
-			
 			$checker++;
 
 		endforeach;
-	 // echo "<pre>";
-	 // print_r($district_total);
-	// // echo "</pre>";
-	// exit;
+		
 		$table_data .= "<td><a href='#' id='total' class='ajax_call1 link' option='total' date='total'>$all_facilities</a></td></tr></tbody>";
 		$table_data_summary .= "<td><a href='#' id='total' class='ajax_call2 link' date='total'>$all_facilities</a></td></tr></tbody>";
 		$table_datas_summary .= "<td><a href='#' id='total' class='ajax_call2 link' date='total'>$all_facilities</a></td>";
@@ -1599,11 +1574,6 @@ class Reports extends MY_Controller
 		$targetted_vs_using_hcmp = 0;
 		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
 		@$targetted_vs_using_hcmp = round((($all_facilities / $targetted_total)) * 100, 1);
-		
-		//echo $all_facilities;
-		//exit;
-		// $total_facilities_targetted = 0;
-		// @$targetted_vs_using_hcmp = round((($total_facilitites_using_hcmp /$total_facilities_targetted )) * 100, 1);
 		 
 		$data_ = "
 		<div class='tabbable tabs-left'>
@@ -1616,7 +1586,7 @@ class Reports extends MY_Controller
 			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" 
 			. $district_names . $table_data . $total_facility_list .  "<td>$total_facilities_in_county</td></tr>" 
 			.$total_targetted_facility_list."<td>$targetted_total</td>" 
-			. $percentage_coverage . $total_percentage_coverage. "<td>$final_coverage_total %</td></tr>".$percentage_coverage_using."<td>$targetted_vs_using_hcmp %</td></tr>
+			. $percentage_coverage. "<td>$final_coverage_total %</td></tr>".$percentage_coverage_using."<td>$targetted_vs_using_hcmp %</td></tr>
 			</table>
 		</div>
 		

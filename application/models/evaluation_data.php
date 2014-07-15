@@ -202,6 +202,7 @@ and f.district=d.id and d.county=$county_id ) as total, count(`use_freq`) as lev
 where f.facility_code=f_e.facility_code 
 and f.district=d.id and d.county=$county_id
 $where
+AND UNIX_TIMESTAMP( f.`date_of_activation` ) >0
 group by `use_freq`
 ");	
 		return $query12;

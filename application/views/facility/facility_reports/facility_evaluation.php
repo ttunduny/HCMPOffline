@@ -1,6 +1,5 @@
 <?php 
      $attributes = array( 'name' => 'myform', 'id'=>'myform');
-	
 		foreach ($facilities as $facility) 
 		{
 			$facility_name = $facility['facility_name'];
@@ -28,7 +27,7 @@
 		
 		<tr class="info"><td colspan="4">1. FACILITY INFORMATION</td></tr>
 		<tr><td>Facility Name: <strong><?php echo $facility_name;?></strong></td>
-			<td>Sub County: <strong><?php echo $district_name['district'];?></strong> </td>
+			<td>Sub County: <strong><?php echo $district_name[0]['district'];?></strong> </td>
 			<td colspan="2"></td>
 		</tr>
 		<tr>
