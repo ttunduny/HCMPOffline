@@ -1141,8 +1141,10 @@ class Reports extends MY_Controller
 
 	}    */ 
 	 //For system uptake option on SUB-COUNTY dashboard
-	 public function get_sub_county_facility_mapping_data() 
+	 public function get_sub_county_facility_mapping_data($year = null, $month = NULL) 
 	 {
+	 	$year = isset($year) ? $year : date("Y");
+		$month = isset($month) ? $month : date("m");
 	 	$identifier = $this -> session -> userdata('user_indicator');
 		$county_id = $this -> session -> userdata('county_id');
 		$district_id = $this -> session -> userdata('district_id');
@@ -1162,7 +1164,10 @@ class Reports extends MY_Controller
 		$date_2 = new DateTime($last_day_of_the_month);
 
 		$district_data = districts::getDistrict($county_id);
-		
+		/*echo "<pre>";
+		print_r($district_data);
+		echo "</pre>";
+		exit;*/
 
 		$facility_data = Facilities::get_Facilities_using_HCMP($district);
 		$log_data = Log::get_log_data($district_id,$county_id);
@@ -1176,7 +1181,7 @@ class Reports extends MY_Controller
 		
 		switch ($identifier):
 		case 'county':
-			$graph_category_data = $district_data;
+			$graph_category_data = $facility_data;
 			$graph_title = $county_name." County ";
 			
 		break;
@@ -1309,16 +1314,175 @@ class Reports extends MY_Controller
 			$data['title'] = "User Logs";
 			$data['banner_text'] = "System Use Statistics";
 		    $data['report_view'] = "subcounty/ajax/facility_roll_out_at_a_glance_v";		
-			$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
+			$data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v":"shared_files/report_templates/side_bar_v";
 			$data['content_view'] = "facility/facility_reports/reports_v";
-			$data['active_panel'] = "system_usage";
+			$data['active_panel'] =(!$this -> session -> userdata('facility_id')) ? "system_usage": "other";
 			$view = 'shared_files/template/template';
 			$this -> load -> view($view, $data);
+			//(!$this -> session -> userdata('facility_id')) ? "consumption": "other" ;
 		endif;
 		
 
 	}
+	//For facility level acces only
+	/*public function get_facility_mapping_data($year = null, $month = NULL) 
+	 {
+	 	$facility_code = $this -> session -> userdata('facility_id');
+		$year = isset($year) ? $year : date("Y");
+		$month = isset($month) ? $month : date("m");
+	 	$county_id = $this -> session -> userdata('county_id');
+		$district_id = $this -> session -> userdata('district_id');
+		$district = $this -> session -> userdata('district_id');
 	
+		//get the name of the district
+		$district_name = Districts::get_district_name_($district_id);
+		$district_name = $district_name['district'];
+		
+		$first_day_of_the_month = date("Y-m-1", strtotime(date($year . "-" . $month)));
+		$last_day_of_the_month = date("Y-m-t", strtotime(date($year . "-" . $month)));
+		
+
+		
+
+		$facility_data = Users::get_users_active_in_facility($facility_code);
+	
+		$series_data = array();
+		$category_data = array();
+		$series_data_monthly = array();
+		$category_data_monthly = array();
+		$seconds_diff = strtotime($last_day_of_the_month) - strtotime($first_day_of_the_month);
+		$date_diff = floor($seconds_diff / 3600 / 24);	
+		
+		$graph_category_data = $facility_data;
+		$graph_title = $district_name." SubCounty ";
+		
+		
+		for ($i = 0; $i <= $date_diff; $i++) :
+			$day = 1 + $i;
+			$new_date = "$year-$month-" . $day;
+				
+			$new_date = date('Y-m-d', strtotime($new_date));
+
+			if (date('N', strtotime($new_date)) < 6) 
+			{
+				$date_ = date('D d', strtotime($new_date));
+				$category_data = array_merge($category_data, array($date_));
+				$temp_1 = array();
+				foreach ($graph_category_data as $user_) :
+					$user_id = $user_ -> id;
+					$user_name = $user_ -> fname." ".$user_ -> lname;
+					$subcounty_data = Log::get_facility_login_count($facility_code, $new_date);
+					(array_key_exists($user_name, $series_data)) ? $series_data[$user_name] = array_merge($series_data[$user_name], array((int)$subcounty_data[0]['total'])) : $series_data = array_merge($series_data, array($user_name => array((int)$subcounty_data[0]['total'])));
+	echo "<pre>";
+		print_r($subcounty_data);
+		echo "</pre>";
+		exit;
+				endforeach;
+
+			} else {
+				// do nothing
+			}
+		endfor;
+		
+		//for setting the month name in the graph when filtering
+		$m = date('F',strtotime('2000-'.$month.'-01'));
+				
+		$graph_data_daily = array();
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_id"=>'container'));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_title"=>'Daily Facility Access log for '.$m." for ".$graph_title));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_type"=>'line'));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_yaxis_title"=>'log In'));
+		$graph_data_daily = array_merge($graph_data_daily,array("graph_categories"=>array()));
+		$graph_data_daily = array_merge($graph_data_daily,array("series_data"=>$series_data));
+	    $graph_data_daily['graph_categories'] = $category_data;	
+		$graph_daily = $this->hcmp_functions->create_high_chart_graph($graph_data_daily);
+
+		for ($i = 0; $i < 12; $i++) :
+			$day = 1 + $i;
+			//changed it to be a month
+			$new_date = "$year-$day";
+			$new_date = date('Y-m', strtotime($new_date));
+			$date_ = date('M', strtotime($new_date));
+			$category_data_monthly = array_merge($category_data_monthly, array($date_));
+
+			foreach ($graph_category_data as $facility_) :
+				$facility_id = $facility_ -> facility_code;
+				$facility_name = $facility_ -> facility_name;
+				$subcounty_data = Log::get_facility_login_monthly_count($county_id, $district_id, $new_date);
+
+				(array_key_exists($facility_name, $series_data_monthly)) ? $series_data_monthly[$facility_name] = array_merge($series_data_monthly[$facility_name], array((int)$subcounty_data[0]['total'])) : $series_data_monthly = array_merge($series_data_monthly, array($facility_name => array((int)$subcounty_data[0]['total'])));
+			endforeach;
+
+		endfor;
+			
+		$graph_data = array();
+		$graph_data = array_merge($graph_data,array("graph_id"=>'container_monthly'));
+		$graph_data = array_merge($graph_data,array("graph_title"=>'Monthly Facility Access for '. $year));
+		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
+		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'log In'));
+		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
+		$graph_data = array_merge($graph_data,array("series_data"=>$series_data_monthly));
+	    $graph_data['graph_categories']=$category_data_monthly;	
+		$graph_monthly = $this->hcmp_functions->create_high_chart_graph($graph_data);
+
+		
+		$graph_log_data = array();
+		$graph_log_data = array_merge($graph_log_data,array("graph_id"=>'log_data_graph'));
+		$graph_log_data = array_merge($graph_log_data,array("graph_title"=>'User Activity for  '.$m.' for '. $graph_title));
+		$graph_log_data = array_merge($graph_log_data,array("graph_type"=>'column'));
+		$graph_log_data = array_merge($graph_log_data,array("graph_yaxis_title"=>'Activities'));
+		$graph_log_data = array_merge($graph_log_data,array("graph_categories"=>array()));
+		$graph_log_data['series_data']['Decommissions'] =
+		$graph_log_data['series_data']['Redistributions'] =
+		$graph_log_data['series_data']['Stock'] =
+		$graph_log_data['series_data']['Orders'] = 
+		$graph_log_data['series_data']['Issues'] =
+		$graph_log_data['series_data']['User Log'] = array();
+		
+		
+		foreach($log_data as $log_data_)
+		{
+			$sum = array_sum($log_data_);
+			$issues = round(($log_data_['total_issues']/$sum)*100);
+			$orders = round(($log_data_['total_orders']/$sum)*100);
+			$decommissions = round(($log_data_['total_decommisions']/$sum)*100);
+			$redistributions = round(($log_data_['total_redistributions']/$sum)*100);
+			$stock = round(($log_data_['total_stock_added']/$sum)*100);
+			$user = round(($log_data_['user_log']/$sum)*100);
+			
+			$graph_log_data['series_data']['Issues'] = array_merge($graph_log_data['series_data']['Issues'],array($issues));
+			$graph_log_data['series_data']['Orders'] = array_merge($graph_log_data['series_data']['Orders'],array($orders));
+			$graph_log_data['series_data']['Decommissions'] = array_merge($graph_log_data['series_data']['Decommissions'],array($decommissions));
+			$graph_log_data['series_data']['Redistributions'] = array_merge($graph_log_data['series_data']['Redistributions'],array($redistributions));
+			$graph_log_data['series_data']['Stock'] = array_merge($graph_log_data['series_data']['Stock'],array($stock));
+			$graph_log_data['series_data']['User Log'] = array_merge($graph_log_data['series_data']['User Log'],array($user));
+		
+		
+		}
+		
+		$graph_log = $this->hcmp_functions->create_high_chart_graph($graph_log_data);
+		
+
+		
+		$data['graph_data_monthly'] =	$graph_monthly;
+		$data['graph_data_daily'] =	$graph_daily;
+		$data['graph_log'] = $graph_log;
+
+		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
+		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
+	
+			$data['title'] = "User Logs";
+			$data['banner_text'] = "System Use Statistics";
+		    $data['report_view'] = "subcounty/ajax/facility_roll_out_at_a_glance_v";		
+			$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+			$data['content_view'] = "facility/facility_reports/reports_v";
+			$data['active_panel'] = "other";
+			$view = 'shared_files/template/template';
+			$this -> load -> view($view, $data);
+		
+		
+
+	}*/
 	public function get_county_facility_mapping_ajax_request($option = null) 
 	{
 		$district_id = $this -> session -> userdata('district_id');
@@ -1391,7 +1555,7 @@ class Reports extends MY_Controller
 			$coverage = 0;
 			$using = 0;
 			@$coverage = round((($value / $district_total_facilities[$key])) * 100, 1);
-			@$using_percentage = round((($value / $district_total_facilities_using_hcmp[$key])) * 100, 1);
+			@$using_percentage = round((($value / $district_total_facilities_targetted[$key])) * 100, 1);
 			$percentage_coverage_total = $percentage_coverage_total + $coverage;
 			$percentage_coverage_total_using = $percentage_coverage_total_using + $using_percentage;
 
@@ -1421,10 +1585,8 @@ class Reports extends MY_Controller
 			$checker++;
 
 		endforeach;
-	 // echo "<pre>";
-	 // print_r($district_total);
-	// // echo "</pre>";
-	// exit;
+		
+	
 		$table_data .= "<td><a href='#' id='total' class='ajax_call1 link' option='total' date='total'>$all_facilities</a></td></tr></tbody>";
 		$table_data_summary .= "<td><a href='#' id='total' class='ajax_call2 link' date='total'>$all_facilities</a></td></tr></tbody>";
 		$table_datas_summary .= "<td><a href='#' id='total' class='ajax_call2 link' date='total'>$all_facilities</a></td>";

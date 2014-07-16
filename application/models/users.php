@@ -203,5 +203,14 @@ public static function get_dpp_details($distirct){
 		$result = $query -> execute();
 		return $result;
 	}
+	public static function get_users_active_in_facility($facility_code)
+	{
+		$query = Doctrine_Query::create() ->select("*") 
+											->from("Users")
+											->where("facility='$facility_code' and status = 1")
+											->OrderBy("id asc");
+		$drugs = $query -> execute();
+		return $drugs;
+	}
 
 }

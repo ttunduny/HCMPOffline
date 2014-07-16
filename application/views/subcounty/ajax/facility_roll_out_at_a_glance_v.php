@@ -3,7 +3,7 @@
   <b>Below is the project status in the county</b>
 </div>
 	 <div id="temp"></div>
-	<?php echo $data ?>
+	<?php echo @$data ?>
 	<div style="padding-top: 25px;">
 <div class="filter" >
 <h5>
