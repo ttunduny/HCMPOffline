@@ -80,15 +80,6 @@
                             </span><a href="<?php echo base_url().'reports/stock_control' ?>">Stock Control Card</a>
                         </td>
                     </tr>
-
-<<<<<<< HEAD
-                    <tr>
-                      <!--  <td>
-                            <span class="glyphicon">
-                            </span><a href="<?php echo base_url().'reports/commodities_issue' ?>">Commodities Issued</a>
-                      </td>-->
-                    </tr>
-=======
                    <!-- <tr>
                         <td>
                             <span class="glyphicon">
@@ -96,7 +87,6 @@
                         </td>
                     </tr>-->
 
->>>>>>> 1762adf092ab8e1512d6b0249af9b65e19c94b22
                     <tr>
                         <td>
                             <span class="glyphicon"></span><a href="<?php echo base_url().'reports/get_facility_mapping_data'?>" >User Statistics</a>
@@ -109,10 +99,7 @@
     </div>
     
 </div>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
+
 <script>
 
 	$(document).ready(function() 
@@ -144,6 +131,3 @@
 	});
 </script>
 
-
->>>>>>> 89e48469412e89eda8061b699da2825b83c81c87
->>>>>>> 1762adf092ab8e1512d6b0249af9b65e19c94b22

@@ -23,8 +23,7 @@ class Divisional_Reports extends MY_Controller
 	//used for both the subcounty and county level program reports
 	 public function program_reports()
 	 {
-	 	//echo $data['active_tab'];
-//exit;
+	 	
 	 	$user_indicator = $district_id = $this -> session -> userdata('user_indicator');
 	 	switch ($user_indicator) 
 	 	{
@@ -53,6 +52,7 @@ class Divisional_Reports extends MY_Controller
 				$data['banner_text'] = "Facility Divisional Reports";
 				$data['report_view'] = "subcounty/reports/program_reports_v";
 				$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+				$data['active_panel'] = "program_reports";
 				
 			break;
 			case district :
@@ -87,7 +87,7 @@ class Divisional_Reports extends MY_Controller
 				$data['banner_text'] = "District Program Reports";
 				$data['report_view'] = "subcounty/reports/program_reports_v";
 				$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
-				
+				$data['active_panel'] = "program_reports";
 			break;
 			case county:
 			 $county_id = $this -> session -> userdata('county_id');
@@ -119,6 +119,7 @@ class Divisional_Reports extends MY_Controller
 			 $data['banner_text'] = " County Program Reports";
 			 $data['report_view'] = "subcounty/reports/program_reports_v";	
 			 $data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
+			 $data['active_panel'] = "program_reports";
 		 break;
 		}
  		

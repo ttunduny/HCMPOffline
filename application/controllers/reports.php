@@ -34,7 +34,8 @@ class Reports extends MY_Controller
 				$data['content_view'] = "facility/facility_reports/reports_v";
 				$view = 'shared_files/template/template';
 				$data['report_view'] = "subcounty/reports/county_stock_level_filter_v";
-				$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";		
+				$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
+				$data['active_panel']='stocking_levels';		
 				break;
 			case moh_user :
 				$data['content_view'] = "";
@@ -390,6 +391,7 @@ class Reports extends MY_Controller
 			$data['content_view'] = "facility/facility_reports/reports_v";
 			$data['report_view'] = "facility/facility_orders/order_listing_v";
 			$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
+			$data['active_panel'] = "orders";
 		else:
 		$data['title'] = $desc;
 		$data['banner_text'] = $desc;
@@ -549,7 +551,7 @@ class Reports extends MY_Controller
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['commodities']=Commodities::get_facility_commodities($facility_code);
 		$data['report_view'] = "facility/facility_reports/bin_card_v";
-		$data['active_panel']='other';
+		$data['active_panel'] = (!$this -> session -> userdata('facility_id')) ? "consumption": "other" ;
 		$this -> load -> view("shared_files/template/template", $data);
 
 	}
@@ -1160,10 +1162,7 @@ class Reports extends MY_Controller
 		$date_2 = new DateTime($last_day_of_the_month);
 
 		$district_data = districts::getDistrict($county_id);
-		//echo "<pre>";
-		//print_r($district_data);
-		//echo "</pre>";
-		//exit;
+		
 
 		$facility_data = Facilities::get_Facilities_using_HCMP($district);
 		$log_data = Log::get_log_data($district_id,$county_id);
@@ -1312,6 +1311,7 @@ class Reports extends MY_Controller
 		    $data['report_view'] = "subcounty/ajax/facility_roll_out_at_a_glance_v";		
 			$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
 			$data['content_view'] = "facility/facility_reports/reports_v";
+			$data['active_panel'] = "system_usage";
 			$view = 'shared_files/template/template';
 			$this -> load -> view($view, $data);
 		endif;
@@ -2514,6 +2514,7 @@ class Reports extends MY_Controller
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['report_view'] = "subcounty/reports/county_expiries_v";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
+		$data['active_panel']='expiries';	
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 		public function county_consumption() {
@@ -2526,6 +2527,7 @@ class Reports extends MY_Controller
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['report_view'] = "subcounty/reports/county_consumption_data_filter_v";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
+		$data['active_panel']='consumption';
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 		public function county_donation() {
@@ -2535,6 +2537,7 @@ class Reports extends MY_Controller
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['report_view'] = "subcounty/reports/county_donation_filter_v";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
+		$data['active_panel']='donations';
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 		public function stock_out(){
