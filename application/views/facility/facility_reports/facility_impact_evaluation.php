@@ -29,7 +29,7 @@
 		</tr>
 		<tr>
 			<td colspan="2">County: <strong><?php echo $county_name['county'];?></strong></td>
-			<td colspan="3">Sub County: <strong><?php echo $district_name['district'];?> </strong> </td>
+			<td colspan="3">Sub County: <strong><?php echo $district_name[0]['district'];?> </strong> </td>
 			
 		</tr>
 		<tr class="info">
@@ -45,14 +45,14 @@
 			<td rowspan="5"><strong>Web Tool Usage</strong></td>
 			<td colspan="2">No. of facility personnel trained on the use of the tool</td>
 			<td colspan="2">
-				<input type="text" name="personnel_no" id="personnel_no" onkeyup="checker('personnel_no', 'num')"value="<?php 
+				<input type="text" name="personnel_no" id="personnel_no" onkeyup="checker('personnel_no', 'num')"value=""<?php 
 			echo  isset($filled_report['no_of_personnel']) ?  $filled_report['no_of_personnel']: '' ?>"></td>
 			
 		</tr>
 		<tr>
 			<td colspan="2">Of the above trained, how many are still using the tool</td>
 			<td colspan="2">
-				<input type="text" name="no_still_using_tool" id="no_still_using_tool" onkeyup="checker('no_still_using_tool', 'num')"value="<?php 
+				<input type="text" name="no_still_using_tool" id="no_still_using_tool" onkeyup="checker('no_still_using_tool', 'num')"value=""<?php 
 			echo  isset($filled_report['no_still_using_tool']) ?  $filled_report['no_still_using_tool']: '' ?>"></td>
 			</td>
 		</tr>
@@ -71,7 +71,7 @@
 		<tr>
 			<td colspan="2">No. of times a week that the tool is accessed</td>
 			<td colspan="2">
-				<input type="text" name="weekly_no_of_times" id="weekly_no_of_times" onkeyup="checker('weekly_no_of_times', 'num')"value="<?php 
+				<input type="text" name="weekly_no_of_times" id="weekly_no_of_times" onkeyup="checker('weekly_no_of_times', 'num')"value=""<?php 
 			echo  isset($filled_report['no_of_times_a_week']) ?  $filled_report['no_of_times_a_week']: '' ?>"></td>
 			
 		</tr>
@@ -92,25 +92,25 @@
 			<td colspan="2">No. of commodities that the facility is stocked out on</td>
 			<td colspan="2">
 				<input type="text" name="no_of_commodity_stock_out" id="no_of_commodity_stock_out" onkeyup="checker('no_of_commodity_stock_out', 'num')"
-			value="<?php 
+			value=""<?php 
 			echo  isset($filled_report['amount_of_commodities_stocked']) ?  $filled_report['amount_of_commodities_stocked']: '' ?>"></td>
 		</tr>
 		<tr>
 			<td colspan="2">Duration of stock out(days/month)</td>
 			<td colspan="2">
-				<input type="text" name="duration_of_stock_out" id="duration_of_stock_out"value="<?php 
+				<input type="text" name="duration_of_stock_out" id="duration_of_stock_out"value=""<?php 
 			echo  isset($filled_report['duration_of_stockout']) ?  $filled_report['duration_of_stockout']: '' ?>"></td>
 		</tr>
 		<tr>
 			<td colspan="2">No. of commodities that have expired</td>
 			<td colspan="2">
-				<input type="text"  name="total_expired_commodities" id="total_expired_commodities" onkeyup="checker('total_expired_commodities', 'num')"value="<?php 
+				<input type="text"  name="total_expired_commodities" id="total_expired_commodities" onkeyup="checker('total_expired_commodities', 'num')"value=""<?php 
 			echo  isset($filled_report['amount_of_expired_commodities'])?  $filled_report['amount_of_expired_commodities']: '' ?>"></td>
 		</tr>
 		<tr>
 			<td colspan="2">No. of commodities that are over stocked in the facility</td>
 			<td colspan="2">
-				<input type="text" name="total_overstocked_commodities" id="total_overstocked_commodities" onkeyup="checker('total_overstocked_commodities', 'num')"value="<?php 
+				<input type="text" name="total_overstocked_commodities" id="total_overstocked_commodities" onkeyup="checker('total_overstocked_commodities', 'num')"value=""<?php 
 			echo  isset($filled_report['amount_of_overstocked_commodities']) ?  $filled_report['amount_of_overstocked_commodities']: '' ?>"></td>
 		</tr>
 		<tr>
@@ -124,7 +124,7 @@
 			<td colspan="2">When was the last order placed?</td>
 			<td colspan="2">
 				<input class='form-control input-small clone_datepicker_normal_limit_today' 
-				type="text" name="date_of_last_order" id="date_of_last_order" required="required" value="<?php 
+				type="text" name="date_of_last_order" id="date_of_last_order" required="required" value=""<?php 
 			echo  isset($filled_report['date_of_last_order']) ?  $filled_report['date_of_last_order']: '' ?>"/></td>
 			
 		</tr>
@@ -161,7 +161,7 @@
 			<td colspan="2">When is the expected date/month of delivery for the order placed</td>
 			<td colspan="2">
 				<input class='form-control input-small clone_datepicker_normal_limit_today' 
-				type="text" name="expected_date_of_delivery" id="expected_date_of_delivery" required="required" value="<?php 
+				type="text" name="expected_date_of_delivery" id="expected_date_of_delivery" required="required" value=""<?php 
 			echo  isset($filled_report['date_of_delivery']) ?  $filled_report['date_of_delivery']: '' ?>"/></td>
 			</td>
 		</tr>
