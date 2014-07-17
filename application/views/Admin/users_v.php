@@ -324,6 +324,11 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
       var div="#process";
       var url = "<?php echo base_url()."admin/edit_user";?>";
       ajax_post (url,div);
+      $('#editModal').on('hidden.bs.modal', function () {
+				$("#datatable").hide().fadeIn('fast');
+				
+				 location.reload();
+			})
            
     });
 
@@ -369,11 +374,7 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
         }); 
 }
 
-$('#editModal,#addModal').on('hidden.bs.modal', function () {
-				$("#datatable").hide().fadeIn('fast');
-				$( ".container" ).empty();
-				 location.reload();
-			})
+
     
 	});
 	

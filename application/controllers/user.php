@@ -83,7 +83,7 @@ class User extends MY_Controller {
 			'banner_name'=>$banner_name);
 
 			$this -> session -> set_userdata($session_data);
-				
+			
 			//get menu items
 			$menu_items = Menu::getByUsertype($access_typeid);
 			//Create array that will hold all the accessible menus in the session
@@ -773,7 +773,7 @@ class User extends MY_Controller {
 		//update user
 			$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
 			$update_user->execute("UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
-									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county'
+									district ='$district_name_edit',facility ='$facility_id_edit_district',status ='$status',county_id ='$county'
                                   	WHERE `id`= '$user_id'");
 		
 	}

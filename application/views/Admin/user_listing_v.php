@@ -66,7 +66,7 @@
 
 					<table  class="table table-hover table-bordered table-update" id="datatable"  >
 						<thead style="background-color: white">
-							<tr>
+							<tr style="font-size: 15px;">
 								<th>First name</th>
 								<th>Last name</th>
 								<th>Email </th>
@@ -86,7 +86,7 @@
 							<?php
 							foreach ($listing as $list ) {
 							?>
-							<tr class="edit_tr" >
+							<tr class="edit_tr" style="font-size: 14px;">
 								<td class="fname" ><?php echo $list['fname']; ?></td>
 								<td class="lname"><?php echo $list['lname']; ?>	</td>
 								<td class="email" data-attr="<?php echo $list['user_id']; ?>"><?php echo $list['email'];?></td>
@@ -99,13 +99,13 @@
 								<?php
 									if ($list['status']==1) {
 								?>
-								<div class="status_item color_d" data-attr="true">
-									<span>Active</span>
+								<div class="status_item color_d" data-attr="true" >
+									<span style="font-size: 12px ;padding:4px">Active</span>
 								</div>
 								<?php }else{ ?>
 
-								<div class=" status_item color_g" data-attr="false">
-									<span>Deactivated</span>
+								<div class=" status_item color_g" data-attr="false" >
+									<span style="font-size: 12px;padding:4px">Deactivated</span>
 								</div> <?php } ?> </td>
 								<td>
 								<button class="btn btn-primary btn-xs edit " data-toggle="modal" data-target="#editModal" id="<?php echo $list['user_id']; ?>" data-target="#">
