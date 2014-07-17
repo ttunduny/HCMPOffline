@@ -35,12 +35,13 @@
 
 		<td>
 			<label>Facility Name: </label>
+
 			<input type="text" requiredname="facility_name" class="form-control" disabled value="<?php echo $facility_name; ?>">
 		</td>			
 		
 		<td class="col-xs-2">
 		<label>Facility Code: </label>
-			<input type="text" requiredname="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
+	<input type="text" requiredname="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
 		</td>
 		</div>
 		

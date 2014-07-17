@@ -26,8 +26,9 @@ class Facilities extends Doctrine_Record {
 	}
 	public static function getFacilities($district){
 		
-	$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");
+		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");
 		$drugs = $query -> execute();
+		$drugs = $drugs->toArray();
 		return $drugs;
 	}
 	public static function get_Facilities_using_HCMP($district)
@@ -57,9 +58,24 @@ class Facilities extends Doctrine_Record {
 		AND UNIX_TIMESTAMP(  `date_of_activation` ) >0
 		ORDER BY  `facility_name` ASC ");
 		return $q;	
-}
-   public static function get_tragetted_rolled_out_facilities($facility_code=null,$district_id=null,$county_id=null){
-       $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+	}
+   public static function get_tragetted_rolled_out_facilities($facility_code=null,$district_id=null,$county_id=null,$identifier=null){
+        switch ($identifier){
+        	case county:
+			 $where_clause= "d.county=$county_id " ;	
+			break;	
+			case district:
+			 $where_clause= "d.id=$district_id" ;	
+			break;	
+			case facility:
+			case facility_admin:
+			 $where_clause= "f.facility_code=$facility_code " ;	
+			break;	
+           default:
+			 $where_clause=isset($facility_code)? "f.facility_code=$facility_code ":
+			  (isset($district_id) && !isset($county_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+			break;	
+        }
         $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
         SELECT SUM( targetted ) AS targetted, SUM( using_hcmp ) AS using_hcmp, COUNT( facility_code ) AS total
         FROM districts d, facilities f
@@ -67,22 +83,36 @@ class Facilities extends Doctrine_Record {
         and $where_clause");
         return $q;    
    }
-	public static function get_facility_name_($facility_code){
-				
-	if($facility_code!=NULL){
-		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("facility_code='$facility_code'");
-		$drugs = $query -> execute();
-		
-		
-		return $drugs;	
-	}	
-else{
-	return NULL;
-}	
+	public static function get_facility_name_($facility_code)
+	{			
+		if($facility_code!=NULL)
+		{
+			$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("facility_code='$facility_code'");
+			$drugs = $query -> execute();
+			return $drugs;	
+		}	
+		else{
+			return NULL;
+		}	
 			
 	}
-	   public static function get_facilities_monitoring_data($facility_code=null,$district_id=null,$county_id=null){
-	$where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+	   public static function get_facilities_monitoring_data($facility_code=null,$district_id=null,$county_id=null,$identifier=null){
+        switch ($identifier){
+        	case county:
+			 $where_clause= "d.county=$county_id " ;	
+			break;	
+			case district:
+			 $where_clause= "d.id=$district_id" ;	
+			break;	
+			case facility:
+			case facility_admin:
+			 $where_clause= "f.facility_code=$facility_code " ;	
+			break;	
+           default:
+			 $where_clause=isset($facility_code)? "f.facility_code=$facility_code ":
+			  (isset($district_id) && !isset($county_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+			break;	
+        }
     $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
     SELECT u.fname, u.lname,f.facility_name, f.facility_code,d.district,
     MAX( f_i.`created_at` ) AS last_issued, ifnull(DATEDIFF( NOW( ) , MAX( f_i.`created_at` ) ),0) AS days_last_issued, 

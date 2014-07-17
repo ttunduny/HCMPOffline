@@ -32,10 +32,13 @@ class redistribution_data extends Doctrine_Record {
 		return $redistribution_data;
 	}
 	public static function get_all_active($facility_code,$option=null) {
-		$query = Doctrine_Query::create() -> select("*") -> from("redistribution_data") -> where("source_facility_code=$facility_code and status=0");
+		$and=($option=='to-me')? " receive_facility_code=$facility_code" : " source_facility_code=$facility_code";
+	
+		$query = Doctrine_Query::create() -> select("*") -> from("redistribution_data") -> where("$and and status=0");
 		$redistribution_data = $query -> execute();
 		return $redistribution_data;
 	}
+	
 	public static function get_redistribution_data($facility_code,$district_id,$county_id,$year){
 	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND d.id = '$district_id'" : null;
 	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;

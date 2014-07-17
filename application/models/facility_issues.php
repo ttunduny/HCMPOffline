@@ -60,14 +60,14 @@ class facility_issues extends Doctrine_Record {
 	$transaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 
      ->fetchAll("SELECT f.date_issued,f.expiry_date,f.batch_no,c.unit_size,f.s11_No,f.balance_as_of,f.adjustmentnve,
-f.adjustmentpve,f.qty_issued,u.fname,u.lname, f. issued_to as service_point_name 
-FROM hcmp.facility_issues f INNER JOIN hcmp.commodities c 
-ON c.id=f.commodity_id  INNER JOIN hcmp.user u 
-ON f.issued_by = u.id WHERE f.facility_code=17401 
-AND f.status =1 AND f.commodity_id=1 
-AND f.date_issued BETWEEN '$convertfrom' 
-AND '$convertto' 
-ORDER BY f.date_issued ASC"); 
+		f.adjustmentpve,f.qty_issued,u.fname,u.lname, f. issued_to as service_point_name 
+		FROM facility_issues f INNER JOIN commodities c 
+		ON c.id=f.commodity_id  INNER JOIN hcmp.user u 
+		ON f.issued_by = u.id WHERE f.facility_code=$facility_code
+		AND f.status =1 AND f.commodity_id=$commodity_id
+		AND f.date_issued BETWEEN '$convertfrom' 
+		AND '$convertto' 
+		ORDER BY f.date_issued asc"); 
 
 
 			return $transaction;	
@@ -85,6 +85,7 @@ ORDER BY f.date_issued ASC");
 			LIMIT 0 , 5 ");
         return $query ;
 	}
+	
 	public static function get_inactive_facilities_in_district($district)
 	{
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()

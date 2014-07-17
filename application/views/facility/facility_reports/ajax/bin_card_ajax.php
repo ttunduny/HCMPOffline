@@ -32,10 +32,10 @@ border: 1px solid #FFF !important;
      <?php   
              foreach ($bin_card as $bin ) { 
                 $bin['unit_size'];
-                $formatdate = new DateTime($bin['date_issued']);
+                $formatdate = strtotime($bin['date_issued']) ? new DateTime($bin['date_issued']) : 'N/A';
                 $formated_date= $formatdate->format('d M Y');
-                $formatdate_exp = new DateTime($bin['expiry_date']);
-                $formated_date_exp= $formatdate_exp->format('d M Y');
+                $formatdate_exp =strtotime($bin['expiry_date']) ? new DateTime($bin['expiry_date']) : 'N/A';
+                $formated_date_exp= strtotime($bin['expiry_date']) ? $formatdate_exp->format('d M Y') : 'N/A';
                 $bin['batch_no'];
                 $calculated=$bin['balance_as_of'];
                 $bin['balance_as_of'];

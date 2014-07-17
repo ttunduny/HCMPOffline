@@ -75,7 +75,7 @@ class Users extends Doctrine_Record {
 	}
 
 	public static function check_user_exist($email) {
-		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username='$email' AND status IN(1,2)");
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("email='$email' AND status IN(1,2)");
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
 	}
@@ -143,6 +143,27 @@ class Users extends Doctrine_Record {
 				");
 		return $query;
 	}
+	
+	public static function get_user_list_all() {
+
+		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id as district_id,d.district,c.id as county_id,c.county,f.facility_code,
+				f.facility_name,f.owner,f.type,a.id as level_id,f.level,a.level,u.status FROM hcmp.user u 
+				LEFT JOIN hcmp.districts d
+				ON
+				d.id=u.district
+				LEFT JOIN hcmp.counties c
+				ON
+				c.id=d.county
+				LEFT JOIN hcmp.facilities f
+				ON
+				u.facility=f.facility_code
+				LEFT JOIN hcmp.access_level a
+				ON
+				a.id=u.usertype_id
+				");
+		return $query;
+	}
 	//////get the dpp details 
 public static function get_dpp_details($distirct){
 	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("district=$distirct and usertype_id='3' ");
@@ -164,6 +185,12 @@ public static function get_dpp_details($distirct){
 		return $result;
 	}
 	
+	public static function get_users_count() {
+
+		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users")  ->Where("usertype_id !=9") -> groupBy("status");
+		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result;
+	}
 	public static function check_activation($cipher) {
 
 		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("activation='$cipher'")->andWhere("status = 0");
@@ -172,9 +199,18 @@ public static function get_dpp_details($distirct){
 		
 	}
 	public static function check_user_exist_activate($email) {
-		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username='$email' AND status=0");
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("email='$email' AND status=0");
 		$result = $query -> execute();
 		return $result;
+	}
+	public static function get_users_active_in_facility($facility_code)
+	{
+		$query = Doctrine_Query::create() ->select("*") 
+											->from("Users")
+											->where("facility='$facility_code' and status = 1")
+											->OrderBy("id asc");
+		$drugs = $query -> execute();
+		return $drugs;
 	}
 
 }

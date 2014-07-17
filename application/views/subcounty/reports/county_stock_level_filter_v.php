@@ -70,7 +70,7 @@ endforeach;
 <option value="ksh">KSH</option>
 </select>
 <div class="col-md-1">
-<button class="btn btn-sm btn-success filter" id="county_filter" name="filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+<button class="btn btn-sm btn-success filter" id="county-filter" name="filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div> 
 </form>
 </div>

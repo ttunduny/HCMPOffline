@@ -20,12 +20,12 @@ if (!$this -> session -> userdata('user_id')) {
 	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
-	 <link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
+	<link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
     <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
 	<link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
 	<script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
-
+  <link href="<?php echo base_url().'assets/bower_components/intro.js/introjs.css'?>" type="text/css" rel="stylesheet"/>
 	<!-- <link href="<?php echo base_url().'assets/metro-bootstrap/docs/font-awesome.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/metro-bootstrap/css/metro-bootstrap.css'?>" type="text/css" rel="stylesheet"/>
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -43,8 +43,7 @@ if (!$this -> session -> userdata('user_id')) {
   } // 
   
 };
-  </script>
-    <script>
+ 
     function load(time){
       var x = new XMLHttpRequest()
       x.open('GET', document.URL , true);
@@ -60,11 +59,9 @@ if (!$this -> session -> userdata('user_id')) {
     },4500);
 
     Pace.on('hide', function(){
-      console.log('done');
+   //   console.log('done');
     });
 
-  </script>
-    <script type="text/javascript">
     var url="<?php echo base_url(); ?>";
     </script>
     <style>
@@ -79,7 +76,7 @@ border-radius:0;
 background-color: white;
 border-color: #e7e7e7;
 }
-.modal-content
+.modal-content,.form-control
 {
   border-radius: 0 !important;
 }
@@ -90,9 +87,9 @@ border-color: #e7e7e7;
   <body screen_capture_injected="true" onload="set_interval()" onmouseover="reset_interval()" onclick="reset_interval()">
     <!-- Fixed navbar -->
     
-   <div class="navbar navbar-default navbar-fixed-top" id="">
+   <div class="navbar navbar-default navbar-fixed-top" id="welcome">
    <div class="container" style="width: 100%; padding-right: 0; ">
-        <div class="navbar-header " > 
+        <div class="navbar-header "  > 
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
@@ -108,7 +105,7 @@ border-color: #e7e7e7;
 				</div>
         </div>
         <div class="navbar-collapse collapse" style="" id="navigate">
-          <ul class="nav navbar-nav navbar-right" >
+          <ul class="nav navbar-nav navbar-right" id="nav-here">
        <li><a href="<?php echo site_url().'home';?>" class=" ">HOME</a> </li>   
 <?php
 //Retrieve all accessible menus/submenus from the session
@@ -131,11 +128,12 @@ foreach($menus as $menu){?>
 	</li>	 
 <?php }?>
  <li><a href="<?php echo site_url("reports/commodity_listing");?>" class="">COMMODITY LIST</a> </li>
-            <li class="dropdown ">
+            <li class="dropdown " id="drop-step">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user" ></span><?php echo $this -> session -> userdata('full_name');?> <b class="caret"></b></a>
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu" >
                 <li><a style="background: whitesmoke;color: black !important" href="" data-toggle="modal" data-target="#changepassModal"><span class="glyphicon glyphicon-pencil" style="margin-right: 2%; "></span>Change password</a></li>               
-                <li><a style="background: whitesmoke;color: black !important" href="<?php echo site_url("user/logout");?>" ><span class="glyphicon glyphicon-off" style="margin-right: 2%;"></span>Log out</a></li>               
+                <li><a style="background: whitesmoke;color: black !important" href="<?php echo site_url("user/logout");?>" ><span class="glyphicon glyphicon-off" style="margin-right: 2%;"></span>Log out</a></li>
+                <li ><a style="background: whitesmoke;color: black !important" href="javascript:void(0);" onclick="startIntro();" ><span class="glyphicon glyphicon-question-sign" style="margin-right: 2%;"></span>Help</a></li>               
               </ul>
             </li>
           </ul>
@@ -272,7 +270,7 @@ foreach($menus as $menu){?>
  */
 var timer = 0;
 function set_interval() {
-  showTime()
+  showTime();
   // the interval 'timer' is set as soon as the page loads
   timer = setInterval("auto_logout()", 3600000);
   // the figure '1801000' above indicates how many milliseconds the timer be set to.
@@ -281,7 +279,7 @@ function set_interval() {
 }
 
 function reset_interval() {
-  showTime()
+  showTime();
   //resets the timer. The timer is reset on each of the below events:
   // 1. mousemove   2. mouseclick   3. key press 4. scroliing
   //first step: clear the existing timer
@@ -478,4 +476,5 @@ return i;
   <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrapPagination.js'?>" type="text/javascript"></script>
   <!-- validation ===================== -->
   <script src="<?php echo base_url().'assets/scripts/jquery.validate.min.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/bower_components/intro.js/intro.js'?>" type="text/javascript"></script>
 </html>

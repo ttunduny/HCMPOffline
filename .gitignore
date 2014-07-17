@@ -1,3 +1,5 @@
 *.class
 *.pyc
 *.pyo
+application/config/database.php
+pdf

@@ -1,12 +1,29 @@
-<div class="container" style="width: 99%; margin: auto;">
-	<span  class='label label-info' >Please note this is a one off activity Stock level as of <?php $today = ( date('d M Y'));
+<style type="text/css">
+#note{
+      padding:10px;
+}
+</style>
+<div class="container-fluid" >
+
+      <div class="row">
+            <div class="col-md-7" id=""><p class="bg-info" id="note">
+                 <b> Please  note this is a one off activity Stock level as of <?php $today = ( date('d M Y'));
     //get today's date in full
 ?>
-		<input type="hidden" name="datepicker" readonly="readonly" value="<?php echo $today; ?>"/>
-		<?php echo $today; ?>
-		To add facility stock data, first do physical stock count</span>
+            <input type="hidden" name="datepicker" readonly="readonly" value="<?php echo $today; ?>"/>
+            <?php echo $today; ?>
+            To add facility stock data, first do physical stock count
+</b>
+            </p></div>
+
+            <div class="col-md-5" id=""></div>
+            
+      </div>
+	
+            
 	<hr />
-	<div class="test" style="height:400px; overflow: auto;">
+      <div class="row " style="min-height:400px; overflow: auto;"><div class="col-md-12">
+	
 		<?php $att = array("name" => 'myform', 'id' => 'myform');
         echo form_open('stock/add_stock_level', $att);
  ?>
@@ -34,35 +51,32 @@
 					<input type="hidden" class="commodity_id" value=""  name="commodity_id[]"/>
 					<select  name="desc[]" class="form-control desc">
 						<option special_data="0" value="0">-Select One--</option>
-						<?php
-                        foreach ($commodities as $commodities) {
-
-                            $id = $commodities -> id;
-                            $commodities_name = $commodities -> commodity_name;
-                            $unit_size = $commodities -> unit_size;
-                            $commodity_code = $commodities -> commodity_code;
-                            $total_units = $commodities -> total_commodity_units;
-                            foreach ($commodities->supplier_name as $supplier_name) :
-                                $name = $supplier_name -> source_name;
-                            endforeach;
-
-                            echo "<option special_data='" . $id . "^" . $name . "^" . $commodity_code . "^" . $unit_size . "^" . $total_units . "'
-value='$id'>" . $commodities_name . "</option>";
-                        }
-						?>
+						 <?php
+                foreach ($commodities as $commodities) {
+                    $id = $commodities['commodity_id'] ;
+                    $commodities_name = $commodities['commodity_name'];
+                    $unit_size = $commodities['unit_size'];
+                    $commodity_code = $commodities['commodity_code'];
+                    $total_units = $commodities['total_commodity_units'];                  
+                    $name =$commodities['source_name'];
+              
+                    echo "<option special_data='" . $id . "^" . $name . "^" . $commodity_code . "^" . $unit_size . "^" . $total_units . "' 
+                    value='$id'>" . $commodities_name . "</option>";
+                }
+                ?>
 					</select></td>
 					<td>
-					<input type="text" class="form-control input-small commodity_supplier" name="commodity_supplier[]" readonly="readonly"/>
+					<input style="width:70px !important;" type="text" class="form-control input-small commodity_supplier" name="commodity_supplier[]" readonly="readonly"/>
 					<input type="hidden" class="actual_units"/>
 					</td>
 					<td>
-					<input type="text" class="form-control input-small unit_size"   name="commodity_unit_size[]" readonly="readonly"/>
+					<input style="width:70px !important;" type="text" class="form-control input-small unit_size"   name="commodity_unit_size[]" readonly="readonly"/>
 					</td>
 					<td>
 					<input class='form-control input-small commodity_batch_no' required="required" data-val="true" name='commodity_batch_no[]' type='text'/>
 					</td>
 					<td>
-					<select class="form-control input-small source_of_item" name="source_of_item[]">
+					<select style="width:95px !important;" class="form-control input-small source_of_item" name="source_of_item[]">
 						<?php
                         foreach ($commodity_source as $commodity_source) {
                             $id = $commodity_source -> id;
@@ -72,14 +86,14 @@ value='$id'>" . $commodities_name . "</option>";
 						?>
 					</select></td>
 					<td>
-					<input id='commodity_manufacture' required="required" class="form-control commodity_manufacture input-small"
+					<input style="width:70px !important;" id='commodity_manufacture' required="required" class="form-control commodity_manufacture input-small"
 					name='commodity_manufacture[]' type='text' value=""  data-val="true"/>
 					</td>
 					<td>
 					<input  class='form-control input-small clone_datepicker' required="required"  data-val="true" name='clone_datepicker[]' type='text' />
 					</td>
 					<td>
-					<select name="commodity_unit_of_issue[]" class="form-control commodity_unit_of_issue input-small">
+					<select style="width:105px !important;"name="commodity_unit_of_issue[]" class="form-control commodity_unit_of_issue input-small">
 						<option value="Pack_Size">Pack Size</option>
 						<option value="Unit_Size">Unit Size</option>
 					</select></td>
@@ -92,14 +106,14 @@ value='$id'>" . $commodities_name . "</option>";
 					</td>
 					<td>
 					<button type="button" class="remove btn btn-danger btn-xs">
-						<span class="glyphicon glyphicon-minus"></span>Remove Row
+						<span class="glyphicon glyphicon-minus"></span>Row
 					</button></td>
 				</tr>
 			</tbody>
 		</table>
 		<?php echo form_close(); ?>
 
-	</div>
+	</div></div>
 </div>
 <hr />
 <div class="container-fluid">
@@ -118,6 +132,7 @@ value='$id'>" . $commodities_name . "</option>";
 			<span class="glyphicon glyphicon-open"></span>Save
 		</button>
 	</div>
+</div>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -172,6 +187,7 @@ value='$id'>" . $commodities_name . "</option>";
             cloned_object.attr("table_row", next_table_row);
             cloned_object.find(".remove").show();
             cloned_object.find(".desc").val(commodity_id);
+           
             cloned_object.find(".unit_size").attr('value',unit_size);
             cloned_object.find(".commodity_batch_no").attr('value',batch_no);
             cloned_object.find(".commodity_batch_no").attr('name',"commodity_batch_no["+next_table_row+"]");
@@ -181,7 +197,7 @@ value='$id'>" . $commodities_name . "</option>";
             cloned_object.find(".clone_datepicker").attr('name',"clone_datepicker["+next_table_row+"]");
             cloned_object.find(".commodity_available_stock").attr('value',stock_level);
             cloned_object.find(".commodity_available_stock").attr('name',"commodity_available_stock["+next_table_row+"]");
-            cloned_object.find(".commodity_total_units").attr('value',total_unit_count);
+            cloned_object.find(".commodity_total_units").attr('value',total_units);
             cloned_object.find(".commodity_unit_of_issue").attr('value',unit_issue);
             cloned_object.find(".actual_units").attr('value',total_units);
             cloned_object.find(".source_of_item").attr('value',source_of_item);
@@ -355,6 +371,7 @@ value='$id'>" . $commodities_name . "</option>";
             function  clone_the_last_row_of_the_table(){
 
             var cloned_object = $('#facility_stock_table tr:last').clone(true);
+            cloned_object.find('input[type=text]').attr("value", "");
             var table_row = cloned_object.attr("table_row");
             var next_table_row = parseInt(table_row) + 1;
             var commodity_id_id = "commodity_id_" + next_table_row;
@@ -375,23 +392,29 @@ value='$id'>" . $commodities_name . "</option>";
             var commodity_batch_no = cloned_object.find(".commodity_batch_no");
             //reset the values
             cloned_object.attr("table_row", next_table_row );
-            cloned_object.find('input[type=text]').attr("value", "");
             desc.attr("value", "0");
             commodity_batch_no.attr("id", commodity_batch_no_id);
+
             commodity_id.attr("id", commodity_id_id);
+
             commodity_batch_no.attr("id", commodity_batch_no_id);
+
             commodity_batch_no.attr("name", "commodity_batch_no["+next_table_row+"]");
             commodity_manufacture.attr("id", commodity_manufacture_id);
+
             commodity_manufacture.attr("name", "commodity_manufacture["+next_table_row+"]");
             commodity_total_units.attr("id", commodity_total_units_id);
+
             commodity_available_stock.attr("id", commodity_available_stock_id);
             commodity_available_stock.attr("name", "commodity_available_stock["+next_table_row+"]");
+
             clone_datepicker.attr("id", clone_datepicker_id);
             clone_datepicker.attr("name", "clone_datepicker["+next_table_row+"]");
+
             // remove the error class
             cloned_object.find("label.error").remove();
             //insert the data
-            cloned_object.insertAfter('#facility_stock_table tr:last');
+            cloned_object.insertAfter('#facility_stock_table tr:last').find('input').val('');
             // refresh the datepickers
             refreshDatePickers();
             }

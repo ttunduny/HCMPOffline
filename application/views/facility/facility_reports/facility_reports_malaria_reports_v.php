@@ -47,6 +47,7 @@
 
 		<td  class="col-xs-1">
 			<label>Report Date:</label>
+
 			<!-- <input type= 'date' name="district_name" class="form-control" value=""> -->
 			<input type="text" class="form-control clone_datepicker_normal_limit_today"  name="district_name" value="<?php echo date('d M Y'); ?>" />
 			</td>
