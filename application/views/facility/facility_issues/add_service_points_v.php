@@ -201,12 +201,14 @@ $(".add").click(function() { //add row here
 	} );
 
 		function  clone_the_last_row_of_the_table(){
-	        var selector_object=$('#facility_service_points tr:last');
+	        var selector_object = $('#facility_service_points tr:last');
             var cloned_object = selector_object.clone(true);
             var table_row = cloned_object.attr("row_id");
-            var next_table_row = parseInt(table_row) + 1;           
+            var next_table_row = parseInt(table_row) + 1; 
+            var blank_value = "";          
 		    cloned_object.attr("row_id", next_table_row);
-			cloned_object.find(".service_point").attr('name','service_point['+next_table_row+']').attr('value',"");           
+			cloned_object.find(".service_point").attr('name','service_point['+next_table_row+']');   
+			cloned_object.find(".service_point").val(blank_value);          
 			cloned_object.insertAfter('#facility_service_points tr:last');	
 	}
 } );

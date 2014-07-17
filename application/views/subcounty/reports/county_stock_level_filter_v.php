@@ -70,7 +70,7 @@ endforeach;
 <option value="ksh">KSH</option>
 </select>
 <div class="col-md-1">
-<button class="btn btn-sm btn-success filter" id="county-filter" name="filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+<button class="btn btn-sm btn-success county-filter"  id="county-filter" ><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div> 
 </form>
 </div>
@@ -165,8 +165,8 @@ var drop_down='';
 		$(".county-filter").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+
-$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+ '/table_data';	
-		ajax_request_replace_div_content(url_,'.graph_content');	
+$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+'/table_data';	
+		ajax_request_replace_div_content(url_,'.graph_content');
           });
           
 	     $(".subcounty-filter").button().click(function(e) {

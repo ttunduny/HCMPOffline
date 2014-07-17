@@ -206,7 +206,7 @@ public static function get_county_cost_of_exipries_new($facility_code=null,$dist
      $and_data
      $group_by
      ");   
-
+	
  return  $inserttransaction ;
 }
 public static function get_facility_cost_of_exipries_new($facility_code=null,$district_id=null,$county_id,$year=null,$month=null,$option=null,$data_for=null)
@@ -287,7 +287,7 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
 	 	
      $and_data .=(isset($category_id)&& ($category_id>0)) ?"AND d.commodity_sub_category_id = '$category_id'" : null;
      $and_data .=(isset($commodity_id)&& ($commodity_id>0)) ?"AND d.id = '$commodity_id'" : null;
-     $and_data .=(isset($division_id)&& ($division_id>0)) ?"AND d.commodity_division = '$division_id' " : "AND d.commodity_division > 1 ";
+     $and_data .=(isset($division_id)&& ($division_id>0)) ?"AND d.commodity_division = '$division_id' " : "AND d.commodity_division <= 1 ";
 	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND di.id = '$district_id'" : null;
 	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;
      $and_data .=($county_id>0) ?" AND di.county='$county_id'" : null;
@@ -379,6 +379,15 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
     $and_data
     $group_by_a_month
      ");		
+	 echo "SELECT  $selection_for_a_month $computation
+    FROM facility_issues fs, facilities f, commodities d, districts di
+    WHERE fs.facility_code = f.facility_code
+    AND f.district = di.id
+    AND fs.qty_issued >0
+    AND d.id = fs.commodity_id
+    $and_data
+    $group_by_a_month";
+    exit;
      return $inserttransaction ;
   }     
     	public static function get_county_expiries($county_id,$year,$district_id=null,$facility_code=null){
@@ -566,72 +575,7 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 
  }
  
- /*
- public static function get_county_cost_of_exipries_new($county_id,$year=null, $month=null,$district_id=null,$option=null,$facility_code=null)
- {
- 	if($month=="null")
- 	{
- 		$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-		->fetchAll("select temp.cal_month, sum(temp.total) as total from (
-		SELECT date_format( fs.expiry_date, '%b' ) as cal_month, 
-		ifnull(CEIL( (SUM(fs.current_balance/ cms.total_commodity_units ))*cms.unit_cost ),0) AS total 
-		FROM facility_stocks fs, facilities f, commodities cms, counties c, districts di 
-		WHERE fs.facility_code = f.facility_code 
-		AND `expiry_date` <= NOW( ) 
-		AND DATE_FORMAT( fs.expiry_date,'%Y') =$year  
-		AND f.district =di.id AND di.county=c.id 
-		AND c.id='$county_id' 
-		AND cms.id = fs.commodity_id 
-		GROUP BY month(expiry_date),di.id) 
-		temp group by temp.cal_month
-		");
- 	
- 	}
- 	else
- 	{
- 		$and_data =(isset($district_id)&& ($district_id>0)) ?"AND di.id = '$district_id'" : null;
-	 	$and_data .=(isset($facility_code)&& ($facility_code>0)) ?"AND f.facility_code = '$facility_code'" : null;
-     	
-     	switch ($option) :
-			case 'ksh':
-				$computation ="ifnull(CEIL( (SUM(fs.current_balance/ cms.total_commodity_units ))*cms.unit_cost ),0) AS total";
-	        break;
-	        case 'units':
-	        	$computation ="ifnull(CEIL( SUM(fs.current_balance)),0) AS total" ;
-	        break;
-	        case 'packs':
-	        	$computation ="ifnull(CEIL( SUM(fs.current_balance/ cms.total_commodity_units ) ),0) AS total" ;
-	        break;
-	        default:
-	        	$computation ="ifnull(CEIL( (SUM(fs.current_balance/ cms.total_commodity_units ))*cms.unit_cost ),0)  AS total" ;
-	        break;
-	    endswitch;
-	 $string = "AND date_format( fs.expiry_date, '%m')=$month" ;
-	 $group_by =(($district_id =='all')) ?"GROUP BY month(expiry_date) asc" : null;
-	 $group_by .=(($district_id =='facility')) ?"GROUP BY fs.commodity_id having total>0 " : null;
-     $select_option =($district_id =='facility') ?"cms.drug_name," : null;
-     $select_option .=($district_id =='all')?  "date_format( fs.expiry_date, '%b' ) as cal_month,": null;
-	 $select_option_special = ($district_id=='facility' || $month!="null") ? $string: null;
-     
-     $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-		->fetchAll("SELECT $select_option $computation
-		FROM facility_stock fs, facilities f, commodities cms, counties c, districts di
-		WHERE fs.facility_code = f.facility_code
-		AND `expiry_date` <= NOW( )
-		AND DATE_FORMAT( fs.expiry_date,'%Y') =$year
-		$select_option_special
-		AND f.district =di.id
-		AND di.county=c.id
-		AND c.id='$county_id'
-		$and_data
-		AND cms.id = fs.commodity_id
-		 $group_by
-		");
- 	}
-
-    return  $inserttransaction ;
-			
-	}*/
+ 
 	public static function get_expiries($facility_code, $year = NULL) 
 	{
 		$year = (isset($year)) ? $year: date("Y");
@@ -645,39 +589,7 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 			and expiry_date <= NOW()
 			GROUP BY  MONTH(  `expiry_date` ) ");
 			return $stocks ;
-		/*
-		else if(isset($district_id))
-		{
-			$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
-			->fetchAll("select fs.current_balance AS total_expiries, fs.expiry_date as month from  districts d, 
-			facility_stocks fs 
-			LEFT JOIN  commodities c 
-			ON c.id=fs.commodity_id 
-			where facility_code=$facility_code 
-			and d.id = $district_id
-			and fs.status =2 
-			AND DATE_FORMAT( fs.expiry_date,'%Y') = $year
-			and expiry_date <= NOW()
-			GROUP BY MONTH(  `expiry_date` ) ");
-			return $stocks ;
-		}
-		else if (isset($county_id))
-		{
-			$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
-			->fetchAll("select fs.current_balance AS total_expiries, fs.expiry_date as month from counties cs,  facility_stocks fs  
-			LEFT JOIN  commodities c 
-			ON c.id=fs.commodity_id 
-			where facility_code=$facility_code 
-			and cs.id = $county_id
-			and fs.status =2 
-			AND DATE_FORMAT( fs.expiry_date,'%Y') = $year
-			and expiry_date <= NOW()
-			GROUP BY MONTH(  `expiry_date` ) ");
-			return $stocks ;
-		}
 		
-		*/
-	
 	}
 	public static function get_filtered_expiries($facility_code, $year, $month, $option) 
 	{
