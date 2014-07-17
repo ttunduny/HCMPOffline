@@ -336,7 +336,7 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
            $computation ="ifnull(SUM(ROUND(fs.qty_issued/d.total_commodity_units)),0) AS total" ;
              break;
 			 case 'mos':
-			echo $district_id;
+			//echo $district_id;
            	$r = facility_stocks_temp::get_months_of_stock($district_id, $county_id, $facility_code);
 			return $r;
 			//echo "<pre>";
@@ -379,15 +379,7 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
     $and_data
     $group_by_a_month
      ");		
-	 echo "SELECT  $selection_for_a_month $computation
-    FROM facility_issues fs, facilities f, commodities d, districts di
-    WHERE fs.facility_code = f.facility_code
-    AND f.district = di.id
-    AND fs.qty_issued >0
-    AND d.id = fs.commodity_id
-    $and_data
-    $group_by_a_month";
-    exit;
+	
      return $inserttransaction ;
   }     
     	public static function get_county_expiries($county_id,$year,$district_id=null,$facility_code=null){
