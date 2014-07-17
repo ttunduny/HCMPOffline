@@ -8,6 +8,7 @@
         		<h3 class="panel-title">Notification <span class="glyphicon glyphicon-bell"></span> </h3>
       		</div>
       <div class="panel-body">
+      	<input type="hidden" id="stocklevel" value="<?php echo $facility_dashboard_notifications['facility_stock_count'] ?>" readonly/>
     <?php if($facility_dashboard_notifications['facility_donations_pending']>0): ?>
       	 <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         <h5>Inter Facility Donation</h5> 
@@ -133,10 +134,7 @@
         <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="order message " id="order_tab">
             <h5>Orders</h5>
         </div>
-         <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
-            <a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>KEMSA</h5></a>
-            <a href=""><h5>MEDS</h5></a> 
-        </div>       
+            
          <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="delivery message" id = "update_order">
         	<h5>Update Order Delivery</h5> 
          </div>  
@@ -175,7 +173,10 @@
 
 	
    $(document).ready(function() {
-   	if('<?php echo ($facility_dashboard_notifications['facility_stock_count']==0)? "true": "false"; ?>'=='true'){
+
+   	var stock=$('#stocklevel').val()
+   	if(stock==0){
+
    		startIntro();
    	}
    	
@@ -191,8 +192,7 @@
            $('#update_order_hide').toggle('slow')
        }); 
 
-	
-       <?php echo $facility_dashboard_notifications['faciliy_stock_graph'] ?>
+       
 
     });
 </script>

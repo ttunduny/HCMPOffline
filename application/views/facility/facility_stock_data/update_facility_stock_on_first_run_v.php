@@ -9,20 +9,24 @@
             <div class="col-md-7" id=""><p class="bg-info" id="note">
                  <b> Please  note this is a one off activity Stock level as of <?php $today = ( date('d M Y'));
     //get today's date in full
-?>
-            <input type="hidden" name="datepicker" readonly="readonly" value="<?php echo $today; ?>"/>
+?><input type="hidden" name="datepicker" readonly="readonly" value="<?php echo $today; ?>"/>
             <?php echo $today; ?>
-            To add facility stock data, first do physical stock count
-</b>
+            </b>
             </p></div>
 
-            <div class="col-md-5" id=""></div>
+            <div class="col-md-5" id=""><b>
+<p class="bg-info" id="note">
+
+            To add facility stock data, first do physical stock count
+</b>
+</p>
+            </div>
             
       </div>
 	
             
 	<hr />
-      <div class="row " style="min-height:400px; overflow: auto;"><div class="col-md-12">
+      <div class="row " style="min-height:300px; overflow: auto;"><div class="col-md-12">
 	
 		<?php $att = array("name" => 'myform', 'id' => 'myform');
         echo form_open('stock/add_stock_level', $att);
