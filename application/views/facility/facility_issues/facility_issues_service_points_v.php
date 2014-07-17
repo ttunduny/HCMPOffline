@@ -20,7 +20,7 @@
 		
 	</div>
 	<hr />
-<div class="table-responsive" style="height:400px; overflow-y: auto;">
+<div class="table-responsive" style="min-height:300px; overflow-y: auto;">
  <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/internal_issue',$att); ?>
 <table  class="table table-hover table-bordered table-update" id="facility_issues_table" >
 <thead style="background-color: white">

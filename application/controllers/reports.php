@@ -516,7 +516,7 @@ class Reports extends MY_Controller
 		$data['banner_text'] = "Expiries";
 		$data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v": "shared_files/report_templates/side_bar_v" ;
 		$data['content_view'] = "facility/facility_reports/reports_v";
-		$data['expiry_data'] = Facility_stocks::All_expiries($facility_code);
+		$data['expiry_data'] = Facility_stocks::All_expiries($facility_code,'all');
 		$data['report_view'] = "facility/facility_reports/expiries_v";
         $data['active_panel']='expiries';
 		$this -> load -> view("shared_files/template/template", $data);
@@ -983,6 +983,9 @@ class Reports extends MY_Controller
 	}
 	public function get_sub_county_json_data($county_id) {
 		echo json_encode(Districts::get_districts($county_id));
+	}
+	public function get_counties_json_data() {
+		echo json_encode(Counties::getAll());
 	}
 	     
 	 //For system uptake option on SUB-COUNTY dashboard

@@ -20,7 +20,7 @@ class Facilities extends Doctrine_Record {
 	}
 
 	public static function getAll() {
-		$query = Doctrine_Query::create() -> select("*") -> from("districts");
+		$query = Doctrine_Query::create() -> select("*") -> from("facilities");
 		$drugs = $query -> execute();
 		return $drugs;
 	}
