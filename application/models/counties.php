@@ -13,7 +13,7 @@ class Counties extends Doctrine_Record {
 
 	public static function getAll() {
 		$query = Doctrine_Query::create() -> select("*") -> from("counties")-> OrderBy("county asc");
-		$drugs = $query -> execute();
+		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $drugs;
 	}
 	

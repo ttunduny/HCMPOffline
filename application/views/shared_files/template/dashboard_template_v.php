@@ -30,6 +30,10 @@ padding-top: 0;
   margin-top: 4.5%;
   
 }
+.modal-content,.form-control
+{
+  border-radius: 0 !important;
+}
 </style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>

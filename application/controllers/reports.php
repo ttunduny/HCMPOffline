@@ -1067,6 +1067,9 @@ class Reports extends MY_Controller
 	public function get_sub_county_json_data($county_id) {
 		echo json_encode(Districts::get_districts($county_id));
 	}
+	public function get_counties_json_data() {
+		echo json_encode(Counties::getAll());
+	}
 	     
 	 //For system uptake option on SUB-COUNTY dashboard
 	/* public function get_sub_county_facility_mapping_data($year = null, $month = NULL) 
