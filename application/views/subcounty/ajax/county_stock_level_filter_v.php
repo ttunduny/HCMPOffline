@@ -309,7 +309,7 @@ var drop_down='';
 	        var url_ = "reports/division_commodities_stock_level_graph/"+
 	        $("#division_district_filter").val()+
 	        "/NULL/"+$("#division_facility_filter").val()+
-	        "/NULL/"+$("#division_name_filter").val() ;
+	        "/NULL/"+$("#division_name_filter").val()+"/"+$("#division_plot_value_filter").val();
 	        
 	        ajax_request_replace_div_content(url_,'.graph_content');    
           });

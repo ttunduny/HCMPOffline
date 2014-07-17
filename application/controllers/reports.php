@@ -2243,7 +2243,7 @@ class Reports extends MY_Controller
 		
       	$commodity_id = ($commodity_id=="NULL") ? null :$commodity_id;
 	 	$district_id = ($district_id=="NULL") ? null :$district_id;
-	 	$option = ($optionr=="NULL") ? null :$option;
+	 	$option = ($option=="NULL") ? null :$option;
 		$category_id = ($category_id=="NULL") ? null :$category_id;
 	 	$facility_code = ($facility_code=="NULL") ? null :$facility_code;
 		$option = ($option=="NULL" || $option=="null") ? null :$option;	
@@ -2332,11 +2332,11 @@ public function get_division_commodities_data($division_id = null,$district_id =
      	{
      	//reset the values here
 		
-      	$district_id = ($district_id=="NULL") ? null :$district_id;
-	 	$division_id = ($division_id=="NULL") ? null :$division_id;
-	 	$option = ($optionr=="NULL") ? null :$option;
-		$facility_code = ($facility_code=="NULL") ? null :$facility_code;
-		$option = ($option=="NULL" || $option=="null") ? null :$option;	
+      	$district_id = ($district_id == "NULL") ? null :$district_id;
+	 	$division_id = ($division_id == "NULL") ? null :$division_id;
+	 	$option = ($option == "NULL") ? null :$option;
+		$facility_code = ($facility_code == "NULL") ? null :$facility_code;
+		$option = ($option == "NULL" || $option == "null") ? null :$option;	
      	//setting up the data
         if($option=="mos"){
         	
