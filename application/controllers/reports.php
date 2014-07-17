@@ -2075,20 +2075,21 @@ class Reports extends MY_Controller
 	}
 
 
-	public function load_stock_level_graph($district_id=NULL, $county_id=NULL, $facility_code=NULL,$commodity_id=null){
-			$county_id=$county_id=='NULL'? 
-			($this -> session -> userdata('user_indicator') == 'county' ? 
-			$this -> session -> userdata('county_id'): null) :$county_id;
-			$district_id=$district_id=='NULL'? 
-			($this -> session -> userdata('user_indicator') == 'district' ? 
-			$this -> session -> userdata('district_id'): null) :$district_id;
-			$facility_code=$facility_code=='NULL'? 
-			($this -> session -> userdata('user_indicator') == 'facility' ? 
-			$this -> session -> userdata('facility_code'): null) :$facility_code;
-            $commodity_id=$commodity_id=='NULL'? null: $commodity_id;
+	public function load_stock_level_graph($district_id=NULL, $county_id=NULL, $facility_code=NULL,$commodity_id=null)
+	{
+		$county_id=$county_id=='NULL'? 
+		($this -> session -> userdata('user_indicator') == 'county' ? 
+		$this -> session -> userdata('county_id'): null) :$county_id;
+		$district_id=$district_id=='NULL'? 
+		($this -> session -> userdata('user_indicator') == 'district' ? 
+		$this -> session -> userdata('district_id'): null) :$district_id;
+		$facility_code=$facility_code=='NULL'? 
+		($this -> session -> userdata('user_indicator') == 'facility' ? 
+		$this -> session -> userdata('facility_code'): null) :$facility_code;
+        $commodity_id = $commodity_id=='NULL'? null: $commodity_id;
 
-         	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id);
-			$month = date('F Y');
+     	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id);
+		$month = date('F Y');
 
 			
 			if (isset($commodity_id)){
@@ -2144,7 +2145,8 @@ class Reports extends MY_Controller
 
 			return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 	}
-public function division_commodities_stock_level_graph($district_id=NULL, $county_id=NULL, $facility_code=NULL,$commodity_id=null,$division_id=NULL)
+	
+	public function division_commodities_stock_level_graph($district_id=NULL, $county_id=NULL, $facility_code=NULL,$commodity_id=null,$division_id=NULL)
 	{
 			$county_id=$county_id=='NULL'? 
 			($this -> session -> userdata('user_indicator') == 'county' ? 
@@ -2235,7 +2237,7 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 		$this -> load -> view($view, $data);
 	    }
 
-     	public function get_county_stock_level_new($commodity_id = null, $commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null) 
+     	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null) 
      	{
      	//reset the values here
 		
