@@ -59,7 +59,7 @@ dateFormat: 'd My',
 	  //	-- Datepicker	limit today		
 	$(".clone_datepicker_normal_limit_today").datepicker({
     maxDate: new Date(),				
-	dateFormat: 'dM y', 
+	dateFormat: 'd My', 
 	changeMonth: true,
 	changeYear: true,
 	buttonImage: baseUrl,       });	

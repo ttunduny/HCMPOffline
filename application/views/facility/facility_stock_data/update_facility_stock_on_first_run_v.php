@@ -180,12 +180,13 @@
             var unit_issue=data[i]['unit_issue'];
             var source_of_item=data[i]['unit_issue'];
             var supplier=data[i]['supplier'];
+            var selected_option=data[i]['unit_issue'];
             var cloned_object = $('#facility_stock_table tr:last').clone(true);
             var table_row = cloned_object.attr("table_row");
             var next_table_row = parseInt(table_row) + 1;
             //set the data
             cloned_object.attr("table_row", next_table_row);
-            cloned_object.find(".remove").show();
+            cloned_object.find(".commodity_unit_of_issue").val(selected_option);
             cloned_object.find(".desc").val(commodity_id);
            
             cloned_object.find(".unit_size").attr('value',unit_size);

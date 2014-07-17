@@ -508,7 +508,7 @@ class Reports extends MY_Controller
 		$data['banner_text'] = "Expiries";
 		$data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v": "shared_files/report_templates/side_bar_v" ;
 		$data['content_view'] = "facility/facility_reports/reports_v";
-		$data['expiry_data'] = Facility_stocks::All_expiries($facility_code);
+		$data['expiry_data'] = Facility_stocks::All_expiries($facility_code,'all');
 		$data['report_view'] = "facility/facility_reports/expiries_v";
         $data['active_panel']='expiries';
 		$this -> load -> view("shared_files/template/template", $data);

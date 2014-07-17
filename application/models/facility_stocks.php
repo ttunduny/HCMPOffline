@@ -155,10 +155,11 @@ $group_by ");
 		return $stocks;
 	}	
 
-	public static function All_expiries($facility_code){
+	public static function All_expiries($facility_code,$checker=null){
+		$and=isset($checker)? " and (f_s.status =1 or f_s.status =2)" : " and f_s.status =1";
 		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select * from  facility_stocks f_s 
-		LEFT JOIN  commodities c ON c.id=f_s.commodity_id where facility_code=$facility_code and f_s.status =1
-		 and f_s.current_balance>0 and expiry_date <= NOW()");
+		LEFT JOIN  commodities c ON c.id=f_s.commodity_id where facility_code=$facility_code 
+		 and f_s.current_balance>0 and expiry_date <= NOW() $and");
 		        return $stocks ;
 	}
 	      /////getting cost of exipries county
@@ -718,5 +719,30 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 		
 	
 	}
+	public static function import_stock_from_v1($facility_code){
+			$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+			->fetchAll("select 
+    *
+from
+    kemsa2.facility_stock
+        left join
+    hcmp.drug_commodity_map ON drug_commodity_map.old_id = facility_stock.kemsa_code
+        where facility_stock.facility_code = $facility_code
+        and year(facility_stock.expiry_date) != 1970 ");
+			return $stocks ;
+	}
 	
+	public static function import_amc_from_v1($facility_code=null,$commoity_id=null){
+		$and=isset($commoity_id) ? " and historical_stock.drug_id=$commoity_id" : null;
+				$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+			->fetchAll("select 
+    *
+from
+    kemsa2.historical_stock
+        left join
+   hcmp.drug_commodity_map ON drug_commodity_map.old_id = historical_stock.drug_id
+        where historical_stock.facility_code = $facility_code $and");
+			return $stocks ;
+		
+	}
 }

@@ -26,6 +26,57 @@ class Stock extends MY_Controller {
 |2. check if the user has any temp data
 |3. auto save the data
 |4. save the data in the facility stock, facility transaction , issues table
+*/	
+	public function import($facility_code=null){
+		$facility_code=isset($facility_code)? $facility_code : $this -> session -> userdata('facility_id'); 
+		
+		$old_facility_stock=facility_stocks::import_stock_from_v1($facility_code);
+		$in_to_stock=$in_to_amc=$amc_ids=array();
+		if(count($old_facility_stock)>0){
+			foreach($old_facility_stock as $old_facility_stock){
+			$temp=array('commodity_id'=>$old_facility_stock['new_id'],
+			             'facility_code'=>$old_facility_stock['facility_code'],
+						 'unit_size'=>$old_facility_stock['unit_size_'],
+						 'batch_no'=>($old_facility_stock['batch_no']=='') ? 'N/A': $old_facility_stock['batch_no'],
+						 'manu'=>($old_facility_stock['manufacture']=='') ? 'N/A': $old_facility_stock['manufacture'],
+						 'expiry_date'=>date('d My',strtotime($old_facility_stock['expiry_date'])),
+						 'stock_level'=>$old_facility_stock['balance'],
+						 'total_unit_count'=>$old_facility_stock['balance'],
+						 'unit_issue'=>'Unit_Size',
+						 'total_units'=>$old_facility_stock['new_total_units'],
+						 'source_of_item'=>1,
+						 'supplier'=>'KEMSA');	
+			array_push($in_to_stock,$temp);
+			if(!array_key_exists('new_id'.$old_facility_stock['new_id'], $amc_ids)){
+			$old_amc=facility_stocks::import_amc_from_v1($facility_code,$old_facility_stock['old_id']);
+
+			$new_units=	($old_amc[0]['old_total_units']!=$old_amc[0]['new_total_units']) 
+			? round(($old_amc[0]['consumption_level']*$old_amc[0]['old_total_units'])/$old_amc[0]['new_total_units']):$old_amc[0]['unit_count'] ;
+				
+			$temp=array('commodity_id'=>$old_facility_stock['new_id'],
+			             'facility_code'=>$old_facility_stock['facility_code'],
+			             'consumption_level'=>isset($old_amc[0]['consumption_level']) ?$old_amc[0]['consumption_level'] :0,
+						 'selected_option'=>isset($old_amc[0]['selected_option'])? $old_amc[0]['selected_option']: "Pack_Size",
+						 'total_units'=>isset($new_units) ? $new_units :0);		
+			
+			array_push($in_to_amc,$temp);
+		    $amc_ids=	array_merge($amc_ids,array('new_id'.$old_facility_stock['new_id']=>'new_id'.$old_facility_stock['new_id']));
+			}
+			}
+		$this -> db -> insert_batch('facility_monthly_stock', $in_to_amc);
+		$this -> db -> insert_batch('facility_stocks_temp', $in_to_stock);
+		}
+   redirect("stock/facility_stock_first_run/first_run");
+	}
+/*
+|--------------------------------------------------------------------------
+| update facility stock 
+|--------------------------------------------------------------------------
+|0. Set up the facility stock
+|1. load the view
+|2. check if the user has any temp data
+|3. auto save the data
+|4. save the data in the facility stock, facility transaction , issues table
 */
      public function set_up_facility_stock(){
          $facility_code=$this -> session -> userdata('facility_id'); 
@@ -260,7 +311,8 @@ if($this->input->post('commodity_id')):
 			'initial_quantity'=>$total_unit_count[$i],
 			'current_balance'=>$total_unit_count[$i],
 			'source_of_commodity'=>$source_of_item[$i],
-			'date_added'=>$date_of_entry );
+			'date_added'=>$date_of_entry,
+			'status' =>(strtotime(str_replace(",", " ",$expiry_date[$i]))>strtotime('now')) ? 1 : 2 );
 			
              //get the closing stock of the given item  
             $facility_stock_=facility_stocks::get_facility_commodity_total($facility_code,$commodity_id[$i], $date_of_entry)->toArray();
