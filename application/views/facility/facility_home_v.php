@@ -175,6 +175,7 @@
    $(document).ready(function() {
 
    	var stock=$('#stocklevel').val()
+
    	if(stock==0){
 
    		startIntro();
@@ -192,7 +193,7 @@
            $('#update_order_hide').toggle('slow')
        }); 
 
-       
+ <?php echo $facility_dashboard_notifications['faciliy_stock_graph'] ?>
 
     });
 </script>
