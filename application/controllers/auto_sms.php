@@ -21,7 +21,7 @@ class auto_sms extends MY_Controller
 			Doctrine_Manager::getInstance()->getCurrentConnection()->execute("
 		insert into facility_stock_out_tracker 
 		set facility_code='".$in[$i]['facility_code']."', commodity_id='".$in[$i]['commodity_id']."',
-		`start_date`='".$in[$i]['date_added']."', status='stocked out' ");
+		`start_date`='".$in[$i]['date_added']."', commodity_status='stocked out' ");
 		
 			
 		}
