@@ -62,9 +62,9 @@
 			<th>Commodity</th>
 			<th>Batch No</th>
 			<th>Expiry Date</th>
-			<th colspan="12" style="text-align: center;">Year: 2014</th>
-			<th colspan="12" style="text-align: center;">Year: 2015</th>
-			<th colspan="12" style="text-align: center;">Year: 2016</th>
+			<th colspan="12" style="text-align: center;"><?php echo "Year: ".$years[0]; ?></th>
+			<th colspan="12" style="text-align: center;"><?php echo "Year: ".$years[1]; ?></th>
+			<th colspan="12" style="text-align: center;"><?php echo "Year: ".$years[2]; ?></th>
 		</thead>
 		</tr>
 
@@ -117,21 +117,41 @@
 		</tr>
 
 					<?php
+		$months = array();
+		$final_date = array();
+		$year_months1 = array();
 
-foreach($expiry_data as $data):
-	$month = null;
-	$checked = '<td><input type="checkbox"  checked disabled ></td>';
-	$unchecked = '<td><input type="checkbox" disabled ></td>';
+		$checked = '<td><input type="checkbox"  checked disabled ></td>';
+		$unchecked = '<td><input type="checkbox" disabled ></td>';
 
-	//$jan=$feb=$march=$april=$may=$june=$july=$aug=$sept=$oct=$nov=$dec = null;
-// $jan=$feb=$march=$april=$may=$june=$july=$aug=$sept=$oct=$nov=$dec = $unchecked;
+		$months_no = count($month_names);
+		$yrs_no = count($years);
+
 	$jan14=$feb14=$march14=$april14=$may14=$june14=$july14=$aug14=$sept14=$oct14=$nov14=$dec14 = $unchecked;
 	$jan15=$feb15=$march15=$april15=$may15=$june15=$july15=$aug15=$sept15=$oct15=$nov15=$dec15 = $unchecked;
 	$jan16=$feb16=$march16=$april16=$may16=$june16=$july16=$aug16=$sept16=$oct16=$nov16=$dec16 = $unchecked;
+
+$yrs_no = count($years);
+$months_no = count($month_names);
+for ($i=0; $i < $yrs_no; $i++) { 
+	for ($j=0; $j < $months_no; $j++) { 
+		$final_date[]=$month_names[$j]." ".$years[$i];
+	}
+}
+
+
+foreach($expiry_data as $data):
+	$month = null;
+	
+
+	$jan14=$feb14=$march14=$april14=$may14=$june14=$july14=$aug14=$sept14=$oct14=$nov14=$dec14 = $unchecked;
+	$jan15=$feb15=$march15=$april15=$may15=$june15=$july15=$aug15=$sept15=$oct15=$nov15=$dec15 = $unchecked;
+	$jan16=$feb16=$march16=$april16=$may16=$june16=$july16=$aug16=$sept16=$oct16=$nov16=$dec16 = $unchecked;
+
+
 	$month = $data['expiry_month'];
-// echo "<pre>";print_r($data['expiry_month']);echo " blah" .$x. "</pre>";
-$commodity = $data['commodity_name'];
-$batch = $data['batch_no'];
+	$commodity = $data['commodity_name'];
+	$batch = $data['batch_no'];
 
 	echo '
 		<tr>
@@ -140,7 +160,8 @@ $batch = $data['batch_no'];
 		<td>
 			'.$data['expiry_date'].'			
 		</td>';
-		switch ($month) {
+
+switch ($month) {
 			// 2014 SWITCH
 			case NULL:
 			
@@ -150,7 +171,7 @@ $batch = $data['batch_no'];
 			
 				break;
 
-			case 'January 2014':
+			case $final_date[0]:
 			$jan14 = $checked;
 			
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
@@ -158,7 +179,7 @@ $batch = $data['batch_no'];
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'February 2014':
+			case $final_date[1]:
 			$feb14 = $checked;
 			
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
@@ -166,7 +187,7 @@ $batch = $data['batch_no'];
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'March 2014':
+			case $final_date[2]:
 			$march14 = $checked;
 			
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
@@ -175,7 +196,7 @@ $batch = $data['batch_no'];
 			
 				break;
 
-			case 'April 2014':
+			case $final_date[3]:
 			$april14 = $checked;
 
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
@@ -183,7 +204,7 @@ $batch = $data['batch_no'];
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'May 2014':
+			case $final_date[4]:
 			$may14 = $checked;
 			
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
@@ -191,49 +212,49 @@ $batch = $data['batch_no'];
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'June 2014':
+			case $final_date[5]:
 			$june14 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'July 2014':
+			case $final_date[6]:
 			$july14 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'August 2014':
+			case $final_date[7]:
 			$aug14 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'September 2014':
+			case $final_date[8]:
 			$sept14 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'October 2014':
+			case $final_date[9]:
 			$oct14 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'November 2014':
+			case $final_date[10]:
 			$nov14 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'December 2014':
+			case $final_date[11]:
 			$dec14 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
@@ -241,7 +262,7 @@ $batch = $data['batch_no'];
 				break;
 
 				// 2015
-			case 'January 2015':
+			case $final_date[12]:
 			$jan15 = $checked;
 			
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
@@ -249,7 +270,7 @@ $batch = $data['batch_no'];
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'February 2015':
+			case $final_date[13]:
 			$feb15 = $checked;
 			
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
@@ -257,7 +278,7 @@ $batch = $data['batch_no'];
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'March 2015':
+			case $final_date[14]:
 			$march15 = $checked;
 			
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
@@ -266,7 +287,7 @@ $batch = $data['batch_no'];
 			
 				break;
 
-			case 'April 2015':
+			case $final_date[15]:
 			$april15 = $checked;
 
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
@@ -274,7 +295,7 @@ $batch = $data['batch_no'];
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'May 2015':
+			case $final_date[16]:
 			$may15 = $checked;
 			
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
@@ -282,49 +303,49 @@ $batch = $data['batch_no'];
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'June 2015':
+			case $final_date[17]:
 			$june15 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'July 2015':
+			case $final_date[18]:
 			$july15 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'August 2015':
+			case $final_date[19]:
 			$aug15 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'September 2015':
+			case $final_date[20]:
 			$sept15 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'October 2015':
+			case $final_date[21]:
 			$oct15 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'November 2015':
+			case $final_date[22]:
 			$nov15 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'December 2015':
+			case $final_date[23]:
 			$dec15 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
@@ -332,7 +353,7 @@ $batch = $data['batch_no'];
 				break;
 
 			// 2016
-			/*case 'January 2016':
+			case $final_date[24]:
 			$jan16 = $checked;
 			
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
@@ -340,7 +361,7 @@ $batch = $data['batch_no'];
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'February 2016':
+			case $final_date[25]:
 			$feb16 = $checked;
 			
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
@@ -348,7 +369,7 @@ $batch = $data['batch_no'];
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'March 2016':
+			case $final_date[26]:
 			$march16 = $checked;
 			
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
@@ -357,7 +378,7 @@ $batch = $data['batch_no'];
 			
 				break;
 
-			case 'April 2016':
+			case $final_date[27]:
 			$april16 = $checked;
 
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
@@ -365,7 +386,7 @@ $batch = $data['batch_no'];
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'May 2016':
+			case $final_date[28]:
 			$may16 = $checked;
 			
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
@@ -373,64 +394,66 @@ $batch = $data['batch_no'];
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'June 2016':
+			case $final_date[29]:
 			$june16 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'July 2016':
+			case $final_date[30]:
 			$july16 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'August 2016':
+			case $final_date[31]:
 			$aug16 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'September 2016':
+			case $final_date[32]:
 			$sept16 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'October 2016':
+			case $final_date[33]:
 			$oct16 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'November 2016':
+			case $final_date[34]:
 			$nov16 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 
-			case 'December 2016':
+			case $final_date[35]:
 			$dec16 = $checked;
 			echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
 			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
 			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
-				break;*/
+				break;
 			
 			default:
-				
+				echo $jan14,$feb14,$march14,$april14,$may14,$june14,$july14,$aug14,$sept14,$oct14,$nov14,$dec14;
+			echo $jan15,$feb15,$march15,$april15,$may15,$june15,$july15,$aug15,$sept15,$oct15,$nov15,$dec15;
+			echo $jan16,$feb16,$march16,$april16,$may16,$june16,$july16,$aug16,$sept16,$oct16,$nov16,$dec16;
 				break;
 		}
 
-		echo '</tr>';
+
+			echo '</tr>';
 
 endforeach;
-
 
 ?>
 
