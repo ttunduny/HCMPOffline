@@ -313,6 +313,12 @@ class Reports extends MY_Controller
 
 	
 	}
+	//facility user manual
+	public function get_facility_user_manual()
+	{
+		$this -> hcmp_functions ->  download_file(assets/manual/HCMPV2_User_Guide);
+		
+	}
 
 	// get the facility transaction data for ordering or quick analysis
 	public function facility_transaction_data() {

@@ -119,7 +119,7 @@ foreach($menus as $menu){?>
             	<?php 
             	foreach($sub_menus as $sub_menu){
             		if ($menu['menu_id']==$sub_menu['menu_id']) {?>						
-		<li><a style="background: whitesmoke;color: black !important" href="<?php echo base_url().$sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
+		<li><a style="background: whitesmoke;color: black !important"  href="<?php echo base_url().$sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
 					<?php	
             	} 
 				}
