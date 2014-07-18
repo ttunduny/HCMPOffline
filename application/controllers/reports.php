@@ -1894,160 +1894,127 @@ class Reports extends MY_Controller
 		$user_names = Users::get_user_names($user_id);
 		$data['user_names'] = ($user_names[0]['fname']." ".$user_names[0]['lname']);
 		
-		$facility_info = tb_data::get_facility_name($facility);
+		$expiry_data_ = Facility_stocks::expiries_report($facility_code);
+		$facility_info = tb_data::get_facility_name($facility_code);
+		$facility_name = $facility_info['facility_name'];
+		$facility_code_ = $facility_info['facility_code'];
 		$facility_district = $facility_info['district'];
 		$district_name_ = Districts::get_district_name_($facility_district);
 		$district_name = $this -> session -> userdata('district');
-		
-		$expiry_data_ = Facility_stocks::expiries_report($facility);
+		 
 		$data['facility_code'] = $facility_info['facility_code']; 
 		$district_region_name = $district_name_['district'];
 		$data['facility_name'] = ($facility_info['facility_name']);
 		$data['facility_type_'] = ($facility_info['owner']);
-		//echo "<pre>";print_r($expiry_data_);echo "</pre>";exit;
+		// echo "<pre>";print_r($years);echo "</pre>";exit;
 		//$data['expiry_data'] = Facility_stocks::expiries_report($facility_code);
 		$facility_name=Facilities::get_facility_name_($facility_code)->toArray();
 		$data['facility_name']=$facility_name[0]['facility_name'];
 
-		
-		
-		$html_body = '<head>
-		<link href="'.base_url().'assets/css/style.css" type="text/css" rel="stylesheet"/>
-	<link href="'.base_url().'assets/css/normalize.css" type="text/css" rel="stylesheet"/>
-	<link href="'.base_url().'assets/css/dashboard.css" type="text/css" rel="stylesheet"/>
-	<link href="'.base_url().'assets/css/jquery-ui-1.10.4.custom.min.css" type="text/css" rel="stylesheet"/>
-	<link href="'. base_url().'assets/boot-strap3/css/bootstrap.min.css" type="text/css" rel="stylesheet"/>
-	<link href="'.base_url().'assets/boot-strap3/css/bootstrap-responsive.css" type="text/css" rel="stylesheet"/>
-	<link href="'.base_url().'assets/css/font-awesome.min.css" type="text/css" rel="stylesheet"/>
-	<link rel="stylesheet" href="'.base_url().'assets/css/pace-theme-flash.css" />
-    <script src="'.base_url().'assets/scripts/jquery.js" type="text/javascript"></script>
-	<link href="'.base_url().'assets/datatable/TableTools.css" type="text/css" rel="stylesheet"/>
-	<link href="'.base_url().'assets/datatable/dataTables.bootstrap.css" type="text/css" rel="stylesheet"/>
-	<script src="'.base_url().'assets/scripts/pace.js" type="text/javascript"></script>
-  <link href="'.base_url().'assets/bower_components/intro.js/introjs.css" type="text/css" rel="stylesheet"/>
-</head>
+				$yrs_no = count($years);
+		$months_no = count($month_names);
+		for ($i=0; $i < $yrs_no; $i++) { 
+			for ($j=0; $j < $months_no; $j++) { 
+			$final_date[]=$month_names[$j]." ".$years[$i];
+			}
+			}
+		$html_body= '
 <body>
 
-		<table width="x0%" class="table table-bordered table-condensed row-fluid">
+<div>
+		<table width="100%" style = "border: 1px solid #ddd;">
 		<tbody>
 		<tr>
-
-		<td>
-			<label>Facility Name: </label>
-			<input type="text" requiredname="facility_name" class="form-control" disabled value= '.$facility_name.'>
-		</td>			
-		
-		<td class="col-xs-2">
-		<label>Facility Code: </label>
-			<input type="text" requiredname="facility_code: " class="form-control" disabled value=';
-		$html_body.= $facility_code;
-		$html_body.='>
-		</td>
-		</div>
-		
-
-
-		<div class="input-group">
-			<td class="col-xs-4">
-			<label>Facility Type: </label>
-			<input type="text" name="dispensary" disabled class="form-control" value= ';
-		$html_body.=$facility_type_;
-		$html_body.='>
-			</td>
-			
-		
-			</div>
+		<th>Expiries Report</th>
 			</tr>
 			
 			</table>
 	</div>
 
-<table width="x0%" class="table table-bordered table-condensed row-fluid">
-<tbody>
+<table width="100%" style = "border: 1px solid #ddd;" class="table table-bordered table-condensed row-fluid">
+<tbody style = "display: table-row-group;vertical-align: middle;border-color: inherit;">
 <form class ="form-control" id="tb_form" name="tb_form_">
 
-	<div class="input-group">
-		<tr>
+	<div>
+		<tr style = "display: table-row;vertical-align: inherit;border-color: inherit;">
 		<thead>
-			<th>Commodity</th>
-			<th>Batch No</th>
-			<th>Expiry Date</th>
-			<th colspan="12" style="text-align: center;">'.$year[0].'</th>
-			<th colspan="12" style="text-align: center;">'.$year[1].'</th>
-			<th colspan="12" style="text-align: center;">'.$year[2].'</th>
+			<th style = "border: 1px solid #ddd;" >Commodity</th>
+			<th style = "border: 1px solid #ddd;" >Batch No</th>
+			<th style = "border: 1px solid #ddd;" >Expiry Date</th>
+			<th colspan="12" style="text-align: center;border: 1px solid #ddd;">';echo $year[0];
+			$html_body.= '</th>
+			<th colspan="12" style="text-align: center;border: 1px solid #ddd;">';echo $year[1];
+			$html_body.='</th>
+			<th colspan="12" style="text-align: center;border: 1px solid #ddd;">';
+			echo $year[2];
+			$html_body.= '</th>
 		</thead>
 		</tr>
 
 		<tr>
 			<thead>
 
-				<th></th>
-				<th></th>
-				<th></th>
+				<th style = "border: 1px solid #ddd;"></th>
+				<th style = "border: 1px solid #ddd;"></th>
+				<th style = "border: 1px solid #ddd;"></th>
 				
-				<th>J</th>
-				<th>F</th>
-				<th>M</th>
-				<th>A</th>
-				<th>M</th>
-				<th>J</th>
-				<th>J</th>
-				<th>A</th>
-				<th>S</th>
-				<th>O</th>
-				<th>N</th>
-				<th>D</th>
+				<th style = "border: 1px solid #ddd;">J</th>
+				<th style = "border: 1px solid #ddd;">F</th>
+				<th style = "border: 1px solid #ddd;">M</th>
+				<th style = "border: 1px solid #ddd;">A</th>
+				<th style = "border: 1px solid #ddd;">M</th>
+				<th style = "border: 1px solid #ddd;">J</th>
+				<th style = "border: 1px solid #ddd;">J</th>
+				<th style = "border: 1px solid #ddd;" >A</th>
+				<th style = "border: 1px solid #ddd;" >S</th>
+				<th style = "border: 1px solid #ddd;" >O</th>
+				<th style = "border: 1px solid #ddd;" >N</th>
+				<th style = "border: 1px solid #ddd;" >D</th>
 				
-				<th>J</th>
-				<th>F</th>
-				<th>M</th>
-				<th>A</th>
-				<th>M</th>
-				<th>J</th>
-				<th>J</th>
-				<th>A</th>
-				<th>S</th>
-				<th>O</th>
-				<th>N</th>
-				<th>D</th>
+				<th style = "border: 1px solid #ddd;" >J</th>
+				<th style = "border: 1px solid #ddd;" >F</th>
+				<th style = "border: 1px solid #ddd;" >M</th>
+				<th style = "border: 1px solid #ddd;" >A</th>
+				<th style = "border: 1px solid #ddd;" >M</th>
+				<th style = "border: 1px solid #ddd;" >J</th>
+				<th style = "border: 1px solid #ddd;" >J</th>
+				<th style = "border: 1px solid #ddd;" >A</th>
+				<th style = "border: 1px solid #ddd;" >S</th>
+				<th style = "border: 1px solid #ddd;" >O</th>
+				<th style = "border: 1px solid #ddd;" >N</th>
+				<th style = "border: 1px solid #ddd;" >D</th>
 				
-				<th>J</th>
-				<th>F</th>
-				<th>M</th>
-				<th>A</th>
-				<th>M</th>
-				<th>J</th>
-				<th>J</th>
-				<th>A</th>
-				<th>S</th>
-				<th>O</th>
-				<th>N</th>
-				<th>D</th>
+				<th style = "border: 1px solid #ddd;" >J</th>
+				<th style = "border: 1px solid #ddd;" >F</th>
+				<th style = "border: 1px solid #ddd;" >M</th>
+				<th style = "border: 1px solid #ddd;" >A</th>
+				<th style = "border: 1px solid #ddd;" >M</th>
+				<th style = "border: 1px solid #ddd;" >J</th>
+				<th style = "border: 1px solid #ddd;" >J</th>
+				<th style = "border: 1px solid #ddd;" >A</th>
+				<th style = "border: 1px solid #ddd;" >S</th>
+				<th style = "border: 1px solid #ddd;" >O</th>
+				<th style = "border: 1px solid #ddd;" >N</th>
+				<th style = "border: 1px solid #ddd;" >D</th>
 			</thead>
 		</tr>
 		';
+
 	foreach($expiry_data_ as $data):
-	$month = null;
-	$checked = '<td><input type="checkbox"  checked disabled ></td>';
+	
+	$checked = '<td><input type="checkbox"  checked = "checked" disabled ></td>';
 	$unchecked = '<td><input type="checkbox" disabled ></td>';
 
-	//$jan=$feb=$march=$april=$may=$june=$july=$aug=$sept=$oct=$nov=$dec = null;
-// $jan=$feb=$march=$april=$may=$june=$july=$aug=$sept=$oct=$nov=$dec = $unchecked;
 	$jan14=$feb14=$march14=$april14=$may14=$june14=$july14=$aug14=$sept14=$oct14=$nov14=$dec14 = $unchecked;
 	$jan15=$feb15=$march15=$april15=$may15=$june15=$july15=$aug15=$sept15=$oct15=$nov15=$dec15 = $unchecked;
 	$jan16=$feb16=$march16=$april16=$may16=$june16=$july16=$aug16=$sept16=$oct16=$nov16=$dec16 = $unchecked;
-	$month = $data['expiry_month'];
-// echo "<pre>";print_r($data['expiry_month']);echo " blah" .$x. "</pre>";
+	
 $commodity = $data['commodity_name'];
 $batch = $data['batch_no'];
+$month = $data['expiry_month'];
 
-$yrs_no = count($years);
-$months_no = count($month_names);
-for ($i=0; $i < $yrs_no; $i++) { 
-	for ($j=0; $j < $months_no; $j++) { 
-		$final_date[]=$month_names[$j]." ".$years[$i];
-	}
-}
+// echo "<pre>";print_r($month);echo " </pre>";
+ // echo "<pre>";print_r($final_date);echo " </pre>";exit;
 
 	$html_body.= '
 		<tr>
@@ -2066,7 +2033,7 @@ for ($i=0; $i < $yrs_no; $i++) {
 			
 				break;
 
-			case 'January 2014':
+			case $final_date[0]:
 			$jan14 = $checked;
 			
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
@@ -2074,7 +2041,7 @@ for ($i=0; $i < $yrs_no; $i++) {
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'February 2014':
+			case $final_date[1]:
 			$feb14 = $checked;
 			
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
@@ -2082,7 +2049,7 @@ for ($i=0; $i < $yrs_no; $i++) {
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'March 2014':
+			case $final_date[2]:
 			$march14 = $checked;
 			
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
@@ -2091,7 +2058,7 @@ for ($i=0; $i < $yrs_no; $i++) {
 			
 				break;
 
-			case 'April 2014':
+			case $final_date[3]:
 			$april14 = $checked;
 
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
@@ -2099,7 +2066,7 @@ for ($i=0; $i < $yrs_no; $i++) {
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'May 2014':
+			case $final_date[4]:
 			$may14 = $checked;
 			
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
@@ -2107,49 +2074,49 @@ for ($i=0; $i < $yrs_no; $i++) {
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'June 2014':
+			case $final_date[5]:
 			$june14 = $checked;
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
 			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'July 2014':
+			case $final_date[6]:
 			$july14 = $checked;
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
 			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'August 2014':
+			case $final_date[7]:
 			$aug14 = $checked;
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
 			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'September 2014':
+			case $final_date[8]:
 			$sept14 = $checked;
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
 			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'October 2014':
+			case $final_date[9]:
 			$oct14 = $checked;
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
 			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'November 2014':
+			case $final_date[10]:
 			$nov14 = $checked;
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
 			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'December 2014':
+			case $final_date[11]:
 			$dec14 = $checked;
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
 			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
@@ -2157,7 +2124,7 @@ for ($i=0; $i < $yrs_no; $i++) {
 				break;
 
 				// 2015
-			case 'January 2015':
+			case $final_date[12]:
 			$jan15 = $checked;
 			
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
@@ -2165,7 +2132,7 @@ for ($i=0; $i < $yrs_no; $i++) {
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'February 2015':
+			case $final_date[13]:
 			$feb15 = $checked;
 			
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
@@ -2173,7 +2140,7 @@ for ($i=0; $i < $yrs_no; $i++) {
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'March 2015':
+			case $final_date[14]:
 			$march15 = $checked;
 			
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
@@ -2182,7 +2149,7 @@ for ($i=0; $i < $yrs_no; $i++) {
 			
 				break;
 
-			case 'April 2015':
+			case $final_date[15]:
 			$april15 = $checked;
 
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
@@ -2190,7 +2157,7 @@ for ($i=0; $i < $yrs_no; $i++) {
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'May 2015':
+			case $final_date[16]:
 			$may15 = $checked;
 			
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
@@ -2198,56 +2165,150 @@ for ($i=0; $i < $yrs_no; $i++) {
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'June 2015':
+			case $final_date[17]:
 			$june15 = $checked;
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
 			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'July 2015':
+			case $final_date[18]:
 			$july15 = $checked;
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
 			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'August 2015':
+			case $final_date[19]:
 			$aug15 = $checked;
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
 			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'September 2015':
+			case $final_date[20]:
 			$sept15 = $checked;
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
 			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'October 2015':
+			case $final_date[21]:
 			$oct15 = $checked;
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
 			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'November 2015':
+			case $final_date[22]:
 			$nov15 = $checked;
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
 			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 
-			case 'December 2015':
+			case $final_date[23]:
 			$dec15 = $checked;
 			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
 			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
 			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
-				default:
-				
+
+			// 2016
+			case $final_date[24]:
+			$jan16 = $checked;
+			
+			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
+			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
+			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
+				break;
+
+			case $final_date[25]:
+			$feb16 = $checked;
+			
+			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
+			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
+			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
+				break;
+
+			case $final_date[26]:
+			$march16 = $checked;
+			
+			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
+			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
+			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
+			
+				break;
+
+			case $final_date[27]:
+			$april16 = $checked;
+
+			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
+			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
+			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
+				break;
+
+			case $final_date[28]:
+			$may16 = $checked;
+			
+			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
+			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
+			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
+				break;
+
+			case $final_date[29]:
+			$june16 = $checked;
+			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
+			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
+			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
+				break;
+
+			case $final_date[30]:
+			$july16 = $checked;
+			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
+			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
+			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
+				break;
+
+			case $final_date[31]:
+			$aug16 = $checked;
+			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
+			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
+			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
+				break;
+
+			case $final_date[32]:
+			$sept16 = $checked;
+			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
+			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
+			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
+				break;
+
+			case $final_date[33]:
+			$oct16 = $checked;
+			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
+			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
+			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
+				break;
+
+			case $final_date[34]:
+			$nov16 = $checked;
+			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
+			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
+			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
+				break;
+
+			case $final_date[35]:
+			$dec16 = $checked;
+			$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
+			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
+			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
+				break;
+			
+			default:
+				$html_body.= $jan14.$feb14.$march14.$april14.$may14.$june14.$july14.$aug14.$sept14.$oct14.$nov14.$dec14;
+			$html_body.= $jan15.$feb15.$march15.$april15.$may15.$june15.$july15.$aug15.$sept15.$oct15.$nov15.$dec15;
+			$html_body.= $jan16.$feb16.$march16.$april16.$may16.$june16.$july16.$aug16.$sept16.$oct16.$nov16.$dec16;
 				break;
 		}
 
@@ -2255,13 +2316,12 @@ for ($i=0; $i < $yrs_no; $i++) {
 		$html_body.= '</tr></div>
 	</form>
 </tbody>
-
 </table>
-</table>
-</body>';
+';
 		
 	}
 
+	// echo "<pre>";print_r($html_body);echo "</pre>";exit;
 			
 		return $html_body;
 	}
