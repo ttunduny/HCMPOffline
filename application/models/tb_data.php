@@ -46,7 +46,7 @@ class Tb_data extends Doctrine_Record
 	{
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
    	 	->fetchAll(
-   	 		"select * from tuberculosis_report_info where report_id = $report_id order by report_date"
+   	 		"select * from tuberculosis_data where report_id = $report_id order by report_date"
    	 		);
 		return $query;
 			
