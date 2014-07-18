@@ -1584,6 +1584,7 @@ class Reports extends MY_Controller
 			//create the pdf here
 			$pdf_body = $this ->  create_program_report_pdf_template($report_id, $facility_code, $report_type);
 			$file_name = $facility_name . '_facility_program_report_date_created_'. date('d-m-y');
+			
 			$pdf_data = array("pdf_title" => "Program Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'download', 'file_name' => $file_name);
 
 			$this -> hcmp_functions -> create_pdf($pdf_data);
@@ -1857,8 +1858,7 @@ class Reports extends MY_Controller
 			$html_body .= "<td>" . $from_TB_data_table[$i]['earliest_expiry'] . "</td>";
 			$html_body .= "<td>" . $from_TB_data_table[$i]['quantity_needed'] . "</td>";
 			$html_body .= "<td>" . $from_TB_data_table[$i]['report_date'] . "</td>";
-			$html_body .= "</tr>";
-			
+			$html_body .= "</tr>";	
 			
 		}
 
@@ -1869,9 +1869,9 @@ class Reports extends MY_Controller
 		$years = array();
 		$month_names[] = array();
 
-		$years[0] = date('Y');
-		$years[1] =date('Y') +1;
-		$years[2] = date('Y') +2;
+	$year1=	$years[0] = date('Y');
+	$year2=	$years[1] =date('Y') +1;
+	$year3=	$years[2] = date('Y') +2;
 
 		$month_names[0] = 'January';
 		$month_names[1] = 'February';
@@ -1922,7 +1922,7 @@ class Reports extends MY_Controller
 <body>
 
 <div>
-		<table width="100%" style = "border: 1px solid #ddd;">
+		<table width="100%"  class="data-table">
 		<tbody>
 		<tr>
 		<th>Expiries Report</th>
@@ -1931,7 +1931,7 @@ class Reports extends MY_Controller
 			</table>
 	</div>
 
-<table width="100%" style = "border: 1px solid #ddd;" class="table table-bordered table-condensed row-fluid">
+<table width="100%"  class="data-table">
 <tbody style = "display: table-row-group;vertical-align: middle;border-color: inherit;">
 <form class ="form-control" id="tb_form" name="tb_form_">
 
@@ -1941,13 +1941,12 @@ class Reports extends MY_Controller
 			<th style = "border: 1px solid #ddd;" >Commodity</th>
 			<th style = "border: 1px solid #ddd;" >Batch No</th>
 			<th style = "border: 1px solid #ddd;" >Expiry Date</th>
-			<th colspan="12" style="text-align: center;border: 1px solid #ddd;">';echo $year[0];
-			$html_body.= '</th>
-			<th colspan="12" style="text-align: center;border: 1px solid #ddd;">';echo $year[1];
-			$html_body.='</th>
-			<th colspan="12" style="text-align: center;border: 1px solid #ddd;">';
-			echo $year[2];
-			$html_body.= '</th>
+			<th colspan="12" style="text-align: center;border: 1px solid #ddd;">'.$year1.'
+			</th>
+			<th colspan="12" style="text-align: center;border: 1px solid #ddd;">'.$year2.'
+			</th>
+			<th colspan="12" style="text-align: center;border: 1px solid #ddd;">'.$year3.'
+		</th>
 		</thead>
 		</tr>
 
@@ -2318,7 +2317,8 @@ $month = $data['expiry_month'];
 </tbody>
 </table>
 ';
-		
+		$pdf_data = array("pdf_title" => "Expiry Tracking Chart For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'download', 'file_name' => $file_name);
+		$html_body['title'] = $pdf_data;
 	}
 
 	// echo "<pre>";print_r($html_body);echo "</pre>";exit;
