@@ -46,7 +46,7 @@
 
 				//var url = "reports/filter_expiries/"+
 				var url = "reports/get_county_cost_of_expiries_new/"+
-<<<<<<< HEAD
+
 				        $("#year_filter").val()+
 				        "/"+$("#month_filter").val()+
 				        "/"+"<?php echo $district_id;?>"+
@@ -55,17 +55,6 @@
         	ajax_request_replace_div_content(url,'.graph-section');
 		
           });
-=======
-		        $("#year_filter").val()+
-		        "/"+$("#month_filter").val()+
-		        "/"+"<?php echo $district_id;?>"+
-		        "/"+$("#plot_value_filter").val()+
-		        "/"+"<?php echo $facility_code;?>";
-        	ajax_request_replace_div_content(url,'.graph-section');
-		
-          });
 
 
->>>>>>> 5e0c8f53abfb0e2fefc12b626b22a38a755470f6
-  });
 </script>
