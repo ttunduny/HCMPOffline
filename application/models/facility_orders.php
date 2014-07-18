@@ -106,16 +106,7 @@ class facility_orders extends Doctrine_Record {
 		return $query_results;
  }
 
-/*<<<<<<< HEAD
->>>>>>> 0952fd935660b0c95ff50f5ecaa046b1c14de6a4
- public static function get_facility_orders($facility_code, $year)
- {
- 	$year = date("Y");
- 	   	
- 	$query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
- 	    ->fetchAll("
- 	    select MONTHNAME( f_o.order_date) as month, f_o.order_total as total 
-=======*/
+
  public static function get_facility_orders($facility_code, $year)
  {
  	//$year = date("Y");

@@ -54,7 +54,7 @@ select count(f_e.bundles_avail) as bundles
 from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
 and f_e.bundles_avail=1
-and f.district=d.id and d.county=$county_id and f.district=1
+and f.district=d.id     and f.district=1
  ");	
  $query_4 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select count(f_e.manuals_avail) as manual
@@ -217,34 +217,34 @@ select  count(f_e.comf_issue) as comp
 from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
 and f_e.comf_issue=1
-and f.district=d.id and d.county=$county_id
+and f.district=d.id    
  ");	
  $query_2 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select count(f_e.comf_order) as modem
 from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
 and f_e.comf_order=1
-and f.district=d.id and d.county=$county_id
+and f.district=d.id    
  ");	
  $query_3 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select count(f_e.comf_update) as bundles
 from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
 and f_e.comf_update=1
-and f.district=d.id and d.county=$county_id
+and f.district=d.id    
  ");	
  $query_4 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select count(f_e.comf_gen) as manual
 from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
 and f_e.comf_gen=1
-and f.district=d.id and d.county=$county_id
+and f.district=d.id    
  ");	
   $query_5 = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select COUNT( f_e.id ) AS total
 from facilities f, facility_evaluation f_e, districts d 
 where f.facility_code=f_e.facility_code 
-and f.district=d.id and d.county=$county_id
+and f.district=d.id    
  ");	
 		return array(0=>array('total'=>$query_5[0]['total'],'comp'=>$query_1[0]['comp'],'modem'=>$query_2[0]['modem'],'bundles'=>$query_3[0]['bundles'],'manual'=>$query_4[0]['manual']));
 	
