@@ -83,11 +83,12 @@ class Log extends Doctrine_Record {
 			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");	
 		 
 	}
-	public static function get_log_data($district_id,$county_id)
+	public static function get_log_data($district_id = null,$county_id = null, $year = null, $month = null)
 	{
-		// $county_id = isset($district_id) ? null:$county_id;
-		// $district_id = isset($county_id) ? null:$district_id;
-		$year = date("Y");
+		
+		$and_data =(isset($district_id)&& ($district_id>0)) ?"AND u.district = $district_id" : null;
+		$and_data .=(isset($county_id)&& ($county_id>0)) ?" AND u.county_id = $county_id" : null;
+		
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		select ifnull(sum(l.issued), 0) as total_issues,
 		ifnull(sum(l.ordered), 0) as total_orders,
@@ -97,17 +98,16 @@ class Log extends Doctrine_Record {
 		ifnull(sum(l.issued+l.ordered+l.decommissioned+l.redistribute+l.add_stock), 0) as user_log
 		from log l, user u
 		where l.user_id = u.id
-		AND u.county_id = $county_id
-		AND u.district = $district_id
+		$and_data
 		AND DATE_FORMAT( l.`start_time_of_event` ,'%Y') = '$year'
+		AND DATE_FORMAT( l.`start_time_of_event` ,'%m') = '$month'
 		");
-		
+	
 		return $q;
 	}
 	public static function get_facility_log_data($facility_code)
 	{
-		// $county_id = isset($district_id) ? null:$county_id;
-		// $district_id = isset($county_id) ? null:$district_id;
+		
 		$year = date("Y");
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		select ifnull(sum(l.issued), 0) as total_issues,
@@ -124,22 +124,25 @@ class Log extends Doctrine_Record {
 		
 		return $q;
 	}
-	public static function get_subcounty_login_count($county_id,$district_id,$date)
+	public static function get_subcounty_login_count($county_id = null,$district_id = null,$date)
 	{
+		 $and_data .=(isset($county_id)&& ($county_id>0)) ?"AND u.county_id = $county_id" : null;
+	     $and_data .=(isset($district_id)&& ($district_id>0)) ?" AND u.district = $district_id" : null;
+	     
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT 
 			ifnull(COUNT(DISTINCT u.facility ),0) AS total
 			FROM log l, user u
 			WHERE u.id = l.user_id
-			AND u.county_id = $county_id
-			AND u.district = $district_id
+			$and_data
 			AND DATE_FORMAT( l.start_time_of_event,'%Y-%m-%d') = '$date'
-			
 			");
+			
 		return $q;
 	}
 	public static function get_facility_login_count($facility_code, $date)
 	{
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT 
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT 
 			ifnull(COUNT(DISTINCT u.facility ),0) AS total
 			FROM log l, user u
 			WHERE u.id = l.user_id
@@ -147,16 +150,19 @@ class Log extends Doctrine_Record {
 			AND DATE_FORMAT( l.start_time_of_event,'%Y-%m-%d') = '$date'
 			
 			");
+			
 		return $q;
 	}
-	public static function get_county_login_count($county_id,$district_id,$date)
-	{	
+	public static function get_county_login_count($county_id =null,$district_id =null,$date)
+	{
+		$and_data .=(isset($county_id)&& ($county_id>0)) ?"AND u.county_id = $county_id" : null;
+     	$and_data .=(isset($district_id)&& ($district_id>0)) ?"AND u.district = $district_id" : null;
+	     
 			$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 			SELECT ifnull(COUNT(DISTINCT u.facility ),0) AS total
 			FROM log l, user u
 			WHERE u.id = l.user_id
-			AND u.county_id =$county_id
-			AND u.district=$district_id
+			$and_data
 			AND DATE_FORMAT( l.start_time_of_event,'%Y-%m-%d') = '$date'
 	
 			");
@@ -164,14 +170,16 @@ class Log extends Doctrine_Record {
 			return $q;
 	}
 
-	public static function get_subcounty_login_monthly_count($county_id,$district_id,$date)
+	public static function get_subcounty_login_monthly_count($county_id = null,$district_id = null,$date)
 	{
+		$and_data .=(isset($county_id)&& ($county_id>0)) ?"AND u.county_id = $county_id" : null;
+     	$and_data .=(isset($district_id)&& ($district_id>0)) ?" AND u.district = $district_id" : null;
+	    
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		SELECT  IFNULL( COUNT(DISTINCT u.facility) , 0 ) AS total
 		FROM log l, user u
 		WHERE u.id = l.user_id
-		AND u.county_id =$county_id
-		AND u.district = $district_id
+		$and_data
 		AND DATE_FORMAT( l.`start_time_of_event` ,'%Y-%m') = '$date'");
 		return $q;
 	
@@ -179,6 +187,7 @@ class Log extends Doctrine_Record {
 	}
 	public static function get_facility_login_monthly_count($facility_code,$date)
 	{
+		
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		SELECT  IFNULL( COUNT(DISTINCT u.facility) , 0 ) AS total
 		FROM log l, user u
@@ -190,14 +199,16 @@ class Log extends Doctrine_Record {
 	
 	}
 	
-	public static function get_county_login_monthly_count($county_id,$district_id,$date)
+	public static function get_county_login_monthly_count($county_id = null,$district_id = null,$date)
 	{
+		$and_data .=(isset($county_id)&& ($county_id>0)) ?"AND u.county_id = $county_id" : null;
+     	$and_data .=(isset($district_id)&& ($district_id>0)) ?"AND u.district = $district_id" : null;
+	    
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 			SELECT  IFNULL( COUNT(DISTINCT u.facility) , 0 ) AS total
 			FROM log l, user u
 			WHERE u.id = l.user_id
-			AND u.county_id =$county_id
-			AND u.district =$district_id
+			$and_data
 			AND DATE_FORMAT( l.`start_time_of_event` ,'%Y-%m') = '$date'");
 		return $q;
 	

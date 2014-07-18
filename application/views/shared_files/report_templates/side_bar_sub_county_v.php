@@ -1,5 +1,5 @@
 <div class="panel-group " id="accordion" style="padding: 0;">
-                <div class="panel panel-default">
+                <div class="panel panel-default <?php echo $active_panel=='stocking_levels'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" id="stocking_levels"><span class="glyphicon glyphicon-sort-by-attributes">
@@ -23,7 +23,7 @@
                         </div>
                     </div> 
                 </div>
-                <div class="panel panel-default">
+                <div class="panel panel-default <?php echo $active_panel=='expiries'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a  data-parent="#accordion" href="<?php echo base_url("reports/county_expiries") ?>" id="expiries"><span class="glyphicon glyphicon-trash">
@@ -31,7 +31,7 @@
                         </h4>
                     </div>
                 </div>
-                <div class="panel panel-default">
+                <div class="panel panel-default <?php echo $active_panel=='consumption'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a  data-toggle="collapse" data-parent="#accordion" href="#collapsec" id="consumption"><span class="glyphicon glyphicon-cutlery">
@@ -55,23 +55,23 @@
                         </div>
                     </div> 
                 </div>
-                 <div class="panel panel-default">
+                 <div class="panel panel-default <?php echo $active_panel=='donations'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a  data-parent="#accordion" href="<?php echo base_url("reports/county_donation") ?>" ><span class="glyphicon glyphicon-retweet">
+                            <a  data-parent="#accordion" id="donations" href="<?php echo base_url("reports/county_donation") ?>" ><span class="glyphicon glyphicon-retweet">
                             </span>Donations</a>
                         </h4>
                     </div>
                 </div>
-                 <div class="panel panel-default">
+                 <div class="panel panel-default <?php echo $active_panel=='orders'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a  data-parent="#accordion" href="<?php echo base_url("reports/order_listing/subcounty/true"); ?>" id="consumption"><span class="glyphicon glyphicon-list-alt">
+                            <a  data-parent="#accordion" href="<?php echo base_url("reports/order_listing/subcounty/true"); ?>" id="orders"><span class="glyphicon glyphicon-list-alt">
                             </span>Orders</a>
                         </h4>
                     </div>
                 </div>
-                      <div class="panel panel-default">
+                      <div class="panel panel-default <?php echo $active_panel=='program_reports'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-parent="#accordion" href="<?php echo base_url("divisional_reports/program_reports"); ?>" id="program_reports"><span class="glyphicon glyphicon-folder-open">
@@ -79,7 +79,7 @@
                         </h4>
                     </div>
                 </div>
-                      <div class="panel panel-default">
+                      <div class="panel panel-default <?php echo $active_panel=='system_usage'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-parent="#accordion" href="<?php echo base_url("reports/get_sub_county_facility_mapping_data"); ?>" id="system_usage"><span class="glyphicon glyphicon-sort">
@@ -112,5 +112,33 @@
     });
 		
 	})
+
+
+	$(document).ready(function() 
+	{
+		
+		$("#stocking_levels").on('click', function(){
+			active_panel(this);
+			});
+		$("#expiries").on('click', function(){
+			active_panel(this);
+			});
+		$("#consumption").on('click', function(){
+			active_panel(this);
+			});	
+		$("#donations").on('click', function(){
+			active_panel(this);
+			});
+		$("#orders").on('click', function(){
+			active_panel(this);
+			});	
+		$("#program_reports").on('click', function(){
+			active_panel(this);
+			});	
+		$("#system_usage").on('click', function(){
+			active_panel(this);
+			});
+	});
 </script>
+
             

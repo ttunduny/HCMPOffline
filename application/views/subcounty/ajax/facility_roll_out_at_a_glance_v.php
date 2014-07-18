@@ -3,7 +3,7 @@
   <b>Below is the project status in the county</b>
 </div>
 	 <div id="temp"></div>
-	<?php echo $data ?>
+	<?php echo @$data ?>
 	<div style="padding-top: 25px;">
 <div class="filter" >
 <h5>
@@ -97,35 +97,15 @@ $(document).ready(function() {
         }); 
 }
 	$("#filter").click(function(){
-				var url = "<?php echo base_url().'reports/get_sub_county_facility_mapping_data/'?>"+
+		var url = "reports/get_sub_county_facility_mapping_data/"+
 				        $("#year_filter").val()+
 				        "/"+$("#month_filter").val();
-        	ajax_supply(url,'#container');
-        	ajax_supply(url,'#log_data_graph');
+        	ajax_request_replace_div_content(url,'#container');
+        	ajax_request_replace_div_content(url,'#log_data_graph');
 		
           });
 
 		
-		function ajax_supply (url,div)
-		{
-
-	    var url = url;
-	    var loading_icon = "<?php echo base_url().'assets/img/loadfill.gif' ?>";
-	    $.ajax({
-          type: "POST",
-          url: url,
-          beforeSend: function() 
-          {
-             $(div).html("");           
-             $(div).html("<img style='margin-top:10%;' src="+loading_icon+">");
-           
-          },
-          success: function(msg) 
-          {
-            $(div).html("");
-            $(div).html(msg);           
-          }
-        });
-       }
+		
  	});
 </script>

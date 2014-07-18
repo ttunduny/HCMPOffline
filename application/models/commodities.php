@@ -15,8 +15,9 @@ class Commodities extends Doctrine_Record {
 		$this -> hasColumn('total_commodity_units', 'int');
 		$this -> hasColumn('commodity_source_id', 'int');
         $this -> hasColumn('tracer_item', 'int');
-        $this -> hasColumn('division', 'int');
+        $this -> hasColumn('commodity_division', 'int');
 		$this -> hasColumn('status', 'int');
+		
 	}
 
 	public function setUp() {

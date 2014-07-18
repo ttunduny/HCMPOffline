@@ -19,7 +19,8 @@ class Districts extends Doctrine_Record {
 		return $drugs;
 	}
 	
-	public static function getDistrict($county,$district_id=null){
+	public static function getDistrict($county = null,$district_id=null)
+	{
 		
 		$addition=(isset($district_id) && ($district_id>0))? "id=$district_id" : "county='$county'";
 		$query = Doctrine_Query::create() -> select("*") -> from("districts")->where("$addition ")->orderby("district asc");
