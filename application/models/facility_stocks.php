@@ -308,7 +308,7 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
      $and_data
       $group_by_a_month
      ");	
-	 
+	
      return $inserttransaction ;
 }   
   public static function get_county_consumption_level_new($facility_code, $district_id,$county_id,$category_id,$commodity_id, $option,$from,$to,$graph_type=null){
@@ -638,5 +638,18 @@ from
         where historical_stock.facility_code = $facility_code $and");
 			return $stocks ;
 		
+	}
+	public static function expiries_report($facility_code){
+		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+			select f_s.facility_code,f_s.commodity_id,f_s.batch_no,f_s.manufacture,
+			f_s.status,
+			c.commodity_name,c.commodity_code,
+			DATE_FORMAT(f_s.expiry_date ,'%d %b %y') as expiry_date,
+			DATE_FORMAT(f_s.expiry_date ,'%M %Y') as expiry_month
+			from  facility_stocks f_s 
+			LEFT JOIN  commodities c ON c.id=f_s.commodity_id 
+			where facility_code= $facility_code and f_s.status =1
+			and f_s.current_balance>0 and expiry_date <= NOW()");
+		        return $stocks ;
 	}
 }

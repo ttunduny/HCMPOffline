@@ -15,8 +15,8 @@ class Hcmp_functions extends MY_Controller {
 	
 public function send_stock_update_sms(){
        $facility_name = $this -> session -> userdata('full_name');
-	   $facility_code=$this -> session -> userdata('news');
-	   $data=User::getUsers($facility_code)->toArray();
+	   $facility_code = $this -> session -> userdata('news');
+	   $data= User::getUsers($facility_code)->toArray();
 
 	   $message= "Stock level for ".$facility_name." have been updated. HCMP";
        

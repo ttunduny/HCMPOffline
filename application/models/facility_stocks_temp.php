@@ -136,6 +136,7 @@ class facility_stocks_temp extends Doctrine_Record {
 				group by cm.id
 
 		 ");
+		
 		 
 		return $query_1;
 	}
