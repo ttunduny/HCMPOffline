@@ -1866,7 +1866,8 @@ class Reports extends MY_Controller
 
 		$html_body .= '</tbody></table></ol>';
 
-	}elseif($report_type == "expiries"){
+	}elseif($report_type == "expiries")
+	{
 			// seth
 		$years = array();
 		$month_names[] = array();
@@ -1924,11 +1925,8 @@ class Reports extends MY_Controller
 <body>
 
 <div>
-<<<<<<< HEAD
-		<table width="100%" style = "border: 1px solid #ddd;">
-=======
+
 		<table width="100%"  class="data-table">
->>>>>>> 1699c9e4be7afb726fee12852d429d3bdfc8666b
 		<tbody>
 		<tr>
 		<th>Expiries Report</th>
@@ -1937,29 +1935,16 @@ class Reports extends MY_Controller
 			</table>
 	</div>
 
-<<<<<<< HEAD
-<table width="100%" style = "border: 1px solid #ddd;" class="table table-bordered table-condensed row-fluid">
-=======
+
 <table width="100%"  class="data-table">
->>>>>>> 1699c9e4be7afb726fee12852d429d3bdfc8666b
+
 <tbody style = "display: table-row-group;vertical-align: middle;border-color: inherit;">
 <form class ="form-control" id="tb_form" name="tb_form_">
 
 	<div>
 		<tr style = "display: table-row;vertical-align: inherit;border-color: inherit;">
 		<thead>
-<<<<<<< HEAD
-			<th>Commodity</th>
-			<th>Batch No</th>
-			<th>Expiry Date</th>
-			<th colspan="12" style="text-align: center;">';echo $year[0];
-			$html_body.= '</th>
-			<th colspan="12" style="text-align: center;">';echo $year[1];
-			$html_body.='</th>
-			<th colspan="12" style="text-align: center;">';
-			echo $year[2];
-			$html_body.= '</th>
-=======
+
 			<th style = "border: 1px solid #ddd;" >Commodity</th>
 			<th style = "border: 1px solid #ddd;" >Batch No</th>
 			<th style = "border: 1px solid #ddd;" >Expiry Date</th>
@@ -1969,16 +1954,13 @@ class Reports extends MY_Controller
 			</th>
 			<th colspan="12" style="text-align: center;border: 1px solid #ddd;">'.$year3.'
 		</th>
->>>>>>> 1699c9e4be7afb726fee12852d429d3bdfc8666b
+
 		</thead>
 		</tr>
 
 		<tr>
 			<thead>
-<<<<<<< HEAD
-=======
 
->>>>>>> 1699c9e4be7afb726fee12852d429d3bdfc8666b
 				<th style = "border: 1px solid #ddd;"></th>
 				<th style = "border: 1px solid #ddd;"></th>
 				<th style = "border: 1px solid #ddd;"></th>
