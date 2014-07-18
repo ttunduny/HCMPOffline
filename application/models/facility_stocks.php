@@ -642,8 +642,7 @@ from
 	public static function expiries_report($facility_code){
 		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 			select f_s.facility_code,f_s.commodity_id,f_s.batch_no,f_s.manufacture,
-			f_s.status,
-			c.commodity_name,c.commodity_code,
+			f_s.status,	c.commodity_name,c.commodity_code,
 			DATE_FORMAT(f_s.expiry_date ,'%d %b %y') as expiry_date,
 			DATE_FORMAT(f_s.expiry_date ,'%M %Y') as expiry_month
 			from  facility_stocks f_s 
