@@ -21,9 +21,9 @@ class commodity_division_details extends Doctrine_Record {
 		$commodities = $query -> execute();
 		return $commodities;
 	}
-	public static function get_all_divisions() 
+	public static function get_all_divisions($division_id) 
 	{
-		$query = Doctrine_Query::create() -> select("*") -> from("commodity_division_details")->where("status=1 and id !=1");
+		$query = Doctrine_Query::create() -> select("*") -> from("commodity_division_details")->where("status=1 and id !=1 and id=$division_id");
 		$commodities = $query -> execute();
 		return $commodities;
 	}

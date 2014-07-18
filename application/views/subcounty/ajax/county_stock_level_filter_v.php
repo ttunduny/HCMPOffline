@@ -296,9 +296,10 @@ var drop_down='';
 		//Tracer Filter Button
 		$(".tracer-filter").button().click(function(e) {
         e.preventDefault();
-        var url_ = "reports/get_county_stock_level_new/"+
-        $("#tracer_district_filter").val()+
-        "/NULL/"+$("#tracer_facility_filter").val()+
+        var url_ = "reports/get_county_stock_level_new/"+"NULL/"+"NULL/"+
+        $("#tracer_district_filter").val()+"/"+
+        $("#tracer_facility_filter").val()+"/"+
+        $("#tracer_plot_value_filter").val()+
         "/NULL";
         ajax_request_replace_div_content(url_,'.graph_content');    
           });
@@ -306,11 +307,12 @@ var drop_down='';
           //Division button filter
           $(".division-filter").button().click(function(e) {
 	        e.preventDefault();
-	        var url_ = "reports/division_commodities_stock_level_graph/"+
-	        $("#division_district_filter").val()+
-	        "/NULL/"+$("#division_facility_filter").val()+
-	        "/NULL/"+$("#division_name_filter").val()+"/"+$("#division_plot_value_filter").val();
-	        
+	        var url_ = "reports/get_division_commodities_data/"+
+	        $("#division_district_filter").val()+"/"+
+	        $("#division_facility_filter").val()+"/"+
+	        $("#division_name_filter").val()+"/"+
+	        $("#division_plot_value_filter").val()+
+	        "/NULL";
 	        ajax_request_replace_div_content(url_,'.graph_content');    
           });
           

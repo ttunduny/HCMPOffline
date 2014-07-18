@@ -2121,7 +2121,6 @@ class Reports extends MY_Controller
 			  else{
 				 $facility_name = null;
 			 }
-			  
          	$graph_data = array();
        		$graph_data = array_merge($graph_data, array("graph_id" => 'graph_default'));
 
@@ -2164,6 +2163,13 @@ class Reports extends MY_Controller
          	$final_graph_data = facility_stocks_temp::get_division_commodities_stock($district_id , $county_id , $facility_code ,$division_id);
 			$month = date('F Y');
 			
+			if (isset($division_id)){
+				$division_name = commodity_division_details::get_all_divisions($division_id)->toArray();
+				$title .=' '.@$division_name[0]['division_name'];
+			}
+			 else{
+				 $division_name = null;
+			 }
 			if (isset($county_id)){
 				$county_name = counties::get_county_name($county_id);
 				$title .=' '.$county_name['county']." County ";
@@ -2187,7 +2193,7 @@ class Reports extends MY_Controller
 			  else{
 				 $facility_name = null;
 			 }
-			  
+		
 
 
          	$graph_data = array();
@@ -2247,7 +2253,7 @@ class Reports extends MY_Controller
 	 	$facility_code = ($facility_code=="NULL") ? null :$facility_code;
 		$option = ($option=="NULL" || $option=="null") ? null :$option;	
      	//setting up the data
-
+  
         if($option=="mos"){
         	
         	$this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id);
@@ -2326,16 +2332,18 @@ class Reports extends MY_Controller
 		 
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		endif;
+		
 	}
-public function get_division_commodities_data($division_id = null,$district_id = null, $facility_code=null, $option = null,$report_type=null) 
+public function get_division_commodities_data($district_id = null, $facility_code=null, $division_id = null, $option = null,$report_type=null) 
      	{
      	//reset the values here
-		
-      	$district_id = ($district_id == "NULL") ? null :$district_id;
-	 	$division_id = ($division_id == "NULL") ? null :$division_id;
-	 	$option = ($option == "NULL") ? null :$option;
-		$facility_code = ($facility_code == "NULL") ? null :$facility_code;
-		$option = ($option == "NULL" || $option == "null") ? null :$option;	
+
+      	$district_id = ($district_id=="NULL") ? null :$district_id;
+	 	$division_id = ($division_id=="NULL") ? null :$division_id;
+	 	$option = ($option=="NULL") ? null :$option;
+		$facility_code = ($facility_code=="NULL") ? null :$facility_code;
+		$option = ($option=="NULL" || $option=="null") ? null :$option;	
+
      	//setting up the data
         if($option=="mos"){
         	
@@ -2353,9 +2361,9 @@ public function get_division_commodities_data($division_id = null,$district_id =
 		$option_new = isset($option) ? $option : "ksh";
 		$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
 		$facility_name = $facility_code_[0]['facility_name'];
-		$commodity_name = (isset($commodity_id))? Commodities::get_details($commodity_id)->toArray() : null;
-		$category_name_ = @$commodity_name[0]['commodity_name'];
-		$commodity_name = isset($category_name_)? " for ".$category_name_ : null;
+		$division_name = (isset($division_id))? Commodity_division_details::get_all_divisions($division_id)->toArray() : null;
+		$division_name_ = @$division_name[0]['division_name'];
+		$commodity_name = isset($division_name_)? " for ".$division_name_ : null;
 		$title = isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
 	 	isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
 	
