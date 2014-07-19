@@ -44,11 +44,11 @@
         <div id="collapseFour" class="panel-collapse collapse <?php echo $active_panel=='statistics'? 'in': null; ?>">
             <div class="panel-body">
                 <table class="table">
-                    <tr>
+                   <!-- <tr>
                         <td>
                             <span class="glyphicon"></span><a href="<?php echo base_url().'reports/load_expiries'?>" >Expiries</a>
                         </td>
-                    </tr>
+                    </tr>-->
                     <tr>
                         <td>
                             <span class="glyphicon"></span><a href="<?php echo base_url().'reports/order_report'?>" >Orders</a>

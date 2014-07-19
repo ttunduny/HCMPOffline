@@ -313,7 +313,6 @@ var drop_down='';
 	        $("#division_name_filter").val()+"/"+
 	        $("#division_plot_value_filter").val()+
 	        "/NULL";
-	        
 	        ajax_request_replace_div_content(url_,'.graph_content');    
           });
           

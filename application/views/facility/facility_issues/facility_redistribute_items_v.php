@@ -1,7 +1,7 @@
 <style>
 	.big{ width: 150px !important; }
 </style>
-<div class="container" style="width: 94%; margin: auto;">
+<div class="container" style="width: 100%; margin: auto;">
 <span  class='label label-info'>To Issue Commodities 
 	i) Select commodity to issue 
 	ii) Enter the Service Point and Quanitity you wish to issue and select the Batch No
@@ -42,7 +42,7 @@
 								</select>
 							</td>
 							<td>
-						<select  name="mfl[0]" class="form-control input-small facility">
+						<select name="mfl[0]" class="form-control input-small facility">
                        <option value="0">--select facility---</option>
 					   </select>
 						</td>

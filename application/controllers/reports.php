@@ -2022,8 +2022,7 @@ class Reports extends MY_Controller
 		{
 			
 			$category_data = array_merge($category_data, $months);
-			$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,
-			$county_id, $year, null,$option ,"all");   
+			$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,$county_id, $year, null,$option ,"all");   
 		
 			foreach ($commodity_array as $data) :
 			$temp_array = array_merge($temp_array, array($data["cal_month"] => (int)$data['total']));
@@ -2040,8 +2039,7 @@ class Reports extends MY_Controller
 		if (isset($month) && $month>0) 
 		{
 			
-			$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,
-			$county_id, $year, $month,$option ,"all_");
+			$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,$county_id, $year, $month,$option ,"all_");
 
 			foreach ($commodity_array as $data) :
 			$series_data  = array_merge($series_data , array($data["name"] => (int) $data['total']));
@@ -2246,6 +2244,7 @@ class Reports extends MY_Controller
      	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null) 
      	{
      	//reset the values here
+     	//get_county_stock_level_new/12/1
 		
       	$commodity_id = ($commodity_id=="NULL") ? null :$commodity_id;
 	 	$district_id = ($district_id=="NULL") ? null :$district_id;
@@ -2338,12 +2337,13 @@ class Reports extends MY_Controller
 public function get_division_commodities_data($district_id = null, $facility_code=null, $division_id = null, $option = null,$report_type=null) 
      	{
      	//reset the values here
-		
+
       	$district_id = ($district_id=="NULL") ? null :$district_id;
 	 	$division_id = ($division_id=="NULL") ? null :$division_id;
 	 	$option = ($option=="NULL") ? null :$option;
 		$facility_code = ($facility_code=="NULL") ? null :$facility_code;
 		$option = ($option=="NULL" || $option=="null") ? null :$option;	
+
      	//setting up the data
         if($option=="mos"){
         	
@@ -2461,13 +2461,13 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		foreach ($consumption_data as $data):
 	    if($report_type=="table_data"):
 		if($commodity_id>0):
-		array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"], $data['total']));
+		array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"], (int)$data['total']));
 		else:
-		array_push($series_data , array($data["name"], $data['total']));
+		array_push($series_data , array($data["name"],(int)$data['total']));
 		endif;						
 		else:
-		$series_data  = array_merge($series_data , array($data['total']));
-		$series_data_=array_merge($series_data_ , array(array($data["name"],$data['total'])));
+		$series_data  = array_merge($series_data , array((int)$data['total']));
+		$series_data_=array_merge($series_data_ , array(array($data["name"],(int)$data['total'])));
 		$category_data=array_merge($category_data, array($data["name"]));
 		endif;
 		//
@@ -2672,7 +2672,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
         $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_1'));
 	    $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
 	    $graph_data=array_merge($graph_data,array("table_body"=>$series_data));
-				
+		$data['active_panel']="expiries";		
 		$data['table'] = $this->hcmp_functions->create_data_table($graph_data);
 		$data['table_id'] ="dem_graph_1";
 		return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);

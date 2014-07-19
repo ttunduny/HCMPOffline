@@ -137,7 +137,6 @@ class facility_stocks_temp extends Doctrine_Record {
 
 		 ");
 		 
-		 
 		return $query_1;
 	}
 
