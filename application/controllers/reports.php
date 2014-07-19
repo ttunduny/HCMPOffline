@@ -2255,10 +2255,10 @@ class Reports extends MY_Controller
 		$option = ($option=="NULL" || $option=="null") ? null :$option;	
      	//setting up the data
   
-        if($option=="mos"){
+         if($option=="mos"){
         	
-        	$this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id);
-        }
+        	 $this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id);
+         }
 
 		$county_id = $this -> session -> userdata('county_id');
 		$county_name = counties::get_county_name($county_id);
