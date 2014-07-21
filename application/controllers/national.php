@@ -1248,7 +1248,7 @@ order by user.id asc");
 		 foreach($facility_user_data as $facility_user_data):
          if($facility_user_data['login']=="Logged In" ){
 		 $total_active_users++;
-		 $status='<button type="button" class="btn btn-xs btn-success">In Use</button>';
+		 $status='<button type="button" class="btn btn-xs btn btn-danger">In Use</button>';
          }else{
          $total_inactive_users++;	
 		 $status='<button type="button" class="btn btn-xs btn-success">Available</button>';
