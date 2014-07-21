@@ -1241,7 +1241,9 @@ from
     log ON log.user_id = user.id
 where
     user.username like '%@hcmp.com'
-order by user.id asc");
+group by user.id
+order by user.id asc
+");
 
     	 $graph_data=$series_data=array();
 		 $total_active_users=$total_inactive_users=0; $status=''; $total=count($facility_user_data);
