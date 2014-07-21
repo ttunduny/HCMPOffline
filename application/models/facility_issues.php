@@ -40,24 +40,62 @@ class facility_issues extends Doctrine_Record {
 		$o->save();
 		return TRUE;
 	}
+   public static function get_last_time_facility_issued($facility_code){
+        $transaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 
+     ->fetchAll("SELECT u.fname, u.lname, 
+     max(f_i.`created_at`) as last_seen, DATEDIFF(now(),max(f_i.`created_at`)) as days_
+     from user u, facility_issues 
+     f_i where f_i.`issued_by`=u.id 
+     and f_i.facility_code=$facility_code"); 
+
+
+            return $transaction[0];    
+   }
 	public static function get_bin_card($facility_code,$commodity_id,$from,$to){
 
 		$convertfrom=date('Y-m-d',strtotime($from ));
 		$convertto=date('Y-m-d',strtotime($to ));
 
 	$transaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-    ->fetchAll("SELECT f.date_issued,f.expiry_date,f.batch_no,c.unit_size,f.s11_No,f.balance_as_of,f.adjustmentnve,
-f.adjustmentpve,f.qty_issued,u.fname,u.lname, f. issued_to as service_point_name 
-FROM hcmp.facility_issues f INNER JOIN hcmp.commodities c 
-ON c.id=f.commodity_id  INNER JOIN hcmp.user u 
-ON f.issued_by = u.id WHERE f.facility_code=17401 
-AND f.status =1 AND f.commodity_id=1 
-AND f.date_issued BETWEEN '$convertfrom' 
-AND '$convertto' 
-ORDER BY f.date_issued ASC"); 
+
+     ->fetchAll("SELECT f.date_issued,f.expiry_date,f.batch_no,c.unit_size,f.s11_No,f.balance_as_of,f.adjustmentnve,
+		f.adjustmentpve,f.qty_issued,u.fname,u.lname, f. issued_to as service_point_name 
+		FROM facility_issues f INNER JOIN commodities c 
+		ON c.id=f.commodity_id  INNER JOIN hcmp.user u 
+		ON f.issued_by = u.id WHERE f.facility_code=$facility_code
+		AND f.status =1 AND f.commodity_id=$commodity_id
+		AND f.date_issued BETWEEN '$convertfrom' 
+		AND '$convertto' 
+		ORDER BY f.date_issued asc"); 
+
 
 			return $transaction;	
 	}
+	public static function get_active_facilities_in_district($district)
+	{
+	 	$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT f.`facility_name` , count( fi.`facility_code` ) AS issue_count
+			FROM facilities f, facility_issues fi
+			WHERE fi.`facility_code` = f.`facility_code`
+			AND fi.`availability` =1
+			AND f.`district` = '$district'
+			GROUP BY fi.`facility_code`
+			ORDER BY issue_count DESC , f.`facility_name` ASC
+			LIMIT 0 , 5 ");
+        return $query ;
+	}
 	
+	public static function get_inactive_facilities_in_district($district)
+	{
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT f.`facility_name`
+			FROM facilities f, user u
+			WHERE u.`facility` != f.`facility_code`
+			AND f.`district` = '$district'
+			GROUP BY f.`facility_code`
+			ORDER BY f.`facility_name` ASC");
+		
+		return $query ;
+	}
 }

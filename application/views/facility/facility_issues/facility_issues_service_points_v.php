@@ -1,10 +1,26 @@
-<div class="container" style="width: 96%; margin: auto;">
-<span  class='label label-info'>To Issue commodities i) select commodity to issue 
-	ii) enter the service point and quanitity you wish to issue and select the batch no
-	iii) to add more issues press add row</span><br /><span class="label label-danger">Available Batch Stock is for a specific 
-	batch, Total Balance is the total for the commodity</span>
+<style type="text/css">
+.row div p{
+	padding:10px;
+}
+</style>
+<link href="<?php echo base_url().'assets/bower_components/intro.js/introjs.css'?>" type="text/css" rel="stylesheet"/>
+<div class="container-fluid" style="">
+
+	<div class="row">
+		<div class="col-md-4" id=""><p class="bg-info"><span class="badge ">1</span>Enter the Service point and Commodity you wish to issue and select the Commodity</p></div>
+		<div class="col-md-5" id=""><p class="bg-info"><span class="badge ">2</span> Select Batch No,input date issued,select issue type and quantity issued</p></div>
+		<div class="col-md-3" id=""><p class="bg-info"><span class="badge ">3</span>To add more issues press add row
+			<span class="glyphicon glyphicon-question-sign toolt" data-toggle="tooltip" data-placement="left" title="click for help" href="javascript:void(0);" onclick="startIntro();" style="margin-left:20%;"></span></p>
+		
+	</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6"><p class="text-danger">*Available Batch Stock is for a specific 
+	batch, Total Balance is the total for the commodity</p></div>
+		
+	</div>
 	<hr />
-<div class="table-responsive" style="height:400px; overflow-y: auto;">
+<div class="table-responsive" style="min-height:300px; overflow-y: auto;">
  <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/internal_issue',$att); ?>
 <table  class="table table-hover table-bordered table-update" id="facility_issues_table" >
 <thead style="background-color: white">
@@ -13,21 +29,21 @@
 						<th>Description</th>
 						<th>Supplier</th>
 						<th>Unit Size</th>
-						<th>Batch&nbsp;No&nbsp;&nbsp;</th>
+						<th>Batch&nbsp;No</th>
 						<th>Expiry Date</th>
 						<th>Available Batch Stock</th>
 						<th>Issue Date</th>
-						<th>Issue&nbsp;Type&nbsp;&nbsp;</th>
+						<th>Issue&nbsp;Type</th>
 						<th>Issued Quantity</th>
 						<th>Total Balance</th>
-						<th>Action</th>				    
+						<th>Action</th>			    
 					</tr>
 					</thead>
 					<tbody>
 						<tr row_id='0'>
-						<td>
-						<select  name="service_point[0]" class="form-control input-small service_point">
-							<option value="0" >- select service point -</option>
+						<td id="step1">
+						<select  name="service_point[0]" class="form-control input-small service_point" >
+							<option value="0" >Select service point</option>
 								<?php 
 foreach ($service_point as $service_point) :						
 			$service_point_name=$service_point->service_point_name;			
@@ -36,9 +52,9 @@ endforeach;
 		?> 
 						</select>
 						</td>
-						<td>
-	<select class="form-control input-small service desc" name="desc[0]">
-    <option special_data="0" value="0" selected="selected">-Select Commodity -</option>
+						<td id="step2">
+	<select class="form-control input-small service desc" name="desc[0]" >
+    <option special_data="0" value="0" selected="selected" style="width:auto !important;">Select Commodity</option>
 		<?php 
 foreach ($commodities as $commodities) :						
 			$commodity_name=$commodities['commodity_name'];
@@ -57,21 +73,21 @@ endforeach;
 						<input type="hidden" id="0" name="total_units[0]" value="" class="total_units"/>
 						<input type="hidden" name="commodity_balance[0]" value="0" class="commodity_balance"/>
 						<input type="hidden" name="facility_stock_id[0]" value="0" class="facility_stock_id"/>	
-						<input type="text" class="form-control input-small supplier_name" readonly="readonly" name="supplier_name[]"/></td>
+						<input style="width:80px !important;" type="text" class="form-control input-small supplier_name" readonly="readonly" name="supplier_name[]"/></td>
 			            <td><input  type="text" class="form-control input-small unit_size" readonly="readonly"  /></td>
-						<td><select class="form-control input-small batch_no big" name="batch_no[0]"></select></td>
-						<td><input type='text' class='form-control input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
+						<td id="step3"><select style="width:80px !important;" class="form-control input-small batch_no big" name="batch_no[0]"></select></td>
+						<td><input style="width:110px !important;" type='text' class='form-control input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
 						<td><input class='form-control input-small available_stock' type="text" name="available_stock[0]" readonly="readonly" /></td>
-						<td>
-<input class='form-control input-small clone_datepicker_normal_limit_today' 
+						<td id="step4">
+<input  class='form-control input-small clone_datepicker_normal_limit_today' 
 type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
-						<td><select  class="form-control commodity_unit_of_issue big" name="commodity_unit_of_issue[]">
+						<td id="step5"><select style="width:80px !important;" class="form-control commodity_unit_of_issue big" name="commodity_unit_of_issue[]">
 			<option  value="Pack_Size">Pack Size</option>
 			<option value="Unit_Size">Unit Size</option>
 			</select></td>
-						<td><input class='form-control input-small quantity_issued' type="text" value=""  name="quantity_issued[0]"  required="required"/></td>
+						<td id="step6"><input class='form-control input-small quantity_issued' type="text" value=""  name="quantity_issued[0]"  required="required"/></td>
 						<td><input class='form-control input-small balance' type="text" value="" readonly="readonly" /></td>
-						<td><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Remove Row</button></td>
+						<td style="width:50px !important;" id="step8" ><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Row</button></td>
 			</tr>
 		           </tbody>
 		           </table>
@@ -79,8 +95,8 @@ type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="re
 <hr />
 <div class="container-fluid">
 <div style="float: right">
-<button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
-<button class="save btn btn-success" id=""><span class="glyphicon glyphicon-open"></span>Save</button></div>
+<button type="button" id="step7" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
+<button class="save btn btn-success" id="step9"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 </div>
 </div>
 <?php echo form_close();?>
@@ -347,5 +363,64 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 				});
 			return 	[dropdown,facility_stock_id_,total_stock_bal,expiry_date];
 		}
+		 $('.toolt').tooltip({
+        placement: 'left'
+    }); 
 	});	
 </script>
+ <script type="text/javascript">
+      function startIntro(){
+        var intro = introJs();
+          intro.setOptions({
+            steps: [
+              {
+                element: '#step1',
+                intro: "Select <i>Service point</i> <b>here.</b> ."
+              },
+              {
+                element: '#step2',
+                intro: "Select, <i>Commodity</i> <b>here.</b>This will populate the batch no. ",
+                position: 'right'
+              },
+              {
+                element: '#step3',
+                intro: "Select, <i>Batch No</i> <b>here.</b>This will populate the Expiry date. ",
+                position: 'right'
+              },
+              {
+                element: '#step4',
+                intro: "Select, <i>Issue date</i> <b>here.</b> ",
+                position: 'right'
+              },
+              {
+                element: '#step5',
+                intro: "Select, <i>Issue type</i> <b>here.</b> ",
+                position: 'right'
+              },
+              {
+                element: '#step6',
+                intro: 'Enter, <i>Issue Quantity</i> <b>here.</b>',
+                position: 'bottom'
+              },
+              {
+                element: '#step7',
+                intro: "<span style='font-family: Tahoma'>Click here to Issue more commodities</span>",
+                position: 'left'
+              },
+              {
+                element: '#step8',
+                intro: "<span style='font-family: Tahoma'>Click here to remove commodities</span>",
+                position: 'left'
+              },
+              {
+                element: '#step9',
+                intro: "<span style='font-family: Tahoma'>Click here to Complete  activity</span> ",
+                position: 'left'
+              }
+            ]
+          });
+
+          intro.start();
+      }
+    </script>
+   <script src="<?php echo base_url().'assets/bower_components/intro.js/intro.js'?>" type="text/javascript"></script>

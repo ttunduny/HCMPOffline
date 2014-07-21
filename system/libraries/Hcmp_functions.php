@@ -8,7 +8,7 @@ class Hcmp_functions extends MY_Controller {
 	
 		function __construct() {
 		parent::__construct();
-		$this -> load -> helper(array('url','file'));
+		$this -> load -> helper(array('url','file','download'));
 		$this -> load -> library(array('phpexcel/phpexcel','mpdf/mpdf'));
 	}
 
@@ -215,17 +215,9 @@ $cc_email=($this->test_mode)?'kariukijackson@gmail.com': 'anganga.pmo@gmail.com,
 
 public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL){
   
-		$mail_list=($this->test_mode)?'kariukijackson@gmail.com,kariukijackson@ymail.com': 'rkihoto@clintonhealthaccess.org,
-  		eunicew2000@yahoo.com,
-  		gmacharia@clintonhealthaccess.org,
-  		Jhungu@clintonhealthaccess.org,
-  		nmaingi@strathmore.edu,
-  		bwariari@clintonhealthaccess.org,
-  		kyalocatherine@gmail.com,
-  		ashminneh.mugo@gmail.com,
-  		smutheu@clintonhealthaccess.org,
-  		kariukijackson@gmail.com,
-  		kelvinmwas@gmail.com,';
+		$mail_list=($this->test_mode)?'hcmpkenya@gmail.com,hcmpkenya@gmail.com': ',
+  		hcmpkenya@gmail.com,
+  		hcmpkenya@gmail.com,';
 			
 		$fromm='hcmpkenya@gmail.com';
 		$messages=$message;
@@ -315,7 +307,6 @@ if(count($excel_data)>0):
         $rowExec++;
 		}
 
-		//	echo date('H:i:s') . " Rename sheet\n";
 		$objPHPExcel -> getActiveSheet() -> setTitle('Simple');
 
 		// Save Excel 2007 file
@@ -323,15 +314,134 @@ if(count($excel_data)>0):
 		$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
 
 		// We'll be outputting an excel file
-		header('Content-type: application/vnd.ms-excel');
-
+		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header("Cache-Control: no-store, no-cache, must-revalidate");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
 		// It will be called file.xls
-		header("Content-Disposition: attachment; filename=".$excel_data['file_name'].".xls");
+		header("Content-Disposition: attachment; filename=".$excel_data['file_name'].".xlsx");
 
 		// Write file to the browser
-		$objWriter -> save('php://output');
+        $objWriter -> save('php://output');
+       $objPHPExcel -> disconnectWorksheets();
+       unset($objPHPExcel);
 		// Echo done
 endif;
+}
+ public function clone_excel_order_template($order_id,$report_type){
+    $inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx';
+    $facility_details = facility_orders::get_facility_order_details($order_id);
+	if(count($facility_details)==1):
+	$facility_stock_data_item = facility_order_details::get_order_details($order_id);
+
+    $file_name=time().'.xlsx';
+	
+	$excel2 = PHPExcel_IOFactory::createReader('Excel2007');
+    $excel2=$objPHPExcel= $excel2->load($inputFileName); // Empty Sheet
+    
+    $sheet = $objPHPExcel->getSheet(0); 
+    $highestRow = $sheet->getHighestRow(); 
+	
+    $highestColumn = $sheet->getHighestColumn();
+	
+    $excel2->setActiveSheetIndex(0);
+	
+    $excel2->getActiveSheet()
+    ->setCellValue('H4', $facility_details[0]['facility_code'])
+    ->setCellValue('H5', $facility_details[0]['facility_name'])
+    ->setCellValue('H6', '')       
+    ->setCellValue('H7', $facility_details[0]['county'])
+	->setCellValue('H8', $facility_details[0]['order_date']);
+   //  Loop through each row of the worksheet in turn
+for ($row = 17; $row <= $highestRow; $row++){ 
+    //  Read a row of data into an array
+    $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);							  
+   if(isset($rowData[0][2])){
+   	foreach($facility_stock_data_item as $facility_stock_data_item_){
+   	if(in_array($rowData[0][2], $facility_stock_data_item_)){
+   	$key = array_search($rowData[0][2], $facility_stock_data_item_);
+	$excel2->getActiveSheet()->setCellValue("H$row", $facility_stock_data_item_['quantity_ordered_pack']);	
+   	}	
+   	} 	
+   }
+}
+
+   $objWriter = PHPExcel_IOFactory::createWriter($excel2, 'Excel2007');
+   if($report_type=='download_file'){
+   	// We'll be outputting an excel file
+		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header("Cache-Control: no-store, no-cache, must-revalidate");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+		// It will be called file.xls
+		header("Content-Disposition: attachment; filename=$file_name");
+		// Write file to the browser
+        $objWriter -> save('php://output');
+       $objPHPExcel -> disconnectWorksheets();
+       unset($objPHPExcel);
+   } elseif($report_type=='save_file'){
+   	 $objWriter->save("print_docs/excel/excel_files/".$file_name);
+   }
+   endif;
+
+ }
+/*********KEMSA UPLOADER**********/
+ public function kemsa_excel_order_uploader($inputFileName){
+   // $inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx';
+
+	if(isset($inputFileName)):
+	$item_details = Commodities::get_all_from_supllier(1);
+
+	$excel2 = PHPExcel_IOFactory::createReader('Excel2007');
+    $excel2=$objPHPExcel= $excel2->load($inputFileName); // Empty Sheet
+    
+    $sheet = $objPHPExcel->getSheet(0); 
+    $highestRow = $sheet->getHighestRow(); 
+	
+    $highestColumn = $sheet->getHighestColumn();
+	$temp=array();
+    $facility_code= $sheet->getCell('H4')->getValue();
+	
+   //  Loop through each row of the worksheet in turn
+for ($row = 1; $row <= $highestRow; $row++){ 
+    //  Read a row of data into an array
+    $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);							  
+   if(isset($rowData[0][2]) && $rowData[0][2]!='Product Code'){
+   	foreach($item_details as $key=> $data){
+   	if(in_array($rowData[0][2], $data)){
+array_push($temp,array('sub_category_name'=>$data['sub_category_name'],'commodity_name'=>$data['commodity_name']
+	,'unit_size'=>$data['unit_size'],'unit_cost'=>$data['unit_cost'],'commodity_code'=>$data['commodity_code'],'commodity_id'=>$data['commodity_id'],
+	'total_commodity_units'=>$data['total_commodity_units'],'opening_balance'=>0,
+	'total_receipts'=>0,
+	'total_issues'=>0,
+	'quantity_ordered'=>$rowData[0][7],
+	'comment'=>'',
+	'closing_stock_'=>0,
+	'closing_stock'=>0,
+	'days_out_of_stock'=>0,
+	'date_added'=>'',
+	'losses'=>0,
+	'status'=>0,
+	'adjustmentpve'=>0,
+	'adjustmentnve'=>0,
+	'historical'=>0));
+	unset($item_details[$key]);
+   	}	
+   	} 	
+   }
+}
+
+   unset($objPHPExcel);
+  return(array('row_data'=>$temp,'facility_code'=>$facility_code));
+   endif;
+
+ }
+/*************/	
+/* HCMP file downloader 
+/********/	
+public function download_file($path){
+$data = file_get_contents($path); // Read the file's contents
+force_download(basename($path), $data);
 }
 /*************/	
 /* HCMP PDF creator
@@ -355,6 +465,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
 </style>';
             $name=$this -> session -> userdata('full_name');
 	        $this->mpdf = new mPDF('', 'A4-L', 0, '', 15, 15, 16, 16, 9, 9, '');
+			$this->mpdf->ignore_invalid_utf8 = true;
             $this->mpdf->WriteHTML($html_title);
             $this->mpdf->defaultheaderline = 1;  
             $this->mpdf->simpleTables = true;
@@ -378,7 +489,79 @@ endif;
 }
 /****************************END************************/
  //// /////HCMP Create high chart graph
-  public function create_high_chart_graph($graph_data=null){
+  public function create_high_chart_graph($graph_data=null)
+  {
+  	$high_chart='';
+  	if(isset($graph_data)):
+		$graph_id=$graph_data['graph_id'];
+		$graph_title=$graph_data['graph_title'];
+		$graph_type=$graph_data['graph_type'];
+        $stacking=isset($graph_data['stacking']) ? $graph_data['stacking'] : null;
+		$graph_categories=json_encode(array_map('utf8_encode',$graph_data['graph_categories'])); 
+		//echo json_encode($graph_data['graph_categories']);
+		$graph_yaxis_title=$graph_data['graph_yaxis_title'];
+		$graph_series_data=$graph_data['series_data'];
+		$array_size=sizeof($graph_data['series_data'][key($graph_data['series_data'])]);			
+		$height=$array_size<12? null :$array_size*30;
+		$height=isset($height) ? ", height:$height" : null;
+		//set up the graph here
+		if($graph_type=="bar"){
+		$data_=" series: {
+                    stacking: '$stacking',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }";	
+		}else{
+			$data_="column: {
+                    stacking: '$stacking',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }";	
+		}
+		$high_chart .="
+		$('#$graph_id').highcharts({
+		    chart: { zoomType:'x', type: '$graph_type' $height },
+            credits: { enabled:false},
+            title: {text: '$graph_title'},
+            yAxis: { min: 0, title: {text: '$graph_yaxis_title' }},
+            subtitle: {text: 'Source: HCMP', x: -20 },
+            xAxis: { categories: $graph_categories },
+            tooltip: { crosshairs: [true,true] },
+                scrollbar: {
+               enabled: true
+               },
+               plotOptions: {
+                 series: {
+                    stacking: '$stacking',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
+            },
+            series: [";			 
+		    foreach($graph_series_data as $key=>$raw_data):
+					$temp_array=array();
+					$high_chart .="{ name: '$key', data:";					 
+					  foreach($raw_data as $key_data):
+						is_int($key_data)? $temp_array=array_merge($temp_array,array((int)$key_data)) :
+						$temp_array=array_merge($temp_array,array($key_data));						
+						endforeach;					
+					  $high_chart .= json_encode($temp_array)."},";				  
+				   endforeach;
+	     $high_chart .="]  })";
+
+	endif;
+
+	return $high_chart; 	
+  }
+//// /////HCMP Create high chart graph
+  public function create_high_chart_graph_multistep($graph_data=null)
+  {
   	$high_chart='';
   	if(isset($graph_data)):
 		$graph_id=$graph_data['graph_id'];
@@ -406,9 +589,9 @@ endif;
 					$temp_array=array();
 					$high_chart .="{ name: '$key', data:";					 
 					  foreach($raw_data as $key_data):
-						$temp_array=array_merge($temp_array,array((int)$key_data));
+						$temp_array=array_merge($temp_array,array($key_data));
 						endforeach;
-					  $high_chart .= json_encode($temp_array)."},";				  
+					  $high_chart .= "[]".json_encode($temp_array)."},";				  
 				   endforeach;
 	     $high_chart .="]  })";
 

@@ -1,5 +1,5 @@
 <div class="panel-group " id="accordion" style="padding: 0;">
-                <div class="panel panel-default">
+                <div class="panel panel-default <?php echo $active_panel=='stocking_levels'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" id="stocking_levels"><span class="glyphicon glyphicon-sort-by-attributes">
@@ -14,11 +14,16 @@
                   <a href="<?php echo base_url("reports") ?>">Actual Stocks</a>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                  <a href="<?php echo base_url("reports/stock_out") ?>">Stock Outs</a>
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                     </div> 
                 </div>
-                <div class="panel panel-default">
+                <div class="panel panel-default <?php echo $active_panel=='expiries'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a  data-parent="#accordion" href="<?php echo base_url("reports/county_expiries") ?>" id="expiries"><span class="glyphicon glyphicon-trash">
@@ -26,7 +31,7 @@
                         </h4>
                     </div>
                 </div>
-                <div class="panel panel-default">
+                <div class="panel panel-default <?php echo $active_panel=='consumption'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a  data-toggle="collapse" data-parent="#accordion" href="#collapsec" id="consumption"><span class="glyphicon glyphicon-cutlery">
@@ -50,34 +55,34 @@
                         </div>
                     </div> 
                 </div>
-                 <div class="panel panel-default">
+                 <div class="panel panel-default <?php echo $active_panel=='donations'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" id="consumption"><span class="glyphicon glyphicon-retweet">
+                            <a  data-parent="#accordion" id="donations" href="<?php echo base_url("reports/county_donation") ?>" ><span class="glyphicon glyphicon-retweet">
                             </span>Donations</a>
                         </h4>
                     </div>
                 </div>
-                 <div class="panel panel-default">
+                 <div class="panel panel-default <?php echo $active_panel=='orders'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a  data-parent="#accordion" href="<?php echo base_url("reports/order_listing/subcounty/true"); ?>" id="consumption"><span class="glyphicon glyphicon-list-alt">
+                            <a  data-parent="#accordion" href="<?php echo base_url("reports/order_listing/subcounty/true"); ?>" id="orders"><span class="glyphicon glyphicon-list-alt">
                             </span>Orders</a>
                         </h4>
                     </div>
                 </div>
-                      <div class="panel panel-default">
+                      <div class="panel panel-default <?php echo $active_panel=='program_reports'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" id="consumption"><span class="glyphicon glyphicon-folder-open">
+                            <a data-parent="#accordion" href="<?php echo base_url("divisional_reports/program_reports"); ?>" id="program_reports"><span class="glyphicon glyphicon-folder-open">
                             </span>Program Reports</a>
                         </h4>
                     </div>
                 </div>
-                      <div class="panel panel-default">
+                      <div class="panel panel-default <?php echo $active_panel=='system_usage'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" id="consumption"><span class="glyphicon glyphicon-sort">
+                            <a data-parent="#accordion" href="<?php echo base_url("reports/get_sub_county_facility_mapping_data"); ?>" id="system_usage"><span class="glyphicon glyphicon-sort">
                             </span>System Usage</a>
                         </h4>
                     </div>
@@ -89,8 +94,8 @@
                     '<?php	$facilities=Facilities::get_facilities_online_per_district($this -> session -> userdata('county_id'));
                     foreach($facilities as $facility):
 						    $facility_code=$facility['facility_code'];
-							 $facility_name=$facility['facility_name']; ?>?>'+					
-						'<option <?php echo 'value="'.$facility_code.'">'.$facility_name ;?></option><?php endforeach;?>';
+							 $facility_name= $facility['facility_name']; ?>?>'+					
+						'<option <?php echo 'value="'.$facility_code.'">'.preg_replace("/[^A-Za-z0-9 ]/", "",$facility_name );?></option><?php endforeach;?>';
    //hcmp custom message dialog
     dialog_box(body_content,
     '<button type="button" class="btn btn-primary order_for_them" >View Their Bin Card</button>'
@@ -107,5 +112,33 @@
     });
 		
 	})
+
+
+	$(document).ready(function() 
+	{
+		
+		$("#stocking_levels").on('click', function(){
+			active_panel(this);
+			});
+		$("#expiries").on('click', function(){
+			active_panel(this);
+			});
+		$("#consumption").on('click', function(){
+			active_panel(this);
+			});	
+		$("#donations").on('click', function(){
+			active_panel(this);
+			});
+		$("#orders").on('click', function(){
+			active_panel(this);
+			});	
+		$("#program_reports").on('click', function(){
+			active_panel(this);
+			});	
+		$("#system_usage").on('click', function(){
+			active_panel(this);
+			});
+	});
 </script>
+
             

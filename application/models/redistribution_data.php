@@ -32,9 +32,31 @@ class redistribution_data extends Doctrine_Record {
 		return $redistribution_data;
 	}
 	public static function get_all_active($facility_code,$option=null) {
-		$query = Doctrine_Query::create() -> select("*") -> from("redistribution_data") -> where("source_facility_code=$facility_code and status=0");
+		$and=($option=='to-me')? " receive_facility_code=$facility_code" : " source_facility_code=$facility_code";
+	
+		$query = Doctrine_Query::create() -> select("*") -> from("redistribution_data") -> where("$and and status=0");
 		$redistribution_data = $query -> execute();
 		return $redistribution_data;
+	}
+	
+	public static function get_redistribution_data($facility_code,$district_id,$county_id,$year){
+	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND d.id = '$district_id'" : null;
+	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;
+     $and_data .=($county_id>0) ?" AND d.county='$county_id'" : null;
+	 $and_data .=isset($year) ?" AND year(r_d.`date_sent`)='$year'" : null;
+     $query=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+     select temp1.fname as sender_name, temp1.fname as receiver_name, 
+     r_d.`source_facility_code`, f.facility_name as source_facility_name, temp3.facility_name as receiver_facility_name, 
+     temp3.facility_code as receiver_facility_code,  c.`id`, c.commodity_name,c.commodity_code, c.unit_size, c.unit_cost, 
+     c.total_commodity_units, r_d.`quantity_sent`, r_d.`quantity_received`, r_d.`manufacturer`,
+     r_d.`batch_no`, r_d.`expiry_date`, r_d.`status`, r_d.`date_sent`, r_d.`date_received` 
+     from facilities f, commodities c, districts d, redistribution_data r_d  
+     left join user  as temp1 on temp1.id=r_d.`sender_id` 
+     left join user  as temp2 on temp2.id=r_d.`receiver_id` 
+     left join facilities as temp3 on temp3.facility_code=r_d.`receive_facility_code`  
+      where r_d.commodity_id=c.id and r_d.`source_facility_code`=f.facility_code and f.district=d.id $and_data ");	
+
+	return $query;	
 	}
 	
 }

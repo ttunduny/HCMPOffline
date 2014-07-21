@@ -18,6 +18,8 @@ var baseUrl=json_obj.url;
         $(this).attr("id", new_id); // change to new id
         $(this).removeClass('hasDatepicker'); // remove hasDatepicker class
         $(this).datepicker({ 
+        	dateFormat: 'd My', 
+    minDate: 0,
         	beforeShowDay: function(date)
     {
         // getDate() returns the day [ 0 to 31 ]
@@ -28,8 +30,7 @@ var baseUrl=json_obj.url;
         }
 
         return [false, ''];
-    },
-        	        dateFormat: 'd M yy', 
+    },              
         	        buttonImage: baseUrl,
 					changeMonth: true,
 			        changeYear: true
@@ -39,6 +40,8 @@ var baseUrl=json_obj.url;
   }
   //	-- Datepicker	showing just the last day of the month 			
 	$(".clone_datepicker").datepicker({
+dateFormat: 'd My', 
+    minDate: 0,
 	beforeShowDay: function(date)
     {
         // getDate() returns the day [ 0 to 31 ]
@@ -49,7 +52,6 @@ var baseUrl=json_obj.url;
         }
         return [false, ''];
     },				
-	dateFormat: 'd M yy', 
 	changeMonth: true,
 	changeYear: true,
 	buttonImage: baseUrl,       });	
@@ -57,7 +59,7 @@ var baseUrl=json_obj.url;
 	  //	-- Datepicker	limit today		
 	$(".clone_datepicker_normal_limit_today").datepicker({
     maxDate: new Date(),				
-	dateFormat: 'd M yy', 
+	dateFormat: 'd My', 
 	changeMonth: true,
 	changeYear: true,
 	buttonImage: baseUrl,       });	
@@ -65,7 +67,7 @@ var baseUrl=json_obj.url;
 
      function ajax_request_replace_div_content(function_url,div){
 		var function_url =url+function_url;
-		var loading_icon=url+"assets/img/loader.gif";
+		var loading_icon=url+"assets/img/loader2.gif";
 		$.ajax({
 		type: "POST",
 		url: function_url,
@@ -88,7 +90,7 @@ var baseUrl=json_obj.url;
         $(this).removeClass('hasDatepicker'); // remove hasDatepicker class
         $(this).datepicker({ 
         	        maxDate: new Date(),
-        	        dateFormat: 'd M yy', 
+        	        dateFormat: 'd My', 
         	        buttonImage: baseUrl,
 					changeMonth: true,
 			        changeYear: true
@@ -156,7 +158,7 @@ function dialog_box(body_html_data,footer_html_data){
         }
         return [false, ''];
     },				
-	dateFormat: 'd M yy', 
+	dateFormat: 'd My', 
 	changeMonth: true,
 	changeYear: true,
 	buttonImage: baseUrl,       });	
@@ -219,8 +221,18 @@ function confirm_if_the_user_wants_to_save_the_form(form_id){
        '<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>';
       dialog_box("Kindly confirm the values before saving",buttons);
       $('.save_issue').on('click', function() {
-      $(form_id).submit();   
+          
+          if($(form_id).valid()){
+           $(form_id).submit();      
+          }
+      
       });
 }
+
+function active_panel(div_object){
+
+     	 $('.panel').removeClass('active-panel');
+     	 $(div_object).parent().parent().parent().addClass('active-panel');
+     }
 
 

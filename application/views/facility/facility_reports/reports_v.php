@@ -3,6 +3,7 @@
         <p class="pull-left visible-xs">
             <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Click to view Side Menu</button>
           </p>
+
         <div class="col-sm-3 col-md-2 sidebar-offcanvas"  id="bar" role="navigation" style="margin-left:0.5%; padding-top: 0.5%">
            <?php $this -> load -> view($sidebar);?>
         </div>
@@ -16,11 +17,13 @@
       
     </div>
 <script>
+
       $(document).ready(function () {
   $('[data-toggle=offcanvas]').click(function () {
     $('.row-offcanvas').toggleClass('active')
   });
   
+
   $(window).resize(function() {
     if (($(window).width() < 768))
     {

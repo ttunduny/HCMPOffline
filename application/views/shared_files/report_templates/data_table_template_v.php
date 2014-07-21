@@ -1,4 +1,5 @@
-<?php echo $table; ?>
+<?php if(isset($stats_data)){ echo $stats_data;}
+echo $table; ?>
 <script>
     $(document).ready(function() {
 	//datatables settings 

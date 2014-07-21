@@ -27,8 +27,80 @@ class orders extends MY_Controller {
 		$test= $this -> hcmp_functions -> create_order_delivery_color_coded_table(1);
 		echo $test['table'];
 	}
+	
+	public function test_read_write_excel(){
 
-	public function facility_order() {
+	$inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx';
+
+    $file_name=time().'.xlsx';
+	$excel2 = PHPExcel_IOFactory::createReader('Excel2007');
+    $excel2=$objPHPExcel= $excel2->load($inputFileName); // Empty Sheet
+    
+    $sheet = $objPHPExcel->getSheet(0); 
+    $highestRow = $sheet->getHighestRow(); 
+	
+    $highestColumn = $sheet->getHighestColumn();
+	
+    $excel2->setActiveSheetIndex(0);
+	
+    $excel2->getActiveSheet()
+    ->setCellValue('H4', '4')
+    ->setCellValue('H5', '5')
+    ->setCellValue('H6', '6')       
+    ->setCellValue('H7', '7')
+	->setCellValue('H8', '7');
+
+   //  Loop through each row of the worksheet in turn
+for ($row = 1; $row <= $highestRow; $row++){ 
+    //  Read a row of data into an array
+    $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);							  
+   if(isset($rowData[0][2]) && $rowData[0][2]!='Product Code'){
+   	$excel2->getActiveSheet()->setCellValue("H$row", '7');
+   }
+
+}
+
+   $objWriter = PHPExcel_IOFactory::createWriter($excel2, 'Excel2007');
+   $objWriter->save("print_docs/excel/excel_files/".$file_name);
+
+	}
+	public function getDistrict()
+	{
+		//for ajax
+		$county = $_POST['county'];
+		$districts = Districts::getDistrict($county);
+		$list = "";
+		
+		foreach ($districts as $districts) 
+		{
+			$list.=$districts->id;
+			$list.="*";
+			$list.=$districts->district;
+			$list.="_";
+		}
+		
+		echo $list;
+	}
+	public function getFacilities()
+	{
+		//for ajax
+		$district=$_POST['district'];
+		$facilities=Facilities::getFacilities($district);
+		$list="";
+		
+		foreach ($facilities as $facilities) 
+		{
+			$list.=$facilities->facility_code;
+			$list.="*";
+			$list.=$facilities->facility_name;
+			$list.="_";
+		}
+		
+		echo $list;
+	}
+
+	public function facility_order() 
+	{
 		$facility_code = $this -> session -> userdata('facility_id');
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
 		$data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";
@@ -39,14 +111,33 @@ class orders extends MY_Controller {
 		$data['facility_commodity_list'] = Commodities::get_facility_commodities($facility_code);
 		$this -> load -> view('shared_files/template/template', $data);
 	}
-	public function facility_order_($facility_code) {
-		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
+	public function facility_order_($facility_code=null) {
+		// hack to ensure that when you are ordering for a facility that is not using hcmp they have all the items
+		$checker= $this -> session -> userdata('facility_id') ? null : 1; 
+		if(isset($_FILES['file']) && $_FILES['file']['size'] > 0){ 
+			$more_data=$this -> hcmp_functions -> kemsa_excel_order_uploader($_FILES["file"]["tmp_name"]);
+			$data['order_details'] = $data['facility_order'] =$more_data['row_data'];
+			
+			$facility_data = Facilities::get_facility_name($more_data['facility_code'])->toArray();
+			if(count($facility_data)==0){
+			$this -> session -> set_flashdata('system_error_message', "Kindly upload a file with correct facility MFL code ");
+			redirect("reports/order_listing/subcounty");	
+			}
+			if($facility_data[0]['using_hcmp']==1){
+			$this -> session -> set_flashdata('system_error_message', "You cannot order for a". 
+			" facility that is already using HCMP, they need to place their order using their accounts");
+			redirect("reports/order_listing/subcounty");		
+			}
+		}else{
+		$data['order_details'] = $data['facility_order'] = Facility_Transaction_Table::get_commodities_for_ordering($facility_code,$checker);
+		$facility_data = Facilities::get_facility_name($facility_code)->toArray();	
+		}
 		$data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";
 		$data['title'] = "Facility New Order";
+		$data['system_error_message']="You are ordering for ".$facility_data[0]['facility_name'] ;
 		$data['facility_code'] = $facility_code;
 		$data['banner_text'] = "Facility New Order";
-		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];
-		$data['order_details'] = $data['facility_order'] = Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
+		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];		
 		$data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
 		$this -> load -> view('shared_files/template/template', $data);
 	}
@@ -122,7 +213,9 @@ class orders extends MY_Controller {
 				$this -> hcmp_functions -> create_pdf($pdf_data);
 				$order_listing = 'facility';
 			endif;
-
+			$user = $this -> session -> userdata('user_id');
+			$user_action = "order";
+		 	Log::log_user_action($user, $user_action);
 			$this -> session -> set_flashdata('system_success_message', "Facility Order No $new_order_no has Been Saved");
 			redirect("reports/order_listing/$order_listing");
 
@@ -169,7 +262,7 @@ class orders extends MY_Controller {
 
 			for ($i = 0; $i < $number_of_id; $i++) {
 
-				$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("INSERT INTO facility_order_details (  `id`,
+			$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("INSERT INTO facility_order_details (  `id`,
 			`order_number_id`,
 			`commodity_id`,
 			`quantity_ordered_pack`,
@@ -255,6 +348,30 @@ class orders extends MY_Controller {
 		endif;
 
 	}
+     public function auto_save_order_detail(){
+         //security check     
+    if($this->input->is_ajax_request()):
+            $commodity_id = $this -> input -> post('commodity_id');
+            $order_details_id = $this -> input -> post('order_details_id');
+            $batch_no = $this -> input -> post('batch_no');
+            $manu = $this -> input -> post('manu');
+            $clone_datepicker = $this -> input -> post('clone_datepicker');
+            $quantity = $this -> input -> post('quantity');
+            $actual_quantity = $this -> input -> post('actual_quantity');
+            //build the query to run
+            $orders = Doctrine_Manager::getInstance() -> 
+            getCurrentConnection() -> execute("update facility_order_details 
+             set
+            `batch_no`='$batch_no',
+            `quantity_recieved_pack`=$quantity,
+            `quantity_recieved_unit`=$actual_quantity,
+             `maun`='$manu',
+            `expiry_date`='$clone_datepicker'
+             where
+            `id`=$order_details_id ");
+            echo 'success';
+    endif;
+     }
       	/*
 	 |--------------------------------------------------------------------------
 	 | End of update_facility_new_order
@@ -297,24 +414,43 @@ class orders extends MY_Controller {
 			endif;
 			redirect();
 	}
-
-
-
 	public function create_order_pdf_template($order_no) {
 		$from_order_table = facility_orders::get_order_($order_no);
 		//get the order data here
-		$from_order_details_table = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT a.sub_category_name, 
-	    b.commodity_name, b.commodity_code, b.unit_size, b.unit_cost, 
-		c.quantity_ordered_pack,c.quantity_ordered_unit, c.price,  c.quantity_recieved,
-		c.o_balance, c.t_receipts, c.t_issues, c.adjustnve, c.adjustpve,
-        c.losses, c.days, c.comment, c.c_stock,c.s_quantity
-        FROM  commodity_sub_category a, commodities b, facility_order_details c
-        WHERE c.order_number_id =$order_no
+		$from_order_details_table = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT 
+
+    a.sub_category_name,
+    b.commodity_name,
+    b.commodity_code,
+    b.unit_size,
+    b.unit_cost,
+    c.quantity_ordered_pack,
+    c.quantity_ordered_unit,
+    c.price,
+    c.quantity_recieved,
+    c.o_balance,
+    c.t_receipts,
+    c.t_issues,
+    c.adjustnve,
+    c.adjustpve,
+    c.losses,
+    c.days,
+    c.comment,
+    c.c_stock,
+    c.s_quantity
+    
+FROM
+    commodity_sub_category a,
+    commodities b,
+    facility_order_details c
+WHERE
+    c.order_number_id = $order_no
         AND b.id = c.commodity_id
         AND a.id = b.commodity_sub_category_id
-        ORDER BY a.id ASC , b.commodity_name ASC ");
+group by b.id
+ORDER BY a.id ASC , b.commodity_name ASC  ");
 		// get the order details here
-		$from_order_details_table_count = count(from_order_details_table);
+		$from_order_details_table_count = count($from_order_details_table);
 		foreach ($from_order_table as $order) {
 			$o_no = $order -> order_no;
 			$o_bed_capacity = $order -> bed_capacity;

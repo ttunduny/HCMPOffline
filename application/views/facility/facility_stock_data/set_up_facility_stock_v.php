@@ -1,5 +1,5 @@
 <div class="test"><div class="container" style="width: 96%; margin: auto;">
-<span  class='label label-info' style="padding-left: 1%"> Select the Commodities that are used in this facility by inputting the AMC or check box</span>
+<span  class='label label-info' style="padding-left: 1%"> Select the Commodities that are used in this facility by inputing the AMC or selecting the check box</span>
 </div>
 <div style="max-height:600px; overflow-y:auto; width: 100%">
 <table width="100%" class="row-fluid table table-hover table-bordered table-update"  id="example">
@@ -8,11 +8,12 @@
 						<th>Category</th>
 						<th>Description</th>
 						<th>Commodity&nbsp;Code</th>
+						<th>In Use?</th>	
 						<th>Unit Size</th>
 						<th>Issue Type</th>
-					    <th>Average&nbsp;Consumption&nbsp;Quantity </th>
+					    <th>Average&nbsp;Monthly&nbsp;Consumption&nbsp;(Units) </th>
 					    <th>Total&nbsp;Units</th>
-					    <th>Select</th>			    
+					    		    
 </tr>
 </thead>
 <tbody>
@@ -25,6 +26,7 @@
 	   <td>$facility_commodities[sub_category_name]</td>
 	   <td>$facility_commodities[commodity_name]</td>
 	   <td>$facility_commodities[commodity_code]</td>
+	   <td><input type='checkbox' class='checkbox'  $status/></td>
 	   <td>$facility_commodities[unit_size]</td>
 	   <td><select class='form-control commodity_unit_of_issue input-small' name='commodity_unit_of_issue[]'>
 			<option value='Pack_Size'>Pack Size</option>
@@ -32,7 +34,7 @@
 			</select></td>
 	<td><input class='form-control input-small quantity' type='text' name='quantity[]' value='$facility_commodities[consumption_level]' </td>
 	<td><input class='form-control input-small actual_quantity' type='text' name='actual_quantity[]' value='$facility_commodities[total_units]'</td>
-	<td><input type='checkbox' class='checkbox'  $status/></td>
+	
 	   </tr>"; 
        endforeach; 
 ?>
@@ -42,19 +44,12 @@
 <hr />
 <div class="container-fluid">
 <div style="float: right">
-<button class="save btn btn-success"><span class="glyphicon glyphicon-open"></span>Update</button></div>
+<button class="save btn btn-success">
+<span class="glyphicon glyphicon-open"></span>Update</button></div>
 </div>
 </div>
 <script>
 $(document).ready(function() {	
-var $table = $('#example');
-div = null; 
-//float the headers
-  $table.floatThead({ 
-	 scrollingTop: 5,
-	 zIndex: 1002,
-	 scrollContainer: function($table){ return $table.closest('.test'); }
-	});	
 	//datatables settings 
 	$('#example').dataTable( {
 		   "sDom": "T lfrtip",
@@ -92,7 +87,10 @@ div = null;
     }  
 	// finally calculate the stock 
     calculate_actual_stock(actual_unit_size,commodity_unit_of_issue,num,".actual_quantity",selector_object);
-    get_the_data_from_the_form_to_save(selector_object);
+   var data= get_the_data_from_the_form_to_save(selector_object);
+     //save the data in the db          
+	var url = "<?php echo base_url().'stock/save_set_up_facility_stock'?>";	  
+    ajax_simple_post_with_console_response(url, data);	
 	});	
 	$('.commodity_unit_of_issue').on('change',function(){
     var selector_object=$(this);
@@ -105,7 +103,7 @@ div = null;
      //save the data in the db          
 	var url = "<?php echo base_url().'stock/save_set_up_facility_stock'?>";	
 
-    ajax_simple_post_with_console_response(url, data,div);	  	
+    ajax_simple_post_with_console_response(url, data);	  	
 	});	//check box movement
 	$(".checkbox").change(function() {
 	var selector_object=$(this);
@@ -113,14 +111,14 @@ div = null;
     var data =get_the_data_from_the_form_to_save(selector_object);	
      //save the data in the db          
 	var url = "<?php echo base_url().'stock/save_set_up_facility_stock'?>";	  
-    ajax_simple_post_with_console_response(url, data,div);	
+    ajax_simple_post_with_console_response(url, data);	
     } else{
     selector_object.closest("tr").find('.actual_units').val(0);
     selector_object.closest("tr").find('.quantity').val(0);
     var data =get_the_data_from_the_form_to_save(selector_object);	
      //save the data in the db          
 	var url = "<?php echo base_url().'stock/save_set_up_facility_stock/delete'?>";	  
-    ajax_simple_post_with_console_response(url, data,div);	  	
+    ajax_simple_post_with_console_response(url, data);	  	
     }
     });
 	function get_the_data_from_the_form_to_save(selector_object){
@@ -134,6 +132,11 @@ div = null;
 	return data;
 	   	
 	}
+	$('.save').button().click(function() {
+		//alert();
+		//window.
+		window.open("<?php echo base_url('stock/amc')?>",'_parent');
+	});
 })
  
 </script>

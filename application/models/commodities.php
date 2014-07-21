@@ -14,7 +14,10 @@ class Commodities extends Doctrine_Record {
 		$this -> hasColumn('date_updated', 'date');
 		$this -> hasColumn('total_commodity_units', 'int');
 		$this -> hasColumn('commodity_source_id', 'int');
+        $this -> hasColumn('tracer_item', 'int');
+        $this -> hasColumn('commodity_division', 'int');
 		$this -> hasColumn('status', 'int');
+		
 	}
 
 	public function setUp() {
@@ -31,7 +34,7 @@ class Commodities extends Doctrine_Record {
 		return $commodities;
 	}
 	public static function get_all_2() {
-		$query=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select * from commodities order by commodity_name asc");	
+		$query=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select * from commodities where status=1 order by commodity_name asc");	
 		return $query;
 	}
 	public static function get_details($commodity_id) {
@@ -40,7 +43,15 @@ class Commodities extends Doctrine_Record {
 		
 		return $commodities;
 	}
-	public static function get_all_from_supllier($supplier_id) {
+
+    public static function get_tracer_items(){
+     $query = Doctrine_Query::create() -> select("*") -> from("commodities")->where("status=1 and tracer_item=1");
+     $commodities = $query -> execute();
+        
+        return $commodities;   
+    }
+	
+public static function get_all_from_supllier($supplier_id) {
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as commodity_id, c.total_commodity_units,
               c.unit_size,c.unit_cost ,c_s.source_name, c_s_c.sub_category_name
@@ -56,7 +67,7 @@ return $inserttransaction;
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as commodity_id,c.unit_size,c.unit_cost as unit_cost,
     c.total_commodity_units,
-    c_s.source_name, c_s_c.sub_category_name
+    c_s.source_name,c_s.id as supplier_id, c_s_c.sub_category_name
                FROM commodities c, commodity_source c_s, commodity_sub_category c_s_c,facility_monthly_stock f_m_s
                WHERE f_m_s.commodity_id = c.id
                AND c.commodity_sub_category_id = c_s_c.id
@@ -64,7 +75,7 @@ return $inserttransaction;
                AND c.commodity_source_id = c_s.id $order_by"); 
 return $inserttransaction;
 	}// set up the facility stock here
-	public function set_facility_stock_data_amc($facility_code){
+	public static function set_facility_stock_data_amc($facility_code){
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll("SELECT c.id as commodity_id, c.commodity_code, c.commodity_name, c.unit_size, 
     c.commodity_sub_category_id, c_s_c.sub_category_name, c.total_commodity_units, 

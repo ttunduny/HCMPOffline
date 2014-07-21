@@ -18,17 +18,14 @@ class Malaria_Data extends Doctrine_Record
 		$this -> hasColumn('Days_Out_Stock', 'int',11);
 		$this -> hasColumn('Report_Total', 'varchar',30);
 		$this -> hasColumn('Report_Date', 'date');
+		$this -> hasColumn('report_id', 'int',15);
 		
 			
 	}
 
 	public function setUp() 
 	{
-		
 		$this -> setTableName('malaria_data');
-		//$this -> hasOne('kemsa_id as Code', array('local' => 'kemsa_code', 'foreign' => 'kemsa_code'));
-		//$this -> hasOne('user_id as id', array('local' => 'user_id', 'foreign' => 'user_id'));
-		
 				
 	}
 	public static function get_user_data($id)
@@ -40,9 +37,38 @@ class Malaria_Data extends Doctrine_Record
 	}
 	public static function getall($id)
 	{
-		$query = Doctrine_Query::create() -> select("*") -> from("malaria_data")-> where("user_id = '$id' ")->groupBy("Report_Date");
+		$query = Doctrine_Query::create() -> select("*") -> from("malaria_data")-> where("user_id = '$id' ")->groupBy("Report_Date") ->orderBy("Report_Date desc");
 		$all_data = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $all_data;
+			
+	}
+	public static function getall_facility($facility_id)
+	{
+		$query = Doctrine_Query::create() -> select("*") -> from("malaria_data")-> where("facility_id = '$facility_id' ")->groupBy("Report_Date") ->orderBy("Report_Date desc");
+		$all_data = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $all_data;
+			
+	}
+	//get the report details of a particular facility
+	public static function get_facility_report_details($facility_id)
+	{
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+   	 	->fetchAll("select distinct(user_id) as user, 
+   	 			date_format(Report_Date, '%M %Y')as report_date, 
+   	 			report_date as report_timestamp, report_id, 
+   	 			facility_id as facility_code 
+   	 			from malaria_data 
+   	 			where facility_id = $facility_id 
+   	 			order by Report_Date desc"); 
+		return $query;
+			
+	}
+	//get the malaria report for a particular facility 
+	public static function get_report_submitter($id)
+	{
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+   	 	->fetchAll("select distinct(user_id) as user, facility_id from malaria_data where facility_id = $id order by user_id"); 
+		return $query;
 			
 	}
 	public static function getall_time($time)
@@ -52,7 +78,32 @@ class Malaria_Data extends Doctrine_Record
 		return $all_data;
 			
 	}
-	/*public static function get_malariareport($id, $to_date, $from_date)
+	public static function get_facility_report($report_id, $facility_id)
+	{
+		$query = Doctrine_Query::create() -> select("*") -> from("malaria_data")-> where("report_id = '$report_id' AND facility_id = $facility_id ");
+		$all_data = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $all_data;
+			
+	}
+	public static function get_facilities()
+	{
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+    	->fetchAll("SELECT DISTINCT(facility_id) from malaria_data"); 
+		return $query;
+			
+	}
+	/*
+	 * $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+    ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as commodity_id, c.total_commodity_units,
+              c.unit_size,c.unit_cost ,c_s.source_name, c_s_c.sub_category_name
+               FROM commodities c,commodity_sub_category c_s_c, commodity_source c_s
+               WHERE c.commodity_sub_category_id = c_s_c.id
+               AND c.commodity_source_id=$supplier_id
+               AND c.commodity_sub_category_id = c_s_c.id
+               order by c_s_c.id asc,c.commodity_name asc "); 
+return $inserttransaction;
+	 * 
+	 * public static function get_malariareport($id, $to_date, $from_date)
 	{
 		$query = Doctrine_Query::create() -> select("*") -> from("malaria_data")-> where("facility_id = '$id' and to_date < = '$to_date' and from_date >= '$from_date' ");
 		$all_data = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);

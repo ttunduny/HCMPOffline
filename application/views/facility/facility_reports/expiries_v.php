@@ -20,7 +20,7 @@
     <tbody>
     
      <?php   
-           $total=0;
+           $total=0; $count=0;
         foreach ($expiry_data as $potential_exp ) { 
                 $potential_exp[''];
                 $formatdate = new DateTime($potential_exp['expiry_date']);
@@ -33,6 +33,7 @@
                 $ts2 = strtotime(date('d M Y'));
                 $seconds_diff = $ts2 - $ts1;
 				$total=$total+ $total_exp_cost;  
+				$count=($potential_exp['status']=1) ? $count+$count: $count+1;
                 ?>    
             <tr>                          
               <td><?php echo $potential_exp['commodity_name'];?> </td>
@@ -66,10 +67,10 @@
 <?php
 if (!$this -> session -> userdata('facility_id')):
 else: 
-if($total>0):
+if($count>0):
 $att = array("name" => 'myform', 'id' => 'myform');
 echo form_open('stock/decommission', $att);
-endif;
+
 ?>		
 </form>
 <hr />
@@ -78,7 +79,7 @@ endif;
 <button class="remove btn btn-danger"><span class="glyphicon glyphicon-remove"></span>Decommission Items</button></div>
 
 </div>
-<?php endif; ?>
+<?php endif; endif;?>
 </div>
 
 <script type="text/javascript">

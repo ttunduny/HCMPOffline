@@ -1,4 +1,7 @@
 <div class="container" style="width: 96%; margin: auto;">
+    <span class="label label-success">The Last Stock Update was as at : <?php
+    echo date('j M, Y',strtotime($last_issued_data['last_seen'])). ", $last_issued_data[days_] day(s) ago, $last_issued_data[fname] 
+    $last_issued_data[lname]" ?></span>
 	<?php echo form_open('orders/facility_order'); ?>
  <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
@@ -22,8 +25,9 @@
     foreach($facility_stock_data as $facility_stock_data):
 		foreach($facility_stock_data->commodity_detail as $item):
 		foreach($item->sub_category_data as $sub_category):
-		endforeach;		
-		echo "
+		endforeach;	
+	   $closing=($facility_stock_data->closing_stock<0)	?0 : $facility_stock_data->closing_stock;
+		echo "<tr>
 		<td>$sub_category->sub_category_name</td>
 		<td>$item->commodity_name</td>
 		<td>$item->commodity_code</td>
@@ -35,7 +39,8 @@
 		<td>$facility_stock_data->adjustmentpve</td>
 		<td>$facility_stock_data->losses</td>
 		<td>$facility_stock_data->days_out_of_stock</td>
-		<td>$facility_stock_data->closing_stock</td>
+		<td>$closing</td>
+		</tr>
 		";
 		endforeach;
 	endforeach;

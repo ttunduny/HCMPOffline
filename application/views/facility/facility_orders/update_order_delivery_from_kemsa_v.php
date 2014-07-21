@@ -1,6 +1,6 @@
 <style>
  	.input-small{
- 		width: 100px !important;
+ 		width: 80px !important;
  	}
  </style>
 <?php $att = array("name" => 'myform', 'id' => 'myform');
@@ -40,7 +40,7 @@ echo form_open('stock/update_facility_stock_from_kemsa_order', $att);
 			<label>Order Sheet No :</label>
 			<input type="text" class="form-control"  name="order"   readonly="readonly" value="<?php echo $general_order_details->order_no  ?>" />
 			
-			<label>Order Total :</label>
+			<label>Order Total (KSH) :</label>
 			<input type="text" class="form-control order_total"  name="order_total"   readonly="readonly" value="<?php echo $general_order_details->order_total  ?>" />
 			
 		</div>
@@ -112,22 +112,23 @@ echo form_open('stock/update_facility_stock_from_kemsa_order', $att);
 				<th>Description</th>
 				<th>Item Code</th>
 				<th>Unit Size</th>
-				<th>Unit Cost</th>
+				<th>Unit Cost(KSH)</th>
 				<th>Ordered Qty (Packs)</th>
 				<th>Ordered Qty (Units)</th>
 				<th>Price Bought</th>
-				<th>Total Cost</th>
+				<th>Total Cost(KSH)</th>
 				<th>Batch No</th>
 				<th>Manufacturer</th>
 				<th>Expiry Date</th>
 				<th>Quantity Received</th>
 				<th>Total Unit Count</th>
-				<th>Total Cost</th>
+				<th>Total Cost(KSH)</th>
 			</tr>
 		</thead>
 		<tbody>
  <?php  $new_count=0; foreach($order_details as $order_details):
         $cost=$order_details['unit_cost']*$order_details['quantity_ordered_pack'];
+        $expiry_date=strtotime($order_details['expiry_date'])  ? $order_details['expiry_date'] : null ;
         echo "<tr>
         <td>
         <input type='hidden' class='order_details_id' name='order_details_id[$new_count]' value='$order_details[id]'/>
@@ -145,11 +146,14 @@ echo form_open('stock/update_facility_stock_from_kemsa_order', $att);
         <td><input class='form-control input-small' type='text' name='qty_unit[$new_count]' value='$order_details[quantity_ordered_unit]' readonly='yes'/></td>
         <td><input class='form-control input-small' type='text' name='price_bought[$new_count]' value='$order_details[unit_cost]' readonly='yes'/></td>
         <td><input class='form-control input-small' type='text' name='total_cost[$new_count]' value='$cost' readonly='yes'/></td>
-        <td><input class='form-control input-small' type='text' name='batch_no[$new_count]' value='' required='required'/></td>
-        <td><input class='form-control input-small' type='text' name='manu[$new_count]' value='' required='required'/></td>
-        <td><input class='form-control input-small clone_datepicker' type='text' name='expiry_date[$new_count]' value='' required='required' /></td>
-        <td><input class='form-control input-small quantity' type='text' name='quantity[$new_count]' value='' required='required' /></td>
-        <td><input class='form-control input-small actual_quantity' type='text' name='actual_quantity[$new_count]' value='' readonly='yes'/></td>
+        <td><input class='form-control input-small batch_no' type='text' name='batch_no[$new_count]' value='$order_details[batch_no]' required='required'/></td>
+        <td><input class='form-control input-small manu' type='text' name='manu[$new_count]' value='$order_details[maun]' required='required'/></td>
+        <td><input class='form-control input-small clone_datepicker' type='text' name='expiry_date[$new_count]' 
+        value='$expiry_date' required='required' /></td>
+        <td><input class='form-control input-small quantity' type='text' name='quantity[$new_count]'
+         value='$order_details[quantity_recieved]' required='required' /></td>
+        <td><input class='form-control input-small actual_quantity' type='text' name='actual_quantity[$new_count]' 
+        value='$order_details[quantity_recieved_unit]' readonly='yes'/></td>
         <td><input class='form-control input-small cost' type='text' name='cost[$new_count]' value='' readonly='yes'/></td>
         </tr>";
         $new_count++;
@@ -169,8 +173,9 @@ echo form_open('stock/update_facility_stock_from_kemsa_order', $att);
 </div>
 <script>
 	$(document).ready(function() {
-
 		var new_count =count;
+		//auto compute
+        calculate_totals();
 		$(".show_hide").show();
 		$('.show_hide').click(function(event) {
 		if($(this).html()=="Delivery Dispatch Details. Click to Hide"){
@@ -185,7 +190,7 @@ echo form_open('stock/update_facility_stock_from_kemsa_order', $att);
 			//datatables settings 
 	$('#main').dataTable( {
        "sPaginationType": "bootstrap",
-       "sScrollY": "377px",
+       "sScrollY": "277px",
 	     "sScrollX": "100%",
         "oLanguage": {
                         "sLengthMenu": "_MENU_ Records per page",
@@ -302,6 +307,7 @@ echo form_open('stock/update_facility_stock_from_kemsa_order', $att);
 calculate_actual_stock (total_units, "Pack_Size",user_input,".actual_quantity",selector_object,null);
 var total_cost=parseInt(unit_cost.replace(",", ""))*user_input;
 $(this).closest("tr").find(".cost").val(total_cost);
+get_the_data_from_the_form_to_save(selector_object);
 calculate_totals();
 	});
 	
@@ -384,12 +390,32 @@ calculate_totals();
 	 	else{ var total=$(this).val()
 	 		}//calculate the balances here
 	 	var unit_cost=$(this).closest("tr").find(".unit_cost").val();    	
-        order_total=(parseInt(total)*parseInt(unit_cost.replace(",", "")))+parseInt(order_total);    
+        order_total=(parseInt(total)*parseInt(unit_cost.replace(",", "")))+parseInt(order_total); 
+  
+      $(this).closest("tr").find(".cost").val(parseInt(total)*parseInt(unit_cost.replace(",", "")));   
      });//check if order total is a NAN
      //set the balances here
      $(".actual_order_total").val(order_total);
 		
-	}		
-	 
+	}
+	function get_the_data_from_the_form_to_save(selector_object){
+    var commodity_id=selector_object.closest("tr").find('.commodity_id').val();
+    var order_details_id=selector_object.closest("tr").find('.order_details_id').val();
+    var batch_no=selector_object.closest("tr").find('.batch_no').val();
+    var manu=selector_object.closest("tr").find('.manu').val();
+    var clone_datepicker=selector_object.closest("tr").find('.clone_datepicker').val();
+    var quantity=selector_object.closest("tr").find('.quantity').val();
+    var actual_quantity=selector_object.closest("tr").find('.actual_quantity').val();
+    var data="commodity_id="+commodity_id+"&order_details_id="
+        +order_details_id+" &batch_no="+batch_no+"&manu="+manu+"&clone_datepicker="+clone_datepicker
+        +"&quantity="+quantity+"&actual_quantity="+actual_quantity;
+    //return data;
+    var url = "<?php echo base_url('orders/auto_save_order_detail')?>"; 
+    if(order_details_id>0){
+      ajax_simple_post_with_console_response(url, data);  
+    }else{
+      //do nothing  
+    }     
+    }
 	}); 
 </script>

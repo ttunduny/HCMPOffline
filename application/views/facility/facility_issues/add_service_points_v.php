@@ -52,9 +52,12 @@
 </div><!-----END--->
 <div class="container" style="width: 96%; margin: auto;">
 <div class="row">
+	
 <div class="col-md-3" style="border: 1px solid #DDD;">
 <?php echo form_open('issues/save_service_points'); ?>
 <div class="table-responsive" style="height:417px; overflow-y: auto;">
+<span  class='label label-info'>i)Enter the name of the Service Point,<br>
+ii)Click save when done</span><br>
 <table  class="table table-hover table-bordered table-update" id="facility_service_points" >
 <thead style="background-color: white">
 <tr><th>Service Point Name</th><th>Action</th></tr>
@@ -77,7 +80,7 @@
 
  </div>
   <div class="col-md-9"  style="border: 1px solid #DDD;">
-  	<table cellpadding="0" cellspacing="0" width="80%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
+  	<table cellpadding="0" cellspacing="0" width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
 		<tr>
 			<th>Service Point Name</th>

@@ -14,8 +14,7 @@ class RH_Drugs_Data extends Doctrine_Record
 		$this -> hasColumn('Adjustments', 'varchar',30);
 		$this -> hasColumn('Ending_Balance', 'varchar',30);
 		$this -> hasColumn('Quantity_Requested', 'varchar',30);
-		
-		
+		$this -> hasColumn('report_id', 'int',15);
 			
 	}
 
@@ -23,9 +22,6 @@ class RH_Drugs_Data extends Doctrine_Record
 	{
 		
 		$this -> setTableName('rh_drugs_data');
-		//$this -> hasOne('kemsa_id as Code', array('local' => 'kemsa_code', 'foreign' => 'kemsa_code'));
-		//$this -> hasOne('user_id as id', array('local' => 'user_id', 'foreign' => 'user_id'));
-		
 				
 	}
 	public static function get_user_data($id)
@@ -49,28 +45,27 @@ class RH_Drugs_Data extends Doctrine_Record
 		return $all_data;
 			
 	}
-	/*public static function get_malariareport($id, $to_date, $from_date)
+	public static function get_facility_report_details($facility_id)
 	{
-		$query = Doctrine_Query::create() -> select("*") -> from("malaria_data")-> where("facility_id = '$id' and to_date < = '$to_date' and from_date >= '$from_date' ");
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+   	 	->fetchAll("select distinct(user_id) as user, 
+   	 	date_format(Report_Date, '%M %Y')as report_date, 
+   	 	report_date as report_timestamp, report_id, 
+   	 	facility_id as facility_code 
+   	 	from rh_drugs_data 
+   	 	where facility_id = $facility_id 
+   	 	order by Report_Date desc"); 
+		return $query;
+			
+	}
+	public static function get_facility_report($report_id, $facility_id)
+	{
+		$query = Doctrine_Query::create() -> select("*") -> from("rh_drugs_data")-> where("report_id = '$report_id' AND facility_id = $facility_id ");
 		$all_data = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $all_data;
 			
 	}
-	public static function getreports() 
-	{
-		
-		$from = $_POST['frommalariareport'];
-		$to = $_POST['tomalariareport'];
-		$facility_Code = $_POST['facilitycode'];
-		$convertfrom = date('y-m-d',strtotime($from ));
-		$convertto = date('y-m-d',strtotime($to ));
-		
-		$query = Doctrine_Query::create() -> select("*") 
-		-> from("malaria_data")-> where("from_date >='$convertfrom' AND to_date <='$convertto'");
-		$stocktake = $query ->execute();
-		return $stocktake;
-	}
-	 * */
+	
 	
 	 
 }

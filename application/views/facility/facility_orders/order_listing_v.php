@@ -157,9 +157,9 @@ HTML_DATA;
 
 		//} 
 		?>
-<div class="row container" style="width: 100%; margin: auto;">
-<div class="col-md-2" style="border: 1px solid #DDD;">
-<div class="table-responsive" style="height:100%; overflow-y: auto;">
+<div class="row container" style="width: 100%; margin: auto; padding: 0">
+<div class="col-md-2" style="border: 1px solid #DDD; padding: 0">
+<div style= "overflow-y: auto;">
 	<legend>
 			Orders Summary
 		</legend>
@@ -170,14 +170,17 @@ HTML_DATA;
 		<tr><td>Pending Delivery</td><td><?php echo $approved_orders; ?></td></tr>
 		<tr><td>Delivered</td><td><?php echo $delivered_orders; ?></td></tr>
 </table>
-<?php  if($identifier==='district'): ?>
 <hr />
-<div class="container-fluid">
-<div style="float: right">
-<button class="btn btn-success btn-xs order-for" style="margin-left:5%">
- <span class="glyphicon glyphicon-floppy-open"></span>Order For Facilities</button></div>
-</div>
+<div class="">
+<button class="btn btn-success btn-xs floppy-save"><span class="glyphicon glyphicon-floppy-save"></span>Download KEMSA template</button>
+<?php  if($identifier==='district'): ?>
+<button class="btn btn-success btn-xs order-for-excel" >
+ <span class="glyphicon glyphicon-floppy-open"></span>Order For Facilities via excel</button>
+<button class="btn btn-success btn-xs order-for" >
+ <span class="glyphicon glyphicon-floppy-open"></span>Order For Facilities online</button>
 <?php  endif; ?>
+
+</div>
 </div>
  </div>
 <div class="col-md-10" style="border: 1px solid #DDD;">
@@ -376,14 +379,16 @@ $(document).ready(function() {
 
 	$('.dataTables_filter label input').addClass('form-control');
 	$('.dataTables_length label select').addClass('form-control');*/
-
+    $(".floppy-save").on('click', function(){
+    	 window.location="<?php echo site_url('reports/force_file_download')."/?url=print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx"?>";	
+    })
     $( "#myTabContent_" ).tabs();
 	$(".order-for").on('click', function() {
 	var body_content='<select id="facility_code" name="facility_code" class="form-control"><option value="0">--Select Facility Name--</option>'+
                     '<?php	foreach($facilities as $facility):
 						     $facility_code=$facility['facility_code'];
 							 $facility_name=$facility['facility_name']; ?>'+					
-						'<option <?php echo 'value="'.$facility_code.'">'.$facility_name ;?></option><?php endforeach;?>';
+						'<option <?php echo 'value="'.$facility_code.'">'.preg_replace("/[^A-Za-z0-9 ]/", "",$facility_name) ;?></option><?php endforeach;?>';
    //hcmp custom message dialog
     dialog_box(body_content,
     '<button type="button" class="btn btn-primary order_for_them" >Order For Them</button>'
@@ -397,6 +402,26 @@ $(document).ready(function() {
      window.location="<?php echo site_url('orders/facility_order_');?>/"+facility_code;		
     }
    	
+    });
+		
+	});
+	$(".order-for-excel").on('click', function() {
+	var body_content='<?php  $att=array("name"=>'myform','id'=>'myform'); 
+	echo form_open_multipart('orders/facility_order_',$att)?>'+
+'<input type="file" name="file" id="file" required="required" class="form-control"><br>'+
+'<input type="submit" name="submit"  value="Upload">'+
+'</form>';
+   //hcmp custom message dialog
+    dialog_box(body_content,
+    ''); 
+    $(".order_for_them").on('click', function() {
+    var facility_code=$('#facility_code').val();
+    if(facility_code==0){
+    alert("Please select a Facility First");
+    	
+    }else{
+     window.location="<?php echo site_url('orders/facility_order_');?>/"+facility_code;		
+    }
     });
 		
 	});
