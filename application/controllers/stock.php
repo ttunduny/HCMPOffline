@@ -49,10 +49,10 @@ class Stock extends MY_Controller {
 						 'batch_no'=>($old_facility_stock['batch_no']=='') ? 'N/A': $old_facility_stock['batch_no'],
 						 'manu'=>($old_facility_stock['manufacture']=='') ? 'N/A': $old_facility_stock['manufacture'],
 						 'expiry_date'=>date('d My',strtotime($old_facility_stock['expiry_date'])),
-						 'stock_level'=>$old_facility_stock['balance'],
-						 'total_unit_count'=>$old_facility_stock['balance'],
+						 'stock_level'=>($old_facility_stock['balance']<0? 0: $old_facility_stock['balance']),
+						 'total_unit_count'=>$old_facility_stock['new_total_units'],
 						 'unit_issue'=>'Unit_Size',
-						 'total_units'=>$old_facility_stock['new_total_units'],
+						 'total_units'=>($old_facility_stock['balance']<0? 0: $old_facility_stock['balance']),
 						 'source_of_item'=>1,
 						 'supplier'=>'KEMSA');	
 			array_push($in_to_stock,$temp);
@@ -73,8 +73,9 @@ class Stock extends MY_Controller {
 			}
 			}
           $this -> db -> insert_batch('facility_monthly_stock', $in_to_amc);
-          $this -> db -> insert_batch('facility_stocks_temp', $in_to_stock);  
+         $this -> db -> insert_batch('facility_stocks_temp', $in_to_stock);  
 		}
+
 		if(count($old_facility_issues)){
 		foreach($old_facility_issues as $old_facility_issues){
 			$temp=array('commodity_id'=>$old_facility_issues['new_id'],
@@ -146,8 +147,8 @@ class Stock extends MY_Controller {
         
         foreach($order_details_match as $order_details_match){
           $temp_array = array("commodity_id" => $order_details_match['new_id'],
-          'quantity_ordered_pack' => round($order_details_match['quantityOrdered']/$order_details_match['new_total_units']), 
-          'quantity_ordered_unit' => $order_details_match['quantityOrdered'], 
+          'quantity_ordered_pack' => round($order_details_match['quantityOrdered']), 
+          'quantity_ordered_unit' => $order_details_match['quantityOrdered']*$order_details_match['new_total_units'], 
           'quantity_recieved' => $order_details_match['quantityRecieved'], 'price' => $order_details_match['new_price'], 
           'o_balance' => $order_details_match['o_balance'], 't_receipts' => $order_details_match['t_receipts'],
           't_issues' => $order_details_match['t_issues'], 'adjustpve' => 0,
