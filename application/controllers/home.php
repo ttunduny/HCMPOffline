@@ -34,18 +34,16 @@ class Home extends MY_Controller
 			case 'moh_user':
 			$view = '';
 			break;
-			case 'district_tech':
-			$view = '';
-			break;
+			case 'scmlt':
+			case 'rtk_county_admin':
+			case 'allocation_committee':
 			case 'rtk_manager':
-			$view = '';
+			redirect('home_controller');
 			break;
 			case 'super_admin':
 			$view = '';
 			break;
-			case 'allocation_committee':
-			$view = '';
-			break;	
+				
         endswitch;
 
 		$data['title'] = "System Home";

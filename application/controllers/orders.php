@@ -294,8 +294,8 @@ class orders extends MY_Controller {
 			$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'download', 'file_name' => $file_name);
 
 			$this -> hcmp_functions -> create_pdf($pdf_data);
-		endif;
-		redirect();
+			endif;
+			redirect();
 	}
 
 
