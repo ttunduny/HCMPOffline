@@ -1238,7 +1238,7 @@ endif;
 from
     user
         left join
-    log ON log.user_id = user.id
+    log ON log.user_id = user.id and log.start_time_of_event =(select max(start_time_of_event) from log where log.user_id=user.id)
 where
     user.username like '%@hcmp.com'
 group by user.id
