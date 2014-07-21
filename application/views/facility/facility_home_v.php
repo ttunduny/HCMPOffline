@@ -1,5 +1,15 @@
 <div class="container" style="width: 96%; margin: auto;">
 <div class="row">
+        <?php if($facility_dashboard_notifications['stocks_from_v1']>0): ?>
+        <div style="height:auto; margin-bottom: 2px" class="warning message col-md-4" id="">        
+        <h5> 0) Import facility stock from version 1 </h5> 
+            <p>
+            <a class="link" href="<?php echo base_url('stock/import') ?>">
+                <span class="badge"><?php 
+                echo $facility_dashboard_notifications['stocks_from_v1'];?></span>facility stock can be imported to version 2</a> 
+            </p>
+        </div>
+        <?php else: //Import facility stock from version 1?>
 	<div class="col-md-4">
 		<div class="row">			
 			<div class="col-md-12">
@@ -28,16 +38,7 @@
 			 </div>
 		  <?php endif; //donations_pending?>
    <?php if($facility_dashboard_notifications['facility_stock_count']==0): ?>
-   	<?php if($facility_dashboard_notifications['stocks_from_v1']>0): ?>
-   	    <div style="height:auto; margin-bottom: 2px" class="warning message " id="">      	
-        <h5> 0) Import facility stock from version 1 </h5> 
-        	<p>
-			<a class="link" href="<?php echo base_url('stock/import') ?>">
-				<span class="badge"><?php 
-				echo $facility_dashboard_notifications['stocks_from_v1'];?></span>facility stock can be imported to version 2</a> 
-			</p>
-        </div>
-        <?php endif; //Import facility stock from version 1?>
+
       	<div style="height:auto; margin-bottom: 2px" class="warning message " id="">      	
         <h5> 1) Set up facility stock</h5> 
         	<p>
@@ -164,7 +165,8 @@
         <div style="/*border: 1px solid #036;*/ ;" id="container"></div>
       </div>
     </div>
-  </div>  	
+  </div> 
+  <?php endif; //donations_pending?> 	
 	</div>	
 	
 </div>

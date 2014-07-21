@@ -653,5 +653,19 @@ from
 			return $stocks ;
 		
 	}
-	
+		public static function import_issues_from_v1($facility_code=null,$commoity_id=null){
+		$and=isset($commoity_id) ? " and historical_stock.drug_id=$commoity_id" : null;
+				$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+			->fetchAll("select 
+			    *
+			from
+			    kemsa2.facility_issues
+			        left join
+			   hcmp.drug_commodity_map ON drug_commodity_map.old_id = facility_issues.kemsa_code
+			        where facility_issues.facility_code = $facility_code
+			and facility_issues.receipts=0");
+			return $stocks ;
+		
+	}
+
 }
