@@ -388,8 +388,8 @@
 
 												<?php
 												foreach ($facilities as $facility) :
-													$id = $facility -> facility_code;
-													$facility_name = $facility -> facility_name;
+													$id = $facility ['facility_code'];
+													$facility_name = $facility ['facility_name'] ;
 													echo "<option value='$id'>$facility_name</option>";
 												endforeach;
 												?>
@@ -405,6 +405,7 @@
 													
 													
 												</select>
+												<input type="hidden" name="district_name_edit" class="" id="district_name_edit" >
 											</div>
 										</div>
 										<div class="col-md-6">
@@ -778,7 +779,7 @@ $(".edit_user").click(function() {
         }); 
 }
 			$('#myModal').on('hidden.bs.modal', function () {
-				$("#datatable").hide().fadeIn('fast');
+				$("#datatable,.modal-content").hide().fadeIn('fast');
 				 location.reload();
 			})
 			
