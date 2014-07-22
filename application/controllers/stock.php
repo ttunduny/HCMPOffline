@@ -72,8 +72,8 @@ class Stock extends MY_Controller {
 		    $amc_ids=	array_merge($amc_ids,array('new_id'.$old_facility_stock['new_id']=>'new_id'.$old_facility_stock['new_id']));
 			}
 			}
-          $this -> db -> insert_batch('facility_monthly_stock', $in_to_amc);
-         $this -> db -> insert_batch('facility_stocks_temp', $in_to_stock);  
+         $this -> db -> insert_batch('facility_monthly_stock', $in_to_amc);
+        $this -> db -> insert_batch('facility_stocks_temp', $in_to_stock);  
 		}
 
 		if(count($old_facility_issues)){
@@ -160,7 +160,7 @@ class Stock extends MY_Controller {
         }
       
          } 
-        $this -> db -> insert_batch('facility_order_details', $in_to_orders); 
+       $this -> db -> insert_batch('facility_order_details', $in_to_orders); 
         }
 
 		
