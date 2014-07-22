@@ -11,6 +11,7 @@ class national extends MY_Controller
         parent::__construct();
         $this -> load -> helper(array('form', 'url','file'));
         $this -> load -> library(array('form_validation','PHPExcel/PHPExcel'));
+		$this -> load -> library(array('hcmp_functions', 'form_validation'));
     }
     public function index() {
         $counties = $q = Doctrine_Manager::getInstance()
@@ -1226,6 +1227,51 @@ if(count($excel_data)>0):
         // Echo done
 endif;
 }
+ public function demo_accounts(){
+ 	       $facility_user_data = Doctrine_Manager::getInstance()
+        ->getCurrentConnection()
+        ->fetchAll("select distinct
+    user.id,
+    user.username,
+    user.usertype_id,
+    ifnull(log.`action`, 0) as login
+from
+    user
+        left join
+    log ON log.user_id = user.id and log.start_time_of_event =(select max(start_time_of_event) from log where log.user_id=user.id)
+where
+    user.username like '%@hcmp.com'
+group by user.id
+order by user.id asc
+");
+
+    	 $graph_data=$series_data=array();
+		 $total_active_users=$total_inactive_users=0; $status=''; $total=count($facility_user_data);
+		 foreach($facility_user_data as $facility_user_data):
+         if($facility_user_data['login']=="Logged In" ){
+		 $total_active_users++;
+		 $status='<button type="button" class="btn btn-xs btn btn-danger">In Use</button>';
+         }else{
+         $total_inactive_users++;	
+		 $status='<button type="button" class="btn btn-xs btn-success">Available</button>';
+         }
+	    array_push($series_data, array($facility_user_data['username'],123456, $status));
+	    endforeach;
+	    array_push($series_data, array('','Total Available Accounts:',$total_inactive_users));
+		array_push($series_data, array('','Total Accounts In Use :',$total_active_users));
+		array_push($series_data, array('','Total Demo Accounts:',$total));
+	   
+		$category_data=array(array("User Name"," Password ","Status"));
+
+        $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_1'));
+	    $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
+	    $graph_data=array_merge($graph_data,array("table_body"=>$series_data));
+        $data['content_view']= $this->hcmp_functions->create_data_table($graph_data);
+		$data['title'] = "Demo User Accounts";
+		$data['banner_text'] = "Demo User Accounts";
+		$this -> load -> view('shared_files/template/plain_template_v', $data);
+ 	
+ }
 }   
     
     ?>
