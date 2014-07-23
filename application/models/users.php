@@ -96,6 +96,30 @@ class Users extends Doctrine_Record {
 
 		$update -> execute("UPDATE user SET status=2  WHERE id='$user_id' ;");
 	}
+	
+	public static function get_user_list_facility($facility) {
+
+		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id as district_id,d.district,c.id as county_id,c.county,f.facility_code,
+				f.facility_name,f.owner,f.type,a.id as level_id,f.level,a.level,u.status FROM hcmp.user u 
+				LEFT JOIN hcmp.districts d
+				ON
+				d.id=u.district
+				RIGHT JOIN hcmp.counties c
+				ON
+				c.id=d.county
+				RIGHT JOIN hcmp.facilities f
+				ON
+				u.facility=f.facility_code
+				RIGHT JOIN hcmp.access_level a
+				ON
+				a.id=u.usertype_id
+				where f.facility_code=$facility
+				and a.id != 3
+				")
+				;
+		return $query;
+	}
 
 	public static function get_user_list_district($district) {
 
@@ -250,6 +274,12 @@ public static function get_dpp_details($distirct){
 	
 	public static function check_db_activation($phone,$code) {
 		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("telephone='$phone' AND activation='$code' AND status=0");
+		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result;
+	}
+	
+	public static function check_if_email($test_email) {
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username LIKE '%$test_email%'");
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
 	}

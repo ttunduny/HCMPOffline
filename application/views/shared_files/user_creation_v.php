@@ -140,7 +140,7 @@
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 					&times;
 				</button>
-				<h4 class="modal-title" id="myModalLabel" style="text-align: center;line-height: 1">Edit User</h4>
+				<h4 class="modal-title" id="myModalLabel" style="text-align: center;line-height: 1">Add User</h4>
 			</div>
 			<div class="row" style="margin:auto" id="error_msg">
 				<div class=" col-md-12">
@@ -192,7 +192,9 @@
 										</div>
 									</div>
 									<div class="col-md-6">
-
+										<div id="err" style="padding: 6px;">
+											
+										</div>
 									</div>
 								</div>
 							</fieldset>
@@ -232,8 +234,8 @@
 													<option value=''>Select User type</option>
 													<?php
 													foreach ($user_types as $user_types) :
-														$id = $user_types -> id;
-														$type_name = $user_types -> level;
+														$id = $user_types ['id'];
+														$type_name = $user_types ['level'];
 														echo "<option value='$id'>$type_name</option>";
 													endforeach;
 													?>
@@ -283,11 +285,29 @@
 									</div>
 								</div>
 								<?php }elseif ($identifier=='facility_admin') {
-											//code if facility admin
-											
-											
-										}
+									//code if facility admin
+									
 								?>
+								<div class="row" style="margin:auto">
+										<div class=" col-md-6">
+											<div class="form-group">
+												<select class="form-control " id="user_type" name="user_type" required="required">
+													<option value=''>Select User type</option>
+													<?php
+													foreach ($user_types as $user_type) :
+														$display_id = $user_type ['id'];
+														$name = $user_type ['level'];
+														echo "<option value='$display_id'>$name</option>";
+													endforeach;
+													?>
+												</select>
+											</div>
+										</div>
+										<div class="col-md-6">
+
+										</div>
+									</div>
+								<?php }?>
 								<div class="row">
 									<div class="col-md-6">
 									
@@ -375,7 +395,9 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-
+										<div class="err" style="padding: 6px;">
+											
+										</div>
 								</div>
 							</div>
 						
@@ -475,9 +497,34 @@
 
 								<?php }elseif ($identifier=='facility_admin') {
 									//code if facility admin
-									}
+									
 								?>
-
+								<div class="row" style="margin:auto">
+										<div class=" col-md-6">
+											<div class="form-group">
+												<select class="form-control " id="user_type_edit_district" name="user_type_edit_district" required="required">
+													<option value=''>Select User type</option>
+													<?php
+													foreach ($user_types as $user) :
+														$id = $user['id'];
+														$type_name = $user['level'];
+														echo "<option value='$id'>$type_name</option>";
+													endforeach;
+													?>
+												</select>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="onoffswitch">
+									    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" >
+									    <label class="onoffswitch-label" for="myonoffswitch">
+									        <div  class="onoffswitch-inner"></div>
+									        <div  class="onoffswitch-switch"></div>
+									    </label>
+									</div>
+										</div>
+									</div>
+								<?php }?>
 								<div class="row" style="margin:auto" id="process">
 									<div class=" col-md-12">
 										<div class="form-group">
@@ -647,6 +694,30 @@ $('#facility_id_edit_district').val(facility_id)
   var email = $('#email_edit').val()
 
    $('#username_edit').val(email)
+   
+   $('#username').val(email)
+   $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "<?php echo base_url()."user/check_user_json";?>", //Relative or absolute path to response.php file
+      data:{ 'email': $('#email_edit').val()},
+      success: function(data) {
+        if(data.response=='false'){
+						
+						 $('.err').html(data.msg);
+							$( '.err' ).addClass( "alert-danger alert-dismissable" );
+							}else if(data.response=='true'){
+								
+								$(".err").empty();
+								$(".err").removeClass("alert-danger alert-dismissable");
+								$( '.err' ).addClass( "alert-success alert-dismissable" );
+								$('.err').html(data.msg);
+								
+								
+							}
+      }
+    });
+    return false;
 
     })
     
@@ -678,8 +749,34 @@ $('#email').keyup(function() {
   var email = $('#email').val()
 
    $('#username').val(email)
+   
+   $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "<?php echo base_url()."user/check_user_json";?>", //Relative or absolute path to response.php file
+      data:{ 'email': $('#email').val()},
+      success: function(data) {
+        if(data.response=='false'){
+						
+						 $('#err').html(data.msg);
+							$( '#err' ).addClass( "alert-danger alert-dismissable" );
+							}else if(data.response=='true'){
+								
+								$("#err").empty();
+								$("#err").removeClass("alert-danger alert-dismissable");
+								$( '#err' ).addClass( "alert-success alert-dismissable" );
+								$('#err').html(data.msg);
+								
+								
+							}
+      }
+    });
+    return false;
+  });
 
-    })
+    
+    
+    
     
    
 $("#create_new").click(function() {

@@ -444,6 +444,7 @@ class User extends MY_Controller {
 		$user_type_id = $this -> session -> userdata('user_type_id');
 		$district = $this -> session -> userdata('district_id');
 		$county = $this -> session -> userdata('county_id');
+		$facility = $this -> session -> userdata('facility_id');
 		
 
 		//query to get user listing by type of user
@@ -451,12 +452,11 @@ class User extends MY_Controller {
 		switch ($identifier):
 			case 'moh':
 			$permissions='moh_permissions';
-			$data['listing']= Users::get_user_list($user_type_id);	
 			$template = 'shared_files/template/dashboard_template_v';
 			break;
 			case 'facility_admin':
 			$permissions='facilityadmin_permissions';
-			$data['listing']= Users::get_user_list($user_type_id);	
+			$data['listing']= Users::get_user_list_facility($facility);		
 			$template = 'shared_files/template/template';
 			break;
 			case 'district':
@@ -513,14 +513,34 @@ class User extends MY_Controller {
 			$identifier = $this -> session -> userdata('user_indicator');	
 			if ($identifier=="county") {
 				$permissions='county_permissions';	
-			} else {
-				$permissions='district_permissions';	
+			} elseif($identifier=="facility_admin") {
+					$permissions='facilityadmin_permissions';
+			}else{
+				$permissions='district_permissions';
 			}
 					
 					
 			echo json_encode(Access_level::get_access_levels($permissions));
 		
 		}
+		
+		public function check_user_json()	{
+			
+			$test_email=$_POST['email'];
+			$mycount=count(Users::check_if_email($test_email));
+			if ($mycount > 0) {
+				
+				$response = array('msg' => 'Username Exists.Try again','response'=> 'false');
+				echo json_encode($response);
+				
+			} else {
+				$response = array('msg' => 'Username accepted','response'=> 'true');
+				echo json_encode($response);
+			}
+							
+			
+		}
+		
 
 	public function addnew_user(){
 

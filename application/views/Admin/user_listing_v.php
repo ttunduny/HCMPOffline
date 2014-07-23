@@ -187,7 +187,9 @@
 										</div>
 									</div>
 									<div class="col-md-6">
-										
+										<div id="err" style="padding: 6px;">
+											
+										</div>
 									</div>
 								</div>
 							</fieldset>
@@ -349,7 +351,9 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-										
+										<div id="err" style="padding: 6px;">
+											
+										</div>
 								</div>
 							</div>
 									
