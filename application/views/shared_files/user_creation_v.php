@@ -216,8 +216,8 @@
 
 												<?php
 												foreach ($facilities as $facility) :
-													$id = $facility -> facility_code;
-													$facility_name = $facility -> facility_name;
+													$id = $facility ['facility_code'];
+													$facility_name = $facility ['facility_name'];
 													echo "<option value='$id'>$facility_name</option>";
 												endforeach;
 												?>
@@ -254,8 +254,8 @@
 
 												<?php
 												foreach ($district_data as $district_) :
-													$district_id = $district_ -> id;
-													$district_name = $district_ -> district;
+													$district_id = $district_ ['id'];
+													$district_name = $district_ ['district'];
 													echo "<option value='$district_id'>$district_name</option>";
 												endforeach;
 												?>
@@ -267,7 +267,7 @@
 										<div class="form-group">
 											<select class="form-control " id="facility_id" required="required">
 												<option value="">Select Facility</option>
-												<option value=""></option>
+												
 											</select>
 										</div>
 									</div>
@@ -288,7 +288,14 @@
 											
 										}
 								?>
-
+								<div class="row">
+									<div class="col-md-6">
+									
+										</div>
+										<div class="col-md-6">
+									
+										</div>
+								</div>
 								<div class="row" style="margin:auto" id="processing">
 									<div class=" col-md-12">
 										<div class="form-group">
@@ -302,10 +309,11 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">
+				<button class="btn btn-default" data-dismiss="modal">
 					Close
 				</button>
-				<button type="button" class="btn btn-primary" id="create_new">
+				
+				<button class="btn btn-primary" id="create_new">
 					Save changes
 				</button>
 			</div>
@@ -388,8 +396,8 @@
 
 												<?php
 												foreach ($facilities as $facility) :
-													$id = $facility -> facility_code;
-													$facility_name = $facility -> facility_name;
+													$id = $facility ['facility_code'];
+													$facility_name = $facility ['facility_name'] ;
 													echo "<option value='$id'>$facility_name</option>";
 												endforeach;
 												?>
@@ -405,6 +413,7 @@
 													
 													
 												</select>
+												<input type="hidden" name="district_name_edit" class="" id="district_name_edit" >
 											</div>
 										</div>
 										<div class="col-md-6">
@@ -428,8 +437,8 @@
 												<option value=''>Select Sub-County</option>
 												<?php
 												foreach ($district_data as $district) :
-													$d_id = $district -> id;
-													$d_name = $district -> district;
+													$d_id = $district ['id'];
+													$d_name = $district ['district'];
 													echo "<option value='$d_id'>$d_name</option>";
 												endforeach;
 												?>
@@ -778,7 +787,7 @@ $(".edit_user").click(function() {
         }); 
 }
 			$('#myModal').on('hidden.bs.modal', function () {
-				$("#datatable").hide().fadeIn('fast');
+				$("#datatable,.modal-content").hide().fadeIn('fast');
 				 location.reload();
 			})
 			
