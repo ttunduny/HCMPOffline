@@ -411,7 +411,7 @@ if($this->input->post('commodity_id')):
 			'current_balance'=>$total_unit_count[$i],
 			'source_of_commodity'=>$source_of_item[$i],
 			'date_added'=>$date_of_entry,
-			'status' =>(strtotime(str_replace(",", " ",$expiry_date[$i]))>strtotime('now')) ? 1 : 2 );
+			'status' =>(strtotime(str_replace(",", " ",$expiry_date[$i]))>strtotime('now') || $total_unit_count[$i]>0 ) ? 1 : 2 );
 			
              //get the closing stock of the given item  
             $facility_stock_=facility_stocks::get_facility_commodity_total($facility_code,$commodity_id[$i], $date_of_entry)->toArray();
