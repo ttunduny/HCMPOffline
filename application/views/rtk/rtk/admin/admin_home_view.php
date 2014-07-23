@@ -121,8 +121,8 @@ foreach ($res_arr1->result_array() as $value) {
                     ?>  
 
                     <tr>
-                        <td><?php echo $value['fname']; ?></td>
-                        <td><?php echo $value['lname']; ?></td>
+                        <td><?php echo '<a href="user_profile/'.$value['user_id'].'">'.$value['fname'].'</a>'; ?></td>
+                        <td><?php echo '<a href="user_profile/'.$value['user_id'].'">'.$value['lname'].'</a>'; ?></td>
                         <td><?php echo $value['email']; ?></td>
                         <td><?php echo $value['level']; ?></td>
                         <td><?php
@@ -132,48 +132,11 @@ foreach ($res_arr1->result_array() as $value) {
                                 echo $value['district'];
                             }
                             ?></td>
-                        <td><?php echo $value['county']; ?> 
-                            <?php
-                            if ($value['level'] == 'rtkcountyadmin') {
-                                echo '<a id="county_add" href="#AddCounty' . $value['user_id'] . '"  data-toggle="modal" >add</a>';
-                            }
-                            ?>
-
-
-                            <div id="AddCounty<?php echo $value['user_id']; ?>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                <div class="modal-header">
-                                    <button type="button" class="close"  aria-hidden="true"></button>
-                                    <h3 id="myModalLabel">Add County</h3>
-
-                                </div>
-                                <div class="modal-body">
-                                    <form id="user_add_rca_county<?php echo $value['user_id']; ?>" method="POST" action="<?php echo base_url(); ?>rtk_management/add_rca_to_county" title="Add County to rca">
-
-
-                                        <input id="county_text" type="text" name="rca_id" rel="1" value="<?php echo $value['user_id']; ?>" /><br />
-
-
-
-                                        <br />
-                                        <select name="county" rel="5">
-                                            <option value="0">-- select County --</option>
-                                            <?php echo $counties_option_html; ?>
-
-                                        </select>
-
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                                    <input type="submit" id="add_rca_county" class="btn btn-primary" value="Save changes" />
-                                    </form>
-                                </div>
-                            </div>
-                            <span id="morecounties_<?php echo $value['user_id']; ?>"></span></td>
+                        <td><?php echo $value['county']; ?> </td>
                         <td><a style="color:red;" title="Delete user" href="<?php echo base_url() . 'rtk_management/delete_user_gen/' . $value['user_id'] . '/rtk_manager'; ?>">[x]</a></td>
                     </tr>
                 <script type="text/javascript">
                     $(function() {
-                        $("#morecounties<?php echo $value['user_id']; ?>").load("<?php echo base_url(); ?>rtk_management/show_rca_counties/<?php echo $value['user_id']; ?>");
                             });
                 </script>
             <?php } ?></tbody>

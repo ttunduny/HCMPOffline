@@ -1,4 +1,4 @@
-<div class="span3 bs-docs-sidebar" style="border-right: solid 1px #ccc;padding-right: 20px;font-size: 150%;">
+<div class="col-md-2" style="border-right: solid 1px #ccc;padding-right: 20px;">
     <select id="switch_county" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;">
         <option>-- Select county --</option>
         <?php echo $option; ?>
@@ -16,7 +16,7 @@
     <?php } ?>
     </select>
 
-    <ul class="nav nav-tabs nav-stacked">
+    <ul class="nav nav-pills nav-stacked">
         <li><a href="<?php echo base_url().'rtk_management/county_home'?>">Summary</a></li>        
         <li><a href="<?php echo base_url().'rtk_management/rca_districts'?>">Districts</a></li>
         <li><a href="<?php echo base_url().'rtk_management/rca_pending_facilities'?>">Pending Facilities</a></li>

@@ -65,6 +65,7 @@ $englishdate = date('F, Y', strtotime($monthyear));
     #switch_district{font-size: 17px;margin: 8px 0px 13px 0px;}
     body > div.container-fluid > div > div > div.leftpanel > div > span{font-size: 18px;text-transform: uppercase;font-style: oblique;font-family: calibri;padding: 0px 6px 5px 17px;border-bottom: solid 1px #ccc;background: #D6CA00;width: 100%;font-style: normal;}
     .label {font-size: 11px;padding: 3px;}
+    body > div.container-fluid > div > h1{margin-left: 235px;}
 </style>
 <script type="text/javascript">
     $(function() {
@@ -82,6 +83,9 @@ $englishdate = date('F, Y', strtotime($monthyear));
         &nbsp;
         <a href="<?php echo base_url(); ?>rtk_management/switch_district/0/rtk_manager/0/home_controller/0//" class="btn btn-primary" id="switch_idenity" style="margin-top: -10px;">Go</a>
     </div><?php } ?>
+
+
+
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
 <div class="leftpanel">
     <div class="sidebar">

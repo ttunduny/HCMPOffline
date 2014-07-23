@@ -188,10 +188,10 @@
                 var num_pos_adj = parseInt(pos_adj);
                 var neg_adj = $('#neg_adj_' + row).val();
                 var num_neg_adj = parseInt(neg_adj);
- 
+
 
                 num_final = num_bal + num_qty_rcvd - num_q_used - num_loses + num_pos_adj - num_neg_adj;
- 
+
                 $('#physical_count_' + row).attr("value", num_final);
             }
             $('.bbal').keyup(function() {
@@ -426,7 +426,7 @@ foreach ($facilities as $facility) {
                     <input type="hidden" id="district" name="district" value="<?php echo $district_id; ?>">
                     <input type="hidden" id="unit_of_issue_<?php echo $checker ?>" name = "unit_of_issue[<?php echo $checker ?>]" value="<?php echo $lab_commodities['unit_of_issue']; ?>">
                     <td colspan = "2" style = "text-align:left"></b><?php echo $lab_commodities['commodity_name']; ?></td>
-                    <td style = "color:#000; border:none;  text-align:center"><?php //echo $lab_commodities['unit_of_issue'];    ?>TESTS</td>
+                    <td style = "color:#000; border:none;  text-align:center"><?php //echo $lab_commodities['unit_of_issue'];     ?>TESTS</td>
                     <td><input id="b_balance_<?php echo $checker ?>" name = "b_balance[<?php echo $checker ?>]" class='bbal' size="10" type="text" value="0" style = "text-align:center"/></td>
                     <td><input id="q_received_<?php echo $checker ?>" name = "q_received[<?php echo $checker ?>]" class='qty_rcvd' size="10" type="text" value="0" style = "text-align:center"/></td>
                     <td><input id="q_used_<?php echo $checker ?>" name = "q_used[<?php echo $checker ?>]" class='qty_used' size="10" type="text" value="0" style = "text-align:center"/></td>

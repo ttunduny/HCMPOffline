@@ -1,4 +1,5 @@
 <?php
+
 $month = $this->session->userdata('Month');
 if ($month == '') {
     $month = date('mY', time());
@@ -8,15 +9,6 @@ $month = substr_replace($month, "", -4);
 $monthyear = $year . '-' . $month . '-1';
 $englishdate = date('F, Y', strtotime($monthyear));
 ?>
-<script src="<?php echo base_url() . 'Scripts/accordion.js' ?>" type="text/javascript"></script>
-<SCRIPT LANGUAGE="Javascript" SRC="<?php echo base_url(); ?>Scripts/FusionCharts/FusionCharts.js"></SCRIPT> 
-<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>Scripts/jquery.dataTables.js"></script>
-<style type="text/css" title="currentStyle">
-
-@import "<?php echo base_url(); ?>DataTables-1.9.3 /media/css/jquery.dataTables.css";
-
-
-</style>
 <script type="text/javascript">
 
 $(document).ready(function() {
@@ -52,94 +44,9 @@ function loadcountysummary(county) {
 }
 
 </script>
-<style>
-.leftpanel{
-    width: 17%;
-    height:auto;
-    float: left;
-}
-
-.alerts{
-    width:95%;
-    height:auto;
-    background: #E3E4FA;  
-    padding-bottom: 2px;
-    padding-left: 2px;
-    margin-left:0.5em;
-    -webkit-box-shadow: 0 8px 6px -6px black;
-    -moz-box-shadow: 0 8px 6px -6px black;
-    box-shadow: 0 8px 6px -6px black;
-
-}
-#example td{
-    font-size: 12px;      
-}
-.notify{
-    width:95%;
-    height:auto;
-    background: #E3E4FA;  
-    padding-bottom: 2px;
-    padding-left: 2px;
-    margin-left:0.5em;
-    -webkit-box-shadow: 0 8px 6px -6px black;
-    -moz-box-shadow: 0 8px 6px -6px black;
-    box-shadow: 0 8px 6px -6px black;
-
-}
-
-.dash_menu{
-    width: 100%;
-    float: left;
-    height:auto; 
-    -webkit-box-shadow: 2px 3px 5px#888;
-    box-shadow: 2px 3px 5px #888; 
-    margin-bottom:3.2em; 
-}
-
-.dash_main{
-    width: 82%;       
-    height:500px;
-    float: left;
-    margin-left:0.75em;
-    margin-bottom:0em;
-    font-size: 12px;
-}
-.dash_notify{
-    width: 15.85%;
-    float: left;
-    padding-left: 2px;
-    height:450px;
-    margin-left:8px;
-    -webkit-box-shadow: 2px 2px 6px #888;
-    box-shadow: 2px 2px 6px #888;
-
-}
-
-div.container {
-    width:auto;
-    height:auto;
-    padding:0;
-    margin:0; }
-    div.content {
-        background:#f0f0f0;
-        margin: 0;
-        padding:10px;
-        font-size:.9em;
-        line-height:1.5em;
-        font-family:"Helvetica Neue", Arial, Helvetica, Geneva, sans-serif; }
-        div.content ul, div.content p {
-            padding:0;
-            margin:0;
-            padding:3px; }
-            div.content ul li {
-                list-style-position:inside;
-                line-height:25px; }
-                div.content ul li a {
-                    color:#555555; }
-                    code {
-                        overflow:auto; }
-
-                        </style>
+<style type="text/css">
+    body > div.container-fluid > div > h1{margin-left: 230px;}
+</style>
 
                         <script type="text/javascript">
 
@@ -161,44 +68,66 @@ window.location.href = path;
         <a href="<?php echo base_url(); ?>rtk_management/switch_district/0/rtk_manager/0/home_controller/0//" class="btn btn-primary" id="switch_idenity" style="margin-top: -10px;">Go</a>
       </div>
       <?php }?>
+
+
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
       <div class="leftpanel">
-        <div class="sidebar">
-          <a href="<?php echo site_url('rtk_management/rtk_orders'); ?>">&nbsp;</a>
-          <nav class="sidenav">
-            <?php
-            $option = '';
-            $id = $this->session->userdata('user_id');
-            $q = 'SELECT * from dmlt_districts,districts 
-            where dmlt_districts.district=districts.id
-            and dmlt_districts.dmlt=' . $id;
-            $res = $this->db->query($q);
-            foreach ($res->result_array() as $key => $value) {
-              $option .= '<option value = "' . $value['id'] . '">' . $value['district'] . '</option>';
-            }
-            ?>
-
-            <span style="
-            font-size: 19px;
-            text-transform: uppercase;
-            font-style: oblique;
-            font-family: calibri;
-            " class="label label-info">Switch districts</span>
-            <br />
-
-            <select id="switch_district">
-              <option>-- Select District --</option>
-              <?php echo $option; ?>
-            </select>
-            <br />
-            <ul>
-                                    <li class="orders_minibar" id="dpp_stats"><a href="#" style="margin: 0;  padding: 5%;  height: 15px;  border-top: #f0f0f0 1px solid;  background: #cccccc;  font: normal 1.3em 'Trebuchet MS',Arial,Sans-Serif;  text-decoration: none;  text-transform: uppercase;  background: #29527b;  border-radius: 0.5em;  color: #fff;">Statistics</a></li>
-                                    <li class="orders_minibar"><a href="<?php echo site_url('rtk_management/rtk_orders'); ?>" style="margin: 0;  padding: 5%;  height: 15px;  border-top: #f0f0f0 1px solid;  background: #cccccc;  font: normal 1.3em 'Trebuchet MS',Arial,Sans-Serif;  text-decoration: none;  text-transform: uppercase;  background: #29527b;  border-radius: 0.5em;  color: #fff;">Orders</a></li>
-                                    <li class="orders_minibar"><a href="<?php echo site_url('rtk_management/rtk_allocation'); ?>" style="margin: 0;  padding: 5%;  height: 15px;  border-top: #f0f0f0 1px solid;  background: #cccccc;  font: normal 1.3em 'Trebuchet MS',Arial,Sans-Serif;  text-decoration: none;  text-transform: uppercase;  background: #29527b;  border-radius: 0.5em;  color: #fff;">Allocation</a></li>
-                                </ul>
-          </nav>
+    <div class="sidebar">
+        <?php
+        $option = '';
+        $id = $this->session->userdata('user_id');
+        $q = 'SELECT * from dmlt_districts,districts 
+                                where dmlt_districts.district=districts.id
+                                and dmlt_districts.dmlt=' . $id;
+        $res = $this->db->query($q);
+        foreach ($res->result_array() as $key => $value) {
+            $option .= '<option value = "' . $value['id'] . '">' . $value['district'] . '</option>';
+        }
+        ?>
+        <span style="" class="label label-info">Switch districts</span>
+        <br />
+        <br />
+        <select id="switch_district">
+            <option>-- Select District --</option>
+            <?php echo $option; ?>
+        </select>
+        <br />
+        <div class="panel-group " id="accordion" style="padding: 0;">
+            <div class="panel panel-default active-panel">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a href="<?php echo site_url('rtk_management/rtk_allocation'); ?>" href="#collapseOne" id="notifications"><span class="glyphicon glyphicon-bullhorn">
+                            </span>Home</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-default active-panel">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a href="<?php echo site_url('rtk_management/rtk_allocation'); ?>" href="#collapseOne" id="notifications"><span class="glyphicon glyphicon-stats">
+                            </span>Statistics</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a href="<?php echo site_url('rtk_management/rtk_orders'); ?>" href="#collapseTwo" id="stocking_levels"><span class="glyphicon glyphicon-sort-by-attributes">
+                            </span>Orders</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a href="<?php echo site_url('rtk_management/rtk_allocation'); ?>" href="#collapseThree" id="expiries"><span class="glyphicon glyphicon-trash">
+                            </span>Allocation</a>
+                    </h4>
+                </div>
+            </div>
         </div>
-
-      </div>      
+    </div>
+</div>     
       <div class="dash_main" id = "dash_main">
         <?php
 $district = $this->session->userdata('district1');
@@ -264,11 +193,7 @@ $d_name = $district_name[0]['district'];
             </table>
         <?php endif;
         ?>
-
-
-
-        
-      </div>
+ </div></div>
 
       <link rel="stylesheet" type="text/css" href="http://tableclothjs.com/assets/css/tablecloth.css">
 

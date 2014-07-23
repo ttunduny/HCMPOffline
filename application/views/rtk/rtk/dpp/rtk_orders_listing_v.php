@@ -158,44 +158,65 @@ window.location.href = path;
         <a href="<?php echo base_url(); ?>rtk_management/switch_district/0/rtk_manager/0/home_controller/0//" class="btn btn-primary" id="switch_idenity" style="margin-top: -10px;">Go</a>
       </div>
       <?php }?>
+     
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
       <div class="leftpanel">
-        <div class="sidebar">
-          <a href="<?php echo site_url('rtk_management/rtk_orders'); ?>">&nbsp;</a>
-          <nav class="sidenav">
-            <?php
-            $option = '';
-            $id = $this->session->userdata('user_id');
-            $q = 'SELECT * from dmlt_districts,districts 
-            where dmlt_districts.district=districts.id
-            and dmlt_districts.dmlt=' . $id;
-            $res = $this->db->query($q);
-            foreach ($res->result_array() as $key => $value) {
-              $option .= '<option value = "' . $value['id'] . '">' . $value['district'] . '</option>';
-            }
-            ?>
-
-            <span style="
-            font-size: 19px;
-            text-transform: uppercase;
-            font-style: oblique;
-            font-family: calibri;
-            " class="label label-info">Switch districts</span>
-            <br />
-
-            <select id="switch_district">
-              <option>-- Select District --</option>
-              <?php echo $option; ?>
-            </select>
-            <br />
-            <ul>
-                                    <li class="orders_minibar" id="dpp_stats"><a href="#" style="margin: 0;  padding: 5%;  height: 15px;  border-top: #f0f0f0 1px solid;  background: #cccccc;  font: normal 1.3em 'Trebuchet MS',Arial,Sans-Serif;  text-decoration: none;  text-transform: uppercase;  background: #29527b;  border-radius: 0.5em;  color: #fff;">Statistics</a></li>
-                                    <li class="orders_minibar"><a href="<?php echo site_url('rtk_management/rtk_orders'); ?>" style="margin: 0;  padding: 5%;  height: 15px;  border-top: #f0f0f0 1px solid;  background: #cccccc;  font: normal 1.3em 'Trebuchet MS',Arial,Sans-Serif;  text-decoration: none;  text-transform: uppercase;  background: #29527b;  border-radius: 0.5em;  color: #fff;">Orders</a></li>
-                                    <li class="orders_minibar"><a href="<?php echo site_url('rtk_management/rtk_allocation'); ?>" style="margin: 0;  padding: 5%;  height: 15px;  border-top: #f0f0f0 1px solid;  background: #cccccc;  font: normal 1.3em 'Trebuchet MS',Arial,Sans-Serif;  text-decoration: none;  text-transform: uppercase;  background: #29527b;  border-radius: 0.5em;  color: #fff;">Allocation</a></li>
-                                </ul>
-          </nav>
+    <div class="sidebar">
+        <?php
+        $option = '';
+        $id = $this->session->userdata('user_id');
+        $q = 'SELECT * from dmlt_districts,districts 
+                                where dmlt_districts.district=districts.id
+                                and dmlt_districts.dmlt=' . $id;
+        $res = $this->db->query($q);
+        foreach ($res->result_array() as $key => $value) {
+            $option .= '<option value = "' . $value['id'] . '">' . $value['district'] . '</option>';
+        }
+        ?>
+        <span style="" class="label label-info">Switch districts</span>
+        <br />
+        <br />
+        <select id="switch_district">
+            <option>-- Select District --</option>
+            <?php echo $option; ?>
+        </select>
+        <br />
+        <div class="panel-group " id="accordion" style="padding: 0;">
+            <div class="panel panel-default active-panel">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a href="<?php echo site_url('rtk_management/rtk_allocation'); ?>" href="#collapseOne" id="notifications"><span class="glyphicon glyphicon-bullhorn">
+                            </span>Home</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-default active-panel">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a href="<?php echo site_url('rtk_management/rtk_allocation'); ?>" href="#collapseOne" id="notifications"><span class="glyphicon glyphicon-stats">
+                            </span>Statistics</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a href="<?php echo site_url('rtk_management/rtk_orders'); ?>" href="#collapseTwo" id="stocking_levels"><span class="glyphicon glyphicon-sort-by-attributes">
+                            </span>Orders</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a href="<?php echo site_url('rtk_management/rtk_allocation'); ?>" href="#collapseThree" id="expiries"><span class="glyphicon glyphicon-trash">
+                            </span>Allocation</a>
+                    </h4>
+                </div>
+            </div>
         </div>
-
-      </div>
+    </div>
+</div> 
       <?php
       $district = $this->session->userdata('district1');
       $district_name = Districts::get_district_name($district)->toArray();
