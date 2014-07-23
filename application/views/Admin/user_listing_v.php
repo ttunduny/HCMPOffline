@@ -2,9 +2,12 @@
 <div class="container">
 	
 	<?php $x = array();
+	
 					foreach ($counts as $key) {
+						
 						$x[] = $key['count'];
 					}
+					
 					?>
 
 <div class="row" style="padding-top: 0.5%;padding-bottom: 0.5%" >
