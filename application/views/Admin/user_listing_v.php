@@ -2,9 +2,12 @@
 <div class="container">
 	
 	<?php $x = array();
+	
 					foreach ($counts as $key) {
+						
 						$x[] = $key['count'];
 					}
+					
 					?>
 
 <div class="row" style="padding-top: 0.5%;padding-bottom: 0.5%" >
@@ -184,7 +187,9 @@
 										</div>
 									</div>
 									<div class="col-md-6">
-										
+										<div id="err" style="padding: 6px;">
+											
+										</div>
 									</div>
 								</div>
 							</fieldset>
@@ -346,7 +351,9 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-										
+										<div id="err" style="padding: 6px;">
+											
+										</div>
 								</div>
 							</div>
 									

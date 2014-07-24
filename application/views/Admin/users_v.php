@@ -295,6 +295,29 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
   var email = $('#email_edit').val()
 
    $('#username_edit').val(email)
+   
+   $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "<?php echo base_url()."user/check_user_json";?>", //Relative or absolute path to response.php file
+      data:{ 'email': $('#email_edit').val()},
+      success: function(data) {
+        if(data.response=='false'){
+						
+						 $('#err').html(data.msg);
+							$( '#err' ).addClass( "alert-danger alert-dismissable" );
+							}else if(data.response=='true'){
+								
+								$("#err").empty();
+								$("#err").removeClass("alert-danger alert-dismissable");
+								$( '#err' ).addClass( "alert-success alert-dismissable" );
+								$('#err').html(data.msg);
+								
+								
+							}
+      }
+    });
+    return false;
 
     })
 
@@ -314,6 +337,28 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
   var email = $('#email').val()
 
    $('#username').val(email)
+   $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "<?php echo base_url()."user/check_user_json";?>", //Relative or absolute path to response.php file
+      data:{ 'email': $('#email').val()},
+      success: function(data) {
+        if(data.response=='false'){
+						
+						 $('#err').html(data.msg);
+							$( '#err' ).addClass( "alert-danger alert-dismissable" );
+							}else if(data.response=='true'){
+								
+								$("#err").empty();
+								$("#err").removeClass("alert-danger alert-dismissable");
+								$( '#err' ).addClass( "alert-success alert-dismissable" );
+								$('#err').html(data.msg);
+								
+								
+							}
+      }
+    });
+    return false;
 
     })
     
