@@ -71,9 +71,9 @@ class Reports extends MY_Controller
 	}
 
 	/*
-	 |--------------------------------------------------------------------------
-	 | SHARED REPORTS
-	 |--------------------------------------------------------------------------
+	 |--------------------------------------------------------------------------|
+	 | SHARED REPORTS															|
+	 |--------------------------------------------------------------------------|
 	 */
 	//Default function for all non functioning parts of the system
 	public function work_in_progress()
@@ -1178,12 +1178,12 @@ class Reports extends MY_Controller
 	 {
 	 	$year = (isset($year)&& ($year>0))? $year : date("Y");
 		$month = (isset($month)&& ($month>0))? $month : date("m");
-		
 		$identifier = $this -> session -> userdata('user_indicator');
 		$county_id = $this -> session -> userdata('county_id');
+		
 		$district_id = $this -> session -> userdata('district_id');
 		$district = $this -> session -> userdata('district_id');
-	
+		
 		//Get the name of the county
 		$county_name = Counties::get_county_name($county_id);
 		$county_name = $county_name['county'];
@@ -1197,9 +1197,9 @@ class Reports extends MY_Controller
 		$date_1 = new DateTime($first_day_of_the_month);
 		$date_2 = new DateTime($last_day_of_the_month);
 
-		$district_data = districts::getDistrict($county_id);
-		$facility_data = Facilities::get_Facilities_using_HCMP($district);
-		
+		$facility_data = Facilities::get_Facilities_using_HCMP($county_id,$district);
+		/*$district_data = districts::getDistrict($county_id);
+		 * */
 		
 		$series_data = array();
 		$category_data = array();
