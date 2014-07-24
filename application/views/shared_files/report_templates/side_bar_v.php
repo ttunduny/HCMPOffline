@@ -98,6 +98,12 @@
                             <span class="glyphicon"></span><a href="<?php echo base_url().'reports/get_sub_county_facility_mapping_data'?>" >User Statistics</a>
                         </td>
                     </tr>
+
+                    <tr>
+                        <td>
+                            <span class="glyphicon"></span><a href="<?php echo base_url().'reports/facility_stock_level_dashboard'?>" >Stocking Levels</a>
+                        </td>
+                    </tr>
                     
                 </table>
             </div>

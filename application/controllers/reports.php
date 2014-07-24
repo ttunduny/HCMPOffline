@@ -2706,6 +2706,23 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 	     return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
 
 	    }
+   public function facility_stock_level_dashboard(){
+   				$county_id = $this -> session -> userdata('county_id');
+   				$view = 'shared_files/template/dashboard_template_v';
+	            $data['district_data'] = districts::getDistrict($county_id);
+	            $data['c_data'] = Commodities::get_all_2();
+				$data['categories']=commodity_sub_category::get_all_pharm();
+				$data['banner_text'] = "Stocking Levels";
+				$data['title'] = "Stocking Levels";
+				$data['content_view'] = "facility/facility_reports/reports_v";
+				$view = 'shared_files/template/template';
+				$data['report_view'] = "subcounty/reports/county_stock_level_filter_v";
+				$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+				$data['active_panel']='stocking_levels';
+		 		$data['title'] = "Reports";
+		
+		$this -> load -> view($view, $data);
+	    }
 
 	    public function tb_report(){
 	    $data['title'] = "Facility Expiries";
