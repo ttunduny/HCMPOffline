@@ -649,7 +649,7 @@ class User extends MY_Controller {
                           Hi ' .  $full_name . ', </br>
 		<p>
 		Your HCMP Account - ' . $email_address . ' -  was recently created.</br>
-		Before your account can be activated , you must do the following to complete your registration.</br></p> 
+		Before your account can be activated , you must complete one of the following steps to complete your registration.</br></p> 
 	
 		<p>
 		Step 1. Follow the link below
@@ -660,7 +660,7 @@ class User extends MY_Controller {
 		<table class="twelve columns">
                         <tr>
                           <td class="panel">
-                            <p><strong style="font-size:20px;">' . $link . '</strong> <a href="#"></a></p>
+                            <p><strong style="font-size:14px;">' . $link . '</strong> <a href="#"></a></p>
                           </td>
                           <td class="expander"></td>
                         </tr>
@@ -671,7 +671,7 @@ class User extends MY_Controller {
 					  <table class="twelve columns">
                         <tr>
                           <td class="panel">
-                            <p><strong style="font-size:20px;">' . $site_url. '</strong> <a href="#"></a></p>
+                            <p><strong style="font-size:14px;">' . $site_url. '</strong> <a href="#"></a></p>
                           </td>
                           <td class="expander"></td>
                         </tr>
