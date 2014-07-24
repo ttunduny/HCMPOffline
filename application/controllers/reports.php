@@ -2718,7 +2718,7 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 				$view = 'shared_files/template/template';
 				$data['report_view'] = "subcounty/reports/county_stock_level_filter_v";
 				$data['sidebar'] = "shared_files/report_templates/side_bar_v";
-				$data['active_panel']='stocking_levels';
+				$data['active_panel']='other';
 		 		$data['title'] = "Reports";
 		
 		$this -> load -> view($view, $data);
