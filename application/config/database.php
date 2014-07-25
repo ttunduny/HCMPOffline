@@ -51,7 +51,11 @@ $active_record = TRUE;
 $db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'root';
 $db['default']['password'] = '';
+<<<<<<< HEAD
 $db['default']['database'] = 'hcmp_rtk';
+=======
+$db['default']['database'] = 'hcmp';
+>>>>>>> a1f1d53592a6fa16725ae54031d2658849a7a7ab
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
