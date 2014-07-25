@@ -136,7 +136,7 @@ class User extends MY_Controller {
 
 		Log::update_log_out_action($this -> session -> userdata('user_id'));
 
-		$this -> session -> sess_destroy();
+		$this -> session -> sess_destroy(); session_destroy();
 		$data['title'] = "Login";
 		$this -> load -> view("shared_files/login_pages/login_v", $data);
 	}
