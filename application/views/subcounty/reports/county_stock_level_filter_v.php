@@ -41,11 +41,8 @@ endforeach;
 <option value="packs">Packs</option>
 <option value="units">Units</option>
 <option value="ksh">KSH</option>
-<<<<<<< HEAD
 <option value="mos">Month of Stock</option>
-=======
-<option value="ksh">Months Of Stock</option>
->>>>>>> 7b29729cba9f15aa56f6dfbe46633739be8baa13
+
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success category-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
