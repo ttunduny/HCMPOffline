@@ -117,7 +117,7 @@ class facility_stocks_temp extends Doctrine_Record {
 		 select 
     cm.commodity_name,
     round(avg(IFNULL(f_s.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),
-            1) as total
+            1) as total, d1.district, f.facility_name
 			from
    				facilities f,
     			districts d1,

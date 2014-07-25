@@ -2769,7 +2769,7 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 
 
         if($option=="mos"){
-        	
+        	        	
         	$this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id);
         }
 
@@ -2863,14 +2863,6 @@ public function get_division_commodities_data($division_id = null,$district_id =
 	 	$option = ($option=="NULL") ? null :$option;
 		$facility_code = ($facility_code=="NULL") ? null :$facility_code;
 		$option = ($option=="NULL" || $option=="null") ? null :$option;	
-		
-		// if((!isset($district_id)) && (!isset($facility_code)) && (!isset($division_id)) && (!isset($option)))
-		// {
-// 			
-			// $this->division_commodities_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id,$division_id);
-		// }
-// 		
-		// else{
 
      	//setting up the data
         if($option=="mos"){
