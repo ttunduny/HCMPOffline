@@ -71,16 +71,17 @@ class Home extends MY_Controller
 			case 'moh_user':
 			$view = '';
 			break;
-			case 'district_tech':
-			$view = '';
-			break;
+			case 'scmlt':
+			case 'rtk_county_admin':
+			case 'allocation_committee':
 			case 'rtk_manager':
-			$view = '';
+			redirect('home_controller');
 			break;
 			case 'super_admin':
 			$view = 'shared_files/template/dashboard_v';
 			$data['content_view'] = "shared_files/template/super_admin_template";
 			break;
+				
 			case 'allocation_committee':
 			$view = '';
 			break;	
@@ -136,6 +137,11 @@ class Home extends MY_Controller
 	$facility_donations=redistribution_data::get_all_active($facility_code,"to-me")->count();
 	//get items they have been donated and are pending
 	$facility_donations_pending=redistribution_data::get_all_active($facility_code)->count();
+	//get stocks from v1
+	$stocks_from_v1=0;
+	if($facility_stock_count==0 && $facility_donations==0 && $facility_donations_pending==0 ){
+	$stocks_from_v1=count(facility_stocks::import_stock_from_v1($facility_code));	
+	}
 	return array('facility_stock_count'=>$facility_stock_count,
 	'faciliy_stock_graph'=>$faciliy_stock_data,
 	'items_stocked_out_in_facility'=>$items_stocked_out_in_facility,
@@ -143,7 +149,8 @@ class Home extends MY_Controller
 	'potential_expiries'=>$potential_expiries,
 	'actual_expiries'=>$actual_expiries,
 	'facility_donations'=>$facility_donations,
-	'facility_donations_pending'=>$facility_donations_pending
+	'facility_donations_pending'=>$facility_donations_pending,
+	'stocks_from_v1'=>$stocks_from_v1
 	);	
     }
 	

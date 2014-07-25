@@ -38,8 +38,7 @@
 </div>
 <script>
 	$(document).ready(function() 
-	{
-		<?php echo @$graph_data; ?>
+	{		<?php echo @$graph_data; ?>
 	
 			$("#filter").click(function() 
 			{

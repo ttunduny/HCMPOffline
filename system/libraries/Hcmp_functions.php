@@ -11,72 +11,68 @@ class Hcmp_functions extends MY_Controller {
 		$this -> load -> helper(array('url','file','download'));
 		$this -> load -> library(array('phpexcel/phpexcel','mpdf/mpdf'));
 	}
-
-	
 public function send_stock_update_sms(){
        $facility_name = $this -> session -> userdata('full_name');
-	   $facility_code=$this -> session -> userdata('news');
-	   $data=User::getUsers($facility_code)->toArray();
+	   $facility_code=$this -> session -> userdata('facility_id');;
+	   $data=Users::getUsers($facility_code)->toArray();
 
 	   $message= "Stock level for ".$facility_name." have been updated. HCMP";
        
 	   $phone=$this->get_facility_phone_numbers($facility_code);
 	   $phone .=$this->get_ddp_phone_numbers($data[0]['district']);
 
-	   
 	   $this->send_sms(substr($phone,0,-1),$message);
 
 	}
+public function send_stock_donate_sms(){
+		
+       $facility_name = $this -> session -> userdata('full_name');
+	   $facility_code=$this -> session -> userdata('facility_id');;
+	   $data=Users::getUsers($facility_code)->toArray();
+
+	   //$message= "Stock level for ".$facility_name." has been updated. HCMP";
+       
+	   $phone=$this->get_facility_phone_numbers($facility_code);
+	   $phone .=$this->get_ddp_phone_numbers($data[0]['district']);
+	   $message= $facility_name." have been donated commodities. HCMP";		
+	   $this->send_sms(substr($phone,0,-1),$message);
+
+	}
+
+
+
 
 public function send_order_sms(){
 	
 
        $facility_name = $this -> session -> userdata('full_name');
-	   $facility_code=$this -> session -> userdata('news');
-	   $data=User::getUsers($facility_code)->toArray();
+	   $facility_code=$this -> session -> userdata('facility_id');;
+	   $data=Users::getUsers($facility_code)->toArray();
 
 	   $message= $facility_name." has submitted an order. HCMP";
        
 	   $phone=$this->get_facility_phone_numbers($facility_code);
 	   $phone .=$this->get_ddp_phone_numbers($data[0]['district']);
 
-	   
 	   $this->send_sms(substr($phone,0,-1),$message);
 
 	}
 public function send_order_approval_sms($facility_code,$status){
 
-	  
-       
        $message=($status==1)?$facility_name." order has been rejected. HCMP":
        $facility_name." order has been approved. HCMP";
  
-        $data=User::getUsers($facility_code)->toArray();
+       $data=Users::getUsers($facility_code)->toArray();
 	   $phone=$this->get_facility_phone_numbers($facility_code);
 	   $phone .=$this->get_ddp_phone_numbers($data[0]['district']);
 
-	   
 	   $this->send_sms(substr($phone,0,-1),$message);
 
 	}
 
-public function send_stock_decommission_email($message,$subject,$attach_file){
-	
-	   $facility_code=$this -> session -> userdata('news');
-	   
-	   $data=User::getUsers($facility_code)->toArray();
-	   
-	   $email_address=$this->get_facility_email($facility_code);
-	   
-	   $email_address .=$this->get_ddp_email($data[0]['district']);
 
-	   
-	   $this->send_email(substr($email_address,0,-1),$message,$subject,$attach_file);
-	   
-	 
-	}
 public function get_facility_phone_numbers($facility_code){
-	$data=User::get_user_info($facility_code);
+	$data=Users::get_user_info($facility_code);
 	$phone=""; 
 	foreach ($data as $info) {
 
@@ -87,7 +83,7 @@ public function get_facility_phone_numbers($facility_code){
 	return $phone;
 }
 public function get_facility_email($facility_code){
-	$data=User::get_user_info($facility_code);
+	$data=Users::get_user_info($facility_code);
 	$user_email=""; 
 	foreach ($data as $info) {
 
@@ -95,11 +91,12 @@ public function get_facility_email($facility_code){
 
 		   	
 		}
+	$facility_code=='' ?  exit : null;
 	return $user_email;
 }
 
 public function get_ddp_phone_numbers($district_id){
-	$data=User::get_dpp_details($district_id);
+	$data=Users::get_dpp_details($district_id);
 	$phone=""; 
 	
 	foreach ($data as $info) {
@@ -109,32 +106,97 @@ public function get_ddp_phone_numbers($district_id){
 	return $phone;
 }
 public function get_ddp_email($district_id){
-	$data=User::get_dpp_details($district_id);
+	$data=Users::get_dpp_details($district_id);
 	$user_email=""; 
 	foreach ($data as $info) {
 
 			$user_email .=$info->email.',';
 		}
+	$district_id=='' ?  exit : null;
 	return $user_email;
 }
-public function send_stock_donate_sms(){
-		
-       $facility_name = $this -> session -> userdata('full_name');
-	   $facility_code=$this -> session -> userdata('news');
-	   $data=User::getUsers($facility_code)->toArray();
+public function get_county_email($county_id){
+     !isset($county_id) ?  exit : null; 
+	// added function on user
+	$county=Districts::get_county_id($county_id);
+	$county_email=Users::get_county_details($county[0]['county']);
+	if($this->test_mode) return null; //check to ensure the demo site wount start looking for county admin
+	if($county[0]['county']==1){
+	return 'kariuki.jackson@outlook.com,';	
+	}else{
+		if(count($county_email)>0){
+		return $county_email[0]['email'].',';	
+		}else{
 
-	   //$message= "Stock level for ".$facility_name." has been updated. HCMP";
-       
-	   $phone=$this->get_facility_phone_numbers($facility_code);
-	   $phone .=$this->get_ddp_phone_numbers($data[0]['district']);
-	    $message= $facility_name." have been donated commodities. HCMP";		
-		$this->send_sms(substr($phone,0,-1),$message);
+		return "";
+		}
 		
-		
-
 	}
+	
+}
+public function send_stock_decommission_email($message,$subject,$attach_file){
+	
+	   $facility_code=$this -> session -> userdata('facility_id');;
+	   
+	   $data=Users::getUsers($facility_code)->toArray();
+	   
+	   $email_address=$this->get_facility_email($facility_code);
+	   
+	   $email_address .=$this->get_ddp_email($data[0]['district']);
 
+       $email_address .= $this->get_county_email($data[0]['district']);
 
+	   $this->send_email(substr($email_address,0,-1),$message,$subject,$attach_file);
+	   
+	 
+	}
+public function send_order_submission_email($message,$subject,$attach_file){
+
+	   $facility_code=$this -> session -> userdata('facility_id');
+	   $data=Users::getUsers($facility_code)->toArray();
+	   $email_address=$this->get_facility_email($facility_code);
+	    
+	   $email_address .=$this->get_ddp_email($data[0]['district']);	   
+	   $cc_email=($this->test_mode)?'kariukijackson@gmail.com,': $this->get_county_email($data[0]['district']) ;
+
+	  return $this->send_email(substr($email_address,0,-1),$message, $subject,$attach_file,null,substr( $cc_email,0,-1));
+	
+}
+public function send_order_approval_email($message,$subject,$attach_file,$facility_code,$reject_order=null){
+	  
+ $cc_email="";
+ $data=facilities::get_facility_name_($facility_code)->toArray();
+ $data=$data[0];
+
+  if($reject_order=="Rejected" || $reject_order=="Updated"):
+	  $email_address=$this->get_facility_email($facility_code);
+	  $cc_email .=$this->get_ddp_email($data['district']);	  
+	  else:		  
+		  $email_address=($this->test_mode)?'kariuki.jackson@outlook.com,': 'kariuki.jackson@outlook.com,'; 
+       
+	  $cc_email .=$this->get_ddp_email($data['district']);
+	   $cc_email .=$this->get_facility_email($facility_code);
+
+	   $cc_email .=$this->get_county_email($data['district']) ;
+
+  endif;
+ 
+		return $this->send_email(substr($email_address,0,-1),$message, $subject,$attach_file,null,substr($cc_email,0,-1));
+	
+}
+public function send_order_delivery_email($message,$subject,$attach_file=null){
+
+       $cc_email='';
+      // echo 'test'; exit;
+	   $facility_code=$this -> session -> userdata('facility_id');;	   
+	   $data=Users::getUsers($facility_code)->toArray();	   
+	   $cc_email .=$this->get_facility_email($facility_code);
+	   $cc_email .=$this->get_county_email($data[0]['district']) ;
+		
+		
+	return $this->send_email(substr($this->get_ddp_email($data[0]['district']),0,-1),$message,$subject,null,null,substr($cc_email,0,-1));
+	
+}
 public function send_sms($phones,$message) {
 	
    $message=urlencode($message);
@@ -152,81 +214,20 @@ public function send_sms($phones,$message) {
 	//endforeach;
  		
 	}
-public function send_order_submission_email($message,$subject,$attach_file){
-	 
-      $cc_email=($this->test_mode)?'kariukijackson@gmail.com': 'anganga.pmo@gmail.com,sochola06@yahoo.com';
-	 
-		
-	   $facility_code=$this -> session -> userdata('news');
-	   
-	   $data=User::getUsers($facility_code)->toArray();
-	   
-	   $email_address=$this->get_facility_email($facility_code);
-	   
-	   $email_address .=$this->get_ddp_email($data[0]['district']);
-		
-		
-		return $this->send_email(substr($email_address,0,-1),$message, $subject,$attach_file,null,$cc_email);
-	
-}
-public function send_order_approval_email($message,$subject,$attach_file,$facility_code,$reject_order=null){
-	  
- $cc_email=($this->test_mode)?'kariukijackson@gmail.com': 'anganga.pmo@gmail.com,sochola06@yahoo.com';
-	   
-	  
- $data=User::getUsers($facility_code)->toArray();
-  if($reject_order==1):
-	  $email_address=$this->get_facility_email($facility_code);
-	  $cc_email .=$this->get_ddp_email($data[0]['district']);
-	  
-	  else:
-		  
-		  $email_address=($this->test_mode)?'kariukijackson@gmail.com': 'shamim.kuppuswamy@kemsa.co.ke,
-samuel.wataku@kemsa.co.ke,
-jmunyu@kemsa.co.ke,
-imugada@kemsa.co.ke,
-laban.okune@kemsa.co.ke,
-samuel.wataku@kemsa.co.ke,'; 
-
-	  $cc_email .=$this->get_ddp_email($data[0]['district']);
-	   $cc_email .=$this->get_facility_email($facility_code); 
-  endif;
-	  
-
-		return $this->send_email(substr($email_address,0,-1),$message, $subject,$attach_file,null,substr($cc_email,0,-1));
-	
-}
-public function send_order_delivery_email($message,$subject,$attach_file=null){
-
-$cc_email=($this->test_mode)?'kariukijackson@gmail.com': 'anganga.pmo@gmail.com,sochola06@yahoo.com';
-
-	   $facility_code=$this -> session -> userdata('news');
-	   
-	   $data=User::getUsers($facility_code)->toArray();
-	   
-	   $cc_email .=$this->get_facility_email($facility_code);
-	   
-		
-		
-	return $this->send_email(substr($this->get_ddp_email($data[0]['district']),0,-1),$message,$subject,null,null,substr($cc_email,0,-1));
-	
-}
 /*****************************************Email function for HCMP, all the deafult email addresses and email content have been set ***************/
 
 public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL){
   
-		$mail_list=($this->test_mode)?'kelvinmwas@gmail.com,kelvinmwas@gmail.com': ',
-  		kelvinmwas@gmail.com,
-  		kelvinmwas@gmail.com,';
+		$mail_list=($this->test_mode)?'kariukijackson@ymail.com,': 'kariukijackson@gmail.com,';
 			
-		$fromm='hcmpkenya@gmail.com';
+		$fromm='info-noreply@health-cmp.or.ke';
 		$messages=$message;
   		$config['protocol']    = 'smtp';
-        $config['smtp_host']    = 'ssl://smtp.gmail.com';
+        $config['smtp_host']    = 'ssl://host05.safaricombusiness.co.ke';
         $config['smtp_port']    = '465';
         $config['smtp_timeout'] = '7';
-        $config['smtp_user']    = 'hcmpkenya@gmail.com';
-        $config['smtp_pass']    = 'healthkenya';
+        $config['smtp_user']    = 'info-noreply@health-cmp.or.ke';
+        $config['smtp_pass']    = 'hcmp@#2012';//healthkenya //hcmpkenya@gmail.com
         $config['charset']    = 'utf-8';
         $config['newline']    = "\r\n";
         $config['mailtype'] = 'html'; // or html
@@ -249,10 +250,20 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
 
 		;
   		
-		 (isset($attach_file))? $this->email->attach($attach_file) :	'';
+		if (isset($attach_file)): 
+		$files=explode("(more)", $attach_file.'(more)');
+		$items=count($files)-1;
+		foreach($files as $key=>$files){
+		if($key!=$items){
+		$this->email->attach($files);
+
+		}	
+		}
+
+		endif;
 			
   		$this->email->subject($subject);
- 		$this->email->message($messages);
+ 		$this->email->message($message);
  
   if($this->email->send())
  {
@@ -260,7 +271,7 @@ return TRUE;
  }
  else
 {
- return FALSE;
+echo $this->email->print_debugger(); exit;
 
  
 }
@@ -328,13 +339,13 @@ if(count($excel_data)>0):
 		// Echo done
 endif;
 }
- public function clone_excel_order_template($order_id,$report_type){
+ public function clone_excel_order_template($order_id,$report_type,$file_name=null){
     $inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx';
     $facility_details = facility_orders::get_facility_order_details($order_id);
 	if(count($facility_details)==1):
 	$facility_stock_data_item = facility_order_details::get_order_details($order_id);
 
-    $file_name=time().'.xlsx';
+    $file_name =isset($file_name) ? $file_name.'.xlsx' : time().'.xlsx';
 	
 	$excel2 = PHPExcel_IOFactory::createReader('Excel2007');
     $excel2=$objPHPExcel= $excel2->load($inputFileName); // Empty Sheet
@@ -380,7 +391,7 @@ for ($row = 17; $row <= $highestRow; $row++){
        $objPHPExcel -> disconnectWorksheets();
        unset($objPHPExcel);
    } elseif($report_type=='save_file'){
-   	 $objWriter->save("print_docs/excel/excel_files/".$file_name);
+   	 $objWriter->save("./print_docs/excel/excel_files/".$file_name);
    }
    endif;
 

@@ -4,9 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    
     <!-- Bootstrap core CSS -->
-    
     <link rel="icon" href="<?php echo base_url().'assets/img/coat_of_arms.png'?>" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/loadingbar.css'?>" />
     <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/elusive-webfont.css'?>" />
@@ -33,6 +31,10 @@
         }
         .panel,.page-header
         
+{
+  border-radius: 0 !important;
+}
+.modal-content,.form-control
 {
   border-radius: 0 !important;
 }
@@ -107,8 +109,8 @@
                     <h2 class="icon icon-lab">Sidebar</h2>
                     <ul>
                         <li><a class="icon icon-data" href="<?php echo base_url().'Home';?>">Home</a></li>
-                        <li><a class="icon icon-study" href="<?php echo base_url().'Admin/manage_commodities';?>">Commodities</a></li>
-                        <li><a class="icon icon-location" href="<?php echo base_url().'Admin/manage_users';?>">User Management</a></li>
+                        <li><a class="icon icon-study" href="<?php echo base_url().'admin/manage_commodities';?>">Commodities</a></li>
+                        <li><a class="icon icon-location" href="<?php echo base_url().'admin/manage_users';?>">User Management</a></li>
                         <li><a class="icon icon-photo" href="#">Facilities</a></li>
                         <li><a class="icon icon-wallet" href="#">Counties</a></li>
                         <li><a class="icon icon-wallet" href="#">Sub-Counties</a></li>

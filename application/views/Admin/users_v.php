@@ -14,12 +14,14 @@
 		
 		padding: 8px;
 	}
-	#addModal .modal-dialog {
+	#addModal .modal-dialog,#editModal .modal-dialog {
 		width: 54%;
+		
 	}
 		
 	
 </style>
+
 
 
 <div class="container-fluid">
@@ -27,7 +29,7 @@
 	<div class="row" style="margin-top: 1%;">
 		<div class="col-md-12">
 			
-			<ul class="nav nav-tabs" id="myTab">
+			<ul class="nav nav-tabs" id="Tab">
   <li class="active"><a href="#home" data-toggle="tab"><span class="glyphicon glyphicon-cog"></span>User Settings</a></li>
   <li><a href="#profile" data-toggle="tab"><span class="glyphicon glyphicon-list"></span> Graphs & Statistics</a></li>
 </ul>
@@ -40,6 +42,7 @@
   	
   </div>
   <div class="tab-pane" id="profile">stats</div>
+  
 </div>
 
 		</div>
@@ -55,17 +58,23 @@
 	
 	$(document).ready(function () {
 		
+		$('#Tab a').click(function (e) {
+ 		 e.preventDefault()
+  			$(this).tab('show')
+		})
+		
 		$("#sub_county").hide(); 
 		$("#facility_name").hide();
 		
-		$('#myTab a').click(function (e) {
- 		 e.preventDefault()
-  			$(this).tab('show')
-})
-
+		
 $('#add_new').click(function () {
 	
  		 $('#addModal').appendTo("body").modal('show');
+})
+
+$('.edit').click(function () {
+	
+ 		 $('#editModal').appendTo("body").modal('show');
 })
 
 $('.dataTables_filter label input').addClass('form-control');
@@ -205,7 +214,7 @@ var drop_down='';
 				
         }, 4000);
             
-                  
+            location.reload();      
           }
         }); 
         $('#myModal').on('hidden.bs.modal', function () {
@@ -213,6 +222,105 @@ var drop_down='';
 				 location.reload();
 			})
 }
+
+
+
+    
+    
+        //handle everything edits
+$("#test").on('click','.edit',function() {
+	
+	var district_val=$(this).closest('tr').find('.district').attr('data-attr')
+	var facility_val=$(this).closest('tr').find('.facility_name').attr('data-attr')
+	var chck_fac_l = facility_val.length 
+	var chck_dis_l = district_val.length 
+	
+	//check which fields to display
+	if(chck_fac_l === 0 && chck_dis_l===0 ){
+		
+	$( "#edit_district" ).prop( "disabled", true );
+	$( "#edit_facility" ).prop( "disabled", true );
+	
+}else if(chck_dis_l != 0 && chck_fac_l === 0 ){
+	
+	$( "#edit_facility" ).prop( "disabled", true );
+}
+
+	
+	//capture relevant data
+var email = $(this).closest('tr').find('.email').html();
+var phone = $(this).closest('tr').find('.phone').html();
+var district = $(this).closest('tr').find('.district').html();
+var fname = $(this).closest('tr').find('.fname').html();
+var lname = $(this).closest('tr').find('.lname').html();
+var county = $(this).closest('tr').find('.county').attr('data-attr');
+var usertype = $(this).closest('tr').find('.level').attr('data-attr');
+var district_id = $(this).closest('tr').find('.district').attr('data-attr');
+var facility_id = $(this).closest('tr').find('.facility_name').attr('data-attr');
+
+   //fill inputs with relevant data
+$('#email_edit').val(email)
+$('#email_edit').attr('data-id',$(this).closest('tr').find('.email').attr('data-attr'))
+$('#telephone_edit').val(phone)
+$('#fname_edit').val(fname)
+$('#lname_edit').val(lname)
+$('#username_edit').val(email)
+
+$('#user_type_edit_district').val(usertype)
+$('#county_edit').val(county)
+$('#edit_district').val(district_id)
+$('#edit_facility').val(facility_id)
+
+
+
+
+
+if($(this).closest('tr').find('.status_item').attr('data-attr')=="false"){
+	$('.onoffswitch-checkbox').prop('checked', false) 	
+}else if($(this).closest('tr').find('.status_item').attr('data-attr')=="true"){
+	$('.onoffswitch-checkbox').prop('checked', true) 
+}
+
+if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
+	$("#facility_id_edit").attr("disabled", "disabled"); 
+}
+
+
+
+  });
+  
+  //make sure email==username  for edits
+  $('#email_edit').keyup(function() {
+
+  var email = $('#email_edit').val()
+
+   $('#username_edit').val(email)
+   
+   $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "<?php echo base_url()."user/check_user_json";?>", //Relative or absolute path to response.php file
+      data:{ 'email': $('#email_edit').val()},
+      success: function(data) {
+        if(data.response=='false'){
+						
+						 $('#err').html(data.msg);
+							$( '#err' ).addClass( "alert-danger alert-dismissable" );
+							}else if(data.response=='true'){
+								
+								$("#err").empty();
+								$("#err").removeClass("alert-danger alert-dismissable");
+								$( '#err' ).addClass( "alert-success alert-dismissable" );
+								$('#err').html(data.msg);
+								
+								
+							}
+      }
+    });
+    return false;
+
+    })
+
 		
 		$("#user_type").change(function() {
 	
@@ -223,6 +331,96 @@ var drop_down='';
         } 
            
     	});	
+    	
+    	$('#email').keyup(function() {
+
+  var email = $('#email').val()
+
+   $('#username').val(email)
+   $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "<?php echo base_url()."user/check_user_json";?>", //Relative or absolute path to response.php file
+      data:{ 'email': $('#email').val()},
+      success: function(data) {
+        if(data.response=='false'){
+						
+						 $('#err').html(data.msg);
+							$( '#err' ).addClass( "alert-danger alert-dismissable" );
+							}else if(data.response=='true'){
+								
+								$("#err").empty();
+								$("#err").removeClass("alert-danger alert-dismissable");
+								$( '#err' ).addClass( "alert-success alert-dismissable" );
+								$('#err').html(data.msg);
+								
+								
+							}
+      }
+    });
+    return false;
+
+    })
+    
+    //POST DATA
+    
+    $("#edit_user").click(function() {
+
+      var div="#process";
+      var url = "<?php echo base_url()."admin/edit_user";?>";
+      ajax_post (url,div);
+      $('#editModal').on('hidden.bs.modal', function () {
+				$("#datatable").hide().fadeIn('fast');
+				
+				 location.reload();
+			})
+           
+    });
+
+   function ajax_post (url,div){
+    var url =url;
+
+     //alert(url);
+    // return;
+     var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";
+     $.ajax({
+          type: "POST",
+          data:{ 'fname_edit': $('#fname_edit').val(),'lname_edit': $('#lname_edit').val(),'county_edit': $('#county_edit').val(),
+          'telephone_edit': $('#telephone_edit').val(),'email_edit': $('#email_edit').val(),
+          'username_edit': $('#username_edit').val(),'facility_id_edit_district': $('#edit_facility').val(),
+          'user_type_edit_district': $('#user_type_edit_district').val(),'district_name_edit': $('#edit_district').val(),
+			'facility_id_edit': $('#edit_facility').val(),'status': $('.onoffswitch-checkbox').prop('checked'),'user_id':$('#email_edit').attr('data-id')},
+          url: url,
+          beforeSend: function() {
+            //$(div).html("");
+            var answer = confirm("Are you sure you want to proceed?");
+        if (answer){
+            $('.modal-body').html("<img style='margin:30% 0 20% 42%;' src="+loading_icon+">");
+        } else {
+            return false;
+        }
+             
+            
+          },
+          success: function(msg) {
+          //success message
+          
+          setTimeout(function () {
+          	$('.modal-body').html("<div class='bg-warning' style='height:30px'>"+
+							"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"+
+							"<h3>Success Your records were Edited. Please Close to continue</h3></div>")
+							$('.modal-footer').html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>")
+				
+        }, 4000);
+        
+              
+          }
+           
+        }); 
+}
+
+
+    
 	});
 	
 	

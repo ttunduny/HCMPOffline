@@ -30,6 +30,10 @@ padding-top: 0;
   margin-top: 4.5%;
   
 }
+.modal-content,.form-control
+{
+  border-radius: 0 !important;
+}
 </style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -77,7 +81,7 @@ foreach($menus as $menu){?>
                 foreach($sub_menus as $sub_menu){
                     if ($menu['menu_id']==$sub_menu['menu_id']) {?>
                         
-                        <li><a style="background: whitesmoke;color: black !important" class="" href="<?php echo $sub_menu['submenu_url']?>">
+                        <li><a style="background: whitesmoke;color: black !important"  class="" href="<?php echo $sub_menu['submenu_url']?>">
                             <?php echo $sub_menu['submenu_text']?></a></li>
                     <?php                   
                 } 

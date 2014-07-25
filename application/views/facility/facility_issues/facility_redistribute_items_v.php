@@ -129,7 +129,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			  type: "POST",
 			  url: baseUrl,
 			  data: "district="+id,
-			  success: function(msg){
+			  success: function(msg){ 
 			  		var values=msg.split("_");
 			  		var txtbox;
 			  		for (var i=0; i < values.length-1; i++) {

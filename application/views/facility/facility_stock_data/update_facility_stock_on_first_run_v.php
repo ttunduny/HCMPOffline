@@ -9,20 +9,24 @@
             <div class="col-md-7" id=""><p class="bg-info" id="note">
                  <b> Please  note this is a one off activity Stock level as of <?php $today = ( date('d M Y'));
     //get today's date in full
-?>
-            <input type="hidden" name="datepicker" readonly="readonly" value="<?php echo $today; ?>"/>
+?><input type="hidden" name="datepicker" readonly="readonly" value="<?php echo $today; ?>"/>
             <?php echo $today; ?>
-            To add facility stock data, first do physical stock count
-</b>
+            </b>
             </p></div>
 
-            <div class="col-md-5" id=""></div>
+            <div class="col-md-5" id=""><b>
+<p class="bg-info" id="note">
+
+            To add facility stock data, first do physical stock count
+</b>
+</p>
+            </div>
             
       </div>
 	
             
 	<hr />
-      <div class="row " style="min-height:400px; overflow: auto;"><div class="col-md-12">
+      <div class="row " style="min-height:300px; overflow: auto;"><div class="col-md-12">
 	
 		<?php $att = array("name" => 'myform', 'id' => 'myform');
         echo form_open('stock/add_stock_level', $att);
@@ -118,6 +122,7 @@
 <hr />
 <div class="container-fluid">
 	<div style="float: right">
+	    <?php if(!isset($import)): ?>
 		<a href="<?php echo base_url('reports/create_excel_facility_stock_template') ?>" >
 		<button type="button" class="btn btn-primary">
 			<span class="glyphicon glyphicon-save"></span>download excel template
@@ -131,6 +136,11 @@
 		<button type="button" class="save btn btn-sm btn-success">
 			<span class="glyphicon glyphicon-open"></span>Save
 		</button>
+		<?php else: ?>
+		      <button type="button" class="save btn btn-sm btn-success">
+            <span class="glyphicon glyphicon-open"></span>Finish Importing
+        </button>
+        <?php endif; ?>
 	</div>
 </div>
 
@@ -180,12 +190,13 @@
             var unit_issue=data[i]['unit_issue'];
             var source_of_item=data[i]['unit_issue'];
             var supplier=data[i]['supplier'];
+            var selected_option=data[i]['unit_issue'];
             var cloned_object = $('#facility_stock_table tr:last').clone(true);
             var table_row = cloned_object.attr("table_row");
             var next_table_row = parseInt(table_row) + 1;
             //set the data
             cloned_object.attr("table_row", next_table_row);
-            cloned_object.find(".remove").show();
+            cloned_object.find(".commodity_unit_of_issue").val(selected_option);
             cloned_object.find(".desc").val(commodity_id);
            
             cloned_object.find(".unit_size").attr('value',unit_size);

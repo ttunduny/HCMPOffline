@@ -86,11 +86,21 @@
                             </span><a href="<?php echo base_url().'reports/stock_control' ?>">Stock Control Card</a>
                         </td>
                     </tr>
+
                    <!-- <tr>
                         <td>
                             <span class="glyphicon">
                             </span><a href="<?php echo base_url().'reports/commodities_issue' ?>">Commodities Issued</a>
                         </td>
+                    </tr>-->
+
+
+                   <!--  <tr>
+                       <td>
+
+                            <span class="glyphicon">
+                            </span><a href="<?php echo base_url().'reports/commodities_issue' ?>">Commodities Issued</a>
+                      </td>
                     </tr>-->
 
                     <tr>
@@ -142,4 +152,7 @@
 			});
 	});
 </script>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 801686231c0596a94df7850349770c6af99588ba

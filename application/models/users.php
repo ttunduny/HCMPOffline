@@ -96,6 +96,30 @@ class Users extends Doctrine_Record {
 
 		$update -> execute("UPDATE user SET status=2  WHERE id='$user_id' ;");
 	}
+	
+	public static function get_user_list_facility($facility) {
+
+		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id as district_id,d.district,c.id as county_id,c.county,f.facility_code,
+				f.facility_name,f.owner,f.type,a.id as level_id,f.level,a.level,u.status FROM hcmp.user u 
+				LEFT JOIN hcmp.districts d
+				ON
+				d.id=u.district
+				RIGHT JOIN hcmp.counties c
+				ON
+				c.id=d.county
+				RIGHT JOIN hcmp.facilities f
+				ON
+				u.facility=f.facility_code
+				RIGHT JOIN hcmp.access_level a
+				ON
+				a.id=u.usertype_id
+				where f.facility_code=$facility
+				and a.id != 3
+				")
+				;
+		return $query;
+	}
 
 	public static function get_user_list_district($district) {
 
@@ -172,17 +196,48 @@ public static function get_dpp_details($distirct){
 }
 
 	public static function get_users_district($district) {
-		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users") -> where("district='$district'") ->andWhere("usertype_id !=3")
-		->groupBy("status");
-		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
-		return $result;
+		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+			SELECT count(*) as count FROM hcmp.user u 
+				LEFT JOIN hcmp.districts d
+				ON
+				d.id=u.district
+				RIGHT JOIN hcmp.counties c
+				ON
+				c.id=d.county
+				RIGHT JOIN hcmp.facilities f
+				ON
+				u.facility=f.facility_code
+				RIGHT JOIN hcmp.access_level a
+				ON
+				a.id=u.usertype_id
+				where u.district=$district
+				and a.id != 3
+				group by status
+				")
+				;
+		return $query;
 	}
 	public static function get_users_county($county) {
 
-		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users") -> where("county_id='$county'") ->andWhere("usertype_id !=10")
-		->groupBy("status");
-		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
-		return $result;
+		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+			SELECT count(*) as count FROM hcmp.user u 
+				LEFT JOIN hcmp.districts d
+				ON
+				d.id=u.district
+				RIGHT JOIN hcmp.counties c
+				ON
+				c.id=d.county
+				LEFT JOIN hcmp.facilities f
+				ON
+				u.facility=f.facility_code
+				RIGHT JOIN hcmp.access_level a
+				ON
+				a.id=u.usertype_id
+				where u.county_id=$county
+				and a.id != 10
+				Group by status
+				");
+		return $query;
 	}
 	
 	public static function get_users_count() {
@@ -203,6 +258,7 @@ public static function get_dpp_details($distirct){
 		$result = $query -> execute();
 		return $result;
 	}
+
 	public static function get_users_active_in_facility($facility_code)
 	{
 		$query = Doctrine_Query::create() ->select("*") 
@@ -212,5 +268,33 @@ public static function get_dpp_details($distirct){
 		$drugs = $query -> execute();
 		return $drugs;
 	}
+		public static function getUsers($facility_c){
+		$query = Doctrine_Query::create() -> select("*") -> from("users")->where("facility=$facility_c");
+		$level = $query -> execute();
+		return $level;
+	}
 
+  //////get the county details 
+public static function get_county_details($county_id){
+	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("county_id=$county_id and usertype_id='10' ");
+		$level = $query -> execute();
+		return $level;
 }
+
+
+
+	
+	public static function check_db_activation($phone,$code) {
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("telephone='$phone' AND activation='$code' AND status=0");
+		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result;
+	}
+	
+	public static function check_if_email($test_email) {
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username LIKE '%$test_email%'");
+		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result;
+	}
+	
+	}
+

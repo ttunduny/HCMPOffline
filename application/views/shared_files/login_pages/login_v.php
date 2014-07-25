@@ -90,6 +90,10 @@ if ($popup=="errorpopup") {
   echo  '<div class="alert alert-success alert-dismissable" style="text-align:center;">Your password '.$user_email.' has been changed. Please login.
 <button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>
 ','</div>';
+}elseif ($popup=="activation") {
+  echo  '<div class="alert alert-success alert-dismissable" style="text-align:center;">Your account has been Activated. Please login.
+<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>
+','</div>';
 }
 unset($popup);
 
@@ -110,7 +114,8 @@ unset($popup);
       
                 
  <div class="row">
-        <div class="col-md-3"></div>
+        <div class="col-md-3">
+        	<a href="<?php echo base_url('national/demo_accounts') ?>"><button class="btn btn-primary ">Demo Site Login Credentials </button></div></a>
   <div class="col-md-6"> 
   			<div class="row">
           <div class="col-md-1"></div>
@@ -135,6 +140,7 @@ unset($popup);
    <input type="submit" class="btn btn-primary " name="register" id="register" value="Log in" style="margin-bottom: 3%;">
    
   <a class="" style="margin-left: 2%;" href="<?php echo base_url().'user/forgot_password'?>" id="modalbox">Can't access your account ?</a>
+  <a class="" style="margin-left: 2%;" href="<?php echo base_url().'user/sms_activate'?>" id="modalbox">Activate my Account?</a>
     
     
 </div>
@@ -165,7 +171,9 @@ unset($popup);
     	
 ================================================== -->
 		<script>
-	$(document).ready(function() {});
+	$(document).ready(function() {
+		
+	});
 		
 		</script>
 

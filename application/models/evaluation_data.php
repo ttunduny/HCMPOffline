@@ -206,6 +206,7 @@ and f.district=d.id $where) as total, count(`use_freq`) as level, use_freq from 
 where f.facility_code=f_e.facility_code 
 and f.district=d.id
 $where
+AND UNIX_TIMESTAMP( f.`date_of_activation` ) >0
 group by `use_freq`
 ");	
 		return $query12;

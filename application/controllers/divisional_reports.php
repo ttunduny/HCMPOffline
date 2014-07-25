@@ -23,7 +23,6 @@ class Divisional_Reports extends MY_Controller
 	//used for both the subcounty and county level program reports
 	 public function program_reports()
 	 {
-
 	 	$user_indicator = $district_id = $this -> session -> userdata('user_indicator');
 	 	switch ($user_indicator) 
 	 	{
@@ -215,7 +214,6 @@ public function tb_report(){
 
 	    $data['title'] = "Tuberculosis Report";
 		$data['banner_text'] = "Facility Tuberculosis & Leprosy Commodities";
-
 		$data['graph_data'] = $faciliy_expiry_data;
 		$data['content_view'] = "facility/facility_reports/tb_report";
 		$view = 'shared_files/template/template';
@@ -327,8 +325,14 @@ public function save_tb_data(){
 			'report_date' => $save_time
 			);
 $this->db->insert('tuberculosis_report_info',$data_);
+	echo "Success";
+		exit;
+	// END OF SAVING data
 
-$this->program_reports();
+	foreach ($values as $key => $value) {
+		$no = count($values['table']);
+		
+}
 }
 
 	//For the RH Report

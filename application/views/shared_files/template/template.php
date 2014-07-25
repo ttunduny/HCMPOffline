@@ -1,4 +1,4 @@
-<?php
+<?php session_start();
 if (!$this -> session -> userdata('user_id')) {
   redirect("user");
 }
@@ -110,16 +110,17 @@ border-color: #e7e7e7;
 <?php
 //Retrieve all accessible menus/submenus from the session
 $menus= $this -> session -> userdata('menus');
-$sub_menus= $this -> session -> userdata('sub_menus');
+$sub_menus= $_SESSION["submenus"];
+
 //Loop through all menus to display them in the top panel menu section
-foreach($menus as $menu){?>
+foreach($menus as $menu){ $menu_id=(int)$menu['menu_id'];?> 
 	<li class="" >
             	<a id="sub" href="<?php echo site_url($menu['menu_url']); ?>" class=""><?php echo $menu['menu_text']?></a>            	
             	<ul class="dropdown-menu" style="min-width: 0" >
             	<?php 
             	foreach($sub_menus as $sub_menu){
-            		if ($menu['menu_id']==$sub_menu['menu_id']) {?>						
-		<li><a style="background: whitesmoke;color: black !important" href="<?php echo base_url().$sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
+            		if ($menu_id==(int)$sub_menu['menu_id']) {?>						
+		<li><a style="background: whitesmoke;color: black !important"  href="<?php echo base_url().$sub_menu['submenu_url']?>"><?php echo $sub_menu['submenu_text']?></a></li>
 					<?php	
             	} 
 				}
