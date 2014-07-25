@@ -216,6 +216,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 			$user = $this -> session -> userdata('user_id');
 			$user_action = "order";
 		 	Log::log_user_action($user, $user_action);
+			$this -> hcmp_functions -> send_order_sms();
 			$this -> session -> set_flashdata('system_success_message', "Facility Order No $new_order_no has Been Saved");
 			redirect("reports/order_listing/$order_listing");
 
@@ -342,7 +343,8 @@ for ($row = 1; $row <= $highestRow; $row++){
 			else :
 				$order_listing = 'facility';
 			endif;
-
+			//Test for sms
+			//$this -> hcmp_functions -> order_update_sms($this -> session -> userdata('facility_id'),$status);
 			$this -> session -> set_flashdata('system_success_message', "Facility Order No $order_id has Been $status");
 			redirect("reports/order_listing/$order_listing");
 		endif;

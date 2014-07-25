@@ -900,6 +900,7 @@ for($key=0;$key<count($stock_id);$key++):
          $myobj->save(); 	
 	 endif;
 endfor;
+//$this-> hcmp_functions ->send_stock_update_sms();
 $this->session->set_flashdata('system_success_message', "Facility Stock data has Been Updated"); 
 redirect('reports/facility_stock_data');	
 endif;	

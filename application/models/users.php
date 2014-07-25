@@ -67,7 +67,8 @@ class Users extends Doctrine_Record {
 		$names = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $names;
 	}
-	public static function get_user_info($facility_code) {
+	public static function get_user_info($facility_code) 
+	{
 		$query = Doctrine_Query::create() -> select("DISTINCT usertype_id, telephone,district, facility") -> from("users")->where("status='1' and  facility='$facility_code'");
 		$info = $query -> execute();
 		
@@ -78,6 +79,18 @@ class Users extends Doctrine_Record {
 		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("email='$email' AND status IN(1,2)");
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
+	}
+	public static function get_facility_admins($facility_code) 
+	{
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("facility = $facility_code AND usertype_id IN(2,5) AND status = 1");
+		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result;
+	}
+	public static function getUsers($facility_code){
+		$query = Doctrine_Query::create() -> select("*") -> from("users")->where("facility=$facility_code");
+		$level = $query -> execute();
+		
+		return $level;
 	}
 
 	public static function reset_password($user_id, $new_password_confirm) {
