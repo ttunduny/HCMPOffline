@@ -43,6 +43,7 @@ class Stock extends MY_Controller {
 		$in_to_stock=$in_to_amc=$in_to_issues=$amc_ids=$in_to_orders=array();
 		if(count($old_facility_stock)>0){
 			foreach($old_facility_stock as $old_facility_stock){
+			if(isset($old_facility_stock['new_id'])):
 			$temp=array('commodity_id'=>$old_facility_stock['new_id'],
 			             'facility_code'=>$old_facility_stock['facility_code'],
 						 'unit_size'=>$old_facility_stock['unit_size_'],
@@ -71,11 +72,12 @@ class Stock extends MY_Controller {
 			array_push($in_to_amc,$temp);
 		    $amc_ids=	array_merge($amc_ids,array('new_id'.$old_facility_stock['new_id']=>'new_id'.$old_facility_stock['new_id']));
 			}
+			endif;
 			}
-         $this -> db -> insert_batch('facility_monthly_stock', $in_to_amc);
-        $this -> db -> insert_batch('facility_stocks_temp', $in_to_stock);  
+       $this -> db -> insert_batch('facility_monthly_stock', $in_to_amc);
+       $this -> db -> insert_batch('facility_stocks_temp', $in_to_stock);  
 		}
-
+  
 		if(count($old_facility_issues)){
 		foreach($old_facility_issues as $old_facility_issues){
 			$temp=array('commodity_id'=>$old_facility_issues['new_id'],

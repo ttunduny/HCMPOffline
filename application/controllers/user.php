@@ -2,6 +2,7 @@
 /**
  * @author Kariuki
  */
+ session_start();
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
@@ -96,6 +97,7 @@ class User extends MY_Controller {
 				$menuids[] = $menu_item -> id;
 
 			}
+			
 			$sub_menus = array();
 			foreach ($menuids as $parentid) {
 
@@ -107,11 +109,12 @@ class User extends MY_Controller {
 				}
 
 			}
-
+            	
 			//Save this menus array in the session
-			$this -> session -> set_userdata(array("menus" => $menus));
+			$this -> session -> set_userdata("menus" ,$menus);
 			//Save this sub menus array in the session
-			$this -> session -> set_userdata(array("sub_menus" => $sub_menus));
+		    $_SESSION["submenus"]= $sub_menus; 
+		
 			//creating a new log value
 			Log::update_log_out_action($this -> session -> userdata('user_id'));
 		
@@ -121,7 +124,7 @@ class User extends MY_Controller {
 			$u1->action = $action;
 			$u1->save();
 			
-			redirect('Home');
+			redirect('home');
 		} else {
 			$data['popup'] = "errorpopup";
 			$data['title'] = "Login";
@@ -133,7 +136,7 @@ class User extends MY_Controller {
 
 		Log::update_log_out_action($this -> session -> userdata('user_id'));
 
-		$this -> session -> sess_destroy();
+		$this -> session -> sess_destroy(); session_destroy();
 		$data['title'] = "Login";
 		$this -> load -> view("shared_files/login_pages/login_v", $data);
 	}
