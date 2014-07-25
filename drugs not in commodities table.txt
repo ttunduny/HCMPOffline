@@ -1,0 +1,8 @@
+Praziquantel tab 600mg				PM03PRA001 	Assigned ID 271
+Sulfadoxine/pyrimethamine tab 500mg/25mg	PM03SPY001	Assigned ID 272
+Multivitamin syrup				PM14MUL001	Assigned ID 273
+Malaria Rapid Diagnostic Test Kit		null		Assigned ID 274
+Daily Activity Register				NS01CLL041	Assigned ID 275
+Lignocaine Hydrochloride Injection -2%		PM07LG001	Assigned ID 276
+Blood Grouping Antisera (ANT-D)			N01BGS003	Assigned ID 277
+Multivitamin Tablets				pm14mul002	Assigned ID 278

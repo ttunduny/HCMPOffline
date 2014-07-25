@@ -41,7 +41,11 @@ endforeach;
 <option value="packs">Packs</option>
 <option value="units">Units</option>
 <option value="ksh">KSH</option>
+<<<<<<< HEAD
 <option value="mos">Month of Stock</option>
+=======
+<option value="ksh">Months Of Stock</option>
+>>>>>>> 7b29729cba9f15aa56f6dfbe46633739be8baa13
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success category-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
@@ -166,8 +170,8 @@ var drop_down='';
 		$(".county-filter").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+
-$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+'/table_data';	
-		ajax_request_replace_div_content(url_,'.graph_content');
+$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+ '/graph_data';	
+		ajax_request_replace_div_content(url_,'.graph_content');	
           });
           
 	     $(".subcounty-filter").button().click(function(e) {
