@@ -145,6 +145,48 @@ $group_by ");
 		$stocks= $query -> execute();
 		return $stocks;
 	}	
+		//Used for the SMS notificatin
+		//Gets the total number of potential expiries in the facility
+		public static function get_potential_expiries_sms()
+		{
+			$expiries = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+			SELECT fs.facility_code, f.facility_name, cs.source_name, COUNT(DISTINCT(fs.commodity_id)) as total
+			FROM facility_stocks fs, facilities f, commodity_source cs, commodities c
+			WHERE expiry_date  BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 3 MONTH) 
+			AND fs.facility_code = f.facility_code
+			AND cs.id = fs.source_of_commodity
+			and current_balance>0
+			GROUP BY facility_code");
+			
+			return $expiries;
+		}
+		public static function get_stock_outs_sms($facility_code)
+		{
+			$and_data .=(isset($facility_code)&&($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;
+			$stock_outs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+			select 
+			    fs.date_added, 
+				fs.commodity_id,
+				fs.facility_code,
+			    f.facility_name,
+			    c.commodity_name,
+				COUNT(DISTINCT (fs.commodity_id)) as total
+			   FROM
+			    facility_stocks fs,
+			    facilities f,
+			    commodity_source cs,
+			    commodities c
+			where
+			    fs.current_balance = 0 
+					and fs.status = 1
+			        and fs.initial_quantity > 0
+					AND fs.facility_code = f.facility_code
+					$and_data
+			group by facility_code
+			order by f.facility_name");
+			
+			return $stock_outs;
+		}
 
 	public static function specify_period_potential_expiry($facility_code,$interval){
 		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks")
