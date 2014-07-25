@@ -8,7 +8,6 @@
 	}
 	<?php 
  	$link = base_url('reports/get_facility_report_pdf/'.'1101'.'/'.$facility_code.'/expiries');	
-// 	$link_excel = base_url('reports/create_excel_facility_program_report/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/TB');
 
 	 ?>
 </style>

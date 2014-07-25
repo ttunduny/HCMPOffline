@@ -129,7 +129,8 @@ class Log extends Doctrine_Record {
 		 $and_data .=(isset($county_id)&& ($county_id>0)) ?"AND u.county_id = $county_id" : null;
 	     $and_data .=(isset($district_id)&& ($district_id>0)) ?" AND u.district = $district_id" : null;
 	     
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT 
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+			SELECT 
 			ifnull(COUNT(DISTINCT u.facility ),0) AS total
 			FROM log l, user u
 			WHERE u.id = l.user_id

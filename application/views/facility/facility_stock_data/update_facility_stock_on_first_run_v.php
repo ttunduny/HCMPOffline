@@ -122,6 +122,7 @@
 <hr />
 <div class="container-fluid">
 	<div style="float: right">
+	    <?php if(!isset($import)): ?>
 		<a href="<?php echo base_url('reports/create_excel_facility_stock_template') ?>" >
 		<button type="button" class="btn btn-primary">
 			<span class="glyphicon glyphicon-save"></span>download excel template
@@ -135,6 +136,11 @@
 		<button type="button" class="save btn btn-sm btn-success">
 			<span class="glyphicon glyphicon-open"></span>Save
 		</button>
+		<?php else: ?>
+		      <button type="button" class="save btn btn-sm btn-success">
+            <span class="glyphicon glyphicon-open"></span>Finish Importing
+        </button>
+        <?php endif; ?>
 	</div>
 </div>
 

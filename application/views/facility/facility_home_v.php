@@ -1,5 +1,15 @@
 <div class="container" style="width: 96%; margin: auto;">
 <div class="row">
+        <?php if($facility_dashboard_notifications['stocks_from_v1']>0): ?>
+        <div style="height:auto; margin-bottom: 2px" class="warning message col-md-4" id="">        
+        <h5> 0) Import facility stock from version 1 </h5> 
+            <p>
+            <a class="link" href="<?php echo base_url('stock/import') ?>">
+                <span class="badge"><?php 
+                echo $facility_dashboard_notifications['stocks_from_v1'];?></span>facility stock can be imported to version 2</a> 
+            </p>
+        </div>
+        <?php else: //Import facility stock from version 1?>
 	<div class="col-md-4">
 		<div class="row">			
 			<div class="col-md-12">
@@ -28,16 +38,7 @@
 			 </div>
 		  <?php endif; //donations_pending?>
    <?php if($facility_dashboard_notifications['facility_stock_count']==0): ?>
-   	<?php if($facility_dashboard_notifications['stocks_from_v1']>0): ?>
-   	    <div style="height:auto; margin-bottom: 2px" class="warning message " id="">      	
-        <h5> 0) Import facility stock from version 1 </h5> 
-        	<p>
-			<a class="link" href="<?php echo base_url('stock/import') ?>">
-				<span class="badge"><?php 
-				echo $facility_dashboard_notifications['stocks_from_v1'];?></span>facility stock can be imported to version 2</a> 
-			</p>
-        </div>
-        <?php endif; //Import facility stock from version 1?>
+
       	<div style="height:auto; margin-bottom: 2px" class="warning message " id="">      	
         <h5> 1) Set up facility stock</h5> 
         	<p>
@@ -131,9 +132,14 @@
         	<a href="<?php echo base_url('issues/confirm_external_issue')?>"><h5>Receive Commodities From Other Sources</h5></a>
         	 
         </div> 
-        <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="order message " id="order_tab">
+         <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="order message " id="order_tab">
             <h5>Orders</h5>
         </div>
+         <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
+            <a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>KEMSA</h5></a>
+            <a href=""><h5>MEDS</h5></a> 
+        </div>  
+
             
          <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="delivery message" id = "update_order">
         	<h5>Update Order Delivery</h5> 
@@ -164,7 +170,8 @@
         <div style="/*border: 1px solid #036;*/ ;" id="container"></div>
       </div>
     </div>
-  </div>  	
+  </div> 
+  <?php endif; //donations_pending?> 	
 	</div>	
 	
 </div>

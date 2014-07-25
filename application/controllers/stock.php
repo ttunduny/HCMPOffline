@@ -29,21 +29,31 @@ class Stock extends MY_Controller {
 */	
 	public function import($facility_code=null){
 		$facility_code=isset($facility_code)? $facility_code : $this -> session -> userdata('facility_id'); 
+		$reset_facility_update_stock_first_temp = Doctrine_Manager::getInstance()->getCurrentConnection();
+	    $reset_facility_update_stock_first_temp->execute("DELETE FROM `facility_stocks_temp` WHERE  facility_code=$facility_code; ");
 		
 		$old_facility_stock=facility_stocks::import_stock_from_v1($facility_code);
-		$in_to_stock=$in_to_amc=$amc_ids=array();
+		$old_facility_issues=facility_stocks::import_issues_from_v1($facility_code);
+        $old_facility_orders=Doctrine_Manager::getInstance()->getCurrentConnection()
+        ->fetchAll("select 
+        *
+        from
+        kemsa2.ordertbl
+        where ordertbl.facilityCode = $facility_code");;
+		$in_to_stock=$in_to_amc=$in_to_issues=$amc_ids=$in_to_orders=array();
 		if(count($old_facility_stock)>0){
 			foreach($old_facility_stock as $old_facility_stock){
+			if(isset($old_facility_stock['new_id'])):
 			$temp=array('commodity_id'=>$old_facility_stock['new_id'],
 			             'facility_code'=>$old_facility_stock['facility_code'],
 						 'unit_size'=>$old_facility_stock['unit_size_'],
 						 'batch_no'=>($old_facility_stock['batch_no']=='') ? 'N/A': $old_facility_stock['batch_no'],
 						 'manu'=>($old_facility_stock['manufacture']=='') ? 'N/A': $old_facility_stock['manufacture'],
 						 'expiry_date'=>date('d My',strtotime($old_facility_stock['expiry_date'])),
-						 'stock_level'=>$old_facility_stock['balance'],
-						 'total_unit_count'=>$old_facility_stock['balance'],
+						 'stock_level'=>($old_facility_stock['balance']<0? 0: $old_facility_stock['balance']),
+						 'total_unit_count'=>$old_facility_stock['new_total_units'],
 						 'unit_issue'=>'Unit_Size',
-						 'total_units'=>$old_facility_stock['new_total_units'],
+						 'total_units'=>($old_facility_stock['balance']<0? 0: $old_facility_stock['balance']),
 						 'source_of_item'=>1,
 						 'supplier'=>'KEMSA');	
 			array_push($in_to_stock,$temp);
@@ -62,11 +72,101 @@ class Stock extends MY_Controller {
 			array_push($in_to_amc,$temp);
 		    $amc_ids=	array_merge($amc_ids,array('new_id'.$old_facility_stock['new_id']=>'new_id'.$old_facility_stock['new_id']));
 			}
+			endif;
 			}
-		$this -> db -> insert_batch('facility_monthly_stock', $in_to_amc);
-		$this -> db -> insert_batch('facility_stocks_temp', $in_to_stock);
+       $this -> db -> insert_batch('facility_monthly_stock', $in_to_amc);
+       $this -> db -> insert_batch('facility_stocks_temp', $in_to_stock);  
 		}
-   redirect("stock/facility_stock_first_run/first_run");
+  
+		if(count($old_facility_issues)){
+		foreach($old_facility_issues as $old_facility_issues){
+			$temp=array('commodity_id'=>$old_facility_issues['new_id'],
+						 's11_No'=>$old_facility_issues['s11_No'],
+			             'facility_code'=>$old_facility_issues['facility_code'],
+			             'batch_no'=>isset($old_facility_issues['batch_no']) ?$old_facility_issues['batch_no'] :'N/A',
+						 'expiry_date'=>strtotime($old_facility_issues['expiry_date'])? $old_facility_issues['expiry_date']: "N/A",
+						 'balance_as_of'=>$old_facility_issues['balanceAsof'],
+						 'qty_issued'=>$old_facility_issues['qty_issued'],
+						 'date_issued'=>$old_facility_issues['date_issued'],
+						 'issued_to'=>$old_facility_issues['issued_to'],
+						 'created_at'=>$old_facility_issues['created_at'],
+						 'issued_by'=>$old_facility_issues['issued_by'],
+						 'status'=>2
+						 );	
+		array_push($in_to_issues,$temp);
+		}
+	    $this -> db -> insert_batch('facility_issues', $in_to_issues);
+		}
+        if(count($old_facility_orders)>0){
+         foreach($old_facility_orders as $old_facility_orders){
+             $order_status=$old_facility_orders["orderStatus"];
+             $name=$old_facility_orders["reciever_name"];
+             $new_order_id=Doctrine_Manager::getInstance()->getCurrentConnection()
+        ->fetchAll("select 
+        *
+        from
+        hcmp.facility_order_status
+        where facility_order_status.status_desc like '%$order_status%'");
+         $new_name_id=Doctrine_Manager::getInstance()->getCurrentConnection()
+        ->fetchAll("select 
+        *
+        from
+        kemsa2.user
+        where concat (user.fname,' ',user.lname) like '%$name%'");
+          $temp=array('order_date'=>$old_facility_orders['orderDate'],
+                         'approval_date'=>$old_facility_orders['approvalDate'],
+                         'dispatch_date'=>$old_facility_orders['dispatchDate'],
+                         'deliver_date'=>$old_facility_orders['deliverDate'],
+                         'dispatch_update_date'=>$old_facility_orders['dispatch_update_date'],
+                         'facility_code'=>$old_facility_orders['facilityCode'],
+                         'order_no'=>$old_facility_orders['order_no'],
+                         'workload'=>$old_facility_orders['workload'],
+                         'bed_capacity'=>$old_facility_orders['bedcapacity'],
+                         'kemsa_order_id'=>$old_facility_orders['kemsaOrderid'],
+                         'reciever_id'=>count($new_name_id)>0?$new_name_id[0]['id'] :NULL,
+                         'drawing_rights'=>$old_facility_orders['drawing_rights'],
+                         'ordered_by'=>$old_facility_orders['orderby'],
+                         'approved_by'=>$old_facility_orders['approveby'],
+                         'dispatch_by'=>$old_facility_orders['dispatchby'],
+                         'warehouse'=>$old_facility_orders['warehouse'],
+                         'source'=>1,
+                         'deliver_total'=>$old_facility_orders['total_delivered'],
+                         'status'=> $new_order_id[0]['id'],
+                         'order_total'=>$old_facility_orders["orderTotal"]
+                         ); 
+         
+                    $this -> db -> insert('facility_orders', $temp);
+                    $new_order_no = $this -> db -> insert_id();
+                    
+              $order_details_match=Doctrine_Manager::getInstance()->getCurrentConnection()
+        ->fetchAll("select 
+         *
+        from
+         kemsa2.orderdetails
+        left join
+        hcmp.drug_commodity_map ON drug_commodity_map.old_id = orderdetails.kemsa_code
+        where orderdetails.orderNumber =".$old_facility_orders['id']);
+        
+        foreach($order_details_match as $order_details_match){
+          $temp_array = array("commodity_id" => $order_details_match['new_id'],
+          'quantity_ordered_pack' => round($order_details_match['quantityOrdered']), 
+          'quantity_ordered_unit' => $order_details_match['quantityOrdered']*$order_details_match['new_total_units'], 
+          'quantity_recieved' => $order_details_match['quantityRecieved'], 'price' => $order_details_match['new_price'], 
+          'o_balance' => $order_details_match['o_balance'], 't_receipts' => $order_details_match['t_receipts'],
+          't_issues' => $order_details_match['t_issues'], 'adjustpve' => 0,
+           'adjustnve' => 0, 'losses' => $order_details_match['losses'], 
+           'days' => $order_details_match['days'], 'c_stock' => $order_details_match['c_stock'], 
+           'comment' => $order_details_match['comment'], 's_quantity' => $order_details_match['s_quantity'], 
+           'amc' => $order_details_match['historical_consumption'], 'order_number_id' => $new_order_no);
+        array_push($in_to_orders,$temp_array);  
+        }
+      
+         } 
+       $this -> db -> insert_batch('facility_order_details', $in_to_orders); 
+        }
+
+		
+        redirect("stock/facility_stock_first_run/first_run/import");
 	}
 /*
 |--------------------------------------------------------------------------
@@ -122,7 +222,7 @@ endif;
 endif;
      }
 
-	 public function facility_stock_first_run($checker){
+	 public function facility_stock_first_run($checker,$import=null){
 	 	 $facility_code=$this -> session -> userdata('facility_id'); 
 	 	$which_view_to_load=($checker=='first_run')?"facility/facility_stock_data/update_facility_stock_on_first_run_v" :
 		"facility/facility_stock_data/update_facility_stock_v";
@@ -131,6 +231,7 @@ endif;
 		$data['banner_text'] = "Update Stock Level";
 		$data['commodities'] = Commodities::get_facility_commodities($facility_code);
 		$data['commodity_source']=commodity_source::get_all();
+        $data['import']=$import;
 		$this -> load -> view("shared_files/template/template", $data);	
 		
 	}
@@ -312,7 +413,7 @@ if($this->input->post('commodity_id')):
 			'current_balance'=>$total_unit_count[$i],
 			'source_of_commodity'=>$source_of_item[$i],
 			'date_added'=>$date_of_entry,
-			'status' =>(strtotime(str_replace(",", " ",$expiry_date[$i]))>strtotime('now')) ? 1 : 2 );
+			'status' =>(strtotime(str_replace(",", " ",$expiry_date[$i]))>strtotime('now') || $total_unit_count[$i]>0 ) ? 1 : 2 );
 			
              //get the closing stock of the given item  
             $facility_stock_=facility_stocks::get_facility_commodity_total($facility_code,$commodity_id[$i], $date_of_entry)->toArray();
@@ -801,6 +902,7 @@ for($key=0;$key<count($stock_id);$key++):
          $myobj->save(); 	
 	 endif;
 endfor;
+//$this-> hcmp_functions ->send_stock_update_sms();
 $this->session->set_flashdata('system_success_message', "Facility Stock data has Been Updated"); 
 redirect('reports/facility_stock_data');	
 endif;	

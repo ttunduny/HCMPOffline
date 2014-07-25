@@ -152,12 +152,12 @@ for ($row = 1; $row <= $highestRow; $row++){
 		$data['order_details'] = $order_data;
 		$data['facility_order'] = facility_order_details::get_order_details($order_id);
 		$data['facility_commodity_list'] = Commodities::get_facility_commodities($order_data[0]['facility_code']);
-		$this -> load -> view('shared_files/template/template', $data);
-	}
+		$this -> load -> view('shared_files/template/template' , $data);
+			}
 
-	public function facility_new_order() {
-		//security check
-		if ($this -> input -> post('commodity_id')) :
+			public function facility_new_order() {
+			//security check
+			if ($this -> input -> post('commodity_id')) :
 			$this -> load -> database();
 			$data_array = array();
 			$commodity_id = $this -> input -> post('commodity_id');
@@ -188,42 +188,72 @@ for ($row = 1; $row <= $highestRow; $row++){
 			$number_of_id = count($commodity_id);
 
 			for ($i = 0; $i < $number_of_id; $i++) {
-				if ($i == 0) {
-					$order_details = array("workload" => $workload, 'bed_capacity' => $bed_capacity, 'order_total' => $order_total, 'order_no' => $order_no, 'order_date' => $order_date, 'facility_code' => $facility_code, 'ordered_by' => $user_id, 'drawing_rights' => $drawing_rights);
-					$this -> db -> insert('facility_orders', $order_details);
-					$new_order_no = $this -> db -> insert_id();
-				}
-				$temp_array = array("commodity_id" => $commodity_id[$i], 'quantity_ordered_pack' => $quantity_ordered_pack[$i], 'quantity_ordered_unit' => $quantity_ordered_pack[$i], 'quantity_recieved' => 0, 'price' => $price[$i], 'o_balance' => $o_balance[$i], 't_receipts' => $t_receipts[$i], 't_issues' => $t_issues[$i], 'adjustpve' => $adjustpve[$i], 'adjustnve' => $adjustnve[$i], 'losses' => $losses[$i], 'days' => $days[$i], 'c_stock' => $c_stock[$i], 'comment' => $comment[$i], 's_quantity' => $s_quantity[$i], 'amc' => $amc[0], 'order_number_id' => $new_order_no);
-				//create the array to push to the db
-				array_push($data_array, $temp_array);
+			if ($i == 0) {
+			$order_details = array("workload" => $workload, 'bed_capacity' => $bed_capacity, 'order_total' => $order_total, 'order_no' => $order_no, 'order_date' => $order_date, 'facility_code' => $facility_code, 'ordered_by' => $user_id, 'drawing_rights' => $drawing_rights);
+			$this -> db -> insert('facility_orders', $order_details);
+			$new_order_no = $this -> db -> insert_id();
+			}
+			$temp_array = array("commodity_id" => $commodity_id[$i], 'quantity_ordered_pack' => $quantity_ordered_pack[$i], 'quantity_ordered_unit' => $quantity_ordered_pack[$i], 'quantity_recieved' => 0, 'price' => $price[$i], 'o_balance' => $o_balance[$i], 't_receipts' => $t_receipts[$i], 't_issues' => $t_issues[$i], 'adjustpve' => $adjustpve[$i], 'adjustnve' => $adjustnve[$i], 'losses' => $losses[$i], 'days' => $days[$i], 'c_stock' => $c_stock[$i], 'comment' => $comment[$i], 's_quantity' => $s_quantity[$i], 'amc' => $amc[0], 'order_number_id' => $new_order_no);
+			//create the array to push to the db
+			array_push($data_array, $temp_array);
 			}// insert the data here
 			$this -> db -> insert_batch('facility_order_details', $data_array);
 			if ($this -> session -> userdata('user_indicator') == 'district') :
-				$order_listing = 'subcounty';
+			$order_listing = 'subcounty';
 			elseif ($this -> session -> userdata('user_indicator') == 'county') :
-				$order_listing = 'county';
+			$order_listing = 'county';
 			else :
-				$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($facility_code);
-				$facility_name = $myobj -> facility_name;
-				// get the order form details here
-				//create the pdf here
-				$pdf_body = $this -> create_order_pdf_template($new_order_no);
-				$file_name = $facility_name . '_facility_order_no_' . $new_order_no . "_date_created_" . date('d-m-y');
-				$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
-				$this -> hcmp_functions -> create_pdf($pdf_data);
-				$order_listing = 'facility';
+			$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($facility_code);
+			$facility_name = $myobj -> facility_name;
+			// get the order form details here
+			//create the pdf here
+			$pdf_body = $this -> create_order_pdf_template($new_order_no);
+			$file_name = $facility_name . '_facility_order_no_' . $new_order_no . "_date_created_" . date('d-m-y');
+			$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
+			$this -> hcmp_functions -> create_pdf($pdf_data);// create pdf
+			$this -> hcmp_functions -> clone_excel_order_template($new_order_no,'save_file',$file_name);//create excel
+			$order_listing = 'facility';
+			$message_1='
+			<br>
+			Please find the Order Made by '.$facility_name.' below for approval.
+			<br>
+			You may log in to the HCMP system to approve it.<a href="http://health-cmp.or.ke/" target="_blank">Click here</a>
+			<br>
+			<br>
+			<br>
+			';
+			$subject='Pending Approval Order Report For '.$facility_name;
+
+			$attach_file1='./pdf/'.$file_name.'.pdf';
+			$attach_file2="./print_docs/excel/excel_files/".$file_name.'.xlsx';
+
+			$message=$message_1.$pdf_body;
+
+			$response= $this->hcmp_functions->send_order_submission_email($message,$subject,$attach_file1."(more)".$attach_file2,null);
+            
+			if($response){
+			delete_files($attach_file1);
+            delete_files($attach_file2);
+			}
+			else{
+
+			}
+
 			endif;
 			$user = $this -> session -> userdata('user_id');
 			$user_action = "order";
+
 		 	Log::log_user_action($user, $user_action);
+			//$this -> hcmp_functions -> send_order_sms();
+
 			$this -> session -> set_flashdata('system_success_message', "Facility Order No $new_order_no has Been Saved");
 			redirect("reports/order_listing/$order_listing");
 
-		endif;
+			endif;
 
-	}
+			}
 
-	public function update_facility_new_order() {
+			public function update_facility_new_order() {
 		//security check
 		if ($this -> input -> post('commodity_id')) :
 			$this -> load -> database();
@@ -259,7 +289,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 			//$user_id=$this->session->userdata('user_id');
 			$order_date = date('y-m-d');
 			$number_of_id = count($commodity_id);
-
+            $subject=$file_name=$title=$info=$attach_file=null;
 			for ($i = 0; $i < $number_of_id; $i++) {
 
 			$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("INSERT INTO facility_order_details (  `id`,
@@ -318,23 +348,52 @@ for ($row = 1; $row <= $highestRow; $row++){
 			$myobj -> workload = $workload;
 			$myobj -> bed_capacity = $bed_capacity;
 			$myobj -> order_no = $order_no;
-			$myobj -> order_total = $order_total;
+			$myobj -> order_total = $order_total;						
+			$facility_code=$myobj ->facility_code;
+			
+
+			$myobj1 = Doctrine::getTable('Facilities') -> findOneByfacility_code($facility_code);
+			$facility_name = $myobj1 -> facility_name;
+			$pdf_body = $this -> create_order_pdf_template($order_id);
+			
+			$file_name = $facility_name . '_facility_order_no_' . $order_id. "_date_created_" . date('d-m-y');
+			
+			$pdf_data = array("pdf_title" => "Order Report For $facility_name", 
+			'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
+			
+			$this -> hcmp_functions -> create_pdf($pdf_data);// create pdf
+			$this -> hcmp_functions -> clone_excel_order_template($order_id,'save_file',$file_name);//create excel
+			
+			$attach_file1='./pdf/'.$file_name.'.pdf';
+			$attach_file2="./print_docs/excel/excel_files/".$file_name.'.xlsx';
+			
 			if ($rejected == 1) {
 				$myobj -> status = 1;
 				$status = "Updated";
+				$subject='Updated Order Report Pending Approval For '.$facility_name;				
+
+				$attach_file='./pdf/'.$file_name.'.pdf';
 			}
 			if ($rejected_admin == 1) {
 				$myobj -> status = 3;
 				$status = "Rejected";
+				$subject='Rejected Order Report For '.$facility_name;
+				$info='<br> Note the order for  '.$facility_name.' Has been rejected by '.$approve_name1.' '.$approve_name2.'.
+				<br>
+		  		Find the attached order, correct it
+				<br>';
+		
 			}
 			if ($approved_admin == 1) {
 				$myobj -> status = 2;
 				$myobj -> approval_date = date('y-m-d');
 				$myobj -> approved_by = $this -> session -> userdata('user_id');
 				$status = "Approved";
+				$subject='Approved Order Report For '.$facility_name;
+			
 			}
-			$myobj -> save();
-
+			
+           $myobj -> save();
 			if ($this -> session -> userdata('user_indicator') == 'district') :
 				$order_listing = 'subcounty';
 			elseif ($this -> session -> userdata('user_indicator') == 'county') :
@@ -342,9 +401,24 @@ for ($row = 1; $row <= $highestRow; $row++){
 			else :
 				$order_listing = 'facility';
 			endif;
+			
+          $message="<br>Please find the $status Order for  ".$facility_name.'
+		  <br>'.$info.$pdf_body ;
 
-			$this -> session -> set_flashdata('system_success_message', "Facility Order No $order_id has Been $status");
-			redirect("reports/order_listing/$order_listing");
+		$response= $this->hcmp_functions->send_order_approval_email($message,$subject,
+		$attach_file1."(more)".$attach_file2,$facility_code,$status);
+		if($response){
+			delete_files($attach_file1);
+            delete_files($attach_file2);
+			}
+			else{
+
+			}  
+			//Test for sms
+			//$this -> hcmp_functions -> order_update_sms($this -> session -> userdata('facility_id'),$status);
+		$this -> session -> set_flashdata('system_success_message', "Facility Order No $order_id has Been $status");
+		redirect("reports/order_listing/$order_listing");
+
 		endif;
 
 	}
@@ -411,8 +485,8 @@ for ($row = 1; $row <= $highestRow; $row++){
 			$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'download', 'file_name' => $file_name);
 
 			$this -> hcmp_functions -> create_pdf($pdf_data);
-		endif;
-		redirect();
+			endif;
+			redirect();
 	}
 	public function create_order_pdf_template($order_no) {
 		$from_order_table = facility_orders::get_order_($order_no);

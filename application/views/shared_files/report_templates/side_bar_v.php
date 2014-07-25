@@ -24,8 +24,7 @@
                             <a href="<?php echo base_url().'reports/expiry_tracking' ?>">Expiry Tracking</a> <span class="label label-info"></span>
                         </td>
                     </tr>
-                    
-                    
+
                 </table>
 
             </div>
@@ -152,3 +151,4 @@
 			});
 	});
 </script>
+
