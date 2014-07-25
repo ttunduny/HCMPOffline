@@ -2120,7 +2120,15 @@ class Reports extends MY_Controller
 		}
 			  else{
 				 $facility_name = null;
-			 }
+			  }	 
+
+			  if((!isset($district_id)) && (!isset($facility_code)) && (!isset($option)))
+		{
+			$county_id = $this -> session -> userdata('county_id');
+			$county_name = counties::get_county_name($county_id);
+			$title .=' '.$county_name['county']." County ";
+			
+		}
          	$graph_data = array();
        		$graph_data = array_merge($graph_data, array("graph_id" => 'graph_default'));
 
@@ -2193,6 +2201,14 @@ class Reports extends MY_Controller
 			  else{
 				 $facility_name = null;
 			 }
+			  
+			 	 if((!isset($district_id)) && (!isset($facility_code)) && (!isset($division_id)) && (!isset($option)))
+		{
+			$county_id = $this -> session -> userdata('county_id');
+			$county_name = counties::get_county_name($county_id);
+			$title .=' '.$county_name['county']." County ";
+			
+		}
 		
 
 
@@ -2253,7 +2269,17 @@ class Reports extends MY_Controller
 	 	$facility_code = ($facility_code=="NULL") ? null :$facility_code;
 		$option = ($option=="NULL" || $option=="null") ? null :$option;	
      	//setting up the data
-  
+     	
+     		// if((!isset($district_id)) && (!isset($facility_code)) && (!isset($option)))
+		// {
+// 			
+			// $this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id);
+		// }
+// 		
+		// elseif((!isset($district_id)) && (!isset($facility_code)) && (!isset($option)) && (!isset($commodity_id))) {
+			// $this->get_county_stock_level_new($commodity_id, $category_id, $district_id, $facility_code, $option);
+		// }
+		
          if($option=="mos"){
         	
         	 $this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id);
@@ -2332,7 +2358,7 @@ class Reports extends MY_Controller
 		 
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		endif;
-		
+			
 	}
 public function get_division_commodities_data($district_id = null, $facility_code=null, $division_id = null, $option = null,$report_type=null) 
      	{
@@ -2343,6 +2369,14 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 	 	$option = ($option=="NULL") ? null :$option;
 		$facility_code = ($facility_code=="NULL") ? null :$facility_code;
 		$option = ($option=="NULL" || $option=="null") ? null :$option;	
+		
+		// if((!isset($district_id)) && (!isset($facility_code)) && (!isset($division_id)) && (!isset($option)))
+		// {
+// 			
+			// $this->division_commodities_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id,$division_id);
+		// }
+// 		
+		// else{
 
      	//setting up the data
         if($option=="mos"){
@@ -2422,6 +2456,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		 
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		endif;
+		
 	}
         public function consumption_data_dashboard() {
 
