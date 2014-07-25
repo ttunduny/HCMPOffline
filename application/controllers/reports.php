@@ -1866,9 +1866,7 @@ class Reports extends MY_Controller
 
 		$html_body .= '</tbody></table></ol>';
 
-
-	}elseif($report_type == "expiries")
-	{
+	}elseif($report_type == "expiries"){
 
 			// seth
 		$years = array();
@@ -2567,23 +2565,22 @@ $month = $data['expiry_month'];
 
 
 
-	public function load_stock_level_graph($district_id=NULL, $county_id=NULL, $facility_code=NULL,$commodity_id=null,$report_type = null)
+	public function load_stock_level_graph($district_id=NULL, $county_id=NULL, $facility_code=NULL,$commodity_id=null)
 	{
-			$county_id=$county_id=='NULL'? 
-			($this -> session -> userdata('user_indicator') == 'county' ? 
-			$this -> session -> userdata('county_id'): null) :$county_id;
-			$district_id=$district_id=='NULL'? 
-			($this -> session -> userdata('user_indicator') == 'district' ? 
-			$this -> session -> userdata('district_id'): null) :$district_id;
-			$facility_code=$facility_code=='NULL'? 
-			($this -> session -> userdata('user_indicator') == 'facility' ? 
-			$this -> session -> userdata('facility_code'): null) :$facility_code;
-            $commodity_id=$commodity_id=='NULL'? null: $commodity_id;
+		$county_id=$county_id=='NULL'? 
+		($this -> session -> userdata('user_indicator') == 'county' ? 
+		$this -> session -> userdata('county_id'): null) :$county_id;
+		$district_id=$district_id=='NULL'? 
+		($this -> session -> userdata('user_indicator') == 'district' ? 
+		$this -> session -> userdata('district_id'): null) :$district_id;
+		$facility_code=$facility_code=='NULL'? 
+		($this -> session -> userdata('user_indicator') == 'facility' ? 
+		$this -> session -> userdata('facility_code'): null) :$facility_code;
+        $commodity_id = $commodity_id=='NULL'? null: $commodity_id;
 
-         	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id);
-			$month = date('F Y');
+     	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id);
+		$month = date('F Y');
 
-			
 			if (isset($commodity_id)){
 				$commodity_name = Commodities::get_details($commodity_id)->toArray();
 				$title .=' '.@$commodity_name[0]['commodity_name'];
@@ -2651,6 +2648,7 @@ $month = $data['expiry_month'];
 		    $graph_data = array_merge($graph_data,array("graph_type"=>$graph_type));
 		    $graph_data = array_merge($graph_data,array("graph_yaxis_title"=>"Months of Stock"));
 		    $graph_data = array_merge($graph_data, array("graph_categories" => array()));
+
 			$graph_data = array_merge($graph_data, array("series_data" => array("Stock" =>array())));	
 			foreach($final_graph_data as $final_graph_data_):
 				$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'], array($final_graph_data_['commodity_name']));
@@ -2717,7 +2715,6 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 				 $facility_name = null;
 			 }
 
-			  
 			 	 if((!isset($district_id)) && (!isset($facility_code)) && (!isset($division_id)) && (!isset($option)))
 		{
 			$county_id = $this -> session -> userdata('county_id');
@@ -2810,9 +2807,6 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 	 	$facility_code = ($facility_code=="NULL") ? null :$facility_code;
 		$option = ($option=="NULL" || $option=="null") ? null :$option;	
 
-
-     	//setting up the data
-
 		$county_id = $this -> session -> userdata('county_id');
 		$county_name = counties::get_county_name($county_id);
 		$category_data = $series_data = $series_data_ =  $graph_data = $data =array();
@@ -2892,8 +2886,8 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 			
 	}
 
-public function get_division_commodities_data($district_id = null, $facility_code=null, $division_id = null, $option = null,$report_type=null) 
 
+public function get_division_commodities_data($district_id = null, $facility_code=null, $division_id = null, $option = null,$report_type=null) 
      	{
      	//reset the values here
 

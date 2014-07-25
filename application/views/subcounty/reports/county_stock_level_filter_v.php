@@ -42,10 +42,17 @@ endforeach;
 <option value="units">Units</option>
 <option value="ksh">KSH</option>
 <<<<<<< HEAD
+<<<<<<< HEAD
 <option value="ksh">Months Of Stock</option>
 =======
 <option value="mos">Month of Stock</option>
 >>>>>>> b70638aaec775bfbca82dc647ec89f06d204e8c1
+=======
+<option value="mos">Month of Stock</option>
+=======
+<option value="ksh">Months Of Stock</option>
+>>>>>>> 7b29729cba9f15aa56f6dfbe46633739be8baa13
+>>>>>>> 16ea17dc5001583e5cbc4a5779f470794b82577f
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success category-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
