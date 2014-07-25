@@ -587,7 +587,7 @@ $("#district_name").change(function() {
     }
     else{
 var drop_down='';
- var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+$("#district_name").val();
+ var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json/"+$("#district_name").val();
   $.getJSON( hcmp_facility_api ,function( json ) {
      $("#facility_id").html('<option value="NULL" selected="selected">Select Facility</option>');
       $.each(json, function( key, val ) {
@@ -608,7 +608,7 @@ var drop_down='';
     }
     else{
 var drop_down='';
- var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+$("#district_name_edit").val();
+ var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json/"+$("#district_name_edit").val();
   $.getJSON( hcmp_facility_api ,function( json ) {
      $("#facility_id_edit").html('<option value="NULL" selected="selected">Select Facility</option>');
       $.each(json, function( key, val ) {
@@ -706,11 +706,13 @@ $('#facility_id_edit_district').val(facility_id)
 						
 						 $('.err').html(data.msg);
 							$( '.err' ).addClass( "alert-danger alert-dismissable" );
+							$(".edit_user,#create_new").attr("disabled", "disabled");
 							}else if(data.response=='true'){
 								
 								$(".err").empty();
 								$(".err").removeClass("alert-danger alert-dismissable");
 								$( '.err' ).addClass( "alert-success alert-dismissable" );
+								$(".edit_user,#create_new").attr("disabled", false);
 								$('.err').html(data.msg);
 								
 								
@@ -760,11 +762,13 @@ $('#email').keyup(function() {
 						
 						 $('#err').html(data.msg);
 							$( '#err' ).addClass( "alert-danger alert-dismissable" );
+							$(".edit_user,#create_new").attr("disabled", "disabled");
 							}else if(data.response=='true'){
 								
 								$("#err").empty();
 								$("#err").removeClass("alert-danger alert-dismissable");
 								$( '#err' ).addClass( "alert-success alert-dismissable" );
+								$(".edit_user,#create_new").attr("disabled", false);
 								$('#err').html(data.msg);
 								
 								

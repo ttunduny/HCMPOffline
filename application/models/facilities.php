@@ -28,7 +28,7 @@ class Facilities extends Doctrine_Record {
 		
 		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");
 		$drugs = $query -> execute();
-		//$drugs = $drugs->toArray();
+		$drugs = $drugs->toArray();
 		return $drugs;
 	}
 	public static function get_Facilities_using_HCMP($district)

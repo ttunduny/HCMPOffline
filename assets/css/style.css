@@ -28,9 +28,9 @@ body {
 .logo {
 	width: 6em;
 	height: 6em;
-	margin-left: 0.6%;
+	margin-left: 10%;
 	position: relative;
-	background: url("../img/coat_of_arms-resized1.png") no-repeat;
+	background: url("../img/coat_of_arms1.png") no-repeat;
 	float: left;
 	margin-bottom: 0.5%;
 }
