@@ -162,6 +162,20 @@ $group_by ");
 		 and f_s.current_balance>0 and expiry_date <= NOW() $and");
 		        return $stocks ;
 	}
+
+	public static function expiries_report($facility_code){
+		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+			select f_s.facility_code,f_s.commodity_id,f_s.batch_no,f_s.manufacture,
+			f_s.status,
+			c.commodity_name,c.commodity_code,
+			DATE_FORMAT(f_s.expiry_date ,'%d %b %y') as expiry_date,
+			DATE_FORMAT(f_s.expiry_date ,'%M %Y') as expiry_month
+			from  facility_stocks f_s 
+			LEFT JOIN  commodities c ON c.id=f_s.commodity_id 
+			where facility_code= $facility_code and f_s.status =1
+			and f_s.current_balance>0 and expiry_date <= NOW()");
+		        return $stocks ;
+	}
 	      /////getting cost of exipries county
 public static function get_county_cost_of_exipries_new($facility_code=null,$district_id=null,$county_id,$year=null,$month=null,$option=null,$data_for=null)
  {
@@ -269,7 +283,8 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
      $selection_for_a_month = (isset($facility_code) && isset($district_id))||(($category_id>0))? " d.commodity_name as name," : 
 			 (($district_id>0) && !isset($facility_code) ? " f.facility_name as name,":
 			 ($graph_type=='table_data')&& ($commodity_id>0) ?" di.district , f.facility_name, f.facility_code, " : " di.district as name,") ; 
-			
+	 $selection_for_a_month =(!isset($commodity_id) && !isset($category_id) ) ? " di.district ,d.commodity_name, f.facility_name, f.facility_code,di.district as name,"
+     :$selection_for_a_month;		
 	 switch ($option) :
          case 'ksh':
            $computation ="ifnull((SUM(ROUND(fs.current_balance/ d.total_commodity_units)))*d.unit_cost ,0) AS total";
@@ -287,17 +302,18 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
 	 	
      $and_data .=(isset($category_id)&& ($category_id>0)) ?"AND d.commodity_sub_category_id = '$category_id'" : null;
      $and_data .=(isset($commodity_id)&& ($commodity_id>0)) ?"AND d.id = '$commodity_id'" : null;
-     $and_data .=(isset($division_id)&& ($division_id>0)) ?"AND d.commodity_division = '$division_id' " : "AND d.commodity_division <= 1 ";
+     $and_data .=(isset($division_id)&& ($division_id>0)) ?"AND d.commodity_division = '$division_id' " :null;
 	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND di.id = '$district_id'" : null;
 	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;
      $and_data .=($county_id>0) ?" AND di.county='$county_id'" : null;
-     
+      $and_data .=(!isset($commodity_id) && !isset($category_id) ) ? 'and d.id=fs.commodity_id' : null;
      $group_by_a_month =((isset($facility_code) && isset($district_id)) ||(isset($category_id)&& ($category_id>0)))? " GROUP BY fs.commodity_id having total>0" : 
 	 (isset($district_id) && !isset($facility_code) ?  " GROUP BY f.facility_code having total>0": 
 	 ($graph_type=='table_data')&& ($commodity_id>0) ?" GROUP BY d.id, f.facility_code having total>0 order by di.district asc, f.facility_name asc" :
 	 " GROUP BY d.id having total > 0") ;
-
-
+    $group_by_a_month =(!isset($commodity_id) && !isset($category_id) ) ? " GROUP BY d.id, f.facility_code having total>0 order by di.district asc, f.facility_name asc "
+     :$group_by_a_month ;
+ // echo ; exit;
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll("SELECT  $selection_for_a_month $computation
      FROM facility_stocks fs, facilities f, commodities d,  districts di

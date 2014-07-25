@@ -15,7 +15,8 @@ class Evaluation extends MY_Controller {
             return @round($percentage);
         }
      public function index(){
-     	$data['district_data'] = districts::getDistrict(1);
+     	$county_id = $this -> session -> userdata('county_id');
+     	$data['district_data'] = districts::getDistrict($county_id);
 
 		$data['banner_text'] = "Facility Training Evaluation Results";
 		$data['title'] = "Facility Training Evaluation Results";
@@ -27,11 +28,11 @@ class Evaluation extends MY_Controller {
      	
      }
 
-     public function default_graph($district=null){
-     	$county_id = isset($district) ? null : 1;
-		$district_id = isset($county_id) ? $district :null;
+     public function default_graph(){
 
-		$county_id = 1;	
+     	$county_id = $this -> session -> userdata('county_id');
+     	$district_id = $this -> session -> userdata('district_id');
+		
 
 		$graph_data =$data= array();
 
@@ -118,7 +119,7 @@ class Evaluation extends MY_Controller {
 		
 		$frequency_of_use  = evaluation_data::get_use_freq($county_id, $district_id);
 		$satisfaction = evaluation_data::get_use_freq($county_id, $district_id);
-		$county_id = 1;
+		
 		
 		// fifth chart
 		$frequency_of_use  = evaluation_data::get_use_freq($county_id, $district_id);
@@ -199,14 +200,19 @@ class Evaluation extends MY_Controller {
 
      	return $this -> load -> view('subcounty/reports/analysis_new', $data);
      }
-	public function analysis($district=null) {
-		$county_id = isset($district) ? null : 1;
-		$district_id = isset($district) ? $district :null;
+	public function analysis($district=null,$county_id=null) {
+		$district_id_ = $this -> session -> userdata('district_id');
+		$district_id = isset($district) ? $district : $district_id_;
+		
+		$county_id_ = $this -> session -> userdata('county_id');
+		$county_id = isset($county_id) ?$county_id: null ;
 
+     
 		$graph_data =$data= array();
 	
 
 		$data['county_id'] = $county_id;
+		$data['district_id'] = $district_id;
 
 		//creating the first pie chart
 
@@ -234,7 +240,7 @@ class Evaluation extends MY_Controller {
 
         $data['facility_evaluation']=$this->hcmp_functions->create_high_chart_graph($graph_data);
 		// end of chart data
-        $county_id = 1;	
+        
 		//creating the first bar chart
         $training_resource = evaluation_data::get_training_resource($county_id, $district_id);
 
@@ -287,7 +293,7 @@ class Evaluation extends MY_Controller {
 		
 		$frequency_of_use  = evaluation_data::get_use_freq($county_id, $district_id);
 		$satisfaction = evaluation_data::get_use_freq($county_id, $district_id);
-		$county_id = 1;
+		
 		
 		// fifth chart
 		$frequency_of_use  = evaluation_data::get_use_freq($county_id, $district_id);

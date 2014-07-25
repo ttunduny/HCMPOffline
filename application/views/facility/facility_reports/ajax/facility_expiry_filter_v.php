@@ -45,6 +45,7 @@
 
 				//var url = "reports/filter_expiries/"+
 				var url = "reports/get_county_cost_of_expiries_new/"+
+
 				        $("#year_filter").val()+
 				        "/"+$("#month_filter").val()+
 				        "/"+"<?php echo $district_id;?>"+
