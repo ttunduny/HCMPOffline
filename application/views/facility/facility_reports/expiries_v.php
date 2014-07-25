@@ -33,7 +33,7 @@
                 $ts2 = strtotime(date('d M Y'));
                 $seconds_diff = $ts2 - $ts1;
 				$total=$total+ $total_exp_cost;  
-				$count=($potential_exp['status']=1) ? $count+$count: $count+1;
+				$count=($potential_exp['status']=1) ? $count+1: $count;
                 ?>    
             <tr>                          
               <td><?php echo $potential_exp['commodity_name'];?> </td>
