@@ -1305,7 +1305,12 @@ class Reports extends MY_Controller
 		$graph_log_data['series_data']['Orders'] = 
 		$graph_log_data['series_data']['Issues'] =
 		$graph_log_data['series_data']['Log In Log Out'] = array();
+
 		
+		$log_data = Log::get_log_data($district_id,$county_id, $year, $month);
+		//var_dump($log_data);
+		//exit;
+
 		
 		$log_data = Log::get_log_data($district_id,$county_id, $year, $month);
 		//var_dump($log_data);
@@ -1866,6 +1871,7 @@ class Reports extends MY_Controller
 		}
 
 		$html_body .= '</tbody></table></ol>';
+
 
 	}elseif($report_type == "expiries")
 	{
@@ -2721,7 +2727,6 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 		 $data['number_of_tracer_items'] = count(facility_stocks_temp::get_tracer_item_names());
 
 	     return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
-
 	    }
 
 	    public function tb_report(){
@@ -2735,17 +2740,15 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 
      	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null) 
      	{
-     	//reset the values here
-     	//get_county_stock_level_new/12/1
-		
+
       	$commodity_id = ($commodity_id=="NULL") ? null :$commodity_id;
 	 	$district_id = ($district_id=="NULL") ? null :$district_id;
-	 	$option = ($option=="NULL") ? null :$option;
+	 	$option = ($optionr=="NULL") ? null :$option;
 		$category_id = ($category_id=="NULL") ? null :$category_id;
 	 	$facility_code = ($facility_code=="NULL") ? null :$facility_code;
 		$option = ($option=="NULL" || $option=="null") ? null :$option;	
-     	//setting up the data
 
+     	//setting up the data
         if($option=="mos"){
         	
         	$this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id);
@@ -2760,7 +2763,9 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
         //check if the district is set
 		$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
 		$district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " subcounty" : null;
-		$option_new = isset($option) ? $option : "ksh";
+		
+		$option_new = isset($option) ? $option : null;
+		$option_title = isset($option) ? $option : "Ksh";
 		$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
 		$facility_name = $facility_code_[0]['facility_name'];
 		$commodity_name = (isset($commodity_id))? Commodities::get_details($commodity_id)->toArray() : null;
@@ -2776,23 +2781,24 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 			if($report_type=="table_data"):
 				if($commodity_id>0):
 					array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"], $data['total']));
+
 				else:
-					array_push($series_data , array($data["name"],(int) $data['total']));
+					array_push($series_data , array($data["commodity_name"],$data["facility_name"],$data["name"],(int) $data['total']));
 				endif;						
 			else:
-
-				$series_data  = array_merge($series_data , array($data["name"] => (int)$data['total']));
+				$series_data  = array_merge($series_data , array($data["name"],(int)$data['total']));
 				$series_data_  = array_merge($series_data_ , array($data["name"],(int)$data['total']));
 				$category_data=array_merge($category_data, array($data["name"]));
 			endif;
 
+
 		endforeach;
-		
 		if($report_type=="table_data"):
 			if($commodity_id>0):
 				$category_data = array(array("Sub-county","Facility Name","Mfl","TOTAL ".$option_new));
 			else:
-				array_push($category_data, array("Stock level $commodity_name $title $month_ $year","stocks worth in $option_new"));
+				array_push($category_data, array("Commodity Name","Facility Name","Sub-county Name","stocks worth in $option_title "));
+				
 			endif;	
 	       	$graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_'));
 		    $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
