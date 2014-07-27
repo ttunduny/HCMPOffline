@@ -882,7 +882,7 @@ class Reports extends MY_Controller
 	}	
 	public function filtered_consumption($commodity_id, $year, $option)
 	{
-
+	
 		$year = (isset($year) && ($year>0))? $year: date("Y");
 		$option = (isset($option)) ? $option: "units";
 
@@ -952,7 +952,7 @@ class Reports extends MY_Controller
 		
 		foreach($orders as $facility_orders):
 			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_orders['month']));	
-			$graph_data['series_data']['Total Orders'] = array_merge($graph_data['series_data']['Total Orders'],array((int)$facility_orders['total']));	
+			$graph_data['series_data']['Total Orders'] = array_merge($graph_data['series_data']['Total Orders'],array((int)$facility_orders['total_orders']));	
 		endforeach;
 		//create the graph here
 		$facility_order_data = $this->hcmp_functions->create_high_chart_graph($graph_data);
@@ -973,7 +973,8 @@ class Reports extends MY_Controller
 
 	public function filter_facility_orders($year, $month, $option)
 	{
-		
+		//echo $year;
+		//exit;
 		$facility_code = isset($facility_code) ? $facility_code: $this -> session -> userdata('facility_id');
 		$facility_name = Facilities::get_facility_name2($facility_code);
 		
@@ -994,7 +995,7 @@ class Reports extends MY_Controller
 			$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
 			foreach($orders as $facility_orders):
 				$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_orders['month']));	
-				$graph_data['series_data']['Total Orders'] = array_merge($graph_data['series_data']['Total Orders'],array((int)$facility_orders['total']));	
+				$graph_data['series_data']['Total Orders'] = array_merge($graph_data['series_data']['Total Orders'],array((int)$facility_orders['total_orders']));	
 			endforeach;
 			
 		}
@@ -1032,14 +1033,6 @@ class Reports extends MY_Controller
 				$graph_data['series_data']['Total Orders'] = array_merge($graph_data['series_data']['Total Orders'],array((int)$facility_orders['total']));	
 			endforeach;
 		}
-		
-		
-		
-		//Holds all the months of the year
-		
-		
-		
-		
 		
 		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
@@ -1285,25 +1278,24 @@ class Reports extends MY_Controller
 		$graph_data = array_merge($graph_data,array("graph_id"=>'container_monthly'));
 		$graph_data = array_merge($graph_data,array("graph_title"=>'Monthly Facility Access for '. $year));
 		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
-		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'log In'));
+		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Log Ins'));
 		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
 		$graph_data = array_merge($graph_data,array("series_data"=>$series_data_monthly));
 	    $graph_data['graph_categories'] = $category_data_monthly;	
 		$graph_monthly = $this->hcmp_functions->create_high_chart_graph($graph_data);
-
 		
 		$graph_log_data = array();
 		$graph_log_data = array_merge($graph_log_data,array("graph_id"=>'log_data_graph'));
 		$graph_log_data = array_merge($graph_log_data,array("graph_title"=>'User Activity for  '.$m.' for '. $graph_title));
 		$graph_log_data = array_merge($graph_log_data,array("graph_type"=>'column'));
 		$graph_log_data = array_merge($graph_log_data,array("graph_yaxis_title"=>'Activities'));
-		$graph_log_data = array_merge($graph_log_data,array("graph_categories"=>array()));
+		$graph_log_data = array_merge($graph_log_data,array("graph_categories"=>"User Activity"));
 		$graph_log_data['series_data']['Decommissions'] =
 		$graph_log_data['series_data']['Redistributions'] =
 		$graph_log_data['series_data']['Stock Updates'] =
 		$graph_log_data['series_data']['Orders'] = 
 		$graph_log_data['series_data']['Issues'] =
-		$graph_log_data['series_data']['Log In Log Out'] = array();
+		$graph_log_data['series_data']['Log Ins'] = array();
 		
 		
 		$log_data = Log::get_log_data($district_id,$county_id, $year, $month);
@@ -1325,7 +1317,7 @@ class Reports extends MY_Controller
 			$graph_log_data['series_data']['Decommissions'] = array_merge($graph_log_data['series_data']['Decommissions'],array((int)$decommissions));
 			$graph_log_data['series_data']['Redistributions'] = array_merge($graph_log_data['series_data']['Redistributions'],array((int)$redistributions));
 			$graph_log_data['series_data']['Stock Updates'] = array_merge($graph_log_data['series_data']['Stock Updates'],array((int)$stock));
-			$graph_log_data['series_data']['Log In Log Out'] = array_merge($graph_log_data['series_data']['Log In Log Out'],array((int)$user));
+			$graph_log_data['series_data']['Log Ins'] = array_merge($graph_log_data['series_data']['Log Ins'],array((int)$user));
 		
 		
 		}
