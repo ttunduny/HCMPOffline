@@ -214,8 +214,8 @@ $group_by ");
 			DATE_FORMAT(f_s.expiry_date ,'%M %Y') as expiry_month
 			from  facility_stocks f_s 
 			LEFT JOIN  commodities c ON c.id=f_s.commodity_id 
-			where facility_code= $facility_code and f_s.status =1
-			and f_s.current_balance>0 and expiry_date <= NOW()");
+			where facility_code= $facility_code 
+			and f_s.current_balance>0 and expiry_date between DATE_ADD(CURDATE(), INTERVAL 0 year) and  DATE_ADD(CURDATE(), INTERVAL 2 year)");
 		        return $stocks ;
 	}
 	      /////getting cost of exipries county
