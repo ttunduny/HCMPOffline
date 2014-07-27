@@ -207,15 +207,26 @@ $group_by ");
 
 	public static function expiries_report($facility_code){
 		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-			select f_s.facility_code,f_s.commodity_id,f_s.batch_no,f_s.manufacture,
-			f_s.status,
-			c.commodity_name,c.commodity_code,
-			DATE_FORMAT(f_s.expiry_date ,'%d %b %y') as expiry_date,
-			DATE_FORMAT(f_s.expiry_date ,'%M %Y') as expiry_month
-			from  facility_stocks f_s 
-			LEFT JOIN  commodities c ON c.id=f_s.commodity_id 
-			where facility_code= $facility_code 
-			and f_s.current_balance>0 and expiry_date between DATE_ADD(CURDATE(), INTERVAL 0 year) and  DATE_ADD(CURDATE(), INTERVAL 2 year)");
+			select 
+    f_s.facility_code,
+    f_s.commodity_id,
+    f_s.batch_no,
+    f_s.manufacture,
+    f_s.status,
+    c.commodity_name,
+    c.commodity_code,
+    DATE_FORMAT(f_s.expiry_date, '%d %b %y') as expiry_date,
+    DATE_FORMAT(f_s.expiry_date, '%M %Y') as expiry_month
+from
+    facility_stocks f_s
+        LEFT JOIN
+    commodities c ON c.id = f_s.commodity_id
+where
+    facility_code = $facility_code
+        and f_s.current_balance > 0
+        and year(expiry_date) between year(NOW()) and year(DATE_ADD(CURDATE(),
+        INTERVAL 2 year)) 
+        order by f_s.expiry_date asc");
 		        return $stocks ;
 	}
 	      /////getting cost of exipries county
