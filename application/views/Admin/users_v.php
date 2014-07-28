@@ -77,6 +77,8 @@ $('.edit').click(function () {
  		 $('#editModal').appendTo("body").modal('show');
 })
 
+
+
 $('.dataTables_filter label input').addClass('form-control');
 	$('.dataTables_length label select').addClass('form-control');
 $('#datatable').dataTable( {
@@ -160,6 +162,73 @@ var drop_down='';
   // console.log(hcmp_facility_api)  
     }
     }); 
+    
+    
+    $('#email').keyup(function() {
+
+  var email = $('#email').val()
+
+   $('#username').val(email)
+   
+   $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "<?php echo base_url()."user/check_user_json";?>", //Relative or absolute path to response.php file
+      data:{ 'email': $('#email').val()},
+      success: function(data) {
+        if(data.response=='false'){
+						
+							$('#err').html(data.msg);
+							console.log(data.msg)
+							$( '.err' ).addClass( "alert-danger alert-dismissable" );
+							$(".edit_user,#create_new").attr("disabled", "disabled");
+							}else if(data.response=='true'){
+								console.log(data.msg)
+								$(".err").empty();
+								$(".err").removeClass("alert-danger alert-dismissable");
+								$( '.err' ).addClass( "alert-success alert-dismissable" );
+								$(".edit_user,#create_new").attr("disabled", false);
+								$('.err').html(data.msg);
+								
+								
+							}
+      }
+    });
+    return false;
+  });
+
+    $('#email_edit').keyup(function() {
+
+  var email = $('#email_edit').val()
+
+   $('#username_edit').val(email)
+   
+   $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "<?php echo base_url()."user/check_user_json";?>", //Relative or absolute path to response.php file
+      data:{ 'email': $('#email_edit').val()},
+      success: function(data) {
+        if(data.response=='false'){
+						
+						 	$('.err').html(data.msg);
+							$( '.err' ).addClass( "alert-danger alert-dismissable" );
+							$(".edit_user,#create_new").attr("disabled", "disabled");
+							}else if(data.response=='true'){
+								
+								$(".err").empty();
+								$(".err").removeClass("alert-danger alert-dismissable");
+								$( '.err' ).addClass( "alert-success alert-dismissable" );
+								$(".edit_user,#create_new").attr("disabled", false);
+								$('.err').html(data.msg);
+								
+								
+							}
+      }
+    });
+    return false;
+
+    }) 
     
     $("#create_new").click(function() {
 
