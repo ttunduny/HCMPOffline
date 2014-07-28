@@ -3,5 +3,5 @@
 *.pyo
 /nbproject/private/
 =======
-application/config/database.php
+/application/config/database.php
 pdf
