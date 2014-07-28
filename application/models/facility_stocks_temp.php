@@ -61,7 +61,7 @@ class facility_stocks_temp extends Doctrine_Record {
     	$county_id=($county_id=="NULL") ? null :$county_id;
     	$commodity_id=($commodity_id=="ALL" || $commodity_id=="NULL") ? null :$commodity_id;
 
-   		$and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
+   		//$and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
     	$and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
    		$and_data .=($county_id>0) ?" AND c.id='$county_id'" : null;
 		$and_data .=($division_id>0) ? " AND cm.commodity_division =$division_id " :null;
