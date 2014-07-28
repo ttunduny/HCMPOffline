@@ -1,0 +1,7 @@
+*.class
+*.pyc
+*.pyo
+/nbproject/private/
+=======
+application/config/database.php
+pdf
