@@ -105,7 +105,7 @@ class Stock extends MY_Controller {
         ->fetchAll("select 
         *
         from
-        hcmp.facility_order_status
+        hcmp_rtk.facility_order_status
         where facility_order_status.status_desc like '%$order_status%'");
          $new_name_id=Doctrine_Manager::getInstance()->getCurrentConnection()
         ->fetchAll("select 
@@ -144,7 +144,7 @@ class Stock extends MY_Controller {
         from
          kemsa2.orderdetails
         left join
-        hcmp.drug_commodity_map ON drug_commodity_map.old_id = orderdetails.kemsa_code
+        hcmp_rtk.drug_commodity_map ON drug_commodity_map.old_id = orderdetails.kemsa_code
         where orderdetails.orderNumber =".$old_facility_orders['id']);
         
         foreach($order_details_match as $order_details_match){
