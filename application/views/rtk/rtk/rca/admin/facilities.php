@@ -30,16 +30,22 @@ $json_dist = str_replace('}', "", $json_dist);
 font-size: 13px;
 float: right;
 padding:4px;
+margin-top: 5px;
 }
 #facilities_tlb_info{
 font-size: 15px; 
+margin-left: 4%;
 float: left;
 }
 #facilities_tlb_length{
+  margin-left: 4%;
   float: left;
 }
 #facilities_tlb_filter{
   float: right;
+}
+table{
+  font-size: 12px;
 }
 </style>
 

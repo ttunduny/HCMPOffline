@@ -532,7 +532,7 @@ class Rtk_Management extends Home_controller {
         $year_previous_1 = substr($previous_month_1, -4);
         $year_previous_2 = substr($previous_month_2, -4);
 
-        $current_month = substr_replace($current_month, "", -4);
+        $current_month = substr_replace($current_month, "", -4);        
         $previous_month_1 = substr_replace($previous_month_1, "", -4);
         $previous_month_2 = substr_replace($previous_month_2, "", -4);
 
@@ -556,25 +556,27 @@ class Rtk_Management extends Home_controller {
         $district_summary1 = $this->rtk_summary_district($district, $year_previous_1, $previous_month_1);
         $district_summary2 = $this->rtk_summary_district($district, $year_previous_2, $previous_month_2);
 
-        $data['district_balances_current'] = $this->district_totals($year_current, $current_month, $district);
+        $county_id = districts::get_county_id($district_summary['district_id']);
+        $county_name = counties::get_county_name($county_id['county']);
+       
+
+        $data['district_balances_current'] = $this->district_totals($year_current, $previous_month, $district);
         $data['district_balances_previous'] = $this->district_totals($year_previous, $previous_month, $district);
         $data['district_balances_previous_1'] = $this->district_totals($year_previous_1, $previous_month_1, $district);
         $data['district_balances_previous_2'] = $this->district_totals($year_previous_2, $previous_month_2, $district);
 
         $data['district_summary'] = $district_summary;
-        $county_id = districts::get_county_id($district_summary['district_id']);
-        $county_name = counties::get_county_name($county_id[0]['county']);
-        $data['districts'] = $this->_districts_from_county($county_name[0]['id']);
+        
+        $data['districts'] = $this->_districts_from_county($county_name['id']);
         $data['facilities'] = $this->_facilities_in_district($district);
 
-        $data['district_name'] = $county_id[0]['district'];
-        $data['county_id'] = $county_name[0]['id'];
-        $data['county_name'] = $county_name[0]['county'];
-        $data[''] = $district_summary['district_id'];
+        $data['district_name'] = $district_summary['district'];
+        $data['county_id'] = $county_name['id'];
+        $data['county_name'] = $county_name['county'];     
 
-        $data['title'] = 'District Profile: ' . $district_summary['district'];
-        $data['banner_text'] = 'District Profile: ' . $district_summary['district'];
-        $data['content_view'] = "rtk/rtk?district_profile_view";
+        $data['title'] = 'RTK County Admin - Sub-County Profile: ' . $district_summary['district'];
+        $data['banner_text'] = 'Sub-County Profile: ' . $district_summary['district'];
+        $data['content_view'] = "rtk/rtk/district_profile_view";
         $data['months'] = $month_text;
 
         $this->load->view("rtk/template", $data);
