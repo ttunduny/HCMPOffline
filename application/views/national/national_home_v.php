@@ -62,8 +62,8 @@ padding-top: 4.5%;
         
         <div class="collapse navbar-collapse navbar-right">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="../navbar/">Home</a></li>
-            <li class=""><a href="./">Reports</a></li>
+            <li class="active"><a href="<?php echo base_url().'national';?>">Home</a></li>
+            <li class=""><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>
             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Welcome, Guest</a>
                         <ul class="dropdown-menu">
                             <li><a href="<?php echo base_url();?>"><span class="glyphicon glyphicon-log-in" style="margin-right: 2%;"></span> Login</a></li>
@@ -144,7 +144,7 @@ padding-top: 4.5%;
        </div>
        
         <div class="row" style="margin-left: 2px">
-       <div class="col-md-6" style="border: 1px solid #DDD;height: 530px; ">
+       <div class="col-md-6" style="border: 1px solid #DDD;height: auto; ">
       
        <div class="panel-heading">
        <h4 class="panel-title">Actual Expiries </h4>
@@ -208,7 +208,7 @@ endforeach;
        </div> 
         </div> 
    
-       <div class="col-md-6" style="border: 1px solid #DDD;height: 530px;" >
+       <div class="col-md-6" style="border: 1px solid #DDD;height: auto;" >
       
        <div class="panel-heading">
        <h4 class="panel-title">Potential Expiries </h4>

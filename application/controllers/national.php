@@ -43,7 +43,7 @@ class national extends MY_Controller
         $data['maps'] = json_encode($finalMap);
         $data['counties']=$county_name;
 		
-        $this -> load -> view("national/national_v.php",$data);
+        $this -> load -> view("national/national_home_v.php",$data);
     } 
     public function search()
     {
@@ -1272,6 +1272,12 @@ order by user.id asc
 		$this -> load -> view('shared_files/template/plain_template_v', $data);
  	
  }
+ 
+	 public function reports(){
+	 	
+			$this -> load -> view('national/reports_v', $data);
+		
+	 }
 }   
     
 
