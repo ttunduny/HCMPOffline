@@ -555,11 +555,10 @@ class User extends MY_Controller {
 		$email_address = $_POST['email'];
 		$username = $_POST['username'];
 		$facility_id = $_POST['facility_id'];
-		$district_code = $_POST['district_name'];
+		$district_code = ($_POST['district_name']=='NULL')? 0: $_POST['district_name'];
 		$user_type = $_POST['user_type'];
 		$full_name= $fname .''.$lname; 
-		$county=(!$this -> session -> userdata('county_id')) ? $_POST['county'] : $this -> session -> userdata('county_id');
-		echo exit;
+		$county=$_POST['county'];
 		switch ($identifier):
 			case 'moh':
 			
@@ -734,8 +733,8 @@ class User extends MY_Controller {
                         <tr>
                           <td class="last right-text-pad">
                             <h5>Contact Info:</h5>
-                            <p>Phone: +254720xxxxxx</p>
-                            <p>Email: <a href="mailto:admin@hcmp.com">admin@hcmp.com</a></p>
+                            <p>Phone: +254xxxxxxxx</p>
+                            <p>Email: <a href="mailto:hcmpkenya@gmail.com">hcmpkenya@gmail.com</a></p>
                           </td>
                           <td class="expander"></td>
                         </tr>
