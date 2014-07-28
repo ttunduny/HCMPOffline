@@ -86,12 +86,7 @@ class Users extends Doctrine_Record {
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
 	}
-	public static function getUsers($facility_code){
-		$query = Doctrine_Query::create() -> select("*") -> from("users")->where("facility=$facility_code");
-		$level = $query -> execute();
-		
-		return $level;
-	}
+
 
 	public static function reset_password($user_id, $new_password_confirm) {
 
