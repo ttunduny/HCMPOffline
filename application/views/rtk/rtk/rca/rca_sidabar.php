@@ -1,10 +1,10 @@
 <div class="col-md-2" style="border-right: solid 1px #ccc;padding-right: 20px;">
-    <select id="switch_county" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;">
+    <select id="switch_county" class="form-control" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;">
         <option>-- Select county --</option>
         <?php echo $option; ?>
     </select>
 
-    <select id="switch_month" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;">
+    <select id="switch_month" class="form-control" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;">
         <option>-- <?php echo $englishdate;?> --</option>
         <?php for ($i=1; $i <12 ; $i++) { 
         $month = date('m', strtotime("-$i month")); 
@@ -16,7 +16,7 @@
     <?php } ?>
     </select>
 
-    <ul class="nav nav-pills nav-stacked">
+    <ul class="nav nav-pills nav-stacked" style="font-size:100%">
         <li><a href="<?php echo base_url().'rtk_management/county_home'?>">Summary</a></li>        
         <li><a href="<?php echo base_url().'rtk_management/rca_districts'?>">Districts</a></li>
         <li><a href="<?php echo base_url().'rtk_management/rca_pending_facilities'?>">Pending Facilities</a></li>

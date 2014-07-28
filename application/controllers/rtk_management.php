@@ -289,19 +289,20 @@ class Rtk_Management extends Home_controller {
     }
 
     public function rca_pending_facilities() {
-        $countyid = $this->session->userdata('county_id');
+        $countyid = $this->session->userdata('county_id');        
         $districts = districts::getDistrict($countyid);
         $county_name = counties::get_county_name($countyid);
-        $County = $county_name[0]['county'];
+
+        $County = $county_name['county'];
         $month = $this->session->userdata('Month');
         if ($month == '') {
             $month = date('mY', strtotime('-1 month'));
         }
         $year = substr($month, -4);
         $month = substr_replace($month, "", -4);
-        $date = date('F-Y', mktime(0, 0, 0, $month, 1, $year));
-
-        $pending_facilities = $this->rtk_facilities_not_reported(NULL, $countyid, NULL, NULL, $year, $month);
+        $date = date('F-Y', mktime(0, 0, 0, $month, 1, $year));       
+        $pending_facilities = $this->rtk_facilities_not_reported(NULL, $countyid,NULL,NULL, $year,$month);
+        $new_pending_facilities = array();                
         $data['county'] = $County;
         $data['pending_facility'] = $pending_facilities;
         $data['title'] = 'RTK County Admin';
@@ -433,18 +434,14 @@ class Rtk_Management extends Home_controller {
 
     public function rca_facilities_reports() {
 
-        /* shows all reports in a county for all districts
-         * For instance the link below
-         * http://localhost/HCMP/rtk_management/reports_in_county/31
-         */
 
         $county = $this->session->userdata('county_id');
 
         date_default_timezone_set('EUROPE/moscow');
         $lastday = date('Y-m-d', strtotime("last day of previous month"));
         $districts = districts::getDistrict($county);
-        $county_name = counties::get_county_name($county);
-        $County = $county_name[0]['county'];
+        $county_name = counties::get_county_name($county);         
+        $County = $county_name['county'];        
         $sql = "SELECT lab_commodity_orders.id, lab_commodity_orders.facility_code, lab_commodity_orders.compiled_by, lab_commodity_orders.order_date, lab_commodity_orders.district_id, districts.district, facilities.facility_name, facilities.facility_code
         FROM lab_commodity_orders,  facilities, districts, counties
         WHERE districts.county = counties.id
@@ -577,7 +574,7 @@ class Rtk_Management extends Home_controller {
 
         $data['title'] = 'District Profile: ' . $district_summary['district'];
         $data['banner_text'] = 'District Profile: ' . $district_summary['district'];
-        $data['content_view'] = "rtk/district_profile_view";
+        $data['content_view'] = "rtk/rtk?district_profile_view";
         $data['months'] = $month_text;
 
         $this->load->view("rtk/template", $data);
@@ -3051,7 +3048,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $data['title'] = "Lab Commodity Order Details";
         // $data['content_view'] = "rtk/lab_order_details_v";
         $data['order_id'] = $order_id;
-        $data['content_view'] = "rtk/dpp/lab_commodities_report";
+        $data['content_view'] = "rtk/rtk/dpp/lab_commodities_report";
         $data['banner_text'] = "Lab Commodity Order Details";
 
         $data['lab_categories'] = Lab_Commodity_Categories::get_all();
@@ -4765,9 +4762,9 @@ WHERE
         $data['commodity_categories'] = $commodity_categories;
 
         $data['title'] = 'RTK Manager Settings';
-        $data['banner_text'] = 'RTK Manager';
+        $data['banner_text'] = 'RTK Manager Settings';
         //$data['content_view'] = "rtk/admin/admin_home_view";
-        $data['content_view'] = "rtk/admin/settings";
+        $data['content_view'] = "rtk/rtk/admin/settings";
         $users = $this->_get_rtk_users();
         $data['users'] = $users;
         $this->load->view('rtk/template', $data);
@@ -5293,6 +5290,7 @@ WHERE
         foreach ($new_unreported as $key => $value) {
             $new_unreported[$key]['report_for'] = $report_for;
         }
+        
 
         return $new_unreported;
     }
@@ -5300,7 +5298,7 @@ WHERE
     public function show_allocation_pending() {
         $data['title'] = '';
         $data['banner_text'] = 'Pending Facilities for Allocations';
-        $data['content_view'] = 'allocation_committee/allocation_pending_v';
+        $data['content_view'] = 'rtk/rtk/allocation_committee/allocation_pending_v';
 
         $pending_facility = $this->rtk_facilities_not_reported(NULL, NULL, NULL, NULL, NULL, NULL);
         $data['pending_facility'] = $pending_facility;

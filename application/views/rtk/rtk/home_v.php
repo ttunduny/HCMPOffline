@@ -29,7 +29,7 @@ $prevmonthname = date('F',strtotime("-3 month", time()));
 ?>
 <script type="text/javascript">
   function loadcountysummary(county){
-//            $(".dash_main").load("<?php echo base_url(); ?>rtk_management/rtk_reporting_by_county/" + county);
+            $(".dash_main").load("<?php echo base_url(); ?>rtk_management/rtk_reporting_by_county/" + county);
             $("#county_summary").load("<?php echo base_url(); ?>rtk_management/summary_tab_display/" + county + "/<?php echo $year.'/'.$month.'/'; ?>");
             $("#county_graph").load("<?php echo base_url(); ?>rtk_management/fusion_test/" + county + "/<?php echo $month.'/'.$year.'/'; ?>");
 
@@ -181,7 +181,7 @@ code {
 <div id="fixed-topbar" style="z-index:10;position: fixed; top: 104px;background: #708BA5; width: 100%;padding: 7px 1px 0px 13px;border-bottom: 1px solid #ccc;border-bottom: 1px solid #ccc;border-radius: 4px 0px 0px 4px;">
 <span class="lead" style="color: #ccc;">Switch Identities</span>
 &nbsp;
-<select id="user_switch"><option value="0"> -- Select UserType--</option><option value="scmlt">DMLT</option><option value="rtk_county_admin">County Administrator</option>
+<select id="user_switch" class="form-control"><option value="0"> -- Select UserType--</option><option value="scmlt">DMLT</option><option value="rtk_county_admin">County Administrator</option>
 </select>
 &nbsp;
 <select id="county_switch"><option value="0"> -- Select Select County--</option><?php echo $counties_option_html;?></select>

@@ -35,7 +35,8 @@ foreach ($res->result_array() as $key => $value) {
     	font-size: 13px;
         font-family: calibri;
     }
-    #reports_length{
+    #reports_length{        
+        margin-left: 3%;
         float: left;
     }
     #reports_filter{
@@ -48,7 +49,7 @@ foreach ($res->result_array() as $key => $value) {
 <script src="http://tableclothjs.com/assets/js/jquery.tablecloth.js"></script>
 
 <script src="http://localhost/HCMP/scripts/bootstrap-typeahead.js"></script>
-<script type="text/javascript" language="javascript" src="<?php echo base_url();?>Scripts/jquery.dataTables.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url();?>assets/datatable/jquery.dataTables.js"></script>
 
 
 <script type="text/javascript">
@@ -101,9 +102,9 @@ foreach ($res->result_array() as $key => $value) {
 <?php include('rca_sidabar.php');?>
 
 <div class="dash_main" style="width: 80%;float: right; overflow: scroll; height: 400px">
-<div id="top" style="margin-left:140px">
+<div id="top" style="margin-left:150px">
     <p>
-        <h2>Available Reports for <?php echo $county; ?> County</h2>
+        <h4>Available Reports for <?php echo $county; ?> County</h4>
     </p>
 </div>
 
