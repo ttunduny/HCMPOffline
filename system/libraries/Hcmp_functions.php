@@ -172,7 +172,12 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 	  $email_address=$this->get_facility_email($facility_code);
 	  $cc_email .=$this->get_ddp_email($data['district']);	  
 	  else:		  
-		  $email_address=($this->test_mode)?'kariuki.jackson@outlook.com,': 'kariuki.jackson@outlook.com,'; 
+		   $email_address=($this->test_mode)?'kariukijackson@gmail.com,': 'shamim.kuppuswamy@kemsa.co.ke,
+samuel.wataku@kemsa.co.ke,
+jmunyu@kemsa.co.ke,
+imugada@kemsa.co.ke,
+laban.okune@kemsa.co.ke,
+samuel.wataku@kemsa.co.ke,'; 
        
 	  $cc_email .=$this->get_ddp_email($data['district']);
 	   $cc_email .=$this->get_facility_email($facility_code);
@@ -220,7 +225,15 @@ public function send_sms($phones,$message) {
 
 public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL){
       
-		$mail_list=($this->test_mode)?'kariukijackson@ymail.com,': 'kariukijackson@gmail.com,';
+		$mail_list=($this->test_mode)?'kariukijackson@gmail.com,kariukijackson@ymail.com': 'rkihoto@clintonhealthaccess.org,
+  		gmacharia@clintonhealthaccess.org,
+  		Jhungu@clintonhealthaccess.org,
+  		nmaingi@strathmore.edu,
+  		bwariari@clintonhealthaccess.org,
+  		kyalocatherine@gmail.com,
+  		smutheu@clintonhealthaccess.org,
+  		kariukijackson@gmail.com,
+  		kelvinmwas@gmail.com,eongute@clintonhealthaccess.org,';
 			
 		$fromm='info-noreply@health-cmp.or.ke';
 		$messages=$message;
