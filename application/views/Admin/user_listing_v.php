@@ -187,7 +187,7 @@
 										</div>
 									</div>
 									<div class="col-md-6">
-										<div id="err" style="padding: 6px;">
+										<div class="err" style="padding: 6px;">
 											
 										</div>
 									</div>
@@ -265,6 +265,7 @@
 										</div>
 									</div>
 									<div class="col-md-6">
+										
 									</div>
 								</div>
 								
@@ -351,7 +352,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-										<div id="err" style="padding: 6px;">
+										<div class="err" style="padding: 6px;">
 											
 										</div>
 								</div>
