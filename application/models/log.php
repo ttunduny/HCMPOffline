@@ -102,7 +102,36 @@ class Log extends Doctrine_Record {
 		AND DATE_FORMAT( l.`start_time_of_event` ,'%Y') = '$year'
 		AND DATE_FORMAT( l.`start_time_of_event` ,'%m') = '$month'
 		");
+		
 	
+		return $q;
+	}
+	public static function get_user_activities_download($facility_code = null, $district_id = null,$county_id = null, $year = null, $month = null)
+	{
+		$and_data =(isset($district_id)&& ($district_id>0)) ?"AND u.district = $district_id" : null;
+		$and_data .=(isset($county_id)&& ($county_id>0)) ?" AND u.county_id = $county_id" : null;
+		$and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND u.facility = $facility_code" : null;
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		select DISTINCT
+		    (l.user_id) as user,
+		    u.fname,
+		    u.lname,
+		    ifnull(sum(l.issued), 0) as total_issues,
+		    ifnull(sum(l.ordered), 0) as total_orders,
+		    ifnull(sum(l.decommissioned), 0) as total_decommisions,
+		    ifnull(sum(l.redistribute), 0) as total_redistributions,
+		    ifnull(sum(l.add_stock), 0) as total_stock_added
+		from
+		    log l,
+		    user u
+		where
+		    l.user_id = u.id 
+		    $and_data
+	        AND DATE_FORMAT(l.`start_time_of_event`, '%Y') = '$year'
+	        AND DATE_FORMAT(l.`start_time_of_event`, '%m') = '$month'
+		GROUP BY user
+		");
+		
 		return $q;
 	}
 	public static function get_facility_log_data($facility_code)

@@ -19,6 +19,7 @@
 
       <div  id="tracer" class="tab-pane fade active in">
           <br />
+          <div class="filter">
                     <form class="form-inline" role="form">
 <select id="tracer_commodity_filter" class="form-control col-md-3">
 <option value="NULL">Select Commodity</option>
@@ -56,6 +57,7 @@ placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_nor
 <button class="btn btn-sm btn-success tracer-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
 </div>
           </form>
+          </div>
       </div>
        <div  id="cat" class="tab-pane fade">
        	<br>

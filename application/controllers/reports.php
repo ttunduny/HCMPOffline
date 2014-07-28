@@ -1225,8 +1225,8 @@ class Reports extends MY_Controller
 		$graph_log_data = array_merge($graph_log_data,array("graph_id"=>'log_data_graph'));
 		$graph_log_data = array_merge($graph_log_data,array("graph_title"=>'User Activity for  '.$m.' for '. $graph_title));
 		$graph_log_data = array_merge($graph_log_data,array("graph_type"=>'column'));
-		$graph_log_data = array_merge($graph_log_data,array("graph_yaxis_title"=>'Activities'));
-		$graph_log_data = array_merge($graph_log_data,array("graph_categories"=>"User Activity"));
+		$graph_log_data = array_merge($graph_log_data,array("graph_yaxis_title"=>'User Activities'));
+		$graph_log_data = array_merge($graph_log_data,array("graph_categories"=>array()));
 		$graph_log_data['series_data']['Decommissions'] =
 		$graph_log_data['series_data']['Redistributions'] =
 		$graph_log_data['series_data']['Stock Updates'] =
@@ -1234,12 +1234,6 @@ class Reports extends MY_Controller
 		$graph_log_data['series_data']['Issues'] =
 		$graph_log_data['series_data']['Log Ins'] = array();
 
-		
-		$log_data = Log::get_log_data($district_id,$county_id, $year, $month);
-		//var_dump($log_data);
-		//exit;
-
-		
 		$log_data = Log::get_log_data($district_id,$county_id, $year, $month);
 		//var_dump($log_data);
 		//exit;
@@ -1263,6 +1257,11 @@ class Reports extends MY_Controller
 		
 		
 		}
+/*
+echo "<pre>";
+print_r($graph_log_data);
+echo "</pre>";
+exit;*/
 		
 		$graph_log = $this->hcmp_functions->create_high_chart_graph($graph_log_data);
 		
@@ -1432,6 +1431,48 @@ class Reports extends MY_Controller
 				
 		
 	}
+	
+/*	//Downloads the excel file for user activities in a particular facility
+	public function get_user_activities_excel($year = null, $month = null)
+	{
+		//pick the IDs from the sessions
+		$county_id = $this -> session -> userdata('county_id');
+		$district_id = $this -> session -> userdata('district_id');
+		$facility_id = $this -> session -> userdata('facility_id');
+		
+		$year = (isset($year)&& ($year>0))? $year : date("Y");
+		$month = (isset($month)&& ($month>0))? $month : date("m");
+		
+	 	$county_name = counties::get_county_name($county_id);
+		
+		$title='';
+		
+		$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
+		$district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " subcounty" : null;
+		$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
+		$facility_name = $facility_code_[0]['facility_name'];
+		$title = isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
+	 	isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
+       
+		$data = Log::get_user_activities_download($facility_code,$district_id,$county_id, $year, $month);
+		echo "<pre>";
+		print_r($data);
+		echo "</pre>";
+		exit;
+		
+		$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "User Activities for $facility_name $title $month_ $year", 'file_name' => "User_activities_for_$title_$month_$year");
+		$row_data = array(array("User Activities $title $month_ $year","User Activities"));
+		$column_data = array("");
+		$excel_data['column_data'] = $column_data;
+		$row_data=array_merge($row_data,$series_data_);
+		$excel_data['row_data'] = $row_data;
+		$this -> hcmp_functions -> create_excel($excel_data);
+		
+		
+	}
+*/
+	
+	
 	public function get_district_drill_down_detail($district_id, $date_of_activation) 
 	{
 		$district_data = "";
@@ -2425,6 +2466,7 @@ $month = $data['expiry_month'];
 		$county_id = $this -> session -> userdata('county_id');
 		$district_id_checker = $this -> session -> userdata('district_id');
 		$county_name = counties::get_county_name($county_id);
+		
 		$category_data = array();
 		$series_data =$series_data_ = array();		
 		$temp_array =$temp_array_ = array();
@@ -2499,10 +2541,10 @@ $month = $data['expiry_month'];
 	
 	}
 
-	public function load_stock_level_graph($district_id=NULL, $county_id=NULL, $facility_code=NULL,$commodity_id=null,$report_type)
- {
-		$user=$this -> session -> userdata('user_indicator');
-		$county_id=$this -> session -> userdata('county_id');
+	public function load_stock_level_graph($district_id=NULL, $county_id=NULL, $facility_code=NULL,$commodity_id=null,$report_type,$tracer = null)
+ 	{
+		$user = $this -> session -> userdata('user_indicator');
+		$county_id = $this -> session -> userdata('county_id');
 		switch ($user) {
 			case 'facility':
 			case 'facility_admin':
@@ -2526,8 +2568,8 @@ $month = $data['expiry_month'];
 			break;
 		}
 
-     	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id);
-
+     	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id,$tracer);
+        $graph_data = $series_data =array();
 		$month = date('F Y');
 
 			if (isset($commodity_id)){
@@ -2563,7 +2605,7 @@ $month = $data['expiry_month'];
 
 			 }
 		if($report_type=="table_data"):
-			$graph_data = $series_data =array();
+			
        		$graph_data = array_merge($graph_data, array("graph_title" => "Months Of Stock For ".$title.""));
 	
 		    foreach ($final_graph_data as $data) :
@@ -2583,13 +2625,13 @@ $month = $data['expiry_month'];
 			
 		else:
     		$graph_type = 'bar';			
-    		$graph_data = array_merge($graph_data,array("graph_id"=>'graph_default'));
+    		$graph_data = array_merge($graph_data,array("graph_id"=>'dem_graph_'));
 		    $graph_data = array_merge($graph_data,array("graph_title"=>"Months Of Stock For ".$title.""));
 		    $graph_data = array_merge($graph_data,array("graph_type"=>$graph_type));
 		    $graph_data = array_merge($graph_data,array("graph_yaxis_title"=>"Months of Stock"));
 		    $graph_data = array_merge($graph_data, array("graph_categories" => array()));
-
 			$graph_data = array_merge($graph_data, array("series_data" => array("Stock" =>array())));	
+			
 			foreach($final_graph_data as $final_graph_data_):
 				$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'], array($final_graph_data_['commodity_name']));
 				$graph_data['series_data']['Stock'] = array_merge($graph_data['series_data']['Stock'],array((int)$final_graph_data_['total']));	
@@ -2728,12 +2770,13 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 		$this -> load -> view($view, $data);
 	    }
 
-     	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null) 
+     	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null,$tracer = null) 
      	{
+     		
      	//reset the values here
         if($option=="mos"){
         	
-        return	$this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id,$report_type);
+        return	$this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id,$report_type,$tracer);
         }
       	$commodity_id = ($commodity_id=="NULL") ? null :$commodity_id;
 	 	$district_id = ($district_id=="NULL") ? null :$district_id;
@@ -2775,9 +2818,9 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 					array_push($series_data , array($data["commodity_name"],$data["facility_name"],$data["name"],(int) $data['total']));
 				endif;						
 			else:
-				$series_data  = array_merge($series_data , array($data["name"],(int)$data['total']));
+				$series_data  = array_merge($series_data , array((int)$data['total']));
 				$series_data_  = array_merge($series_data_ , array($data["name"],(int)$data['total']));
-				$category_data=array_merge($category_data, array($data["name"]));
+				$category_data = array_merge($category_data, array($data["commodity_name"]));
 			endif;
 
 
@@ -2816,6 +2859,7 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 		    $graph_data = array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
 
 		 $data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
+		
 		 
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		endif;
