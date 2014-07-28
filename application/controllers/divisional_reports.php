@@ -24,6 +24,7 @@ class Divisional_Reports extends MY_Controller
 	 	$user_indicator = $district_id = $this -> session -> userdata('user_indicator');
 	 	switch ($user_indicator) 
 	 	{
+	 		case facility_admin :   
 	 		case facility :
 				$facility_id = $this -> session -> userdata('facility_id');
 				

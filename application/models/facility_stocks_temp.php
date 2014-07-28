@@ -67,13 +67,13 @@ class facility_stocks_temp extends Doctrine_Record {
 		$and_data .=($division_id>0) ? " AND cm.commodity_division =$division_id " :null;
     	$and_data =isset( $and_data) ?  $and_data:null;
 
-    	$and_data .=(isset($commodity_id) && ($commodity_id>0))? " AND cm.id =$commodity_id " : " AND cm.tracer_item =1";
-    	
+    	$and_data .=(isset($commodity_id) && ($commodity_id>0))? " AND cm.id =$commodity_id " : null;
+    	//echo ; exit;
     $query_1 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
 		 select 
     cm.commodity_name,
-    round(avg(IFNULL(f_s.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),
-            1) as total, d1.district, f.facility_name
+    ifnull(round(avg(IFNULL(f_s.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),
+            1),0) as total, d1.district, f.facility_name
 			from
    				facilities f,
     			districts d1,

@@ -207,15 +207,26 @@ $group_by ");
 
 	public static function expiries_report($facility_code){
 		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-			select f_s.facility_code,f_s.commodity_id,f_s.batch_no,f_s.manufacture,
-			f_s.status,
-			c.commodity_name,c.commodity_code,
-			DATE_FORMAT(f_s.expiry_date ,'%d %b %y') as expiry_date,
-			DATE_FORMAT(f_s.expiry_date ,'%M %Y') as expiry_month
-			from  facility_stocks f_s 
-			LEFT JOIN  commodities c ON c.id=f_s.commodity_id 
-			where facility_code= $facility_code and f_s.status =1
-			and f_s.current_balance>0 and expiry_date <= NOW()");
+			select 
+    f_s.facility_code,
+    f_s.commodity_id,
+    f_s.batch_no,
+    f_s.manufacture,
+    f_s.status,
+    c.commodity_name,
+    c.commodity_code,
+    DATE_FORMAT(f_s.expiry_date, '%d %b %y') as expiry_date,
+    DATE_FORMAT(f_s.expiry_date, '%M %Y') as expiry_month
+from
+    facility_stocks f_s
+        LEFT JOIN
+    commodities c ON c.id = f_s.commodity_id
+where
+    facility_code = $facility_code
+        and f_s.current_balance > 0
+        and year(expiry_date) between year(NOW()) and year(DATE_ADD(CURDATE(),
+        INTERVAL 2 year)) 
+        order by f_s.expiry_date asc");
 		        return $stocks ;
 	}
 	      /////getting cost of exipries county
@@ -344,7 +355,10 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
 	 	
      $and_data .=(isset($category_id)&& ($category_id>0)) ?"AND d.commodity_sub_category_id = '$category_id'" : null;
      $and_data .=(isset($commodity_id)&& ($commodity_id>0)) ?"AND d.id = '$commodity_id'" : null;
+
+
      $and_data .=(isset($division_id)&& ($division_id>0)) ?"AND d.commodity_division = '$division_id' " :null;
+
 	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND di.id = '$district_id'" : null;
 	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;
      $and_data .=($county_id>0) ?" AND di.county='$county_id'" : null;
@@ -547,7 +561,8 @@ public static function get_facility_consumption_level_new($facilities_filter,$co
 					AND fs.status =  '1'
 					AND YEAR( fs.date_issued ) =$year_filter
 					AND cms.id = fs.commodity_id
-					GROUP BY service_name asc");		
+					GROUP BY service_name asc");	
+					
 			return $inserttransaction ;
 		break;
         default:
@@ -568,9 +583,8 @@ public static function get_facility_consumption_level_new($facilities_filter,$co
 					AND YEAR( fs.date_issued ) =$year_filter
 					AND cms.id = fs.commodity_id
 					GROUP BY MONTH( fs.date_issued ) asc");		
+					
 		return $inserttransaction ;
-	
-
 
  }
 public static function get_filtered_commodity_consumption_level($facilities_filter,$commodity_filter,$year_filter,$plot_value_filter)
@@ -609,6 +623,7 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
  public static function get_commodity_consumption_level($facilities_code)
  {
  	$year = date("Y");
+	
 		$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 		->fetchAll("SELECT MONTHNAME( fs.date_issued )as month, cms.commodity_name as commodity, fs.qty_issued AS total_consumption
 			FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
@@ -622,8 +637,6 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 			GROUP BY MONTH( fs.date_issued ) asc");		
 		return $inserttransaction ;
 		
-  
-
  }
  
  

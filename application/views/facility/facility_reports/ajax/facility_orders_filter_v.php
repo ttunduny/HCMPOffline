@@ -1,12 +1,12 @@
 <div class="filter">
 <h5>
 <select name="year" id="year_filter" style="width: 7.8em;">
-		<option value="0">Select Year</option>
+		<option value="NULL">Select Year</option>
 		<option value="2014">2014</option>
 		<option value="2013">2013</option>
 </select>
 <select name="month" id="month_filter" >
-			<option value="0" selected="selected">Select month</option>
+			<option value="NULL" selected="selected">Select month</option>
 			<option value="01">Jan</option>
 			<option value="02">Feb</option>
 			<option value="03">Mar</option>
@@ -20,12 +20,6 @@
 			<option value="11">Nov</option>
 			<option value="12">Dec</option>
 </select>
-<select id="plot_value_filter">
-	<option value="0">Select Plot value</option>
-	<option value="packs">Packs</option>
-	<option value="units">Units</option>
-	<option value="ksh">KSH</option>
-</select> 
 	<button class="btn btn-small btn-success" id="filter" name="filter" style="margin-left: 1em;">Filter <i class="icon-filter"></i></button> 
 	
 </h5>
@@ -37,14 +31,13 @@
 <script>
 	$(document).ready(function() 
 	{
-		<?php echo @$graph_data; ?>
 	
 			$("#filter").click(function() 
 			{
-				var url = "reports/filter_facility_orders/"+
+				var url = "reports/filter_facility_orders/<?php echo $this -> session -> userdata('facility_id')?>"+
+				        "/NULL/NULL/"+
 				        $("#year_filter").val()+
-				        "/"+$("#month_filter").val()+
-				         "/"+$("#plot_value_filter").val();
+				        "/"+$("#month_filter").val();
 
 				ajax_request_replace_div_content(url,'.graph-section');
 		
