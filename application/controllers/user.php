@@ -547,7 +547,6 @@ class User extends MY_Controller {
 
 	public function addnew_user(){
 
-		$county = $this -> session -> userdata('county_id');
 		$identifier = $this -> session -> userdata('user_indicator');
 
 		$fname = $_POST['first_name'];
@@ -559,7 +558,8 @@ class User extends MY_Controller {
 		$district_code = $_POST['district_name'];
 		$user_type = $_POST['user_type'];
 		$full_name= $fname .''.$lname; 
-		
+		$county=(!$this -> session -> userdata('county_id')) ? $_POST['county'] : $this -> session -> userdata('county_id');
+		echo exit;
 		switch ($identifier):
 			case 'moh':
 			
@@ -578,6 +578,26 @@ class User extends MY_Controller {
 			
 			
 			break;	
+        endswitch;
+		
+		switch ($user_type):
+			case 10:
+			$savethis =  new Users();
+				$savethis -> fname = $fname;
+				$savethis -> lname = $lname;
+				$savethis -> email = $email_address;
+				$savethis -> username = $username;
+				$savethis -> password = "123456";
+				$savethis -> activation = $save_activation_code ;
+				$savethis -> usertype_id = $user_type;
+				$savethis -> telephone = $telephone;
+				$savethis -> district = $district_code;
+				$savethis -> facility = $facility_id;
+				$savethis -> status = 1;
+				$savethis -> county_id = $county;
+				$savethis -> save(); exit;
+			break;
+
         endswitch;
 
 		//Generate a activation code

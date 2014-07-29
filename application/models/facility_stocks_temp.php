@@ -64,10 +64,12 @@ class facility_stocks_temp extends Doctrine_Record {
    		//$and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
     	$and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
    		$and_data .=($county_id>0) ?" AND c.id='$county_id'" : null;
+		$new=str_replace(" AND", ",", $and_data);
 		$and_data .=($division_id>0) ? " AND cm.commodity_division =$division_id " :null;
     	$and_data =isset( $and_data) ?  $and_data:null;
-
-    	$and_data .=(isset($commodity_id) && ($commodity_id>0))? " AND cm.id =$commodity_id " : null;
+        
+    	$and_data .=(isset($option) && ($option>0))? " AND cm.tracer_item =1" : " AND cm.id =$commodity_id ";
+		$group_by=(isset($option) && ($option>0))? " group by cm.id $new" : " group by cm.id ";
     	//echo ; exit;
     $query_1 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
 		 select 
@@ -89,7 +91,7 @@ class facility_stocks_temp extends Doctrine_Record {
         		and f_s.commodity_id = cm.id
         		and f_m_s.facility_code = f.facility_code
         		$and_data
-				group by cm.id
+				$group_by
 
 		 ");
 
@@ -109,29 +111,29 @@ class facility_stocks_temp extends Doctrine_Record {
     	$and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
    		$and_data .=($county_id>0) ?" AND c.id='$county_id'" : null;
 		$and_data .=($division_id>0) ? " AND cm.commodity_division =$division_id " :" AND cm.commodity_division >=1 ";
-    	$and_data =isset( $and_data) ?  $and_data:null;
+    	$and_data = isset($and_data) ?  $and_data:null;
     	
     	$query_1 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
 		 select 
-    cm.commodity_name,
-    round(avg(IFNULL(f_s.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),
-            1) as total, d1.district, f.facility_name
-			from
-   				facilities f,
-    			districts d1,
-    			counties c,
-    			facility_stocks f_s,
-    			commodities cm
-        	left join
-    			facility_monthly_stock f_m_s ON f_m_s.`commodity_id` = cm.id
-			where
-    			f_s.facility_code = f.facility_code
-        		and f.district = d1.id
-        		and d1.county = c.id
-        		and f_s.commodity_id = cm.id
-        		and f_m_s.facility_code = f.facility_code
-        		$and_data
-				group by cm.id
+	    cm.commodity_name,
+	    round(avg(IFNULL(f_s.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),
+	            1) as total, d1.district, f.facility_name
+				from
+	   				facilities f,
+	    			districts d1,
+	    			counties c,
+	    			facility_stocks f_s,
+	    			commodities cm
+	        	left join
+	    			facility_monthly_stock f_m_s ON f_m_s.`commodity_id` = cm.id
+				where
+	    			f_s.facility_code = f.facility_code
+	        		and f.district = d1.id
+	        		and d1.county = c.id
+	        		and f_s.commodity_id = cm.id
+	        		and f_m_s.facility_code = f.facility_code
+	        		$and_data
+					group by cm.id
 
 		 ");
 		
