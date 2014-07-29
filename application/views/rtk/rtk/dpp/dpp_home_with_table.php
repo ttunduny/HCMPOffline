@@ -58,7 +58,7 @@ $englishdate = date('F, Y', strtotime($monthyear));
         });
     });
     function loadcountysummary(county) {
-//            $(".dash_main").load("http://localhost/HCMP/rtk_management/rtk_reporting_by_county/" + county);
+            //$(".dash_main").load("<?php echo base_url(); ?>/rtk_management/rtk_reporting_by_county/" + county);
     }
 </script>
 <style>  
@@ -66,6 +66,9 @@ $englishdate = date('F, Y', strtotime($monthyear));
     body > div.container-fluid > div > div > div.leftpanel > div > span{font-size: 18px;text-transform: uppercase;font-style: oblique;font-family: calibri;padding: 0px 6px 5px 17px;border-bottom: solid 1px #ccc;background: #D6CA00;width: 100%;font-style: normal;}
     .label {font-size: 11px;padding: 3px;}
     body > div.container-fluid > div > h1{margin-left: 235px;}
+    table {
+        font-size: 13px;
+    }
 </style>
 <script type="text/javascript">
     $(function() {
@@ -100,11 +103,11 @@ $englishdate = date('F, Y', strtotime($monthyear));
             $option .= '<option value = "' . $value['id'] . '">' . $value['district'] . '</option>';
         }
         ?>
-        <span style="" class="label label-info">Switch districts</span>
+        <span style="" class="label label-info">Switch Sub-Counties</span>
         <br />
         <br />
         <select id="switch_district">
-            <option>-- Select District --</option>
+            <option>-- Select Sub-County --</option>
             <?php echo $option; ?>
         </select>
         <br />
@@ -112,15 +115,15 @@ $englishdate = date('F, Y', strtotime($monthyear));
             <div class="panel panel-default active-panel">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a href="<?php echo site_url('rtk_management/rtk_allocation'); ?>" href="#collapseOne" id="notifications"><span class="glyphicon glyphicon-bullhorn">
+                        <a href="<?php echo base_url('Home'); ?>" href="#collapseOne" id="notifications"><span class="glyphicon glyphicon-bullhorn">
                             </span>Home</a>
                     </h4>
                 </div>
             </div>
             <div class="panel panel-default active-panel">
                 <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a href="<?php echo site_url('rtk_management/rtk_allocation'); ?>" href="#collapseOne" id="notifications"><span class="glyphicon glyphicon-stats">
+                    <h4 class="panel-title" id="dpp_stats">                        
+                        <a href="#" href="#collapseOne" id="notifications"><span class="glyphicon glyphicon-stats">
                             </span>Statistics</a>
                     </h4>
                 </div>
@@ -194,26 +197,26 @@ $englishdate = date('F, Y', strtotime($monthyear));
         $five_days_prior = $deadline_date - 5;
 
         if ($date > 0 && $date < $five_days_prior) {
-            $alertmsg = '<strong>Take note: ' . $d_name . ' District</strong><br /><br />
+            $alertmsg = '<strong>Take note: ' . $d_name . ' Sub-County</strong><br /><br />
                                 Reporting for ' . $lastmonth . ' is on, and the Deadline is on the ' . $deadline_date . '<br > Click on <u>Report</u> for all Facilities with the red label
                                 after this label within the table below<br > <span class="label label-important">  Pending for ' . $lastmonth . '</span>';
             $alertype = "success";
             echo '<div class="alert ' . $alertype . '">' . $alertmsg . ' </div>';
         } else if ($date == $five_days_prior) {
-            $alertmsg = '<strong>Take note: ' . $d_name . ' District</strong><br /><br />' . $five_day_alert;
+            $alertmsg = '<strong>Take note: ' . $d_name . ' Sub-County</strong><br /><br />' . $five_day_alert;
             $alertype = "error";
             echo '<div class="alert ' . $alertype . '">' . $alertmsg . ' </div>';
         } else if ($date > $five_days_prior && $date < $deadline_date) {
-            $alertmsg = '<strong>Take note: ' . $d_name . ' District</strong><br /><br />
+            $alertmsg = '<strong>Take note: ' . $d_name . ' Sub-County</strong><br /><br />
                                 You are Requested to Complete the Reporting Process as you have ' . $remainingdays . ' days left';
             $alertype = "error";
             echo '<div class="alert ' . $alertype . '">' . $alertmsg . ' </div>';
         } else if ($date == $deadline_date) {
-            $alertmsg = '<strong>Take note: ' . $d_name . ' District</strong><br /><br />' . $report_day_alert;
+            $alertmsg = '<strong>Take note: ' . $d_name . ' Sub-County</strong><br /><br />' . $report_day_alert;
             $alertype = "error";
             echo '<div class="alert ' . $alertype . '">' . $alertmsg . ' </div>';
         } else if ($date > $deadline_date) {
-            $alertmsg = '<strong>Take note: ' . $d_name . ' District</strong><br /><br />' . $overdue_alert;
+            $alertmsg = '<strong>Take note: ' . $d_name . ' Sub-County</strong><br /><br />' . $overdue_alert;
             $alertype = "bg-danger";
             echo '<div class="alert ' . $alertype . '">' . $alertmsg . ' </div>';
         }

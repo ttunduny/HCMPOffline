@@ -8,23 +8,38 @@ $month = substr_replace($month, "", -4);
 $monthyear = $year . '-' . $month . '-1';
 $englishdate = date('F, Y', strtotime($monthyear));
 ?>
-<script src="<?php echo base_url() . 'Scripts/accordion.js' ?>" type="text/javascript"></script>
-<SCRIPT LANGUAGE="Javascript" SRC="<?php echo base_url(); ?>Scripts/FusionCharts/FusionCharts.js"></SCRIPT> 
-<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>Scripts/jquery.dataTables.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/datatable/jquery.dataTables.js"></script>
 <style type="text/css" title="currentStyle">
-
-@import "<?php echo base_url(); ?>DataTables-1.9.3 /media/css/jquery.dataTables.css";
-
-
 </style>
 <script type="text/javascript">
 
 $(document).ready(function() {
 
-    $('#example_main').dataTable({
-        "bPaginate": false,
-        "aaSorting": [[3, "asc"]]
-    });
+    $('table').dataTable({
+                        "sDom": "T lfrtip",
+                        "bPaginate": true,
+                        "aaSorting": [[0, "desc"]],
+                        "sScrollY": "377px",
+                        "sScrollX": "100%",
+                        "sPaginationType": "bootstrap",
+                        "oLanguage": {
+                            "sLengthMenu": "_MENU_ Records per page",
+                            "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
+                        },
+                        "oTableTools": {
+                            "aButtons": [
+                                "copy",
+                                "print",
+                                {
+                                    "sExtends": "collection",
+                                    "sButtonText": 'Save',
+                                    "aButtons": ["csv", "xls", "pdf"]
+                                }
+                            ],
+                            "sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+                        }
+                    });
+                    $("table").tablecloth({theme: "paper"});
     $.fn.slideFadeToggle = function(speed, easing, callback) {
         return this.animate({
             opacity: 'toggle',
@@ -42,7 +57,7 @@ $(document).ready(function() {
 
 $("#dpp_stats").click(function(event)
         {
-            $("dash_main").load("<?php echo base_url(); ?>rtk_management/summary_tab_display/" + <?php echo $countyid; ?> + "/<?php echo $year; ?>/<?php echo $month; ?>/");
+            $(".dataTables_wrapper").load("<?php echo base_url(); ?>rtk_management/summary_tab_display/" + <?php echo $countyid; ?> + "/<?php echo $year; ?>/<?php echo $month; ?>/");
 
         });
     });
@@ -52,6 +67,15 @@ function loadcountysummary(county) {
 }
 
 </script>
+<style>  
+    #switch_district{font-size: 17px;margin: 8px 0px 13px 0px;}
+    body > div.container-fluid > div > div > div.leftpanel > div > span{font-size: 18px;text-transform: uppercase;font-style: oblique;font-family: calibri;padding: 0px 6px 5px 17px;border-bottom: solid 1px #ccc;background: #D6CA00;width: 100%;font-style: normal;}
+    .label {font-size: 11px;padding: 3px;}
+    body > div.container-fluid > div > h1{margin-left: 235px;}
+    table {
+        font-size: 12px;
+    }
+</style>
 <style>
 .leftpanel{
     width: 17%;
@@ -94,10 +118,9 @@ function loadcountysummary(county) {
 }
 
 .dash_main{
-    width: 82%;       
-    height:500px;
-    float: left;
-    margin-left:0.75em;
+    width: 94%;       
+    height:520px;   
+    margin-left:90px;
     margin-bottom:0em;
     font-size: 14px;
 }
@@ -173,11 +196,11 @@ window.location.href = path;
             $option .= '<option value = "' . $value['id'] . '">' . $value['district'] . '</option>';
         }
         ?>
-        <span style="" class="label label-info">Switch districts</span>
+        <span style="" class="label label-info">Switch Sub-Counties</span>
         <br />
         <br />
         <select id="switch_district">
-            <option>-- Select District --</option>
+            <option>-- Select Sub-County --</option>
             <?php echo $option; ?>
         </select>
         <br />
@@ -185,15 +208,15 @@ window.location.href = path;
             <div class="panel panel-default active-panel">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a href="<?php echo site_url('rtk_management/rtk_allocation'); ?>" href="#collapseOne" id="notifications"><span class="glyphicon glyphicon-bullhorn">
+                        <a href="<?php echo base_url('Home'); ?>" href="#collapseOne" id="notifications"><span class="glyphicon glyphicon-bullhorn">
                             </span>Home</a>
                     </h4>
                 </div>
             </div>
             <div class="panel panel-default active-panel">
                 <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a href="<?php echo site_url('rtk_management/rtk_allocation'); ?>" href="#collapseOne" id="notifications"><span class="glyphicon glyphicon-stats">
+                    <h4 class="panel-title" id="dpp_stats">
+                        <a href="#" href="#collapseOne" id="notifications"><span class="glyphicon glyphicon-stats">
                             </span>Statistics</a>
                     </h4>
                 </div>
@@ -216,16 +239,17 @@ window.location.href = path;
             </div>
         </div>
     </div>
+</div>
 </div> 
       <?php
       $district = $this->session->userdata('district1');
       $district_name = Districts::get_district_name($district)->toArray();
-      $d_name = $district_name[0]['district'];
+      //$d_name = $district_name[0]['district'];
       ?>
-
-      <div class="dash_main" id = "dash_main">
-        <div id="notification">View all orders for <?php echo $d_name; ?> district below</div>
-        <div id="tablediv" style="height:350px; overflow:scroll;">
+      
+      <div class="dash_main" id="dash_main">        
+        <div id="tablediv" style="margin-left:190px;">
+        <div id="notification" style="margin-left:280px;font-size:14px;font-weight:bold" >View all orders for <?php echo $d_name; ?> Sub-County Below</div>  
         <?php if (count($lab_order_list) > 0) : ?>
         <table width="100%" id="example">
           <thead>
@@ -234,7 +258,7 @@ window.location.href = path;
               <th>MFL&nbsp;Code</th>
               <th>Facility Name</th>
               <th>Compiled By</th>
-              <th>Order Type</th>
+              <!--th>Order Type</th-->
               <th>Order&nbsp;Date</th>
               <th>Action</th>
             </tr>
@@ -243,7 +267,7 @@ window.location.href = path;
             <?php
             foreach ($lab_order_list as $order) {
               $english_date = date('D dS M Y',strtotime($order['order_date']));
-              $reportmonth = date('F',strtotime('-1 month',strtotime($order['order_date'])));
+              $reportmonth = date('F Y',strtotime('-1 month',strtotime($order['order_date'])));
 
               ?>
               <tr>
@@ -251,9 +275,9 @@ window.location.href = path;
                 <td><?php echo $order['facility_code']; ?></td>
                 <td><?php echo $order['facility_name']; ?></td>
                 <td><?php echo $order['compiled_by']; ?></td>
-                <td><?php echo "Lab Commodities"; ?></td>
+                <!--td><?php echo "Lab Commodities"; ?></td-->
                 <td><?php echo $english_date; ?></td>
-                <td><a href="<?php echo site_url('rtk_management/lab_order_details/' . $order['id']); ?>"class="link">View</a><!--|<a href="<?php echo site_url('rtk_management/edit_lab_order_details/' . $order['id']); ?>"class="link">Edit</a>--></td>
+                <td><a href="<?php echo site_url('rtk_management/lab_order_details/' . $order['id']); ?>"class="link">View</a> | <a href="<?php echo site_url('rtk_management/edit_lab_order_details/' . $order['id']); ?>"class="link">Edit</a></td>
               </tr> 
               <?php
             }

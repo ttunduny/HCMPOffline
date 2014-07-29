@@ -632,7 +632,7 @@ class Rtk_Management extends Home_controller {
         $data['zone_d_stats'] = $this->zone_allocation_stats('d');
 
         $data['banner_text'] = 'National';
-        $data['content_view'] = 'rtk/allocation/allocation_home_view';
+        $data['content_view'] = 'rtk/rtk/allocation/allocation_home_view';
         $data['title'] = 'National Summary: ';
         $this->load->view("rtk/template", $data);
     }
@@ -1722,7 +1722,7 @@ class Rtk_Management extends Home_controller {
 
         $htmltable .= '<tr style="background: #E9E9E3; border-top: solid 1px #ccc;">
           <td>Totals</td>
-          <td>' . $ish['districts'] . ' districts</td>
+          <td>' . $ish['districts'] . ' Sub-Counties</td>
           <td>' . $ish['facilities'] . '</td>
           <td>' . $total_punctual . '</td>
           <td>' . $ish['late_reports'] . '</td>
@@ -1734,7 +1734,7 @@ class Rtk_Management extends Home_controller {
           <table class="data-table">
           <thead><tr>
           <th>County</th>
-          <th>District</th>
+          <th>Sub-County</th>
           <th>No of facilities</th>
           <th>No reports before 10th</th>
           <th>No of late reports (10th-12th)</th>
@@ -2751,7 +2751,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $data['nonreported'] = $nonreported;
 
         $data['table_body'] = $table_body;
-        $data['title'] = "RTK";
+        $data['title'] = "Home";
         $data['popout'] = "Your order has been saved.";
         $data['content_view'] = "rtk/rtk/dpp/dpp_home_with_table";
         $data['banner_text'] = "Home";
@@ -2769,7 +2769,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         //     ini_set('memory_limit', '-1');
 
         $data['order_id'] = $order_id;
-        $data['content_view'] = "rtk/dpp/lab_commodities_report_edit_v";
+        $data['content_view'] = "rtk/rtk/dpp/lab_commodities_report_edit_v";
         $data['banner_text'] = "Lab Commodity Order Details";
         $data['lab_categories'] = Lab_Commodity_Categories::get_all();
         $data['detail_list'] = Lab_Commodity_Details::get_order($order_id);
@@ -3091,15 +3091,16 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
     }
 
     public function rtk_orders($msg = NULL) {
-        $district = $this->session->userdata('district_id');
-        $district_name = Districts::get_district_name($district)->toArray();
+        $district = $this->session->userdata('district_id');        
+        $district_name = Districts::get_district_name($district)->toArray();        
         $d_name = $district_name[0]['district'];
         $countyid = $this->session->userdata('county_id');
+
         $data['countyid'] = $countyid;
 
-        $data['title'] = "District Orders";
+        $data['title'] = "Orders";
         $data['content_view'] = "rtk/rtk/dpp/rtk_orders_listing_v";
-        $data['banner_text'] = $d_name . " District Orders";
+        $data['banner_text'] = $d_name . "Orders";
         //        $data['fcdrr_order_list'] = Lab_Commodity_Orders::get_district_orders($district);
         ini_set('memory_limit', '-1');
 
@@ -3107,19 +3108,28 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $last_month = date('m');
         //            $month_ago=date('Y-'.$last_month.'-d');
         $month_ago = date('Y-m-d', strtotime("last day of previous month"));
-        $query = $this->db->query("SELECT  
+        $sql = 'SELECT  
+    facilities.facility_code,facilities.facility_name,lab_commodity_orders.id,lab_commodity_orders.order_date,lab_commodity_orders.district_id,lab_commodity_orders.compiled_by,lab_commodity_orders.facility_code
+    FROM lab_commodity_orders, facilities
+    WHERE lab_commodity_orders.facility_code = facilities.facility_code 
+    AND lab_commodity_orders.order_date between ' . $month_ago . ' AND NOW()
+    AND lab_commodity_orders.district_id =' . $district . '
+    ORDER BY  lab_commodity_orders.id DESC ';       
+        /*$query = $this->db->query("SELECT  
             facilities.facility_code,facilities.facility_name,lab_commodity_orders.id,lab_commodity_orders.order_date,lab_commodity_orders.district_id,lab_commodity_orders.compiled_by,lab_commodity_orders.facility_code
             FROM lab_commodity_orders, facilities
             WHERE lab_commodity_orders.facility_code = facilities.facility_code 
             AND lab_commodity_orders.order_date between '$month_ago ' AND NOW()
             AND lab_commodity_orders.district_id =' . $district . '
-            ORDER BY  lab_commodity_orders.id DESC");
+            ORDER BY  lab_commodity_orders.id DESC");*/
+        $query = $this->db->query($sql);
 
         $data['lab_order_list'] = $query->result_array();
         $data['all_orders'] = Lab_Commodity_Orders::get_district_orders($district);
         $myobj = Doctrine::getTable('districts')->find($district);
         //$data['district_incharge']=array($id=>$myobj->district);
         $data['myClass'] = $this;
+        $data['d_name'] = $d_name;
         $data['msg'] = $msg;
 
         $this->load->view("rtk/template", $data);
@@ -3600,40 +3610,24 @@ WHERE
         $district_name = Districts::get_district_name($district)->toArray();
         $countyid = $this->session->userdata('county_id');
         $data['countyid'] = $countyid;
-        $d_name = $district_name[0]['district'];
-        $data['title'] = "District Allocations";
+        $d_name = $district_name[0]['district'];     
+        $data['title'] = "Allocations";
         $data['content_view'] = "rtk/rtk/dpp/rtk_allocation_v";
-        $data['banner_text'] = $d_name . " District Allocation";
+        $data['banner_text'] = $d_name . "Allocation";
 //        $data['lab_order_list'] = Lab_Commodity_Orders::get_district_orders($district);
         ini_set('memory_limit', '-1');
 
         $start_date = date("Y-m-", strtotime("-3 Month "));
         $start_date .='1';
 
-        $end_date = date('Y-m-d', strtotime("last day of previous month"));
-        //$month = date('F', strtotime($end_date));
-        /*    $sql = "SELECT distinct lab_commodity_details.* ,lab_commodity_orders.order_date,facilities.facility_name, lab_commodities.commodity_name, facility_amc.amc 
-          from lab_commodity_details, lab_commodity_orders, facilities, lab_commodities,facility_amc
-          where lab_commodity_details.facility_code=lab_commodity_orders.facility_code
-          and lab_commodity_details.district_id = '$district'
-          and facilities.facility_code = lab_commodity_details.facility_code
-          and lab_commodities.id = lab_commodity_details.commodity_id
-          and lab_commodity_details.allocated > 0
-          and facilities.facility_code = facility_amc.facility_code
-          and lab_commodities.id = facility_amc.commodity_id
-          and lab_commodity_details.created_at between '$start_date' and '$end_date' ";
-          //        echo "$sql";die();
-          $query = $this->db->query($sql);
-          //echo "<pre>";
-          //print_r($query->result_array());die();
-          $data['lab_order_list'] = $query->result_array(); */
+        $end_date = date('Y-m-d', strtotime("last day of previous month"));      
         $allocations = $this->allocation(NULL, $county = NULL, $district, $facility = NULL, $sincedate = NULL, $enddate = NULL);
         $data['lab_order_list'] = $allocations;
         $data['all_orders'] = Lab_Commodity_Orders::get_district_orders($district);
         $myobj = Doctrine::getTable('districts')->find($district);
         $data['myClass'] = $this;
-        $data['msg'] = $msg;
-        //$data['month'] = $month;
+        $data['msg'] = $msg;        
+        $data['d_name'] = $d_name;
 
         $this->load->view("rtk/template", $data);
     }
