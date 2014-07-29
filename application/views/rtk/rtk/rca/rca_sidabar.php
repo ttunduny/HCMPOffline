@@ -18,7 +18,7 @@
 
     <ul class="nav nav-pills nav-stacked" style="font-size:100%">
         <li><a href="<?php echo base_url().'rtk_management/county_home'?>">Summary</a></li>        
-        <li><a href="<?php echo base_url().'rtk_management/rca_districts'?>">Districts</a></li>
+        <li><a href="<?php echo base_url().'rtk_management/rca_districts'?>">Sub-Counties</a></li>
         <li><a href="<?php echo base_url().'rtk_management/rca_pending_facilities'?>">Pending Facilities</a></li>
         <li><a href="<?php echo base_url().'rtk_management/rca_facilities_reports' ?>">Reports</a></li>
         <li><a href="<?php echo base_url().'rtk_management/county_admin/users' ?>">Users</a></li>

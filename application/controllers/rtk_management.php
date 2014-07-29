@@ -306,7 +306,7 @@ class Rtk_Management extends Home_controller {
         $data['county'] = $County;
         $data['pending_facility'] = $pending_facilities;
         $data['title'] = 'RTK County Admin';
-        $data['banner_text'] = 'RTK County Admin';
+        $data['banner_text'] = 'RTK County Admin: Pending Facilities';
         $data['content_view'] = "rtk/rtk/rca/pending_facilities_v";
         $this->load->view("rtk/template", $data);
     }
@@ -427,7 +427,7 @@ class Rtk_Management extends Home_controller {
         $data['facilities_count'] = $table_data_facilities;
         $data['county'] = $County;
         $data['title'] = 'RTK County Admin';
-        $data['banner_text'] = 'RTK County Admin';
+        $data['banner_text'] = "RTK County Admin: Sub-Counties in $County County";
         $data['content_view'] = "rtk/rtk/rca/districts_v";
         $this->load->view("rtk/template", $data);
     }
@@ -457,7 +457,7 @@ class Rtk_Management extends Home_controller {
 
         $data['county'] = $County;
         $data['title'] = 'RTK County Admin';
-        $data['banner_text'] = 'RTK County Admin';
+        $data['banner_text'] = "RTK County Admin: Available Reports for $County County";
         $data['content_view'] = "rtk/rtk/rca/facilities_reports_v";
         $this->load->view("rtk/template", $data);
     }
@@ -470,8 +470,7 @@ class Rtk_Management extends Home_controller {
         $districts = districts::getDistrict($Countyid);
 
         $facilities = $this->_facilities_in_county($Countyid);
-        $users = $this->_users_in_county($Countyid, 7);
-
+        $users = $this->_users_in_county($Countyid, 7);        
         $data['facilities'] = $facilities;
         $data['users'] = $users;
         $data['districts'] = $this->_districts_in_county($Countyid);
@@ -490,9 +489,11 @@ class Rtk_Management extends Home_controller {
         $lastday = date('Y-m-d', strtotime("last day of previous month"));
         $County = $this->session->userdata('county_name');
         $Countyid = $this->session->userdata('county_id');
-        $districts = districts::getDistrict($Countyid);
-        $facility = facilities::get_facility_name_($mfl);
-
+        $districts = districts::getDistrict($Countyid);         
+        $sql = "select * from facilities where facility_code=$mfl";
+        $facility = $this->db->query($sql)->result_array();
+        //$facility = facilities::get_facility_name($mfl);        
+        
         $data['reports'] = $this->_monthly_facility_reports($mfl);
         $data['facility_county'] = $data['reports'][0]['county'];
         $data['facility_district'] = $data['reports'][0]['district'];
@@ -505,10 +506,10 @@ class Rtk_Management extends Home_controller {
         $data['county'] = $County;
         $data['mfl'] = $mfl;
         $data['countyid'] = $Countyid;
-        $data['title'] = $facility['facility_name'] . '-' . $mfl;
+        $data['title'] = $facility[0]['facility_name'] . '-' . $mfl;
         $data['facility_name'] = $facility['facility_name'];
-        $data['banner_text'] = 'Facility Profile: ' . $facility['facility_name'] . '-' . $mfl;
-        $data['content_view'] = "rtk/facility_profile_view";
+        $data['banner_text'] = 'Facility Profile: ' . $facility[0]['facility_name'] . '-' . $mfl;
+        $data['content_view'] = "rtk/rtk/facility_profile_view";
 
         $this->load->view("rtk/template", $data);
     }
@@ -873,7 +874,7 @@ class Rtk_Management extends Home_controller {
 
     public function delete_user($user, $district, $redirect_url = null) {
         $sql = 'DELETE FROM `user` WHERE `id` =' . $user
-                . ' AND  `usertype_id` =12'
+                . ' AND  `usertype_id` =7'
                 . ' AND  `district` =' . $district;
 
         $object_id = $user;
@@ -4506,8 +4507,8 @@ WHERE
         $fname = addslashes($fname);
         $lname = addslashes($lname);
 
-        $sql = "INSERT INTO `kemsa2`.`user` (`id`, `fname`, `lname`, `email`, `username`, `password`, `usertype_id`, `telephone`, `district`, `facility`, `created_at`, `updated_at`, `status`, `county_id`)
-        VALUES (NULL, '$fname', '$lname', '$email', '$email', 'b56578e2f9d28c7497f42b32cbaf7d68', '12', '$phone', '$district', NULL, '$time', '$time', '1', '$county');";
+        $sql = "INSERT INTO `user` (`id`, `fname`, `lname`, `email`, `username`, `password`, `usertype_id`, `telephone`, `district`, `facility`, `created_at`, `updated_at`, `status`, `county_id`)
+        VALUES (NULL, '$fname', '$lname', '$email', '$email', 'b56578e2f9d28c7497f42b32cbaf7d68', '7', '$phone', '$district', NULL, '$time', '$time', '1', '$county');";
         $this->db->query($sql);
         $object_id = $this->db->insert_id();
         $this->logData('1', $object_id);

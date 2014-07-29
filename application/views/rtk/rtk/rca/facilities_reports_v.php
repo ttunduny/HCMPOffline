@@ -104,7 +104,7 @@ foreach ($res->result_array() as $key => $value) {
 <div class="dash_main" style="width: 80%;float: right; overflow: scroll; height: 400px">
 <div id="top" style="margin-left:150px">
     <p>
-        <h4>Available Reports for <?php echo $county; ?> County</h4>
+        <!--h4>Available Reports for <?php echo $county; ?> County</h4-->
     </p>
 </div>
 

@@ -99,7 +99,7 @@ foreach ($res->result_array() as $key => $value) {
         <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto">
         	 <table class="table" id="pending">
                 <thead>
-                    <th>District</th>
+                    <th>Sub-County</th>
                     <th>No of Facilities</th>
                 </thead>
                 <tbody>
