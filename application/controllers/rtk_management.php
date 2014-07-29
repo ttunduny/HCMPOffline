@@ -4794,7 +4794,7 @@ WHERE
         $data['title'] = 'RTK Manager Messages';
         $data['banner_text'] = 'RTK Manager';
         //$data['content_view'] = "rtk/rtk/admin/admin_home_view";
-        $data['content_view'] = "rtk/admin/messages";
+        $data['content_view'] = "rtk/rtk/admin/messages";
         $users = $this->_get_rtk_users();
         $data['users'] = $users;
         $this->load->view('rtk/template', $data);
