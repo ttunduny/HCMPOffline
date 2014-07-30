@@ -139,7 +139,7 @@ if ($this->session->userdata('switched_as') == 'dpp') {
 </div>
 <div class="dash_main" id = "dash_main">     
     <div id="notification" style="font-weight:bold;font-size:14px;">View all Allocations for <?php echo $d_name; ?> Sub-County Below</div><br>
-    <?php if (count($lab_order_list) > 0) : ?>
+    <?php  ?>
     <table width="100%" id="example" class="data-table">
         <thead>
             <th><b>Month</b></th>
@@ -172,31 +172,12 @@ if ($this->session->userdata('switched_as') == 'dpp') {
         </tr>
         
         <?php
-        $count++;
-    }
+        $count++;}
     ?>
 </tbody>
 </table>
-<?php
-else :?>
-<table width="100%" id="example1" class="data-table">
-    <thead>
-        <th><b>MFL Code</b></th>
-        <th><b>Facility Name</b></th>
-        <th><b>Commodity</b></th>
-        <th><b>(AMC)</b></th> 
-        <th><b>End Balance</b></th>
-        <th><b>Quantity Requested</b></th>
-        <th><b>Quantity Allocated</b></th>
-    </tr>
-</thead>
-<tbody>                   
-    <tr><td colspan="7"><center>No Records Found</center></td></tr>
-    
-</tbody>
-</table>
-<?php endif;
-?>
+ 
+ 
 </div></div>
 
 <link rel="stylesheet" type="text/css" href="http://tableclothjs.com/assets/css/tablecloth.css">

@@ -13,7 +13,7 @@
 		<option value="2013">2013</option>
 </select>
 	<select name="month" id="month_filter" >
-			<option value="null" selected="selected">Select month</option>
+			<option value="0" selected="selected">Select month</option>
 			<option value="01">Jan</option>
 			<option value="02">Feb</option>
 			<option value="03">Mar</option>
@@ -28,7 +28,8 @@
 			<option value="12">Dec</option>
 		</select>
  
-	<button class="btn btn-small btn-success" id="filter" name="filter" style="margin-left: 1em;">Filter <i class="icon-filter"></i></button> 
+	<button class="btn btn-small btn-success" id="filter" name="filter" style="margin-left: 1em;"><span class="glyphicon glyphicon-filter">Filter</button> 
+	<button class="btn btn-small btn-success" id="download" name="download" style="margin-left: 1em;"><span class="glyphicon glyphicon-save">Download</button> 
 	
 	</h5>
 </div>
@@ -104,7 +105,13 @@ $(document).ready(function() {
         	ajax_request_replace_div_content(url,'#log_data_graph');
 		
           });
-
+	$("#download").click(function(){
+		var url_ = "reports/get_user_activities_excel/"+
+				        $("#year_filter").val()+
+				        "/"+$("#month_filter").val();
+		window.open(url+url_ ,'_blank'); 
+        			
+          });
 		
 		
  	});
