@@ -206,7 +206,7 @@ class Rtk_Management extends Home_controller {
     public function rtk_manager_admin() {
         $data['title'] = 'RTK Manager';
         $data['banner_text'] = 'RTK Manager';
-        $data['content_view'] = "rtk/rtk/admin/admin_home_view";
+        $data['content_view'] = "rtk/rtk/rtk/admin/admin_home_view";
 
         $users = $this->_get_rtk_users();
         $data['users'] = $users;
@@ -447,7 +447,7 @@ class Rtk_Management extends Home_controller {
         WHERE districts.county = counties.id
         AND facilities.district = districts.id
         AND lab_commodity_orders.facility_code = facilities.facility_code
-        AND counties.id =$county 
+        AND counties.id = $county 
         ORDER BY   `lab_commodity_orders`.`order_date` DESC ,`lab_commodity_orders`.`district_id` ASC";
 
         $res = $this->db->query($sql);
@@ -492,8 +492,8 @@ class Rtk_Management extends Home_controller {
         $districts = districts::getDistrict($Countyid);         
         $sql = "select * from facilities where facility_code=$mfl";
         $facility = $this->db->query($sql)->result_array();
-        //$facility = facilities::get_facility_name($mfl);        
-        
+        //$facility = facilities::get_facility_name($mfl);
+        $mfl =  $facility[0]['facility_code'];       
         $data['reports'] = $this->_monthly_facility_reports($mfl);
         $data['facility_county'] = $data['reports'][0]['county'];
         $data['facility_district'] = $data['reports'][0]['district'];
@@ -3112,9 +3112,9 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
     FROM lab_commodity_orders, facilities
     WHERE lab_commodity_orders.facility_code = facilities.facility_code 
     AND lab_commodity_orders.order_date between ' . $month_ago . ' AND NOW()
-    AND lab_commodity_orders.district_id =' . $district . '
-    ORDER BY  lab_commodity_orders.id DESC ';       
-        /*$query = $this->db->query("SELECT  
+    AND facilities.district =' . $district . '
+    ORDER BY  lab_commodity_orders.id DESC ';
+    echo($sql);die;        /*$query = $this->db->query("SELECT  
             facilities.facility_code,facilities.facility_name,lab_commodity_orders.id,lab_commodity_orders.order_date,lab_commodity_orders.district_id,lab_commodity_orders.compiled_by,lab_commodity_orders.facility_code
             FROM lab_commodity_orders, facilities
             WHERE lab_commodity_orders.facility_code = facilities.facility_code 
@@ -4586,7 +4586,6 @@ WHERE
             array_push($facility_arr, $details);
             array_push($sum_facilities, $facility_arr);
         }
-
         return $sum_facilities;
     }
 

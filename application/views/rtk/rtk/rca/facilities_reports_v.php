@@ -83,14 +83,14 @@ foreach ($res->result_array() as $key => $value) {
     $(function() {        
         $('#switch_month').change(function() {
             var value = $('#switch_month').val();
-            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rca/'; ?>" + value + "/";
+            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rtk_county_admin/'; ?>" + value + "/";
 //              alert (path);
             window.location.href = path;
         });
 
         $('#switch_county').change(function() {
             var value = $('#switch_county').val();
-            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rca/0/home_controller/'; ?>" + value + "";
+            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rtk_county_admin/0/home_controller/'; ?>" + value + "";
 //              alert (path);
             window.location.href = path;
         });
