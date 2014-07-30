@@ -236,7 +236,11 @@ class User extends MY_Controller {
                           <td>
                           Hi ' . $Usersname . ', </br>
 		<p>
+<<<<<<< HEAD
 		HCMP account username '.$email_address.'.You recently requested for a password reset.</br>
+=======
+		You are HCMP account username '.$email_address.'.You recently requested for a password reset.</br>
+>>>>>>> 3fdf95f787b16f58bb572e87bc0cb5c0961bb277
 		If you made this request ,this is your reset code.</br></p> 
 	
 		<table class="twelve columns">
@@ -274,7 +278,61 @@ class User extends MY_Controller {
 
                     </td>
                   </tr>
-                </table>';
+                </table>
+
+<<<<<<< HEAD
+                <table class="row footer">
+                  <tr>
+                    <td class="wrapper">
+
+                    </td>
+                    <td class="wrapper last">
+
+                      <table class="six columns">
+                        <tr>
+                          <td class="last right-text-pad">
+                            <h5>Contact Info:</h5>
+                            <p>Phone: +254720xxxxxx</p>
+                            <p>Email: <a href="mailto:admin@hcmp.com">admin@hcmp.com</a></p>
+                          </td>
+                          <td class="expander"></td>
+                        </tr>
+                      </table>
+
+                    </td>
+                  </tr>
+                </table>
+
+
+                <table class="row">
+                  <tr>
+                    <td class="wrapper last">
+
+                      <table class="twelve columns">
+                        <tr>
+                          <td align="center">
+                            <center>
+                              <p style="text-align:center;"><a href="#">Terms</a> | <a href="#">Privacy</a> | <a href="#">Unsubscribe</a></p>
+                            </center>
+                          </td>
+                          <td class="expander"></td>
+                        </tr>
+                      </table>
+
+                    </td>
+                  </tr>
+                </table>
+
+              <!-- container end below -->
+              </td>
+            </tr>
+          </table>
+
+        </center>
+			</td>
+		</tr>
+	</table>
+		</body></html>';
 
 				//exit;
 
@@ -657,11 +715,75 @@ class User extends MY_Controller {
                 <table class="row callout">
                   <tr>
                     <td class="wrapper last">
+<<<<<<< HEAD
 
+                      
+
+=======
+>>>>>>> 3fdf95f787b16f58bb572e87bc0cb5c0961bb277
+                    </td>
                   </tr>
-                </table>';
+                </table>
 
-			//	$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
+                <table class="row footer">
+                  <tr>
+                    <td class="wrapper">
+
+                    </td>
+                    <td class="wrapper last">
+
+                      <table class="six columns">
+                        <tr>
+                          <td class="last right-text-pad">
+                            <h5>Contact Info:</h5>
+<<<<<<< HEAD
+                            <p>Phone: +254xxxxxxxx</p>
+=======
+                            <p>Phone: </p>
+>>>>>>> 3fdf95f787b16f58bb572e87bc0cb5c0961bb277
+                            <p>Email: <a href="mailto:hcmpkenya@gmail.com">hcmpkenya@gmail.com</a></p>
+                          </td>
+                          <td class="expander"></td>
+                        </tr>
+                      </table>
+
+                    </td>
+<<<<<<< HEAD
+                  </tr>
+                </table>
+
+
+                <table class="row">
+                  <tr>
+                    <td class="wrapper last">
+
+                      <table class="twelve columns">
+                        <tr>
+                          <td align="center">
+                            <center>
+                              <p style="text-align:center;"><a href="#">Terms</a> | <a href="#">Privacy</a> | <a href="#">Unsubscribe</a></p>
+                            </center>
+                          </td>
+                          <td class="expander"></td>
+                        </tr>
+                      </table>
+
+                    </td>
+                  </tr>
+                </table>
+
+              <!-- container end below -->
+              </td>
+            </tr>
+          </table>
+
+        </center>
+			</td>
+		</tr>
+	</table>
+		</body></html>';
+
+				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
 
 				$savethis =  new Users();
 				$savethis -> fname = $fname;
