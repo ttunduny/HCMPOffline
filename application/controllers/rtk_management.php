@@ -206,7 +206,7 @@ class Rtk_Management extends Home_controller {
     public function rtk_manager_admin() {
         $data['title'] = 'RTK Manager';
         $data['banner_text'] = 'RTK Manager';
-        $data['content_view'] = "rtk/rtk/admin/admin_home_view";
+        $data['content_view'] = "rtk/rtk/rtk/admin/admin_home_view";
 
         $users = $this->_get_rtk_users();
         $data['users'] = $users;
@@ -447,7 +447,7 @@ class Rtk_Management extends Home_controller {
         WHERE districts.county = counties.id
         AND facilities.district = districts.id
         AND lab_commodity_orders.facility_code = facilities.facility_code
-        AND counties.id =$county 
+        AND counties.id = $county 
         ORDER BY   `lab_commodity_orders`.`order_date` DESC ,`lab_commodity_orders`.`district_id` ASC";
 
         $res = $this->db->query($sql);
@@ -492,8 +492,8 @@ class Rtk_Management extends Home_controller {
         $districts = districts::getDistrict($Countyid);         
         $sql = "select * from facilities where facility_code=$mfl";
         $facility = $this->db->query($sql)->result_array();
-        //$facility = facilities::get_facility_name($mfl);        
-        
+        //$facility = facilities::get_facility_name($mfl);
+        $mfl =  $facility[0]['facility_code'];       
         $data['reports'] = $this->_monthly_facility_reports($mfl);
         $data['facility_county'] = $data['reports'][0]['county'];
         $data['facility_district'] = $data['reports'][0]['district'];
@@ -663,7 +663,7 @@ class Rtk_Management extends Home_controller {
         FROM facilities, districts, counties
         WHERE facilities.district = districts.id
         AND districts.county = counties.id
-        AND facilities.zone = 'Zone $zone'
+        AND facilities.zone = 'Zone $zone' 
         AND facilities.rtk_enabled =1";
 
         $res = $this->db->query($total_facilities_sql);
@@ -704,7 +704,7 @@ class Rtk_Management extends Home_controller {
         }
         $data['counties_in_zone'] = $this->_zone_counties($zone);
         $data['banner_text'] = 'National';
-        $data['content_view'] = 'rtk/allocation/allocation_zone_view';
+        $data['content_view'] = 'rtk/rtk/allocation/allocation_zone_view';
         $data['title'] = 'National Summary: ';
         $this->load->view("rtk/template", $data);
     }
@@ -1084,7 +1084,7 @@ class Rtk_Management extends Home_controller {
         FROM facilities, districts, counties
         WHERE facilities.district = districts.id
         AND districts.county = counties.id
-        AND districts.id = ' . $district . '
+        AND districts.id = '.$district.' 
         AND facilities.rtk_enabled =1
         ORDER BY  `facilities`.`facility_name` ASC ';
         $q_res = $this->db->query($q);
@@ -1654,9 +1654,7 @@ class Rtk_Management extends Home_controller {
             $reported_percentage = $value['reported_percentage'];
             $xml_html .= "<set label='$district' value='$reported_percentage' />";
         }
-        //      echo "<pre>";
-        //     print_r($data['district_summary']);
-        //        echo "</pre>";
+ 
 
         $xml_body = "<chart formatNumberScale='0' lineColor='000000' lineAlpha='40' showValues='1' rotateValues='1' valuePosition='auto'palette='1' subcaption='Reporting in $countyname County $date' xAxisName='Districts' yAxisName='Percentage Reported' yAxisMinValue='0' showValues='0'  useRoundEdges='1' alternateHGridAlpha='20' divLineAlpha='50' canvasBorderColor='666666' canvasBorderAlpha='40' baseFontColor='666666' lineColor='AFD8F8' chartRightMargin = '0' showBorder='0' bgColor='FFFFFF'>
         $xml_html<styles>
@@ -2570,9 +2568,9 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         } $q = $this->db->query('SELECT * FROM facilities, districts
                 WHERE facilities.district = districts.id
                 AND districts.id =6
-                AND facilities.rtk_enabled =1
-                ' . $exceptioncond . '           
-                ORDER BY  `facilities`.`facility_name` ASC ');
+                AND facilities.rtk_enabled =1 ' 
+                . $exceptioncond 
+                . ' ORDER BY  `facilities`.`facility_name` ASC ');
 
         // the above query can allow us to give reports on who's not reported both on 5th and on 10th of the month
     }
@@ -3114,9 +3112,9 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
     FROM lab_commodity_orders, facilities
     WHERE lab_commodity_orders.facility_code = facilities.facility_code 
     AND lab_commodity_orders.order_date between ' . $month_ago . ' AND NOW()
-    AND lab_commodity_orders.district_id =' . $district . '
-    ORDER BY  lab_commodity_orders.id DESC ';       
-        /*$query = $this->db->query("SELECT  
+    AND facilities.district =' . $district . '
+    ORDER BY  lab_commodity_orders.id DESC ';
+    echo($sql);die;        /*$query = $this->db->query("SELECT  
             facilities.facility_code,facilities.facility_name,lab_commodity_orders.id,lab_commodity_orders.order_date,lab_commodity_orders.district_id,lab_commodity_orders.compiled_by,lab_commodity_orders.facility_code
             FROM lab_commodity_orders, facilities
             WHERE lab_commodity_orders.facility_code = facilities.facility_code 
@@ -3396,10 +3394,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $ish;
         $county = counties::get_county_name($county_id);
         $county_name = Counties::get_county_name($county_id);
-        foreach ($county as $cname) {
-            $ish = $cname['county'];
-        }
-        $data['countyname'] = $ish;
+        $data['countyname'] =$county_name['county'];
 
         $htm = '';
         $table_body = '';
@@ -3491,19 +3486,19 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $data['county_id'] = $county_id;
         $data['table_body'] = $table_body;
         $data['title'] = "County View";
-        $data['table_data'] = $this->rtk_county_sidebar();
-        $data['banner_text'] = "Allocate " . $county_name[0]['county'];
-        $data['content_view'] = "allocation_committee/ajax_view/rtk_county_allocation_datatableonly_v";
+//        $data['table_data'] = $this->rtk_county_sidebar();
+        $data['banner_text'] = "Allocate " . $county_name['county'];
+        $data['content_view'] = "rtk/allocation_committee/ajax_view/rtk_county_allocation_datatableonly_v";
         $this->load->view("rtk/template", $data);
     }
 
     function county_allocation($county_id) {
         $county = Counties::get_county_name($county_id);
-        $countyname = $county[0]['county'];
+        $countyname = $county['county'];
         $data['county_name'] = $countyname;
         $data['banner_text'] = "Allocations in " . $countyname;
         $data['title'] = $countyname . " County RTK Allocations";
-        $data['content_view'] = "allocation_committee/ajax_view/county_allocations_v";
+        $data['content_view'] = "rtk/allocation_committee/ajax_view/county_allocations_v";
         $data['county_allocation'] = $this->_allocation_county($county_id);
 
         $this->load->view("rtk/template", $data);
@@ -4227,14 +4222,17 @@ WHERE
             AND facilities.rtk_enabled =1');
             $facilities_num = $facilities_in_county->num_rows();
 
-            $allocated_facilities = $this->db->query('SELECT DISTINCT lab_commodity_orders.id, lab_commodity_orders.facility_code
-            FROM lab_commodity_details, counties, facilities, districts, lab_commodity_orders
-            WHERE lab_commodity_details.facility_code = facilities.facility_code
-            AND counties.id = districts.county
-            AND counties.id =' . $countyid . '
-            AND facilities.district = districts.id
-            AND lab_commodity_details.order_id = lab_commodity_orders.id
-            AND lab_commodity_details.allocated >0');
+            $sql = "SELECT DISTINCT lab_commodity_orders.id, lab_commodity_orders.facility_code
+                        FROM lab_commodity_details, counties, facilities, districts, lab_commodity_orders
+                        WHERE lab_commodity_details.facility_code = facilities.facility_code
+                        AND counties.id = districts.county
+                        AND counties.id =$countyid 
+                        AND facilities.district = districts.id
+                        AND lab_commodity_details.order_id = lab_commodity_orders.id
+                        AND lab_commodity_details.allocated >0";
+
+            $allocated_facilities = $this->db->query($sql);
+
             $allocated_facilities_num = $allocated_facilities->num_rows();
 
             // $county_map_id=$county_detail->kenya_map_id;
@@ -4588,7 +4586,6 @@ WHERE
             array_push($facility_arr, $details);
             array_push($sum_facilities, $facility_arr);
         }
-
         return $sum_facilities;
     }
 
