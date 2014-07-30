@@ -1,9 +1,10 @@
 
-<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>Scripts/jquery.dataTables.js"></script>
-<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>Scripts/bootstrap-typeahead.js"></script>
-<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>Scripts/tagmanager.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/datatable/jquery.dataTables.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tagsinput/bootstrap-typeahead.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tagsinput/tagmanager.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tagsinput/typeahead.bundle.js"></script>
 
-<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>Scripts/css/tagmanager.css">
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/tagsinput/tagmanager.css">
 
 
 
@@ -16,38 +17,38 @@
   }
 </style>
    
-<div class="tabbable tabs-left" style="font-size:147%;">
+<!--div class="tabbable tabs-left" style="font-size:147%;">
   <ul class="nav nav-tabs">
    <li class="active"><a href="<?php echo base_url().'rtk_management/rtk_manager_admin'; ?>">Users</a></li>
    <li class="active"><a href="<?php echo base_url().'rtk_management/rtk_manager_admin_messages'; ?>">Messages</a></li>
    <li class="active"><a href="<?php echo base_url().'rtk_management/rtk_manager_admin_settings'; ?>">Settings</a></li> 
    <li class="active"><a href="<?php echo base_url().'rtk_management/rtk_manager_logs'; ?>">Activity Logs</a></li> 
  </ul>
-</div>
+</div-->
 
 <div id="content">
     <h1>MESSAGES </h1>
-    
-    <a href="#Add_New" role="button" class="btn" data-toggle="modal">New Message</a> 
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#Add_New">New Message</button>        
     <a href="#Draft_Messages" role="button" class="btn" data-toggle="modal">Draft Messages</a>  
 
     <!-- New Message-->
-    <div id="Add_New" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-     
-        <div class="modal-header">          
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-            <h2 id="myModalLabel">Create Message</h2>
-
-        </div>
-        <div class="modal-body">
+    <div class="modal fade" id="Add_New" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="myModalLabel">Create Message</h4>
+            </div>
+           <div class="modal-body">
             <p></p>
             <form id="compose" name="compose">       
                 <table id="compose_table" >
                   <tr>
                     <label>To:</label>
                   </tr><br/>
-                  <tr>
-                    <input type="email" id="receipients" name="receipients" placeholder="Enter Email Separated by Comma" style="width:96%" data-items="5" class="tm-input" multiple/>                                                                                                                                                                                     
+                  <tr>  
+                    <input type="text" id="receipients" name="receipients" class="form-control" placeholder="Enter Email Separated by Comma"style="width:200px" class="tm-input" multiple/>                     
+                                                                                                                                                                                                     
                       
                   </tr><br/>    
                   <tr>
@@ -65,9 +66,7 @@
                                     
                 </table>
             </form>
-
-        </div>
-        
+        </div>        
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
             <button id="save_message_btn" class="btn btn-primary">Send Message</button>
@@ -86,9 +85,15 @@
        
        $('#receipients').typeahead({
             source: mySource,
-            display: 'name',            
+            //source: ['Amsterdam', 'Washington', 'Sydney', 'Beijing', 'Cairo']
+           display: 'email',            
         });
 
+      /*$('#test').tagsinput({
+        typeahead: {
+          source: ['Amsterdam', 'Washington', 'Sydney', 'Beijing', 'Cairo']
+        }
+      });*/
        
         //$('#receipients').tagsinput('items');
         var receipients = $(".tm-input").tagsManager({               
