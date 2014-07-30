@@ -557,6 +557,7 @@ class Rtk_Management extends Home_controller {
         $district_summary1 = $this->rtk_summary_district($district, $year_previous_1, $previous_month_1);
         $district_summary2 = $this->rtk_summary_district($district, $year_previous_2, $previous_month_2);
 
+
         $county_id = districts::get_county_id($district_summary['district_id']);
         $county_name = counties::get_county_name($county_id['county']);
        
@@ -566,6 +567,7 @@ class Rtk_Management extends Home_controller {
         $data['district_balances_previous_1'] = $this->district_totals($year_previous_1, $previous_month_1, $district);
         $data['district_balances_previous_2'] = $this->district_totals($year_previous_2, $previous_month_2, $district);
 
+        
         $data['district_summary'] = $district_summary;
         
         $data['districts'] = $this->_districts_from_county($county_name['id']);
