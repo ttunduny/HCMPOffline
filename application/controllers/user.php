@@ -547,7 +547,7 @@ class User extends MY_Controller {
 				$range = microtime(true);
 				$activation = rand(0, $range);
 				//encrypt code to be saved
-				$save_activation_code = md5($activation);
+				$save_activation_code = $activation;
 			$result='http://' . $_SERVER['SERVER_NAME'] .'/HCMPv2/assets/img/coat_of_arms-resized1.png';
 			
 			$phone=$telephone;
