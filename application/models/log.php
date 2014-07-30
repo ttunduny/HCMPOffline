@@ -107,6 +107,29 @@ class Log extends Doctrine_Record {
 	
 		return $q;
 	}
+		public static function get_login_only($facility_code = null,$district_id = null,$county_id = null, $year = null, $month = null)
+	{
+		
+		$and_data =(isset($district_id)&& ($district_id>0)) ?"AND u.district = $district_id" : null;
+		$and_data .=(isset($county_id)&& ($county_id>0)) ?" AND u.county_id = $county_id" : null;
+		$and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND u.facility = $facility_code" : null;
+		
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		select count(l.id) as total
+		from log l, user u
+		where l.user_id = u.id
+		and l.issued=0 
+        and l.ordered=0 
+        and l.decommissioned=0 
+        and l.redistribute=0 
+        and l.add_stock=0
+		$and_data 
+		AND DATE_FORMAT( l.`start_time_of_event` ,'%Y-%m') = '$year-$month'
+		");
+		
+	
+		return $q;
+	}
 	public static function get_user_activities_download($facility_code = null, $district_id = null,$county_id = null, $year = null, $month = null)
 	{
 		$and_data =(isset($district_id)&& ($district_id>0)) ?"AND u.district = $district_id" : null;

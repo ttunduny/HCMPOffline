@@ -1011,9 +1011,10 @@ class Reports extends MY_Controller
 			$graph_title = $county_name." County ";
 			
 		break;
+		case 'facility_admin':
 		case 'facility':
 			$graph_category_data = $facility_data;
-			$graph_title = $district_name." SubCounty ";
+			$graph_title = $facility_name;
 			
 		break;
 		case 'district':
@@ -1095,32 +1096,23 @@ class Reports extends MY_Controller
 		$graph_log_data = array_merge($graph_log_data,array("graph_title"=>'User Activity for  '.$m.' for '. $graph_title));
 		$graph_log_data = array_merge($graph_log_data,array("graph_type"=>'column'));
 		$graph_log_data = array_merge($graph_log_data,array("graph_yaxis_title"=>'User Activities'));
-		$graph_log_data = array_merge($graph_log_data,array("graph_categories"=>array()));
-		$graph_log_data['series_data']['Decommissions'] =array();
-		$graph_log_data['series_data']['Redistributions'] =array();
-		$graph_log_data['series_data']['Stock Updates'] =array();
-		$graph_log_data['series_data']['Orders'] = array();
-		$graph_log_data['series_data']['Issues'] =array();
-		$graph_log_data['series_data']['Log Ins'] = array();
-
+		$graph_log_data = array_merge($graph_log_data,array("graph_categories"=>array('Decommissions','Redistributions','Stock Updates',
+		'Orders','Issues','Log Ins')));
+		$graph_log_data = array_merge($graph_log_data,array("series_data"=>array('total %'=>array())));
 		$log_data = Log::get_log_data($facility_code,$district_id,$county_id, $year, $month);
-		
+		$log_data_login_only=Log::get_login_only($facility_code,$district_id,$county_id, $year, $month);
 		foreach($log_data as $log_data_)
 		{
-			$sum = array_sum($log_data_);
-			$issues = $log_data_['total_issues'];
-			$orders = $log_data_['total_orders'];
-			$decommissions = $log_data_['total_decommisions'];
-			$redistributions = $log_data_['total_redistributions'];
-			$stock = $log_data_['total_stock_added'];
-			$user = $log_data_['user_log'];
-			
-			$graph_log_data['series_data']['Issues'] = array_merge($graph_log_data['series_data']['Issues'],array((int)$issues));
-			$graph_log_data['series_data']['Orders'] = array_merge($graph_log_data['series_data']['Orders'],array((int)$orders));
-			$graph_log_data['series_data']['Decommissions'] = array_merge($graph_log_data['series_data']['Decommissions'],array((int)$decommissions));
-			$graph_log_data['series_data']['Redistributions'] = array_merge($graph_log_data['series_data']['Redistributions'],array((int)$redistributions));
-			$graph_log_data['series_data']['Stock Updates'] = array_merge($graph_log_data['series_data']['Stock Updates'],array((int)$stock));
-			$graph_log_data['series_data']['Log Ins'] = array_merge($graph_log_data['series_data']['Log Ins'],array((int)$user));
+			$sum = $log_data_['user_log'];
+			$issues = ($log_data_['total_issues']/$sum)*100;
+			$orders = ($log_data_['total_orders']/$sum)*100;
+			$decommissions = ($log_data_['total_decommisions']/$sum)*100;
+			$redistributions = ($log_data_['total_redistributions']/$sum)*100;
+			$stock = ($log_data_['total_stock_added']/$sum)*100;;
+			$user = ($log_data_login_only[0]['total']/$sum)*100;;
+			$temp=array((int)$decommissions,(int)$redistributions,(int)$stock,(int)$orders,(int)$issues,(int)$user);
+			$graph_log_data['series_data']['total %'] = array_merge($graph_log_data['series_data']['total %'],$temp);
+
 		
 		
 		}
