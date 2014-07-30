@@ -1,14 +1,7 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-<<<<<<< HEAD
     RewriteBase /HCMP
-=======
-<<<<<<< HEAD
-    RewriteBase /HCMPv2_live
-=======
-    RewriteBase /HCMPv2
->>>>>>> 3fdf95f787b16f58bb572e87bc0cb5c0961bb277
->>>>>>> 293c9c200bafdfc5ca47f3058c0f7e05c9c0f98e
+
 
     #Removes access to the system folder by users.
     #Additionally this will allow you to create a System.php controller,
