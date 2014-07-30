@@ -3,5 +3,9 @@
 *.pyo
 /nbproject/private/
 =======
-application/config/database.php
-pdf
+/application/config/database.php
+/pdf/
+/drug_commodity_map.sql
+/drugs not in commodities table.txt
+/nbproject
+/view_1.txt

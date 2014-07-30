@@ -693,7 +693,7 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 from
     kemsa2.facility_stock
         left join
-    hcmp.drug_commodity_map ON drug_commodity_map.old_id = facility_stock.kemsa_code
+    hcmp_rtk.drug_commodity_map ON drug_commodity_map.old_id = facility_stock.kemsa_code
         where facility_stock.facility_code = $facility_code
         and year(facility_stock.expiry_date) != 1970 ");
 			return $stocks ;
@@ -707,7 +707,7 @@ from
 from
     kemsa2.historical_stock
         left join
-   hcmp.drug_commodity_map ON drug_commodity_map.old_id = historical_stock.drug_id
+   hcmp_rtk.drug_commodity_map ON drug_commodity_map.old_id = historical_stock.drug_id
         where historical_stock.facility_code = $facility_code $and");
 			return $stocks ;
 		
@@ -720,7 +720,7 @@ from
 			from
 			    kemsa2.facility_issues
 			        left join
-			   hcmp.drug_commodity_map ON drug_commodity_map.old_id = facility_issues.kemsa_code
+			   hcmp_rtk.drug_commodity_map ON drug_commodity_map.old_id = facility_issues.kemsa_code
 			        where facility_issues.facility_code = $facility_code
 			and facility_issues.receipts=0");
 			return $stocks ;
