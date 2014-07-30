@@ -6,7 +6,7 @@ $month= substr_replace($month,"", -4);
 $monthyear = $year . '-' . $month . '-1';
 $englishdate = date('F, Y', strtotime($monthyear));
 ?> 
-<script type="text/javascript" language="javascript" src="<?php echo base_url();?>Scripts/jquery.dataTables.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url();?>assets/datatable/jquery.dataTables.js"></script>
 
 
 <script type="text/javascript">
@@ -26,7 +26,7 @@ $englishdate = date('F, Y', strtotime($monthyear));
 
           $('#switch_month').change(function(){
                 var value = $('#switch_month').val();
-              var path = "<?php echo base_url().'rtk_management/switch_district/0/rca/';?>"+value + "/";
+              var path = "<?php echo base_url().'rtk_management/switch_district/0/rtk_county_admin/';?>"+value + "/";
 //              alert (path);
                  window.location.href=path;
             });

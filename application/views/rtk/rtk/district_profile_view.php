@@ -3,6 +3,13 @@
         font-size: 13px;
         font-family: calibri;
     }
+    .dl-horizontal{
+      
+    }
+    table{
+      font-size: 12px;
+      width: 560px;
+    }
 </style>
 <link rel="stylesheet" type="text/css" href="http://tableclothjs.com/assets/css/tablecloth.css">
 <script src="http://tableclothjs.com/assets/js/jquery.tablesorter.js"></script>
@@ -36,7 +43,7 @@
             <li class="active"><a href="#">Sub County: <?php echo $district_name; ?></a></li> 
                    <li class="nav-header">Facilities</li>
                  </ul>
-                 <div style="height:400px;overflow:scroll;border:1px ridge #ccc" >
+                 <div style="height:500px;overflow:scroll;border:1px ridge #ccc" >
                       <?php foreach ($facilities as $key => $value) {
                     echo '<a href="'.base_url().'rtk_management/facility_profile/'.$value['facility_code'].'">'.$value['facility_name'].'</a> <br />';
                  } ?>
@@ -56,23 +63,29 @@
                <dt>Facilities</dt>
                <dd><?php echo $district_summary['total_facilities']; ?></dd>
                <dt>Reported (%)</dt>
-               <dd>
-               <div class="progress progress-success progress-striped"><div class="bar" style="width: <?php echo $district_summary['reported_percentage']; ?>%"><?php echo $district_summary['reported']; ?>(<?php echo $district_summary['reported_percentage']; ?>%)</div></div>
+               <dd>                
+               <div class="progress progress-success progress-striped">
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $district_summary['reported_percentage']; ?>%;color:000;"></div>
+              </div>               
                </dd>
                <dt>Late Reports (%)</dt>
                <dd>
-               <div class="progress progress-warning progress-striped"><div class="bar" style="width: <?php echo $district_summary['late_reports_percentage']; ?>%"><?php echo $district_summary['late_reports']; ?>(<?php echo $district_summary['late_reports_percentage']; ?>%)</div></div>
+               <div class="progress progress-warning progress-striped">
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $district_summary['late_reports_percentage']; ?>%;color:000;"><?php echo $district_summary['late_reports']; ?>(<?php echo $district_summary['late_reports_percentage']; ?>%)</div>
+              </div>
                 </dd>
                <dt>Remaining Facilities (%)</dt>
                <dd>
-               <div class="progress progress-danger progress-striped"><div class="bar" style="width: <?php echo $district_summary['nonreported_percentage']; ?>%"><?php echo $district_summary['nonreported']; ?>(<?php echo $district_summary['nonreported_percentage']; ?>%)</div></div>
+               <div class="progress progress-danger progress-striped">
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $district_summary['nonreported_percentage']; ?>%;color:000;"><?php echo $district_summary['nonreported']; ?>(<?php echo $district_summary['nonreported_percentage']; ?>%)</div>
+              </div>
                </dd>
                </dl>
     </div>
-    <div class="span4" style="border-left: solid 1px  #ccc;margin-left: 10px;padding-left: 10px;">
-        <h3><?php echo $district_name; ?> Sub-County Stock Card</h3>
+    <div class="span4" style="border-left: solid 1px  #ccc;margin-left: 10px;padding-left: 10px;width:20%;float:left;">
+        <h4><?php echo $district_name; ?> Sub-County Stock Card</h4>
 
-   <table class="table" style="">
+   <table class="table" width="60px">
                                 <thead>
                                     <tr>
                                         <th>Kit</th>
@@ -117,7 +130,7 @@
                                 </tbody>
                             </table>
     </div>    
-    <div id="chart" style="margin-left:20%;margin-top:260px;height:450px;width:76%;border:1px ridge #ccc;">
+    <div id="chart" style="margin-left:25%;margin-top:250px;height:380px;width:70%;border:1px ridge #ccc;">
       
         
     </div>
@@ -135,19 +148,19 @@
     $used_c =   str_replace("\"", " ",json_encode($district_balances_current[0]['sum_used']));
     $tests_c =   str_replace("\"", " ",json_encode($district_balances_current[0]['sum_tests']));
     $closing_c =   str_replace("\"", " ",json_encode($district_balances_current[0]['sum_closing_bal']));
-    $allocated_c =  str_replace("\"", " ",json_encode($district_balances_current[0]['sum_allocated']));
+    $allocated_c =  str_replace("\"", " ",json_encode($district_balances_current[0]['sum_received']));
 
     $opening_c1 =  str_replace("\"", " ",json_encode($district_balances_previous[0]['sum_opening']));
     $used_c1 =   str_replace("\"", " ",json_encode($district_balances_previous[0]['sum_used']));
     $tests_c1 =   str_replace("\"", " ",json_encode($district_balances_previous[0]['sum_tests']));
     $closing_c1 =   str_replace("\"", " ",json_encode($district_balances_previous[0]['sum_closing_bal']));
-    $allocated_c1 =  str_replace("\"", " ",json_encode($district_balances_previous[0]['sum_allocated']));
+    $allocated_c1 =  str_replace("\"", " ",json_encode($district_balances_previous[0]['sum_received']));
 
     $opening_c2 =  str_replace("\"", " ",json_encode($district_balances_previous_2[0]['sum_opening']));
     $used_c2 =   str_replace("\"", " ",json_encode($district_balances_previous_2[0]['sum_used']));
     $tests_c2 =   str_replace("\"", " ",json_encode($district_balances_previous_2[0]['sum_tests']));
     $closing_c2 =   str_replace("\"", " ",json_encode($district_balances_previous_2[0]['sum_closing_bal']));
-    $allocated_c2 =  str_replace("\"", " ",json_encode($district_balances_previous_2[0]['sum_allocated']));
+    $allocated_c2 =  str_replace("\"", " ",json_encode($district_balances_previous_2[0]['sum_received']));
 
     $first_month =  str_replace("\"", " ",json_encode($months[0]));
     $second_month =  str_replace("\"", " ",json_encode($months[1]));
@@ -161,10 +174,10 @@ $(function () {
   
    $('#chart').highcharts({
         title: {
-            text: 'District Monthly Summaries'
+            text: 'Sub-County Monthly Summaries'
         },
         xAxis: {
-            categories: ['Begining Balance',  'Used Total', 'Total Tests', 'Closing Balance' ,'Allocated']           
+            categories: ['Begining Balance',  'Used Total', 'Total Tests', 'Closing Balance' ,'Received']           
         },
         labels: {
             items: [{
