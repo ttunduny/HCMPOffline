@@ -841,37 +841,10 @@ class Reports extends MY_Controller
 	public function consumption() 
 	{
 		$facility_code = $this -> session -> userdata('facility_id'); 
-		$county_id = $this -> session -> userdata('county_id');
-		$facility_name = Facilities::get_facility_name2($facility_code);
-		$county_id = $this -> session -> userdata('county_id');
-		$county_name = counties::get_county_name($county_id);
-		
-		$consumption = Facility_stocks::get_commodity_consumption_level($facility_code);
-		//Holds all the months of the year
-		//Build the line graph showing the expiries graph
-		$graph_data = array();
-		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
-		$graph_data = array_merge($graph_data,array("graph_title"=>'Total Consumed Commodities in '.$facility_name['facility_name']));
-		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
-		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Consumed Commodities  (values in packs)'));
-		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
-		$graph_data = array_merge($graph_data,array("series_data"=>array("Consumption"=>array())));
-		//$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],$months);	
-		
-		foreach($consumption as $facility_stock_expired):
-			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_stock_expired['month']));	
-			$graph_data['series_data']['Consumption'] = array_merge($graph_data['series_data']['Consumption'],array((int)$facility_stock_expired['total_consumption']));	
-		endforeach;
-		//create the graph here
-		$faciliy_stock_data = $this->hcmp_functions->create_high_chart_graph($graph_data);
-				
-		$loading_icon = base_url().'assests/img/no-record-found.png'; 
-		$faciliy_stock_data = isset($faciliy_stock_data)? $faciliy_stock_data : "$('#graph-section').html('<img src=$loading_icon>')'" ;
-   			
 		$data['title'] = "Consumption"	;
 		$data['banner_text'] = "Facility Consumption"	;
 		$data['c_data'] = Commodities::get_facility_commodities($facility_code);
-		$data['graph_data'] =	$faciliy_stock_data;
+		//$data['graph_data'] =	$faciliy_stock_data;
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		$data['report_view']="facility/facility_reports/ajax/consumption_stats_ajax";
 		$data['content_view']="facility/facility_reports/reports_v";
