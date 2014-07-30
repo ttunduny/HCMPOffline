@@ -19,6 +19,7 @@
 
       <div  id="tracer" class="tab-pane fade active in">
           <br />
+          <div class="filter">
                     <form class="form-inline" role="form">
 <select id="tracer_commodity_filter" class="form-control col-md-3">
 <option value="NULL">Select Commodity</option>
@@ -56,6 +57,7 @@ placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_nor
 <button class="btn btn-sm btn-success tracer-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
 </div>
           </form>
+          </div>
       </div>
        <div  id="cat" class="tab-pane fade">
        	<br>
@@ -163,8 +165,7 @@ endforeach;
 <select id="subcounty_facility_filter" class="form-control col-md-2">
 <option value="NULL">Select facility</option>
 </select>	
-<input type="text" name="from"  id="from" 
-placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" />
+<input type="text" name="from"  id="from" placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" />
 <input type="text" name="to"  id="to" placeholder="TO" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" />		
 <select id="subcounty_plot_value_filter" class="form-control col-md-2">
 <option selected="selected" value="NULL">Select Plot value</option>
@@ -246,7 +247,7 @@ var drop_down='';
         var from =$("#tracer_from").val();
         var to =$("#tracer_to").val();
         
-        if(from==''){from="NULL";   }
+        if(from==''){from="NULL";}
         if(to==''){to="NULL";}
 
         var url_ = "reports/consumption_stats_graph/"+

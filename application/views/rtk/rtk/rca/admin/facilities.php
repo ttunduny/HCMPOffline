@@ -155,14 +155,14 @@ function update_rtk(val){
     {
 
       echo "Non-Reporting";
-      echo ' <a href="../../rtk_management/activate_facility/' . $row['facility_code'] . '" title="Add"><i class="icon-plus-sign"> </i></a>';
+      echo ' <a href="../../rtk_management/activate_facility/' . $row['facility_code'] . '" title="Add"><span class="glyphicon glyphicon-plus"></span> </i></a>';
 
 
     }
     else
       {
         echo "Reporting";
-        echo ' <a href="../../rtk_management/deactivate_facility/' . $row['facility_code'] . '" title="Remove"><i class="icon-minus-sign"> </i></a>';
+        echo ' <a href="../../rtk_management/deactivate_facility/' . $row['facility_code'] . '" title="Remove"><span class="glyphicon glyphicon-minus"></span> </i></a>';
       }?></td>
   </tr>
   <?php }?>
