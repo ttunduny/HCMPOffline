@@ -3,6 +3,7 @@
 *.pyo
 /nbproject/private/
 application/config/database.php
+system/libraries/Hcmp_functions.php
 /pdf
 drug_commodity_map.sql
 drugs not in commodities table.txt
