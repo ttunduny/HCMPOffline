@@ -805,6 +805,7 @@ class Reports extends MY_Controller
 		$this -> load -> view($view, $data);
         
 	}
+	
 	public function load_filtered_cost_of_orders($year=null)
 	{
 		$year = (isset($year)) ? $year: date("Y");
@@ -1084,6 +1085,11 @@ class Reports extends MY_Controller
 		$identifier = $this -> session -> userdata('user_indicator');
 		$county_id = $this -> session -> userdata('county_id');
 		
+		//Get facility code
+		$facility_code = $this -> session -> userdata('facility_id');
+		$facility_code_ = (isset($facility_code)&&($facility_code>0) )? facilities::get_facility_name_($facility_code) -> toArray() : null;
+		$facility_name = $facility_code_[0]['facility_name'];
+			
 		$district_id = $this -> session -> userdata('district_id');
 		$district = $this -> session -> userdata('district_id');
 		
@@ -1091,8 +1097,8 @@ class Reports extends MY_Controller
 		$county_name = Counties::get_county_name($county_id);
 		$county_name = $county_name['county'];
 		//get the name of the district
-		$district_name = Districts::get_district_name_($district_id);
-		$district_name = $district_name['district'];
+		$district_name_ = (isset($district_id)&&($district_id>0) )?Districts::get_district_name_($district_id):null;
+		$district_name = $district_name_['district'];
 		
 		$first_day_of_the_month = date("Y-m-1", strtotime(date($year . "-" . $month)));
 		$last_day_of_the_month = date("Y-m-t", strtotime(date($year . "-" . $month)));
@@ -1102,9 +1108,6 @@ class Reports extends MY_Controller
 
 		$facility_data = Facilities::get_Facilities_using_HCMP($county_id,$district);
 
-		/*$district_data = districts::getDistrict($county_id);
-		 * */
-		
 		$series_data = array();
 		$category_data = array();
 		$series_data_monthly = array();
@@ -1130,7 +1133,7 @@ class Reports extends MY_Controller
 			$graph_title = $district_name." SubCounty ";
 		break;	
 		endswitch;
-
+		
 		for ($i = 0; $i <= $date_diff; $i++) :
 			$day = 1 + $i;
 			$new_date = "$year-$month-" . $day;
@@ -1145,8 +1148,10 @@ class Reports extends MY_Controller
 				foreach ($graph_category_data as $facility_) :
 					$facility_id = $facility_ -> facility_code;
 					$facility_name = $facility_ -> facility_name;
-					$subcounty_data = Log::get_subcounty_login_count($county_id, $district_id, $new_date);
-					(array_key_exists($facility_name, $series_data)) ? $series_data[$facility_name] = array_merge($series_data[$facility_name], array((int)$subcounty_data[0]['total'])) : $series_data = array_merge($series_data, array($facility_name => array((int)$subcounty_data[0]['total'])));
+					$subcounty_data = Log::get_subcounty_login_count($county_id, $district_id,$facility_id, $new_date);
+					(array_key_exists($facility_name, $series_data)) ? 
+					$series_data[$facility_name] = array_merge($series_data[$facility_name], array((int)$subcounty_data[0]['total'])) :
+					$series_data = array_merge($series_data, array($facility_name => array((int)$subcounty_data[0]['total'])));
 	
 				endforeach;
 
@@ -1154,6 +1159,7 @@ class Reports extends MY_Controller
 				// do nothing
 			}
 		endfor;
+		
 		//for setting the month name in the graph when filtering
 		$m = date('F',strtotime('2000-'.$month.'-01'));
 				
@@ -1178,7 +1184,7 @@ class Reports extends MY_Controller
 			foreach ($graph_category_data as $facility_) :
 				$facility_id = $facility_ -> facility_code;
 				$facility_name = $facility_ -> facility_name;
-				$subcounty_data = Log::get_subcounty_login_monthly_count($county_id, $district_id, $new_date);
+				$subcounty_data = Log::get_subcounty_login_monthly_count($county_id, $district_id,$facility_id, $new_date);
 
 				(array_key_exists($facility_name, $series_data_monthly)) ? $series_data_monthly[$facility_name] = array_merge($series_data_monthly[$facility_name], array((int)$subcounty_data[0]['total'])) : $series_data_monthly = array_merge($series_data_monthly, array($facility_name => array((int)$subcounty_data[0]['total'])));
 			endforeach;
@@ -1208,10 +1214,12 @@ class Reports extends MY_Controller
 		$graph_log_data['series_data']['Issues'] =
 		$graph_log_data['series_data']['Log Ins'] = array();
 
-		$log_data = Log::get_log_data($district_id,$county_id, $year, $month);
-		//var_dump($log_data);
-		//exit;
+		$log_data = Log::get_log_data($facility_code,$district_id,$county_id, $year, $month);
 		
+		/*echo "<pre>";
+		print_r($log_data);
+		echo "</pre>";
+		exit;*/
 		foreach($log_data as $log_data_)
 		{
 			$sum = array_sum($log_data_);
@@ -1430,7 +1438,7 @@ exit;*/
 		$data = Log::get_user_activities_download($facility_code,$district_id,$county_id, $year, $month);
 		
 		foreach ($data as $data):
-			$series_data_=array_merge($series_data_ , array(array($data["fname"],$data["lname"],$data["total_issues"],$data["total_orders"],$data["total_orders"],$data['total_decommisions'],$data['total_redistributions'],$data['total_stock_added'])));
+			$series_data_=array_merge($series_data_ , array(array($data["fname"],$data["lname"],$data["facility_name"],$data["total_issues"],$data["total_orders"],$data['total_decommisions'],$data['total_redistributions'],$data['total_stock_added'])));
 		endforeach;
 		
 		$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' 
