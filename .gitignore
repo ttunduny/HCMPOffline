@@ -4,9 +4,8 @@
 /nbproject/private/
 =======
 application/config/database.php
-pdf
+/pdf
 drug_commodity_map.sql
 drugs not in commodities table.txt
-pdf
-nbproject
+/nbproject
 view_1.txt
