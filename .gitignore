@@ -1,2 +1,16 @@
+<<<<<<< HEAD
 system/libraries/Hcmp_functions.php
 application/config/database.php
+=======
+*.class
+*.pyc
+*.pyo
+/nbproject/private/
+=======
+application/config/database.php
+pdf
+>>>>>>> 3fdf95f787b16f58bb572e87bc0cb5c0961bb277
+nbproject
+drug_commodity_map.sql
+drugs not in commodities table.txt
+view_1.txt

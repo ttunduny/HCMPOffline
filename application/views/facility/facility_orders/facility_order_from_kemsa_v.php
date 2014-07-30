@@ -147,7 +147,7 @@ $(document).ready(function() {
 							 $unit_size=preg_replace('/[^A-Za-z0-9\-]/', ' ',$commodity['unit_size']);
 							 $unit_cost=$commodity['unit_cost'];
 							 $total_commodity_units=$commodity['total_commodity_units'];
-							 $commodity_name=preg_replace('/[^A-Za-z0-9\-]/', ' ', $commodity['commodity_name']);?>'+					
+							 $commodity_name=preg_replace('/[^A-Za-z0-9\-]/', ' ', $commodity['commodity_name']);?>'+						
 						'<option <?php echo 'special_data="'.$commodity_id.'^'.$unit_cost.'^'.$unit_size.
 	'^'.$sub_category_name.'^'.$commodity_code.'^'.$total_commodity_units.'" value="'.$commodity_id.'">'.$commodity_name ;?></option><?php endforeach;?>'+
 	'</select></td><td><input readonly="readonly" class="form-control" type="text" name="commodity_code"    /></td>'+
@@ -178,6 +178,7 @@ $(document).ready(function() {
 	 	alert("Please select a commodity first");
 	 	return;
 	 }
+
 	// add the items here to the order form
 	  $("#example" ).dataTable().fnAddData( [ 
   	 '<input type="hidden" class="commodity_name" name="commodity_name['+new_count+']" value="'+$("#desc option:selected").text()+'" />'+

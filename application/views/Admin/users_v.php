@@ -57,10 +57,18 @@
 <script>
 	
 	$(document).ready(function () {
+<<<<<<< HEAD
 		       $('#myModal').on('hidden.bs.modal', function () {
         	alert('jack');
 				$("#datatable").hide().fadeIn('fast');
 				 location.reload();
+=======
+		
+		       $('#main-content').on('hidden.bs.modal','#myModal', function () {
+               alert('jack');
+				$("#datatable").hide().fadeIn('fast');
+				// location.reload();
+>>>>>>> 3fdf95f787b16f58bb572e87bc0cb5c0961bb277
 			});
 		$('#Tab a').click(function (e) {
  		 e.preventDefault()

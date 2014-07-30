@@ -42,8 +42,9 @@ class national extends MY_Controller
 		$data['title'] = "National Dashboard";
         $data['maps'] = json_encode($finalMap);
         $data['counties']=$county_name;
-		
+
         $this -> load -> view("national/national_v.php",$data);
+
     } 
     public function search()
     {
@@ -1272,6 +1273,28 @@ order by user.id asc
 		$this -> load -> view('shared_files/template/plain_template_v', $data);
  	
  }
+
+	 public function reports(){
+	 	
+		$data['county'] = Counties::getAll();
+		$data['commodities'] = Commodities::get_all();
+		$data['sub_county'] = Districts::getAll();
+	 	$this -> load -> view('national/reports_v', $data);
+		
+	 }
+	 public function facilities_json(){
+	 	
+		echo json_encode(facilities::getAll_json());
+		
+	 }
+	 
+	 public function commodities_json(){
+	 	
+		
+		echo json_encode(Commodities::getAll_json());
+		
+	 }
+
 }   
     
 

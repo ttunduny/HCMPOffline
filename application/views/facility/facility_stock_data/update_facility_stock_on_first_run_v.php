@@ -30,6 +30,7 @@
         </div>
    
             <?php endif; ?>
+
             
       </div>
 	
@@ -146,6 +147,7 @@
 			<span class="glyphicon glyphicon-open"></span>Save
 		</button>
 		<?php else: ?>
+
 		      <button type="button" class="importing btn btn-sm btn-success">
             <span class="glyphicon glyphicon-open"></span>Finish Importing
         </button>
@@ -342,6 +344,7 @@
             $('.save').button().click(function() {
             confirm_if_the_user_wants_to_save_the_form("#myform");
             });
+
              $('.importing').button().click(function() {
              $(this).attr("disabled", 'disabled');
             var img='<img src="<?php echo base_url('assets/img/wait.gif') ?>"/>';
@@ -349,6 +352,7 @@
      '');
              $("#myform").submit();  
             });
+
             function send_data_to_the_temp_table(selector_object){
 
             var data_ =$('option:selected', selector_object.closest("tr").find('.desc')).attr('special_data');
