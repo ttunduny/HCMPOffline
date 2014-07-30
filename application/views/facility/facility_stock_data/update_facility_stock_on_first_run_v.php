@@ -21,6 +21,16 @@
 </b>
 </p>
             </div>
+            <?php if(isset($import)): ?>
+            		<div style="height:auto; margin-bottom: 2px" class="warning message col-md-5" id="">      	
+        <h5> 1) Set up facility stock</h5> 
+        	<p>
+		 This process can take up to 1 minute, to avoid getting duplicates please be patient do not click Finish Importing button twice 
+			</p>
+        </div>
+   
+            <?php endif; ?>
+
             
       </div>
 	
@@ -137,7 +147,8 @@
 			<span class="glyphicon glyphicon-open"></span>Save
 		</button>
 		<?php else: ?>
-		      <button type="button" class="save btn btn-sm btn-success">
+
+		      <button type="button" class="importing btn btn-sm btn-success">
             <span class="glyphicon glyphicon-open"></span>Finish Importing
         </button>
         <?php endif; ?>
@@ -333,6 +344,15 @@
             $('.save').button().click(function() {
             confirm_if_the_user_wants_to_save_the_form("#myform");
             });
+
+             $('.importing').button().click(function() {
+             $(this).attr("disabled", 'disabled');
+            var img='<img src="<?php echo base_url('assets/img/wait.gif') ?>"/>';
+       dialog_box(img+'<h5 style="display: inline-block; font-weight:500;font-size: 18px;padding-left: 2%;"> Please wait finalizing import</h5>',
+     '');
+             $("#myform").submit();  
+            });
+
             function send_data_to_the_temp_table(selector_object){
 
             var data_ =$('option:selected', selector_object.closest("tr").find('.desc')).attr('special_data');

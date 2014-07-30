@@ -46,14 +46,13 @@
 */
 
 $active_group = 'default';
-$active_record = TRUE ;
 
 $db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'root';
 $db['default']['password'] = '#cmP@2014';
 $db['default']['database'] = 'hcmp_rtk';
 $db['default']['dbdriver'] = 'mysql';
-$db['default']['dbprefix'] = '';;;;
+$db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;
 $db['default']['cache_on'] = FALSE;
@@ -63,6 +62,7 @@ $db['default']['dbcollat'] = 'utf8_general_ci';
 $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;;
+
 
 
 /* End of file database.php */
@@ -91,11 +91,6 @@ Doctrine_Manager::connection($db['default']['dsn'], $db['default']['database']);
 // Load the models for the autoloader
 Doctrine::loadModels(realpath(dirname(__FILE__) . '/..') . DIRECTORY_SEPARATOR . 'models');
 
-
-
-
 /*****/
-
-
 
 /* Location: ./application/config/database.php */

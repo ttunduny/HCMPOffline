@@ -29,9 +29,12 @@ class Stock extends MY_Controller {
 */	
 	public function import($facility_code=null){
 		$facility_code=isset($facility_code)? $facility_code : $this -> session -> userdata('facility_id'); 
-		$reset_facility_update_stock_first_temp = Doctrine_Manager::getInstance()->getCurrentConnection();
-	    $reset_facility_update_stock_first_temp->execute("DELETE FROM `facility_stocks_temp` WHERE  facility_code=$facility_code; ");
-		
+
+		$reset_facility_historical_stock_table = Doctrine_Manager::getInstance()->getCurrentConnection();
+	    $reset_facility_historical_stock_table->execute("DELETE FROM `facility_monthly_stock` WHERE  facility_code=$facility_code; ");
+		$reset_facility_issues_table = Doctrine_Manager::getInstance()->getCurrentConnection();
+	    $reset_facility_issues_table->execute("DELETE FROM `facility_issues` WHERE  facility_code=$facility_code;");
+
 		$old_facility_stock=facility_stocks::import_stock_from_v1($facility_code);
 		$old_facility_issues=facility_stocks::import_issues_from_v1($facility_code);
         $old_facility_orders=Doctrine_Manager::getInstance()->getCurrentConnection()
@@ -41,6 +44,7 @@ class Stock extends MY_Controller {
         kemsa2.ordertbl
         where ordertbl.facilityCode = $facility_code");;
 		$in_to_stock=$in_to_amc=$in_to_issues=$amc_ids=$in_to_orders=array();
+
 		if(count($old_facility_stock)>0){
 			foreach($old_facility_stock as $old_facility_stock){
 			if(isset($old_facility_stock['new_id'])):
@@ -74,6 +78,7 @@ class Stock extends MY_Controller {
 			}
 			endif;
 			}
+
        $this -> db -> insert_batch('facility_monthly_stock', $in_to_amc);
        $this -> db -> insert_batch('facility_stocks_temp', $in_to_stock);  
 		}

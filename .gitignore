@@ -1,0 +1,16 @@
+*.class
+*.pyc
+*.pyo
+system/libraries/Hcmp_functions.php
+/nbproject/private/
+application/config/database.php
+nbproject
+drug_commodity_map.sql
+drugs not in commodities table.txt
+/pdf
+drug_commodity_map.sql
+drugs not in commodities table.txt
+/nbproject
+view_1.txt
+
+

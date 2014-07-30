@@ -57,10 +57,18 @@
 <script>
 	
 	$(document).ready(function () {
+<<<<<<< HEAD
 		       $('#myModal').on('hidden.bs.modal', function () {
         	alert('jack');
 				$("#datatable").hide().fadeIn('fast');
 				 location.reload();
+=======
+		
+		       $('#main-content').on('hidden.bs.modal','#myModal', function () {
+               alert('jack');
+				$("#datatable").hide().fadeIn('fast');
+				// location.reload();
+>>>>>>> 3fdf95f787b16f58bb572e87bc0cb5c0961bb277
 			});
 		$('#Tab a').click(function (e) {
  		 e.preventDefault()
@@ -167,8 +175,7 @@ var drop_down='';
     }
     }); 
     
-    
-    $('#email').keyup(function() {
+       $('#email').keyup(function() {
 
   var email = $('#email').val()
 
@@ -182,7 +189,7 @@ var drop_down='';
       success: function(data) {
         if(data.response=='false'){
 						
-							$('#err').html(data.msg);
+							$('.err').html(data.msg);
 							console.log(data.msg)
 							$( '.err' ).addClass( "alert-danger alert-dismissable" );
 							$(".edit_user,#create_new").attr("disabled", "disabled");
@@ -200,8 +207,8 @@ var drop_down='';
     });
     return false;
   });
-
-    $('#email_edit').keyup(function() {
+  
+     $('#email_edit').keyup(function() {
 
   var email = $('#email_edit').val()
 
@@ -291,7 +298,12 @@ var drop_down='';
             location.reload();      
           }
         }); 
- 
+
+        $('#editModal,#addmodal').on('hidden.bs.modal', function () {
+				$("#datatable").hide().fadeIn('fast');
+				 location.reload();
+			})
+
 }
 
 
@@ -375,14 +387,14 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
       success: function(data) {
         if(data.response=='false'){
 						
-						 $('#err').html(data.msg);
-							$( '#err' ).addClass( "alert-danger alert-dismissable" );
+						 $('.err_edit').html(data.msg);
+							$( '.err_edit' ).addClass( "alert-danger alert-dismissable" );
 							}else if(data.response=='true'){
 								
-								$("#err").empty();
-								$("#err").removeClass("alert-danger alert-dismissable");
-								$( '#err' ).addClass( "alert-success alert-dismissable" );
-								$('#err').html(data.msg);
+								$(".err_edit").empty();
+								$(".err_edit").removeClass("alert-danger alert-dismissable");
+								$( '.err_edit' ).addClass( "alert-success alert-dismissable" );
+								$('.err_edit').html(data.msg);
 								
 								
 							}
@@ -403,7 +415,7 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
            
     	});	
     	
-    	$('#email').keyup(function() {
+    	$('#email').on(function() {
 
   var email = $('#email').val()
 
@@ -416,14 +428,14 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
       success: function(data) {
         if(data.response=='false'){
 						
-						 $('#err').html(data.msg);
-							$( '#err' ).addClass( "alert-danger alert-dismissable" );
+						 $('.err').html(data.msg);
+							$( '.err' ).addClass( "alert-danger alert-dismissable" );
 							}else if(data.response=='true'){
 								
-								$("#err").empty();
-								$("#err").removeClass("alert-danger alert-dismissable");
-								$( '#err' ).addClass( "alert-success alert-dismissable" );
-								$('#err').html(data.msg);
+								$(".err").empty();
+								$(".err").removeClass("alert-danger alert-dismissable");
+								$( '.err' ).addClass( "alert-success alert-dismissable" );
+								$('.err').html(data.msg);
 								
 								
 							}
@@ -486,7 +498,7 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
         
               
           }
-           
+			
         }); 
 }
 

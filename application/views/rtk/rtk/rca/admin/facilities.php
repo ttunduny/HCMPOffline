@@ -30,16 +30,22 @@ $json_dist = str_replace('}', "", $json_dist);
 font-size: 13px;
 float: right;
 padding:4px;
+margin-top: 5px;
 }
 #facilities_tlb_info{
 font-size: 15px; 
+margin-left: 4%;
 float: left;
 }
 #facilities_tlb_length{
+  margin-left: 4%;
   float: left;
 }
 #facilities_tlb_filter{
   float: right;
+}
+table{
+  font-size: 12px;
 }
 </style>
 
@@ -82,31 +88,31 @@ function update_rtk(val){
 
 
 <!-- Button to trigger modal -->
-<a href="#Add_Facility" role="button" class="btn" data-toggle="modal">Add Facility</a>
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#Add_Facility">Add Facility</button>
+<!--a href="#Add_Facility" role="button" class="btn" data-toggle="modal">Add Facility</a-->
 <hr />
-
-<!-- Modal -->
-<div id="Add_Facility" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-        <h3 id="myModalLabel">Add Facility</h3>
-
-    </div>
-    <div class="modal-body">
+<div class="modal fade" id="Add_Facility" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add Facility</h4>
+      </div>
+      <div class="modal-body">
         <p></p>
         <form id="add_facility_form"> 
             <div class="modal-body">
-                            <h4>Facility Name: </h4>
+                            <h5>Facility Name: </h5>
                             <form id="add_facility" method="POST" action="">
-                            <p> <input type="text" name="facilityname" id="facilityname" /></p>
-                            <h4>Facility MFL Code: </h4>
-                            <p> <input type="text" name="facilitycode" id="facilitycode" /></p>
-                            <h4>Facility Owner: </h4>
-                            <p> <input type="text" name="facilityowner" id="facilityowner" /></p>
-                            <h4>Facility type: </h4>
-                            <p> <input type="text" name="facilitytype" id="facilitytype" /></p>
+                            <p> <input class="form-control" type="text" name="facilityname" id="facilityname" /></p>
+                            <h5>Facility MFL Code: </h5>
+                            <p> <input type="text" class="form-control" name="facilitycode" id="facilitycode" /></p>
+                            <h5>Facility Owner: </h5>
+                            <p> <input type="text" class="form-control" name="facilityowner" id="facilityowner" /></p>
+                            <h5>Facility type: </h5>
+                            <p> <input type="text" class="form-control" name="facilitytype" id="facilitytype" /></p>
 
-                            <select name="district" id="district">
+                            <select name="district" id="district" class="form-control">
                               <option> -- Select District --</option>
                               <?php foreach ($districts as $dists) { ?>
                               <option value="<?php echo $dists['id']; ?>"><?php echo $dists['district']; ?></option>
@@ -117,10 +123,12 @@ function update_rtk(val){
         </form>
 
     </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button id="save_facility" class="btn btn-primary">Save changes</button>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="save_facility" class="btn btn-primary">Save Changes</button>
+      </div>
     </div>
+  </div>
 </div>
 
 <table class="data-table" id="facilities_tlb">
@@ -138,7 +146,7 @@ function update_rtk(val){
    $code =$row['facility_code'];
    ?>
     <tr id="<?php echo $row['facil_id'];?>">    
-    <td><?php echo '<a href="../../rtk_management/facility_profile/' . $code. '" title="View">'.$code.'</a>' ?></td>
+    <td><?php echo $code. '  <a href="../../rtk_management/facility_profile/' . $code. '" title="View">View</a>' ?></td>
     <td><?php echo $row['facility_name'];?></td>
     <td><?php echo $row['owner'];?></td>
     <td><?php echo $county;?></td>    
