@@ -64,13 +64,14 @@ class facility_stocks_temp extends Doctrine_Record {
    		$and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
     	$and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
    		$and_data .=($county_id>0) ?" AND c.id='$county_id'" : null;
+		$and_data .=($commodity_id>0) ?" AND cm.id =$commodity_id " : null;
 		$new=str_replace(" AND", ",", $and_data);
 		$and_data .=($division_id>0) ? " AND cm.commodity_division =$division_id " :null;
     	$and_data =isset( $and_data) ?  $and_data:null;
-        
-    	$and_data .=(isset($option) && ($option>0))? " AND cm.tracer_item =1" : " AND cm.id =$commodity_id ";
+        	
+    	$and_data .=(isset($option) && ($option>0))? " AND cm.tracer_item =1" : null;
 		$group_by=(isset($option) && ($option>0))? " group by cm.id $new" : " group by cm.id ";
-    	//echo ; exit;
+ 
     $query_1 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
 		 select 
     cm.commodity_name,

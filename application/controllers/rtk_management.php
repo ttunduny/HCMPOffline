@@ -1,5 +1,7 @@
 <?php
+/*
 
+*/
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
@@ -96,22 +98,8 @@ class Rtk_Management extends Home_controller {
 //    $this->allocation($zone, $county , $district,$facility , $sincedate,$enddate);
     }
 
-    public function bootstrap() {
-
-        $month = $this->session->userdata('Month');
-        if ($month == '') {
-            $month = date('mY', strtotime('-1 month'));
-        }
-        $year = substr($month, -4);
-        $month = substr_replace($month, "", -4);
-        $monthyear = $year . '-' . $month . '-1';
-        $englishdate = date('F, Y', strtotime($monthyear));
-        $County = $this->session->userdata('county_name');
-        $data['county'] = $County;
-        $Countyid = $this->session->userdata('county_id');
-        $data['content_view'] = "allocation_committee/bootstrap_table";
-        $data['banner_text'] = "Rtk Manager";
-        $this->load->view('rtk/template', $data);
+    function country_progress(){
+        rtk_summary_county();
     }
 
     public function rtk_manager($Countyid = null) {
@@ -206,7 +194,7 @@ class Rtk_Management extends Home_controller {
     public function rtk_manager_admin() {
         $data['title'] = 'RTK Manager';
         $data['banner_text'] = 'RTK Manager';
-        $data['content_view'] = "rtk/rtk/rtk/admin/admin_home_view";
+        $data['content_view'] = "rtk/rtk/admin/admin_home_view";
 
         $users = $this->_get_rtk_users();
         $data['users'] = $users;
@@ -597,7 +585,7 @@ class Rtk_Management extends Home_controller {
         $data['countyid'] = $Countyid;
         $data['title'] = 'Facility Profile: ' . $facility['facility_name'];
         $data['banner_text'] = 'Facility Profile: ' . $facility['facility_name'];
-        $data['content_view'] = "rtk/county_profile_view";
+        $data['content_view'] = "rtk/rtk/county_profile_view";
 
         $this->load->view("rtk/template", $data);
     }
@@ -3116,7 +3104,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
     AND lab_commodity_orders.order_date between ' . $month_ago . ' AND NOW()
     AND facilities.district =' . $district . '
     ORDER BY  lab_commodity_orders.id DESC ';
-    echo($sql);die;        /*$query = $this->db->query("SELECT  
+           /*$query = $this->db->query("SELECT  
             facilities.facility_code,facilities.facility_name,lab_commodity_orders.id,lab_commodity_orders.order_date,lab_commodity_orders.district_id,lab_commodity_orders.compiled_by,lab_commodity_orders.facility_code
             FROM lab_commodity_orders, facilities
             WHERE lab_commodity_orders.facility_code = facilities.facility_code 
