@@ -105,18 +105,37 @@ class facility_orders extends Doctrine_Record {
 
 		return $query_results;
  }
-
-/*<<<<<<< HEAD
->>>>>>> 0952fd935660b0c95ff50f5ecaa046b1c14de6a4
- public static function get_facility_orders($facility_code, $year)
- {
- 	$year = date("Y");
- 	   	
- 	$query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
+ public static function get_cost_of_orders($facility_code=null,$district_id=null,$county_id=null,$year=null,$month=null){
+ 	    $year_=date("Y");
+		$month_=date("n");
+		$and_data =(isset($district_id)&& ($district_id>0)) ?"AND d.id = '$district_id'" : null;
+	 	$and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;
+     	$and_data .=(isset($county_id)&&$county_id>0) ?" AND d.county='$county_id'" : '';
+		$and_data .=($year=="NULL") ? " and YEAR(f_o.order_date) = $year_ ": " and YEAR(f_o.order_date) = $year ";
+	
+		$and_data .($month=='NULL') ? null: "and month(f_o.order_date) = $month_";
+		$group_by=($month=='NULL') ? 'GROUP BY MONTH(f_o.order_date) asc': 'GROUP BY f_o.order_date asc';
+		//echo ; exit;
+		$query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
  	    ->fetchAll("
- 	    select MONTHNAME( f_o.order_date) as month, f_o.order_total as total 
-=======*/
- public static function get_facility_orders($facility_code, $year)
+ 	  	select 
+    	DATE_FORMAT(f_o.order_date ,'%b %d %y') as month,
+    	sum(f_o.order_total) as total_orders
+		from
+    	facilities f,
+    	districts d,
+    	facility_orders f_o
+		where
+    	f_o.facility_code = f.facility_code
+        and d.id=f.district
+        $and_data
+        $group_by
+		");
+
+		return $query_results;
+ }
+
+ /*public static function get_facility_orders($facility_code, $year)
  {
  	//$year = date("Y");
 	 ($year == 0) ? $year = date("Y"): $year;
@@ -126,7 +145,7 @@ class facility_orders extends Doctrine_Record {
 		from facilities f, facility_orders f_o 
 		where f_o.facility_code=f.facility_code 
 		and f_o.facility_code = $facility_code
-		and YEAR(f_o.order_date) = $year
+		and 
 		GROUP BY MONTH( f_o.order_date ) asc");
 
 		return $query_results;
@@ -204,6 +223,6 @@ $query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
 			order BY date_order asc");	
 			
 	return $inserttransaction ;
- }
+ }*/
 }
 	

@@ -15,18 +15,16 @@ class Divisional_Reports extends MY_Controller
 	
 	public function index()
 	{
-		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
-		$data['content_view'] = "facility/facility_reports/reports_v";
-		$view = 'shared_files/template/template';
-		$this -> load -> view($view, $data);
+		$this -> program_reports();
 	}
 	//used for both the subcounty and county level program reports
 	 public function program_reports()
 	 {
-	 	
+
 	 	$user_indicator = $district_id = $this -> session -> userdata('user_indicator');
 	 	switch ($user_indicator) 
 	 	{
+	 		case facility_admin :   
 	 		case facility :
 				$facility_id = $this -> session -> userdata('facility_id');
 				
@@ -421,7 +419,7 @@ $this->db->insert('tuberculosis_report_info',$data_);
 
 		$this->db->insert_batch('malaria_data',$dbData);
 		
-		$this->view_malaria_report();
+		$this->program_reports();
 	}
 	public function save_RH_report()
 	{

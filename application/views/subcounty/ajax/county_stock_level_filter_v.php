@@ -5,7 +5,7 @@
 <ul class='nav nav-tabs'>
 	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items <?php echo " ($number_of_tracer_items)"; ?></a></li>
       <li class=""><a href="#division" data-toggle="tab">Program Commodities</a></li>
-      <li class=""><a href="#cat" data-toggle="tab">Categories</a></li>
+      <!--<li class=""><a href="#cat" data-toggle="tab">Categories</a></li>-->
       <li class=""><a href="#county" data-toggle="tab">County View</a></li>
       <li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>
 </ul>
@@ -84,7 +84,7 @@ endforeach;
 			</div>
       </form>
       </div>
-   <div  id="cat" class="tab-pane fade">
+  <!-- <div  id="cat" class="tab-pane fade">
 <br>
 <div class="filter row">
 <form class="form-inline" role="form">
@@ -127,7 +127,7 @@ endforeach;
    </form>
       </div>
    
-      </div>
+   </div>-->
       <div  id="county" class="tab-pane fade in">
       	<br>
 <div class="filter row">
@@ -296,31 +296,33 @@ var drop_down='';
 		//Tracer Filter Button
 		$(".tracer-filter").button().click(function(e) {
         e.preventDefault();
-      
-        var url_ = "reports/load_stock_level_graph/"+
-        $("#tracer_district_filter").val()+
-        "/NULL/"+$("#tracer_facility_filter").val()+
+        var url_ = "reports/get_county_stock_level_new/"+"NULL/"+"NULL/"+
+        $("#tracer_district_filter").val()+"/"+
+        $("#tracer_facility_filter").val()+"/"+
+        $("#tracer_plot_value_filter").val()+
         "/NULL";
-         
-       
         ajax_request_replace_div_content(url_,'.graph_content');    
           });
+          
           //Division button filter
           $(".division-filter").button().click(function(e) {
 	        e.preventDefault();
-	        var url_ = "reports/division_commodities_stock_level_graph/"+
-	        $("#division_district_filter").val()+
-	        "/NULL/"+$("#division_facility_filter").val()+
-	        "/NULL/"+$("#division_name_filter").val() ;
-	        
+	        var url_ = "reports/get_division_commodities_data/"+
+	        $("#division_district_filter").val()+"/"+
+	        $("#division_facility_filter").val()+"/"+
+	        $("#division_name_filter").val()+"/"+
+	        $("#division_plot_value_filter").val()+
+	        "/NULL";
 	        ajax_request_replace_div_content(url_,'.graph_content');    
           });
           
          $(".tracer-download").button().click(function(e) {
         e.preventDefault(); 
-        var url_ = "reports/get_county_stock_level_new/"+"NULL/"+"NULL/"+"$("#tracer_district_filter").val()+"/NULL/"+$("#tracer_plot_value_filter").val()+"/csv_data";   
+        var url_ = "reports/get_county_stock_level_new/"+"NULL/"+"NULL/"+
+        $("#tracer_district_filter").val()+"/NULL/"+$("#tracer_plot_value_filter").val()+"/csv_data";   
          window.open(url+url_ ,'_blank');   
           });
+          
           $(".division-download").button().click(function(e) {
         e.preventDefault(); 
         var url_ = "reports/get_division_commodities_data/"+

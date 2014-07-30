@@ -221,7 +221,7 @@
 										<div class=" col-md-6">
 											<div class="form-group">
 												<select class="form-control " id="sub_county" name="sub_county" required="required">
-													<option value=''>Select Sub County</option>
+													<option selected="selected" value='0'>Select Sub County</option>
 													
 												</select>
 											</div>

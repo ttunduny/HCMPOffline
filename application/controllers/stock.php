@@ -105,7 +105,7 @@ class Stock extends MY_Controller {
         ->fetchAll("select 
         *
         from
-        hcmp.facility_order_status
+        hcmp_rtk.facility_order_status
         where facility_order_status.status_desc like '%$order_status%'");
          $new_name_id=Doctrine_Manager::getInstance()->getCurrentConnection()
         ->fetchAll("select 
@@ -144,7 +144,7 @@ class Stock extends MY_Controller {
         from
          kemsa2.orderdetails
         left join
-        hcmp.drug_commodity_map ON drug_commodity_map.old_id = orderdetails.kemsa_code
+        hcmp_rtk.drug_commodity_map ON drug_commodity_map.old_id = orderdetails.kemsa_code
         where orderdetails.orderNumber =".$old_facility_orders['id']);
         
         foreach($order_details_match as $order_details_match){
@@ -403,6 +403,7 @@ if($this->input->post('commodity_id')):
 
          //collect n set the data in the array
 		for($i=0;$i<$count;$i++):
+			$status=($total_unit_count[$i]>0)? 1: 2;
             $date_of_entry=($form_type=='first_run') ? date('y-m-d H:i:s') :date('Y-m-d',strtotime($date_of_entry_[$i])) ;
 			$mydata=array('facility_code'=>$facility_code,
 			'commodity_id'=>$commodity_id[$i],
@@ -413,7 +414,7 @@ if($this->input->post('commodity_id')):
 			'current_balance'=>$total_unit_count[$i],
 			'source_of_commodity'=>$source_of_item[$i],
 			'date_added'=>$date_of_entry,
-			'status' =>(strtotime(str_replace(",", " ",$expiry_date[$i]))>strtotime('now') || $total_unit_count[$i]>0 ) ? 1 : 2 );
+			'status' =>(strtotime(str_replace(",", " ",$expiry_date[$i]))>strtotime('now')) ? $status : 2 );
 			
              //get the closing stock of the given item  
             $facility_stock_=facility_stocks::get_facility_commodity_total($facility_code,$commodity_id[$i], $date_of_entry)->toArray();
@@ -718,7 +719,7 @@ $step_2_size=count($get_pushed_items);
 		<br>
 		<br>".$order_details['table'];				
 		$subject='Order Report For '.$order_details['facility_name'];
-		//$this->hcmp_functions ->send_order_delivery_email($message_1,$subject,null);
+		$this->hcmp_functions ->send_order_delivery_email($message_1,$subject,null);
 		$this->session->set_flashdata('system_success_message', 'Stock details have been Updated');
 endif;
 		redirect('reports/facility_stock_data');	
@@ -838,16 +839,18 @@ $html_body.=
 		</tbody>
 		</table>'; 
    	$file_name ='Facility_Expired_Commodities_'.$facility_name."_".$facility_code."_".$date;
-	$pdf_data = array("pdf_title" => "Facility Expired Commodities For $facility_name", 'pdf_html_body' => $html_body, 'pdf_view_option' => 'download', 'file_name' => $file_name);
+	$pdf_data = array("pdf_title" => "Facility Expired Commodities For $facility_name", 
+	'pdf_html_body' => $html_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
 	$this -> hcmp_functions -> create_pdf($pdf_data);
    if($this->hcmp_functions->send_stock_decommission_email($html_body,'Decommission Report For '.$facility_name,'./pdf/'.$file_name.'.pdf')){
    	delete_files('./pdf/'.$file_name.'.pdf');
    	$this->session->set_flashdata('system_success_message', 'Stocks Have Been Decommissioned');		
      }
-endif;
+
 $user = $this -> session -> userdata('user_id');
 $user_action = "decommission";
 Log::log_user_action($user, $user_action);
+endif;
 redirect('reports/facility_stock_data');	
   }
 			
@@ -902,6 +905,7 @@ for($key=0;$key<count($stock_id);$key++):
          $myobj->save(); 	
 	 endif;
 endfor;
+//$this-> hcmp_functions ->send_stock_update_sms();
 $this->session->set_flashdata('system_success_message', "Facility Stock data has Been Updated"); 
 redirect('reports/facility_stock_data');	
 endif;	

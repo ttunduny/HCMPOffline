@@ -58,6 +58,11 @@
 	
 	$(document).ready(function () {
 		
+		       $('#main-content').on('hidden.bs.modal','#myModal', function () {
+               alert('jack');
+				$("#datatable").hide().fadeIn('fast');
+				// location.reload();
+			});
 		$('#Tab a').click(function (e) {
  		 e.preventDefault()
   			$(this).tab('show')
@@ -259,7 +264,8 @@ var drop_down='';
           data:{ 'first_name': $('#first_name').val(),'last_name': $('#last_name').val(),
           'telephone': $('#telephone').val(),'email': $('#email').val(),
           'username': $('#username').val(),'facility_id': $('#facility_id').val(),
-          'district_name': $('#district_name').val(),'user_type': $('#user_type').val()},
+          'county':$('#county').val(),
+          'district_name': $('#sub_county').val(),'user_type': $('#user_type').val()},
           url: url,
           beforeSend: function() {
            
@@ -285,10 +291,12 @@ var drop_down='';
             location.reload();      
           }
         }); 
+
         $('#editModal,#addmodal').on('hidden.bs.modal', function () {
 				$("#datatable").hide().fadeIn('fast');
 				 location.reload();
 			})
+
 }
 
 

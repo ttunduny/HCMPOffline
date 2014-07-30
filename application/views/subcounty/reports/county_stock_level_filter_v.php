@@ -3,53 +3,11 @@
   <b>Below are the Stocking Levels in the County </b> :Select filter Options
 </div>
 <ul class='nav nav-tabs'>
-      <li class="active"><a href="#cat" data-toggle="tab">Categories</a></li>
-      <li class=""><a href="#county" data-toggle="tab">County View</a></li>
+      <li class="active"><a href="#county" data-toggle="tab">County View</a></li>
       <li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>
 </ul>
     <div id="myTabContent" class="tab-content">
-
-       <div  id="cat" class="tab-pane fade active in">
-       	<br>
-       	<div class="filter row">
-<form class="form-inline" role="form">
-       	<select id="category_filter" class="form-control col-md-3">
-<option value="NULL">Select Commodity Category</option>
-<?php
-foreach($categories as $data):
-		$commodity_name=$data->sub_category_name;	
-		$commodity_id=$data->id;
-		echo "<option value='$commodity_id'>$commodity_name</option>";
-endforeach;
-?>
-</select>
-	<select id="category_district_filter" class="form-control col-md-2">
-<option selected="selected" value="NULL">Select Sub-county</option>
-<?php
-foreach($district_data as $district_):
-		$district_id=$district_->id;
-		$district_name=$district_->district;	
-		echo "<option value='$district_id'>$district_name</option>";
-endforeach;
-?>
-</select> 
-<select id="category_facility_filter" class="form-control col-md-3">
-<option value="NULL">Select facility</option>
-</select>	
-<select id="category_plot_value_filter" class="form-control col-md-2">
-<option selected="selected" value="NULL">Select Plot value</option>
-<option value="packs">Packs</option>
-<option value="units">Units</option>
-<option value="ksh">KSH</option>
-</select>
-<div class="col-md-1">
-<button class="btn btn-sm btn-success category-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
-</div>
-   </form>
-      </div>
-   
-      </div>
-       <div  id="county" class="tab-pane fade in">
+       <div  id="county" class="tab-pane active fade in">
       	<br>
 <div class="filter row">
 <form class="form-inline" role="form">
@@ -68,9 +26,10 @@ endforeach;
 <option value="packs">Packs</option>
 <option value="units">Units</option>
 <option value="ksh">KSH</option>
+<option value="mos">Month of Stock</option>
 </select>
 <div class="col-md-1">
-<button class="btn btn-sm btn-success filter" id="county-filter" name="filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+<button class="btn btn-sm btn-success county-filter"  id="county-filter" ><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div> 
 </form>
 </div>
@@ -107,6 +66,7 @@ endforeach;
 <option value="packs">Packs</option>
 <option value="units">Units</option>
 <option value="ksh">KSH</option>
+<option value="mos">Month of Stock</option>
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success subcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
@@ -165,8 +125,9 @@ var drop_down='';
 		$(".county-filter").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+
-$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+ '/table_data';	
+$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+'/table_data';	
 		ajax_request_replace_div_content(url_,'.graph_content');	
+
           });
           
 	     $(".subcounty-filter").button().click(function(e) {

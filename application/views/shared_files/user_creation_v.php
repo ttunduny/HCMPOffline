@@ -551,6 +551,11 @@
 </div><!-- end Modal edit user -->
 <script>
       $(document).ready(function () {
+      	$('#myModal').on('hidden.bs.modal', function () {
+      		alert('jack');
+				$("#datatable,.modal-content").hide().fadeIn('fast');
+				 location.reload();
+			});
 	$('.dataTables_filter label input').addClass('form-control');
 	$('.dataTables_length label select').addClass('form-control');
 $('#datatable').dataTable( {
@@ -837,6 +842,7 @@ $("#create_new").click(function() {
                   
           }
         }); 
+        
 }
 $(".edit_user").click(function() {
 
@@ -887,10 +893,7 @@ $(".edit_user").click(function() {
            
         }); 
 }
-			$('#myModal').on('hidden.bs.modal', function () {
-				$("#datatable,.modal-content").hide().fadeIn('fast');
-				 location.reload();
-			})
+			
 			
 			oTable = $('#datatable').dataTable();
 			
