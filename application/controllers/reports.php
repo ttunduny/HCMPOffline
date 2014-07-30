@@ -880,8 +880,9 @@ class Reports extends MY_Controller
 		$this -> load -> view($view, $data);
 		
 	}	
-	public function filtered_consumption($commodity_id, $year, $option)
+	public function filtered_consumption($commodity_id = null, $option = null,$from = null,$to = null,$report_type = null)
 	{
+		//($commodity_id = null,$category_id = null, $district_id = null, $facility_code=null, $option = null,$from=null,$to=null,$report_type=null)
 	
 		$year = (isset($year) && ($year>0))? $year: date("Y");
 		$option = (isset($option)) ? $option: "units";
@@ -923,7 +924,7 @@ class Reports extends MY_Controller
 				$graph_data['series_data']['Consumption'] = array_merge($graph_data['series_data']['Consumption'],array((int)$facility_consumption['total_consumption']));	
 			endforeach;
 		}
-
+		
 		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		
@@ -1432,45 +1433,46 @@ exit;*/
 		
 	}
 	
-/*	//Downloads the excel file for user activities in a particular facility
+	//Downloads the excel file for user activities in a particular facility
 	public function get_user_activities_excel($year = null, $month = null)
 	{
-		//pick the IDs from the sessions
-		$county_id = $this -> session -> userdata('county_id');
+		$year = (isset($year)&&($year>0))? $year:date("Y");
+		$month = (isset($month)&&($month>0))? $month:date("m");
 		$district_id = $this -> session -> userdata('district_id');
-		$facility_id = $this -> session -> userdata('facility_id');
+		$facility_code = $this -> session -> userdata('facility_id');
 		
-		$year = (isset($year)&& ($year>0))? $year : date("Y");
-		$month = (isset($month)&& ($month>0))? $month : date("m");
-		
-	 	$county_name = counties::get_county_name($county_id);
-		
-		$title='';
-		
+		$district_id = ($district_id=="NULL") ? null :$district_id;
+	 	$facility_code = ($facility_code=="NULL") ? null :$facility_code;
+		$county_id = $this -> session -> userdata('county_id');
+		$county_name = counties::get_county_name($county_id);
+		$series_data_=array();
 		$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
 		$district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " subcounty" : null;
-		$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
+		
+		$facility_code_ = (isset($facility_code)&&($facility_code>0) )? facilities::get_facility_name_($facility_code) -> toArray() : null;
 		$facility_name = $facility_code_[0]['facility_name'];
 		$title = isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
-	 	isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
-       
-		$data = Log::get_user_activities_download($facility_code,$district_id,$county_id, $year, $month);
-		echo "<pre>";
-		print_r($data);
-		echo "</pre>";
-		exit;
+	    $district_id>0 && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
 		
-		$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "User Activities for $facility_name $title $month_ $year", 'file_name' => "User_activities_for_$title_$month_$year");
-		$row_data = array(array("User Activities $title $month_ $year","User Activities"));
+		$data = Log::get_user_activities_download($facility_code,$district_id,$county_id, $year, $month);
+		
+		foreach ($data as $data):
+			$series_data_=array_merge($series_data_ , array(array($data["fname"],$data["lname"],$data["total_issues"],$data["total_orders"],$data["total_orders"],$data['total_decommisions'],$data['total_redistributions'],$data['total_stock_added'])));
+		endforeach;
+		
+		$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' 
+		=> "User Activities for $title ", 'file_name' => "User_Activities_for_$district_name__$facility_name_");
+		$row_data = array(array("First Name","Last Name","Facility Name","Total Issues","Total Orders","Total Decommissions","Total Redistributions","Stock Additions"));
 		$column_data = array("");
 		$excel_data['column_data'] = $column_data;
 		$row_data=array_merge($row_data,$series_data_);
-		$excel_data['row_data'] = $row_data;
+		$excel_data['row_data'] = $row_data;;
 		$this -> hcmp_functions -> create_excel($excel_data);
 		
 		
+		
 	}
-*/
+
 	
 	
 	public function get_district_drill_down_detail($district_id, $date_of_activation) 
@@ -2977,7 +2979,10 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		$to=($to=="NULL") ? strtotime(date('d-m-y')) : strtotime(urldecode($to));
 		$category_id=($category_id=="NULL") ? null :$category_id;		
 		$county_id = $this -> session -> userdata('county_id');
+		$district_id = $this -> session -> userdata('district_id');
+		
 		$county_name = counties::get_county_name($county_id);
+		
 		$category_data=$series_data = $graph_data= $series_data_=array();
 		//check if the district is set
 		$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;

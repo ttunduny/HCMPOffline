@@ -28,8 +28,8 @@
 			<option value="12">Dec</option>
 		</select>
  
-	<button class="btn btn-small btn-success" id="filter" name="filter" style="margin-left: 1em;"><span class="glyphicon glyphicon-filter">Filter</i></button> 
-	<button class="btn btn-small btn-success" id="download" name="download" style="margin-left: 1em;"><span class="glyphicon glyphicon-save">Download</i></button> 
+	<button class="btn btn-small btn-success" id="filter" name="filter" style="margin-left: 1em;"><span class="glyphicon glyphicon-filter">Filter</button> 
+	<button class="btn btn-small btn-success" id="download" name="download" style="margin-left: 1em;"><span class="glyphicon glyphicon-save">Download</button> 
 	
 	</h5>
 </div>
@@ -106,9 +106,10 @@ $(document).ready(function() {
 		
           });
 	$("#download").click(function(){
-		var url = "reports/get_user_activities_excel/"+
+		var url_ = "reports/get_user_activities_excel/"+
 				        $("#year_filter").val()+
 				        "/"+$("#month_filter").val();
+		window.open(url+url_ ,'_blank'); 
         			
           });
 		

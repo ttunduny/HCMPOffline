@@ -165,8 +165,7 @@ endforeach;
 <select id="subcounty_facility_filter" class="form-control col-md-2">
 <option value="NULL">Select facility</option>
 </select>	
-<input type="text" name="from"  id="from" 
-placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" />
+<input type="text" name="from"  id="from" placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" />
 <input type="text" name="to"  id="to" placeholder="TO" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" />		
 <select id="subcounty_plot_value_filter" class="form-control col-md-2">
 <option selected="selected" value="NULL">Select Plot value</option>
@@ -248,7 +247,7 @@ var drop_down='';
         var from =$("#tracer_from").val();
         var to =$("#tracer_to").val();
         
-        if(from==''){from="NULL";   }
+        if(from==''){from="NULL";}
         if(to==''){to="NULL";}
 
         var url_ = "reports/consumption_stats_graph/"+

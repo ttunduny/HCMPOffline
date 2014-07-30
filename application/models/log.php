@@ -112,10 +112,11 @@ class Log extends Doctrine_Record {
 		$and_data .=(isset($county_id)&& ($county_id>0)) ?" AND u.county_id = $county_id" : null;
 		$and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND u.facility = $facility_code" : null;
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-		select DISTINCT
-		    (l.user_id) as user,
+		select 
+			DISTINCT (l.user_id) as user,
 		    u.fname,
 		    u.lname,
+			f.facility_name,
 		    ifnull(sum(l.issued), 0) as total_issues,
 		    ifnull(sum(l.ordered), 0) as total_orders,
 		    ifnull(sum(l.decommissioned), 0) as total_decommisions,
@@ -123,14 +124,17 @@ class Log extends Doctrine_Record {
 		    ifnull(sum(l.add_stock), 0) as total_stock_added
 		from
 		    log l,
-		    user u
+		    user u,
+		    facilities f
 		where
 		    l.user_id = u.id 
+		    AND u.facility = f.facility_code
 		    $and_data
 	        AND DATE_FORMAT(l.`start_time_of_event`, '%Y') = '$year'
 	        AND DATE_FORMAT(l.`start_time_of_event`, '%m') = '$month'
 		GROUP BY user
 		");
+		
 		
 		return $q;
 	}
