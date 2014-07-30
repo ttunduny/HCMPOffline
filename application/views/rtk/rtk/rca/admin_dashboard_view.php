@@ -6,7 +6,7 @@ $month= substr_replace($month,"", -4);
 $monthyear = $year . '-' . $month . '-1';
 $englishdate = date('F, Y', strtotime($monthyear));
 ?> 
-<script type="text/javascript" language="javascript" src="<?php echo base_url();?>Scripts/jquery.dataTables.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url();?>assets/datatable/jquery.dataTables.js"></script>
 
 
 <script type="text/javascript">

@@ -3,6 +3,13 @@
         font-size: 13px;
         font-family: calibri;
     }
+    .dl-horizontal{
+      
+    }
+    table{
+      font-size: 12px;
+      width: 560px;
+    }
 </style>
 <link rel="stylesheet" type="text/css" href="http://tableclothjs.com/assets/css/tablecloth.css">
 <script src="http://tableclothjs.com/assets/js/jquery.tablesorter.js"></script>
@@ -36,7 +43,7 @@
             <li class="active"><a href="#">Sub County: <?php echo $district_name; ?></a></li> 
                    <li class="nav-header">Facilities</li>
                  </ul>
-                 <div style="height:400px;overflow:scroll;border:1px ridge #ccc" >
+                 <div style="height:500px;overflow:scroll;border:1px ridge #ccc" >
                       <?php foreach ($facilities as $key => $value) {
                     echo '<a href="'.base_url().'rtk_management/facility_profile/'.$value['facility_code'].'">'.$value['facility_name'].'</a> <br />';
                  } ?>
@@ -69,10 +76,10 @@
                </dd>
                </dl>
     </div>
-    <div class="span4" style="border-left: solid 1px  #ccc;margin-left: 10px;padding-left: 10px;">
-        <h3><?php echo $district_name; ?> Sub-County Stock Card</h3>
+    <div class="span4" style="border-left: solid 1px  #ccc;margin-left: 10px;padding-left: 10px;width:20%;float:left;">
+        <h4><?php echo $district_name; ?> Sub-County Stock Card</h4>
 
-   <table class="table" style="">
+   <table class="table" width="60px">
                                 <thead>
                                     <tr>
                                         <th>Kit</th>
@@ -117,7 +124,7 @@
                                 </tbody>
                             </table>
     </div>    
-    <div id="chart" style="margin-left:20%;margin-top:260px;height:450px;width:76%;border:1px ridge #ccc;">
+    <div id="chart" style="margin-left:25%;margin-top:250px;height:380px;width:70%;border:1px ridge #ccc;">
       
         
     </div>
@@ -161,7 +168,7 @@ $(function () {
   
    $('#chart').highcharts({
         title: {
-            text: 'District Monthly Summaries'
+            text: 'Sub-County Monthly Summaries'
         },
         xAxis: {
             categories: ['Begining Balance',  'Used Total', 'Total Tests', 'Closing Balance' ,'Allocated']           

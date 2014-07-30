@@ -25,7 +25,7 @@ foreach ($res->result_array() as $key => $value) {
 }
 ?>
 
-<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>Scripts/jquery.dataTables.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/datatable/jquery.dataTables.js"></script>
 
 
 <script type="text/javascript">
@@ -79,8 +79,7 @@ foreach ($res->result_array() as $key => $value) {
 //echo "<pre>";var_dump($reports);echo "</pre>";
     ?>
     <div id="graphs">
-        <script src="http://code.highcharts.com/highcharts.js"></script>
-        <script src="http://code.highcharts.com/modules/exporting.js"></script>
+        
         <script type="text/javascript">
 
             $(function() {
@@ -130,7 +129,7 @@ foreach ($res->result_array() as $key => $value) {
             </div>
 <?php } ?>
         <div>
-            <table class="table" style="font-size: 139%;">
+            <table class="table" style="font-size: 120%;">
                 <thead>
                     <tr>
                         <th>Kit</th>

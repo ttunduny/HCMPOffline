@@ -141,11 +141,11 @@ public function send_stock_decommission_email($message,$subject,$attach_file){
 	   $data=Users::getUsers($facility_code)->toArray();
 	   
 	   $email_address=$this->get_facility_email($facility_code);
-	   
+	 
 	   $email_address .=$this->get_ddp_email($data[0]['district']);
-
+        
        $email_address .= $this->get_county_email($data[0]['district']);
-
+        
 	   $this->send_email(substr($email_address,0,-1),$message,$subject,$attach_file);
 	   
 	 
@@ -177,7 +177,9 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 	  $cc_email .=$this->get_ddp_email($data['district']);
 	   $cc_email .=$this->get_facility_email($facility_code);
 
+
 	   $cc_email .=$this->get_county_email($data['district']) ;
+
 
   endif;
  
@@ -217,17 +219,17 @@ public function send_sms($phones,$message) {
 /*****************************************Email function for HCMP, all the deafult email addresses and email content have been set ***************/
 
 public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL){
-  
+      
 		$mail_list=($this->test_mode)?'kariukijackson@ymail.com,': 'kariukijackson@gmail.com,';
 			
 		$fromm='info-noreply@health-cmp.or.ke';
 		$messages=$message;
   		$config['protocol']    = 'smtp';
-        $config['smtp_host']    = 'ssl://host05.safaricombusiness.co.ke';
+        $config['smtp_host']    = 'ssl://smtp.gmail.com';
         $config['smtp_port']    = '465';
         $config['smtp_timeout'] = '7';
-        $config['smtp_user']    = 'info-noreply@health-cmp.or.ke';
-        $config['smtp_pass']    = 'hcmp@#2012';//healthkenya //hcmpkenya@gmail.com
+        $config['smtp_user']    = 'hcmpkenya@gmail.com';
+        $config['smtp_pass']    = 'healthkenya';//healthkenya //hcmpkenya@gmail.com
         $config['charset']    = 'utf-8';
         $config['newline']    = "\r\n";
         $config['mailtype'] = 'html'; // or html
@@ -256,7 +258,6 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
 		foreach($files as $key=>$files){
 		if($key!=$items){
 		$this->email->attach($files);
-
 		}	
 		}
 
@@ -743,9 +744,8 @@ $tester= count($detail_list);
 	$order_value  = round(($total_fill_rate/count($detail_list)),0,PHP_ROUND_HALF_UP);
 	}	
 	$message=<<<HTML_DATA
-<table id="main1" width="100%" class="row-fluid table table-bordered data-table">
-	<thead>
-		<tr>
+	<table>
+			<tr>
 		<th colspan='11'>
 		<p>$facility_name</p>
 		<p>Fill rate(Quantity Ordered/Quantity Received)</p>
@@ -764,7 +764,9 @@ Facility Order No $order_id| KEMSA Order No $kemsa_order_no | Total ordered valu
 		<th>Problematic Delivery 0% </th>
 		<th width="50px" style="background-color:#ea1e17;"></th>
 		<th>Problematic Delivery over 100%</th>
-		</tr>
+		</tr></table> </br></n>
+<table id="main1" width="100%" class="row-fluid table table-bordered">
+	<thead>
 		<tr>
 		<th><strong>Category</strong></th>
 		<th><strong>Description</strong></th>
@@ -782,6 +784,7 @@ Facility Order No $order_id| KEMSA Order No $kemsa_order_no | Total ordered valu
 		 $table_body	
 	</tbody>
 </table>
+<br></n>
 HTML_DATA;
 return array('table'=>$message,'date_ordered'=>$order_date,'date_received'=>$deliver_date,'order_total'=>$order_total,'actual_order_total'=>$actual_order_total,'lead_time'=>$date_diff,'facility_name'=>$facility_name);
  }

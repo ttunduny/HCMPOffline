@@ -48,10 +48,10 @@ class Home_Controller extends MY_Controller {
                 if ($lab_count > 0) {
                     $reported = $reported + 1;
                     //".site_url('rtk_management/get_report/'.$facility_detail['facility_code'])."
-                    $table_body .="<span class='label label-success'>Submitted  for    $lastmonth </span><a href=" . site_url('rtk_management/rtk_orders') . " class='link'>View</a></td>";
+                    $table_body .="<span class='label label-success'>Submitted  for    $lastmonth </span><a href=" . site_url('rtk_management/rtk_orders') . " class='link'> View</a></td>";
                 } else {
                     $nonreported = $nonreported + 1;
-                    $table_body .="<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link'>Report</a></td>";
+                    $table_body .="<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link'> Report</a></td>";
                 }
 
                 $table_body .="</td>";

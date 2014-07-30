@@ -67,7 +67,8 @@ class Users extends Doctrine_Record {
 		$names = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $names;
 	}
-	public static function get_user_info($facility_code) {
+	public static function get_user_info($facility_code) 
+	{
 		$query = Doctrine_Query::create() -> select("DISTINCT usertype_id, telephone,district, facility") -> from("users")->where("status='1' and  facility='$facility_code'");
 		$info = $query -> execute();
 		
@@ -79,6 +80,13 @@ class Users extends Doctrine_Record {
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
 	}
+	public static function get_facility_admins($facility_code) 
+	{
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("facility = $facility_code AND usertype_id IN(2,5) AND status = 1");
+		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $result;
+	}
+
 
 	public static function reset_password($user_id, $new_password_confirm) {
 
@@ -268,12 +276,7 @@ public static function get_dpp_details($distirct){
 		$drugs = $query -> execute();
 		return $drugs;
 	}
-		public static function getUsers($facility_c){
-		$query = Doctrine_Query::create() -> select("*") -> from("users")->where("facility=$facility_c");
-		$level = $query -> execute();
-		return $level;
-	}
-
+	
   //////get the county details 
 public static function get_county_details($county_id){
 	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("county_id=$county_id and usertype_id='10' ");

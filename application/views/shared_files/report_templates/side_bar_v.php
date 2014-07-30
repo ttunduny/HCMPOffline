@@ -19,7 +19,12 @@
                             <a href="<?php echo base_url().'reports/expiries' ?>">Expired</a> <span class="label label-info"></span>
                         </td>
                     </tr>
-                    
+                    <tr>
+                        <td>
+                            <a href="<?php echo base_url().'reports/expiry_tracking' ?>">Expiry Tracking</a> <span class="label label-info"></span>
+                        </td>
+                    </tr>
+
                 </table>
 
             </div>
@@ -44,11 +49,11 @@
         <div id="collapseFour" class="panel-collapse collapse <?php echo $active_panel=='statistics'? 'in': null; ?>">
             <div class="panel-body">
                 <table class="table">
-                    <tr>
+                   <!-- <tr>
                         <td>
                             <span class="glyphicon"></span><a href="<?php echo base_url().'reports/load_expiries'?>" >Expiries</a>
                         </td>
-                    </tr>
+                    </tr>-->
                     <tr>
                         <td>
                             <span class="glyphicon"></span><a href="<?php echo base_url().'reports/order_report'?>" >Orders</a>
@@ -102,6 +107,12 @@
                             <span class="glyphicon"></span><a href="<?php echo base_url().'reports/get_sub_county_facility_mapping_data'?>" >User Statistics</a>
                         </td>
                     </tr>
+
+                    <tr>
+                        <td>
+                            <span class="glyphicon"></span><a href="<?php echo base_url().'reports/facility_stock_level_dashboard'?>" >Stocking Levels</a>
+                        </td>
+                    </tr>
                     
                 </table>
             </div>
@@ -140,7 +151,4 @@
 			});
 	});
 </script>
-<<<<<<< HEAD
 
-=======
->>>>>>> 801686231c0596a94df7850349770c6af99588ba

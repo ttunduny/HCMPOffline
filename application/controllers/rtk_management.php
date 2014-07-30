@@ -289,23 +289,24 @@ class Rtk_Management extends Home_controller {
     }
 
     public function rca_pending_facilities() {
-        $countyid = $this->session->userdata('county_id');
+        $countyid = $this->session->userdata('county_id');        
         $districts = districts::getDistrict($countyid);
         $county_name = counties::get_county_name($countyid);
-        $County = $county_name[0]['county'];
+
+        $County = $county_name['county'];
         $month = $this->session->userdata('Month');
         if ($month == '') {
             $month = date('mY', strtotime('-1 month'));
         }
         $year = substr($month, -4);
         $month = substr_replace($month, "", -4);
-        $date = date('F-Y', mktime(0, 0, 0, $month, 1, $year));
-
-        $pending_facilities = $this->rtk_facilities_not_reported(NULL, $countyid, NULL, NULL, $year, $month);
+        $date = date('F-Y', mktime(0, 0, 0, $month, 1, $year));       
+        $pending_facilities = $this->rtk_facilities_not_reported(NULL, $countyid,NULL,NULL, $year,$month);
+        $new_pending_facilities = array();                
         $data['county'] = $County;
         $data['pending_facility'] = $pending_facilities;
         $data['title'] = 'RTK County Admin';
-        $data['banner_text'] = 'RTK County Admin';
+        $data['banner_text'] = 'RTK County Admin: Pending Facilities';
         $data['content_view'] = "rtk/rtk/rca/pending_facilities_v";
         $this->load->view("rtk/template", $data);
     }
@@ -426,25 +427,21 @@ class Rtk_Management extends Home_controller {
         $data['facilities_count'] = $table_data_facilities;
         $data['county'] = $County;
         $data['title'] = 'RTK County Admin';
-        $data['banner_text'] = 'RTK County Admin';
+        $data['banner_text'] = "RTK County Admin: Sub-Counties in $County County";
         $data['content_view'] = "rtk/rtk/rca/districts_v";
         $this->load->view("rtk/template", $data);
     }
 
     public function rca_facilities_reports() {
 
-        /* shows all reports in a county for all districts
-         * For instance the link below
-         * http://localhost/HCMP/rtk_management/reports_in_county/31
-         */
 
         $county = $this->session->userdata('county_id');
 
         date_default_timezone_set('EUROPE/moscow');
         $lastday = date('Y-m-d', strtotime("last day of previous month"));
         $districts = districts::getDistrict($county);
-        $county_name = counties::get_county_name($county);
-        $County = $county_name[0]['county'];
+        $county_name = counties::get_county_name($county);         
+        $County = $county_name['county'];        
         $sql = "SELECT lab_commodity_orders.id, lab_commodity_orders.facility_code, lab_commodity_orders.compiled_by, lab_commodity_orders.order_date, lab_commodity_orders.district_id, districts.district, facilities.facility_name, facilities.facility_code
         FROM lab_commodity_orders,  facilities, districts, counties
         WHERE districts.county = counties.id
@@ -460,7 +457,7 @@ class Rtk_Management extends Home_controller {
 
         $data['county'] = $County;
         $data['title'] = 'RTK County Admin';
-        $data['banner_text'] = 'RTK County Admin';
+        $data['banner_text'] = "RTK County Admin: Available Reports for $County County";
         $data['content_view'] = "rtk/rtk/rca/facilities_reports_v";
         $this->load->view("rtk/template", $data);
     }
@@ -473,8 +470,7 @@ class Rtk_Management extends Home_controller {
         $districts = districts::getDistrict($Countyid);
 
         $facilities = $this->_facilities_in_county($Countyid);
-        $users = $this->_users_in_county($Countyid, 7);
-
+        $users = $this->_users_in_county($Countyid, 7);        
         $data['facilities'] = $facilities;
         $data['users'] = $users;
         $data['districts'] = $this->_districts_in_county($Countyid);
@@ -493,9 +489,11 @@ class Rtk_Management extends Home_controller {
         $lastday = date('Y-m-d', strtotime("last day of previous month"));
         $County = $this->session->userdata('county_name');
         $Countyid = $this->session->userdata('county_id');
-        $districts = districts::getDistrict($Countyid);
-        $facility = facilities::get_facility_name_($mfl);
-
+        $districts = districts::getDistrict($Countyid);         
+        $sql = "select * from facilities where facility_code=$mfl";
+        $facility = $this->db->query($sql)->result_array();
+        //$facility = facilities::get_facility_name($mfl);        
+        
         $data['reports'] = $this->_monthly_facility_reports($mfl);
         $data['facility_county'] = $data['reports'][0]['county'];
         $data['facility_district'] = $data['reports'][0]['district'];
@@ -508,10 +506,10 @@ class Rtk_Management extends Home_controller {
         $data['county'] = $County;
         $data['mfl'] = $mfl;
         $data['countyid'] = $Countyid;
-        $data['title'] = $facility['facility_name'] . '-' . $mfl;
+        $data['title'] = $facility[0]['facility_name'] . '-' . $mfl;
         $data['facility_name'] = $facility['facility_name'];
-        $data['banner_text'] = 'Facility Profile: ' . $facility['facility_name'] . '-' . $mfl;
-        $data['content_view'] = "rtk/facility_profile_view";
+        $data['banner_text'] = 'Facility Profile: ' . $facility[0]['facility_name'] . '-' . $mfl;
+        $data['content_view'] = "rtk/rtk/facility_profile_view";
 
         $this->load->view("rtk/template", $data);
     }
@@ -535,7 +533,7 @@ class Rtk_Management extends Home_controller {
         $year_previous_1 = substr($previous_month_1, -4);
         $year_previous_2 = substr($previous_month_2, -4);
 
-        $current_month = substr_replace($current_month, "", -4);
+        $current_month = substr_replace($current_month, "", -4);        
         $previous_month_1 = substr_replace($previous_month_1, "", -4);
         $previous_month_2 = substr_replace($previous_month_2, "", -4);
 
@@ -559,25 +557,27 @@ class Rtk_Management extends Home_controller {
         $district_summary1 = $this->rtk_summary_district($district, $year_previous_1, $previous_month_1);
         $district_summary2 = $this->rtk_summary_district($district, $year_previous_2, $previous_month_2);
 
-        $data['district_balances_current'] = $this->district_totals($year_current, $current_month, $district);
+        $county_id = districts::get_county_id($district_summary['district_id']);
+        $county_name = counties::get_county_name($county_id['county']);
+       
+
+        $data['district_balances_current'] = $this->district_totals($year_current, $previous_month, $district);
         $data['district_balances_previous'] = $this->district_totals($year_previous, $previous_month, $district);
         $data['district_balances_previous_1'] = $this->district_totals($year_previous_1, $previous_month_1, $district);
         $data['district_balances_previous_2'] = $this->district_totals($year_previous_2, $previous_month_2, $district);
 
         $data['district_summary'] = $district_summary;
-        $county_id = districts::get_county_id($district_summary['district_id']);
-        $county_name = counties::get_county_name($county_id[0]['county']);
-        $data['districts'] = $this->_districts_from_county($county_name[0]['id']);
+        
+        $data['districts'] = $this->_districts_from_county($county_name['id']);
         $data['facilities'] = $this->_facilities_in_district($district);
 
-        $data['district_name'] = $county_id[0]['district'];
-        $data['county_id'] = $county_name[0]['id'];
-        $data['county_name'] = $county_name[0]['county'];
-        $data[''] = $district_summary['district_id'];
+        $data['district_name'] = $district_summary['district'];
+        $data['county_id'] = $county_name['id'];
+        $data['county_name'] = $county_name['county'];     
 
-        $data['title'] = 'District Profile: ' . $district_summary['district'];
-        $data['banner_text'] = 'District Profile: ' . $district_summary['district'];
-        $data['content_view'] = "rtk/district_profile_view";
+        $data['title'] = 'RTK County Admin - Sub-County Profile: ' . $district_summary['district'];
+        $data['banner_text'] = 'Sub-County Profile: ' . $district_summary['district'];
+        $data['content_view'] = "rtk/rtk/district_profile_view";
         $data['months'] = $month_text;
 
         $this->load->view("rtk/template", $data);
@@ -633,7 +633,7 @@ class Rtk_Management extends Home_controller {
         $data['zone_d_stats'] = $this->zone_allocation_stats('d');
 
         $data['banner_text'] = 'National';
-        $data['content_view'] = 'rtk/allocation/allocation_home_view';
+        $data['content_view'] = 'rtk/rtk/allocation/allocation_home_view';
         $data['title'] = 'National Summary: ';
         $this->load->view("rtk/template", $data);
     }
@@ -874,7 +874,7 @@ class Rtk_Management extends Home_controller {
 
     public function delete_user($user, $district, $redirect_url = null) {
         $sql = 'DELETE FROM `user` WHERE `id` =' . $user
-                . ' AND  `usertype_id` =12'
+                . ' AND  `usertype_id` =7'
                 . ' AND  `district` =' . $district;
 
         $object_id = $user;
@@ -1721,7 +1721,7 @@ class Rtk_Management extends Home_controller {
 
         $htmltable .= '<tr style="background: #E9E9E3; border-top: solid 1px #ccc;">
           <td>Totals</td>
-          <td>' . $ish['districts'] . ' districts</td>
+          <td>' . $ish['districts'] . ' Sub-Counties</td>
           <td>' . $ish['facilities'] . '</td>
           <td>' . $total_punctual . '</td>
           <td>' . $ish['late_reports'] . '</td>
@@ -1733,7 +1733,7 @@ class Rtk_Management extends Home_controller {
           <table class="data-table">
           <thead><tr>
           <th>County</th>
-          <th>District</th>
+          <th>Sub-County</th>
           <th>No of facilities</th>
           <th>No reports before 10th</th>
           <th>No of late reports (10th-12th)</th>
@@ -2750,7 +2750,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $data['nonreported'] = $nonreported;
 
         $data['table_body'] = $table_body;
-        $data['title'] = "RTK";
+        $data['title'] = "Home";
         $data['popout'] = "Your order has been saved.";
         $data['content_view'] = "rtk/rtk/dpp/dpp_home_with_table";
         $data['banner_text'] = "Home";
@@ -2768,7 +2768,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         //     ini_set('memory_limit', '-1');
 
         $data['order_id'] = $order_id;
-        $data['content_view'] = "rtk/dpp/lab_commodities_report_edit_v";
+        $data['content_view'] = "rtk/rtk/dpp/lab_commodities_report_edit_v";
         $data['banner_text'] = "Lab Commodity Order Details";
         $data['lab_categories'] = Lab_Commodity_Categories::get_all();
         $data['detail_list'] = Lab_Commodity_Details::get_order($order_id);
@@ -3049,7 +3049,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $data['title'] = "Lab Commodity Order Details";
         // $data['content_view'] = "rtk/lab_order_details_v";
         $data['order_id'] = $order_id;
-        $data['content_view'] = "rtk/dpp/lab_commodities_report";
+        $data['content_view'] = "rtk/rtk/dpp/lab_commodities_report";
         $data['banner_text'] = "Lab Commodity Order Details";
 
         $data['lab_categories'] = Lab_Commodity_Categories::get_all();
@@ -3090,15 +3090,16 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
     }
 
     public function rtk_orders($msg = NULL) {
-        $district = $this->session->userdata('district_id');
-        $district_name = Districts::get_district_name($district)->toArray();
+        $district = $this->session->userdata('district_id');        
+        $district_name = Districts::get_district_name($district)->toArray();        
         $d_name = $district_name[0]['district'];
         $countyid = $this->session->userdata('county_id');
+
         $data['countyid'] = $countyid;
 
-        $data['title'] = "District Orders";
+        $data['title'] = "Orders";
         $data['content_view'] = "rtk/rtk/dpp/rtk_orders_listing_v";
-        $data['banner_text'] = $d_name . " District Orders";
+        $data['banner_text'] = $d_name . "Orders";
         //        $data['fcdrr_order_list'] = Lab_Commodity_Orders::get_district_orders($district);
         ini_set('memory_limit', '-1');
 
@@ -3106,19 +3107,28 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $last_month = date('m');
         //            $month_ago=date('Y-'.$last_month.'-d');
         $month_ago = date('Y-m-d', strtotime("last day of previous month"));
-        $query = $this->db->query("SELECT  
+        $sql = 'SELECT  
+    facilities.facility_code,facilities.facility_name,lab_commodity_orders.id,lab_commodity_orders.order_date,lab_commodity_orders.district_id,lab_commodity_orders.compiled_by,lab_commodity_orders.facility_code
+    FROM lab_commodity_orders, facilities
+    WHERE lab_commodity_orders.facility_code = facilities.facility_code 
+    AND lab_commodity_orders.order_date between ' . $month_ago . ' AND NOW()
+    AND lab_commodity_orders.district_id =' . $district . '
+    ORDER BY  lab_commodity_orders.id DESC ';       
+        /*$query = $this->db->query("SELECT  
             facilities.facility_code,facilities.facility_name,lab_commodity_orders.id,lab_commodity_orders.order_date,lab_commodity_orders.district_id,lab_commodity_orders.compiled_by,lab_commodity_orders.facility_code
             FROM lab_commodity_orders, facilities
             WHERE lab_commodity_orders.facility_code = facilities.facility_code 
             AND lab_commodity_orders.order_date between '$month_ago ' AND NOW()
             AND lab_commodity_orders.district_id =' . $district . '
-            ORDER BY  lab_commodity_orders.id DESC");
+            ORDER BY  lab_commodity_orders.id DESC");*/
+        $query = $this->db->query($sql);
 
         $data['lab_order_list'] = $query->result_array();
         $data['all_orders'] = Lab_Commodity_Orders::get_district_orders($district);
         $myobj = Doctrine::getTable('districts')->find($district);
         //$data['district_incharge']=array($id=>$myobj->district);
         $data['myClass'] = $this;
+        $data['d_name'] = $d_name;
         $data['msg'] = $msg;
 
         $this->load->view("rtk/template", $data);
@@ -3596,40 +3606,24 @@ WHERE
         $district_name = Districts::get_district_name($district)->toArray();
         $countyid = $this->session->userdata('county_id');
         $data['countyid'] = $countyid;
-        $d_name = $district_name[0]['district'];
-        $data['title'] = "District Allocations";
+        $d_name = $district_name[0]['district'];     
+        $data['title'] = "Allocations";
         $data['content_view'] = "rtk/rtk/dpp/rtk_allocation_v";
-        $data['banner_text'] = $d_name . " District Allocation";
+        $data['banner_text'] = $d_name . "Allocation";
 //        $data['lab_order_list'] = Lab_Commodity_Orders::get_district_orders($district);
         ini_set('memory_limit', '-1');
 
         $start_date = date("Y-m-", strtotime("-3 Month "));
         $start_date .='1';
 
-        $end_date = date('Y-m-d', strtotime("last day of previous month"));
-        //$month = date('F', strtotime($end_date));
-        /*    $sql = "SELECT distinct lab_commodity_details.* ,lab_commodity_orders.order_date,facilities.facility_name, lab_commodities.commodity_name, facility_amc.amc 
-          from lab_commodity_details, lab_commodity_orders, facilities, lab_commodities,facility_amc
-          where lab_commodity_details.facility_code=lab_commodity_orders.facility_code
-          and lab_commodity_details.district_id = '$district'
-          and facilities.facility_code = lab_commodity_details.facility_code
-          and lab_commodities.id = lab_commodity_details.commodity_id
-          and lab_commodity_details.allocated > 0
-          and facilities.facility_code = facility_amc.facility_code
-          and lab_commodities.id = facility_amc.commodity_id
-          and lab_commodity_details.created_at between '$start_date' and '$end_date' ";
-          //        echo "$sql";die();
-          $query = $this->db->query($sql);
-          //echo "<pre>";
-          //print_r($query->result_array());die();
-          $data['lab_order_list'] = $query->result_array(); */
+        $end_date = date('Y-m-d', strtotime("last day of previous month"));      
         $allocations = $this->allocation(NULL, $county = NULL, $district, $facility = NULL, $sincedate = NULL, $enddate = NULL);
         $data['lab_order_list'] = $allocations;
         $data['all_orders'] = Lab_Commodity_Orders::get_district_orders($district);
         $myobj = Doctrine::getTable('districts')->find($district);
         $data['myClass'] = $this;
-        $data['msg'] = $msg;
-        //$data['month'] = $month;
+        $data['msg'] = $msg;        
+        $data['d_name'] = $d_name;
 
         $this->load->view("rtk/template", $data);
     }
@@ -4511,8 +4505,8 @@ WHERE
         $fname = addslashes($fname);
         $lname = addslashes($lname);
 
-        $sql = "INSERT INTO `kemsa2`.`user` (`id`, `fname`, `lname`, `email`, `username`, `password`, `usertype_id`, `telephone`, `district`, `facility`, `created_at`, `updated_at`, `status`, `county_id`)
-        VALUES (NULL, '$fname', '$lname', '$email', '$email', 'b56578e2f9d28c7497f42b32cbaf7d68', '12', '$phone', '$district', NULL, '$time', '$time', '1', '$county');";
+        $sql = "INSERT INTO `user` (`id`, `fname`, `lname`, `email`, `username`, `password`, `usertype_id`, `telephone`, `district`, `facility`, `created_at`, `updated_at`, `status`, `county_id`)
+        VALUES (NULL, '$fname', '$lname', '$email', '$email', 'b56578e2f9d28c7497f42b32cbaf7d68', '7', '$phone', '$district', NULL, '$time', '$time', '1', '$county');";
         $this->db->query($sql);
         $object_id = $this->db->insert_id();
         $this->logData('1', $object_id);
@@ -4763,9 +4757,9 @@ WHERE
         $data['commodity_categories'] = $commodity_categories;
 
         $data['title'] = 'RTK Manager Settings';
-        $data['banner_text'] = 'RTK Manager';
+        $data['banner_text'] = 'RTK Manager Settings';
         //$data['content_view'] = "rtk/admin/admin_home_view";
-        $data['content_view'] = "rtk/admin/settings";
+        $data['content_view'] = "rtk/rtk/admin/settings";
         $users = $this->_get_rtk_users();
         $data['users'] = $users;
         $this->load->view('rtk/template', $data);
@@ -4798,7 +4792,7 @@ WHERE
         $data['title'] = 'RTK Manager Messages';
         $data['banner_text'] = 'RTK Manager';
         //$data['content_view'] = "rtk/rtk/admin/admin_home_view";
-        $data['content_view'] = "rtk/admin/messages";
+        $data['content_view'] = "rtk/rtk/admin/messages";
         $users = $this->_get_rtk_users();
         $data['users'] = $users;
         $this->load->view('rtk/template', $data);
@@ -5291,6 +5285,7 @@ WHERE
         foreach ($new_unreported as $key => $value) {
             $new_unreported[$key]['report_for'] = $report_for;
         }
+        
 
         return $new_unreported;
     }
@@ -5298,7 +5293,7 @@ WHERE
     public function show_allocation_pending() {
         $data['title'] = '';
         $data['banner_text'] = 'Pending Facilities for Allocations';
-        $data['content_view'] = 'allocation_committee/allocation_pending_v';
+        $data['content_view'] = 'rtk/rtk/allocation_committee/allocation_pending_v';
 
         $pending_facility = $this->rtk_facilities_not_reported(NULL, NULL, NULL, NULL, NULL, NULL);
         $data['pending_facility'] = $pending_facility;
