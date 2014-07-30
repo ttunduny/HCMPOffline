@@ -352,7 +352,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-										<div class="err" style="padding: 6px;">
+										<div class="err_edit" style="padding: 8px;">
 											
 										</div>
 								</div>
