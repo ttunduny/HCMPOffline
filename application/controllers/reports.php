@@ -1207,11 +1207,11 @@ class Reports extends MY_Controller
 		$graph_log_data = array_merge($graph_log_data,array("graph_type"=>'column'));
 		$graph_log_data = array_merge($graph_log_data,array("graph_yaxis_title"=>'User Activities'));
 		$graph_log_data = array_merge($graph_log_data,array("graph_categories"=>array()));
-		$graph_log_data['series_data']['Decommissions'] =
-		$graph_log_data['series_data']['Redistributions'] =
-		$graph_log_data['series_data']['Stock Updates'] =
-		$graph_log_data['series_data']['Orders'] = 
-		$graph_log_data['series_data']['Issues'] =
+		$graph_log_data['series_data']['Decommissions'] =array();
+		$graph_log_data['series_data']['Redistributions'] =array();
+		$graph_log_data['series_data']['Stock Updates'] =array();
+		$graph_log_data['series_data']['Orders'] = array();
+		$graph_log_data['series_data']['Issues'] =array();
 		$graph_log_data['series_data']['Log Ins'] = array();
 
 		$log_data = Log::get_log_data($facility_code,$district_id,$county_id, $year, $month);
@@ -2758,7 +2758,7 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
      		
      	//reset the values here
         if($option=="mos"){
-        	
+        
         return	$this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id,$report_type,$tracer);
         }
       	$commodity_id = ($commodity_id=="NULL") ? null :$commodity_id;
