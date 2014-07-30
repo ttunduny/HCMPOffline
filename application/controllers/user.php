@@ -659,7 +659,7 @@ class User extends MY_Controller {
                     <td class="wrapper last">
 
                   </tr>
-                </table>';
+                </table>'; 
 
 				
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
