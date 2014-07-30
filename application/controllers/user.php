@@ -845,7 +845,7 @@ class User extends MY_Controller {
 			
 			$email = $_POST['username'];
 			$password = $_POST['new_password'];
-			
+			$myurl=$this->uri->segment(3);
 			
 			//confirm user exists and is inactive
 			

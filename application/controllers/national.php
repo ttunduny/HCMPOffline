@@ -1275,7 +1275,22 @@ order by user.id asc
  
 	 public function reports(){
 	 	
-			$this -> load -> view('national/reports_v', $data);
+		$data['county'] = Counties::getAll();
+		$data['commodities'] = Commodities::get_all();
+		$data['sub_county'] = Districts::getAll();
+	 	$this -> load -> view('national/reports_v', $data);
+		
+	 }
+	 public function facilities_json(){
+	 	
+		echo json_encode(facilities::getAll_json());
+		
+	 }
+	 
+	 public function commodities_json(){
+	 	
+		
+		echo json_encode(Commodities::getAll_json());
 		
 	 }
 }   
