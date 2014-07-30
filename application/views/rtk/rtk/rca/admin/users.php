@@ -1,39 +1,48 @@
 <!-- Button to trigger modal -->
-<a href="#Add_DMLT" role="button" class="btn" data-toggle="modal">Add DMLT</a>
-<hr />
+<link rel="stylesheet" type="text/css" href="http://tableclothjs.com/assets/css/tablecloth.css">
+<script src="http://tableclothjs.com/assets/js/jquery.tablesorter.js"></script>
+<script src="http://tableclothjs.com/assets/js/jquery.metadata.js"></script>
+<script src="http://tableclothjs.com/assets/js/jquery.tablecloth.js"></script>
 
-<!-- Modal -->
-<div id="Add_DMLT" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-        <h3 id="myModalLabel">Add DMLT</h3>
+<script src="http://localhost/HCMP/scripts/bootstrap-typeahead.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url();?>assets/datatable/jquery.dataTables.js"></script>
 
-    </div>
-    <div class="modal-body">
+
+
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#Add_DMLT">Add SCMLT</button>
+<br/>
+<div class="modal fade" id="Add_DMLT" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add SCMLT</h4>
+      </div>
+      <div class="modal-body">        
         <p></p>
         <form id="add_dmlt_form"> 
             <table>
                 <tr>    
                     <td>First Name</td>
-                    <td><input id="first_name" type="text" name="first_name" /></td>
+                    <td><input class="form-control" id="first_name" type="text" name="first_name" /></td>
                 </tr>
                 <tr>
                     <td>Last Name</td>
-                    <td><input id="last_name" type="text" name="last_name" /></td>
+                    <td><input class="form-control" id="last_name" type="text" name="last_name" /></td>
                 </tr>
                 <tr>
                     <td>Email</td>
-                    <td><input id="email" type="text" name="email" /></td>
+                    <td><input class="form-control" id="email" type="text" name="email" /></td>
                 </tr>
                 <tr>
                     <td>Phone</td>
-                    <td><input id="phone" type="text" name="phone" />
-                        <input id="county" type="hidden" name="county" value="<?php echo $countyid; ?>" /></td>
+                    <td><input class="form-control" id="phone" type="text" name="phone" />
+                        <input class="form-control" id="county" type="hidden" name="county" value="<?php echo $countyid; ?>" /></td>
                 </tr>
                 <tr>
-                    <td>District</td>
+                    <td>Sub-County</td>
                     <td>
-                        <select id="district">
+                        <select id="district" class="form-control">
                             <option> -- Select Sub County --</option>
                             <?php foreach ($districts as $dists) { ?>
                                 <option value="<?php echo $dists['id']; ?>"><?php echo$dists['district']; ?></option>
@@ -44,20 +53,22 @@
             </table>
         </form>
 
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="save_dmlt" class="btn btn-primary">Save Changes</button>
+      </div>
     </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button id="save_dmlt" class="btn btn-primary">Save changes</button>
-    </div>
+  </div>
 </div>
 
-<table class="data-table">
+<table id="users_table" class="data-table">
     <thead>
-    <th style="width: 10px;"></th>
+    <th style="width: 10px;">Delete</th>
     <th>Name</th>
     <th>email</th>
     <th>Phone</th>
-
     <th>Main Sub County</th>
     <th>Other Sub Counties</th>
 
@@ -67,13 +78,12 @@
     <?php foreach ($users as $row) { ?>
         <tr>
             <td><a href="<?php echo '../delete_user/'.$row['id'].'/'.$row['district_id'].'/county_user'; ?>" title="Delete <?php echo $row['fname'] . ' ' . $row['lname']; ?>"><span style="color: #DD6A6A;">[x]</span></a></td>
-
             <td><a href="#user_<?php echo $row['id']; ?>"><?php echo $row['fname'] . ' ' . $row['lname']; ?></a></td>
             <td><?php echo $row['email']; ?></td>
             <td><?php echo $row['telephone']; ?></td>
             <td><?php echo $row['district']; ?></td>
             <td>
-                <a href="#dmlt_district_<?php echo $row['id']; ?>" role="button"  data-toggle="modal">add  Sub-County</a>
+                <a href="#" data-target="dmlt_district_<?php echo $row['id']; ?>" role="button"  data-toggle="modal">Add  Sub-County</a>
                 <div id="districts_dmlt_<?php echo $row['id']; ?>"> </div>
                 <script type="text/javascript">
                 $(function(){
@@ -141,6 +151,17 @@
                 window.location = "<?php echo base_url() . 'rtk_management/county_admin/users'; ?>";
             });
         });
+        $('#users_table').tablecloth({theme: "paper",         
+          bordered: true,
+          condensed: true,
+          striped: true,
+          sortable: true,
+          clean: true,
+          cleanElements: "th td",
+          customClass: "my-table"
+        });
+
+        
         /*
          $('#add_dmlt_district').click(function() {
          var dmlt_id = $(this).closest('div: #dmlt_id').val();
@@ -166,3 +187,8 @@
          */
     });
 </script>
+<style type="text/css">
+table{
+    font-size: 13px;
+}
+</style>

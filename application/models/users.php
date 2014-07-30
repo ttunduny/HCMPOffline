@@ -109,17 +109,17 @@ class Users extends Doctrine_Record {
 
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
 			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id as district_id,d.district,c.id as county_id,c.county,f.facility_code,
-				f.facility_name,f.owner,f.type,a.id as level_id,f.level,a.level,u.status FROM hcmp.user u 
-				LEFT JOIN hcmp.districts d
+				f.facility_name,f.owner,f.type,a.id as level_id,f.level,a.level,u.status FROM user u 
+				LEFT JOIN districts d
 				ON
 				d.id=u.district
-				RIGHT JOIN hcmp.counties c
+				RIGHT JOIN counties c
 				ON
 				c.id=d.county
-				RIGHT JOIN hcmp.facilities f
+				RIGHT JOIN facilities f
 				ON
 				u.facility=f.facility_code
-				RIGHT JOIN hcmp.access_level a
+				RIGHT JOIN access_level a
 				ON
 				a.id=u.usertype_id
 				where f.facility_code=$facility
@@ -133,17 +133,17 @@ class Users extends Doctrine_Record {
 
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
 			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id as district_id,d.district,c.id as county_id,c.county,f.facility_code,
-				f.facility_name,f.owner,f.type,a.id as level_id,f.level,a.level,u.status FROM hcmp.user u 
-				LEFT JOIN hcmp.districts d
+				f.facility_name,f.owner,f.type,a.id as level_id,f.level,a.level,u.status FROM user u 
+				LEFT JOIN districts d
 				ON
 				d.id=u.district
-				RIGHT JOIN hcmp.counties c
+				RIGHT JOIN counties c
 				ON
 				c.id=d.county
-				RIGHT JOIN hcmp.facilities f
+				RIGHT JOIN facilities f
 				ON
 				u.facility=f.facility_code
-				RIGHT JOIN hcmp.access_level a
+				RIGHT JOIN access_level a
 				ON
 				a.id=u.usertype_id
 				where u.district=$district
@@ -157,17 +157,17 @@ class Users extends Doctrine_Record {
 
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
 			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id as district_id,d.district,c.id as county_id,c.county,f.facility_code,
-				f.facility_name,f.owner,f.type,a.id as level_id,f.level,a.level,u.status FROM hcmp.user u 
-				LEFT JOIN hcmp.districts d
+				f.facility_name,f.owner,f.type,a.id as level_id,f.level,a.level,u.status FROM user u 
+				LEFT JOIN districts d
 				ON
 				d.id=u.district
-				RIGHT JOIN hcmp.counties c
+				RIGHT JOIN counties c
 				ON
 				c.id=d.county
-				LEFT JOIN hcmp.facilities f
+				LEFT JOIN facilities f
 				ON
 				u.facility=f.facility_code
-				RIGHT JOIN hcmp.access_level a
+				RIGHT JOIN access_level a
 				ON
 				a.id=u.usertype_id
 				where u.county_id=$county
@@ -179,20 +179,35 @@ class Users extends Doctrine_Record {
 	public static function get_user_list_all() {
 
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
-			SELECT u.id as user_id,u.fname,u.lname,u.email,u.username,u.telephone,d.id as district_id,d.district,c.id as county_id,c.county,f.facility_code,
-				f.facility_name,f.owner,f.type,a.id as level_id,f.level,a.level,u.status FROM hcmp.user u 
-				LEFT JOIN hcmp.districts d
-				ON
-				d.id=u.district
-				LEFT JOIN hcmp.counties c
-				ON
-				c.id=d.county
-				LEFT JOIN hcmp.facilities f
-				ON
-				u.facility=f.facility_code
-				LEFT JOIN hcmp.access_level a
-				ON
-				a.id=u.usertype_id
+				SELECT 
+    u.id as user_id,
+    u.fname,
+    u.lname,
+    u.email,
+    u.username,
+    u.telephone,
+    d.id as district_id,
+    d.district,
+    c.id as county_id,
+    c.county,
+    f.facility_code,
+    f.facility_name,
+    f.owner,
+    f.type,
+    a.id as level_id,
+    f.level,
+    a.level,
+    u.status
+FROM
+   user u
+        LEFT JOIN
+    counties c ON c.id = u.county_id
+        LEFT JOIN
+    districts d ON d.id = u.district
+        LEFT JOIN
+    facilities f ON u.facility = f.facility_code
+        LEFT JOIN
+    access_level a ON a.id = u.usertype_id
 				");
 		return $query;
 	}
@@ -205,17 +220,17 @@ public static function get_dpp_details($distirct){
 
 	public static function get_users_district($district) {
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
-			SELECT count(*) as count FROM hcmp.user u 
-				LEFT JOIN hcmp.districts d
+			SELECT count(*) as count FROM user u 
+				LEFT JOIN districts d
 				ON
 				d.id=u.district
-				RIGHT JOIN hcmp.counties c
+				RIGHT JOIN counties c
 				ON
 				c.id=d.county
-				RIGHT JOIN hcmp.facilities f
+				RIGHT JOIN facilities f
 				ON
 				u.facility=f.facility_code
-				RIGHT JOIN hcmp.access_level a
+				RIGHT JOIN access_level a
 				ON
 				a.id=u.usertype_id
 				where u.district=$district
@@ -228,17 +243,17 @@ public static function get_dpp_details($distirct){
 	public static function get_users_county($county) {
 
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
-			SELECT count(*) as count FROM hcmp.user u 
-				LEFT JOIN hcmp.districts d
+			SELECT count(*) as count FROM user u 
+				LEFT JOIN districts d
 				ON
 				d.id=u.district
-				RIGHT JOIN hcmp.counties c
+				RIGHT JOIN counties c
 				ON
 				c.id=d.county
-				LEFT JOIN hcmp.facilities f
+				LEFT JOIN facilities f
 				ON
 				u.facility=f.facility_code
-				RIGHT JOIN hcmp.access_level a
+				RIGHT JOIN access_level a
 				ON
 				a.id=u.usertype_id
 				where u.county_id=$county
