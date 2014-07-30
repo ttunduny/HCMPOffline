@@ -775,13 +775,7 @@ class User extends MY_Controller {
 	</table>
 		</body></html>';
 
-				
-				
-				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
-
-				//exit;
-
-		//save user
+				//save user
 				$savethis =  new Users();
 				$savethis -> fname = $fname;
 				$savethis -> lname = $lname;
@@ -796,6 +790,12 @@ class User extends MY_Controller {
 				$savethis -> status = 0;
 				$savethis -> county_id = $county;
 				$savethis -> save();
+				
+				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
+
+				//exit;
+
+		
 		
 
 
