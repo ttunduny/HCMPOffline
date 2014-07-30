@@ -7,6 +7,7 @@ application/config/database.php
 nbproject
 drug_commodity_map.sql
 drugs not in commodities table.txt
+system/libraries/Hcmp_functions.php
 /pdf
 drug_commodity_map.sql
 drugs not in commodities table.txt

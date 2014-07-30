@@ -26,7 +26,7 @@
 
 <div class="container-fluid">
 	
-	<div class="row" style="margin-top: 1%;">
+	<div class="row" style="margin-top: 1%;" >
 		<div class="col-md-12">
 			
 			<ul class="nav nav-tabs" id="Tab">
