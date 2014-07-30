@@ -561,7 +561,8 @@ public static function get_facility_consumption_level_new($facilities_filter,$co
 					AND fs.status =  '1'
 					AND YEAR( fs.date_issued ) =$year_filter
 					AND cms.id = fs.commodity_id
-					GROUP BY service_name asc");		
+					GROUP BY service_name asc");	
+					
 			return $inserttransaction ;
 		break;
         default:
@@ -582,9 +583,8 @@ public static function get_facility_consumption_level_new($facilities_filter,$co
 					AND YEAR( fs.date_issued ) =$year_filter
 					AND cms.id = fs.commodity_id
 					GROUP BY MONTH( fs.date_issued ) asc");		
+					
 		return $inserttransaction ;
-	
-
 
  }
 public static function get_filtered_commodity_consumption_level($facilities_filter,$commodity_filter,$year_filter,$plot_value_filter)
@@ -623,6 +623,7 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
  public static function get_commodity_consumption_level($facilities_code)
  {
  	$year = date("Y");
+	
 		$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 		->fetchAll("SELECT MONTHNAME( fs.date_issued )as month, cms.commodity_name as commodity, fs.qty_issued AS total_consumption
 			FROM facility_issues fs, commodities cms, facilities f, districts di, counties c
@@ -636,8 +637,6 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 			GROUP BY MONTH( fs.date_issued ) asc");		
 		return $inserttransaction ;
 		
-  
-
  }
  
  
