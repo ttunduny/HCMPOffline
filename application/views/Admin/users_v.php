@@ -57,10 +57,11 @@
 <script>
 	
 	$(document).ready(function () {
-		       $('#myModal').on('hidden.bs.modal', function () {
-        	alert('jack');
+		
+		       $('#main-content').on('hidden.bs.modal','#myModal', function () {
+               alert('jack');
 				$("#datatable").hide().fadeIn('fast');
-				 location.reload();
+				// location.reload();
 			});
 		$('#Tab a').click(function (e) {
  		 e.preventDefault()
