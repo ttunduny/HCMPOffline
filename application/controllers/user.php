@@ -240,7 +240,7 @@ class User extends MY_Controller {
                           <td>
                           Hi ' . $Usersname . ', </br>
 		<p>
-		You are HCMP account username '.$email_address.'.You recently requested for a password reset.</br>
+		HCMP account username '.$email_address.'.You recently requested for a password reset.</br>
 		If you made this request ,this is your reset code.</br></p> 
 	
 		<table class="twelve columns">
