@@ -51,8 +51,23 @@ class Facility_stocks extends Doctrine_Record {
 		return $stocks; 
 	}// get all facility stock commodity id, options check if the user wants batch data or commodity grouped data and return the total 
 	
-	public static function get_distinct_stocks_for_this_facility($facility_code,$checker=null,$exception=null){
+public static function get_distinct_stocks_for_this_district_store($district_id){
+$store_stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("SELECT DISTINCT ds.commodity_id as commodity_id, c.commodity_name, fs.expiry_date,sum(ds.qty_issued)as quantity,fs.manufacture,
+c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commodity_source c_s, drug_store ds,commodities c
+ where ds.district_id= '$district_id' and fs.expiry_date >= NOW()
+ and ds.commodity_id=fs.commodity_id and c.id=ds.commodity_id and fs.current_balance>0 group by fs.id,ds.commodity_id order by fs.expiry_date asc
+");
+return $store_stocks;
+}
 
+public static function get_district_store_commodities($district_id){
+$store_comm = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("SELECT DISTINCT commodity_id as commodity_id from drug_store");
+return $store_comm;
+}
+
+	public static function get_distinct_stocks_for_this_facility($facility_code,$checker=null,$exception=null){
 $addition=isset($checker)? ($checker==='batch_data')? 'and fs.current_balance>0 group by fs.id,c.id order by fs.expiry_date asc' 
 : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc' : null ;
 $check_expiry_date=isset($exception)? null: " and fs.expiry_date >= NOW()" ;

@@ -12,11 +12,7 @@
 <div class="table-responsive" style="height:400px; overflow-y: auto;">
 
  <?php
-if (isset($donate_destination)&&($donate_destination == 'district')) {
-  $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/district_store_issue',$att); 
-}else{
-  $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/external_issue',$att); 
-}
+  $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/district_store_external_issue',$att); 
   ?>
 <table width="100%"  class="table table-hover table-bordered table-update" id="facility_issues_table" >
 <thead style="background-color: white">
@@ -40,42 +36,22 @@ if (isset($donate_destination)&&($donate_destination == 'district')) {
 						<tr row_id='0'>
 						<td>
 								<select name="district[0]" class="form-control input-small district">
-						<?php 
-
-								if (isset($donate_destination)&&($donate_destination == 'district')) {
-									echo '<option value="'.$district_id.' "> '.$district_data['district'].'</option>';
-								}
-								else{
-									echo '<option value="0">--select subcounty---</option>';
+								<option value="0">--select subcounty---</option>
+						<?php
 									foreach ($subcounties as $district) {
 									$id=$district->id;
 									$name=$district->district;		
 									echo '<option value="'.$id.'"> '.$name.'</option>';
 								}
-							}
 							 ?>
 								</select>
 							</td>
-							<?php 
-								$dropdown2=isset($donate_destination)&&($donate_destination == 'district')? 
-								'<td>
-						<select  name="mfl[0]" class="form-control input-small">
-						<!-- donate_destination -->
-                       <option value="18803">District Store</option>
-					   </select>
-						</td>
-						'
-								:'
-								<td>
+							<td>
 						<select  name="mfl[0]" class="form-control input-small facility">
 						<!-- donate_destination -->
                        <option value="0">--select facility---</option>
 					   </select>
-						</td>'
-						;
-						echo $dropdown2;
-							 ?>
-							
+						</td>
 						<td>
 	<select class="form-control input-small service desc" name="desc[0]">
     <option special_data="0" value="0" selected="selected">-Select Commodity -</option>
@@ -85,8 +61,8 @@ foreach ($commodities as $commodities) :
 			$commodity_id=$commodities['commodity_id'];
 			$unit=$commodities['unit_size'];
 			$source_name=$commodities['source_name'];
-			$total_commodity_units=$commodities['total_commodity_units'];
-			$commodity_balance=$commodities['commodity_balance'];		
+			$total_commodity_units=$commodities['quantity'];
+			$commodity_balance=$commodities['quantity'];		
 		echo "<option special_data='$commodity_id^$unit^$source_name^$total_commodity_units^$commodity_balance' value='$commodity_id'>$commodity_name</option>";		
 endforeach;
 		?> 		
