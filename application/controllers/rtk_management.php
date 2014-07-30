@@ -633,7 +633,7 @@ class Rtk_Management extends Home_controller {
         $data['zone_d_stats'] = $this->zone_allocation_stats('d');
 
         $data['banner_text'] = 'National';
-        $data['content_view'] = 'rtk/rtk/allocation/allocation_home_view';
+        $data['content_view'] = 'rtk/allocation/allocation_home_view';
         $data['title'] = 'National Summary: ';
         $this->load->view("rtk/template", $data);
     }
