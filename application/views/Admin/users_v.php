@@ -163,8 +163,7 @@ var drop_down='';
     }
     }); 
     
-    
-    $('#email').keyup(function() {
+       $('#email').keyup(function() {
 
   var email = $('#email').val()
 
@@ -178,7 +177,7 @@ var drop_down='';
       success: function(data) {
         if(data.response=='false'){
 						
-							$('#err').html(data.msg);
+							$('.err').html(data.msg);
 							console.log(data.msg)
 							$( '.err' ).addClass( "alert-danger alert-dismissable" );
 							$(".edit_user,#create_new").attr("disabled", "disabled");
@@ -196,8 +195,8 @@ var drop_down='';
     });
     return false;
   });
-
-    $('#email_edit').keyup(function() {
+  
+     $('#email_edit').keyup(function() {
 
   var email = $('#email_edit').val()
 
@@ -286,7 +285,7 @@ var drop_down='';
             location.reload();      
           }
         }); 
-        $('#myModal').on('hidden.bs.modal', function () {
+        $('#editModal,#addmodal').on('hidden.bs.modal', function () {
 				$("#datatable").hide().fadeIn('fast');
 				 location.reload();
 			})
@@ -373,14 +372,14 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
       success: function(data) {
         if(data.response=='false'){
 						
-						 $('#err').html(data.msg);
-							$( '#err' ).addClass( "alert-danger alert-dismissable" );
+						 $('.err_edit').html(data.msg);
+							$( '.err_edit' ).addClass( "alert-danger alert-dismissable" );
 							}else if(data.response=='true'){
 								
-								$("#err").empty();
-								$("#err").removeClass("alert-danger alert-dismissable");
-								$( '#err' ).addClass( "alert-success alert-dismissable" );
-								$('#err').html(data.msg);
+								$(".err_edit").empty();
+								$(".err_edit").removeClass("alert-danger alert-dismissable");
+								$( '.err_edit' ).addClass( "alert-success alert-dismissable" );
+								$('.err_edit').html(data.msg);
 								
 								
 							}
@@ -401,7 +400,7 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
            
     	});	
     	
-    	$('#email').keyup(function() {
+    	$('#email').on(function() {
 
   var email = $('#email').val()
 
@@ -414,14 +413,14 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
       success: function(data) {
         if(data.response=='false'){
 						
-						 $('#err').html(data.msg);
-							$( '#err' ).addClass( "alert-danger alert-dismissable" );
+						 $('.err').html(data.msg);
+							$( '.err' ).addClass( "alert-danger alert-dismissable" );
 							}else if(data.response=='true'){
 								
-								$("#err").empty();
-								$("#err").removeClass("alert-danger alert-dismissable");
-								$( '#err' ).addClass( "alert-success alert-dismissable" );
-								$('#err').html(data.msg);
+								$(".err").empty();
+								$(".err").removeClass("alert-danger alert-dismissable");
+								$( '.err' ).addClass( "alert-success alert-dismissable" );
+								$('.err').html(data.msg);
 								
 								
 							}
@@ -484,7 +483,7 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
         
               
           }
-           
+			
         }); 
 }
 
