@@ -230,9 +230,9 @@ $(document).ready(function () {
 	  //check empty fields
             var email = $('#new_password').val()
             var user = $('#username').val()
-            var newe = $('#new_password_confirm').val()
+            var newE = $('#new_password_confirm').val()
             
-	  if (email==''||user==''||newe=='') {
+	  if (email==''||user==''||newE=='') {
 				alert('Please make sure no field is empty');
 			return;
 			}
