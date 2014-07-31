@@ -49,12 +49,13 @@ table{
 }
 </style>
 
-  <link rel="stylesheet" type="text/css" href="http://tableclothjs.com/assets/css/tablecloth.css">
-  <script src="http://tableclothjs.com/assets/js/jquery.tablesorter.js"></script>
-  <script src="http://tableclothjs.com/assets/js/jquery.metadata.js"></script>
-  <script src="http://tableclothjs.com/assets/js/jquery.tablecloth.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.tablesorter.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.metadata.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.tablecloth.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/tablecloth/assets/css/tablecloth.css">
+<script type="text/javascript" language="javascript" src="<?php echo base_url();?>assets/datatable/jquery.dataTables.js"></script>
 
-  <script src="http://localhost/HCMP/scripts/bootstrap-typeahead.js"></script>
+ 
 
   <script type="text/javascript">
 
@@ -113,7 +114,7 @@ function update_rtk(val){
                             <p> <input type="text" class="form-control" name="facilitytype" id="facilitytype" /></p>
 
                             <select name="district" id="district" class="form-control">
-                              <option> -- Select District --</option>
+                              <option> -- Select Sub-County --</option>
                               <?php foreach ($districts as $dists) { ?>
                               <option value="<?php echo $dists['id']; ?>"><?php echo $dists['district']; ?></option>
                               <?php }?>

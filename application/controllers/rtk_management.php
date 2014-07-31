@@ -791,7 +791,8 @@ class Rtk_Management extends Home_controller {
         } elseif ($action == 'remove') {
             $this->_remove_dmlt_from_district($dmlt, $district);
         }
-        redirect('rtk_management/county_admin/users');
+        echo "Sub-County Added Successfully";
+        //redirect('rtk_management/county_admin/users');
     }
 
     function _get_rca_counties($rca) {
