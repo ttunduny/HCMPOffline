@@ -6,12 +6,15 @@
 
     <select id="switch_month" class="form-control" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;">
        <option>-- <?php echo $englishdate;?> --</option>
-        <?php for ($i=1; $i <12 ; $i++) { 
-        $month = date('m', strtotime("-$i month")); 
-        $year = date('Y', strtotime("-$i month")); 
-        $month_value = $month.$year;
-        $month_text =  date('F', strtotime("-$i month")); 
-        $month_text = "-- ".$month_text." ".$year." --"; ?>
+        <?php 
+
+            for ($i=1; $i <=12 ; $i++) { 
+            $month = date('m', strtotime("-$i month")); 
+            $year = date('Y', strtotime("-$i month")); 
+            $month_value = $month.$year;
+            $month_text =  date('F', strtotime("-$i month")); 
+            $month_text = "-- ".$month_text." ".$year." --";
+         ?>
         <option value="<?php echo $month_value ?>"><?php echo $month_text ?></option>;
     <?php } ?>
     </select>

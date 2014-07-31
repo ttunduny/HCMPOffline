@@ -1,5 +1,5 @@
 <script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/datatable/jquery.dataTables.js"></script>
-<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/scripts/unit_size.js"></script>
+
 <style type="text/css" title="currentStyle">
     
 </style>
@@ -102,7 +102,8 @@
 
         function validateEnd(row) {
             var end_val = $('#physical_count_' + row).val();
-            if (end_val < 0) {
+            var loss = $('#losses_' + row).val();
+            if ((end_val < 0) |(loss <0)){
                 $('#q_received_' + row).attr("value", 0);
                 $('#q_used_' + row).attr("value", 0);
                 // $('#tests_done_' + row).attr("value",0);
@@ -211,6 +212,7 @@
                 row_id = $(this).closest("tr");
                 number = row_id.attr("commodity_id");
                 num = parseInt(number);
+                alert(num);
                 compute_end(num);
                 compute_losses(num);
                 validateEnd(num);
