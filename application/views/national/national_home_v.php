@@ -32,6 +32,17 @@ padding-top: 4.5%;
 {
   border-radius: 0 !important;
 }
+#overview{
+	padding-right:0;
+}
+#overview h4{
+	
+	padding:6px;
+	font:#000;
+	background:#fff;
+	text-align:center;
+	margin:0;
+}
 
 </style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -104,35 +115,12 @@ padding-top: 4.5%;
 		<div class="col-md-8">
 			
 			<div class="row">
-				<div class="col-md-6" style="border: 1px solid #000;height: 200px">
-					<div class="panel panel-success">
-       <div class="panel-heading">
-       <h3 class="panel-title" style="display:inline-block;"><div class="county-name" style="display:inline-block"></div>Facility Overview</h3>
-       </div>
-        <div class="panel-body">
-       
-          <div style="display:table-row" >
-            <div style="display:table-cell">
-                <p style="font-size:120%;display: inline-block;"> <span class="glyphicon glyphicon-user"></span>#HCW Trained  &nbsp;
-                <div style="display: inline-block;" id="hcw_trained"></p></div></div>
-         <div style="display:table-cell;">&nbsp;&nbsp;&nbsp;&nbsp;</div>
-            <div style="display:table-cell;">
-             <p style="font-size:120%;display: inline-block;"><span class="glyphicon glyphicon-calendar"></span>#Facilities Rolled Out  &nbsp;
-                 <div style="display: inline-block;" id="facilities_rolled_out"></div></p></div>   
-          </div>
-       </div>    
-       </div>
+				<div class="col-md-6" style="border: 1px solid #000;height: 200px" id="overview">
+					<h4>Facility Overview</h4>
 				</div>
-				<div class="col-md-6" style="border: 1px solid #000;height: 200px">
+				<div class="col-md-6" style="border: 1px solid #000;height: 200px" id="info">
+					<h4>Facility Infor</h4>
 					
-					<div class="panel panel-success" >
-			       <div class="panel-heading">
-			       <h3 class="panel-title" style="display:inline-block;"><div class="county-name" style="display:inline-block"></div>Facility Information</h3>
-			       </div>
-			        <div class="panel-body">
-			     <div id="facilities"></div>
-			          </div>
-       				</div> 
 				</div>
 			</div>
 			
@@ -270,19 +258,14 @@ endforeach;
         </div>
           
        </div> 
+
        
 				</div>
 			</div>
 			
 		</div>
 	</div>
-			<div class="row">
-				<div class="col-md-12" style="border: 1px solid #000;height: 400px">Graph</div>
-			</div>
 			
-			<div class="row">
-				<div class="col-md-12" style="border: 1px solid #000;height: 400px">Graph</div>
-			</div>
     
     </div> <!-- /container -->
     

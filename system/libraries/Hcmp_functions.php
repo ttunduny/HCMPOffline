@@ -10,7 +10,9 @@ class Hcmp_functions extends MY_Controller {
 		function __construct() {
 		parent::__construct();
 		$this -> load -> helper(array('url','file','download'));
-		$this -> load -> library(array('phpexcel/phpexcel','mpdf/mpdf')) ;
+
+		$this -> load -> library(array('PHPExcel/PHPExcel','mpdf/mpdf'));
+
 	}
 public function send_stock_update_sms(){
        $facility_name = $this -> session -> userdata('full_name');
