@@ -4,4 +4,4 @@
 
     });
 </script>
-<div style="/*border: 1px solid #036;*/ ;" id="<?php echo $graph_id ?>"></div>
+<div style="" id="<?php echo $graph_id ?>"></div>

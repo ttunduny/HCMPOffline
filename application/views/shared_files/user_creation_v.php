@@ -551,6 +551,7 @@
 </div><!-- end Modal edit user -->
 <script>
       $(document).ready(function () {
+      	$(".edit_user,#create_new").attr("disabled", "disabled");
       	$('#myModal').on('hidden.bs.modal', function () {
       		alert('jack');
 				$("#datatable,.modal-content").hide().fadeIn('fast');

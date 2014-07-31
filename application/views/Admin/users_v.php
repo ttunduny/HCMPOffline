@@ -57,7 +57,7 @@
 <script>
 	
 	$(document).ready(function () {
-		
+		$("#create_new,#edit_user").attr("disabled", "disabled");
 		       $('#main-content').on('hidden.bs.modal','#myModal', function () {
                alert('jack');
 				$("#datatable").hide().fadeIn('fast');
