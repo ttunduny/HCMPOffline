@@ -3,6 +3,23 @@
 <script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tagsinput/bootstrap-typeahead.js"></script>
 <script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tagsinput/tagmanager.js"></script>
 <script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tagsinput/typeahead.bundle.js"></script>
+<link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
+  <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
+  <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
+  <link href="<?php echo base_url().'assets/css/jquery-ui.css'?>" type="text/css" rel="stylesheet"/>
+  <link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
+  
+  <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/typehead/handlebars.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script> 
+  <script src="<?php echo base_url();?>assets/highcharts/highcharts.js"></script>
+  <script src="<?php echo base_url();?>assets/highcharts/exporting.js"></script>
+  <script src="<?php echo base_url().'assets/scripts/jquery-ui.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/validator.js'?>" type="text/javascript"></script> 
+  <script src="<?php echo base_url().'assets/scripts/waypoints.js'?>" type="text/javascript"></script> 
+  <script src="<?php echo base_url().'assets/scripts/waypoints-sticky.min.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/typehead/typeahead.js'?>" type="text/javascript"></script>
 
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/tagsinput/tagmanager.css">
 
@@ -17,93 +34,73 @@
   }
 </style>
    
-<!--div class="tabbable tabs-left" style="font-size:147%;">
-  <ul class="nav nav-tabs">
-   <li class="active"><a href="<?php echo base_url().'rtk_management/rtk_manager_admin'; ?>">Users</a></li>
-   <li class="active"><a href="<?php echo base_url().'rtk_management/rtk_manager_admin_messages'; ?>">Messages</a></li>
-   <li class="active"><a href="<?php echo base_url().'rtk_management/rtk_manager_admin_settings'; ?>">Settings</a></li> 
-   <li class="active"><a href="<?php echo base_url().'rtk_management/rtk_manager_logs'; ?>">Activity Logs</a></li> 
- </ul>
-</div-->
 
 <div id="content">
     <h1>MESSAGES </h1>
-    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#Add_New">New Message</button>        
-    <a href="#Draft_Messages" role="button" class="btn" data-toggle="modal">Draft Messages</a>  
+    <div id="message">
+      <input class="typeahead form-control" type="text" placeholder="facility , county, subcounty name" data-provide="typeahead">
 
-    <!-- New Message-->
-    <div class="modal fade" id="Add_New" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-              <h4 class="modal-title" id="myModalLabel">Create Message</h4>
-            </div>
-           <div class="modal-body">
-            <p></p>
-            <form id="compose" name="compose">       
-                <table id="compose_table" >
-                  <tr>
-                    <label>To:</label>
-                  </tr><br/>
-                  <tr>  
-                    <input type="text" id="receipients" name="receipients" class="form-control" placeholder="Enter Email Separated by Comma"style="width:200px" class="tm-input" multiple/>                     
-                                                                                                                                                                                                     
-                      
-                  </tr><br/>    
-                  <tr>
-                    <label>Subject:</label>
-                  </tr><br/>
-                  <tr>                   
-                    <input id="subject" type="text" style="width:96%" />   
-                  <tr>
-                    <label>Message:</label>
-                  </tr><br/>
-                  <tr>    
-                        <textarea id="message" style="width:96%;" rows="10"></textarea>
-                        
-                  </tr> <br/>
-                                    
-                </table>
-            </form>
-        </div>        
-        <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-            <button id="save_message_btn" class="btn btn-primary">Send Message</button>
-        </div>
     </div>
-</div>
+
+  </div>
+    
 
 
 
 <script type="text/javascript">
     $(function() {   
 
-        var mySource = <?php echo $emails; ?>;
-        //var mySource = ['All DMLTs','Pending Sub-Counties','All SCMLTs','Pending Counties'];
 
-       
-       $('#receipients').typeahead({
-            source: mySource,
-            //source: ['Amsterdam', 'Washington', 'Sydney', 'Beijing', 'Cairo']
-           display: 'email',            
+      var substringMatcher = function(strs) {
+            return function findMatches(q, cb) {
+                var matches, substringRegex;
+                // an array that will be populated with substring matches
+                matches = [];
+                // regex used to determine if a string contains the substring `q`
+                substrRegex = new RegExp(q, 'i');
+                // iterate through the pool of strings and for any string that
+                // contains the substring `q`, add it to the `matches` array
+                $.each(strs, function(i, str) {
+                if (substrRegex.test(str)) {
+                    // the typeahead jQuery plugin expects suggestions to a
+                    // JavaScript object, refer to typeahead docs for more info
+                    matches.push({ value: str });
+                }
+                });
+                cb(matches);
+            };
+            };
+            
+            
+        var messages = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('messages'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: '../assets/scripts/typehead/json/messages.json'
         });
+        
+        messages.initialize();        
 
-      /*$('#test').tagsinput({
-        typeahead: {
-          source: ['Amsterdam', 'Washington', 'Sydney', 'Beijing', 'Cairo']
+        $('.typeahead').typeahead({
+        highlight: true
+        },
+        {
+        name: 'category',
+        displayKey: 'category',
+        source: facilities.ttAdapter(),
+        templates: {
+            header: '<h5 class="query-title">Facilities</h5>'
         }
-      });*/
-       
-        //$('#receipients').tagsinput('items');
-        var receipients = $(".tm-input").tagsManager({               
-          replace:false,                              
-          onlyTagList: true,  
-          
-        });
-       
+        }});
 
 
+
+
+
+
+
+
+
+       
         
         $('#save_message_btn').click(function() {         
         

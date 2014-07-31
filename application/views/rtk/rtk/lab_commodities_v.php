@@ -1,8 +1,7 @@
-<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>Scripts/jquery.dataTables.js"></script>
-<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>Scripts/unit_size.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/datatable/jquery.dataTables.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/scripts/unit_size.js"></script>
 <style type="text/css" title="currentStyle">
-
-    @import "<?php echo base_url(); ?>DataTables-1.9.3 /media2/css/jquery.dataTables.css";
+    
 </style>
 <style>
     .user{
@@ -280,6 +279,8 @@
         $('#save1')
                 .button()
                 .click(function() {
+                    $('#message').html('The Report is Being Saved');                                         
+                 $(this).hide();
                 });
         $("#dialog").dialog({
             height: 140,
@@ -311,13 +312,13 @@ foreach ($facilities as $facility) {
 }
 ?>
 
-<div id="dialog-form" title="Enter the lab commodity details here">
+<div id="dialog-form" title="Enter the lab commodity details here" style="background-color:#f0f0f0">
     <form>
         <table id="facility_order"  class="table-striped">
-            <input type="hidden" name="facility_name" colspan = "3" style = "color:#000; border:none" value="<?php echo $facility_name ?>"></td>
-            <input type="hidden" name="facility_code" colspan = "2" style = "color:#000; border:none" value="<?php echo $facility_code ?>"></td>
-            <input type="hidden" name="district_name" colspan = "2" style = "color:#000; border:none" value="<?php echo $district ?>"></td>
-            <input type="hidden" name="county" colspan = "3" style = "color:#000; border:none" value="<?php echo $county ?>"></td>
+            <input class="form-control" type="hidden" name="facility_name" colspan = "3" style = "color:#000; border:none" value="<?php echo $facility_name ?>"></td>
+            <input class="form-control" type="hidden" name="facility_code" colspan = "2" style = "color:#000; border:none" value="<?php echo $facility_code ?>"></td>
+            <input class="form-control" type="hidden" name="district_name" colspan = "2" style = "color:#000; border:none" value="<?php echo $district ?>"></td>
+            <input class="form-control" type="hidden" name="county" colspan = "3" style = "color:#000; border:none" value="<?php echo $county ?>"></td>
 
             <tr><td colspan = "2" tyle = "text-align:left"><b>Name of Facility:</b></td>
                 <td colspan = "1"><?php echo $facility_name ?></td>
@@ -340,57 +341,57 @@ foreach ($facilities as $facility) {
             <tr><td colspan = "2" style = "text-align:left"><b>District:</b></td>
                 <td><?php echo $district ?></td>
                 <td colspan = "2"><b>VCT</b></td>
-                <td><input class='user2'class='user2' id="vct" name="vct" colspan = "2" style = "color:#000" value=0></td>
+                <td><input class="form-control" class='user2'class='user2' id="vct" name="vct" colspan = "2" style = "color:#000" value=0></td>
                 <td colspan = "2"></td>
                 <td rowspan = "3">RDT</td>
                 <td style = "text-align:left">Patients&nbsp;<u>under</u> 5&nbsp;years</td>
-            <td><input class='user2'id="rdt_under_tests" name="rdt_under_tests" size="10" type="text"/></td>
-            <td><input class='user2'id="rdt_under_positive" name="rdt_under_positive" size="10" type="text"/></td>                          
+            <td><input class="form-control" class='user2'id="rdt_under_tests" name="rdt_under_tests" size="10" type="text"/></td>
+            <td><input class="form-control" class='user2'id="rdt_under_positive" name="rdt_under_positive" size="10" type="text"/></td>                          
 
             </tr>
             <tr><td colspan = "2" style = "text-align:left"><b>County:</b></td>                     
                 <td><?php echo $county ?></td>
                 <td colspan = "2"><b>PITC</b></td>
-                <td><input class='user2'class='user2' id="pitc" name="pitc" colspan = "2" style = "color:#000" value=0></td>
+                <td><input class="form-control" class='user2'class='user2' id="pitc" name="pitc" colspan = "2" style = "color:#000" value=0></td>
                 <td colspan = "2"></td>
                 <td style = "text-align:left">Patients&nbsp;aged 5-14&nbsp;yrs</td>
-                <td><input class='user2'id="rdt_to_tests" name="rdt_to_tests" size="10" type="text"/></td>
-                <td><input class='user2'id="rdt_to_positive" name="rdt_to_positive" size="10" type="text"/></td>                        </tr>
+                <td><input class="form-control" class='user2'id="rdt_to_tests" name="rdt_to_tests" size="10" type="text"/></td>
+                <td><input class="form-control" class='user2'id="rdt_to_positive" name="rdt_to_positive" size="10" type="text"/></td>                        </tr>
             <tr><td colspan = "2" style = "text-align:right"><b>Beginning:</b></td> 
-                <td><input class='my_date'id="begin_date" name="begin_date" colspan = "2" size="10" type="text"/></td>
+                <td><input class="form-control" class='my_date'id="begin_date" name="begin_date" colspan = "2" size="10" type="text"/></td>
                 <td colspan = "2"><b>PMTCT</b></td>
-                <td><input class='user2'class='user2' id="pmtct" name="pmtct" colspan = "2" style = "color:#000" value=0></td>
+                <td><input class="form-control" class='user2'class='user2' id="pmtct" name="pmtct" colspan = "2" style = "color:#000" value=0></td>
                 <td colspan = "2"></td>
                 <td style = "text-align:left">Patients&nbsp;<u>over</u> 14&nbsp;years</td>
-            <td><input class='user2'id="rdt_over_tests" name="rdt_over_tests" size="10" type="text"/></td>
-            <td><input class='user2'id="rdt_over_positive" name="rdt_over_positive" size="10" type="text"/></td>
+            <td><input class="form-control" class='user2'id="rdt_over_tests" name="rdt_over_tests" size="10" type="text"/></td>
+            <td><input class="form-control" class='user2'id="rdt_over_positive" name="rdt_over_positive" size="10" type="text"/></td>
 
             </tr>
             <tr><td colspan = "2" style = "text-align:right"><b>Ending:</b></td>
-                <td><input class='my_date'id="end_date" name="end_date" colspan = "2" size="10" type="text"/></td>
+                <td><input class="form-control" class='my_date'id="end_date" name="end_date" colspan = "2" size="10" type="text"/></td>
                 <td colspan = "2"><b>Blood&nbsp;Screening</b></td>
-                <td><input class='user2'class='user2' id="blood_screening" name="blood_screening" colspan = "2" style = "color:#000" value=0></td>
+                <td><input class="form-control" class='user2'class='user2' id="blood_screening" name="blood_screening" colspan = "2" style = "color:#000" value=0></td>
                 <td colspan = "2"></td>
                 <td rowspan = "3">Microscopy</td>
                 <td style = "text-align:left">Patients&nbsp;<u>under</u> 5&nbsp;years</td>
-            <td><input class='user2'id="micro_under_tests" name="micro_under_tests" size="10" type="text"/></td>
-            <td><input class='user2'id="micro_under_positive" name="micro_under_positive" size="10" type="text"/></td>                          
+            <td><input class="form-control" class='user2'id="micro_under_tests" name="micro_under_tests" size="10" type="text"/></td>
+            <td><input class="form-control" class='user2'id="micro_under_positive" name="micro_under_positive" size="10" type="text"/></td>                          
             </tr>
             <tr ><td colspan = "3"></td>
                 <td colspan = "2"><b>Other&nbsp;(Please&nbsp;Specify)</b></td>
-                <td><input class='user2'class='user2' id="other2" name="other2" colspan = "2" style = "color:#000" value=0></td>    
+                <td><input class="form-control" class='user2'class='user2' id="other2" name="other2" colspan = "2" style = "color:#000" value=0></td>    
                 <td colspan = "2"></td>
                 <td style = "text-align:left">Patients&nbsp;aged 5-14&nbsp;yrs</td>
-                <td><input class='user2'id="micro_to_tests" name="micro_to_tests" size="10" type="text"/></td>
-                <td><input class='user2'id="micro_to_positive" name="micro_to_positive" size="10" type="text"/></td>
+                <td><input class="form-control" class='user2'id="micro_to_tests" name="micro_to_tests" size="10" type="text"/></td>
+                <td><input class="form-control" class='user2'id="micro_to_positive" name="micro_to_positive" size="10" type="text"/></td>
             </tr>
             <tr><td colspan = "3"></td>
                 <td colspan = "2"><b>Specify&nbsp;Here:</b></td>
-                <td><input class='user2'class='user2' id="specification" name="specification" colspan = "2" style = "color:#000"></td>  
+                <td><input class="form-control" class='user2'class='user2' id="specification" name="specification" colspan = "2" style = "color:#000"></td>  
                 <td colspan = "2"></td>
                 <td style = "text-align:left">Patients&nbsp;<u>over</u> 14&nbsp;years</td>
-            <td><input class='user2'id="micro_over_tests" name="micro_over_tests" size="10" type="text"/></td>
-            <td><input class='user2'id="micro_over_positive" name="micro_over_positive" size="10" type="text"/></td>
+            <td><input class="form-control" class='user2'id="micro_over_tests" name="micro_over_tests" size="10" type="text"/></td>
+            <td><input class="form-control" class='user2'id="micro_over_positive" name="micro_over_positive" size="10" type="text"/></td>
             </tr>
 
             <tr><td colspan = "14"></td></tr>
@@ -422,22 +423,22 @@ foreach ($facilities as $facility) {
 
                 <?php foreach ($lab_category->category_lab_commodities as $lab_commodities) { ?>
                     <tr commodity_id="<?php echo $checker ?>"><input type="hidden" id="commodity_id_<?php echo $checker ?>" name="commodity_id[<?php echo $checker ?>]" value="<?php echo $lab_commodities['id']; ?>" >
-                    <input type="hidden" id="facilityCode" name="facilityCode">
-                    <input type="hidden" id="district" name="district" value="<?php echo $district_id; ?>">
-                    <input type="hidden" id="unit_of_issue_<?php echo $checker ?>" name = "unit_of_issue[<?php echo $checker ?>]" value="<?php echo $lab_commodities['unit_of_issue']; ?>">
+                    <input class="form-control" type="hidden" id="facilityCode" name="facilityCode">
+                    <input class="form-control" type="hidden" id="district" name="district" value="<?php echo $district_id; ?>">
+                    <input class="form-control" type="hidden" id="unit_of_issue_<?php echo $checker ?>" name = "unit_of_issue[<?php echo $checker ?>]" value="<?php echo $lab_commodities['unit_of_issue']; ?>">
                     <td colspan = "2" style = "text-align:left"></b><?php echo $lab_commodities['commodity_name']; ?></td>
                     <td style = "color:#000; border:none;  text-align:center"><?php //echo $lab_commodities['unit_of_issue'];     ?>TESTS</td>
-                    <td><input id="b_balance_<?php echo $checker ?>" name = "b_balance[<?php echo $checker ?>]" class='bbal' size="10" type="text" value="0" style = "text-align:center"/></td>
-                    <td><input id="q_received_<?php echo $checker ?>" name = "q_received[<?php echo $checker ?>]" class='qty_rcvd' size="10" type="text" value="0" style = "text-align:center"/></td>
-                    <td><input id="q_used_<?php echo $checker ?>" name = "q_used[<?php echo $checker ?>]" class='qty_used' size="10" type="text" value="0" style = "text-align:center"/></td>
-                    <td><input id="tests_done_<?php echo $checker ?>" name = "tests_done[<?php echo $checker ?>]" class='tests_done' size="10" value="0" type="text" style = "text-align:center"/></td>
-                    <td><input id="losses_<?php echo $checker ?>" name = "losses[<?php echo $checker ?>]" class='loses' size="10" type="text" value="0" style = "text-align:center" readonly/></td>
-                    <td><input id="pos_adj_<?php echo $checker ?>" name = "pos_adj[<?php echo $checker ?>]" class='pos_adj' size="10" type="text" value="0" style = "text-align:center"/></td>  
-                    <td><input id="neg_adj_<?php echo $checker ?>" name = "neg_adj[<?php echo $checker ?>]" class='neg_adj' size="10" type="text" value="0" style = "text-align:center"/></td>
-                    <td><input id="physical_count_<?php echo $checker ?>"  name = "physical_count[<?php echo $checker ?>]" class='phys_count' value="0" size="10" type="text" style = "text-align:center"/></td>
-                    <td><input id="q_expiring_<?php echo $checker ?>" name = "q_expiring[<?php echo $checker ?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>
-                    <td><input id="days_out_of_stock_<?php echo $checker ?>" name = "days_out_of_stock[<?php echo $checker ?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>  
-                    <td><input id="q_requested_<?php echo $checker ?>" name = "q_requested[<?php echo $checker ?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>                  
+                    <td><input class="form-control" id="b_balance_<?php echo $checker ?>" name = "b_balance[<?php echo $checker ?>]" class='bbal' size="10" type="text" value="0" style = "text-align:center"/></td>
+                    <td><input class="form-control" id="q_received_<?php echo $checker ?>" name = "q_received[<?php echo $checker ?>]" class='qty_rcvd' size="10" type="text" value="0" style = "text-align:center"/></td>
+                    <td><input class="form-control" id="q_used_<?php echo $checker ?>" name = "q_used[<?php echo $checker ?>]" class='qty_used' size="10" type="text" value="0" style = "text-align:center"/></td>
+                    <td><input class="form-control" id="tests_done_<?php echo $checker ?>" name = "tests_done[<?php echo $checker ?>]" class='tests_done' size="10" value="0" type="text" style = "text-align:center"/></td>
+                    <td><input class="form-control" id="losses_<?php echo $checker ?>" name = "losses[<?php echo $checker ?>]" class='loses' size="10" type="text" value="0" style = "text-align:center" readonly/></td>
+                    <td><input class="form-control" id="pos_adj_<?php echo $checker ?>" name = "pos_adj[<?php echo $checker ?>]" class='pos_adj' size="10" type="text" value="0" style = "text-align:center"/></td>  
+                    <td><input class="form-control" id="neg_adj_<?php echo $checker ?>" name = "neg_adj[<?php echo $checker ?>]" class='neg_adj' size="10" type="text" value="0" style = "text-align:center"/></td>
+                    <td><input class="form-control" id="physical_count_<?php echo $checker ?>"  name = "physical_count[<?php echo $checker ?>]" class='phys_count' value="0" size="10" type="text" style = "text-align:center"/></td>
+                    <td><input class="form-control" id="q_expiring_<?php echo $checker ?>" name = "q_expiring[<?php echo $checker ?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>
+                    <td><input class="form-control" id="days_out_of_stock_<?php echo $checker ?>" name = "days_out_of_stock[<?php echo $checker ?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>  
+                    <td><input class="form-control" id="q_requested_<?php echo $checker ?>" name = "q_requested[<?php echo $checker ?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>                  
                     </tr>
                     <?php
                     $checker++;
@@ -460,11 +461,11 @@ foreach ($facilities as $facility) {
             <tr>
 
                 <td colspan = "3" style = "text-align:left"><b>Order for Extra LMIS tools:<br/> To be requested only when your data collection or reporting tools are nearly full. Indicate quantity required for each tool type.</b></td>
-                <td><input class='user2'id="order_extra" name="order_extra" size="10" type="text"/></td>
+                <td><input class="form-control" class='user2'id="order_extra" name="order_extra" size="10" type="text"/></td>
                 <td colspan = "5"><b>(1) Daily Activity Register for Laboratory Reagents and Consumables (MOH 642):</b></td>
-                <td><input class='user2'id="moh_642" name="moh_642" size="10" type="text"/></td>
+                <td><input class="form-control" class='user2'id="moh_642" name="moh_642" size="10" type="text"/></td>
                 <td colspan = "3"><b>(2) F-CDRR for Laboratory Commodities (MOH 643):</b></td>
-                <td><input class='user2'id="moh_643" name="moh_643" size="10" type="text"/></td>
+                <td><input class="form-control" class='user2'id="moh_643" name="moh_643" size="10" type="text"/></td>
             </tr>   
 
 
@@ -477,19 +478,19 @@ foreach ($facilities as $facility) {
                 <td colspan = "1"></td>
                 <td colspan = "2" style = "text-align:left">Date:</td>
             </tr>
-            <tr><td><input class='user2'id="compiled_by" name="compiled_by" size="10" type="text" colspan = "2"/>
+            <tr><td><input class="form-control" class='user2'id="compiled_by" name="compiled_by" size="10" type="text" colspan = "2"/>
                     <br/><span style="color: #f33;font-size: 10px;">* required field</span></td>
                 <td colspan = "2"><br/></td>
                 <td colspan = "2"><input class='user2'id="compiled_tel" name="compiled_tel" size="10" type="text" colspan = "2"/></td>
                 <td colspan = "1"><br/></td>
                 <td colspan = "1"><br/></td>
-                <td><input class='user2'id="compiled_des" name="compiled_des" size="10" type="text" colspan = "2"/></td>
+                <td><input class="form-control" class='user2'id="compiled_des" name="compiled_des" size="10" type="text" colspan = "2"/></td>
                 <td colspan = "1"><br/></td>
                 <td colspan = "1"><br/></td>
-                <td><input class='user2'id="compiled_sign" name="compiled_sign" size="10" type="text" colspan = "2"/></td>
+                <td><input class="form-control" class='user2'id="compiled_sign" name="compiled_sign" size="10" type="text" colspan = "2"/></td>
                 <td colspan = "1"><br/></td>
                 <td colspan = "1"><br/></td>
-                <td><input class='user2'id="compiled_date" name="compiled_date" size="10" type="text" colspan = "2"/></td>
+                <td><input class="form-control" class='user2'id="compiled_date" name="compiled_date" size="10" type="text" colspan = "2"/></td>
             </tr>
 
             <tr></tr>
@@ -503,23 +504,24 @@ foreach ($facilities as $facility) {
                 <td colspan = "1"></td>
                 <td colspan = "2" style = "text-align:left">Date:</td>
             </tr>
-            <tr>                    <td><input class='user2'id="approved_by" name="approved_by" size="10" type="text" colspan = "2"/>
+            <tr>                    <td><input class="form-control" class='user2'id="approved_by" name="approved_by" size="10" type="text" colspan = "2"/>
                     <br/><span style="color: #f33;font-size: 10px;">* required field</span></td>            
                 <td colspan = "2"><br/></td>
-                <td colspan = "2"><input class='user2'id="approved_tel" name="approved_tel" size="10" type="text" colspan = "2"/></td>
+                <td colspan = "2"><input class="form-control" class='user2'id="approved_tel" name="approved_tel" size="10" type="text" colspan = "2"/></td>
                 <td colspan = "1"><br/></td>
                 <td colspan = "1"><br/></td>
-                <td><input class='user2'id="approved_des" name="approved_des" size="10" type="text" colspan = "2"/></td>
+                <td><input class="form-control" class='user2'id="approved_des" name="approved_des" size="10" type="text" colspan = "2"/></td>
                 <td colspan = "1"><br/></td>
                 <td colspan = "1"><br/></td>
-                <td><input class='user2'id="approved_sign" name="approved_sign" size="10" type="text" colspan = "2"/></td>
+                <td><input class="form-control" class='user2'id="approved_sign" name="approved_sign" size="10" type="text" colspan = "2"/></td>
                 <td colspan = "1"><br/></td>
                 <td colspan = "1"><br/></td>
-                <td><input class='user2'id="approved_date" name="approved_date" size="10" type="text" colspan = "2"/></td>
+                <td><input class="form-control" class='user2'id="approved_date" name="approved_date" size="10" type="text" colspan = "2"/></td>
             </tr>
 
         </table>
-        <input class="btn btn-primary" type="submit"   id="save1"  value="Save" style="margin-left: 0%; width:100px" >
+        <div id="message" type="text" style="margin-left: 0%; width:200px;color:blue;font-size:160%"></div>
+        <input class="form-control" class="btn btn-primary" type="submit"   id="save1"  value="Save" style="margin-left: 0%; width:100px" >
     </form>
 </div>
 <br />

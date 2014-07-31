@@ -110,10 +110,10 @@
                         <hr />
                         <form id="add_dmlt_district_form" method="POST" action="<?php echo base_url() . 'rtk_management/dmlt_district_action'; ?>">
                             
-                            <input name="dmlt_id" id="dmlt_id" type="hidden" value=""/>
+                            <input class="form-control" name="dmlt_id" id="dmlt_id" type="hidden" value=""/>
                             <input name="action" id="action" type="hidden" value="add"/>
                             
-                            <select name="sub_county" id="sub_county">
+                            <select name="sub_county" id="sub_county" class="form-control">
                                 <option> -- Select Sub-County --</option>
                                 <?php foreach ($districts as $dists) { ?>
                                     <option value="<?php echo $dists['id']; ?>"><?php echo $dists['district']; ?></option>

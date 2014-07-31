@@ -1,19 +1,20 @@
 <div class="col-md-2" style="border-right: solid 1px #ccc;padding-right: 20px;">
     <select id="switch_county" class="form-control" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;">
-        <option>-- Select county --</option>
+        <option>-- Select County --</option>
         <?php echo $option; ?>
     </select>
 
     <select id="switch_month" class="form-control" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;">
-        <option>-- <?php echo $englishdate;?> --</option>
-        <?php for ($i=1; $i <12 ; $i++) { 
-        $month = date('m', strtotime("-$i month")); 
-        $year = date('Y', strtotime("-$i month")); 
-        $month_value = $month.$year;
-        $month_text =  date('F', strtotime("-$i month")); 
-        $month_text = "-- ".$month_text." ".$year." --"; ?>
-        <option value="<?php echo $month_value ?>"><?php echo $month_text ?></option>;
-    <?php } ?>
+        <?php 
+            for ($i=0; $i <12 ; $i++) {  
+                $day = "-$i";
+                //$month = date('F Y');
+                $month_stamp = mktime(0, 0, 0, $day , 1, date("Y"));
+                $month = date("M d, Y", $month_stamp);
+                $year = date('Y', strtotime("-$i month")); 
+                echo "<option>$month</option>";              
+            }
+        ?>
     </select>
 
     <ul class="nav nav-pills nav-stacked" style="font-size:100%">

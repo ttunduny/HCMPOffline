@@ -7,6 +7,7 @@ $year = substr($month, -4);
 $month = substr_replace($month, "", -4);
 $monthyear = $year . '-' . $month . '-1';
 $englishdate = date('F, Y', strtotime($monthyear));
+
 ?>
 <style type="text/css" title="currentStyle"> 
 
@@ -180,7 +181,7 @@ $englishdate = date('F, Y', strtotime($monthyear));
         $sql = "select distinct rtk_settings.* 
                             from rtk_settings, facilities 
                             where facilities.zone = rtk_settings.zone 
-                            and facilities.district = 1";
+                            and facilities.rtk_enabled = 1";
         $res_ddl = $this->db->query($sql);
         $deadline_date = null;
         $settings = $res_ddl->result_array();
@@ -238,7 +239,7 @@ $englishdate = date('F, Y', strtotime($monthyear));
         if (isset($notif_message)) {
             if ($notif_message != '') {
                 $alertype = "error";
-                echo '<div class="alert notif alert-success">' . $notif_message . ' </div>';
+                echo '<div class="alert-<?php echo $alertype; ?> notif alert-success">' . $alertmsg . ' </div>';
             }
         }
         //   echo '<div class="alert alert-' . $alertype . '">' . $alertmsg . ' </div>';
