@@ -35,13 +35,69 @@ padding-top: 4.5%;
 #overview{
 	padding-right:0;
 }
-#overview h4{
+#overview h4, #info h4{
 	
-	padding:6px;
-	font:#000;
-	background:#fff;
+	padding:4px;
+	color:white;
+	background:#528f42;
 	text-align:center;
 	margin:0;
+	
+	font-size:15px;
+}
+/*state overview*/
+
+.state-overview .symbol, .state-overview .value {
+    display: inline-block;
+    text-align: center;
+}
+
+.state-overview .value  {
+    float: right;
+
+}
+
+.state-overview .value h1, .state-overview .value p  {
+    margin: 0;
+    padding: 0;
+    color: #c6cad6;
+}
+
+.state-overview .value h1 {
+    font-weight: 300;
+}
+
+.state-overview .symbol i {
+    color: #fff;
+    font-size: 50px;
+}
+
+.state-overview .symbol {
+    width: 40%;
+    padding: 25px 15px;
+    -webkit-border-radius: 4px 0px 0px 4px;
+    border-radius: 4px 0px 0px 4px;
+}
+
+.state-overview .value {
+    width: 58%;
+    padding-top: 21px;
+}
+
+.state-overview .terques {
+    background: #6ccac9;
+}
+
+.state-overview .red {
+    background: #ff6c60;
+}
+
+.state-overview .yellow {
+    background: #f8d347;
+}
+
+.state-overview .blue {
+    background: #57c8f2;
 }
 
 </style>
@@ -114,14 +170,108 @@ padding-top: 4.5%;
 		<div class="col-md-8">
 			
 			<div class="row">
-				<div class="col-md-6" style="border: 1px solid #000;height: 200px" id="overview">
-					<h4>Facility Overview</h4>
-				</div>
-				<div class="col-md-6" style="border: 1px solid #000;height: 200px" id="info">
-					<h4>Facility Infor</h4>
+				<div class="col-md-12" style="border: 1px solid #000;height: 200px" id="overview">
 					
+					<div class="row state-overview">
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol terques">
+                          	<span class="glyphicon glyphicon-user"></span>
+                          </div>
+                          <div class="value">
+                          	<p>New Users</p>
+                              <h3 class="count">495</h3>
+                              
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol red">
+                              <span class="glyphicon glyphicon-user"></span>
+                          </div>
+                          <div class="value">
+                              <h3 class=" count2">947</h3>
+                              <p>Sales</p>
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol yellow">
+                              <span class="glyphicon glyphicon-user"></span>
+                          </div>
+                          <div class="value">
+                              <h1 class=" count3">328</h1>
+                              <p>New Order</p>
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol blue">
+                              <span class="glyphicon glyphicon-user"></span>
+                          </div>
+                          <div class="value">
+                              <h1 class=" count4">10328</h1>
+                              <p>Total Profit</p>
+                          </div>
+                      </section>
+                  </div>
+              </div>
+              
+              <div class="row state-overview">
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol terques">
+                          	<span class="glyphicon glyphicon-user"></span>
+                          </div>
+                          <div class="value">
+                              <h3 class="count">495</h3>
+                              <p>New Users</p>
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol red">
+                              <span class="glyphicon glyphicon-user"></span>
+                          </div>
+                          <div class="value">
+                              <h3 class=" count2">947</h3>
+                              <p>Sales</p>
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol yellow">
+                              <span class="glyphicon glyphicon-user"></span>
+                          </div>
+                          <div class="value">
+                              <h1 class=" count3">328</h1>
+                              <p>New Order</p>
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol blue">
+                              <span class="glyphicon glyphicon-user"></span>
+                          </div>
+                          <div class="value">
+                              <h1 class=" count4">10328</h1>
+                              <p>Total Profit</p>
+                          </div>
+                      </section>
+                  </div>
+              </div>
 				</div>
+				
 			</div>
+			
+			
+			
 			
 			<div class="row">
 				<div class="col-md-12" style="border: 1px solid #000;height: 420px">
