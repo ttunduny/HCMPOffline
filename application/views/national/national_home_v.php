@@ -32,6 +32,17 @@ padding-top: 4.5%;
 {
   border-radius: 0 !important;
 }
+#overview{
+	padding-right:0;
+}
+#overview h4{
+	
+	padding:6px;
+	font:#000;
+	background:#fff;
+	text-align:center;
+	margin:0;
+}
 
 </style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -103,183 +114,26 @@ padding-top: 4.5%;
 		<div class="col-md-8">
 			
 			<div class="row">
-				<div class="col-md-6" style="border: 1px solid #000;height: 200px">
-					<div class="panel panel-success">
-       <div class="panel-heading">
-       <h3 class="panel-title" style="display:inline-block;"><div class="county-name" style="display:inline-block"></div>Facility Overview</h3>
-       </div>
-        <div class="panel-body">
-       
-          <div style="display:table-row" >
-            <div style="display:table-cell">
-                <p style="font-size:120%;display: inline-block;"> <span class="glyphicon glyphicon-user"></span>#HCW Trained  &nbsp;
-                <div style="display: inline-block;" id="hcw_trained"></p></div></div>
-         <div style="display:table-cell;">&nbsp;&nbsp;&nbsp;&nbsp;</div>
-            <div style="display:table-cell;">
-             <p style="font-size:120%;display: inline-block;"><span class="glyphicon glyphicon-calendar"></span>#Facilities Rolled Out  &nbsp;
-                 <div style="display: inline-block;" id="facilities_rolled_out"></div></p></div>   
-          </div>
-       </div>    
-       </div>
+				<div class="col-md-6" style="border: 1px solid #000;height: 200px" id="overview">
+					<h4>Facility Overview</h4>
 				</div>
-				<div class="col-md-6" style="border: 1px solid #000;height: 200px">
+				<div class="col-md-6" style="border: 1px solid #000;height: 200px" id="info">
+					<h4>Facility Infor</h4>
 					
-					<div class="panel panel-success" >
-			       <div class="panel-heading">
-			       <h3 class="panel-title" style="display:inline-block;"><div class="county-name" style="display:inline-block"></div>Facility Information</h3>
-			       </div>
-			        <div class="panel-body">
-			     <div id="facilities"></div>
-			          </div>
-       				</div> 
 				</div>
 			</div>
 			
 			<div class="row">
 				<div class="col-md-12" style="border: 1px solid #000;height: 420px">
 					
-					<div class="panel panel-success">
-       <div class="panel-heading">
-       <h3 class="panel-title" style="display:inline-block;"><div class="county-name" style="display:inline-block"></div>Expiries</h3>
-       </div>
-       
-        <div class="row" style="margin-left: 2px">
-       <div class="col-md-6" style="border: 1px solid #DDD;height: auto; ">
-      
-       <div class="panel-heading">
-       <h4 class="panel-title">Actual Expiries </h4>
-       </div>
-        <div class="panel-body" style="margin-left: 2px">
-      <ul class='nav nav-tabs' id="actual_">
-      <li class="active"><a href="#acounty" data-toggle="tab">County View</a></li>
-      <li class=""><a href="#asubcounty" data-toggle="tab">Sub County View</a></li>
-       </ul>
-       <div id="myTabContent" class="tab-content ">
-            <div  id="acounty" class="tab-pane active fade in">
-       <div class="filter row" style="margin-left: 2px;">
-<form class="form-inline" role="form">
-<select id="ecounty_filter" class="form-control col-md-2 county">
-<option value="NULL">Select County</option>
-<?php
-foreach($counties as $data):
-    foreach($data as $key=>$name):
-      echo "<option value='$key'>$name</option>";
-    endforeach;
-       
-endforeach;
-?>
-</select>   
-<select id="eyear" class="form-control col-md-2">
-<option selected="selected" value="NULL">Select Year</option>
-<option  value="2014">2014</option>
-<option  value="2013">2013</option>
-</select> 
-<div class="col-md-2">
-<button class="btn btn-sm btn-success ecounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
-</div>
-
-</form>
-</div>
-       </div> 
-        <div  id="asubcounty" class="tab-pane fade in">
-            <!-- -->
-<div class="filter row" style="margin-left: 2px;">
-<form class="form-inline" role="form">
-<select id="asubcounty_filter" class="form-control col-md-2 subcounty">
-<option value="NULL">Select Sub-County</option>
-</select>
-<select id="asubcounty_facility_filter" class="form-control col-md-3 facility">
-<option value="NULL">Select facility</option>
-</select>   
-<select id="asubcountyyear" class="form-control col-md-2">
-<option selected="selected" value="NULL">Select Year</option>
-<option  value="2014">2014</option>
-<option  value="2013">2013</option>
-</select> 
-<div class="col-md-2">
-<button class="btn btn-sm btn-success asubcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
-</div>
-
-</form>
-</div>
-       </div>   
-      </div>
-       <div id="actual">test</div>
-       </div> 
-        </div> 
-   
-       <div class="col-md-6" style="border: 1px solid #DDD;height: auto;" >
-      
-       <div class="panel-heading">
-       <h4 class="panel-title">Potential Expiries </h4>
-       </div>
-        <div class="panel-body">
-        <ul class='nav nav-tabs' id="potential_">
-      <li class="active"><a href="#pcounty" data-toggle="tab">County View</a></li>
-      <li class=""><a href="#psubcounty" data-toggle="tab">Sub County View</a></li>
-       </ul>
-       <div id="myTabContent" class="tab-content">
-            <div  id="pcounty" class="tab-pane active fade in">
-       <div class="filter row" style="margin-left: 2px;">
-<form class="form-inline" role="form">
-<select id="pcounty_filter" class="form-control col-md-2 county">
-<option value="NULL">Select County</option>
-<?php
-foreach($counties as $data):
-    foreach($data as $key=>$name):
-      echo "<option value='$key'>$name</option>";
-    endforeach;
-       
-endforeach;
-?>
-</select>   
-<div class="col-md-2">
-<button class="btn btn-sm btn-success pcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
-</div>
-
-</form>
-</div>
-       </div> 
-        <div  id="psubcounty" class="tab-pane fade in">
-                        <!-- -->
-<div class="filter row" >
-<form class="form-inline" role="form">
-<select id="psubcounty_filter" class="form-control col-md-2 subcounty">
-<option value="NULL">Select Sub-County</option>
-</select> 
-<select id="psubcounty_facility_filter" class="form-control col-md-3 facility">
-<option value="NULL">Select facility</option>
-</select>   
-<div class="col-md-2">
-<button class="btn btn-sm btn-success psubcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
-</div>
-<div class="col-md-1">
-<button class="btn btn-sm btn-success psubcounty-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
-</div>
-</form>
-</div>
-            </div>   
-      </div>
-      <div id="potential">test</div>
-       </div>    
-      
-       </div> 
-        </div>
-          
-       </div> 
+					
        
 				</div>
 			</div>
 			
 		</div>
 	</div>
-			<div class="row">
-				<div class="col-md-12" style="border: 1px solid #000;height: 400px">Graph</div>
-			</div>
 			
-			<div class="row">
-				<div class="col-md-12" style="border: 1px solid #000;height: 400px">Graph</div>
-			</div>
     
     </div> <!-- /container -->
     

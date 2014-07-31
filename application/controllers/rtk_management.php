@@ -196,7 +196,7 @@ class Rtk_Management extends Home_controller {
         $data['banner_text'] = 'RTK Manager';
         $data['content_view'] = "rtk/rtk/admin/admin_home_view";
 
-        $users = $this->_get_rtk_users();
+        $users = $this->_get_rtk_users();        
         $data['users'] = $users;
         $this->load->view('rtk/template', $data);
     }
@@ -826,7 +826,7 @@ class Rtk_Management extends Home_controller {
     }
 
     function _add_rca_to_county($rca, $county, $redirect_url) {
-        $sql = "INSERT INTO `kemsa2`.`rca_county` (`id`, `rca`, `county`) VALUES (NULL, '$rca', '$county')";
+        $sql = "INSERT INTO `rca_county` (`id`, `rca`, `county`) VALUES (NULL, '$rca', '$county')";
         $this->db->query($sql);
         $object_id = $this->db->insert_id();
         $this->logData('1', $object_id);
@@ -4517,7 +4517,7 @@ WHERE
         $fname = addslashes($fname);
         $lname = addslashes($lname);
 
-        $sql = "INSERT INTO `kemsa2`.`user` (`id`, `fname`, `lname`, `email`, `username`, `password`, `usertype_id`, `telephone`, `district`, `facility`, `created_at`, `updated_at`, `status`, `county_id`)
+        $sql = "INSERT INTO `user` (`id`, `fname`, `lname`, `email`, `username`, `password`, `usertype_id`, `telephone`, `district`, `facility`, `created_at`, `updated_at`, `status`, `county_id`)
         VALUES (NULL, '$fname', '$lname', '$email', '$email', 'b56578e2f9d28c7497f42b32cbaf7d68', '$level', '', '$district', NULL, '$time', '$time', '1', '$county');";
         $this->db->query($sql);
         $object_id = $this->db->insert_id();

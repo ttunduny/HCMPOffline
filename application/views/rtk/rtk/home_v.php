@@ -198,7 +198,7 @@ code {
 <div class="well" style="width:97%;"> 
 <div class="page-header">
  
-     <h1 style="font-size: 140%;">County summary <?php echo $englishdate;?><small> Kenya</small></h1>
+     <h1 style="font-size: 140%;">County Cummary <?php echo $englishdate;?><small> Kenya</small></h1>
    </div>
 <!--     <h4>Leading County in reporting: Nakuru</h4>-->
      <div id="county_graph"></div>

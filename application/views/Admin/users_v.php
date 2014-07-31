@@ -26,7 +26,7 @@
 
 <div class="container-fluid">
 	
-	<div class="row" style="margin-top: 1%;">
+	<div class="row" style="margin-top: 1%;" >
 		<div class="col-md-12">
 			
 			<ul class="nav nav-tabs" id="Tab">
@@ -57,7 +57,7 @@
 <script>
 	
 	$(document).ready(function () {
-		
+		$("#create_new,#edit_user").attr("disabled", "disabled");
 		       $('#main-content').on('hidden.bs.modal','#myModal', function () {
                alert('jack');
 				$("#datatable").hide().fadeIn('fast');
