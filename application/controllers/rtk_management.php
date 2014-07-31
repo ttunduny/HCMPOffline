@@ -791,7 +791,12 @@ class Rtk_Management extends Home_controller {
         } elseif ($action == 'remove') {
             $this->_remove_dmlt_from_district($dmlt, $district);
         }
+        if ($_POST['referer']=='user_management'){
+             redirect('rtk_management/user_profile/'.$dmlt);
+        }
+            else{
         redirect('rtk_management/county_admin/users');
+            }
     }
 
     function _get_rca_counties($rca) {
@@ -806,7 +811,7 @@ class Rtk_Management extends Home_controller {
 
     public function remove_rca_from_county($rca, $county) {
         $this->_remove_rca_from_county($rca, $county);
-        redirect('rtk_management/rtk_manager_admin');
+        redirect('rtk_management/user_profile/'.$rca);
     }
 
     function _remove_rca_from_county($rca, $county, $redirect_url) {
@@ -821,11 +826,11 @@ class Rtk_Management extends Home_controller {
         $rca = $_POST['rca_id'];
         $county = $_POST['county'];
         $this->_add_rca_to_county($rca, $county);
-        redirect('rtk_management/rtk_manager_admin');
+        redirect('rtk_management/user_profile/'.$rca);
     }
 
-    function _add_rca_to_county($rca, $county, $redirect_url) {
-        $sql = "INSERT INTO `kemsa2`.`rca_county` (`id`, `rca`, `county`) VALUES (NULL, '$rca', '$county')";
+    function _add_rca_to_county($rca, $county) {
+        $sql = "INSERT INTO `rca_county` (`id`, `rca`, `county`) VALUES (NULL, '$rca', '$county')";
         $this->db->query($sql);
         $object_id = $this->db->insert_id();
         $this->logData('1', $object_id);
@@ -851,7 +856,13 @@ class Rtk_Management extends Home_controller {
 
     public function remove_dmlt_from_district($dmlt, $district) {
         $this->_remove_dmlt_from_district($dmlt, $district);
+        if ($_GET['referer']=='user_management'){
+        redirect('rtk_management/user_profile/'.$dmlt);
+
+        }
+else{
         redirect('rtk_management/county_admin/users');
+}            
     }
 
     function _remove_dmlt_from_district($dmlt, $district, $redirect_url) {
@@ -2874,6 +2885,12 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $returnable = $q_res->result_array();
         return $returnable;
     }
+        function _all_subcounties() {
+        $q = 'SELECT id,district FROM  `districts` ';
+        $q_res = $this->db->query($q);
+        $returnable = $q_res->result_array();
+        return $returnable;
+    }
 
     public function fcdrr_test($facility_c) {
         $data = array();
@@ -4516,7 +4533,7 @@ WHERE
         $fname = addslashes($fname);
         $lname = addslashes($lname);
 
-        $sql = "INSERT INTO `kemsa2`.`user` (`id`, `fname`, `lname`, `email`, `username`, `password`, `usertype_id`, `telephone`, `district`, `facility`, `created_at`, `updated_at`, `status`, `county_id`)
+        $sql = "INSERT INTO `user` (`id`, `fname`, `lname`, `email`, `username`, `password`, `usertype_id`, `telephone`, `district`, `facility`, `created_at`, `updated_at`, `status`, `county_id`)
         VALUES (NULL, '$fname', '$lname', '$email', '$email', 'b56578e2f9d28c7497f42b32cbaf7d68', '$level', '', '$district', NULL, '$time', '$time', '1', '$county');";
         $this->db->query($sql);
         $object_id = $this->db->insert_id();
@@ -5450,7 +5467,9 @@ WHERE
         $user_details = $this->user_details($user_id);
 //        echo "<pre>";print_r($user_details);die;
         $full_name = $arr[0]['fname'].' '.$user_details[0]['lname'];
-        $data['all_counties'] = $this->all_counties();
+        $data['all_counties'] = $this->_all_counties();
+        $data['all_subcounties'] = $this->_all_subcounties();
+        $data['user_id'] =  $user_id;
 
         $data['user_logs'] = $this->rtk_logs($user_id);
         $data['full_name'] = $full_name;
@@ -5462,10 +5481,7 @@ WHERE
         $this->load->view('rtk/template',$data);
 
     }
-    function all_counties(){
-        $counties = $this->db ->query("select * from counties");
-        return ($counties->result_array());
-    }
+
 
 public function allstats(){
     for ($i=1; $i <48 ; $i++) { 
