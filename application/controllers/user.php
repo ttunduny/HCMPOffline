@@ -753,8 +753,8 @@ class User extends MY_Controller {
 		public function activation($myurl){
 			
 			$myurl=$this->uri->segment(3);
-			$cipher= md5($myurl);
-						
+			echo $cipher= md5($myurl);
+			exit;			
 			//query to find match 
 			Users::check_activation($cipher);
 			$restrict= count(Users::check_activation($cipher));
