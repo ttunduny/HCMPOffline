@@ -279,7 +279,7 @@
         $('#save1')
                 .button()
                 .click(function() {
-                    $('#message').html('The Report is Being Saved');                                         
+                    $('#message').html('The Report is Being Saved. Please Wait');                                         
                  $(this).hide();
                 });
         $("#dialog").dialog({
@@ -520,7 +520,7 @@ foreach ($facilities as $facility) {
             </tr>
 
         </table>
-        <div id="message" type="text" style="margin-left: 0%; width:200px;color:blue;font-size:160%"></div>
+        <div id="message" type="text" style="margin-left: 0%; width:200px;color:blue;font-size:120%"></div>
         <input class="form-control" class="btn btn-primary" type="submit"   id="save1"  value="Save" style="margin-left: 0%; width:100px" >
     </form>
 </div>
