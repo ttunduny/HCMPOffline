@@ -567,7 +567,7 @@ class Rtk_Management extends Home_controller {
         $data['district_balances_previous_1'] = $this->district_totals($year_previous_1, $previous_month_1, $district);
         $data['district_balances_previous_2'] = $this->district_totals($year_previous_2, $previous_month_2, $district);
 
-        
+
         $data['district_summary'] = $district_summary;
         
         $data['districts'] = $this->_districts_from_county($county_name['id']);
@@ -4767,15 +4767,17 @@ WHERE
     }
 
     public function rtk_manager_admin_messages() {
-        $sql = "select email from user";
-        $res = $this->db->query($sql);
-        $emails = $res->result_array();
+        
+        $users = array('email' =>'All SCMLTs' , 
+                        'email' =>'All CLCs' ,
+                        'email' =>'Sub-Counties with Less than 25% Reported' ,
+                        'email' =>'Sub-Counties with Less than 50% Reported' ,
+                        'email' =>'Sub-Counties with Less than 75% Reported' ,
+                        'email' =>'Sub-Counties with Less than 90% Reported' );             
+        echo "<pre>";
+        print_r($users);die();
 
-        $sql1 = "select fname from user";
-        $res1 = $this->db->query($sql1);
-        $fname = $res1->result_array();
 
-        //$details = array('email'=>$emails,'fname'=>$fname);
 
         $data['emails'] = json_encode($emails);
         $data['emails'] = str_replace('"', "'", $data['emails']);
@@ -4793,7 +4795,7 @@ WHERE
         $data['title'] = 'RTK Manager Messages';
         $data['banner_text'] = 'RTK Manager';
         //$data['content_view'] = "rtk/rtk/admin/admin_home_view";
-        $data['content_view'] = "rtk/rtk/admin/messages";
+        $data['content_view'] = "rtk/rtk/admin/messages1";
         $users = $this->_get_rtk_users();
         $data['users'] = $users;
         $this->load->view('rtk/template', $data);
