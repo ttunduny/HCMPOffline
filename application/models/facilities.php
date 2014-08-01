@@ -6,6 +6,7 @@ class Facilities extends Doctrine_Record {
 		$this -> hasColumn('facility_name', 'varchar',30);
 		$this -> hasColumn('district', 'varchar',30);
 		$this -> hasColumn('owner', 'varchar',30);
+		$this -> hasColumn('level', 'varchar',30);
 		$this->hasColumn('drawing_rights','text');
 		$this->hasColumn('using_hcmp','int');//
 		$this->hasColumn('date_of_activation','date');
@@ -144,7 +145,7 @@ return $q;
 }
 	public static function get_facilities_online_per_district($county_id){
 	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-select d.id, d.district,f.facility_name,f.facility_code, DATE_FORMAT(`date_of_activation`,'%d %b %y') as date 
+select d.id, d.district,f.facility_name,f.facility_code,f.level,f.owner, DATE_FORMAT(`date_of_activation`,'%d %b %y') as date 
 from facilities f, districts d 
 where f.district=d.id and d.county='$county_id'
 and unix_timestamp(f.`date_of_activation`) >0 

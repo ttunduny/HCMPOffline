@@ -65,11 +65,11 @@ class User extends MY_Controller {
             if ($user_indicator  == 'district') :
              //get county name
             $district_name = districts::get_district_name_($district_id);
-            $banner_name = $district_name['district'];
+            $banner_name = $district_name['district']." Sub-county";
             elseif ($user_indicator  == 'county') :            
             //get county name
             $county_name = Counties::get_county_name($county_id);
-            $banner_name = $county_name['county'];
+            $banner_name = $county_name['county']." County";
             elseif ($user_indicator  == 'facility' || $user_indicator == 'facility_admin') :
              //get county name
             $facility_name = Facilities::get_facility_name2($facility_id);
@@ -181,7 +181,7 @@ class User extends MY_Controller {
 				$range = microtime(true);
 				$rand = rand(0, $range);
 				//encrypt code
-				$save_code = md5($rand);
+				$save_code = $rand;
 				$result='http://' . $_SERVER['SERVER_NAME'] .'/HCMPv2/assets/img/coat_of_arms-resized1.png';
 				
 				//Send Code to User
