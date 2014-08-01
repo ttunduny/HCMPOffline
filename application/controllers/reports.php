@@ -2944,9 +2944,9 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		$identifier = $this -> session -> userdata('user_indicator');
         $facility_data=Facilities::get_facilities_monitoring_data( $facility_code,$district_id,$county_id,$identifier);
         foreach($facility_data as $facility){
-
+ $date=(strtotime($facility['last_seen']))? date('j M, Y',strtotime($facility['last_seen'])):"N/A" ;
           array_push($series_data,array(
-          date('j M, Y',strtotime($facility['last_seen'])),
+          $date,
           $facility['days_last_seen'],
           date('j M, Y',strtotime($facility['last_issued'])) ,
           $facility['days_last_issued'],
