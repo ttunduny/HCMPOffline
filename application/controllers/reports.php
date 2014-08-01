@@ -2897,17 +2897,7 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 
 		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code, $district_id, $county_id,
 		$category_id, $commodity_id, $option_new, $report_type);
-		echo"SELECT  $selection_for_a_month $computation
-     FROM facility_stocks fs, facilities f, commodities d,  districts di
-     WHERE fs.facility_code = f.facility_code
-     AND f.district =di.id
-     and fs.expiry_date>NOW()
-     AND fs.status=1
-     $and_data
-      $group_by_a_month";
-		//echo "<pre>";
-		//print_r($category_data);
-		//echo "</pre>";
+	
 
         foreach ($commodity_array as $data) :
 			if($report_type=="table_data"):
