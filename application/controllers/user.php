@@ -181,7 +181,7 @@ class User extends MY_Controller {
 				$range = microtime(true);
 				$rand = rand(0, $range);
 				//encrypt code
-				$save_code = md5($rand);
+				$save_code = $rand;
 				$result='http://' . $_SERVER['SERVER_NAME'] .'/HCMPv2/assets/img/coat_of_arms-resized1.png';
 				
 				//Send Code to User
