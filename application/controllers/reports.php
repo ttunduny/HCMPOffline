@@ -845,7 +845,6 @@ class Reports extends MY_Controller
 		$data['title'] = "Consumption"	;
 		$data['banner_text'] = "Facility Consumption"	;
 		$data['c_data'] = Commodities::get_facility_commodities($facility_code);
-		//$data['graph_data'] =	$faciliy_stock_data;
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		$data['report_view']="facility/facility_reports/ajax/consumption_stats_ajax";
 		$data['content_view']="facility/facility_reports/reports_v";
@@ -995,7 +994,7 @@ class Reports extends MY_Controller
 		$date_1 = new DateTime($first_day_of_the_month);
 		$date_2 = new DateTime($last_day_of_the_month);
 
-		$facility_data = Facilities::get_Facilities_using_HCMP($county_id,$district);
+		$facility_data = Facilities::get_Facilities_using_HCMP($county_id,$district,$facility_code);
 
 		$series_data = array();
 		$category_data = array();
@@ -1100,10 +1099,10 @@ class Reports extends MY_Controller
 		'Orders','Issues','Log Ins')));
 		$graph_log_data = array_merge($graph_log_data,array("series_data"=>array('total %'=>array())));
 		$log_data = Log::get_log_data($facility_code,$district_id,$county_id, $year, $month);
-		$log_data_login_only=Log::get_login_only($facility_code,$district_id,$county_id, $year, $month);
+		$log_data_login_only = Log::get_login_only($facility_code,$district_id,$county_id, $year, $month);
 		foreach($log_data as $log_data_)
 		{
-			$sum = $log_data_['user_log'];
+			$sum = $log_data_['user_log']+$log_data_login_only[0]['total'];
 			$issues = ($log_data_['total_issues']/$sum)*100;
 			$orders = ($log_data_['total_orders']/$sum)*100;
 			$decommissions = ($log_data_['total_decommisions']/$sum)*100;
@@ -1309,12 +1308,12 @@ class Reports extends MY_Controller
 		$data = Log::get_user_activities_download($facility_code,$district_id,$county_id, $year, $month);
 		
 		foreach ($data as $data):
-			$series_data_=array_merge($series_data_ , array(array($data["fname"],$data["lname"],$data["facility_name"],$data["total_issues"],$data["total_orders"],$data['total_decommisions'],$data['total_redistributions'],$data['total_stock_added'])));
+			$series_data_=array_merge($series_data_ , array(array($data["time"],$data["fname"],$data["lname"],$data["facility_name"],$data["issued"],$data["ordered"],$data['decommissioned'],$data['redistribute'],$data['add_stock'],$data['no_activity'])));
 		endforeach;
 		
 		$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' 
 		=> "User Activities for $title ", 'file_name' => "User_Activities_for_$district_name__$facility_name_");
-		$row_data = array(array("First Name","Last Name","Facility Name","Total Issues","Total Orders","Total Decommissions","Total Redistributions","Stock Additions"));
+		$row_data = array(array("Time","First Name","Last Name","Facility Name","Issued Commodities?","Ordered Commodities?","Decommissioned Commodities?","Redistributed Commodities?","Stock?","Did Nothing?"));
 		$column_data = array("");
 		$excel_data['column_data'] = $column_data;
 		$row_data=array_merge($row_data,$series_data_);
@@ -2816,12 +2815,12 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		 $county_id = $this -> session -> userdata('county_id');
 	     $data['district_data'] = districts::getDistrict($county_id);
 	     $data['c_data'] = Commodities::get_all_2();
-		 
          $data['tracer_items'] = Commodities::get_tracer_items();
 		 $data['categories']=commodity_sub_category::get_all_pharm();
 		return $this -> load -> view("subcounty/ajax/county_consumption_data_filter_v", $data);
 	}
 	    public function consumption_stats_graph($commodity_id = null,$category_id = null, $district_id = null, $facility_code=null, $option = null,$from=null,$to=null,$report_type=null) {
+	    	
 	    //reset the values here
      	$commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
 	 	$district_id=($district_id=="NULL") ? null :$district_id;
@@ -2835,7 +2834,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		
 		$county_name = counties::get_county_name($county_id);
 		
-		$category_data=$series_data = $graph_data= $series_data_=array();
+		$category_data = $series_data = $graph_data= $series_data_=array();
 		//check if the district is set
 		$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
 		$district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " subcounty" : null;
@@ -2848,37 +2847,41 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		$title=isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
 	    $district_id>0 && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
 		$time= "between ".date('j M y', $from)." and ".date('j M y', $to);
+		
 		$consumption_data = Facility_stocks::get_county_consumption_level_new($facility_code,$district_id, $county_id,$category_id, $commodity_id, $option,$from, $to,$report_type);
+		
 		foreach ($consumption_data as $data):
-	    if($report_type=="table_data"):
-		if($commodity_id>0):
-		array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"], (int)$data['total']));
-		else:
-		array_push($series_data , array($data["name"],(int)$data['total']));
-		endif;						
-		else:
-		$series_data  = array_merge($series_data , array((int)$data['total']));
-		$series_data_=array_merge($series_data_ , array(array($data["name"],(int)$data['total'])));
-		$category_data=array_merge($category_data, array($data["name"]));
-		endif;
+		    if($report_type=="table_data"):
+				if($commodity_id>0):
+					array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"],$data['commodity'], (int)$data['total']));
+				else:
+					array_push($series_data , array($data["name"],$data['commodity'],(int)$data['total']));
+				endif;						
+			else:
+				$series_data  = array_merge($series_data , array((int)$data['total']));
+				$series_data_ = array_merge($series_data_ , array(array($data["name"],(int)$data['total'])));
+				$category_data = array_merge($category_data, array($data["name"]));
+			endif;
 		//
 		endforeach;
 		
 		if($report_type=="csv_data"):
-		$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' 
-		=> "Consumption level $commodity_name $title $time", 'file_name' => "consumption_level_$commodity_name_$title_$time");
-		$row_data = array(array("Consumption level in $commodity_name $title $time","Consumption level in $option_new"));
-		$column_data = array("");
-		$excel_data['column_data'] = $column_data;
-		$row_data=array_merge($row_data,$series_data_);
-		$excel_data['row_data'] = $row_data;;
-		$this -> hcmp_functions -> create_excel($excel_data);
+			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 
+								'doc_title' => "Consumption level $commodity_name $title $time", 
+								'file_name' => "consumption_level_$commodity_name_$title_$time");
+			$row_data = array(array("Consumption level in $commodity_name $title $time","Consumption level in $option_new"));
+			$column_data = array("");
+			$excel_data['column_data'] = $column_data;
+			$row_data = array_merge($row_data,$series_data_);
+			$excel_data['row_data'] = $row_data;;
+			$this -> hcmp_functions -> create_excel($excel_data);
+		
 		elseif($report_type=="table_data"):
-		if($commodity_id>0):
-		$category_data=array(array("Sub-county","Facility Name","Mfl","TOTAL ".$option_new));
-		else:
-		array_push($category_data, array("Consumption level $commodity_name $title $time","stocks worth in $option_new"));
-		endif;	
+			if($commodity_id>0):
+				$category_data=array(array("Sub-county","Facility Name","Mfl","Commodity Name","TOTAL ".$option_new));
+			else:
+				array_push($category_data, array("Consumption level $commodity_name $title $time","Commodity Name","stocks worth in $option_new"));
+			endif;	
         $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_'));
 	    $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
 	    $graph_data=array_merge($graph_data,array("table_body"=>$series_data));
