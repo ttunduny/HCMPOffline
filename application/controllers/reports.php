@@ -109,6 +109,20 @@ class Reports extends MY_Controller
 		}
 		echo $list;
 	}
+
+	public function district_store_reports(){
+	$district_id = $this -> session -> userdata('district_id');
+	$data['content_view'] = "facility/facility_reports/reports_v";
+	$view = 'shared_files/template/template';
+	$data['report_view'] = "subcounty/reports/drug_store_reports_home";
+	$data['sidebar'] = "subcounty/reports/drug_store_side_bar";
+	$data['report_data'] = Facility_stocks::drug_store_commodity_expiries($district_id);
+    $data['active_panel']='expiries';
+    $data['title'] = "District Store Reports";
+		
+		$this -> load -> view($view, $data);
+	}
+
      /*
 	 |--------------------------------------------------------------------------
 	 | FACILITY REPORTS
@@ -515,7 +529,7 @@ class Reports extends MY_Controller
     }
 
 	public function expiries($facility_code=null) {
-        $facility_code=isset($facility_code) ? $facility_code: $this -> session -> userdata('facility_id');
+        $facility_code=isset($facility_code) ? $facility_code: $this -> session -> userdata('district_id');
 		$facility_name=Facilities::get_facility_name_($facility_code)->toArray();
 		$data['facility_name']=$facility_name[0]['facility_name'];
 		$data['title'] = "Expiries";
@@ -523,6 +537,22 @@ class Reports extends MY_Controller
 		$data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v": "shared_files/report_templates/side_bar_v" ;
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['expiry_data'] = Facility_stocks::All_expiries($facility_code,'all');
+		$data['report_view'] = "facility/facility_reports/expiries_v";
+        $data['active_panel']='expiries';
+
+		$this -> load -> view("shared_files/template/template", $data);
+
+	}
+
+		public function store_expiries() {
+        $district_id=isset($district_id) ? $district_id: $this -> session -> userdata('district_id');
+		$district_name=Districts::get_district_name($district_id)->toArray();
+		$data['district_name']=$district_name[0]['district'];
+		$data['title'] = "Store Expiries";
+		$data['banner_text'] = "Expiries";
+		$data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v": "shared_files/report_templates/side_bar_v" ;
+		$data['content_view'] = "facility/facility_reports/reports_v";
+		$data['expiry_data'] = Facility_stocks::drug_store_commodity_expiries($district_id);
 		$data['report_view'] = "facility/facility_reports/expiries_v";
         $data['active_panel']='expiries';
 

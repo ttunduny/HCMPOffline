@@ -82,6 +82,50 @@ c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commo
 
 return $stocks ;
 }
+
+
+    public static function get_district_stock_amc($district_id){
+  $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+	->fetchAll("			
+SELECT 
+    c.id AS commodity_id,
+    ds.id AS drug_store_stock_id,
+    ds.expiry_date,
+    c.commodity_name,
+    c.commodity_code,
+    c.unit_size,
+    ROUND(SUM(ds.qty_issued), 1) AS commodity_balance,
+    ROUND((SUM(ds.qty_issued) / c.total_commodity_units),
+            1) AS pack_balance,
+    c.total_commodity_units,
+    c_s.source_name,
+    ds.batch_no,
+    c_s.id AS source_id,
+    CASE temp.selected_option
+        WHEN 'Pack_Size' THEN ROUND(temp.consumption_level, 1)
+        WHEN
+            'Unit_Size'
+        THEN
+            ROUND(temp.total_units / temp.consumption_level,
+                    1)
+        ELSE 0
+    END AS amc
+FROM
+    commodity_source c_s,
+    drug_store ds,
+    commodities c
+        LEFT JOIN
+    facility_monthly_stock temp ON temp.commodity_id = c.id
+WHERE
+    ds.district_id = '$district_id'
+    
+        AND ds.expiry_date >= NOW()
+        AND c.id = ds.commodity_id
+GROUP BY c.id
+		");
+return $stocks ;      
+    }
+
     public static function get_facility_stock_amc($facility_code){
   $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 	->fetchAll("
@@ -134,6 +178,26 @@ c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commo
 ");
 return $stocks ;		
 	}
+
+	public static function drug_store_commodity_expiries($district_id){
+$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("SELECT ds.id,ds.commodity_id as commodity_id,c.commodity_name,c.unit_size,c.unit_cost,ds.facility_code,ds.district_id
+,ds.s11_No,ds.batch_no,
+ds.expiry_date,ds.balance_as_of,ds.adjustmentpve,
+ds.adjustmentnve,ds.qty_issued AS current_balance,ds.date_issued,
+ds.issued_to,ds.created_at,ds.issued_by,
+ds.status
+
+from drug_store ds,commodities c
+
+where ds.expiry_date 
+		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND district_id = '$district_id' 
+        and qty_issued>0 and c.id = ds.commodity_id
+");
+return $stocks ;		
+	}
+
+
 	  public static function get_items_that_have_stock_out_in_facility($facility_code=null,$district_id=null,$county_id=null){
 $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
 $group_by=isset($facility_code)? " order by c.commodity_name asc" : 

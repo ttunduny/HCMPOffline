@@ -1,4 +1,4 @@
-
+<div class="container" style="width: 96%; margin: auto;">
 <style>
 	.big{ width: 150px !important; }
 </style>
@@ -103,6 +103,7 @@ type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="re
 <button class=" save btn btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 
 
+</div>
 </div>
 </div>
 <?php echo form_close();?>

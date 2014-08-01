@@ -61,7 +61,7 @@ if (isset($donate_destination)&&($donate_destination == 'district')) {
 								'<td>
 						<select  name="mfl[0]" class="form-control input-small">
 						<!-- donate_destination -->
-                       <option value="18803">District Store</option>
+                       <option value="0">District Store</option>
 					   </select>
 						</td>
 						'

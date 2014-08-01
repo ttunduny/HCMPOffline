@@ -36,6 +36,9 @@ if (!defined('BASEPATH'))
 						$data['banner_text'] = "Redistribute Commodities";
 						$data['title'] ="Redistribute Commodities";						
 					break;	
+					case 'store_external':		
+						$this ->district_store();						
+					break;	
 					case 'district_store':	
 						$district_id = $this -> session -> userdata('district_id');	
 						$dist = districts::get_district_name_($district_id);	
@@ -54,6 +57,61 @@ if (!defined('BASEPATH'))
 	    $data['facility_stock_data']=json_encode(facility_stocks::get_distinct_stocks_for_this_facility($facility_code,"batch_data"));	
      	$this -> load -> view("shared_files/template/template", $data);
 	}
+
+	public function store_home(){
+		$view = 'shared_files/template/template';
+		    $data['content_view'] = "subcounty/subcounty_drug_store_home";	
+			$data['district_dashboard_notifications']=$this->get_district_dashboard_notifications_graph_data();
+			$data['title'] = "System Home";
+		$data['banner_text'] = "Home";
+		$this -> load -> view($view, $data);
+	}
+
+	public function get_district_dashboard_notifications_graph_data()
+    {
+    //format the graph here
+    $facility_code=$this -> session -> userdata('facility_id');
+    $district_id = $this -> session -> userdata('district_id');	
+    $district_stock_=facility_stocks::get_district_stock_amc($district_id);
+    //echo("<pre>");print_r($district_stock_);echo "</pre>";exit;
+	$district_stock_count=count($district_stock_);
+    $graph_data=array();
+	$graph_data=array_merge($graph_data,array("graph_id"=>'container'));
+	$graph_data=array_merge($graph_data,array("graph_title"=>'District Store Stock level'));
+	$graph_data=array_merge($graph_data,array("graph_type"=>'bar'));
+	$graph_data=array_merge($graph_data,array("graph_yaxis_title"=>'Total stock level  (values in packs)'));
+	$graph_data=array_merge($graph_data,array("graph_categories"=>array()));
+	$graph_data=array_merge($graph_data,array("series_data"=>array("Current Balance"=>array())));
+	$graph_data['stacking']='normal';
+	foreach($district_stock_ as $district_stock_):
+		$graph_data['graph_categories']=array_merge($graph_data['graph_categories'],array($district_stock_['commodity_name']));	
+		$graph_data['series_data']['Current Balance']=array_merge($graph_data['series_data']['Current Balance'],array((float) $district_stock_['pack_balance']));	
+
+	endforeach;
+	//create the graph here
+
+	$district_stock_data=$this->hcmp_functions->create_high_chart_graph($graph_data);
+	$loading_icon=base_url('assets/img/no-record-found.png'); 
+	$district_stock_data=($district_stock_count>0)? $district_stock_data : "$('#container').html('<img src=$loading_icon>');" ;
+	
+    //get potential expiries info here
+    // echo "<pre>";print_r($district_id);echo "</pre>";exit;
+    $potential_expiries_=count(Facility_stocks::drug_store_commodity_expiries($district_id));
+    //get actual Expiries info here
+    $actual_expiries=count(Facility_stocks::drug_store_commodity_expiries($district_id));
+	//get items they have been donated for
+	$facility_donations=redistribution_data::get_all_active_drug_store($district_id,"to-me")->count();
+	//get stocks from v1
+	$stocks_from_v1=0;
+	return array('district_stock_count'=>$district_stock_count,
+	'district_stock_graph'=>$district_stock_data,
+	'potential_expiries'=>$potential_expiries_,
+	'actual_expiries'=>$actual_expiries,
+	'facility_donations'=>$facility_donations,
+	'facility_donations_pending'=>$facility_donations_pending,
+	'stocks_from_v1'=>$stocks_from_v1
+	);	
+    }
 
 	public function district_store(){
 		$district_id = $this -> session -> userdata('district_id');	
@@ -175,6 +233,7 @@ if (!defined('BASEPATH'))
 				     'date_issued'=>date('y-m-d',strtotime($clone_datepicker_normal_limit_today[$i])),'issued_by'=>$this -> session -> userdata('user_id'));
 					 
 					  $mydata_2 = array('manufacturer'=>$manufacture[$i],
+					  	'district_id' => $district_id,
 					  'source_facility_code' => $facility_code,	 
 	                 'batch_no' => $batch_no[$i] ,'commodity_id' => $commodity_id[$i],
 				     'expiry_date' => date('y-m-d',strtotime($expiry_date[$i])),'quantity_sent'=> $total_items_issues ,
@@ -342,6 +401,17 @@ redirect();
 	$data['content_view'] = "facility/facility_issues/facility_redistribute_items_confirmation_v";
 	$this -> load -> view("shared_files/template/template", $data);		
 	}
+	// get_all_active_drug_store
+	public function confirm_store_external_issue($editable_=null){
+	$district_id = $this -> session -> userdata('district_id');
+	$data['title'] ="Confirm Redistribution";	
+	$data['banner_text'] = "Confirm Redistribution";
+	$data['redistribution_data']=redistribution_data::get_all_active_drug_store($district_id,$editable_);	
+	$data['editable']=$editable_;
+	$data['content_view'] = "facility/facility_issues/facility_redistribute_items_confirmation_v";
+	$this -> load -> view("shared_files/template/template", $data);		
+	}
+
 public function add_service_points(){
 	$facility_code=$this -> session -> userdata('facility_id');
 	$data['title'] ="Facility Service Points";	
