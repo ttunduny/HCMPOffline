@@ -12,6 +12,9 @@ $reporting_percentage = number_format($reporting_percentage, $decimals = 0);
 #tab1 > ul > li.span4{background: rgba(204, 204, 204, 0.14);padding: 13px;border: solid 1px #ccc;color: #92A8B4; height: 300px;overflow-y: scroll;}
 #chartdiv {width: 100%;height    : 500px;font-size : 11px;} 
 #stock_table{width: 100%;}
+table{
+    font-size: 12px;
+}
 </style>
 <div class="tabbable">
     <ul class="nav nav-tabs">
