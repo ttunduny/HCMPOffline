@@ -1302,21 +1302,21 @@ class Reports extends MY_Controller
 		
 		$facility_code_ = (isset($facility_code)&&($facility_code>0) )? facilities::get_facility_name_($facility_code) -> toArray() : null;
 		$facility_name = $facility_code_[0]['facility_name'];
-		$title = isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
-	    $district_id>0 && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
+		$title = (isset($facility_code) && isset($district_id))? "$district_name_ : $facility_name" :
+		($district_id>0 && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
 		
 		$data = Log::get_user_activities_download($facility_code,$district_id,$county_id, $year, $month);
 		
 		foreach ($data as $data):
-			$series_data_=array_merge($series_data_ , array(array($data["time"],$data["fname"],$data["lname"],$data["facility_name"],$data["issued"],$data["ordered"],$data['decommissioned'],$data['redistribute'],$data['add_stock'],$data['no_activity'])));
+			$series_data_ = array_merge($series_data_ , array(array($data["time"],$data["fname"],$data["lname"],$data["facility_name"],$data["issued"],$data["ordered"],$data['decommissioned'],$data['redistribute'],$data['add_stock'],$data['no_activity'])));
 		endforeach;
 		
 		$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' 
-		=> "User Activities for $title ", 'file_name' => "User_Activities_for_$district_name__$facility_name_");
-		$row_data = array(array("Time","First Name","Last Name","Facility Name","Issued Commodities?","Ordered Commodities?","Decommissioned Commodities?","Redistributed Commodities?","Stock?","Did Nothing?"));
-		$column_data = array("");
+		=> "User Activities for $title ", 'file_name' => "User_Activities_for_$title");
+		$row_data = array();
+		$column_data = array("Time","First Name","Last Name","Facility Name","Issued Commodities?","Ordered Commodities?","Decommissioned Commodities?","Redistributed Commodities?","Added/Updated Commmodities?","Did Nothing?");
 		$excel_data['column_data'] = $column_data;
-		$row_data=array_merge($row_data,$series_data_);
+		$row_data = array_merge($row_data,$series_data_);
 		$excel_data['row_data'] = $row_data;;
 		$this -> hcmp_functions -> create_excel($excel_data);
 		
