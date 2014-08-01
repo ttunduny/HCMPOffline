@@ -107,7 +107,7 @@ class Log extends Doctrine_Record {
 	
 		return $q;
 	}
-		public static function get_login_only($facility_code = null,$district_id = null,$county_id = null, $year = null, $month = null)
+	public static function get_login_only($facility_code = null,$district_id = null,$county_id = null, $year = null, $month = null)
 	{
 		
 		$and_data =(isset($district_id)&& ($district_id>0)) ?"AND u.district = $district_id" : null;
@@ -137,15 +137,41 @@ class Log extends Doctrine_Record {
 		$and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND u.facility = $facility_code" : null;
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		select 
-			DISTINCT (l.user_id) as user,
+		DISTINCT(l.user_id) as user,
+		    start_time_of_event as time,
 		    u.fname,
 		    u.lname,
-			f.facility_name,
-		    ifnull(sum(l.issued), 0) as total_issues,
-		    ifnull(sum(l.ordered), 0) as total_orders,
-		    ifnull(sum(l.decommissioned), 0) as total_decommisions,
-		    ifnull(sum(l.redistribute), 0) as total_redistributions,
-		    ifnull(sum(l.add_stock), 0) as total_stock_added
+		    f.facility_name,
+		    (CASE
+		        WHEN l.issued = 1 THEN 'Yes'
+		        ELSE 'No'
+		    END) AS issued,
+		    (CASE
+		        WHEN l.ordered = 1 THEN 'Yes'
+		        ELSE 'No'
+		    END) AS ordered,
+		    (CASE
+		        WHEN l.decommissioned = 1 THEN 'Yes'
+		        ELSE 'No'
+		    END) AS decommissioned,
+		    (CASE
+		        WHEN l.redistribute = 1 THEN 'Yes'
+		        ELSE 'No'
+		    END) AS redistribute,
+		    (CASE
+		        WHEN l.add_stock = 1 THEN 'Yes'
+		        ELSE 'No'
+		    END) AS add_stock,
+		    (CASE
+		        WHEN
+		            l.add_stock = 0 AND l.issued = 0
+		                AND l.ordered = 0
+		                AND l.decommissioned = 0
+		                AND l.redistribute = 0
+		        THEN
+		            'Yes'
+		        ELSE 'No'
+		    END) as no_activity
 		from
 		    log l,
 		    user u,
@@ -156,7 +182,7 @@ class Log extends Doctrine_Record {
 		    $and_data
 	        AND DATE_FORMAT(l.`start_time_of_event`, '%Y') = '$year'
 	        AND DATE_FORMAT(l.`start_time_of_event`, '%m') = '$month'
-		GROUP BY user
+		GROUP BY start_time_of_event
 		");
 		
 		
