@@ -478,11 +478,13 @@ class Rtk_Management extends Home_controller {
         $County = $this->session->userdata('county_name');
         $Countyid = $this->session->userdata('county_id');
         $districts = districts::getDistrict($Countyid);         
-        $sql = "select * from facilities where facility_code=$mfl";
+        $sql = "select * from facilities where facility_code=$mfl";        
         $facility = $this->db->query($sql)->result_array();
-        //$facility = facilities::get_facility_name($mfl);
+        //$facility = facilities::get_facility_name($mfl);        
         $mfl =  $facility[0]['facility_code'];       
         $data['reports'] = $this->_monthly_facility_reports($mfl);
+        echo "<pre>";
+        print_r($data['reports']);die();
         $data['facility_county'] = $data['reports'][0]['county'];
         $data['facility_district'] = $data['reports'][0]['district'];
         $data['district_id'] = $data['reports'][0]['district_id'];
@@ -2843,7 +2845,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
 
         /*         * ******************************************setting the report title******************** */
 
-        $html_title = "<div ALIGN=CENTER><img src='" . base_url() . "Images/coat_of_arms.png' height='70' width='70'style='vertical-align: top;' > </img></div>
+        $html_title = "<div ALIGN=CENTER><img src='" . base_url() . "assets/img/coat_of_arms-resized.png' height='70' width='70'style='vertical-align: top;' > </img></div>
             <div style='text-align:center; font-size: 14px;display: block;font-weight: bold;'>$title</div>
             <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>
             Ministry of Health</div>
@@ -4546,25 +4548,28 @@ WHERE
     }
 
     private function _monthly_facility_reports($mfl, $monthyear = null) {
-        $sql = 'select lab_commodity_orders.order_date,lab_commodity_orders.compiled_by,lab_commodity_orders.id,
-        facilities.facility_name,districts.district,districts.id as district_id, counties.county,counties.id as county_id
-        FROM lab_commodity_orders,facilities,districts,counties
-        WHERE lab_commodity_orders.facility_code = facilities.facility_code
-        AND facilities.district = districts.id
-        AND counties.id = districts.county
-        AND facilities.facility_code =' . $mfl;
-
+        $conditions = '';
         if (isset($monthyear)) {
             $year = substr($monthyear, -4);
             $month = substr_replace($monthyear, "", -4);
             $firstdate = $year . '-' . $month . '-01';
             $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
             $lastdate = $year . '-' . $month . '-' . $num_days;
-            $sql.=" AND lab_commodity_orders.order_date
+            $conditions=" AND lab_commodity_orders.order_date
                                 BETWEEN  '$firstdate'
                                 AND  '$lastdate'";
         }
 
+        $sql = "select lab_commodity_orders.order_date,lab_commodity_orders.compiled_by,lab_commodity_orders.id,
+        facilities.facility_name,districts.district,districts.id as district_id, counties.county,counties.id as county_id
+        FROM lab_commodity_orders,facilities,districts,counties
+        WHERE lab_commodity_orders.facility_code = facilities.facility_code
+        AND facilities.district = districts.id
+        AND counties.id = districts.county
+        AND facilities.facility_code =$mfl $conditions";
+        echo "$sql";die();
+
+        
         $sql .=' Order by lab_commodity_orders.order_date desc';
         $res = $this->db->query($sql);
         $sum_facilities = array();
@@ -5283,9 +5288,9 @@ WHERE
     }
 
     public function show_allocation_pending() {
-        $data['title'] = '';
+        $data['title'] = 'RTK Allocation';
         $data['banner_text'] = 'Pending Facilities for Allocations';
-        $data['content_view'] = 'rtk/rtk/allocation_committee/allocation_pending_v';
+        $data['content_view'] = 'rtk/allocation_committee/allocation_pending_v';
 
         $pending_facility = $this->rtk_facilities_not_reported(NULL, NULL, NULL, NULL, NULL, NULL);
         $data['pending_facility'] = $pending_facility;

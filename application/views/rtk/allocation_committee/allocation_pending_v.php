@@ -1,10 +1,7 @@
-
 <link rel="stylesheet" type="text/css" href="http://tableclothjs.com/assets/css/tablecloth.css">
 <script src="http://tableclothjs.com/assets/js/jquery.tablesorter.js"></script>
 <script src="http://tableclothjs.com/assets/js/jquery.metadata.js"></script>
 <script src="http://tableclothjs.com/assets/js/jquery.tablecloth.js"></script>
-<script src="http://localhost/HCMP/scripts/bootstrap-typeahead.js"></script>
-<script type="text/javascript" language="javascript" src="<?php echo base_url();?>Scripts/jquery.dataTables.js"></script>
 
 
 
@@ -15,6 +12,9 @@
 }
 #pending_facilities_length{
   float: left;
+}
+table{
+  font-size: 13px;
 }
 
 
@@ -40,9 +40,10 @@
     .divide{height: 2em;}
 
 
+
 </style>
-<div style="width:100%;font-size: 12px;height:10px;padding: 10px 10px 10px 10px;margin-bottom:10px;border-bottom: solid 1px #ccc;">
-  <ul class="nav top-navigation">        
+<div style="width:100%;font-size: 12px;height:20px;padding: 10px 10px 10px 10px;margin-bottom:10px;">
+  <ul class="navtbl top-navigation nav" style="margin-top:0px;float:left;">        
     <li class=""><a href="#">Zone-A</a></li>
     <li class=""><a href="#">Zone-B</a></li>
     <li class=""><a href="#">Zone-C</a></li>
@@ -53,8 +54,7 @@
 
 <div class="main-container" style="width: 100%;float: right;">
 	<table id="pending_facilities" class="data-table"> 
-		<thead>	
-      <th>Status</th>
+		<thead>	      
 			<th>MFL</th>
 			<th>Facility Name</th>
 			<th>Sub-County</th>
@@ -69,8 +69,7 @@
         $zone = str_replace(' ', '-',$value['zone']);
         $facil = $value['facility_code'];
         ?> 
-        <tr>        
-          <td><input type="checkbox" value="<?php echo $facil;?>" class="selected"></td>
+        <tr>                  
           <td><?php echo $value['facility_code'];?></td>
           <td><?php echo $value['facility_name'];?></td>
           <td><?php echo $value['district'];?></td>
@@ -89,11 +88,20 @@
 </div>
 <script>
 $(document).ready(function() {
+  $("table").tablecloth({theme: "paper",         
+          bordered: true,
+          condensed: true,
+          striped: true,
+          sortable: true,
+          clean: true,
+          cleanElements: "th td",
+          customClass: "my-table"
+        });
   var table = $('#pending_facilities').dataTable({
     "sDom": "T lfrtip",
     "sScrollY": "377px",
     "sScrollX": "100%",
-    "bPaginate": false,
+    "bPaginate": true,
     "oLanguage": {
       "sLengthMenu": "_MENU_ Records per page",
       "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
@@ -108,7 +116,7 @@ $(document).ready(function() {
         "aButtons": ["csv", "xls", "pdf"]
       }
       ],
-      "sSwfPath": "../v2/assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+      "sSwfPath": "../assets/datatable/media/swf/copy_csv_xls_pdf.swf"
     }
   });
 
@@ -125,10 +133,10 @@ $(document).ready(function() {
       select.append('<option value="' + d + '">' + d + '</option>')
     });
   });
-  $('.nav li a').click(function(e) {
+  $('.navtbl li a').click(function(e) {
     var $this = $(this);
     var thistext = $(this).text();
-    $('.nav li').removeClass('active');
+    $('.navtbl li').removeClass('active');
     $this.parent().addClass('active');
     $(".dataTables_filter label input").focus();
     $('.dataTables_filter label input').val(thistext).trigger($.Event("keyup", {keyCode: 13}));
@@ -141,18 +149,18 @@ $(document).ready(function() {
 
 <!--Datatables==========================  --> 
 <script src="http://cdn.datatables.net/1.10.0/js/jquery.dataTables.js" type="text/javascript"></script>
-<script src="../v2/assets/datatable/jquery.dataTables.min.js" type="text/javascript"></script>  
-<script src="../v2/assets/datatable/dataTables.bootstrap.js" type="text/javascript"></script>
-<script src="../v2/assets/datatable/TableTools.js" type="text/javascript"></script>
-<script src="../v2/assets/datatable/ZeroClipboard.js" type="text/javascript"></script>
-<script src="../v2/assets/datatable/dataTables.bootstrapPagination.js" type="text/javascript"></script>
+<script src="../assets/datatable/jquery.dataTables.min.js" type="text/javascript"></script>  
+<script src="../assets/datatable/dataTables.bootstrap.js" type="text/javascript"></script>
+<script src="../assets/datatable/TableTools.js" type="text/javascript"></script>
+<script src="../assets/datatable/ZeroClipboard.js" type="text/javascript"></script>
+<script src="../assets/datatable/dataTables.bootstrapPagination.js" type="text/javascript"></script>
 <!-- validation ===================== -->
-<script src="../v2/assets/scripts/jquery.validate.min.js" type="text/javascript"></script>
+<script src="../assets/scripts/jquery.validate.min.js" type="text/javascript"></script>
 
 
 
-<link href="../v2/assets/boot-strap3/css/bootstrap-responsive.css" type="text/css" rel="stylesheet"/>
-<link href="../v2/assets/datatable/TableTools.css" type="text/css" rel="stylesheet"/>
-<link href="../v2/assets/datatable/dataTables.bootstrap.css" type="text/css" rel="stylesheet"/>
+<link href="../assets/boot-strap3/css/bootstrap-responsive.css" type="text/css" rel="stylesheet"/>
+<link href="../assets/datatable/TableTools.css" type="text/css" rel="stylesheet"/>
+<link href="../assets/datatable/dataTables.bootstrap.css" type="text/css" rel="stylesheet"/>
 
 
