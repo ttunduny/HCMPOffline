@@ -13,7 +13,7 @@
 		<option value="2013">2013</option>
 </select>
 	<select name="month" id="month_filter" >
-			<option value="null" selected="selected">Select month</option>
+			<option value="0" selected="selected">Select month</option>
 			<option value="01">Jan</option>
 			<option value="02">Feb</option>
 			<option value="03">Mar</option>
@@ -28,7 +28,8 @@
 			<option value="12">Dec</option>
 		</select>
  
-	<button class="btn btn-small btn-success" id="filter" name="filter" style="margin-left: 1em;">Filter <i class="icon-filter"></i></button> 
+	<button class="btn btn-small btn-success" id="filter" name="filter" style="margin-left: 1em;"><span class="glyphicon glyphicon-filter">Filter</button> 
+	<button class="btn btn-small btn-success" id="download" name="download" style="margin-left: 1em;"><span class="glyphicon glyphicon-save">Download</button> 
 	
 	</h5>
 </div>
@@ -50,16 +51,20 @@ $(document).ready(function() {
 		
 		$('.modal-dialog').addClass("modal-lg");
 		var body_content='<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
-		'<thead><tr><th>District Name</th><th>MFL No</th><th>Facility Name</th><th>Date Activated</th></tr></thead>'+
+		'<thead><tr><th>District Name</th><th>MFL No</th><th>Facility Name</th><th>Level</th><th>Owner</th><th>Date Activated</th></tr></thead>'+
 		'<tbody>'+			   	    
 		'<?php	foreach($get_facility_data as $detail):
 			     $facility_district = $detail['district'];
 				 $facility_code = $detail['facility_code'];							
 				 $facility_name = $detail['facility_name'];
+				 $level= $detail['level'];
+				 $owner = $detail['owner'];
 				 $facility_activation_date = $detail['date'];
 				 ;?>'+'<tr><td>'+'<?php echo $facility_district ;?>'+'</td>'
 				 +'<td>'+'<?php echo $facility_code ;?>'+'</td>'
 				 +'<td>'+'<?php echo $facility_name ;?>'+'</td>'
+				 +'<td>'+'<?php echo $level ;?>'+'</td>'
+				 +'<td>'+'<?php echo $owner;?>'+'</td>'
 				 +'<td>'+'<?php echo $facility_activation_date ;?>'+'</td>'
 				 +'</td></tr>'+'<?php endforeach;?>'
 				 +'</tbody></table>';
@@ -104,7 +109,13 @@ $(document).ready(function() {
         	ajax_request_replace_div_content(url,'#log_data_graph');
 		
           });
-
+	$("#download").click(function(){
+		var url_ = "reports/get_user_activities_excel/"+
+				        $("#year_filter").val()+
+				        "/"+$("#month_filter").val();
+		window.open(url+url_ ,'_blank'); 
+        			
+          });
 		
 		
  	});

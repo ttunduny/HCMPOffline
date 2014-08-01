@@ -137,9 +137,7 @@ class facility_orders extends Doctrine_Record {
 
  /*public static function get_facility_orders($facility_code, $year)
  {
- 	//$year = date("Y");
-	 ($year == 0) ? $year = date("Y"): $year;
- 	    $query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
+ 	  $query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
  	    ->fetchAll("
  	    select MONTHNAME( f_o.order_date) as month, f_o.order_total as total_orders 
 		from facilities f, facility_orders f_o 
@@ -147,7 +145,7 @@ class facility_orders extends Doctrine_Record {
 		and f_o.facility_code = $facility_code
 		and 
 		GROUP BY MONTH( f_o.order_date ) asc");
-
+		
 		return $query_results;
  }
  public static function get_filtered_facility_orders($facility_code, $year, $month, $option)

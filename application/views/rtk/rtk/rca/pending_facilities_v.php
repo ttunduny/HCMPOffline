@@ -25,9 +25,25 @@ foreach ($res->result_array() as $key => $value) {
 }
 ?>
 <style type="text/css">
-    #pending td{
+    #pending_facilities td{
         font-size: 13px;
         font-family: calibri;
+    }
+    #top{
+        position: fixed;
+        margin-top: -45px;
+        font-size: 13px;
+        font-family: calibri;
+    }
+    #pending_facilities_length{        
+        margin-left: 3%;
+        float: left;
+    }
+    #pending_facilities_filter{
+        float: right;
+    }
+    .pagination{
+        margin-top: 10px;
     }
 </style>
 <link rel="stylesheet" type="text/css" href="http://tableclothjs.com/assets/css/tablecloth.css">
@@ -35,10 +51,7 @@ foreach ($res->result_array() as $key => $value) {
 <script src="http://tableclothjs.com/assets/js/jquery.metadata.js"></script>
 <script src="http://tableclothjs.com/assets/js/jquery.tablecloth.js"></script>
 
-<script src="http://localhost/HCMP/scripts/bootstrap-typeahead.js"></script>
-
 <script type="text/javascript">
-
            
     $(document).ready(function() {
         $("table").tablecloth({theme: "paper",         
@@ -50,7 +63,11 @@ foreach ($res->result_array() as $key => $value) {
           cleanElements: "th td",
           customClass: "my-table"
         });
-
+         $('#pending_facilities').dataTable({
+            "bJQueryUI": false,
+            "bPaginate": true,
+            "aaSorting": [[3, "desc"]]
+        });
         
     });
     var county = <?php echo $this->session->userdata('county_id'); ?>;
@@ -59,14 +76,14 @@ foreach ($res->result_array() as $key => $value) {
     $(function() {        
         $('#switch_month').change(function() {
             var value = $('#switch_month').val();
-            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rca/'; ?>" + value + "/";
+            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rtk_county_admin/'; ?>" + value + "/";
 //              alert (path);
             window.location.href = path;
         });
 
         $('#switch_county').change(function() {
             var value = $('#switch_county').val();
-            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rca/0/home_controller/'; ?>" + value + "";
+            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rtk_county_admin/0/home_controller/'; ?>" + value + "";
 //              alert (path);
             window.location.href = path;
         });
@@ -97,30 +114,38 @@ foreach ($res->result_array() as $key => $value) {
         ?>     
 
         <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto">
-        	 <table class="table" id="pending">
-                <thead>
-                    <th>District</th>
-                    <th>Facility</th>
-                </thead>
-                <tbody id="">
-                <?php
-                while ( $counter <count($thead)) {                                      
-                    $counter_1 = 0;
-                    foreach ($tbody[$counter] as $value) {
-                        $counter_1 = count($value);
-                        for ($i=0; $i <$counter_1 ; $i++) { ?>
-                        <tr>
-                            <td><?php echo $thead[$counter];?></td>
-                            <td><?php echo $value[$i];?></td>
-                        </tr>                        
+        	 <table id="pending_facilities" class="data-table"> 
+                    <thead>                   
+                        <th>MFL</th>
+                        <th>Facility Name</th>
+                        <th>Sub-County</th>
+                        <th>County</th>
+                        <th>Zone</th>
+                        <th>Report For:</th>
+                    </thead>
+                    <tbody>
                         <?php
-                             }
-                        
-                    }
-                 $counter++;                 
-                }
-            ?></tbody>
-            </table>
+                  if(count($pending_facility)>0){
+                   foreach ($pending_facility as $value) {
+                    $zone = str_replace(' ', '-',$value['zone']);
+                    $facil = $value['facility_code'];
+                    ?> 
+                    <tr>                             
+                      <td><?php echo $value['facility_code'];?></td>
+                      <td><?php echo $value['facility_name'];?></td>
+                      <td><?php echo $value['district'];?></td>
+                      <td><?php echo $value['county'];?></td>
+                      <td><?php echo $zone;?></td>
+                      <td><?php echo $value['report_for'];?></td>
+                    </tr>
+                    <?php   }
+                  }else{ ?>
+                  <tr>There are No Facilities which did not Report</tr>
+                  <?php }
+                  ?>            
+
+                </tbody>
+              </table>
 
         </div>
         

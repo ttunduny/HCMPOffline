@@ -9,7 +9,7 @@ class Hcmp_functions extends MY_Controller {
 		function __construct() {
 		parent::__construct();
 		$this -> load -> helper(array('url','file','download'));
-		$this -> load -> library(array('phpexcel/phpexcel','mpdf/mpdf'));
+		$this -> load -> library(array('PHPExcel/PHPExcel','mpdf/mpdf'));
 	}
 public function send_stock_update_sms(){
        $facility_name = $this -> session -> userdata('full_name');
@@ -219,7 +219,7 @@ public function send_sms($phones,$message) {
 /*****************************************Email function for HCMP, all the deafult email addresses and email content have been set ***************/
 
 public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL){
-      
+      return true;
 		$mail_list=($this->test_mode)?'kariukijackson@ymail.com,': 'kariukijackson@gmail.com,';
 			
 		$fromm='info-noreply@health-cmp.or.ke';

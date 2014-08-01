@@ -65,11 +65,11 @@ class User extends MY_Controller {
             if ($user_indicator  == 'district') :
              //get county name
             $district_name = districts::get_district_name_($district_id);
-            $banner_name = $district_name['district'];
+            $banner_name = $district_name['district']." Sub-county";
             elseif ($user_indicator  == 'county') :            
             //get county name
             $county_name = Counties::get_county_name($county_id);
-            $banner_name = $county_name['county'];
+            $banner_name = $county_name['county']." County";
             elseif ($user_indicator  == 'facility' || $user_indicator == 'facility_admin') :
              //get county name
             $facility_name = Facilities::get_facility_name2($facility_id);
@@ -181,8 +181,8 @@ class User extends MY_Controller {
 				$range = microtime(true);
 				$rand = rand(0, $range);
 				//encrypt code
-				$save_code = md5($rand);
-				$result='http://' . $_SERVER['SERVER_NAME'] .'/HCMPv2/assets/img/coat_of_arms-resized1.png';
+				$save_code = $rand;
+				$result=base_url().'assets/img/coat_of_arms-resized1.png';
 				
 				//Send Code to User
 				$subject = "Request For Password Reset";
@@ -314,8 +314,12 @@ class User extends MY_Controller {
 
 		$reset_code = $_POST['code'];
 		$email = $_POST['username'];
-		echo $code = md5($reset_code);
-exit;
+
+		$code = md5($reset_code);
+
+		$code = $reset_code;
+
+
 		//get user details
 
 		$userdetail_result = Users::check_user_exist($email);
@@ -523,7 +527,7 @@ exit;
 			
 			break;	
         endswitch;
-		
+		     if($email_address!=''):
 		switch ($user_type):
 			case 10:
 			$savethis =  new Users();
@@ -550,7 +554,7 @@ exit;
 				$activation = rand(0, $range);
 				//encrypt code to be saved
 				$save_activation_code = md5($activation);
-			$result='http://' . $_SERVER['SERVER_NAME'] .'/HCMPv2/assets/img/coat_of_arms-resized1.png';
+			$result=base_url().'assets/img/coat_of_arms-resized1.png';
 			
 			$phone=$telephone;
 			$message='Hi, your activation code is '.$activation;
@@ -705,7 +709,7 @@ exit;
 				$savethis -> status = 0;
 				$savethis -> county_id = $county;
 				$savethis -> save();
-		
+endif;
 
 
 	}
