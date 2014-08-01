@@ -179,7 +179,7 @@ class User extends MY_Controller {
 
 				//generate random code
 				$range = microtime(true);
-			//	$rand = rand(0, $range);
+				$rand = rand(0, $range);
 				//encrypt code
 				$save_code = $rand;
 				$result='http://' . $_SERVER['SERVER_NAME'] .'/HCMPv2/assets/img/coat_of_arms-resized1.png';
