@@ -290,12 +290,12 @@ function loadcountysummary(county) {
                     $alertype = $progress_class;
                 }
                 ?>
-                <div class="alert alert-<?php echo $alertype ?>"><?php echo $alertmsg ?></div>
+                <div class="alert alert-<?php echo $alertype ?>" style="margin-top:-18px;"><?php echo $alertmsg ?></div>
 
                 <?php if (isset($notif_message)) {
                     if ($notif_message != '') {
                         $alertype = "error";
-                        echo '<div class="alert notif alert-success" style="margin-left:5px;">' . $notif_message . ' </div>';
+                        echo '<div class="alert notif alert-success" style="margin-top:-18px;">' . $notif_message . ' </div>';
                     }
                 }?>
 
