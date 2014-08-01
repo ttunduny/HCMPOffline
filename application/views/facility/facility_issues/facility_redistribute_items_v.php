@@ -121,7 +121,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			 * 3 arguments(the ajax url, value POSTed and the id of the object to populated)
 			 */
 	        var locator =$('option:selected', this);
-			json_obj={"url":"<?php echo site_url("Reports/get_facilities");?>",}
+			json_obj={"url":"<?php echo site_url("reports/get_facilities");?>",}
 			var baseUrl=json_obj.url;
 			var id=$(this).val();
 		    var dropdown;

@@ -15,7 +15,7 @@
 <div class="filter row">
 	<form class="form-inline" role="form">
 <select id="commodity_filter" class="form-control col-md-2">
-	<option value="0">Select Commodity</option>
+	<option value="NULL">Select Commodity</option>
 	<?php
 	foreach($c_data as $data):
 			$commodity_name = $data['commodity_name'];	
@@ -32,7 +32,7 @@
 		<option value="2013">2013</option>
 </select>-->
 <select id="plot_value_filter" class="form-control col-md-3">
-	<option value="0">Select Plot value</option>
+	<option value="NULL">Select Plot value</option>
 	<option value="packs">Packs</option>
 	<option value="units">Units</option>
 	<option value="ksh">KSH</option>
