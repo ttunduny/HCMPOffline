@@ -35,7 +35,7 @@ padding-top: 4.5%;
 #overview{
 	padding-right:0;
 }
-#overview h4, #info h4{
+h4{
 	
 	padding:4px;
 	color:white;
@@ -65,6 +65,7 @@ padding-top: 4.5%;
 
 .state-overview .value h1 {
     font-weight: 300;
+    font-size:30px;
 }
 
 .state-overview .symbol i {
@@ -73,7 +74,7 @@ padding-top: 4.5%;
 }
 
 .state-overview .symbol {
-    width: 40%;
+    width: 35%;
     padding: 25px 15px;
     -webkit-border-radius: 4px 0px 0px 4px;
     border-radius: 4px 0px 0px 4px;
@@ -81,7 +82,7 @@ padding-top: 4.5%;
 
 .state-overview .value {
     width: 58%;
-    padding-top: 21px;
+    padding-top: 0;
 }
 
 .state-overview .terques {
@@ -97,7 +98,19 @@ padding-top: 4.5%;
 }
 
 .state-overview .blue {
-    background: #57c8f2;
+    background: #a7cfdf;
+}
+.state-overview .purple {
+    background: #e7b7dd;
+}
+.state-overview .seagreen {
+    background: #39b7ac;
+}
+.state-overview .b {
+    background: #8075c4;
+}
+.state-overview .b2 {
+    background: #fd7998;
 }
 
 </style>
@@ -152,7 +165,7 @@ padding-top: 4.5%;
 		<div class="col-md-4">
 			
 			<div class="row">
-				<div class="col-md-12" style="border: 1px solid #000;height: 620px">
+				<div class="col-md-12" style="/*border: 1px solid #000;*/height: 620px">
 					<div id="map" ></div>
 				<script>
 					var map= new FusionMaps ("assets/FusionMaps/FCMap_KenyaCounty.swf","KenyaMap","100%","100%","0","0");
@@ -170,7 +183,7 @@ padding-top: 4.5%;
 		<div class="col-md-8">
 			
 			<div class="row">
-				<div class="col-md-12" style="border: 1px solid #000;height: 200px" id="overview">
+				<div class="col-md-12" style="/*border: 1px solid #000;*/height: 200px" id="overview">
 					
 					<div class="row state-overview">
                   <div class="col-lg-3 col-sm-6">
@@ -179,8 +192,8 @@ padding-top: 4.5%;
                           	<span class="glyphicon glyphicon-user"></span>
                           </div>
                           <div class="value">
-                          	<p>New Users</p>
-                              <h3 class="count">495</h3>
+                          	<p>Health Workers Trained</p>
+                              <h1 class="count">495</h1>
                               
                           </div>
                       </section>
@@ -191,8 +204,9 @@ padding-top: 4.5%;
                               <span class="glyphicon glyphicon-user"></span>
                           </div>
                           <div class="value">
-                              <h3 class=" count2">947</h3>
-                              <p>Sales</p>
+                          	<p>Facilities Rolled Out</p>
+                              <h1 class=" count2">947</h1>
+                              
                           </div>
                       </section>
                   </div>
@@ -202,8 +216,9 @@ padding-top: 4.5%;
                               <span class="glyphicon glyphicon-user"></span>
                           </div>
                           <div class="value">
+                          	<p>Total facilities</p>
                               <h1 class=" count3">328</h1>
-                              <p>New Order</p>
+                              
                           </div>
                       </section>
                   </div>
@@ -213,8 +228,9 @@ padding-top: 4.5%;
                               <span class="glyphicon glyphicon-user"></span>
                           </div>
                           <div class="value">
+                          	<p>Public health facilities	</p>
                               <h1 class=" count4">10328</h1>
-                              <p>Total Profit</p>
+                              
                           </div>
                       </section>
                   </div>
@@ -223,45 +239,49 @@ padding-top: 4.5%;
               <div class="row state-overview">
                   <div class="col-lg-3 col-sm-6">
                       <section class="panel">
-                          <div class="symbol terques">
+                          <div class="symbol purple">
                           	<span class="glyphicon glyphicon-user"></span>
                           </div>
                           <div class="value">
-                              <h3 class="count">495</h3>
-                              <p>New Users</p>
+                          	<p>Private health facilities</p>
+                              <h1 class="count">495</h1>
+                              
                           </div>
                       </section>
                   </div>
                   <div class="col-lg-3 col-sm-6">
                       <section class="panel">
-                          <div class="symbol red">
+                          <div class="symbol b">
                               <span class="glyphicon glyphicon-user"></span>
                           </div>
                           <div class="value">
-                              <h3 class=" count2">947</h3>
-                              <p>Sales</p>
+                          	<p>Faith-based Facilities</p>
+                              <h1 class=" count2">947</h1>
+                              
                           </div>
                       </section>
                   </div>
                   <div class="col-lg-3 col-sm-6">
                       <section class="panel">
-                          <div class="symbol yellow">
+                          <div class="symbol seagreen">
                               <span class="glyphicon glyphicon-user"></span>
                           </div>
                           <div class="value">
+                          	<p>Other Facilities</p>
                               <h1 class=" count3">328</h1>
-                              <p>New Order</p>
+                              
                           </div>
                       </section>
                   </div>
                   <div class="col-lg-3 col-sm-6">
                       <section class="panel">
-                          <div class="symbol blue">
+                          <div class="symbol b2">
                               <span class="glyphicon glyphicon-user"></span>
                           </div>
                           <div class="value">
+                          	<p>Facilities Using HCMP</p>
                               <h1 class=" count4">10328</h1>
-                              <p>Total Profit</p>
+                              
                           </div>
                       </section>
                   </div>
@@ -273,18 +293,159 @@ padding-top: 4.5%;
 			
 			
 			
-			<div class="row">
-				<div class="col-md-12" style="border: 1px solid #000;height: 420px">
+			<div class="row" style="margin-bottom: 5.5%;">
+				<div class="col-md-12" style="/*border: 1px solid #000;*/height: 420px" id="expiries">
 					
-					
+					<h4>National  Expiries</h4>
        
+       <div class="col-md-6" style="border: 1px solid #DDD; ">
+      
+       <div class="panel-heading">
+       <h5 class="panel-title">Actual Expiries </h5>
+       </div>
+       
+       
+       <div id="actual" style=""></div>
+       
+        </div> 
+        
+        <div class="col-md-6" style="border: 1px solid #DDD;" >
+      
+       <div class="panel-heading">
+       <h5 class="panel-title">Potential Expiries </h5>
+       </div>
+        
+      <div id="potential"></div>
+          
+      
+       </div> 
 				</div>
 			</div>
 			
 		</div>
 	</div>
 			
+    <div class="row">
+                <div class="col-md-6">
+       <div class="panel panel-success">
+       <div class="panel-heading">
+       <h3 class="panel-title"><div class="county-name" style="display:inline-block"></div>Stock Level in Months of Stock (MOS)</h3>
+       </div>
+        <div class="panel-body" style="height:500px;">
+        <ul class='nav nav-tabs'>
+      <li class="active"><a href="#stracer" data-toggle="tab">Tracer Items</a></li>
+      </ul>
+      <div id="myTabContent" class="tab-content">
+      <div  id="stracer" class="tab-pane fade active in">
+<br>
+<div class="col-md-1">
+    <a href="national/search" target="_blank">
+    <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
+</a>
+
+</div>
+      </div>
+       </div>
+        <div id="mos"></div> <!--- MOS -->
+       </div>
+       
+       </div>
+      
+       </div>
+       <div class="col-md-6">
+       <div class="panel panel-success">
+       <div class="panel-heading">
+       <h3 class="panel-title"><div class="county-name" style="display:inline-block"></div>Consumption</h3>
+       </div>
+        <div class="panel-body" style="height: 500px;">
+       <ul class='nav nav-tabs'>
+      <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items</a></li>
+       </ul>
+   <div id="myTabContent" class="tab-content">
+                <div  id="tracer" class="tab-pane fade active in">
+<br>
+<div class="col-md-1">
+    <a href="national/search" target="_blank">
+    <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
+</a>
+
+</div>
+
+        
+      </div>
+      </div>
+      <div id="consumption"></div> <!-- consumption -->
+       </div>    
+       </div>
+       </div>
+ </div><!--- row 2 -->
+ 
+ <div class="row">
+                <div class="col-md-6">
+       <div class="panel panel-success">
+       <div class="panel-heading">
+       <h3 class="panel-title"><div class="county-name" style="display:inline-block"></div>Cost of Orders</h3>
+       </div>
+        <div class="panel-body" style="height:500px;">
+        <ul class='nav nav-tabs'>
+      <li class="active"><a href="#corders" data-toggle="tab">Year</a></li>
+      </ul>
+      <div id="myTabContent" class="tab-content">
+      <div  id="corders" class="tab-pane fade active in">
+<br>
+<div class="col-md-1">
+    <a href="national/search" target="_blank">
+    <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
+</a>
+
+</div>
+      </div>
+       </div>
+        <div id="orders"></div> <!--- MOS -->
+       </div>
+       
+       </div>
+      
+       </div>
+       <div class="col-md-6">
+       <div class="panel panel-success">
+       <div class="panel-heading">
+       <h3 class="panel-title"><div class="county-name" style="display:inline-block"></div>Order Lead Time</h3>
+       </div>
+        <div class="panel-body" style="height: 500px;">
+  <hr />
+    <a href="national/search" target="_blank">
+    <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
+</a>
+      <div class="row">
+          <div class="col-md-12">
+       <div class="panel-heading">
+       <h3 class="panel-title">Fill Rate</h3>
+       </div>
+       <div id="fill_rate">
+            <div class="progress">
+    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 80%;">
+        80%
+    </div>
+      </div>
+       </div>
+       </div>  
+       <div class="col-md-12">
+       <div class="panel-heading">
+       <h3 class="panel-title">Order Lead Time</h3>
+       </div>
+       <div id="lead_infor">
+         
+
+
+       </div>
+       </div>  
+      </div>
     
+       </div>    
+       </div>
+       </div>
+     </div>
     </div> <!-- /container -->
     
     
