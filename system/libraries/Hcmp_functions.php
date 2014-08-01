@@ -240,7 +240,6 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
   		kariukijackson@gmail.com,
   		kelvinmwas@gmail.com,eongute@clintonhealthaccess.org,';
 
-			
 		$fromm='info-noreply@health-cmp.or.ke';
 		$messages=$message;
   		$config['protocol']    = 'smtp';

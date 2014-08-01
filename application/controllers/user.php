@@ -182,7 +182,7 @@ class User extends MY_Controller {
 				$rand = rand(0, $range);
 				//encrypt code
 				$save_code = $rand;
-				$result='http://' . $_SERVER['SERVER_NAME'] .'/HCMPv2/assets/img/coat_of_arms-resized1.png';
+				$result=base_url().'assets/img/coat_of_arms-resized1.png';
 				
 				//Send Code to User
 				$subject = "Request For Password Reset";
@@ -309,7 +309,7 @@ class User extends MY_Controller {
 
 		$reset_code = $_POST['code'];
 		$email = $_POST['username'];
-		$code = md5($reset_code);
+		$code = $reset_code;
 
 		//get user details
 
@@ -518,7 +518,7 @@ class User extends MY_Controller {
 			
 			break;	
         endswitch;
-		
+		     if($email_address!=''):
 		switch ($user_type):
 			case 10:
 			$savethis =  new Users();
@@ -545,8 +545,10 @@ class User extends MY_Controller {
 				$activation = rand(0, $range);
 				//encrypt code to be saved
 				$save_activation_code = $activation;
-			$result='http://' . $_SERVER['SERVER_NAME'] .'/HCMPv2/assets/img/coat_of_arms-resized1.png';
-			
+
+				$save_activation_code = $activation;
+			$result=base_url().'assets/img/coat_of_arms-resized1.png';
+
 			$phone=$telephone;
 			$message='Hi, your activation code is '.$activation;
 			$this -> hcmp_functions -> send_sms($phones,$message);
@@ -668,13 +670,13 @@ class User extends MY_Controller {
 				$savethis -> status = 0;
 				$savethis -> county_id = $county;
 				$savethis -> save();
-				
+
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
 
 				//exit;
 
-		
-		
+endif;
+
 
 
 	}
