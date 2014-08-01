@@ -17,7 +17,7 @@
       <li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>
 </ul>
 <div id="myTabContent" class="tab-content">
-	       <div  id="cat" class="tab-pane fade active in">
+	<div  id="cat" class="tab-pane fade active in">
        	<br>
        	<div class="filter row">
 <form class="form-inline" role="form">

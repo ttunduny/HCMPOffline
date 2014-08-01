@@ -26,7 +26,7 @@
 
 <div class="container-fluid">
 	
-	<div class="row" style="margin-top: 1%;">
+	<div class="row" style="margin-top: 1%;" >
 		<div class="col-md-12">
 			
 			<ul class="nav nav-tabs" id="Tab">
@@ -57,7 +57,12 @@
 <script>
 	
 	$(document).ready(function () {
-		
+		$("#create_new,#edit_user").attr("disabled", "disabled");
+		       $('#main-content').on('hidden.bs.modal','#myModal', function () {
+               alert('jack');
+				$("#datatable").hide().fadeIn('fast');
+				// location.reload();
+			});
 		$('#Tab a').click(function (e) {
  		 e.preventDefault()
   			$(this).tab('show')
@@ -76,6 +81,8 @@ $('.edit').click(function () {
 	
  		 $('#editModal').appendTo("body").modal('show');
 })
+
+
 
 $('.dataTables_filter label input').addClass('form-control');
 	$('.dataTables_length label select').addClass('form-control');
@@ -161,6 +168,72 @@ var drop_down='';
     }
     }); 
     
+       $('#email').keyup(function() {
+
+  var email = $('#email').val()
+
+   $('#username').val(email)
+   
+   $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "<?php echo base_url()."user/check_user_json";?>", //Relative or absolute path to response.php file
+      data:{ 'email': $('#email').val()},
+      success: function(data) {
+        if(data.response=='false'){
+						
+							$('.err').html(data.msg);
+							console.log(data.msg)
+							$( '.err' ).addClass( "alert-danger alert-dismissable" );
+							$(".edit_user,#create_new").attr("disabled", "disabled");
+							}else if(data.response=='true'){
+								console.log(data.msg)
+								$(".err").empty();
+								$(".err").removeClass("alert-danger alert-dismissable");
+								$( '.err' ).addClass( "alert-success alert-dismissable" );
+								$(".edit_user,#create_new").attr("disabled", false);
+								$('.err').html(data.msg);
+								
+								
+							}
+      }
+    });
+    return false;
+  });
+  
+     $('#email_edit').keyup(function() {
+
+  var email = $('#email_edit').val()
+
+   $('#username_edit').val(email)
+   
+   $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "<?php echo base_url()."user/check_user_json";?>", //Relative or absolute path to response.php file
+      data:{ 'email': $('#email_edit').val()},
+      success: function(data) {
+        if(data.response=='false'){
+						
+						 	$('.err').html(data.msg);
+							$( '.err' ).addClass( "alert-danger alert-dismissable" );
+							$(".edit_user,#create_new").attr("disabled", "disabled");
+							}else if(data.response=='true'){
+								
+								$(".err").empty();
+								$(".err").removeClass("alert-danger alert-dismissable");
+								$( '.err' ).addClass( "alert-success alert-dismissable" );
+								$(".edit_user,#create_new").attr("disabled", false);
+								$('.err').html(data.msg);
+								
+								
+							}
+      }
+    });
+    return false;
+
+    }) 
+    
     $("#create_new").click(function() {
 
       var first_name = $('#first_name').val()
@@ -191,7 +264,8 @@ var drop_down='';
           data:{ 'first_name': $('#first_name').val(),'last_name': $('#last_name').val(),
           'telephone': $('#telephone').val(),'email': $('#email').val(),
           'username': $('#username').val(),'facility_id': $('#facility_id').val(),
-          'district_name': $('#district_name').val(),'user_type': $('#user_type').val()},
+          'county':$('#county').val(),
+          'district_name': $('#sub_county').val(),'user_type': $('#user_type').val()},
           url: url,
           beforeSend: function() {
            
@@ -217,10 +291,12 @@ var drop_down='';
             location.reload();      
           }
         }); 
-        $('#myModal').on('hidden.bs.modal', function () {
+
+        $('#editModal,#addmodal').on('hidden.bs.modal', function () {
 				$("#datatable").hide().fadeIn('fast');
 				 location.reload();
 			})
+
 }
 
 
@@ -304,14 +380,14 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
       success: function(data) {
         if(data.response=='false'){
 						
-						 $('#err').html(data.msg);
-							$( '#err' ).addClass( "alert-danger alert-dismissable" );
+						 $('.err_edit').html(data.msg);
+							$( '.err_edit' ).addClass( "alert-danger alert-dismissable" );
 							}else if(data.response=='true'){
 								
-								$("#err").empty();
-								$("#err").removeClass("alert-danger alert-dismissable");
-								$( '#err' ).addClass( "alert-success alert-dismissable" );
-								$('#err').html(data.msg);
+								$(".err_edit").empty();
+								$(".err_edit").removeClass("alert-danger alert-dismissable");
+								$( '.err_edit' ).addClass( "alert-success alert-dismissable" );
+								$('.err_edit').html(data.msg);
 								
 								
 							}
@@ -332,7 +408,7 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
            
     	});	
     	
-    	$('#email').keyup(function() {
+    	$('#email').on(function() {
 
   var email = $('#email').val()
 
@@ -345,14 +421,14 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
       success: function(data) {
         if(data.response=='false'){
 						
-						 $('#err').html(data.msg);
-							$( '#err' ).addClass( "alert-danger alert-dismissable" );
+						 $('.err').html(data.msg);
+							$( '.err' ).addClass( "alert-danger alert-dismissable" );
 							}else if(data.response=='true'){
 								
-								$("#err").empty();
-								$("#err").removeClass("alert-danger alert-dismissable");
-								$( '#err' ).addClass( "alert-success alert-dismissable" );
-								$('#err').html(data.msg);
+								$(".err").empty();
+								$(".err").removeClass("alert-danger alert-dismissable");
+								$( '.err' ).addClass( "alert-success alert-dismissable" );
+								$('.err').html(data.msg);
 								
 								
 							}
@@ -415,7 +491,7 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
         
               
           }
-           
+			
         }); 
 }
 

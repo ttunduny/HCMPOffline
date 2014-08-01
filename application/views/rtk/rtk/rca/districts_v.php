@@ -99,15 +99,19 @@ foreach ($res->result_array() as $key => $value) {
         <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto">
         	 <table class="table" id="pending">
                 <thead>
-                    <th>District</th>
+                    <th>Sub-County</th>
                     <th>No of Facilities</th>
                 </thead>
                 <tbody>
                 <?php  
-                    $count_districts = count($districts_list); 
-                    for ($i=0; $i <$count_districts ; $i++) { ?> 
+                    $count_districts = count($districts_list);             
+
+                    for ($i=0; $i <$count_districts ; $i++) {
+                        $district = $districts_list[$i]['id'];
+                        $action = base_url() . 'rtk_management/district_profile/' . $district;
+                     ?> 
                         <tr>
-                            <td><a href="#"><?php echo $districts_list[$i]['district'];?></a></td>
+                            <td><?php echo $districts_list[$i]['district'];?>&nbsp;<a href="<?php echo $action;?>">View </a></td>
                             <td><?php echo $facilities_count[$i];?></td>
                         </tr>
                     <?php } ?>

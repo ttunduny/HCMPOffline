@@ -6,6 +6,7 @@ class Facilities extends Doctrine_Record {
 		$this -> hasColumn('facility_name', 'varchar',30);
 		$this -> hasColumn('district', 'varchar',30);
 		$this -> hasColumn('owner', 'varchar',30);
+		$this -> hasColumn('level', 'varchar',30);
 		$this->hasColumn('drawing_rights','text');
 		$this->hasColumn('using_hcmp','int');//
 		$this->hasColumn('date_of_activation','date');
@@ -24,17 +25,22 @@ class Facilities extends Doctrine_Record {
 		$drugs = $query -> execute();
 		return $drugs;
 	}
+	public static function getAll_json() {
+		$query = Doctrine_Query::create() -> select("*") -> from("facilities");
+		$drugs = $query -> execute();
+		return $drugs;
+	}
 	public static function getFacilities($district){
 		
 		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");
 		$drugs = $query -> execute();
-		//$drugs = $drugs->toArray();
 		return $drugs;
 	}
-	public static function get_Facilities_using_HCMP($county_id=null, $district=null)
+	public static function get_Facilities_using_HCMP($county_id = null, $district = null, $facility_code = null)
 	{
 		$and_data =(isset($county_id)&& ($county_id>0)) ?" AND d.county = $county_id" : null;
 	    $and_data .=(isset($district_id)&& ($district_id>0)) ?" AND f.district = $district_id" : null;
+	    $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = $facility_code" : null;
 	    $and_data .= " AND using_hcmp = 1 ";
 		
 	   	$query = Doctrine_Query::create() ->select("*") ->from("facilities f, districts d")->where("f.district = d.id $and_data")->OrderBy("facility_name asc");
@@ -140,7 +146,7 @@ return $q;
 }
 	public static function get_facilities_online_per_district($county_id){
 	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-select d.id, d.district,f.facility_name,f.facility_code, DATE_FORMAT(`date_of_activation`,'%d %b %y') as date 
+select d.id, d.district,f.facility_name,f.facility_code,f.level,f.owner, DATE_FORMAT(`date_of_activation`,'%d %b %y') as date 
 from facilities f, districts d 
 where f.district=d.id and d.county='$county_id'
 and unix_timestamp(f.`date_of_activation`) >0 
@@ -196,7 +202,7 @@ return $q;
 		$query = Doctrine_Query::create()->select('*')->from('facilities')->where("facility_code='$facility_code'");
 		$result = $query -> execute();
 		return $result;
-	}
+	}	
 	public static function get_facility_name2($facility_code)
 	{
 	$query = Doctrine_Query::create()->select('facility_name')->from('facilities')->where("facility_code='$facility_code'");

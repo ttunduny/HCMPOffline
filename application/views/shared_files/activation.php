@@ -47,6 +47,31 @@ body.loading .modal {
 				
 				
 	</div>
+	<div class="container-fluid">
+		
+		<div class="row">
+			<div class="col-md-4" style="">
+				
+			</div>
+			<div class="col-md-4" style="">
+				
+				<?php 
+if (isset($popup)) {	
+	echo	'<div class="alert alert-danger alert-dismissable" style="text-align:center;"> Error! Please make sure your details are correct! Try Again.
+<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>
+','</div>';
+}
+unset($popup);
+
+ ?>
+			</div>
+			<div class="col-md-4" style="">
+				
+				
+			</div>
+		</div>
+		
+	</div>
 	
 <div class="container">
     <div class="row">
@@ -202,6 +227,15 @@ $(document).ready(function () {
       
       var newps = $('#new_password').val()
 	  var newpsconfirm = $('#new_password_confirm').val()
+	  //check empty fields
+            var email = $('#new_password').val()
+            var user = $('#username').val()
+            var newE = $('#new_password_confirm').val()
+            
+	  if (email==''||user==''||newE=='') {
+				alert('Please make sure no field is empty');
+			return;
+			}
 	  
 	  if(newps!= newpsconfirm){
 						
@@ -231,6 +265,7 @@ $(document).ready(function () {
           beforeSend: function() {
             //$(div).html("");
             var answer = confirm("Are you sure you want to proceed?");
+            			
         if (answer){
             $('body').addClass("loading");
         } else {

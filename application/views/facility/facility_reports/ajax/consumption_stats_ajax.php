@@ -2,13 +2,21 @@
  	.input-small{
  		width: 100px !important;
  	}
+ 	.input-small_{
+ 		width: 230px !important;
+ 	}
   .filter-row{
     margin: none;
   }
  </style>
-<div class="filter">
+
+ <?php $facility_code=$this -> session -> userdata('facility_id');
+		$district_id=$this -> session -> userdata('district_id');
+		$county_id =$this -> session -> userdata('county_id');  ?>
+<div class="filter row">
+	<form class="form-inline" role="form">
 <select id="commodity_filter" class="form-control col-md-2">
-	<option value="0">Select Commodity</option>
+	<option value="NULL">Select Commodity</option>
 	<?php
 	foreach($c_data as $data):
 			$commodity_name = $data['commodity_name'];	
@@ -17,8 +25,7 @@
 	endforeach;
 	?>
 </select>
-<input type="text" name="from"  id="from" 
-placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" />
+<input type="text" name="from"  id="from" placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" />
 <input type="text" name="to"  id="to" placeholder="TO" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" />		
 <!--<select name="year" id="year_filter" style="width: 7.8em;">
 		<option value="0">Select Year</option>
@@ -26,14 +33,14 @@ placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_nor
 		<option value="2013">2013</option>
 </select>-->
 <select id="plot_value_filter" class="form-control col-md-3">
-	<option value="0">Select Plot value</option>
+	<option value="NULL">Select Plot value</option>
 	<option value="packs">Packs</option>
 	<option value="units">Units</option>
 	<option value="ksh">KSH</option>
 	<option value="service_point">Per Service Point</option>
 </select> 
 <button class="btn btn-sm btn-success" id="filter" name="filter"><span class="glyphicon glyphicon-filter">Filter</button> 
-	
+</form>	
 </div>
 
 <div class='graph-section' id='graph-section'></div>
@@ -53,10 +60,17 @@ placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_nor
 		        
 		        if(from==''){from="NULL";}
 		        if(to==''){to="NULL";}
-				var url = "reports/filtered_consumption/"+
-				        $("#commodity_filter").val()+
-				        "/"+$("#year_filter").val()+
-				         "/"+$("#plot_value_filter").val();
+	        
+		        //($commodity_id = null, $option = null,$from = null,$to = null,$report_type = null)
+		        //($commodity_id = null,$category_id = null, $district_id = null, $facility_code=null, $option = null,$from=null,$to=null,$report_type=null)
+		        var url = "reports/consumption_stats_graph/"+
+							$("#commodity_filter").val()+
+							"/NULL/"+"<?php echo $district_id;?>"+
+							"/"+"<?php echo $facility_code;?>"+"/"+
+							$("#plot_value_filter").val()+
+							"/"+encodeURI(from)+
+							"/"+encodeURI(to)+
+							"/"+'table_data';
  				ajax_request_replace_div_content(url,'.graph-section');
 		
           });
@@ -68,6 +82,7 @@ placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_nor
 	changeMonth: true,
 	changeYear: true,
 	buttonImage: baseUrl,       });	
+
 		
   });
 </script>

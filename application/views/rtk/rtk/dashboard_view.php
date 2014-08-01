@@ -22,7 +22,18 @@ $reporting_percentage = number_format($reporting_percentage, $decimals = 0);
     <div class="tab-content">
         <div class="tab-pane active" id="tab1">
             <ul class="thumbnails">
-                <li class="span11">
+                <li class="col-md-11">
+
+                <div>
+                                    Countrywide Progress: <?php echo $reporting_percentage; ?>%
+            <div class="progress">
+<div class="progress">
+  <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $reporting_percentage; ?>%;">
+    <?php echo $reporting_percentage; ?>%
+  </div>
+</div>
+
+        </div></div>
                     <div id="container" style="min-width: 310px; height: 360px; margin: 0 auto"></div>
                 </li>
                 <li class="span4">
@@ -57,11 +68,9 @@ $reporting_percentage = number_format($reporting_percentage, $decimals = 0);
                     </ul>
                 </li>
             </ul>
-            Countrywide Progress: <?php echo $reporting_percentage; ?>%
-            <div class="progress progress-info" style="height: 10px;">
-                <div class="bar" style="width: <?php echo $reporting_percentage; ?>%"></div>
-            </div>
-        </div>
+
+</div>
+            
         <div class="tab-pane" id="StockStatus">
             <table id="stock_table">
                 <thead>
@@ -99,6 +108,7 @@ $reporting_percentage = number_format($reporting_percentage, $decimals = 0);
                 </tbody>
             </table>
         </div>
+        
         <div class="tab-pane" id="CountyProgess">
             <p>Howdy, I'm in Section 2.</p>
         </div>
