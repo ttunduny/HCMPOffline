@@ -30,7 +30,7 @@ $json_dist = str_replace('}', "", $json_dist);
 font-size: 13px;
 float: right;
 padding:4px;
-margin-top: 5px;
+margin-top: 15px;
 }
 #facilities_tlb_info{
 font-size: 15px; 
@@ -43,6 +43,9 @@ float: left;
 }
 #facilities_tlb_filter{
   float: right;
+}
+.pagination{
+  margin-top: 20px;
 }
 table{
   font-size: 12px;
@@ -139,7 +142,7 @@ function update_rtk(val){
     <th>Name</th>
     <th>Owner</th>
     <th>County</th>
-    <th>District</th>
+    <th>Sub-County</th>
     <th>Reporting Status</th>
    </thead>
   <tbody>

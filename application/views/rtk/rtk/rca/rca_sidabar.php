@@ -19,7 +19,7 @@
     <?php } ?>
     </select>
 
-    <ul class="nav nav-pills nav-stacked" style="font-size:100%">
+    <ul class="nav nav-pills nav-stacked" style="font-size:100%;border:ridge 1px #ccc">
         <li><a href="<?php echo base_url().'rtk_management/county_home'?>">Summary</a></li>        
         <li><a href="<?php echo base_url().'rtk_management/rca_districts'?>">Sub-Counties</a></li>
         <li><a href="<?php echo base_url().'rtk_management/rca_pending_facilities'?>">Pending Facilities</a></li>

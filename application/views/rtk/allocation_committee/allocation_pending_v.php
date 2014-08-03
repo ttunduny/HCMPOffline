@@ -11,7 +11,7 @@
   float: right;
 }
 #pending_facilities_length{
-  float: left;
+  float: left;  
 }
 table{
   font-size: 13px;
@@ -42,6 +42,21 @@ table{
 
 
 </style>
+<!--div style="width:100%;font-size: 12px;height:20px;padding: 10px 10px 10px 10px;margin-bottom:10px;" class="navtbl">
+    <select id="switch_month" class="form-control" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;float:left;margin-left:20px;">      
+        <?php 
+
+            for ($i=1; $i <=12 ; $i++) { 
+            $month = date('m', strtotime("-$i month")); 
+            $year = date('Y', strtotime("-$i month")); 
+            $month_value = $month.$year;
+            $month_text =  date('F', strtotime("-$i month")); 
+            $month_text = "-- ".$month_text." ".$year." --";
+         ?>
+        <option value="<?php echo $month_value ?>"><?php echo $month_text ?></option>;
+    <?php } ?>
+    </select>
+  </div-->
 <div style="width:100%;font-size: 12px;height:20px;padding: 10px 10px 10px 10px;margin-bottom:10px;">
   <ul class="navtbl top-navigation nav" style="margin-top:0px;float:left;">        
     <li class=""><a href="#">Zone-A</a></li>
@@ -52,7 +67,10 @@ table{
   </ul>
 </div>
 
+
+
 <div class="main-container" style="width: 100%;float: right;">
+
 	<table id="pending_facilities" class="data-table"> 
 		<thead>	      
 			<th>MFL</th>
@@ -143,6 +161,11 @@ $(document).ready(function() {
 
     e.preventDefault();
   });
+  $('#switch_month').change(function() {
+            var value = $('#switch_month').val();
+            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/allocation_committee/'; ?>" + value + "<?php '/show_allocation_pending/'?>";
+            window.location.href = path;
+        });
 
 });
 </script>

@@ -21,14 +21,17 @@
 }
 .col5{background:#D8D8D8;}
 table{
-    font-size: 11px;
-    line-height:50%;
+    font-size: 11px;   
 }    
+table td{
+    line-height: 11px;
+}
 </style>
 <script type="text/javascript">
 $(function() {
 
     $('#user_order input').addClass("form-control");
+    //$('#user_order input').addClass("resize");
     var begining_bal = <?php echo json_encode($beginning_bal);?>;
 
     for (var a = 0; a < begining_bal.length; a++) {            
@@ -139,6 +142,20 @@ function validateEnd(row){
             }
 
         }
+
+        function validate_quantity_used(row){
+
+            if($('#q_used_'+row).val()<$('#tests_done_'+row).val()){
+                alert('The Quantity used cannot be Less than the Number of Tests Done. Please check your calculations again');                
+                $('#q_used_'+row).attr("value",0);
+            }
+            var q0 = $('#q_used_'+row).val();
+            if(isNaN(q0)){
+                $('#q_used_'+row).attr("value",0);
+            }
+
+        }
+
 
 
 
@@ -264,8 +281,8 @@ var num_neg_adj = parseInt(neg_adj);
                 //Validate Quantity Used
                 var sum_bbal_q_rec_pos_adj = num_bal + num_qty_rcvd + num_pos_adj - num_neg_adj;
                 if((num_q_used>sum_bbal_q_rec_pos_adj)&&(row!=0)){
-                    $('#losses_' + row).attr("value",5);                    
-                    $('#tests_done_' + row).attr("value",5);                    
+                    $('#losses_' + row).attr("value",0);                    
+                    $('#tests_done_' + row).attr("value",0);                    
                     $('#q_used_'+row).attr("color","red");
                     $('#physical_count_' + row).attr("value",sum_bbal_q_rec_pos_adj);
 
@@ -301,6 +318,7 @@ var num_neg_adj = parseInt(neg_adj);
                 row_id = $(this).closest("tr");
                 number = row_id.attr("commodity_id");
                 num = parseInt(number);
+                validate_quantity_used(num);
                 compute_end(num);
                 //compute_losses(num);
                 //validateEnd(num);
@@ -309,6 +327,7 @@ var num_neg_adj = parseInt(neg_adj);
                 row_id = $(this).closest("tr");
                 number = row_id.attr("commodity_id");
                 num = parseInt(number);
+                validate_quantity_used(num);
                 compute_end(num);
                 //compute_losses(num);
                 //validateEnd(num);
@@ -712,7 +731,7 @@ $("table").tablecloth({
     bordered: true,
     condensed: true,
     striped: true,            
-    clean: false,            
+    clean: true,                
 });
 </script>
 
