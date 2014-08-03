@@ -22,7 +22,6 @@ class Rtk_Management extends Home_controller {
 
     public function national_rtk_allocation() {
         $data['title'] = "National RTK Allocations";
-
         $data['banner_text'] = "National RTK Allocations";
         $data['title'] = " National RTK Allocations";
         $data['content_view'] = "rtk/allocation_committee/national_rtk_allocations";
