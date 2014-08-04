@@ -2459,10 +2459,11 @@ $month = $data['expiry_month'];
 	
 	}
 
-	public function load_stock_level_graph($district_id=NULL, $county_id=NULL, $facility_code=NULL,$commodity_id=null,$report_type,$tracer = null)
+	public function load_stock_level_graph($district_id=NULL, $county_id=NULL, $facility_code=NULL,$commodity_id=null,$report_type)
  	{
 		$user = $this -> session -> userdata('user_indicator');
 		$county_id = $this -> session -> userdata('county_id');
+		$district_id = $this -> session -> userdata('district_id');
 		switch ($user) {
 			case 'facility':
 			case 'facility_admin':
@@ -2485,8 +2486,9 @@ $month = $data['expiry_month'];
 				
 			break;
 		}
-
-     	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id,$tracer);
+		
+			
+     	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id);
         $graph_data = $series_data =array();
 
 		$month = date('F Y');
@@ -2508,8 +2510,8 @@ $month = $data['expiry_month'];
 			 }
 			 
 			 if (isset($district_id)){
-			 	$district_name = districts::get_district_name_($district_id);
-				 $title .=' '.$district_name['district']." Sub-County ";
+			 	 $district_name = Districts::get_district_name($district_id);
+				 $title .=' '.$district_name['district']." Subcounty";
 			 }
 			  else{
 				 $district_name = null;
@@ -2523,10 +2525,8 @@ $month = $data['expiry_month'];
 				 $facility_name = null;
 
 			 }
-
+			 echo $district_name[0];
 		if($report_type=="table_data"):
-			
-
        		$graph_data = array_merge($graph_data, array("graph_title" => "Months Of Stock For ".$title.""));
 			/*echo "<pre>";
 			print_r($report_type);
@@ -2551,9 +2551,17 @@ $month = $data['expiry_month'];
 			echo $data['table'];
 			//exit;
 			//echo $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
+		elseif($report_type=="csv_data"):
+			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "Stock level $commodity_name $title $month_ $year", 'file_name' => "Stock_level_$commodity_name_$title_$month_$year");
+			$row_data = array(array("Stock level $commodity_name $title $month_ $year",$option_new));
+			$column_data = array("");
+			$excel_data['column_data'] = $column_data;
+			array_push($row_data,$series_data_); 
+			$excel_data['row_data'] = $row_data;
+			$this -> hcmp_functions -> create_excel($excel_data);
 			
 		else:
-
+			echo $district_name;
     		$graph_type = 'bar';			
     		$graph_data = array_merge($graph_data,array("graph_id"=>'dem_graph_'));
 		    $graph_data = array_merge($graph_data,array("graph_title"=>"Months Of Stock For ".$title.""));
@@ -2700,14 +2708,14 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 		$this -> load -> view($view, $data);
 	    }
 
-     	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null,$tracer = null) 
+     	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null) 
      	{
      		
      	//reset the values here
 
         if($option=="mos"){
         
-        return	$this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id,$report_type,$tracer);
+        return	$this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id,$report_type);
         }
       	$commodity_id = ($commodity_id=="NULL") ? null :$commodity_id;
 	 	$district_id = ($district_id=="NULL") ? null :$district_id;
