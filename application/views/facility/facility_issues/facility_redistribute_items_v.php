@@ -1,14 +1,25 @@
-<style>
-	.big{ width: 150px !important; }
+<style type="text/css">
+.row div p{
+	padding:10px;
+}
 </style>
-<div class="container" style="width: 100%; margin: auto;">
-<span  class='label label-info'>To Issue Commodities 
-	i) Select commodity to issue 
-	ii) Enter the Service Point and Quanitity you wish to issue and select the Batch No
-	iii) To add more Issues press Add Row</span><br /><span class="label label-danger">Available Batch Stock is for a specific 
-	batch, Total Balance is the total for the commodity</span>
+<link href="<?php echo base_url().'assets/bower_components/intro.js/introjs.css'?>" type="text/css" rel="stylesheet"/>
+
+	<div class="row">
+		<div class="col-md-4" id=""><p class="bg-info"><span class="badge ">1</span>Select commodity to issue </p></div>
+		<div class="col-md-5" id=""><p class="bg-info"><span class="badge ">2</span> Enter the Service Point and Quantity you wish to issue and select the Batch No</p></div>
+		<div class="col-md-3" id=""><p class="bg-info"><span class="badge ">3</span>To add more Issues press Add Row
+			<span class="glyphicon glyphicon-question-sign toolt" data-toggle="tooltip" data-placement="left" title="click for help" href="javascript:void(0);" onclick="startIntro();" style="margin-left:20%;"></span></p>
+		
+	</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6"><p class="text-danger">*Available Batch Stock is for a specific 
+	batch, Total Balance is the total for the commodity</p></div>
+		
+	</div>
 	<hr />
-<div class="table-responsive" style="height:400px; overflow-y: auto;">
+<div class="table-responsive" style="min-height:300px; overflow-y: auto;">
  <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/external_issue',$att); ?>
 <table width="100%"  class="table table-hover table-bordered table-update" id="facility_issues_table" >
 <thead style="background-color: white">
