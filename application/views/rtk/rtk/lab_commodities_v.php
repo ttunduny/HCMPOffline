@@ -26,6 +26,16 @@ table{
 }    
 </style>
 <script type="text/javascript">
+
+//Reset the form to be blank when you click the back button
+$(window).bind("pageshow", function() {
+    var form = $('form'); 
+    // let the browser natively reset defaults
+    form[0].reset();
+
+    //to fo event listeners
+    //form.find(':input').not(':button,:submit,:reset,:hidden').trigger('change');
+});
 $(function() {
 
     $('#user_order input').addClass("form-control");
@@ -111,63 +121,59 @@ function validateEnd(row){
     var end_val = $('#physical_count_' + row).val();
     if(end_val<0){
 
-                //$('#losses_' + row).attr("value",5);
-                $('#pos_adj_' + row).attr("value",0);
-                $('#neg_adj_' + row).attr("value",0);
-                if($('#q_used_0').val()<end_val){
-                    //alert('The Quantity used canot be Less than the Number of Tests Done. Please check your calculations again');
-                    
-                    // $('#q_used_0').attr("value",0);
-                }
-                var end =  parseInt($('#b_balance_'+row).val()) + parseInt($('#q_received_'+row).val());
-                $('#q_used_' + row).attr("value",end);
-            }
+        //$('#losses_' + row).attr("value",5);
+        $('#pos_adj_' + row).attr("value",0);
+        $('#neg_adj_' + row).attr("value",0);
+        if($('#q_used_0').val()<end_val){
+            //alert('The Quantity used canot be Less than the Number of Tests Done. Please check your calculations again');
+            
+            // $('#q_used_0').attr("value",0);
         }
+        var end =  parseInt($('#b_balance_'+row).val()) + parseInt($('#q_received_'+row).val());
+        $('#q_used_' + row).attr("value",end);
+    }
+}
 
 
+function validate_quantity_used(){
 
-        function validate_quantity_used(){
+    if($('#q_used_0').val()<$('#tests_done_0').val()){
+        alert('The Quantity used cannot be Less than the Number of Tests Done. Please check your calculations again');
+        var t0 = $('#tests_done_0').val();
+        $('#q_used_0').attr("value",t0);
+    }
+    var q0 = $('#q_used_0').val();
+    if(isNaN(q0)){
+        $('#q_used_0').attr("value",0);
+    }
 
-            if($('#q_used_0').val()<$('#tests_done_0').val()){
-                alert('The Quantity used cannot be Less than the Number of Tests Done. Please check your calculations again');
-                var t0 = $('#tests_done_0').val();
-                $('#q_used_0').attr("value",t0);
-            }
-            var q0 = $('#q_used_0').val();
-            if(isNaN(q0)){
-                $('#q_used_0').attr("value",0);
-            }
-
-        }
-
-
-
+}
         var tests_done_q = 0;
         var tests_done_no = parseInt(tests_done_q);
-        function compute_tests_done(){  
-            var vct_no = parseInt($('#vct').val());
-            var pitc_no = parseInt($('#pitc').val());
-            var pmtct_no = parseInt($('#pmtct').val());
-            var blood_screening_no = parseInt($('#blood_screening').val());
-            var other = parseInt($('#other2').val());
-            tests_done_no = vct_no + pitc_no + pmtct_no + blood_screening_no + other;
+function compute_tests_done(){  
+    var vct_no = parseInt($('#vct').val());
+    var pitc_no = parseInt($('#pitc').val());
+    var pmtct_no = parseInt($('#pmtct').val());
+    var blood_screening_no = parseInt($('#blood_screening').val());
+    var other = parseInt($('#other2').val());
+    tests_done_no = vct_no + pitc_no + pmtct_no + blood_screening_no + other;
 
-            $('#tests_done_0').attr("value",tests_done_no);
-            $('#q_used_0').attr("value",tests_done_no);
+    $('#tests_done_0').attr("value",tests_done_no);
+    $('#q_used_0').attr("value",tests_done_no);
 /*
-            
-            if($('#q_used_0').val()<$('#tests_done_0').val()){
-                var t0 = $('#tests_done_0').val();
-                $('#q_used_0').attr("value",0);
-            }
-            if(isNaN($('#tests_done_0').val())){
-                $('#tests_done_0').attr("value",0);
-            }
-            var q0 = $('#q_used_0').val();
-            if(isNaN(q0)){
-                $('#q_used_0').attr("value",0);
-            }
-            */
+    
+    if($('#q_used_0').val()<$('#tests_done_0').val()){
+        var t0 = $('#tests_done_0').val();
+        $('#q_used_0').attr("value",0);
+    }
+    if(isNaN($('#tests_done_0').val())){
+        $('#tests_done_0').attr("value",0);
+    }
+    var q0 = $('#q_used_0').val();
+    if(isNaN(q0)){
+        $('#q_used_0').attr("value",0);
+    }
+    */
 
 
         }       
@@ -222,67 +228,48 @@ function compute_losses(row){
 function compute_end(row) {
     var bal = $('#b_balance_' + row).val();
     var num_bal = parseInt(bal);
-//  alert(num_bal);
+    //  alert(num_bal);
 
-var qty_rcvd = $('#q_received_' + row).val();
-var num_qty_rcvd = parseInt(qty_rcvd);
-//  alert(num_qty_rcvd);
+    var qty_rcvd = $('#q_received_' + row).val();
+    var num_qty_rcvd = parseInt(qty_rcvd);
+    //  alert(num_qty_rcvd);
 
-var q_used = $('#q_used_' + row).val();
-var num_q_used = parseInt(q_used);
-//  alert(num_q_used);
+    var q_used = $('#q_used_' + row).val();
+    var num_q_used = parseInt(q_used);
+    //  alert(num_q_used);
 
-var tests_done = $('#tests_done_' + row).val();
-var num_tests_done = parseInt(tests_done);
-                //  alert(num_tests_done);
+    var tests_done = $('#tests_done_' + row).val();
+    var num_tests_done = parseInt(tests_done);
+                    //  alert(num_tests_done);
 
-                var loses = $('#losses_' + row).val();
-                var num_loses = parseInt(loses);
-//  alert(num_loses);
+                    var loses = $('#losses_' + row).val();
+                    var num_loses = parseInt(loses);
+    //  alert(num_loses);
 
-var pos_adj = $('#pos_adj_' + row).val();
-var num_pos_adj = parseInt(pos_adj);
-//  alert(num_pos_adj);
+    var pos_adj = $('#pos_adj_' + row).val();
+    var num_pos_adj = parseInt(pos_adj);
+    //  alert(num_pos_adj);
 
-var neg_adj = $('#neg_adj_' + row).val();
-var num_neg_adj = parseInt(neg_adj);
-//  alert(num_neg_adj);
+    var neg_adj = $('#neg_adj_' + row).val();
+    var num_neg_adj = parseInt(neg_adj);
 
-                /*
-                 num_final+=num_bal;
-                 num_final+=num_qty_rcvd;
-                 num_final-=num_q_used;
-                 num_final-=num_tests_done;
-                 num_final-=num_loses;
-                 num_final+=num_pos_adj;
-                 num_final-=num_neg_adj;
-                         
-                 */
+     num_final = num_bal + num_qty_rcvd - num_q_used + num_pos_adj - num_neg_adj;
 
-                 num_final = num_bal + num_qty_rcvd - num_q_used + num_pos_adj - num_neg_adj;
+    //Validate Quantity Used
+    var sum_bbal_q_rec_pos_adj = num_bal + num_qty_rcvd + num_pos_adj - num_neg_adj;
+    if((num_q_used>sum_bbal_q_rec_pos_adj)&&(row!=0)){
+        $('#q_used_'+row).css("border-color","red");
+        $('#neg_adj_'+row).css("border-color","red");
+        $('#physical_count_' + row).attr("value",0);
 
-                //Validate Quantity Used
-                var sum_bbal_q_rec_pos_adj = num_bal + num_qty_rcvd + num_pos_adj - num_neg_adj;
-                if((num_q_used>sum_bbal_q_rec_pos_adj)&&(row!=0)){
-                    $('#losses_' + row).attr("value",5);                    
-                    $('#tests_done_' + row).attr("value",5);                    
-                    $('#q_used_'+row).attr("color","red");
-                    $('#physical_count_' + row).attr("value",sum_bbal_q_rec_pos_adj);
+    }else{
+        $('#physical_count_' + row).attr("value", num_final);
+        $('#q_used_'+row).css("color","grey");
 
-                }else if((num_final<0)&&(row!=0)){
-                    $('#losses_' + row).attr("value",6);                    
-                    $('#tests_done_' + row).attr("value",0);
-                    $('#q_used_' +row).attr("value",0);
-                    $('#physical_count_' + row).attr("value",sum_bbal_q_rec_pos_adj);
-                    $('#neg_adj_' +row).attr("value",0);
-                    $('#pos_adj_' + row).attr("value",0);
-                    //$('#physical_count_' + row).attr("color","red");
 
-                }else{
-                                   $('#physical_count_' + row).attr("value", num_final);
-
-                }
-            }
+    }
+    // alert(sum_bbal_q_rec_pos_adj)
+}
             $('.bbal').keyup(function() {
                 row_id = $(this).closest("tr");
                 number = row_id.attr("commodity_id");
@@ -302,7 +289,7 @@ var num_neg_adj = parseInt(neg_adj);
                 number = row_id.attr("commodity_id");
                 num = parseInt(number);
                 compute_end(num);
-                //compute_losses(num);
+                compute_losses(num);
                 //validateEnd(num);
             })
             $('.tests_done').keyup(function() {
@@ -310,7 +297,7 @@ var num_neg_adj = parseInt(neg_adj);
                 number = row_id.attr("commodity_id");
                 num = parseInt(number);
                 compute_end(num);
-                //compute_losses(num);
+                compute_losses(num);
                 //validateEnd(num);
             })
             
@@ -329,58 +316,7 @@ var num_neg_adj = parseInt(neg_adj);
                // validateEnd(num);
             })
 
-            /*
-                     
-             $('.bbal').keyup(function(){
-             row_id = $(this).closest("tr");
-             number = row_id.attr("commodity_id");
-             num = parseInt(number);
-             value = $(this).val();
-             add(value,num)
-             })
-             $('.qty_rcvd').keyup(function(){
-             row_id = $(this).closest("tr");
-             number = row_id.attr("commodity_id");
-             num = parseInt(number);
-             value = $(this).val();
-             add(value,num)
-             })
-             $('.qty_used').keyup(function(){
-             row_id = $(this).closest("tr");
-             number = row_id.attr("commodity_id");
-             num = parseInt(number);
-             value = $(this).val();
-             sub(value,num)
-             })
-             $('.tests_done').keyup(function(){
-             row_id = $(this).closest("tr");
-             number = row_id.attr("commodity_id");
-             num = parseInt(number);
-             value = $(this).val();
-             sub(value,num)
-             })
-             $('.loses').keyup(function(){
-             row_id = $(this).closest("tr");
-             number = row_id.attr("commodity_id");
-             num = parseInt(number);
-             value = $(this).val();
-             sub(value,num)
-             })
-             $('.pos_adj').keyup(function(){
-             row_id = $(this).closest("tr");
-             number = row_id.attr("commodity_id");
-             num = parseInt(number);
-             value = $(this).val();
-             add(value,num)
-             })
-             $('.neg_adj').keyup(function(){
-             row_id = $(this).closest("tr");
-             number = row_id.attr("commodity_id");
-             num = parseInt(number);
-             value = $(this).val();
-             sub(value,num)
-             })
-*/
+            
 
 function add(prev, value, row_id) {
     val = $('#physical_count_' + row_id).val();

@@ -482,8 +482,8 @@ class Rtk_Management extends Home_controller {
         //$facility = facilities::get_facility_name($mfl);        
         $mfl =  $facility[0]['facility_code'];       
         $data['reports'] = $this->_monthly_facility_reports($mfl);
-        echo "<pre>";
-        print_r($data['reports']);die();
+        // echo "<pre>";
+        // print_r($data['reports']);die();
         $data['facility_county'] = $data['reports'][0]['county'];
         $data['facility_district'] = $data['reports'][0]['district'];
         $data['district_id'] = $data['reports'][0]['district_id'];
