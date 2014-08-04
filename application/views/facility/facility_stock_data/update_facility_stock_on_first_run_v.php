@@ -133,26 +133,9 @@
 </div>
 <hr />
 <div class="container-fluid">
-<<<<<<< HEAD
-	<div style="float: right">
-	    <?php if(!isset($import)): ?>
-		<a href="<?php echo base_url('reports/create_excel_facility_stock_template') ?>" >
-		<button type="button" class="btn btn-primary">
-			<span class="glyphicon glyphicon-save"></span>download excel template
-		</button> </a>
-		<button type="button" class="btn btn-success update-via-excel">
-			<span class="glyphicon glyphicon-open"></span>upload
-		</button>
-		<button type="button" class="add btn btn-primary">
-			<span class="glyphicon glyphicon-plus"></span>Add Row
-		</button>
-		<button type="button" class="save btn btn-sm btn-success">
-			<span class="glyphicon glyphicon-open"></span>Save
-		</button>
-		<?php else: ?>
 
+	<div style="float: right">
 		      <button type="button" class="importing btn btn-sm btn-success">
-=======
     <div style="float: right">
         <?php if(!isset($import)): ?>
         <a href="<?php echo base_url('reports/create_excel_facility_stock_template') ?>" >
@@ -171,7 +154,6 @@
         <?php else: ?>
 
               <button type="button" class="importing btn btn-sm btn-success">
->>>>>>> 4138781bc34f00113204ba6aa62b40831faa731b
             <span class="glyphicon glyphicon-open"></span>Finish Importing
         </button>
         <?php endif; ?>
