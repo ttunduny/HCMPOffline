@@ -27,6 +27,7 @@ table td{
     line-height: 11px;
 }
 </style>
+
 <script type="text/javascript">
 $(function() {
 
@@ -505,6 +506,15 @@ foreach ($facilities as $facility) {
     $county = $facility['county'];
     $owner = $facility['owner'];
 }
+$month = date("m", strtotime("Month "));
+$year = date("Y", strtotime(" Month "));
+$num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+$lastdate = $year . '-' . $month . '-' . $num_days;
+$firstdate = $year . '-' . $month . '-01';
+
+$sql = "select * from lab_commodity_orders where facility_code =$facility_code and order_date between $firstdate and $lastdate";
+$res = $this->db->query($sql)->result_array();
+$count = count($res);
 ?>
 
 <div id="dialog-form" title="Enter the lab commodity details here">
@@ -727,6 +737,13 @@ foreach ($facilities as $facility) {
 <?php form_close(); ?>
 
 <script type="text/javascript">
+$(function(){
+    var count = <?php echo $count; ?>;
+    if(count==1){
+        alert('The Report has already been SUbmitted.');
+        window.location('home_controller');
+    }
+});
 $("table").tablecloth({
     bordered: true,
     condensed: true,

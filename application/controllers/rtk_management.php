@@ -1435,7 +1435,7 @@ class Rtk_Management extends Home_controller {
         WHERE lab_commodity_orders.id =  lab_commodity_details.order_id
         AND lab_commodity_details.facility_code =  $mfl_code
         AND lab_commodity_orders.order_date BETWEEN '$three_months_ago' AND NOW()";
-        echo "$q";die();
+        
         if (isset($commodity)) {
             $q.=" AND lab_commodity_details.commodity_id = $commodity";
         } else {

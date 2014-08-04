@@ -144,13 +144,14 @@ function update_rtk(val){
     <th>County</th>
     <th>Sub-County</th>
     <th>Reporting Status</th>
+    <th>Action</th>
    </thead>
   <tbody>
 <?php foreach ($facilities as $row) { 
    $code =$row['facility_code'];
    ?>
     <tr id="<?php echo $row['facil_id'];?>">    
-    <td><?php echo $code. '  <a href="../../rtk_management/facility_profile/' . $code. '" title="View">View</a>' ?></td>
+    <td><?php echo $code; ?></td>
     <td><?php echo $row['facility_name'];?></td>
     <td><?php echo $row['owner'];?></td>
     <td><?php echo $county;?></td>    
@@ -167,6 +168,17 @@ function update_rtk(val){
       {
         echo "Reporting";
         echo ' <a href="../../rtk_management/deactivate_facility/' . $row['facility_code'] . '" title="Remove"><span class="glyphicon glyphicon-minus"></span> </i></a>';
+      }?></td>
+
+  <td><?php if($row['rtk_enabled']==0)
+    {      
+      echo 'N/A';
+
+
+    }
+    else
+      {        
+        echo ' <a href="../../rtk_management/facility_profile/' . $code. ' title="View">View</a>';
       }?></td>
   </tr>
   <?php }?>
