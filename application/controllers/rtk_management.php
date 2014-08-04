@@ -22,7 +22,6 @@ class Rtk_Management extends Home_controller {
 
     public function national_rtk_allocation() {
         $data['title'] = "National RTK Allocations";
-
         $data['banner_text'] = "National RTK Allocations";
         $data['title'] = " National RTK Allocations";
         $data['content_view'] = "rtk/allocation_committee/national_rtk_allocations";
@@ -196,7 +195,7 @@ class Rtk_Management extends Home_controller {
         $data['banner_text'] = 'RTK Manager';
         $data['content_view'] = "rtk/rtk/admin/admin_home_view";
 
-        $users = $this->_get_rtk_users();
+        $users = $this->_get_rtk_users();        
         $data['users'] = $users;
         $this->load->view('rtk/template', $data);
     }
@@ -478,11 +477,12 @@ class Rtk_Management extends Home_controller {
         $County = $this->session->userdata('county_name');
         $Countyid = $this->session->userdata('county_id');
         $districts = districts::getDistrict($Countyid);         
-        $sql = "select * from facilities where facility_code=$mfl";
+        $sql = "select * from facilities where facility_code=$mfl";        
         $facility = $this->db->query($sql)->result_array();
-        //$facility = facilities::get_facility_name($mfl);
+        //$facility = facilities::get_facility_name($mfl);        
         $mfl =  $facility[0]['facility_code'];       
         $data['reports'] = $this->_monthly_facility_reports($mfl);
+        
         $data['facility_county'] = $data['reports'][0]['county'];
         $data['facility_district'] = $data['reports'][0]['district'];
         $data['district_id'] = $data['reports'][0]['district_id'];
@@ -555,7 +555,7 @@ class Rtk_Management extends Home_controller {
         $data['district_balances_previous_1'] = $this->district_totals($year_previous_1, $previous_month_1, $district);
         $data['district_balances_previous_2'] = $this->district_totals($year_previous_2, $previous_month_2, $district);
 
-        
+
         $data['district_summary'] = $district_summary;
         
         $data['districts'] = $this->_districts_from_county($county_name['id']);
@@ -791,7 +791,8 @@ class Rtk_Management extends Home_controller {
         } elseif ($action == 'remove') {
             $this->_remove_dmlt_from_district($dmlt, $district);
         }
-        redirect('rtk_management/county_admin/users');
+        echo "Sub-County Added Successfully";
+        //redirect('rtk_management/county_admin/users');
     }
 
     function _get_rca_counties($rca) {
@@ -825,7 +826,7 @@ class Rtk_Management extends Home_controller {
     }
 
     function _add_rca_to_county($rca, $county, $redirect_url) {
-        $sql = "INSERT INTO `kemsa2`.`rca_county` (`id`, `rca`, `county`) VALUES (NULL, '$rca', '$county')";
+        $sql = "INSERT INTO `rca_county` (`id`, `rca`, `county`) VALUES (NULL, '$rca', '$county')";
         $this->db->query($sql);
         $object_id = $this->db->insert_id();
         $this->logData('1', $object_id);
@@ -1434,6 +1435,7 @@ class Rtk_Management extends Home_controller {
         WHERE lab_commodity_orders.id =  lab_commodity_details.order_id
         AND lab_commodity_details.facility_code =  $mfl_code
         AND lab_commodity_orders.order_date BETWEEN '$three_months_ago' AND NOW()";
+        
         if (isset($commodity)) {
             $q.=" AND lab_commodity_details.commodity_id = $commodity";
         } else {
@@ -1950,7 +1952,6 @@ class Rtk_Management extends Home_controller {
          "switched_as" => $switched_as,
          "Month" => $month,
          'switched_from' => $switched_from);
- 
 
 
         $this->session->set_userdata($session_data);
@@ -2842,7 +2843,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
 
         /*         * ******************************************setting the report title******************** */
 
-        $html_title = "<div ALIGN=CENTER><img src='" . base_url() . "Images/coat_of_arms.png' height='70' width='70'style='vertical-align: top;' > </img></div>
+        $html_title = "<div ALIGN=CENTER><img src='" . base_url() . "assets/img/coat_of_arms-resized.png' height='70' width='70'style='vertical-align: top;' > </img></div>
             <div style='text-align:center; font-size: 14px;display: block;font-weight: bold;'>$title</div>
             <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>
             Ministry of Health</div>
@@ -4516,7 +4517,7 @@ WHERE
         $fname = addslashes($fname);
         $lname = addslashes($lname);
 
-        $sql = "INSERT INTO `kemsa2`.`user` (`id`, `fname`, `lname`, `email`, `username`, `password`, `usertype_id`, `telephone`, `district`, `facility`, `created_at`, `updated_at`, `status`, `county_id`)
+        $sql = "INSERT INTO `user` (`id`, `fname`, `lname`, `email`, `username`, `password`, `usertype_id`, `telephone`, `district`, `facility`, `created_at`, `updated_at`, `status`, `county_id`)
         VALUES (NULL, '$fname', '$lname', '$email', '$email', 'b56578e2f9d28c7497f42b32cbaf7d68', '$level', '', '$district', NULL, '$time', '$time', '1', '$county');";
         $this->db->query($sql);
         $object_id = $this->db->insert_id();
@@ -4545,26 +4546,29 @@ WHERE
     }
 
     private function _monthly_facility_reports($mfl, $monthyear = null) {
-        $sql = 'select lab_commodity_orders.order_date,lab_commodity_orders.compiled_by,lab_commodity_orders.id,
-        facilities.facility_name,districts.district,districts.id as district_id, counties.county,counties.id as county_id
-        FROM lab_commodity_orders,facilities,districts,counties
-        WHERE lab_commodity_orders.facility_code = facilities.facility_code
-        AND facilities.district = districts.id
-        AND counties.id = districts.county
-        AND facilities.facility_code =' . $mfl;
-
+        $conditions = '';
         if (isset($monthyear)) {
             $year = substr($monthyear, -4);
             $month = substr_replace($monthyear, "", -4);
             $firstdate = $year . '-' . $month . '-01';
             $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
             $lastdate = $year . '-' . $month . '-' . $num_days;
-            $sql.=" AND lab_commodity_orders.order_date
+            $conditions=" AND lab_commodity_orders.order_date
                                 BETWEEN  '$firstdate'
                                 AND  '$lastdate'";
         }
 
+        $sql = "select lab_commodity_orders.order_date,lab_commodity_orders.compiled_by,lab_commodity_orders.id,
+        facilities.facility_name,districts.district,districts.id as district_id, counties.county,counties.id as county_id
+        FROM lab_commodity_orders,facilities,districts,counties
+        WHERE lab_commodity_orders.facility_code = facilities.facility_code
+        AND facilities.district = districts.id
+        AND counties.id = districts.county
+        AND facilities.facility_code =$mfl $conditions";        
+
+        
         $sql .=' Order by lab_commodity_orders.order_date desc';
+
         $res = $this->db->query($sql);
         $sum_facilities = array();
         $facility_arr = array();
@@ -4599,7 +4603,7 @@ WHERE
     }
 
     function facility_amc_compute() {
-        $sql = "select facilities.facility_code from facilities where facilities.rtk_enabled = '1' AND facilities.facility_code not in (select facility_amc.facility_code from facility_amc) limit 0,300";
+        $sql = "select facilities.facility_code from facilities where facilities.rtk_enabled = '1' AND facilities.facility_code not in (select facility_amc.facility_code from facility_amc)";
         $res = $this->db->query($sql);
         $facility = $res->result_array();
 
@@ -4631,7 +4635,7 @@ WHERE
             echo $insert3;
             echo $insert5;
             echo $insert6;
-            echo '</pre>';
+            echo '<br/></pre>';
         }
     }
 
@@ -4755,20 +4759,22 @@ WHERE
     }
 
     public function rtk_manager_admin_messages() {
-        $sql = "select email from user";
-        $res = $this->db->query($sql);
-        $emails = $res->result_array();
+        
+        /*$users = array('email' =>'All SCMLTs' , 
+                        'email' =>'All CLCs' ,
+                        'email' =>'Sub-Counties with Less than 25% Reported' ,
+                        'email' =>'Sub-Counties with Less than 50% Reported' ,
+                        'email' =>'Sub-Counties with Less than 75% Reported' ,
+                        'email' =>'Sub-Counties with Less than 90% Reported' );             
+        echo "<pre>";
+        print_r($users);die();
 
-        $sql1 = "select fname from user";
-        $res1 = $this->db->query($sql1);
-        $fname = $res1->result_array();
 
-        //$details = array('email'=>$emails,'fname'=>$fname);
 
         $data['emails'] = json_encode($emails);
         $data['emails'] = str_replace('"', "'", $data['emails']);
         // echo "<pre>";
-        //print_r( $data['emails']);
+        //print_r( $data['emails']);*/
 
 
 
@@ -4782,8 +4788,8 @@ WHERE
         $data['banner_text'] = 'RTK Manager';
         //$data['content_view'] = "rtk/rtk/admin/admin_home_view";
         $data['content_view'] = "rtk/rtk/admin/messages";
-        $users = $this->_get_rtk_users();
-        $data['users'] = $users;
+        //$users = $this->_get_rtk_users();
+       // $data['users'] = $users;
         $this->load->view('rtk/template', $data);
     }
 
@@ -5221,6 +5227,8 @@ WHERE
     and districts.county = counties.id
     and facilities.rtk_enabled='1'";
 
+    //echo "$sql";die();
+
         $sql2 = "select facilities.facility_code
     from facilities, districts, counties 
     where facilities.district=districts.id
@@ -5250,7 +5258,9 @@ WHERE
         }
         sort($new_all);
         sort($new_reported);
-        $returnable = array_diff($new_all, $new_reported);
+
+        //$returnable = array_diff($new_all, $new_reported);
+        $returnable = $this->flip_array_diff_key($new_all, $new_reported);
 
         foreach ($returnable as $value) {
             $sql3 = "select facilities.facility_code,facilities.facility_name, districts.district, counties.county,facilities.zone
@@ -5279,10 +5289,17 @@ WHERE
         return $new_unreported;
     }
 
-    public function show_allocation_pending() {
-        $data['title'] = '';
+    function flip_array_diff_key($b, $a) {
+        $at = array_flip($a);
+        $bt = array_flip($b);
+        $d = array_diff_key($bt, $at);
+        return array_keys($d);
+    }
+
+    public function show_allocation_pending($month=null,$year=null) {
+        $data['title'] = 'RTK Allocation';
         $data['banner_text'] = 'Pending Facilities for Allocations';
-        $data['content_view'] = 'rtk/rtk/allocation_committee/allocation_pending_v';
+        $data['content_view'] = 'rtk/allocation_committee/allocation_pending_v';
 
         $pending_facility = $this->rtk_facilities_not_reported(NULL, NULL, NULL, NULL, NULL, NULL);
         $data['pending_facility'] = $pending_facility;
