@@ -309,7 +309,11 @@ class User extends MY_Controller {
 
 		$reset_code = $_POST['code'];
 		$email = $_POST['username'];
+
+		$code = md5($reset_code);
+
 		$code = $reset_code;
+
 
 		//get user details
 
