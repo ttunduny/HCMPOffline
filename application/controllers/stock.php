@@ -917,8 +917,8 @@ endif;
 redirect();
 }
 public function amc(){
-	$this->session->set_flashdata('system_success_message', "AMC Details Have Been Saved");
-	redirect('home');
+    $this->session->set_flashdata('system_success_message', "AMC Details Have Been Saved");
+    redirect('home');
 }
 }
 
