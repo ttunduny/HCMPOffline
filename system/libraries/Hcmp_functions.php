@@ -219,7 +219,7 @@ public function send_sms($phones,$message) {
 /*****************************************Email function for HCMP, all the deafult email addresses and email content have been set ***************/
 
 public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL){
-      return true;
+    //  return true;
 		$mail_list=($this->test_mode)?'kariukijackson@ymail.com,': 'kariukijackson@gmail.com,';
 			
 		$fromm='info-noreply@health-cmp.or.ke';
