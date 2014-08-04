@@ -1,7 +1,18 @@
+<style>
+	.row div p{
+	padding:10px;
+}
+</style>
 <div class="container" style="width: 96%; margin: auto;">
-    <span class="label label-success">The Last Stock Update was as at : <?php
+    
+    <div class="row">
+		<div class="col-md-6"><p class="bg-info"><span class="">The Last Stock Update was as at : <?php
     echo date('j M, Y',strtotime($last_issued_data['last_seen'])). ", $last_issued_data[days_] day(s) ago, $last_issued_data[fname] 
-    $last_issued_data[lname]" ?></span>
+    $last_issued_data[lname]" ?></span></p></div>
+		
+	</div>
+	
+    
 	<?php echo form_open('orders/facility_order'); ?>
  <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
