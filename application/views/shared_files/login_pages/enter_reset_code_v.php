@@ -75,7 +75,7 @@ if ($popup=="success") {
 <button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>
 ','</div>';
 }elseif ($popup=="request_valid") {
-  echo  '<div class="alert alert-info alert-dismissable" style="text-align:center;">You rescently requested for a password recovery. A code was sent to your email. Please enter it below, to reset your account.
+  echo  '<div class="alert alert-info alert-dismissable" style="text-align:center;">You recently requested for a password recovery. A code was sent to your email. Please enter it below, to reset your account.
 <button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>
 ','</div>';
 }

@@ -22,50 +22,52 @@
 </p>
             </div>
             <?php if(isset($import)): ?>
-            		<div style="height:auto; margin-bottom: 2px" class="warning message col-md-5" id="">      	
+
+                    <div style="height:auto; margin-bottom: 2px" class="warning message col-md-5" id="">        
         <h5> 1) Set up facility stock</h5> 
-        	<p>
-		 This process can take up to 1 minute, to avoid getting duplicates please be patient do not click Finish Importing button twice 
-			</p>
+            <p>
+         This process can take up to 1 minute, to avoid getting duplicates please be patient do not click Finish Importing button twice 
+            </p>
+
         </div>
    
             <?php endif; ?>
 
             
       </div>
-	
+    
             
-	<hr />
+    <hr />
       <div class="row " style="min-height:300px; overflow: auto;"><div class="col-md-12">
-	
-		<?php $att = array("name" => 'myform', 'id' => 'myform');
+    
+        <?php $att = array("name" => 'myform', 'id' => 'myform');
         echo form_open('stock/add_stock_level', $att);
  ?>
  <input type="hidden" name="form_type" value="first_run" />
-		<table  class="table table-hover table-bordered table-update table-responsive"  id="facility_stock_table">
+        <table  class="table table-hover table-bordered table-update table-responsive"  id="facility_stock_table">
 
-			<thead style="background-color: white">
-				<tr>
-					<th> Description</th>
-					<th> Supplier</th>
-					<th> Unit Size</th>
-					<th> Batch No</th>
-					<th> Source of Item</th>
-					<th> Manufacturer</th>
-					<th> Expiry Date</th>
-					<th> Issue Type</th>
-					<th> Stock Level</th>
-					<th> Total Unit Count</th>
-					<th> Options</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr table_row="1">
-					<td>
-					<input type="hidden" class="commodity_id" value=""  name="commodity_id[]"/>
-					<select  name="desc[]" class="form-control desc">
-						<option special_data="0" value="0">-Select One--</option>
-						 <?php
+            <thead style="background-color: white">
+                <tr>
+                    <th> Description</th>
+                    <th> Supplier</th>
+                    <th> Unit Size</th>
+                    <th> Batch No</th>
+                    <th> Source of Item</th>
+                    <th> Manufacturer</th>
+                    <th> Expiry Date</th>
+                    <th> Issue Type</th>
+                    <th> Stock Level</th>
+                    <th> Total Unit Count</th>
+                    <th> Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr table_row="1">
+                    <td>
+                    <input type="hidden" class="commodity_id" value=""  name="commodity_id[]"/>
+                    <select  name="desc[]" class="form-control desc">
+                        <option special_data="0" value="0">-Select One--</option>
+                         <?php
                 foreach ($commodities as $commodities) {
                     $id = $commodities['commodity_id'] ;
                     $commodities_name = $commodities['commodity_name'];
@@ -78,96 +80,99 @@
                     value='$id'>" . $commodities_name . "</option>";
                 }
                 ?>
-					</select></td>
-					<td>
-					<input style="width:70px !important;" type="text" class="form-control input-small commodity_supplier" name="commodity_supplier[]" readonly="readonly"/>
-					<input type="hidden" class="actual_units"/>
-					</td>
-					<td>
-					<input style="width:70px !important;" type="text" class="form-control input-small unit_size"   name="commodity_unit_size[]" readonly="readonly"/>
-					</td>
-					<td>
-					<input class='form-control input-small commodity_batch_no' required="required" data-val="true" name='commodity_batch_no[]' type='text'/>
-					</td>
-					<td>
-					<select style="width:95px !important;" class="form-control input-small source_of_item" name="source_of_item[]">
-						<?php
+                    </select></td>
+                    <td>
+                    <input style="width:70px !important;" type="text" class="form-control input-small commodity_supplier" name="commodity_supplier[]" readonly="readonly"/>
+                    <input type="hidden" class="actual_units"/>
+                    </td>
+                    <td>
+                    <input style="width:70px !important;" type="text" class="form-control input-small unit_size"   name="commodity_unit_size[]" readonly="readonly"/>
+                    </td>
+                    <td>
+                    <input class='form-control input-small commodity_batch_no' required="required" data-val="true" name='commodity_batch_no[]' type='text'/>
+                    </td>
+                    <td>
+                    <select style="width:95px !important;" class="form-control input-small source_of_item" name="source_of_item[]">
+                        <?php
                         foreach ($commodity_source as $commodity_source) {
                             $id = $commodity_source -> id;
                             $commodity_source_name = $commodity_source -> source_name;
                             echo "<option value='$id'>$commodity_source_name</option>";
                         }
-						?>
-					</select></td>
-					<td>
-					<input style="width:70px !important;" id='commodity_manufacture' required="required" class="form-control commodity_manufacture input-small"
-					name='commodity_manufacture[]' type='text' value=""  data-val="true"/>
-					</td>
-					<td>
-					<input  class='form-control input-small clone_datepicker' required="required"  data-val="true" name='clone_datepicker[]' type='text' />
-					</td>
-					<td>
-					<select style="width:105px !important;"name="commodity_unit_of_issue[]" class="form-control commodity_unit_of_issue input-small">
-						<option value="Pack_Size">Pack Size</option>
-						<option value="Unit_Size">Unit Size</option>
-					</select></td>
-					<td>
-					<input id='commodity_available_stock' name='commodity_available_stock[]'
-					type='text' class="form-control input-small input-small commodity_available_stock" required="true" data-val="true"/>
-					</td>
-					<td>
-					<input type='text' class='form-control input-small commodity_total_units' readonly="readonly" name='commodity_total_units[]' value=''/>
-					</td>
-					<td>
-					<button type="button" class="remove btn btn-danger btn-xs">
-						<span class="glyphicon glyphicon-minus"></span>Row
-					</button></td>
-				</tr>
-			</tbody>
-		</table>
-		<?php echo form_close(); ?>
+                        ?>
+                    </select></td>
+                    <td>
+                    <input style="width:70px !important;" id='commodity_manufacture' required="required" class="form-control commodity_manufacture input-small"
+                    name='commodity_manufacture[]' type='text' value=""  data-val="true"/>
+                    </td>
+                    <td>
+                    <input  class='form-control input-small clone_datepicker' required="required"  data-val="true" name='clone_datepicker[]' type='text' />
+                    </td>
+                    <td>
+                    <select style="width:105px !important;"name="commodity_unit_of_issue[]" class="form-control commodity_unit_of_issue input-small">
+                        <option value="Pack_Size">Pack Size</option>
+                        <option value="Unit_Size">Unit Size</option>
+                    </select></td>
+                    <td>
+                    <input id='commodity_available_stock' name='commodity_available_stock[]'
+                    type='text' class="form-control input-small input-small commodity_available_stock" required="true" data-val="true"/>
+                    </td>
+                    <td>
+                    <input type='text' class='form-control input-small commodity_total_units' readonly="readonly" name='commodity_total_units[]' value=''/>
+                    </td>
+                    <td>
+                    <button type="button" class="remove btn btn-danger btn-xs">
+                        <span class="glyphicon glyphicon-minus"></span>Row
+                    </button></td>
+                </tr>
+            </tbody>
+        </table>
+        <?php echo form_close(); ?>
 
-	</div></div>
+    </div></div>
 </div>
 <hr />
 <div class="container-fluid">
-	<div style="float: right">
-	    <?php if(!isset($import)): ?>
-		<a href="<?php echo base_url('reports/create_excel_facility_stock_template') ?>" >
-		<button type="button" class="btn btn-primary">
-			<span class="glyphicon glyphicon-save"></span>download excel template
-		</button> </a>
-		<button type="button" class="btn btn-success update-via-excel">
-			<span class="glyphicon glyphicon-open"></span>upload
-		</button>
-		<button type="button" class="add btn btn-primary">
-			<span class="glyphicon glyphicon-plus"></span>Add Row
-		</button>
-		<button type="button" class="save btn btn-sm btn-success">
-			<span class="glyphicon glyphicon-open"></span>Save
-		</button>
-		<?php else: ?>
 
+	<div style="float: right">
 		      <button type="button" class="importing btn btn-sm btn-success">
+    <div style="float: right">
+        <?php if(!isset($import)): ?>
+        <a href="<?php echo base_url('reports/create_excel_facility_stock_template') ?>" >
+        <button type="button" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>download excel template
+        </button> </a>
+        <button type="button" class="btn btn-success update-via-excel">
+            <span class="glyphicon glyphicon-open"></span>upload
+        </button>
+        <button type="button" class="add btn btn-primary">
+            <span class="glyphicon glyphicon-plus"></span>Add Row
+        </button>
+        <button type="button" class="save btn btn-sm btn-success">
+            <span class="glyphicon glyphicon-open"></span>Save
+        </button>
+        <?php else: ?>
+
+              <button type="button" class="importing btn btn-sm btn-success">
             <span class="glyphicon glyphicon-open"></span>Finish Importing
         </button>
         <?php endif; ?>
-	</div>
+    </div>
 </div>
 
-	<script type="text/javascript">
-		$(document).ready(function() {
-		var $table = $('table');
-		//float the headers
-		$table.floatThead({
-		scrollingTop: 100,
-		zIndex: 1001,
-		scrollContainer: function($table){ return $table.closest('.test'); }
-		});
-		////upload via excel
-		$(".update-via-excel").on('click', function() {
-		var body_content='<?php  $att=array("name"=>'myform','id'=>'myform');
-		echo form_open_multipart('stock/update_stock_via_excel',$att)?>
+    <script type="text/javascript">
+        $(document).ready(function() {
+        var $table = $('table');
+        //float the headers
+        $table.floatThead({
+        scrollingTop: 100,
+        zIndex: 1001,
+        scrollContainer: function($table){ return $table.closest('.test'); }
+        });
+        ////upload via excel
+        $(".update-via-excel").on('click', function() {
+        var body_content='<?php  $att=array("name"=>'myform','id'=>'myform');
+        echo form_open_multipart('stock/update_stock_via_excel',$att)?>
             '+
             '<input type="file" name="file" id="file" required="required" class="form-control"><br>'+
             '<input type="submit" name="submit"  value="Upload">'+
@@ -257,7 +262,7 @@
             //hcmp custom dialog box
             dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
             //This event is fired immediately when the hide instance method has been called.
-            $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.closest("tr").find('.desc').focus();	});
+            $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.closest("tr").find('.desc').focus();  });
             return;
             }
             if(temp_data[1]==0 && temp_data[2]=="" && temp_data[5]=='' ){
@@ -284,7 +289,7 @@
             //hcmp custom dialog box
             dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
             //This event is fired immediately when the hide instance method has been called.
-            $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.closest("tr").find('.desc').focus();	});
+            $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.closest("tr").find('.desc').focus();  });
             selector_object.closest("tr").find('.commodity_total_units').val();
             return;
             }
@@ -296,7 +301,7 @@
             //hcmp custom message dialog
             dialog_box("Decimals are not allowed",'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
             //This event is fired immediately when the hide instance method has been called.
-            $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();	})
+            $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();  })
             return;}  }
             else {
             //reset the text field and the message dialog box
@@ -304,7 +309,7 @@
             //hcmp custom message dialog
             dialog_box("Enter only numbers",'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
             //This event is fired immediately when the hide instance method has been called.
-            $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();	})
+            $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();  })
             return; }
             // finally calculate the stock
             calculate_actual_stock(actual_unit_size,commodity_unit_of_issue,num,".commodity_total_units",selector_object);
@@ -340,8 +345,9 @@
             })
             });
             /************save the data here*******************/
-            $("#myform").validate();
+           
             $('.save').button().click(function() {
+             $("#myform").validate();
             confirm_if_the_user_wants_to_save_the_form("#myform");
             });
 
@@ -450,5 +456,5 @@
             refreshDatePickers();
             }
             });
-	</script>
+    </script>
 
