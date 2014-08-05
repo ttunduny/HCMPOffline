@@ -203,9 +203,9 @@
                $(".order-for-excel").on('click', function(e) {
                   e.preventDefault(); 
     var body_content='<?php  $att=array("name"=>'myform','id'=>'myform'); 
-    echo form_open_multipart('',$att)?>'+
+    echo form_open_multipart('orders/facility_order',$att)?>'+
 '<input type="file" name="file" id="file" required="required" class="form-control"><br>'+
-'<div id="progress_bar"><div class="percent">0%</div></div>'+
+'<button type="submit" name="submit"  value="Upload">Upload</button>'+
 '</form>';
    //hcmp custom message dialog
     dialog_box(body_content,
