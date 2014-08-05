@@ -30,7 +30,7 @@ class orders extends MY_Controller {
 	
 	public function test_read_write_excel(){
 
-	$inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx';
+	$inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx'; 
 
     $file_name=time().'.xlsx';
 	$excel2 = PHPExcel_IOFactory::createReader('Excel2007');
