@@ -74,7 +74,7 @@ $englishdate = date('F, Y', strtotime($monthyear));
     $(function() {
         $('#switch_district').change(function() {
             var value = $('#switch_district').val();
-            var path = "<?php echo base_url() . 'rtk_management/switch_district/'; ?>" + value + "/dpp";
+            var path = "<?php echo base_url() . 'rtk_management/switch_district/'; ?>" + value + "/scmlt";
             window.location.href = path;
         });
     });
