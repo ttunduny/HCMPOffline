@@ -33,7 +33,11 @@ class Users extends Doctrine_Record {
 		$this -> _set('password', md5($salt . $value));
 
 	}
-
+    public static function getUsers($facility_c){
+        $query = Doctrine_Query::create() -> select("*") -> from("Users")->where("facility=$facility_c");
+        $level = $query -> execute();
+        return $level;
+    }
 	public static function login($username, $password) {
 
 		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username = '" . $username . "' AND status=1");
