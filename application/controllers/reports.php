@@ -634,7 +634,8 @@ class Reports extends MY_Controller
 		$interval = $_POST['option_selected'];
 		$data['report_data'] ;
 		$echo = Facility_stocks::specify_period_potential_expiry_store($district_id, $interval);
-		echo "<pre>";print_r($echo);echo "</pre>";exit;
+		
+		// echo "<pre>";print_r($echo);echo "</pre>";exit;
 
 		return $this -> load -> view("facility/facility_reports/ajax/potential_expiries_ajax", $data);
 

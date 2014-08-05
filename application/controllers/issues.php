@@ -127,10 +127,11 @@ if (!defined('BASEPATH'))
 						$data['subcounties']=districts::getAll();
 						$data['banner_text'] = "Redistribute Commodities";
 						$data['title'] ="Redistribute Commodities";		
-						$data['service_point']=service_points::get_all_active($facility_code);		
+						//$data['service_point']=service_points::get_all_active($facility_code);		
 		$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_district_store($district_id,1);
 	    $data['facility_stock_data']=json_encode(facility_stocks::get_distinct_stocks_for_this_district_store($district_id,"batch_data"));	
      	$this -> load -> view("shared_files/template/template", $data);
+
 	}
 	// facility internal issue
 	public function internal_issue()
@@ -345,14 +346,14 @@ public function insert_totals($district_id = null,$comm_id = null,$comm_total = 
 			$c->execute("UPDATE `drug_store` SET `qty_issued` = `qty_issued`-$quantity_issued[$i] where commodity_id='$commodity_id[$i]'");
             //update the transaction table here 
 			$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
-			$inserttransaction->execute("UPDATE `facility_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
+			$inserttransaction->execute("UPDATE `drug_store_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
 			`closing_stock`=`closing_stock`-$total_items_issues
-            WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");		
+            WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and district_id='$district_id';");		
 endfor;
 		$user = $this -> session -> userdata('user_id');
 		 $user_action = "redistribute";
 		 Log::log_user_action($user, $user_action);
-         $this->db->insert_batch('facility_issues', $data_array_issues_table); 
+         $this->db->insert_batch('drug_store', $data_array_issues_table); 
 		 $this->db->insert_batch('redistribution_data', $data_array_redistribution_table); 
          $this->session->set_flashdata('system_success_message', "You have issued $total_items item(s)");
 		 redirect();

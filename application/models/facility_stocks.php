@@ -53,8 +53,8 @@ class Facility_stocks extends Doctrine_Record {
 	
 public static function get_distinct_stocks_for_this_district_store($district_id){
 $store_stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
-->fetchAll("SELECT DISTINCT ds.commodity_id as commodity_id, c.commodity_name, fs.expiry_date,sum(ds.qty_issued)as quantity,fs.manufacture,
-c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commodity_source c_s, drug_store ds,commodities c
+->fetchAll("SELECT DISTINCT ds.commodity_id as commodity_id, c.commodity_name,c.unit_size, fs.expiry_date,sum(ds.qty_issued)as quantity,fs.manufacture, round((SUM(ds.qty_issued ) / c.total_commodity_units) ,1) as pack_balance,
+c_s.source_name,c.commodity_code,sum(fs.current_balance) as commodity_balance,c.total_commodity_units, fs.batch_no, c_s.id as source_id from facility_stocks fs, commodity_source c_s, drug_store ds,commodities c
  where ds.district_id= '$district_id' and fs.expiry_date >= NOW()
  and ds.commodity_id=fs.commodity_id and c.id=ds.commodity_id and fs.current_balance>0 group by fs.id,ds.commodity_id order by fs.expiry_date asc
 ");
