@@ -116,7 +116,7 @@ class Reports extends MY_Controller
 	$view = 'shared_files/template/template';
 	$data['report_view'] = "subcounty/reports/drug_store_reports_home";
 	$data['sidebar'] = "subcounty/reports/drug_store_side_bar";
-	$data['report_data'] = Facility_stocks::drug_store_commodity_expiries($district_id);
+	$data['report_data'] = Facility_stocks::drug_store_potential_expiries($district_id);
     $data['active_panel']='expiries';
     $data['title'] = "District Store Reports";
 		
@@ -622,9 +622,24 @@ class Reports extends MY_Controller
 		$data['facility_name']=$facility_name[0]['facility_name'];;
 		$interval = $_POST['option_selected'];
 		$data['report_data'] = Facility_stocks::specify_period_potential_expiry($facility_code, $interval);
+		echo "<pre>";print_r($data['report_data']);echo "</pre>";exit;
 		$this -> load -> view("facility/facility_reports/ajax/potential_expiries_ajax", $data);
 
 	}
+
+	public function potential_exp_process_store($district_id=null) {
+        $district_id=isset($district_id) ? $district_id: $this -> session -> userdata('district_id');
+		$district_name=Districts::get_district_name($district_id)->toArray();
+		$data['district_name']=$district_name[0]['district'];
+		$interval = $_POST['option_selected'];
+		$data['report_data'] ;
+		$echo = Facility_stocks::specify_period_potential_expiry_store($district_id, $interval);
+		echo "<pre>";print_r($echo);echo "</pre>";exit;
+
+		return $this -> load -> view("facility/facility_reports/ajax/potential_expiries_ajax", $data);
+
+	}
+
 	public function potential_exp_process_subcounty($facility_code=null) {
         $facility_code=isset($facility_code) ? $facility_code: $this -> session -> userdata('facility_id');
 		$facility_name=Facilities::get_facility_name_($facility_code)->toArray();

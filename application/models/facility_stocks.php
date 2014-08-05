@@ -67,6 +67,12 @@ $store_comm = Doctrine_Manager::getInstance()->getCurrentConnection()
 return $store_comm;
 }
 
+public static function get_district_store_total_commodities($district_id){
+$store_comm = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("SELECT * from drug_store_totals");
+return $store_comm;
+}
+
 	public static function get_distinct_stocks_for_this_facility($facility_code,$checker=null,$exception=null){
 $addition=isset($checker)? ($checker==='batch_data')? 'and fs.current_balance>0 group by fs.id,c.id order by fs.expiry_date asc' 
 : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc' : null ;
@@ -190,12 +196,31 @@ ds.status
 
 from drug_store ds,commodities c
 
+where ds.expiry_date  <= NOW() AND district_id = '$district_id' 
+        and qty_issued>0 and c.id = ds.commodity_id
+");
+return $stocks ;		
+	}
+
+	public static function drug_store_potential_expiries($district_id){
+$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("SELECT ds.id,ds.commodity_id as commodity_id,c.commodity_name,c.unit_size,c.unit_cost,ds.facility_code,ds.district_id
+,ds.s11_No,ds.batch_no,
+ds.expiry_date,ds.balance_as_of,ds.adjustmentpve,
+ds.adjustmentnve,ds.qty_issued AS current_balance,ds.date_issued,
+ds.issued_to,ds.created_at,ds.issued_by,
+ds.status
+
+from drug_store ds,commodities c
+
 where ds.expiry_date 
 		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND district_id = '$district_id' 
         and qty_issued>0 and c.id = ds.commodity_id
 ");
 return $stocks ;		
 	}
+
+
 
 
 	  public static function get_items_that_have_stock_out_in_facility($facility_code=null,$district_id=null,$county_id=null){
@@ -231,6 +256,15 @@ $group_by ");
 		 AND facility_code='$facility_code' AND current_balance>0");
 		
 		$stocks= $query -> execute();
+		return $stocks;
+	}	
+
+	public static function specify_period_potential_expiry_store($district_id,$interval){
+		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT ds.id, ds.facility_code, ds.district_id, ds.commodity_id, ds.s11_No, ds.batch_no, ds.expiry_date, ds.balance_as_of , ds.adjustmentpve, ds.adjustmentnve, ds.qty_issued, ds.date_issued, ds.issued_to, ds.created_at, ds.issued_by, ds.status 
+FROM drug_store ds,drug_store_totals dst where expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL $interval MONTH)
+		 AND ds.district_id= $district_id AND ds.district_id = dst.district_id AND dst.total_amount > 0
+		 ");
 		return $stocks;
 	}	
 

@@ -59,6 +59,10 @@ if (!defined('BASEPATH'))
 	}
 
 	public function store_home(){
+		$district_id = $this -> session -> userdata('district_id');	
+		$data['expiry_data'] = Facility_stocks::drug_store_commodity_expiries($district_id);
+		// echo "<pre>";print_r($data['expiry_data']);echo "</pre>";exit;
+
 		$view = 'shared_files/template/template';
 		    $data['content_view'] = "subcounty/subcounty_drug_store_home";	
 			$data['district_dashboard_notifications']=$this->get_district_dashboard_notifications_graph_data();
@@ -201,39 +205,64 @@ if (!defined('BASEPATH'))
 			$data_array_issues_table=array();
 			$data_array_redistribution_table=array();
 
-			// echo "<pre>";print_r($commodity_id);echo "</pre>";exit;
 			$commodity_ids=facility_stocks::get_district_store_commodities($district_id);
-			$comm_count = count($commodity_ids);
-			//echo "<pre>";print_r($commodity_ids);echo "</pre>";exit;
+			
+			$commodity_total = facility_stocks::get_district_store_total_commodities($district_id);
 
+			$comm_count = count($commodity_total);
+			// echo "<pre>";print_r($commodity_total);echo "</pre>";exit;
+
+			// insertion of data to totals table
+			$totals_data =array();
+			$totals_data_ =array();
+			
+			
+			// update the issues table 
 			        for($i=0;$i<$total_items;$i++)://compute the actual stock
-			        
-			 //checks if commodity id is existent 
-	for ($j=0; $j < $comm_count ; $j++) { 
-	if ($commodity_id = $commodity_ids[$j]['commodity_id']) {
-		$b = Doctrine_Manager::getInstance()->getCurrentConnection();
-		$b->execute("UPDATE `drug_store` SET `qty_issued` = `qty_issued`+$quantity_issued[$i] where commodity_id='$commodity_id[$i]'");
-	}
-	else{
-		 $this->db->insert_batch('drug_store', $data_array_issues_table); 
-	}
 
+		$updated_ckecker = 1;
+foreach ($commodity_total as $comm) {
+	if (in_array(($district_id), $comm)){
+		if (in_array(($commodity_id[$i]), $comm)){
+		$b = Doctrine_Manager::getInstance()->getCurrentConnection();
+		$b->execute("UPDATE `drug_store_totals` SET `total_amount` = `total_amount`+$quantity_issued[$i] where commodity_id ='$commodity_id[$i]' and district_id = '$district_id'");
+		$updated_ckecker = 2;
+	    }
+    }//end of dist if
 }
+
+	switch ($updated_ckecker) {
+		case 1:
+			$totals_data =array();
+			$totals_data_ =array();
+
+			$totals_data_ = array(
+					 'district_id'=>$district_id,
+				     'commodity_id' => $commodity_id[$i],
+				     'total_amount' => $quantity_issued[$i]
+				     );
+			array_push($totals_data,$totals_data_);
+		$this->db->insert_batch('drug_store_totals', $totals_data);
+			break;
+		case 2:
+			break;
+		default:
+			break;
+	}
+	
         $total_items_issues=($commodity_unit_of_issue[$i]=='Pack_Size')? 
         $quantity_issued[$i]*$total_units[$i] : $quantity_issued[$i]; 
 		
      //prepare the issues data
      $facility_name=isset($service_point[$i]) ? Facilities::get_facility_name2($service_point[$i]) : null;
 	 $facility_name=isset($facility_name)? $facility_name['facility_name']: 'N/A';
-	                 $mydata = array('facility_code' => $facility_code,	
-	                 'district_id' => $district_id, 
+	                 $mydata = array('facility_code' => $facility_code,	 
 	                 's11_No'=>'(-ve Adj) Stock Deduction', 'batch_no' => $batch_no[$i] ,'commodity_id' => $commodity_id[$i],
 				     'expiry_date' => date('y-m-d',strtotime($expiry_date[$i])),'qty_issued'=> $total_items_issues ,
 				     'issued_to'=>"inter-facility donation:".$facility_name,'balance_as_of'=>$commodity_balance_before[$i], 
 				     'date_issued'=>date('y-m-d',strtotime($clone_datepicker_normal_limit_today[$i])),'issued_by'=>$this -> session -> userdata('user_id'));
 					 
 					  $mydata_2 = array('manufacturer'=>$manufacture[$i],
-					  	'district_id' => $district_id,
 					  'source_facility_code' => $facility_code,	 
 	                 'batch_no' => $batch_no[$i] ,'commodity_id' => $commodity_id[$i],
 				     'expiry_date' => date('y-m-d',strtotime($expiry_date[$i])),'quantity_sent'=> $total_items_issues ,
@@ -249,21 +278,24 @@ if (!defined('BASEPATH'))
 			$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
 			$inserttransaction->execute("UPDATE `facility_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
 			`closing_stock`=`closing_stock`-$total_items_issues
-            WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");		
+            WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");	
+
 endfor;
 		$user = $this -> session -> userdata('user_id');
 		 $user_action = "redistribute";
-		 
-		 
-
 		 Log::log_user_action($user, $user_action);
-        
+         $this->db->insert_batch('facility_issues', $data_array_issues_table); 
 		 $this->db->insert_batch('redistribution_data', $data_array_redistribution_table); 
          $this->session->set_flashdata('system_success_message', "You have issued $total_items item(s)");
 		 redirect();
 endif;
-redirect();		
-	}
+redirect();	
+	}//confirm distribution to district store
+
+public function insert_totals($district_id = null,$comm_id = null,$comm_total = null){
+	// insertion of data to totals table
+			
+}
 
 	public function district_store_external_issue()
 		{
