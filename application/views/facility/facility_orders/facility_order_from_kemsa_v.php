@@ -169,11 +169,12 @@ $(document).ready(function() {
 				$('input:text[name=unit_size]').val(code_array[2]);
 				$('input:text[name=unit_cost]').val(code_array[1]);
 				$('input:hidden[name=cat_name]').val(code_array[3]);
-				$('input:hidden[name=commodity_name_]').val($("#desc option:selected").text());
+				$('input:hidden[name=commodity_name_]').val($(".desc option:selected").text());
 				$('input:hidden[name=total_commodity_units_]').val(code_array[5]);});
 	// add the item to the order list			
-	$('#main-content').on("click", '.add_item',function (){
-	 var check_if_the_user_has_selected_a_commodity=$('.desc').val();
+	$('#main-content').on("click", ".add_item", function (){
+	 var check_if_the_user_has_selected_a_commodity=$('#desc').val();
+
 	 if(check_if_the_user_has_selected_a_commodity==0){
 	 	alert("Please select a commodity first");
 	 	return;
@@ -188,7 +189,7 @@ $(document).ready(function() {
          '<input type="hidden" class="unit_cost" name="price['+new_count+']" value="'+$('input:text[name=unit_cost]').val()+'" />'+
          '<input type="hidden" name="unit_size['+new_count+']" value="'+$('input:text[name=unit_size]').val()+'" />'+
 							"" + $('input:hidden[name=cat_name]').val() + "" ,  
-							"" + $("#desc option:selected").text() + "" , 
+							"" + $('input:hidden[name=commodity_name_]').val() + "" , 
 							"" + $('input:text[name=commodity_code]').val() + "" ,
 							"" + $('input:text[name=unit_size]').val() + "" ,
 							"" + $('input:text[name=unit_cost]').val() + "" ,

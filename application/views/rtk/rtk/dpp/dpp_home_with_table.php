@@ -100,8 +100,15 @@ function loadcountysummary(county) {
                     $q = 'SELECT * from dmlt_districts,districts 
                     where dmlt_districts.district=districts.id
                     and dmlt_districts.dmlt=' . $id;
+                    $q1 = 'SELECT * from user,districts 
+                    where user.district=districts.id
+                    and user.id=' . $id;
                     $res = $this->db->query($q);
+                    $res1 = $this->db->query($q1);
                     foreach ($res->result_array() as $key => $value) {
+                        $option .= '<option value = "' . $value['id'] . '">' . $value['district'] . '</option>';
+                    }
+                    foreach ($res1->result_array() as $key => $value) {
                         $option .= '<option value = "' . $value['id'] . '">' . $value['district'] . '</option>';
                     }
                     ?>
