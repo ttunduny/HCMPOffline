@@ -25,7 +25,7 @@ class Home_Controller extends MY_Controller {
         /* go to application/controllers/home_controller.php and check for this if statement */
         if ($access_level == "scmlt") {
 //            print_r($this->session->userdata());die; 
-            $district = $this->session->userdata('district_id');
+           /* $district = $this->session->userdata('district_id');
             $data['facilities'] = Facilities::get_total_facilities_rtk_in_district($district);
             $facilities = Facilities::get_total_facilities_rtk_in_district($district);
             $district_name = districts::get_district_name_($district);
@@ -69,7 +69,9 @@ class Home_Controller extends MY_Controller {
             $percentage_complete = number_format($percentage_complete, 0);
             $data['percentage_complete'] = $percentage_complete;
             $data['reported'] = $reported;
-            $data['nonreported'] = $nonreported;
+            $data['nonreported'] = $nonreported;*/
+            redirect('rtk_management/scmlt_home');
+
         } else if ($access_level == "rtk_manager") {
 
             redirect('rtk_management/rtk_manager_home');
