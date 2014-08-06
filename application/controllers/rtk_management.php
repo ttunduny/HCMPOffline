@@ -3460,6 +3460,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
 
         //$beg_date = date('Y-m-d', strtotime("first day of this Month"));
         $beg_date = date('Y-m', strtotime("-1 Month"));
+        $beg_date.='-01';
         $end_date = date('Y-m-d', strtotime("last day of previous Month"));
 
 
