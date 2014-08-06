@@ -837,6 +837,8 @@ $("#create_new").click(function() {
           	$('.modal-body').html("<div class='bg-warning' style='height:30px'>"+
 							"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"+
 							"<h3>Success!!! A new user was added to the system. Please Close to continue</h3></div>")
+							
+			$('.modal-footer').html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>")
 				
         }, 4000);
             

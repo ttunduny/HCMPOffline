@@ -1,4 +1,4 @@
-<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>Scripts/jquery.dataTables.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/datatable/jquery.dataTables.js"></script>
 <script src="http://tableclothjs.com/assets/js/jquery.tablecloth.js"></script>
 
 
@@ -34,7 +34,7 @@
 
         });
 
-        $('.nav li a').click(function(e) {
+        $('.navtbl li a').click(function(e) {
             var $this = $(this);
             var thistext = $(this).text();
             $('.nav li').removeClass('active');
@@ -51,7 +51,7 @@
 </script>
 
 <style>
-    @import "<?php echo base_url(); ?>DataTables-1.9.3 /media/css/jquery.dataTables.css";
+    @import "<?php echo base_url(); ?>assets/datatable/media/css/jquery.dataTables.css";
     @import "http://tableclothjs.com/assets/css/tablecloth.css";
 
     .alerts{
@@ -80,7 +80,7 @@
     }
 </style> 
 <div style="width:100%;font-size: 15px;background: #F8F8F8;padding: 10px 10px 10px 10px;border-bottom: solid 1px #ccc;">
-    <ul class="nav nav-pills">
+    <ul class="navtbl nav nav-pills">
 
         <?php foreach ($districts_in_county as $value) { ?>
             <li class=""><a href="#"><?php echo $value['district']; ?></a></li>
@@ -119,7 +119,7 @@ style="
             <tr>
                 <th><b>MFL</b></th>
                 <th><b>Facility Name</b></th>
-                <th><b>District</b></th>
+                <th><b>Sub-County</b></th>
                 <th><b>Received</b></th>
                 <th><b> Consumed</b></th>
                 <th><b>End balance<br />Physical Count</b></th>

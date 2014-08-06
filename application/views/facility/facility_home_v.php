@@ -136,8 +136,9 @@
             <h5>Orders</h5>
         </div>
          <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
-            <a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>KEMSA</h5></a>
-            <a href=""><h5>MEDS</h5></a> 
+            <a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>KEMSA online</h5></a>
+            <a href="" class="order-for-excel"><h5>KEMSA via excel</h5></a>
+            
         </div>  
 
             
@@ -180,7 +181,7 @@
 
 	
    $(document).ready(function() {
-
+    
    	var stock=$('#stocklevel').val()
 
    	if(stock==0){
@@ -199,7 +200,18 @@
            /* Act on the event */
            $('#update_order_hide').toggle('slow')
        }); 
-
+               $(".order-for-excel").on('click', function(e) {
+                  e.preventDefault(); 
+    var body_content='<?php  $att=array("name"=>'myform','id'=>'myform'); 
+    echo form_open_multipart('orders/facility_order',$att)?>'+
+'<input type="file" name="file" id="file" required="required" class="form-control"><br>'+
+'<button type="submit" name="submit"  value="Upload">Upload</button>'+
+'</form>';
+   //hcmp custom message dialog
+    dialog_box(body_content,
+    '');        
+    });
+    
  <?php echo $facility_dashboard_notifications['faciliy_stock_graph'] ?>
 
     });
@@ -245,5 +257,6 @@
 
           intro.start();
       }
+      
     </script>
    

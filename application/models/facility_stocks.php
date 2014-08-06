@@ -199,7 +199,18 @@ $group_by ");
 
 	public static function All_expiries($facility_code,$checker=null){
 		$and=isset($checker)? " and (f_s.status =1 or f_s.status =2)" : " and f_s.status =1";
-		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select * from  facility_stocks f_s 
+		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select     f_s.facility_code,
+    f_s.commodity_id,
+    f_s.batch_no,
+    f_s.manufacture,
+    f_s.status,
+    f_s.expiry_date,
+    c.commodity_name,
+    c.unit_size,
+    c.total_commodity_units,
+    c.unit_cost,
+    f_s.current_balance,
+    c.commodity_code from  facility_stocks f_s 
 		LEFT JOIN  commodities c ON c.id=f_s.commodity_id where facility_code=$facility_code 
 		 and f_s.current_balance>0 and expiry_date <= NOW() $and");
 		        return $stocks ;
