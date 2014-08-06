@@ -18,7 +18,6 @@
         <link href="<?php echo base_url() . 'assets/datatable/dataTables.bootstrap.css' ?>" type="text/css" rel="stylesheet"/>
         <link href="<?php echo base_url() . 'assets/css/font-awesome.min.css' ?>" type="text/css" rel="stylesheet"/>
         <script src="<?php echo base_url() . 'assets/scripts/jquery.js' ?>" type="text/javascript"></script>
-        <script src="<?php echo base_url() . 'assets/scripts/backfix.min.js' ?>" type="text/javascript"></script>
 
         <title>HCMP | <?php echo $title; ?></title>
 

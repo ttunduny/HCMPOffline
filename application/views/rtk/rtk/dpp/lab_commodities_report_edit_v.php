@@ -77,7 +77,7 @@
         if((num_q_used>sum_bbal_q_rec_pos_adj)&&(row!=0)){
             $('#losses_' + row).attr("value",0);                    
             $('#tests_done_' + row).attr("value",0);                    
-            $('#q_used_'+row).attr("color","red");
+            $('#q_used_'+row).css("border-color","red");
             $('#physical_count_' + row).attr("value",sum_bbal_q_rec_pos_adj);
 
         }else if((num_final<0)&&(row!=0)){
