@@ -4679,13 +4679,13 @@ WHERE
             $insert3 = "INSERT INTO facility_amc (`id`, `facility_code`, `commodity_id`, `amc`, `last_update`)VALUES (NULL, '$fcode', '3', '$amc3', '$time');";
             $insert5 = "INSERT INTO facility_amc (`id`, `facility_code`, `commodity_id`, `amc`, `last_update`)VALUES (NULL, '$fcode', '5', '$amc5', '$time');";
             $insert6 = "INSERT INTO facility_amc (`id`, `facility_code`, `commodity_id`, `amc`, `last_update`)VALUES (NULL, '$fcode', '6', '$amc6', '$time');";
-            /*
+            
               $this->db->query($insert1);
               $this->db->query($insert2);
               $this->db->query($insert3);
               $this->db->query($insert5);
               $this->db->query($insert6);
-             */
+            
 
             echo '<pre>';
             echo $insert1;
