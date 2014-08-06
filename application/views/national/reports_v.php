@@ -188,10 +188,10 @@ padding-top: 4.5%;
 								<section class="col-md-12" style="margin-top: 2%">
 							<label for="county">Select Interval</label>
 						   		<select class="form-control input-md" id="interval"> 
-						    	<option>Select Interval</option>
-						    	<option>2 Months</option>
-						    	<option>6 Months</option>
-						    	<option>1 Year</option>
+						    	<option value="0">Select Interval</option>
+						    	<option value="2">Next 2 Months</option>
+						    	<option value="6">Next 6 Months</option>
+						    	<option value="12">Next 1 Year</option>
 						    	
 						    	</select>
 							</section>
