@@ -11,10 +11,11 @@
       width: 560px;
     }
 </style>
-<link rel="stylesheet" type="text/css" href="http://tableclothjs.com/assets/css/tablecloth.css">
-<script src="http://tableclothjs.com/assets/js/jquery.tablesorter.js"></script>
-<script src="http://tableclothjs.com/assets/js/jquery.metadata.js"></script>
-<script src="http://tableclothjs.com/assets/js/jquery.tablecloth.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.tablesorter.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.metadata.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.tablecloth.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/tablecloth/assets/css/tablecloth.css">
+
 
 <script type="text/javascript">
     $(document).ready(function() {

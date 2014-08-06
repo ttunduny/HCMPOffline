@@ -30,7 +30,7 @@ $json_dist = str_replace('}', "", $json_dist);
 font-size: 13px;
 float: right;
 padding:4px;
-margin-top: 5px;
+margin-top: 15px;
 }
 #facilities_tlb_info{
 font-size: 15px; 
@@ -44,17 +44,21 @@ float: left;
 #facilities_tlb_filter{
   float: right;
 }
+.pagination{
+  margin-top: 20px;
+}
 table{
   font-size: 12px;
 }
 </style>
 
-  <link rel="stylesheet" type="text/css" href="http://tableclothjs.com/assets/css/tablecloth.css">
-  <script src="http://tableclothjs.com/assets/js/jquery.tablesorter.js"></script>
-  <script src="http://tableclothjs.com/assets/js/jquery.metadata.js"></script>
-  <script src="http://tableclothjs.com/assets/js/jquery.tablecloth.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.tablesorter.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.metadata.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.tablecloth.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/tablecloth/assets/css/tablecloth.css">
+<script type="text/javascript" language="javascript" src="<?php echo base_url();?>assets/datatable/jquery.dataTables.js"></script>
 
-  <script src="http://localhost/HCMP/scripts/bootstrap-typeahead.js"></script>
+ 
 
   <script type="text/javascript">
 
@@ -113,7 +117,7 @@ function update_rtk(val){
                             <p> <input type="text" class="form-control" name="facilitytype" id="facilitytype" /></p>
 
                             <select name="district" id="district" class="form-control">
-                              <option> -- Select District --</option>
+                              <option> -- Select Sub-County --</option>
                               <?php foreach ($districts as $dists) { ?>
                               <option value="<?php echo $dists['id']; ?>"><?php echo $dists['district']; ?></option>
                               <?php }?>
@@ -138,15 +142,16 @@ function update_rtk(val){
     <th>Name</th>
     <th>Owner</th>
     <th>County</th>
-    <th>District</th>
+    <th>Sub-County</th>
     <th>Reporting Status</th>
+    <th>Action</th>
    </thead>
   <tbody>
 <?php foreach ($facilities as $row) { 
    $code =$row['facility_code'];
    ?>
     <tr id="<?php echo $row['facil_id'];?>">    
-    <td><?php echo $code. '  <a href="../../rtk_management/facility_profile/' . $code. '" title="View">View</a>' ?></td>
+    <td><?php echo $code; ?></td>
     <td><?php echo $row['facility_name'];?></td>
     <td><?php echo $row['owner'];?></td>
     <td><?php echo $county;?></td>    
@@ -163,6 +168,17 @@ function update_rtk(val){
       {
         echo "Reporting";
         echo ' <a href="../../rtk_management/deactivate_facility/' . $row['facility_code'] . '" title="Remove"><span class="glyphicon glyphicon-minus"></span> </i></a>';
+      }?></td>
+
+  <td><?php if($row['rtk_enabled']==0)
+    {      
+      echo 'N/A';
+
+
+    }
+    else
+      {        
+        echo ' <a href="../../rtk_management/facility_profile/' . $code. ' title="View">View</a>';
       }?></td>
   </tr>
   <?php }?>

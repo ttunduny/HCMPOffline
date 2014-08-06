@@ -24,7 +24,8 @@
   </div>
   <div class="tab-pane" id="profile">stats</div>
   <div class="tab-pane" id="messages">settings</div>
-</div>
+  
+  </div>
 
 		</div>
 	</div>
