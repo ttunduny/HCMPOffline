@@ -5,6 +5,7 @@
 <script type="text/javascript">
 
     $(document).ready(function() {
+
         /* Build the DataTable with third column using our custom sort functions */
 
         $('#example').dataTable({
@@ -15,8 +16,8 @@
         });
 
         $("#allocate").button().click(function() {
-        	var loading = '<div id="loading"> &nbsp;&nbsp;<img src="<?php echo base_url(); ?>Images/ajax-loader.gif"><span style="font-size: 13px;color: #92CA8F;font-family: calibri;">Saving Allocations</span></div>';
-        	$('#system_alerts').html(loading);
+        	var loading = '<div id="loading"> &nbsp;&nbsp;<img src="<?php echo base_url(); ?>assets/img/ajax-loader.gif"><span style="font-size: 13px;color: #92CA8F;margin-left:100px; font-family: calibri;">Saving Allocations</span></div>';
+        	$('#allocation-response').html(loading);
       	
 
             var data = $('#myform').serialize();
@@ -24,8 +25,8 @@
                     '../rtk_allocation_data/',
                     {data: data},
             function(response) {
-                $('#system_alerts').html(response);
-                $('#system_alerts').addClass('alert alert-success');
+                $('#allocation-response').html(response);
+                $('#allocation-response').addClass('alert alert-success');
                location.reload(true);
 //                $( "#loading" ).hide();
             }
@@ -132,8 +133,8 @@ style="
     <br />
 <div id="clear">&nbsp;</div>
     <div>
-<input type="button" id="allocate" value="Allocate" style="background: #F8F7F7; padding: 7px;margin: 8px 0px 5px 19px;color: #0088cc;font-family: calibri;font-size: 18px;border: 1px solid #ccc;">
-
+<input class="pull-left" type="button" id="allocate" value="Allocate" style="background: #F8F7F7; padding: 7px;margin: 8px 0px 5px 19px;color: #0088cc;font-family: calibri;font-size: 18px;border: 1px solid #ccc;">
+<div id="allocation-response"></div>
 </div>
 <?php echo form_close(); ?>	
 </div>
