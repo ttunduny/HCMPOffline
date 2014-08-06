@@ -3480,7 +3480,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         AND lab_commodity_orders.order_date BETWEEN '$beg_date' AND '$end_date'
         ORDER BY districts.district,facilities.facility_code  ASC,lab_commodity_details.commodity_id ASC ";
         $orders = $this->db->query($sql);
-//        echo "<pre>";print_r($orders->result_array());die;
+       //echo "<pre>";print_r($orders->result_array());die;
         foreach ($orders->result_array() as $orders_arr) {
             $algorithm = ($orders_arr['commodity_id'] < 4) ? "Old-Algorithm" : 'New-Algorithm';
 
@@ -3497,6 +3497,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
             $district_name = $orders_arr['district'];
             $commodity = $orders_arr['commodity_name'];
             $unit_of_issue = $orders_arr['unit_of_issue'];
+            //$allocation = '<span class="label label-important">Pending Allocation for  ' . $lastmonth . '</span>';
 
 
             $commodity_id = $orders_arr['commodity_id'];
@@ -3507,9 +3508,9 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
             $lastmonth = date('F', strtotime("last day of previous month"));
             $allocation = '';
             if ($allocated > 0) {
-                $allocation = '<span class="label label-success">Allocated for  ' . $lastmonth . '</span>';
+                $allocation = '<span class=\"label label-success\">Allocated for  ' . $lastmonth . '</span>';
             } else {
-                $allocation = '<span class="label label-important">Pending Allocation for  ' . $lastmonth . '</span>';
+                $allocation = '<span class=\"label label-important\">Pending Allocation for  ' . $lastmonth . '</span>';
                 $allocated = ($amc_4month / $unit_of_issue);
                 $allocated = ceil($allocated);
             }
@@ -3679,8 +3680,7 @@ WHERE
 
     public function rtk_allocation_data() {
         if ($_POST['data'] == '') {
-            echo 'No data was found';
-            die;
+            echo 'No data was found';           
         }
         $data = $_POST['data'];
         $data = str_replace('=', '&', $data);

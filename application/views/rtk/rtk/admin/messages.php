@@ -16,6 +16,7 @@
 	<script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
 	<script src="<?php echo base_url().'assets/scripts/typehead/typeahead.js'?>" type="text/javascript"></script>
 	<script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/tagsinput/tagmanager.js'?>" type="text/javascript"></script>
 
   <script>
   paceOptions = {
@@ -146,12 +147,9 @@
         <tr>
           <label>To:</label>
         </tr><br/>
-        <tr>  
-          <div id="multiple-datasets" >           
-            <input class="typeahead form-control " id="receipient" type="text" placeholder="Enter Receipient" data-role="tagsinput" data-provide="typeahead" style="width:96%" />   
-          </div>
-
-
+        <tr>                    
+            <input class="typeahead form-control tm-input" id="receipient" type="text" placeholder="Enter Receipient" data-role="tagsinput" data-provide="typeahead" style="width:96%" />   
+          
         </tr><br/>    
         <tr>
           <label>Subject:</label>
@@ -222,6 +220,11 @@ var substringMatcher = function(strs) {
             
             facilities.initialize();
             
+            $(".tm-input").tagsManager({               
+              replace:false,                              
+              onlyTagList: false,  
+              
+            });
 
             $('.typeahead').typeahead({
               highlight: true
@@ -240,14 +243,14 @@ var substringMatcher = function(strs) {
                 onlyTagList: true,  
                 
               });*/
-            $('#receipient').tagsinput({
+            /*$('#receipient').tagsinput({
               typeaheadjs: {
                 name: 'facilities',
                 displayKey: 'facilities',
                 valueKey: 'facilities',
                 source: facilities.ttAdapter()
               }
-            });
+            });*/
 
 
             function onSelected($e, datum) {
