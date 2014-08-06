@@ -1064,6 +1064,7 @@ class Reports extends MY_Controller
 
 
 		$facility_data = Facilities::get_Facilities_using_HCMP($county_id,$district,$facility_code);
+		
 		$series_data = array();
 		$category_data = array();
 		$series_data_monthly = array();
@@ -1117,6 +1118,7 @@ class Reports extends MY_Controller
 			}
 		endfor;
 		
+		
 		//for setting the month name in the graph when filtering
 		$m = date('F',strtotime('2000-'.$month.'-01'));
 				
@@ -1147,7 +1149,10 @@ class Reports extends MY_Controller
 			endforeach;
 
 		endfor;
-			
+			/*echo "<pre>";
+		print_r($series_data_monthly);
+		echo "</pre>";
+		exit;*/
 		$graph_data = array();
 		$graph_data = array_merge($graph_data,array("graph_id"=>'container_monthly'));
 		$graph_data = array_merge($graph_data,array("graph_title"=>'Monthly Facility Access for '. $year));
