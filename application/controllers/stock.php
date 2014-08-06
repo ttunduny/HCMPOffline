@@ -928,6 +928,61 @@ public function amc(){
 	$this->session->set_flashdata('system_success_message', "AMC Details Have Been Saved");
 	redirect('home');
 }
+public function fix(){
+   // get the facility_codes 
+   $facility_codes=Doctrine_Manager::getInstance()->getCurrentConnection()
+   ->fetchAll("select distinct `facility_code` from `facility_issues` WHERE status=1");
+   foreach( $facility_codes as $key=> $facility_code){
+   //step one reset refrence table
+   $facility_code=$facility_code['facility_code'];
+   $min_date= Doctrine_Manager::getInstance()->getCurrentConnection()
+   ->fetchAll("select min(date_issued) as min_date,issued_by from `facility_issues` WHERE  facility_code=$facility_code and status=1");
+   $reset_facility_transaction_table = Doctrine_Manager::getInstance()->getCurrentConnection();
+   $reset_facility_transaction_table->execute("DELETE FROM `facility_transaction_table` WHERE  facility_code=$facility_code; "); 
+   $reset_facility_transaction_table->execute("DELETE FROM `facility_issues` WHERE  facility_code=$facility_code and s11_No='initial stock update'
+   and status=1");
+   //step two get the facility stocks 
+   $facility_stocks=facility_stocks::get_facility_commodity_total($facility_code);
+   $data_array_facility_transaction=$data_array_facility_issues=array();
+   foreach($facility_stocks as $facility_stock){
+   $commodity_id=   $facility_stock['commodity_id'];
+   if($commodity_id>0):
+   $total= Doctrine_Manager::getInstance()->getCurrentConnection()
+   ->fetchAll("select ifnull(sum(qty_issued),0) as total from `facility_issues` WHERE  facility_code=$facility_code and status=1 and commodity_id=$commodity_id");
+            $mydata2=array('facility_code'=>$facility_code,
+            'commodity_id'=>$facility_stock['commodity_id'],
+            'opening_balance'=>$facility_stock['commodity_balance'],
+            'total_issues'=>$total[0]['total'],
+            'total_receipts'=>0,
+            'adjustmentpve'=>0,
+            'adjustmentnve'=>0,
+            'date_added'=>$min_date[0]['min_date'],
+            'closing_stock'=>$facility_stock['commodity_balance'],
+            'status'=>1);   //send the data to the facility_transaction_table 
+                  
+            array_push($data_array_facility_transaction, $mydata2); 
+            $total_unit_count_=$facility_stock['commodity_balance']*-1;
+            $mydata_=array('facility_code'=>$facility_code,
+            's11_No' =>'initial stock update',
+            'commodity_id'=>$facility_stock['commodity_id'],
+            'batch_no'=> "N/A",
+            'expiry_date'=>"N/A",
+            'balance_as_of'=>0,
+            'qty_issued' => $total_unit_count_,
+            'date_issued' => $min_date[0]['min_date'],
+            'issued_to' => 'N/A',
+            'issued_by' => $min_date[0]['issued_by']); 
+             //create the array to push to the db
+            array_push($data_array_facility_issues, $mydata_);
+            
+endif; 
+   }  
+            $this -> db -> insert_batch('facility_transaction_table', $data_array_facility_transaction);
+            $this -> db -> insert_batch('facility_issues', $data_array_facility_issues); 
+            echo "<br>$key fixed facility code ".$facility_code; 
+   }
+
+}
 }
 
 ?>
