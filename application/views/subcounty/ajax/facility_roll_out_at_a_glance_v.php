@@ -3,7 +3,7 @@
   <b>Below is the project status in the county</b>
 </div>
 	 <div id="temp"></div>
-	<?php echo @$data ?>
+	<?php echo @$data; ?>
 	<div style="padding-top: 25px;">
 <div class="filter" >
 <h5>
@@ -82,11 +82,11 @@ $(document).ready(function() {
         var date1=$(this).attr("date"); 
         var  date=encodeURI(date1);
       
-	    ajax_request_special_(url+"/"+id+"/"+date, date1);	
+	    ajax_special_(url+"/"+id+"/"+date, date1);	
 	    
 	    });
 
-    function ajax_request_special_(url,date){
+    function ajax_special_(url,date){
 	var url = url;
 	 $.ajax({
           type: "POST",
