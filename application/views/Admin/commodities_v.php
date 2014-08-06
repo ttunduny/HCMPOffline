@@ -23,7 +23,10 @@
   	
   </div>
   <div class="tab-pane" id="profile">stats</div>
-  <div class="tab-pane" id="messages">settings</div>
+  <div class="tab-pane" id="messages">
+  <button type="button" class="order-for-excel btn btn-primary" id="order-for-excel">
+  <span class="glyphicon glyphicon-floppy-open"></span>Upload File</button>    
+  </div>
   
   </div>
 
@@ -39,12 +42,22 @@
 <script>
 	
 	$(document).ready(function () {
-		
+
+    
 		$('#myTab a').click(function (e) {
  		 e.preventDefault()
   			$(this).tab('show')
 })
-		
+		    $("#order-for-excel").on('click', function(e) {
+    e.preventDefault(); 
+    var body_content='<?php  $att=array("name"=>'myform','id'=>'myform'); 
+    echo form_open_multipart('orders/facility_order',$att)?>'+
+'<input type="file" name="file" id="file" required="required" class="form-control"><br>'+
+'<button type="submit" name="submit"  value="Upload">Upload</button>'+
+'</form>';
+   //hcmp custom message dialog
+    dialog_box(body_content,'');        
+    });
 	});
 	
 	
