@@ -287,15 +287,32 @@ padding-top: 4.5%;
 						    	</select>
 			  </div>
 			  
+			  <div class="col-xs-9">
+			  	<div class="form-group">
+    		
+    		<div class="col-md-12">
+    			<label for="" class="control-label text-right">View as</label>
+    			<div class="input-group">
+    				<div id="radioBtn" class="btn-group">
+    					<a class="btn btn-primary btn-sm active" data-toggle="a" data-title="PDF">PDF</a>
+    					<a class="btn btn-primary btn-sm notActive" data-toggle="a" data-title="Excel">Excel</a>
+    					<a class="btn btn-primary btn-sm notActive" data-toggle="a" data-title="Graph">Graph</a>
+    				</div>
+    				<input type="hidden" name="happy" id="happy">
+    			</div>
+    		</div>
+    	</div>
+			  </div>
+			  
+			  
+		
+          
 			 
 		</div>
 		
     	
     	<div class="modal-footer">
-				<button type="button" class="btn btn-success" >
-				<span class="glyphicon glyphicon-th-list"></span>	View
-				</button>
-				<button type="button" class="btn btn-danger edit_user">
+				<button type="button" class="btn btn-success edit_user">
 				<span class="glyphicon glyphicon-file"></span>	Generate
 				</button>
 			</div>
@@ -327,7 +344,14 @@ padding-top: 4.5%;
       $("#facility_id").append(drop_down);
     });
     
-     	
+     $('#radioBtn a').on('click', function(){
+    var sel = $(this).data('title');
+    var tog = $(this).data('toggle');
+    $('#'+tog).prop('value', sel);
+    
+    $('a[data-toggle="'+tog+'"]').not('[data-title="'+sel+'"]').removeClass('active').addClass('notActive');
+    $('a[data-toggle="'+tog+'"][data-title="'+sel+'"]').removeClass('notActive').addClass('active');
+})	
     
     $( "#expfrom,#expto" ).datepicker();
     
