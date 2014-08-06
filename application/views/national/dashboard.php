@@ -1,4 +1,6 @@
-<html lang="en"><head>
+<html lang="en">
+	
+	<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,13 +14,16 @@
     <link href="<?php echo base_url().'assets/css/jquery-ui-1.10.4.custom.min.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
-    <link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
-    <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
+    <link href="<?php echo base_url().'assets/font-awesome/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
+    <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
+    <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
     <script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
     <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
+    
+     
     <title>HCMP | National</title>
 <script>
    paceOptions = {
@@ -61,17 +66,14 @@ padding-top: 4.5%;
 {
   border-radius: 0 !important;
 }
-#overview{
-	padding-right:0;
-}
+
 h4{
 	
 	padding:4px;
-	color:white;
-	background:#528f42;
+	color:black;
+	background:white;
 	text-align:center;
-	margin:0;
-	
+	margin:0;	
 	font-size:15px;
 }
 /*state overview*/
@@ -141,16 +143,30 @@ h4{
 .state-overview .b2 {
     background: #fd7998;
 }
-
+#notification_dash p {
+	color: #c6cad6;
+	padding-top:10px;
+	height:40px;
+}
+.badge_color{
+	background-color: darkcyan;
+}
+.count{
+	font-size:14px;
+}
 </style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </script></head>
-  <body screen_capture_injected="true" style="">
-<div class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color:white">
+  </script>
+  
+  </head>
+  
+  <body screen_capture_injected="true" style="background-color: whitesmoke;">
+  	
+  	<div class="container-fluid navbar-default navbar-fixed-top" role="navigation" style="background-color:white">
         <div class="container-fluid">
             <div class="navbar-header" id="st-trigger-effects">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -188,20 +204,102 @@ h4{
 
       </div>
     </div>
-	
-	<div class="container-fluid" style="" id="main-content">
-	<div class="row">
-		
-		<div class="col-md-4">
+    
+   <div class="container-fluid">
+   	<div class="row-fluid">
+   		<div class="col-md-12">
+   			<div class="row state-overview">
+                  <div class="col-lg-2 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol terques">
+                          	<span class="count" id="hcw_trained"></span>
+                          </div>
+                          <div class="value">
+                          	<p>Health Workers Trained</p>
+                              
+                              
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-2 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol red">
+                            <span class=" count" id="facilities_rolled_out"></span>
+                          </div>
+                          <div class="value">
+                          	<p>Facilities Rolled Out</p>
+                              
+                              
+                          </div>
+                      </section>
+                  </div>
+                  
+                  <div class="col-lg-2 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol yellow">
+                              <span class=" count" id="facilities_rolled_out"></span>
+                          </div>
+                          <div class="value">
+                          	<p>Facilities Using HCMP</p>
+                                                           
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-6 col-sm-12">
+                      <section class="panel" style="height: 76px;text-align: center">
+                      		<div class="row-fluid" id="notification_dash">
+                      			<div class="col-lg-4">                      				
+                      				<p>Total Private Health Facilities</p>
+                      				<span class="badge badge_color">361</span>
+
+                      			</div>
+                      			<div class="col-lg-2">
+                      				<p>Faith-based Facilities</p>
+                      				<span class="badge badge_color">114</span>
+                      			</div>
+                      			<div class="col-lg-2">
+                      				<p>Public Health Facilities</p>
+                      				<span class="badge badge_color">6210</span>
+                      			</div>
+                      			<div class="col-lg-2">
+                      				<p>Other Facilities</p>
+                      				<span class="badge badge_color">238</span>
+                      			</div>
+                      			<div class="col-lg-2">
+                      				<p>Total Facilities</p>
+                      				<span class="badge badge_color">7213</span>
+                      			</div>
+                      		
+                      		</div>
+                          
+                      </section>
+                  </div>
+                  
+              </div>
+              
+              
+   		</div>
+   		
+   	</div><!--/row for notifications -->
+   	
+   	<div class="row-fluid" style="">
+   		<div class="col-md-5">
+   			<div class="row">
 			
-			<div class="row">
-				<div class="col-md-12" style="/*border: 1px solid #000;*/height: 620px">
-					<div style="/*border: 1px solid #000;*/height: 500px"><div id="map" ></div></div>
-					<div style="width:130px;margin-left:30%;padding:2%">
+			<div class="col-md-12">
+				
+				
+					<div id="map" style="max-height: 80%;">
+						
+					</div>
+			<div style="width:130px;margin-left:30%;padding:2%">
             <div style="display:inline-block;width:10px;height:10px;background:#FFCC99">
                 
             </div>
-            <div style="width:80px;display:inline-block;margin-left:5px;font-size:120%">Using HCMP</div></div>
+            <div style="width:80px;display:inline-block;margin-left:5px;font-size:120%">
+            	Using HCMP
+            	</div>
+            </div>
 					<script>
 					var map= new FusionMaps ("assets/FusionMaps/FCMap_KenyaCounty.swf","KenyaMap","100%","100%","0","0");
 					map.setJSONData(<?php echo $maps; ?>);
@@ -210,133 +308,26 @@ h4{
     				
                     </script>
 				
-					</div>
-				
-			</div>
-			
-			</div>
-		<div class="col-md-8">
-			
-			<div class="row">
-				<div class="col-md-12" style="/*border: 1px solid #000;*/height: 200px" id="overview">
-					
-					<div class="row state-overview">
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol terques">
-                          	<span class="glyphicon glyphicon-user"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Health Workers Trained</p>
-                              <h1 class="count" id="hcw_trained"></h1>
-                              
-                          </div>
-                      </section>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol red">
-                              <span class="glyphicon glyphicon-user"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Facilities Rolled Out</p>
-                              <h1 class=" count2" id="facilities_rolled_out"></h1>
-                              
-                          </div>
-                      </section>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol yellow">
-                              <span class="glyphicon glyphicon-user"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Total facilities</p>
-                              <h1 class=" count3">328</h1>
-                              
-                          </div>
-                      </section>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol blue">
-                              <span class="glyphicon glyphicon-user"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Public health facilities	</p>
-                              <h1 class=" count4">10328</h1>
-                              
-                          </div>
-                      </section>
-                  </div>
-              </div>
-              
-              <div class="row state-overview">
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol purple">
-                          	<span class="glyphicon glyphicon-user"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Private health facilities</p>
-                              <h1 class="count">495</h1>
-                              
-                          </div>
-                      </section>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol b">
-                              <span class="glyphicon glyphicon-user"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Faith-based Facilities</p>
-                              <h1 class=" count2">947</h1>
-                              
-                          </div>
-                      </section>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol seagreen">
-                              <span class="glyphicon glyphicon-user"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Other Facilities</p>
-                              <h1 class=" count3">328</h1>
-                              
-                          </div>
-                      </section>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol b2">
-                              <span class="glyphicon glyphicon-user"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Facilities Using HCMP</p>
-                              <h1 class=" count4">10328</h1>
-                              
-                          </div>
-                      </section>
-                  </div>
-              </div>
-				</div>
-				
-			</div>
 			
 			
-			
-			
-			<div class="row" style="margin-bottom: 5.5%;">
+		</div>
+   			
+   		</div>
+   		
+   		
+   		
+   	</div>
+   		<div class="col-md-7" style="background-color: white;">
+   			
+   			<div class="row" style="margin-bottom: 5.5%;">
 				<div class="col-md-12" style="/*border: 1px solid #000;*/height: 420px" id="expiries">
 					
 					<h4>National  Expiries</h4>
        
        <div class="col-md-6" style="border: 1px solid #DDD; ">
       
-       <div class="panel-heading">
-       <h5 class="panel-title">Actual Expiries </h5>
+       <div class="">
+       <h4 class="">Actual Expiries </h4>
        </div>
        
        
@@ -346,8 +337,8 @@ h4{
         
         <div class="col-md-6" style="border: 1px solid #DDD;" >
       
-       <div class="panel-heading">
-       <h5 class="panel-title">Potential Expiries </h5>
+       <div class="">
+       <h4 class="">Potential Expiries </h4>
        </div>
         
       <div id="potential"></div>
@@ -357,10 +348,12 @@ h4{
 				</div>
 			</div>
 			
-		</div>
-	</div>
-	
-	<div class="container-fluid">
+   		</div>
+   	<!--/row for map and graph 1 -->
+   	
+   </div>
+   
+   <div class="container-fluid">
 			
     <div class="row">
                 <div class="col-md-6">
@@ -475,11 +468,7 @@ h4{
        </div>
      </div>
      </div>
-    </div> <!-- /container -->
-    <input type="hidden" name="county_id" id="county_id" />
-    
-
-    
+   
    <script>
          //auto run
          var url ='<?php echo base_url()?>';
@@ -615,12 +604,13 @@ h4{
     <script>
     var url='<?php echo base_url(); ?>';
     </script>
-    	 <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
+  <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
     <!-- Bootstrap core JavaScript===================== --> 
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
- 
   <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
-   <script src="<?php echo base_url().'assets/scripts/exporting.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/exporting.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>  
   <!-- Placed at the end of the document so the pages load faster -->
   <script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
@@ -632,6 +622,6 @@ h4{
   <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrapPagination.js'?>" type="text/javascript"></script>
   <!-- validation ===================== -->
   <script src="<?php echo base_url().'assets/scripts/jquery.validate.min.js'?>" type="text/javascript"></script>
-	    <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/loadingbar.css'?>" />
-	    <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/elusive-webfont.css'?>" />
-<div id="window-resizer-tooltip" style="display: none;"><a href="#" title="Edit settings" style="background-image: url(chrome-extension://kkelicaakdanhinjdeammmilcgefonfh/images/icon_19.png);"></a><span class="tooltipTitle">Window size: </span><span class="tooltipWidth" id="winWidth">1366</span> x <span class="tooltipHeight" id="winHeight">768</span><br><span class="tooltipTitle">Viewport size: </span><span class="tooltipWidth" id="vpWidth">1366</span> x <span class="tooltipHeight" id="vpHeight">449</span></div></body></html>
+  <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/loadingbar.css'?>" />
+  <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/elusive-webfont.css'?>" />
+</body></html>
