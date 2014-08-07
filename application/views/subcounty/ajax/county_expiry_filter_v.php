@@ -135,7 +135,7 @@ endforeach;
         $(".county-download").on('click',function(e) {
 		e.preventDefault();			  
         var url_ = 'reports/get_county_cost_of_expiries_new/'+
-        $("#county_year_filter").val()+"/"+$("#county_month_filter").val()+ "/NULL"+"/"+$("#county_plot_value_filter").val()+"/csv_data";	
+        $("#county_year_filter").val()+"/"+$("#county_month_filter").val()+ "/NULL"+"/"+$("#county_plot_value_filter").val()+"/NULL"+"/csv_data";	
 		 window.open(url+url_ ,'_blank');
          });	
          
@@ -149,7 +149,7 @@ endforeach;
          $(".subcounty-download").on('click',function(e) {
 		e.preventDefault();	
         var url_ = 'reports/get_county_cost_of_expiries_new/'+
-        $("#year_filter").val()+"/"+$("#month_filter").val()+ "/"+$("#district_filter").val()+"/"+$("#plot_value_filter").val()+"/csv_data";	 
+        $("#year_filter").val()+"/"+$("#month_filter").val()+ "/"+$("#district_filter").val()+"/"+$("#plot_value_filter").val()+"/NULL"+"/csv_data";	 
 		 window.open(url+url_ ,'_blank');		
           }); 
 

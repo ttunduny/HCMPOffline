@@ -5,6 +5,7 @@ border: 1px solid #FFF !important;
 }
 </style>
 <button type="submit" id="filter" name="filter" class="btn btn-default ">Download PDF <span class="glyphicon glyphicon-download"></span> </button>
+<!-- <a href='get_expiries_pdf' target="_blank"> -->
  <div style="min-height: 400px; background:#edc1d8">
   <img style="align-content: center;margin-left: 46%; border:0 none;" src="<?php echo base_url();?>assets/img/coat_of_arms-resized1.png" class="img-responsive " alt="Responsive image">
         <div id="" style="text-align: center; ">

@@ -625,6 +625,15 @@ class Reports extends MY_Controller
 		$this -> load -> view("shared_files/template/template", $data);
 
 	}
+	/* public function get_expiries_pdf(){
+			 $pdf_body = $this ->  stock_control_ajax();
+			 $file_name = $facility_name . '_facility_program_report_date_created_'. date('d-m-y');
+
+			$pdf_data = array("pdf_title" => "Bin Card For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'download', 'file_name' => $file_name);
+ 
+			 $this -> hcmp_functions -> create_pdf($pdf_data);
+		 redirect();
+	 }*/
 	public function stock_control_ajax() {
 
 		$facility_code = $this -> session -> userdata('facility_id');
@@ -2431,9 +2440,13 @@ $month = $data['expiry_month'];
 		}
 
 		if($report_type=="csv_data"):
+			foreach ($final_graph_data as $data) :
+				$series_data_ =	array_merge($series_data_ , array(array($data["name"], (int) $data['total'])));
+			endforeach;
 			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "stock expired in $commodity_name $title $month_ $year", 'file_name' => "Stock_expired_$commodity_name_$title_$month_$year");
-			$row_data = array(array("stock expired in $title $month_ $year","stock expired in $option_new"));
-			$column_data = array("");
+			$row_data = array();
+			$column_data = array("stock expired in $title $month_ $year", "stock expired in $option_new");
+			
 			$excel_data['column_data'] = $column_data;
 			$row_data=array_merge($row_data,$series_data_);
 			$excel_data['row_data'] = $row_data;
@@ -2538,7 +2551,7 @@ $month = $data['expiry_month'];
 			foreach ($final_graph_data as $data) :
 				$series_data_ =	array_merge($series_data_ , array(array($data["district"],$data["facility_name"],$data["commodity_name"],$data['total'])));
 			endforeach;
-			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "Stock level $commodity_name $title $month_ $year", 'file_name' => "Stock_level_$commodity_name_$title_$month_$year");
+			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "Months Of Stock $commodity_name $title $month_ $year", 'file_name' => "Months_Of_Stock_$commodity_name_$title_$month_$year");
 			$row_data = array();
 			$column_data = array("District","Facility Name","Commodity Name", "Month of Stock");
 			$excel_data['column_data'] = $column_data;
@@ -2547,7 +2560,7 @@ $month = $data['expiry_month'];
 			$this -> hcmp_functions -> create_excel($excel_data);
 
 		else:
-			echo $district_name;
+			//echo $district_name;
     		$graph_type = 'bar';			
     		$graph_data = array_merge($graph_data,array("graph_id"=>'dem_graph_'));
 		    $graph_data = array_merge($graph_data,array("graph_title"=>"Months Of Stock For ".$title.""));
