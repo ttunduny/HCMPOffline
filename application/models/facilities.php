@@ -405,28 +405,41 @@ public static function get_dates_facility_went_online($county_id, $district_id =
 	AND d.county =$county_id
 	$addition
 	AND UNIX_TIMESTAMP(  `date_of_activation` ) >0
-	ORDER BY  `date_of_activation` ASC ");
+	ORDER BY  `date_of_activation` ASC 
+	");
 	return $q;
 		
 }
 
-public static function get_facilities_which_went_online_($district_id, $date_of_activation)
+public static function get_facilities_which_went_online_($district_id = null, $date_of_activation)
 {
-		$and_data =(isset($district_id)&& ($district_id>0)) ?"AND u.district = $district_id" : null;
-		$and_data .=(isset($county_id)&& ($county_id>0)) ?" AND u.county_id = $county_id" : null;
-
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-			SELECT (select count(targetted) 
-			from facilities f 
-			where f.district='$district_id' 
-			and f.targetted = 1) as total_facilities_targetted, 
-			(select count(facility_name) from facilities f where f.district = $district_id and using_hcmp=1) as total_using_hcmp,
-			count(facility_code) as total ,
-			(select count(id) from facilities f where f.district='$district_id') as total_facilities 
-				from facilities f, districts d 
-				where f.district=d.id 
-				and d.id=$district_id 
-				and DATE_FORMAT(  `date_of_activation` ,  '%M %Y' ) = '$date_of_activation'");
+	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+	SELECT 
+		(select count(targetted) from facilities f 	where f.district='$district_id' and f.targetted = 1) as total_facilities_targetted, 
+		(select count(facility_name) from facilities f where f.district = $district_id and using_hcmp=1) as total_using_hcmp,
+		count(facility_code) as total ,
+		(select count(id) from facilities f where f.district='$district_id') as total_facilities 
+	from 
+		facilities f, 
+		districts d 
+	where 
+		f.district = d.id 
+		and d.id = $district_id 
+		and DATE_FORMAT(  `date_of_activation` ,  '%M %Y' ) = '$date_of_activation'");
+				
+		return $q;		
+}
+public static function get_targetted_facilities($district_id = null)
+{
+	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+	SELECT 
+    	count(targetted) as total_facilities_targetted
+	from
+	    facilities f
+	where
+	    f.district = '$district_id' and f.targetted = 1
+		");
+				
 		return $q;		
 }
 public static function get_facilities_reg_on_($district_id,$date_of_activation){

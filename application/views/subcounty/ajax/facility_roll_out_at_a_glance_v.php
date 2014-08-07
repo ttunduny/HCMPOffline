@@ -1,9 +1,9 @@
 <div id="dialog"></div>
-<div class="alert alert-info" >
+	<div class="alert alert-info" >
   <b>Below is the project status in the county</b>
 </div>
 	 <div id="temp"></div>
-	<?php echo @$data ?>
+	<?php echo @$data; ?>
 	<div style="padding-top: 25px;">
 <div class="filter" >
 <h5>
@@ -33,14 +33,14 @@
 	
 	</h5>
 </div>
-	<div style="z-index: -5000;" >
+	<div>
 	<div id="container"  style="height:60%; width: 50%; margin: 0 auto; float: left">
 	</div>
 	<div id="container_monthly"  style="height:60%; width: 50%; margin: 0 auto;float: left"></div>	
 	</div>
-	<div id="log_data_graph"  style="height:60%; width: 50%; margin: 0 auto;float: left;z-index: -5000;"></div>	
+	<div id="log_data_graph"  style="height:60%; width: 50%; margin: 0 auto;float: left"></div>	
 	</div>
-	
+
 <script>
 $(document).ready(function() {
 	<?php echo @$graph_data_daily; ?>
@@ -81,12 +81,11 @@ $(document).ready(function() {
         var date1=$(this).attr("date"); 
         var  date=encodeURI(date1);
       
-	    ajax_request_special_(url+"/"+id+"/"+date, date1);	
+	    ajax_special_(url+"/"+id+"/"+date, date1);	
 	    
 	    });
 
-    function ajax_request_special_(url,date){
-    	alert('ok');
+    function ajax_special_(url,date){
 	var url = url;
 	 $.ajax({
           type: "POST",

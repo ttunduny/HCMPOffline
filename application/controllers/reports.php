@@ -1004,14 +1004,6 @@ class Reports extends MY_Controller
 			endforeach;
 		}
 
-
-
-		//Holds all the months of the year
-
-
-
-
-
 		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 
@@ -1187,8 +1179,7 @@ class Reports extends MY_Controller
 
 
 		$graph_log = $this->hcmp_functions->create_high_chart_graph($graph_log_data);
-
-		$data['graph_data_monthly'] =	$graph_monthly;
+		$data['graph_data_monthly'] = $graph_monthly;
 		$data['graph_data_daily'] =	$graph_daily;
 		$data['graph_log'] = $graph_log;
 
@@ -1217,7 +1208,6 @@ class Reports extends MY_Controller
 	{
 		//$district_id = $this -> session -> userdata('district_id');
 		$county_id = $this -> session -> userdata('county_id');
-
 		$district_data = districts::getDistrict($county_id);
 	
 		$table_data = "<tbody>";
@@ -1272,7 +1262,6 @@ class Reports extends MY_Controller
 				$district_total_facilities_targetted = array_merge($district_total_facilities_targetted, array($district_name => $total_facilities_targetted));
 				(array_key_exists($district_name, $district_total_facilities_using_hcmp)) ? $district_total_facilities_using_hcmp[$district_name] = $total_facilitites_using_hcmp : 
 				$district_total_facilities_using_hcmp = array_merge($district_total_facilities_using_hcmp, array($district_name => $total_facilitites_using_hcmp));
-
 				$table_data .= ($total > 0) ? "<td><a href='#' id='$district_id' class='ajax_call2 link' date='$date'> $total</a></td>" : "<td>$total</td>";
 
 			endforeach;
@@ -1298,7 +1287,6 @@ class Reports extends MY_Controller
 			$total_facility_list .= ($checker == 1) ? "<tr><td><b>TOTAL: Facilities in District</b></td><td>$district_total_facilities[$key]</td>" : "<td>$district_total_facilities[$key]</td>";
 			$table_data .= ($checker == 1) ? "<td><b>TOTAL: Facilities using HCMP</b></td><td>$value</td>" : "<td>$value</td>";
 			$table_summary .= ($checker == 1) ? "<td><b>TOTAL: Facilities using HCMP</b></td><td>$value</td>" : "<td>$value</td>";
-
 			$total_targetted_facility_list .= ($checker == 1) ? "<tr><td><b>TOTAL: Targetted Facilities in District</b></td><td>$district_total_facilities_targetted[$key]</td>":"<td>$district_total_facilities_targetted[$key]</td>";
 
 			$total_facilities_in_county = $total_facilities_in_county + $district_total_facilities[$key];
@@ -1326,7 +1314,6 @@ class Reports extends MY_Controller
 		$targetted_vs_using_hcmp = 0;
 		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
 		@$targetted_vs_using_hcmp = round((($targetted_total/$all_facilities)) * 100, 1);
-
 		$data_ = "
 		<div class='tabbable tabs-left'>
 		<div class='tab-content'>
@@ -2488,16 +2475,10 @@ $month = $data['expiry_month'];
 			$this -> session -> userdata('district_id'): null;
 			}
 			break;
-
-			default:
-
-			break;
-		}
-
-
-     	$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id);
-        $graph_data = $series_data =array();
-
+	}
+		
+		$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id);
+        $graph_data = $series_data = $series_data_ = array();
 		$month = date('F Y');
 
 			if (isset($commodity_id)){
@@ -2534,20 +2515,14 @@ $month = $data['expiry_month'];
 			 }
 			 echo $district_name[0];
 		if($report_type=="table_data"):
-       		$graph_data = array_merge($graph_data, array("graph_title" => "Months Of Stock For ".$title.""));
-			/*echo "<pre>";
-			print_r($report_type);
-			echo "</pre>";
-			exit;*/
-		foreach ($final_graph_data as $data) :
-			array_push($series_data , array($data["district"],$data["facility_name"],$data["commodity_name"],$data['total']));
-		endforeach;
-       endif;
-		if($report_type=="table_data"):
-
-			$category_data = array(array("Sub-county","Facility Name","Commodity Name","Month of Stock"));
+       		$graph_data = array_merge($graph_data, array("graph_title" => "Months Of Stock For ".$title.""));	
+			foreach ($final_graph_data as $data) :
+				array_push($series_data_ , array($data["district"],$data["facility_name"],$data["commodity_name"],$data['total']));
+				array_push($series_data , array($data["district"],$data["facility_name"],$data["commodity_name"],$data['total']));
+			endforeach;
+    			
+			$category_data = array(array("Sub-county","Facility Name","Commodity Name","Total"));
 			//array_push($category_data, array("Stock level $commodity_name $title $month_ $year","stocks worth in $option"));
-
 	       	$graph_data=array_merge($graph_data,array("table_id"=>'graph_default'));
 		    $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
 		    $graph_data=array_merge($graph_data,array("table_body"=>$series_data));
@@ -2559,11 +2534,15 @@ $month = $data['expiry_month'];
 			//exit;
 			//echo $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
 		elseif($report_type=="csv_data"):
+			
+			foreach ($final_graph_data as $data) :
+				$series_data_ =	array_merge($series_data_ , array(array($data["district"],$data["facility_name"],$data["commodity_name"],$data['total'])));
+			endforeach;
 			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "Stock level $commodity_name $title $month_ $year", 'file_name' => "Stock_level_$commodity_name_$title_$month_$year");
-			$row_data = array(array("Stock level $commodity_name $title $month_ $year",$option_new));
-			$column_data = array("");
+			$row_data = array();
+			$column_data = array("District","Facility Name","Commodity Name", "Month of Stock");
 			$excel_data['column_data'] = $column_data;
-			array_push($row_data,$series_data_); 
+			$row_data = array_merge($row_data,$series_data_);
 			$excel_data['row_data'] = $row_data;
 			$this -> hcmp_functions -> create_excel($excel_data);
 
@@ -2675,18 +2654,18 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 	}
 
 
-   public function stock_level_dashboard(){
+   public function stock_level_dashboard()
+   {
+     $data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
+     $data['c_data'] = Commodities::get_all_2();
+     $data['tracer_items'] = Commodities::get_tracer_items();
+	 $data['division_commodities'] = commodity_division_details::get_all_divisions();
+	 $data['categories']= commodity_sub_category::get_all_pharm();
+	 $data['number_of_tracer_items'] = count(facility_stocks_temp::get_tracer_item_names());
 
-	     $data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
-	     $data['c_data'] = Commodities::get_all_2();
-         $data['tracer_items'] = Commodities::get_tracer_items();
-		 $data['division_commodities'] = commodity_division_details::get_all_divisions();
-		 $data['categories']= commodity_sub_category::get_all_pharm();
-		 $data['number_of_tracer_items'] = count(facility_stocks_temp::get_tracer_item_names());
+     return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
 
-	     return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
-
-	    }
+    }
    public function facility_stock_level_dashboard(){
    				$county_id = $this -> session -> userdata('county_id');
    				$view = 'shared_files/template/dashboard_template_v';
@@ -2762,7 +2741,6 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code, $district_id, $county_id,
 		$category_id, $commodity_id, $option_new, $report_type);
 
-
         foreach ($commodity_array as $data) :
 			if($report_type=="table_data"):
 				if($commodity_id>0):
@@ -2773,12 +2751,13 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 				endif;						
 			else:
 				$series_data  = array_merge($series_data , array((int)$data['total']));
-				$series_data_  = array_merge($series_data_ , array($data["name"],(int)$data['total']));
+				$series_data_  = array_merge($series_data_ , array(array($data['district'],$data["facility_name"],$data["facility_code"],$data["commodity_name"],$data['total'])));
 				$category_data = array_merge($category_data, array($data["commodity_name"]));
 			endif;
 
 
 		endforeach;
+		
 		if($report_type=="table_data"):
 			if($commodity_id>0):
 				$category_data = array(array("Sub-county","Facility Name","Mfl","TOTAL ".$option_new));
@@ -2797,10 +2776,11 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 
 		elseif($report_type=="csv_data"):
 			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "Stock level $commodity_name $title $month_ $year", 'file_name' => "Stock_level_$commodity_name_$title_$month_$year");
-			$row_data = array(array("Stock level $commodity_name $title $month_ $year",$option_new));
-			$column_data = array("");
+			$row_data = array();
+			$column_data = array("Sub-county Name","Facility Name","MFL Code","Commodity Name","stocks worth in $option_title ");
 			$excel_data['column_data'] = $column_data;
-			array_push($row_data,$series_data_); 
+			$row_data = array_merge($row_data,$series_data_); 
+			
 			$excel_data['row_data'] = $row_data;
 			$this -> hcmp_functions -> create_excel($excel_data);
 		else:
