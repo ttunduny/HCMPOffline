@@ -118,6 +118,7 @@
                 </nav>
 
                  <div class="container-fluid" style="padding-left: 8px;padding-right: 2px;padding-bottom:42px;"><!-- this is the wrapper for the content -->
+   
                    <?php $this -> load -> view($content_view);?>
                     
                     
@@ -129,7 +130,23 @@
         <p class="text-muted"> Government of Kenya &copy <?php echo date('Y');?>. All Rights Reserved</p>
       </div>
     </div>
-    
+                 <!----------- HCMP MODAL dialog Box for all uses--------->
+<div class="modal fade" id="communication_dialog" tabindex="-1" role="dialog"
+ aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">HCMP: Notification Message</h4>
+      </div>
+      <div class="modal-body" style="max-height: 500px; overflow-y: auto">   
+      </div>
+      <div class="modal-footer">         
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->  
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
     <!-- Bootstrap core JavaScript===================== -->	
