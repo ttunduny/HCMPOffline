@@ -14,11 +14,7 @@ $englishdate = date('F, Y', strtotime($monthyear));
 
 </style>
 <script type="text/javascript">
-bajb_backdetect.OnBack = function()
-    {
-        //alert('You clicked it!');
-        window.location.href = "<?php echo base_url().'home_controller/home';?>";
-    }
+
 $(document).ready(function() {
         //datatables settings 
         $('#maintable').dataTable({

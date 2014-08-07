@@ -4660,9 +4660,9 @@ WHERE
         $res = $this->db->query($sql);
         return $res->result_array();
     }
-
-    function facility_amc_compute() {
-        $sql = "select facilities.facility_code from facilities where facilities.rtk_enabled = '1' AND facilities.facility_code not in (select facility_amc.facility_code from facility_amc)";
+    
+    public function facility_amc_compute() {
+        $sql = "select facilities.facility_code from facilities where facilities.rtk_enabled = '1' AND district=99 AND facilities.facility_code not in (select facility_amc.facility_code from facility_amc)";
         $res = $this->db->query($sql);
         $facility = $res->result_array();
 

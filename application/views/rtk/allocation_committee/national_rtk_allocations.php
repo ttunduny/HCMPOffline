@@ -6,10 +6,10 @@
 
     $(document).ready(function() {
 
-        $('.nav li a').click(function(e) {
+        $('.navtbl li a').click(function(e) {
             var $this = $(this);
             var thistext = $(this).text();
-            $('.nav li').removeClass('active');
+            $('.navtbl li').removeClass('active');
             $this.parent().addClass('active');
             $(".dataTables_filter label input").focus();
             $('.dataTables_filter label input').val(thistext).trigger($.Event("keyup", {keyCode: 13}));
@@ -50,7 +50,7 @@
  
 
 <div style="width:100%;font-size: 15px;background: #F8F8F8;padding: 10px 10px 10px 10px;border-bottom: solid 1px #ccc;">
-    <ul class="nav nav-pills">
+    <ul class="navtbl nav nav-pills">
 
                     <li class=""><a href="#">Quarter-1</a></li>
                     <li class=""><a href="#">Quarter-2</a></li>
