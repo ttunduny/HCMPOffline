@@ -1,15 +1,6 @@
+<?php //echo "<pre>";print_r($district_dashboard_notifications);echo "</pre>";exit; ?>
 <div class="container" style="width: 96%; margin: auto;">
 <div class="row">
-        <?php if($district_dashboard_notifications['stocks_from_v1']>0): ?>
-        <div style="height:auto; margin-bottom: 2px" class="warning message col-md-4" id="">        
-        <h5> 0) Import facility stock from version 1 </h5> 
-            <p>
-            <a class="link" href="<?php echo base_url('stock/import') ?>">
-                <span class="badge"><?php 
-                echo $district_dashboard_notifications['stocks_from_v1'];?></span>facility stock can be imported to version 2</a> 
-            </p>
-        </div>
-        <?php else: //Import facility stock from version 1?>
   <div class="col-md-4">
     <div class="row">     
       <div class="col-md-12">
@@ -59,7 +50,7 @@
       <div class="panel-body">
        <?php if($district_dashboard_notifications['district_stock_count']>0): ?>
         <div style="height:auto; margin-bottom: 2px" class="distribute message ">
-          <a href="<?php echo base_url('issues/index/store_external'); ?>"><h5>Redistribute Commodities to Facilities</h5></a>   
+          <a href="<?php echo base_url('issues/district_store'); ?>"><h5>Redistribute Commodities to Facilities</h5></a>   
         </div>        
          <div style="height:auto; margin-bottom: 2px" class="reports message ">
           <a href="<?php echo base_url("reports/district_store_reports") ?>"><h5>Reports</h5></a>        
@@ -81,7 +72,6 @@
       </div>
     </div>
   </div> 
-  <?php endif; //donations_pending?>  
   </div>  
   
 </div>

@@ -1,4 +1,4 @@
-<?php echo "<pre>";print_r($commodities);echo "</pre>";exit; ?>
+<?php //echo "<pre>";print_r($commodities);echo "</pre>";exit; ?>
 <style>
 	.big{ width: 150px !important; }
 </style>
@@ -36,22 +36,42 @@
 						<tr row_id='0'>
 						<td>
 								<select name="district[0]" class="form-control input-small district">
-								<option value="0">--select subcounty---</option>
-						<?php
+						<?php 
+
+								if (isset($donate_destination)&&($donate_destination == 'district')) {
+									echo '<option value="'.$district_id.' "> '.$district_data['district'].'</option>';
+								}
+								else{
+									echo '<option value="0">--select subcounty---</option>';
 									foreach ($subcounties as $district) {
 									$id=$district->id;
 									$name=$district->district;		
 									echo '<option value="'.$id.'"> '.$name.'</option>';
 								}
+							}
 							 ?>
 								</select>
 							</td>
-							<td>
+							<?php 
+								$dropdown2=isset($donate_destination)&&($donate_destination == 'district')? 
+								'<td>
+						<select  name="mfl[0]" class="form-control input-small">
+						<!-- donate_destination -->
+                       <option value="0">District Store</option>
+					   </select>
+						</td>
+						'
+								:'
+								<td>
 						<select  name="mfl[0]" class="form-control input-small facility">
 						<!-- donate_destination -->
                        <option value="0">--select facility---</option>
 					   </select>
-						</td>
+						</td>'
+						;
+						echo $dropdown2;
+							 ?>
+							
 						<td>
 	<select class="form-control input-small service desc" name="desc[0]">
     <option special_data="0" value="0" selected="selected">-Select Commodity -</option>
@@ -62,7 +82,7 @@ foreach ($commodities as $commodities) :
 			$unit=$commodities['unit_size'];
 			$source_name=$commodities['source_name'];
 			$total_commodity_units=$commodities['total_commodity_units'];
-			$commodity_balance=$commodities['quantity'];		
+			$commodity_balance=$commodities['commodity_balance'];		
 		echo "<option special_data='$commodity_id^$unit^$source_name^$total_commodity_units^$commodity_balance' value='$commodity_id'>$commodity_name</option>";		
 endforeach;
 		?> 		
@@ -101,6 +121,7 @@ type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="re
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
 
 <button class=" save btn btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>
+
 
 </div>
 </div>
@@ -402,11 +423,11 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 					var facility_stock_id=facility_stock_data[i]['facility_stock_id'];	
 					
 			  		dropdown+="<option selected='selected' "+
-			  		 "special_data="+facility_stock_data[i]['expiry_date']+
+			  		 "special_data='"+facility_stock_data[i]['expiry_date']+
 			  		 "^"+facility_stock_data[i]['commodity_balance']+
 			  		 "^"+facility_stock_data[i]['facility_stock_id']+
 			  		 "^"+facility_stock_data[i]['commodity_balance']+
-			  		 "^"+facility_stock_data[i]['manufacture']+">";
+			  		 "^"+facility_stock_data[i]['manufacture']+"'>";
 			  				 expiry_date=$.datepicker.formatDate('dMy', new Date(facility_stock_data[i]['expiry_date']));
 			  				 bal=facility_stock_data[i]['commodity_balance'];
 			  				 facility_stock_id_=facility_stock_data[i]['facility_stock_id'];
