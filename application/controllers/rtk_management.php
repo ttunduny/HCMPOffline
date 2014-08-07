@@ -3453,8 +3453,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $district_name = $district_arr['district'];
         $htm .= '<li>' . $district_name . '</li>';
         $htm .= '<ul class="sub-list">';
-        //          $district_orders = Lab_Commodity_Orders::get_district_orders($district);
-        //            var_dump($district_orders);
+     
         $three_months_ago = date("Y-m-", strtotime("-1 Month"));
         $three_months_ago .='1';
 
@@ -3542,6 +3541,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $data['content_view'] = "rtk/allocation_committee/ajax_view/rtk_county_allocation_datatableonly_v";
         $this->load->view("rtk/template", $data);
     }
+
 
     function county_allocation($county_id) {
         $county = Counties::get_county_name($county_id);
