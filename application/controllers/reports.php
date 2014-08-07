@@ -953,7 +953,7 @@ class Reports extends MY_Controller
 		echo json_encode(facilities::get_facilities_which_are_online($district_id));
 	}
 
-	public function get_facility_json($district=82) {
+	public function get_facility_json($district) {
 	echo json_encode(Facilities::getFacilities_json($district));
 				
 	}
