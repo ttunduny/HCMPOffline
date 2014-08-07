@@ -243,8 +243,33 @@ var drop_down='';
       var username = $('#username').val()
       var facility_id = $('#facility_name').val()
       var district_name = $('#district_name').val()
+      var sub_county = $('#sub_county').val()
+      var county = $('#county').val()
       var user_type = $('#user_type').val()
 
+
+		if(user_type==10){
+			
+			if(first_name==""||last_name==""||telephone==""||email==""||county=="NULL"||user_type=="NULL"){
+						alert('Please make sure you have selected all relevant fields.');
+							return;
+							}
+			
+		}else if (user_type==3){
+			
+			if(first_name==""||last_name==""||telephone==""||email==""||county=="NULL"||sub_county=="NULL"||user_type=="NULL"){
+						alert('Please make sure you have selected all relevant fields.');
+							return;
+							}
+			
+		}
+		else{
+			if(first_name==""||last_name==""||telephone==""||email==""||county=="NULL"||sub_county=="NULL"||facility_id=="NULL"||user_type=="NULL"){
+						alert('Please make sure you have selected all relevant fields.');
+							return;
+							}
+		}
+		
        
       
       var div="#processing";

@@ -36,6 +36,12 @@ class Facilities extends Doctrine_Record {
 		$drugs = $query -> execute();
 		return $drugs;
 	}
+	public static function getFacilities_json($district){
+		
+		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");
+		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $drugs;
+	}
 	public static function get_Facilities_using_HCMP($county_id = null, $district = null, $facility_code = null)
 	{
 		$and_data =(isset($county_id)&& ($county_id>0)) ?" AND d.county = $county_id" : null;
