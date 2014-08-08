@@ -1,9 +1,12 @@
-<script type="text/javascript" language="javascript" src="<?php echo base_url();  ?>Scripts/jquery.dataTables.js"></script>
-<script type="text/javascript" language="javascript" src="<?php echo base_url();  ?>Scripts/unit_size.js"></script>
-<style type="text/css" title="currentStyle">
-			
-			@import "<?php echo base_url(); ?>DataTables-1.9.3 /media2/css/jquery.dataTables.css";
-		</style>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/datatable/jquery.dataTables.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/tablecloth/assets/css/tablecloth.css">
+<script src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.tablesorter.js"></script>
+<script src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.metadata.js"></script>
+<script src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.tablecloth.js"></script>
+
+<style>
+    @import "<?php echo base_url(); ?>assets/datatable/media2/css/jquery.dataTables.css";
+</style>
 <style>
 .user{
 	width:70px;
@@ -17,6 +20,10 @@
 	text-align: center;
 	}
 	.col5{background:#D8D8D8;}
+	input{display: block;width: 100%;height: 34px;padding: 6px 12px;font-size: 14px;line-height: 1.42857143;color: #555;background-color: #fff;background-image: none;border: 1px solid #ccc;border-radius: 4px;-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);box-shadow: inset 0 1px 1px rgba(0,0,0,.075);-webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;}
+	table{
+        font-size: 11px;
+    }
 	</style>
 	<script type="text/javascript">
 	$(function() {
@@ -286,7 +293,7 @@ foreach ($all_details as $detail) {
 
 
 </table>
-<input  class="btn btn-primary" type="submit" id="" name="save1"  value="Update Order" >
+<input  class="btn btn-primary" type="submit" id="" name="save1"  value="Update Order" style="margin-left: 0%; width:100px">
 </form>
 <?php form_close();?>
 </div>
@@ -298,3 +305,11 @@ foreach ($all_details as $detail) {
 
 <br />
 <br />
+<script type="text/javascript">
+$("table").tablecloth({
+            bordered: true,
+            condensed: true,
+            striped: true,            
+            clean: false,            
+        });
+</script>

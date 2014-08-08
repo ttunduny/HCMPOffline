@@ -1,3 +1,5 @@
+
+
 <style>
 	.input-small{
  		width: 100px !important;
@@ -15,7 +17,7 @@
       <li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>
 </ul>
 <div id="myTabContent" class="tab-content">
-	       <div  id="cat" class="tab-pane fade active in">
+	<div  id="cat" class="tab-pane fade active in">
        	<br>
        	<div class="filter row">
 <form class="form-inline" role="form">
@@ -40,6 +42,8 @@ endforeach;
 ?>
 </select> 
 <select id="category_facility_filter" class="form-control col-md-3">
+
+
 <option value="NULL">Select facility</option>
 </select>
 <input type="text" name="from"  id="category_from" 

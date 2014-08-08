@@ -29,7 +29,7 @@ $prevmonthname = date('F',strtotime("-3 month", time()));
 ?>
 <script type="text/javascript">
   function loadcountysummary(county){
-//            $(".dash_main").load("<?php echo base_url(); ?>rtk_management/rtk_reporting_by_county/" + county);
+            $(".dash_main").load("<?php echo base_url(); ?>rtk_management/rtk_reporting_by_county/" + county);
             $("#county_summary").load("<?php echo base_url(); ?>rtk_management/summary_tab_display/" + county + "/<?php echo $year.'/'.$month.'/'; ?>");
             $("#county_graph").load("<?php echo base_url(); ?>rtk_management/fusion_test/" + county + "/<?php echo $month.'/'.$year.'/'; ?>");
 
@@ -178,17 +178,17 @@ code {
 
 <div>
 <?php { ?>
-<div id="fixed-topbar" style="z-index:10;position: fixed; top: 104px;background: #708BA5; width: 100%;padding: 7px 1px 0px 13px;border-bottom: 1px solid #ccc;border-bottom: 1px solid #ccc;border-radius: 4px 0px 0px 4px;">
-<span class="lead" style="color: #ccc;">Switch Identities</span>
+<div id="fixed-topbar" style="z-index:10;position: fixed; top: 74px;background: #708BA5; width: 100%;padding: 7px 1px 0px 13px;border-bottom: 1px solid #ccc;border-bottom: 1px solid #ccc;border-radius: 4px 0px 0px 4px;">
+<span class="lead" style="color: #ccc;float:left;">Switch Identities</span>
 &nbsp;
-<select id="user_switch"><option value="0"> -- Select UserType--</option><option value="scmlt">DMLT</option><option value="rtk_county_admin">County Administrator</option>
+<select id="user_switch" class="form-control" style="width:20%;float:left;margin-left:200px;"><option value="0"> -- Select UserType--</option><option value="scmlt">SCMLT</option><option value="rtk_county_admin">County Administrator</option>
 </select>
 &nbsp;
-<select id="county_switch"><option value="0"> -- Select Select County--</option><?php echo $counties_option_html;?></select>
+<select id="county_switch" class="form-control" style="width:20%;float:left"><option value="0"> -- Select County --</option><?php echo $counties_option_html;?></select>
 &nbsp;
-<select id="district_switch"><option value="0"> -- Select Select District--</option><?php echo $districts_option_html;?></select>
+<select id="district_switch" class="form-control" style="width:20%;float:left"><option value="0"> -- Select Sub-County --</option><?php echo $districts_option_html;?></select>
 &nbsp;
-<a href="#" class="btn btn-primary" id="switch_idenity" style="margin-top: -10px;">Go</a>
+<a href="#" class="btn btn-primary" id="switch_idenity" style="margin-top: 0px;float:left">Go</a>
 </div>
 <?php } ?>
 
@@ -198,7 +198,7 @@ code {
 <div class="well" style="width:97%;"> 
 <div class="page-header">
  
-     <h1 style="font-size: 140%;">County summary <?php echo $englishdate;?><small> Kenya</small></h1>
+     <h1 style="font-size: 140%;">County Summary <?php echo $englishdate;?><small> Kenya</small></h1>
    </div>
 <!--     <h4>Leading County in reporting: Nakuru</h4>-->
      <div id="county_graph"></div>
@@ -209,8 +209,7 @@ code {
 </div>
     
 </div>
-<script src="http://code.highcharts.com/highcharts.js"></script>
-<script src="http://code.highcharts.com/modules/exporting.js"></script>
+
 <script type="text/javascript">$(function () {
         $('#container').highcharts({
 

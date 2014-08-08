@@ -30,12 +30,13 @@ foreach ($res->result_array() as $key => $value) {
         font-family: calibri;
     }
 </style>
-<link rel="stylesheet" type="text/css" href="http://tableclothjs.com/assets/css/tablecloth.css">
-<script src="http://tableclothjs.com/assets/js/jquery.tablesorter.js"></script>
-<script src="http://tableclothjs.com/assets/js/jquery.metadata.js"></script>
-<script src="http://tableclothjs.com/assets/js/jquery.tablecloth.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.tablesorter.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.metadata.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.tablecloth.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/tablecloth/assets/css/tablecloth.css">
+<script type="text/javascript" language="javascript" src="<?php echo base_url();?>assets/datatable/jquery.dataTables.js"></script>
 
-<script src="http://localhost/HCMP/scripts/bootstrap-typeahead.js"></script>
+
 
 <script type="text/javascript">
 
@@ -59,14 +60,14 @@ foreach ($res->result_array() as $key => $value) {
     $(function() {        
         $('#switch_month').change(function() {
             var value = $('#switch_month').val();
-            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rca/'; ?>" + value + "/";
+            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rtk_county_admin/'; ?>" + value + "/";
 //              alert (path);
             window.location.href = path;
         });
 
         $('#switch_county').change(function() {
             var value = $('#switch_county').val();
-            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rca/0/home_controller/'; ?>" + value + "";
+            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rtk_county_admin/0/home_controller/'; ?>" + value + "";
 //              alert (path);
             window.location.href = path;
         });
@@ -99,15 +100,19 @@ foreach ($res->result_array() as $key => $value) {
         <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto">
         	 <table class="table" id="pending">
                 <thead>
-                    <th>District</th>
+                    <th>Sub-County</th>
                     <th>No of Facilities</th>
                 </thead>
                 <tbody>
                 <?php  
-                    $count_districts = count($districts_list); 
-                    for ($i=0; $i <$count_districts ; $i++) { ?> 
+                    $count_districts = count($districts_list);             
+
+                    for ($i=0; $i <$count_districts ; $i++) {
+                        $district = $districts_list[$i]['id'];
+                        $action = base_url() . 'rtk_management/district_profile/' . $district;
+                     ?> 
                         <tr>
-                            <td><a href="#"><?php echo $districts_list[$i]['district'];?></a></td>
+                            <td><?php echo $districts_list[$i]['district'];?>&nbsp;<a href="<?php echo $action;?>">View </a></td>
                             <td><?php echo $facilities_count[$i];?></td>
                         </tr>
                     <?php } ?>

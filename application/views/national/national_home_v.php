@@ -17,6 +17,7 @@
     <link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
     <script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
+    <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
     <title>HCMP | <?php echo $title;?></title>
 
 <style>
@@ -24,16 +25,94 @@
     	border-left: 6px solid #36BB24;
     }
     body {
-padding-top: 0;
+padding-top: 4.5%;
 }
-#main-content{
-  margin-top: 4.5%;
-  
-}
+
 .modal-content,.form-control
 {
   border-radius: 0 !important;
 }
+#overview{
+	padding-right:0;
+}
+h4{
+	
+	padding:4px;
+	color:white;
+	background:#528f42;
+	text-align:center;
+	margin:0;
+	
+	font-size:15px;
+}
+/*state overview*/
+
+.state-overview .symbol, .state-overview .value {
+    display: inline-block;
+    text-align: center;
+}
+
+.state-overview .value  {
+    float: right;
+
+}
+
+.state-overview .value h1, .state-overview .value p  {
+    margin: 0;
+    padding: 0;
+    color: #c6cad6;
+}
+
+.state-overview .value h1 {
+    font-weight: 300;
+    font-size:30px;
+}
+
+.state-overview .symbol i {
+    color: #fff;
+    font-size: 50px;
+}
+
+.state-overview .symbol {
+    width: 35%;
+    padding: 25px 15px;
+    -webkit-border-radius: 4px 0px 0px 4px;
+    border-radius: 4px 0px 0px 4px;
+}
+
+.state-overview .value {
+    width: 58%;
+    padding-top: 0;
+}
+
+.state-overview .terques {
+    background: #6ccac9;
+}
+
+.state-overview .red {
+    background: #ff6c60;
+}
+
+.state-overview .yellow {
+    background: #f8d347;
+}
+
+.state-overview .blue {
+    background: #a7cfdf;
+}
+.state-overview .purple {
+    background: #e7b7dd;
+}
+.state-overview .seagreen {
+    background: #39b7ac;
+}
+.state-overview .b {
+    background: #8075c4;
+}
+.state-overview .b2 {
+    background: #fd7998;
+}
+
 </style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -42,8 +121,7 @@ padding-top: 0;
     <![endif]-->
   </script></head>
   <body screen_capture_injected="true" style="">
-
-    <div class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin:0;">
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header" id="st-trigger-effects">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -52,49 +130,456 @@ padding-top: 0;
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          
+          <a class="navbar-brand " href="<?php echo base_url().'national';?>" >HCMP</a>
 
         </div>
         <div class="navbar-header" >
   
-            <a href="<?php echo base_url().'Home';?>">   
+            <a href="<?php echo base_url().'national';?>">   
             <img style="display:inline-block;"  src="<?php echo base_url();?>assets/img/coat_of_arms_dash.png" class="img-responsive " alt="Responsive image" id="logo" ></a>
-            <div id="" style="display:inline-block;">
-                    <span style="font-size: 0.95em;font-weight: bold; ">Ministry of Health</span><br />
-                    <span style="font-size: 0.85em;">Health Commodities Management Platform (HCMP)</span>   
-                </div>
+            
         </div>
-        <div class="collapse navbar-collapse">
+        
+        <div class="collapse navbar-collapse navbar-right">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a href="<?php echo base_url().'national';?>">Home</a></li>
+            <li class=""><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>
+            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Welcome, Guest</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="<?php echo base_url();?>"><span class="glyphicon glyphicon-log-in" style="margin-right: 2%;"></span> Login</a></li>
+                            
+                            <li class="divider"></li>
+                        </ul>
+                    </li>
+          </ul>
           
-          
-<div  id="system_alerts">
-                    <?php $flash_success_data = NULL;
-                          $flash_error_data = NULL;
-                          $flash_success_data = $this -> session -> flashdata('system_success_message');
-                          $flash_error_data = $this -> session -> flashdata('system_error_message');
-                            if ($flash_success_data != NULL) {
-                            echo '<div class="alert alert-success alert-dismissable" >
-                            <button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>' . $flash_success_data . '</div>';
-                           } elseif ($flash_error_data != NULL) {
-                            echo '<div class="alert alert-danger alert-dismissable" >
-                            <button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>' . $flash_error_data . '</div>';
-                            }
-                        ?>
- </div>
-                              
+                                        
         </div><!--/.nav-collapse -->
 
       </div>
     </div>
-   <div class="container-fluid" style="" id="main-content">
+	
+	<div class="container-fluid" style="" id="main-content">
+	<div class="row">
+		
+		<div class="col-md-4">
+			
+			<div class="row">
+				<div class="col-md-12" style="/*border: 1px solid #000;*/height: 620px">
+					<div id="map" ></div>
+				<script>
+					var map= new FusionMaps ("assets/FusionMaps/FCMap_KenyaCounty.swf","KenyaMap","100%","100%","0","0");
+					map.setJSONData(<?php echo $maps; ?>);
+					
+    				map.render("map");
+    				
+                    </script>
+				
+					</div>
+				
+			</div>
+			
+			</div>
+		<div class="col-md-8">
+			
+			<div class="row">
+				<div class="col-md-12" style="/*border: 1px solid #000;*/height: 200px" id="overview">
+					
+					<div class="row state-overview">
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol terques">
+                          	<span class="glyphicon glyphicon-user"></span>
+                          </div>
+                          <div class="value">
+                          	<p>Health Workers Trained</p>
+                              <h1 class="count">495</h1>
+                              
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol red">
+                              <span class="glyphicon glyphicon-user"></span>
+                          </div>
+                          <div class="value">
+                          	<p>Facilities Rolled Out</p>
+                              <h1 class=" count2">947</h1>
+                              
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol yellow">
+                              <span class="glyphicon glyphicon-user"></span>
+                          </div>
+                          <div class="value">
+                          	<p>Total facilities</p>
+                              <h1 class=" count3">328</h1>
+                              
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol blue">
+                              <span class="glyphicon glyphicon-user"></span>
+                          </div>
+                          <div class="value">
+                          	<p>Public health facilities	</p>
+                              <h1 class=" count4">10328</h1>
+                              
+                          </div>
+                      </section>
+                  </div>
+              </div>
+              
+              <div class="row state-overview">
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol purple">
+                          	<span class="glyphicon glyphicon-user"></span>
+                          </div>
+                          <div class="value">
+                          	<p>Private health facilities</p>
+                              <h1 class="count">495</h1>
+                              
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol b">
+                              <span class="glyphicon glyphicon-user"></span>
+                          </div>
+                          <div class="value">
+                          	<p>Faith-based Facilities</p>
+                              <h1 class=" count2">947</h1>
+                              
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol seagreen">
+                              <span class="glyphicon glyphicon-user"></span>
+                          </div>
+                          <div class="value">
+                          	<p>Other Facilities</p>
+                              <h1 class=" count3">328</h1>
+                              
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol b2">
+                              <span class="glyphicon glyphicon-user"></span>
+                          </div>
+                          <div class="value">
+                          	<p>Facilities Using HCMP</p>
+                              <h1 class=" count4">10328</h1>
+                              
+                          </div>
+                      </section>
+                  </div>
+              </div>
+				</div>
+				
+			</div>
+			
+			
+			
+			
+			<div class="row" style="margin-bottom: 5.5%;">
+				<div class="col-md-12" style="/*border: 1px solid #000;*/height: 420px" id="expiries">
+					
+					<h4>National  Expiries</h4>
+       
+       <div class="col-md-6" style="border: 1px solid #DDD; ">
+      
+       <div class="panel-heading">
+       <h5 class="panel-title">Actual Expiries </h5>
+       </div>
+       
+       
+       <div id="actual" style=""></div>
+       
+        </div> 
+        
+        <div class="col-md-6" style="border: 1px solid #DDD;" >
+      
+       <div class="panel-heading">
+       <h5 class="panel-title">Potential Expiries </h5>
+       </div>
+        
+      <div id="potential"></div>
+          
+      
+       </div> 
+				</div>
+			</div>
+			
+		</div>
+	</div>
+			
+    <div class="row">
+                <div class="col-md-6">
+       <div class="panel panel-success">
+       <div class="panel-heading">
+       <h3 class="panel-title"><div class="county-name" style="display:inline-block"></div>Stock Level in Months of Stock (MOS)</h3>
+       </div>
+        <div class="panel-body" style="height:500px;">
+        <ul class='nav nav-tabs'>
+      <li class="active"><a href="#stracer" data-toggle="tab">Tracer Items</a></li>
+      </ul>
+      <div id="myTabContent" class="tab-content">
+      <div  id="stracer" class="tab-pane fade active in">
+<br>
+<div class="col-md-1">
+    <a href="national/search" target="_blank">
+    <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
+</a>
 
-    <?php $this -> load -> view($content_view);?>
-    </div> <!-- /container -->
-<div id="footer">
-      <div class="container">
-        <p class="text-muted"> Government of Kenya &copy <?php echo date('Y');?>. All Rights Reserved</p>
+</div>
       </div>
+       </div>
+        <div id="mos"></div> <!--- MOS -->
+       </div>
+       
+       </div>
+      
+       </div>
+       <div class="col-md-6">
+       <div class="panel panel-success">
+       <div class="panel-heading">
+       <h3 class="panel-title"><div class="county-name" style="display:inline-block"></div>Consumption</h3>
+       </div>
+        <div class="panel-body" style="height: 500px;">
+       <ul class='nav nav-tabs'>
+      <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items</a></li>
+       </ul>
+   <div id="myTabContent" class="tab-content">
+                <div  id="tracer" class="tab-pane fade active in">
+<br>
+<div class="col-md-1">
+    <a href="national/search" target="_blank">
+    <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
+</a>
+
+</div>
+
+        
+      </div>
+      </div>
+      <div id="consumption"></div> <!-- consumption -->
+       </div>    
+       </div>
+       </div>
+ </div><!--- row 2 -->
+ 
+ <div class="row">
+                <div class="col-md-6">
+       <div class="panel panel-success">
+       <div class="panel-heading">
+       <h3 class="panel-title"><div class="county-name" style="display:inline-block"></div>Cost of Orders</h3>
+       </div>
+        <div class="panel-body" style="height:500px;">
+        <ul class='nav nav-tabs'>
+      <li class="active"><a href="#corders" data-toggle="tab">Year</a></li>
+      </ul>
+      <div id="myTabContent" class="tab-content">
+      <div  id="corders" class="tab-pane fade active in">
+<br>
+<div class="col-md-1">
+    <a href="national/search" target="_blank">
+    <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
+</a>
+
+</div>
+      </div>
+       </div>
+        <div id="orders"></div> <!--- MOS -->
+       </div>
+       
+       </div>
+      
+       </div>
+       <div class="col-md-6">
+       <div class="panel panel-success">
+       <div class="panel-heading">
+       <h3 class="panel-title"><div class="county-name" style="display:inline-block"></div>Order Lead Time</h3>
+       </div>
+        <div class="panel-body" style="height: 500px;">
+  <hr />
+    <a href="national/search" target="_blank">
+    <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
+</a>
+      <div class="row">
+          <div class="col-md-12">
+       <div class="panel-heading">
+       <h3 class="panel-title">Fill Rate</h3>
+       </div>
+       <div id="fill_rate">
+            <div class="progress">
+    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 80%;">
+        80%
     </div>
+      </div>
+       </div>
+       </div>  
+       <div class="col-md-12">
+       <div class="panel-heading">
+       <h3 class="panel-title">Order Lead Time</h3>
+       </div>
+       <div id="lead_infor">
+         
+
+
+       </div>
+       </div>  
+      </div>
+    
+       </div>    
+       </div>
+       </div>
+     </div>
+    </div> <!-- /container -->
+    
+    
+
+    
+    <script>
+         //auto run
+         var url ='<?php echo base_url()?>';
+         $('#potential_').on('shown.bs.tab', function (e) {
+         $('#potential').html('');
+         });
+         $('#actual_').on('shown.bs.tab', function (e) {
+         $('#actual').html('');
+         });
+
+      $('.county-name').html("National "+" &nbsp;");
+      ajax_request_replace_div_content('national/expiry/NULL/NULL/NULL/NULL/NULL',"#actual"); 
+      ajax_request_replace_div_content('national/potential/NULL/NULL/NULL/NULL/NULL',"#potential"); 
+      ajax_request_replace_div_content('national/facility_over_view/',"#facilities_rolled_out");
+      ajax_request_replace_div_content('national/hcw/',"#hcw_trained");
+      ajax_request_replace_div_content('national/stock_level_mos/NULL/NULL/NULL/NULL',"#mos");
+      ajax_request_replace_div_content('national/consumption/NULL/NULL/NULL/NULL',"#consumption");
+      ajax_request_replace_div_content('national/get_facility_infor/NULL/NULL/NULL/NULL',"#facilities");
+      ajax_request_replace_div_content('national/order/NULL/NULL/NULL/NULL/NULL',"#orders");
+      ajax_request_replace_div_content('national/get_lead_infor/NULL/NULL/NULL/NULL/NULL',"#lead_infor");
+      
+        $(".ecounty-filter").button().click(function(e) {
+        e.preventDefault(); 
+        var year = $("#eyear").val();
+        var county = $("#ecounty_filter").val();
+       // var district=$(this).closest("tr").find("#ecounty_filter").val();
+       // var facility=$(this).closest("tr").find("#ecounty_filter").val();
+           ajax_request_replace_div_content('national/expiry/'+year+'/'+county+'/NULL/NULL/NULL',"#actual");
+        });
+        
+        $(".asubcounty-filter").button().click(function(e) {
+        e.preventDefault(); 
+        var year=$("#asubcountyyear").val();
+        var county_id=$('#county_id').val();
+        var district=$("#asubcounty_filter").val();
+        var facility=$("#asubcounty_facility_filter").val();
+        ajax_request_replace_div_content('national/expiry/'+year+'/'+county_id+'/'+district+'/'+facility+'/NULL',"#actual");
+        });
+        /////potential
+        $(".pcounty-filter").button().click(function(e) {
+        e.preventDefault(); 
+        var county=$("#pcounty_filter").val();
+        ajax_request_replace_div_content('national/potential/'+county+'/NULL/NULL/NULL',"#potential");
+        });
+        
+        $(".psubcounty-filter").button().click(function(e) {
+        e.preventDefault(); 
+        var county_id=$('#county_id').val();
+        var district=$("#psubcounty_filter").val();
+        var facility=$("#psubcounty_facility_filter").val();
+        ajax_request_replace_div_content('national/potential/'+county_id+'/'+district+'/'+facility+'/NULL',"#potential");
+        });
+     
+         $(".subcounty").click(function(){
+            /*
+             * when clicked, this object should populate facility names to facility dropdown list.
+             * Initially it sets a default value to the facility drop down list then ajax is used 
+             * is to retrieve the district names using the 'dropdown()' method used above.
+             */
+            json_obj = {"url":"<?php echo site_url("orders/getFacilities");?>",}
+            var baseUrl = json_obj.url;
+            var id = $(this).attr("value");
+            $('.subcounty').val(id);
+            dropdown(baseUrl,"district="+id,".facility");
+ 
+          
+        });
+
+      
+    function run(data){
+        var county_data=data.split('^');
+        $('.county-name').html(county_data[1]+"&nbsp;County &nbsp;");
+        ajax_request_replace_div_content('national/facility_over_view/'+county_data[0],"#facilities_rolled_out");
+        ajax_request_replace_div_content('national/hcw/'+county_data[0],"#hcw_trained");
+        $('.county').val(county_data[0]);
+        $('#county_id').val(county_data[0]);
+        json_obj={"url":"<?php echo site_url("orders/getDistrict");?>",}
+        var baseUrl=json_obj.url;
+        dropdown(baseUrl,"county="+county_data[0],".subcounty");
+        ajax_request_replace_div_content('national/expiry/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#actual");
+        ajax_request_replace_div_content('national/potential/'+county_data[0]+'/NULL/NULL/NULL/NULL',"#potential"); 
+        ajax_request_replace_div_content('national/stock_level_mos/'+county_data[0]+'/NULL/NULL/NULL/ALL',"#mos");
+        ajax_request_replace_div_content('national/consumption/'+county_data[0]+'/NULL/NULL/NULL',"#consumption");
+        ajax_request_replace_div_content('national/get_facility_infor/'+county_data[0]+'/NULL/NULL/NULL',"#facilities");
+        ajax_request_replace_div_content('national/order/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#orders");
+        ajax_request_replace_div_content('national/get_lead_infor/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#lead_infor");
+    }
+            function dropdown(baseUrl,post,identifier){
+            /*
+             * ajax is used here to retrieve values from the server side and set them in dropdown list.
+             * the 'baseUrl' is the target ajax url, 'post' contains the a POST varible with data and
+             * 'identifier' is the id of the dropdown list to be populated by values from the server side
+             */
+            $.ajax({
+              type: "POST",
+              url: baseUrl,
+              data: post,
+              success: function(msg){
+                    var values=msg.split("_")
+                    var dropdown="<option value='NULL'>All</option>";
+                    for (var i=0; i < values.length-1; i++) {
+                        var id_value=values[i].split("*")
+                        dropdown+="<option value="+id_value[0]+">";
+                        dropdown+=id_value[1];
+                        dropdown+="</option>";
+                    };
+                    $(identifier).html(dropdown);
+              },
+              error: function(XMLHttpRequest, textStatus, errorThrown) {
+                   if(textStatus == 'timeout') {}
+               }
+            }).done(function( msg ) {
+            });
+        }
+       function ajax_request_replace_div_content(function_url,div){
+        var function_url =url+function_url;
+        var loading_icon=url+"assets/img/loader2.gif";
+        $.ajax({
+        type: "POST",
+        url: function_url,
+        beforeSend: function() {
+        $(div).html("<img style='margin-left:20%;' src="+loading_icon+">");
+        },
+        success: function(msg) {
+        $(div).html(msg);
+        }
+        });
+        }   
+</script>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

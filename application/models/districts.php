@@ -21,21 +21,19 @@ class Districts extends Doctrine_Record {
 	
 	public static function getDistrict($county = null,$district_id=null)
 	{
-		
-		$addition=(isset($district_id) && ($district_id>0))? "id=$district_id" : "county='$county'";
+		$addition = (isset($district_id) && ($district_id>0))? "id=$district_id" : "county='$county'";
 		$query = Doctrine_Query::create() -> select("*") -> from("districts")->where("$addition ")->orderby("district asc");
-		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
-		
+		$drugs = $query -> execute();
 		return $drugs;
-		
+
 	}
 	public static function get_county_id($district)
 	{
 		$query = Doctrine_Query::create() -> select("county") -> from("districts")->where("id='$district'");
-		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		$drugs = $query -> execute();
 		
 		
-		return $drugs[0];
+		return $drugs;
 	}
 	
 	public static function get_district_name($district)

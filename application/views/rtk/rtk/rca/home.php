@@ -25,7 +25,7 @@ foreach ($res->result_array() as $key => $value) {
 }
 ?>
 
-<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>Scripts/jquery.dataTables.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/datatable/jquery.dataTables.js"></script>
 
 
 <script type="text/javascript">
@@ -46,14 +46,14 @@ foreach ($res->result_array() as $key => $value) {
 
         $('#switch_month').change(function() {
             var value = $('#switch_month').val();
-            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rca/'; ?>" + value + "/";
+            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rtk_county_admin/'; ?>" + value + "/";
 //              alert (path);
             window.location.href = path;
         });
 
         $('#switch_county').change(function() {
             var value = $('#switch_county').val();
-            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rca/0/home_controller/'; ?>" + value + "";
+            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rtk_county_admin/0/home_controller/'; ?>" + value + "";
 //              alert (path);
             window.location.href = path;
         });
@@ -79,8 +79,7 @@ foreach ($res->result_array() as $key => $value) {
 //echo "<pre>";var_dump($reports);echo "</pre>";
     ?>
     <div id="graphs">
-        <script src="http://code.highcharts.com/highcharts.js"></script>
-        <script src="http://code.highcharts.com/modules/exporting.js"></script>
+        
         <script type="text/javascript">
 
             $(function() {
@@ -130,7 +129,7 @@ foreach ($res->result_array() as $key => $value) {
             </div>
 <?php } ?>
         <div>
-            <table class="table" style="font-size: 139%;">
+            <table class="table" style="font-size: 120%;">
                 <thead>
                     <tr>
                         <th>Kit</th>

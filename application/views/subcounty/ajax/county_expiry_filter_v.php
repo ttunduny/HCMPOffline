@@ -110,7 +110,7 @@ endforeach;
 		if(option_value=='NULL'){ $("#facility_filter").hide('slow');	}
 		else{			
 	     var drop_down='';
- 		 var hcmp_facility_api = "<?php echo base_url(); ?>/reports/get_facility_json_data/"+$("#district_filter").val();
+ 		 var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+$("#district_filter").val();
  		 $.getJSON( hcmp_facility_api ,function( json ) {
     	 $("#facility_filter").html('<option value="NULL" selected="selected">--select facility--</option>');
      	 $.each(json, function( key, val ) {

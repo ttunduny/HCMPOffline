@@ -30,7 +30,7 @@ class orders extends MY_Controller {
 	
 	public function test_read_write_excel(){
 
-	$inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx';
+	$inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx'; 
 
     $file_name=time().'.xlsx';
 	$excel2 = PHPExcel_IOFactory::createReader('Excel2007');
@@ -102,13 +102,66 @@ for ($row = 1; $row <= $highestRow; $row++){
 	public function facility_order() 
 	{
 		$facility_code = $this -> session -> userdata('facility_id');
+
+        $items=Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
+        if(isset($_FILES['file']) && $_FILES['file']['size'] > 0){
+        $excel2 = PHPExcel_IOFactory::createReader('Excel2007');
+        $excel2=$objPHPExcel= $excel2->load($_FILES["file"]["tmp_name"]); // Empty Sheet
+    
+        $sheet = $objPHPExcel->getSheet(0); 
+        $highestRow = $sheet->getHighestRow(); 
+    
+        $highestColumn = $sheet->getHighestColumn();
+        $temp=array();
+        $facility_code= $sheet->getCell('H4')->getValue();
+    
+        //  Loop through each row of the worksheet in turn
+        for ($row = 17; $row <= $highestRow; $row++){ 
+        //  Read a row of data into an array
+        $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);                            
+        if(isset($rowData[0][2]) && $rowData[0][2]!='Product Code'){
+        foreach($items as $key=> $data){
+        if(in_array($rowData[0][2], $data)){
+        array_push($temp,array('sub_category_name'=>$data['sub_category_name'],
+        'commodity_name'=>$data['commodity_name'],
+        'unit_size'=>$data['unit_size'],
+        'unit_cost'=>$data['unit_cost'],
+        'commodity_code'=>$data['commodity_code'],
+        'commodity_id'=>$data['commodity_id'],
+        'total_commodity_units'=>$data['total_commodity_units'],
+        'opening_balance'=>$data['opening_balance'],
+        'total_receipts'=>$data['total_receipts'],
+        'total_issues'=>$data['total_issues'],
+        'quantity_ordered'=>($rowData[0][7]=='')? 0:$rowData[0][7],
+        'comment'=>'',
+        'closing_stock_'=>$data['closing_stock_'],
+        'closing_stock'=>$data['closing_stock'],
+        'days_out_of_stock'=>$data['days_out_of_stock'],
+        'date_added'=>'',
+        'losses'=>$data['losses'],
+        'status'=>$data['status'],
+        'adjustmentpve'=>$data['adjustmentpve'],
+        'adjustmentnve'=>$data['adjustmentnve'],
+        'historical'=>$data['historical']));
+         unset($items[$key]);
+            }   
+            }   
+            }
+            }
+
+        unset($objPHPExcel); 
+       $data['order_details'] = $data['facility_order'] = $temp;  
+        }else{
+        $data['order_details'] = $data['facility_order'] = $items;   
+        }
+        $facility_code = $this -> session -> userdata('facility_id');
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
-		$data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";
-		$data['title'] = "Facility New Order";
-		$data['banner_text'] = "Facility New Order";
-		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];
-		$data['order_details'] = $data['facility_order'] = Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
-		$data['facility_commodity_list'] = Commodities::get_facility_commodities($facility_code);
+        $data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";
+        $data['title'] = "Facility New Order";
+        $data['banner_text'] = "Facility New Order";
+        $data['drawing_rights'] = $facility_data[0]['drawing_rights'];
+        $data['facility_commodity_list'] = Commodities::get_facility_commodities($facility_code);
+
 		$this -> load -> view('shared_files/template/template', $data);
 	}
 	public function facility_order_($facility_code=null) {
@@ -242,7 +295,10 @@ for ($row = 1; $row <= $highestRow; $row++){
 			endif;
 			$user = $this -> session -> userdata('user_id');
 			$user_action = "order";
-			Log::log_user_action($user, $user_action);
+
+		 	Log::log_user_action($user, $user_action);
+			//$this -> hcmp_functions -> send_order_sms();
+
 			$this -> session -> set_flashdata('system_success_message', "Facility Order No $new_order_no has Been Saved");
 			redirect("reports/order_listing/$order_listing");
 
@@ -411,8 +467,11 @@ for ($row = 1; $row <= $highestRow; $row++){
 			else{
 
 			}  
+			//Test for sms
+			//$this -> hcmp_functions -> order_update_sms($this -> session -> userdata('facility_id'),$status);
 		$this -> session -> set_flashdata('system_success_message', "Facility Order No $order_id has Been $status");
 		redirect("reports/order_listing/$order_listing");
+
 		endif;
 
 	}

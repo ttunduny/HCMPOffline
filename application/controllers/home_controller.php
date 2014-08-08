@@ -25,7 +25,7 @@ class Home_Controller extends MY_Controller {
         /* go to application/controllers/home_controller.php and check for this if statement */
         if ($access_level == "scmlt") {
 //            print_r($this->session->userdata());die; 
-            $district = $this->session->userdata('district_id');
+           /* $district = $this->session->userdata('district_id');
             $data['facilities'] = Facilities::get_total_facilities_rtk_in_district($district);
             $facilities = Facilities::get_total_facilities_rtk_in_district($district);
             $district_name = districts::get_district_name_($district);
@@ -48,10 +48,10 @@ class Home_Controller extends MY_Controller {
                 if ($lab_count > 0) {
                     $reported = $reported + 1;
                     //".site_url('rtk_management/get_report/'.$facility_detail['facility_code'])."
-                    $table_body .="<span class='label label-success'>Submitted  for    $lastmonth </span><a href=" . site_url('rtk_management/rtk_orders') . " class='link'>View</a></td>";
+                    $table_body .="<span class='label label-success'>Submitted  for    $lastmonth </span><a href=" . site_url('rtk_management/rtk_orders') . " class='link'> View</a></td>";
                 } else {
                     $nonreported = $nonreported + 1;
-                    $table_body .="<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link'>Report</a></td>";
+                    $table_body .="<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link'> Report</a></td>";
                 }
 
                 $table_body .="</td>";
@@ -69,7 +69,9 @@ class Home_Controller extends MY_Controller {
             $percentage_complete = number_format($percentage_complete, 0);
             $data['percentage_complete'] = $percentage_complete;
             $data['reported'] = $reported;
-            $data['nonreported'] = $nonreported;
+            $data['nonreported'] = $nonreported;*/
+            redirect('rtk_management/scmlt_home');
+
         } else if ($access_level == "rtk_manager") {
 
             redirect('rtk_management/rtk_manager_home');

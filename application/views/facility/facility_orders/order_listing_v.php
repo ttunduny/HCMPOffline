@@ -413,17 +413,7 @@ $(document).ready(function() {
 '</form>';
    //hcmp custom message dialog
     dialog_box(body_content,
-    ''); 
-    $(".order_for_them").on('click', function() {
-    var facility_code=$('#facility_code').val();
-    if(facility_code==0){
-    alert("Please select a Facility First");
-    	
-    }else{
-     window.location="<?php echo site_url('orders/facility_order_');?>/"+facility_code;		
-    }
-    });
-		
+    ''); 		
 	});
 	$(".delete").on('click', function() {
 	id= $(this).attr("id");

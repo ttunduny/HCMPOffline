@@ -6,7 +6,7 @@
                             </span>Stocking Levels</a>
                         </h4>
                     </div>
-                   <div id="collapseTwo" class="panel-collapse collapse">
+                   <div id="collapseTwo" class="panel-collapse collapse <?php echo $active_panel=='stocking_levels'? 'in': null; ?>">
                         <div class="panel-body">
                             <table class="table">
                                 <tr>

@@ -5,7 +5,7 @@
 <ul class='nav nav-tabs'>
 	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items <?php echo " ($number_of_tracer_items)"; ?></a></li>
       <li class=""><a href="#division" data-toggle="tab">Program Commodities</a></li>
-      <li class=""><a href="#cat" data-toggle="tab">Categories</a></li>
+      <!--<li class=""><a href="#cat" data-toggle="tab">Categories</a></li>-->
       <li class=""><a href="#county" data-toggle="tab">County View</a></li>
       <li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>
 </ul>
@@ -13,6 +13,7 @@
  
       <div  id="tracer" class="tab-pane fade active in">
               <br>
+              <div class="filter row">
           <form class="form-inline" role="form">
     <select id="tracer_district_filter" class="form-control col-md-2">
 <option selected="selected" value="NULL">Select Sub-county</option>
@@ -29,11 +30,11 @@ endforeach;
 <option value="NULL">Select facility</option>
 </select>	
 <select id="tracer_plot_value_filter" class="form-control col-md-2">
-<option selected="selected" value="NULL">Select Plot value</option>
+<option value="NULL">Select Plot value</option>
 <option value="packs">Packs</option>
 <option value="units">Units</option>
 <option value="ksh">KSH</option>
-<option value="mos">Months of stock</option>
+<option selected="selected" value="mos">Months of stock</option>
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success tracer-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
@@ -42,9 +43,11 @@ endforeach;
 <button class="btn btn-sm btn-success tracer-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
 </div>
           </form>
+         </div>
       </div>
       <div  id="division" class="tab-pane fade">
       <br>
+      <div class="filter row">
       <form class="form-inline" role="form">
 	      	<select id="division_district_filter" class="form-control col-md-2">
 				<option selected="selected" value="NULL">Select Sub-county</option>
@@ -84,50 +87,8 @@ endforeach;
 			</div>
       </form>
       </div>
-   <div  id="cat" class="tab-pane fade">
-<br>
-<div class="filter row">
-<form class="form-inline" role="form">
-       	<select id="category_filter" class="form-control col-md-3">
-<option value="NULL">Select Commodity Category</option>
-<?php
-foreach($categories as $data):
-		$commodity_name=$data->sub_category_name;	
-		$commodity_id=$data->id;
-		echo "<option value='$commodity_id'>$commodity_name</option>";
-endforeach;
-?>
-</select> 
-	<select id="category_district_filter" class="form-control col-md-2">
-<option selected="selected" value="NULL">Select Sub-county</option>
-<?php
-foreach($district_data as $district_):
-		$district_id=$district_->id;
-		$district_name=$district_->district;	
-		echo "<option value='$district_id'>$district_name</option>";
-endforeach;
-?>
-</select> 
-<select id="category_facility_filter" class="form-control col-md-3">
-<option value="NULL">Select facility</option>
-</select>	
-<select id="category_plot_value_filter" class="form-control col-md-2">
-<option selected="selected" value="NULL">Select Plot value</option>
-<option value="packs">Packs</option>
-<option value="units">Units</option>
-<option value="ksh">KSH</option>
-<option value="mos">Months Of Stock</option>
-</select>
-<div class="col-md-1">
-<button class="btn btn-sm btn-success category-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
-</div>
-<div class="col-md-1">
-<button class="btn btn-sm btn-success category-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
-</div>	
-   </form>
       </div>
-   
-      </div>
+
       <div  id="county" class="tab-pane fade in">
       	<br>
 <div class="filter row">
@@ -296,31 +257,33 @@ var drop_down='';
 		//Tracer Filter Button
 		$(".tracer-filter").button().click(function(e) {
         e.preventDefault();
-      
-        var url_ = "reports/load_stock_level_graph/"+
-        $("#tracer_district_filter").val()+
-        "/NULL/"+$("#tracer_facility_filter").val()+
-        "/NULL";
-         
-       
+        var url_ = "reports/get_county_stock_level_new/"+"NULL/"+"NULL/"+
+        $("#tracer_district_filter").val()+"/"+
+        $("#tracer_facility_filter").val()+"/"+
+        $("#tracer_plot_value_filter").val()+
+        "/NULL/1";
         ajax_request_replace_div_content(url_,'.graph_content');    
           });
+          
           //Division button filter
           $(".division-filter").button().click(function(e) {
 	        e.preventDefault();
-	        var url_ = "reports/division_commodities_stock_level_graph/"+
-	        $("#division_district_filter").val()+
-	        "/NULL/"+$("#division_facility_filter").val()+
-	        "/NULL/"+$("#division_name_filter").val() ;
-	        
+	        var url_ = "reports/get_division_commodities_data/"+
+	        $("#division_district_filter").val()+"/"+
+	        $("#division_facility_filter").val()+"/"+
+	        $("#division_name_filter").val()+"/"+
+	        $("#division_plot_value_filter").val()+
+	        "/NULL";
 	        ajax_request_replace_div_content(url_,'.graph_content');    
           });
           
          $(".tracer-download").button().click(function(e) {
         e.preventDefault(); 
-        var url_ = "reports/get_county_stock_level_new/"+"NULL/"+"NULL/"+"$("#tracer_district_filter").val()+"/NULL/"+$("#tracer_plot_value_filter").val()+"/csv_data";   
+        var url_ = "reports/get_county_stock_level_new/"+"NULL/"+"NULL/"+
+        $("#tracer_district_filter").val()+"/"+$("#tracer_facility_filter").val()+"/"+$("#tracer_plot_value_filter").val()+"/csv_data";   
          window.open(url+url_ ,'_blank');   
           });
+          
           $(".division-download").button().click(function(e) {
         e.preventDefault(); 
         var url_ = "reports/get_division_commodities_data/"+

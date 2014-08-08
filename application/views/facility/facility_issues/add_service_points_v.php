@@ -1,3 +1,8 @@
+ <style>
+ 	.row div p{
+	padding:10px;
+}
+ </style>
  <!------MODAL BOX------>
  <div class="modal fade" id="edit_" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -55,9 +60,18 @@
 	
 <div class="col-md-3" style="border: 1px solid #DDD;">
 <?php echo form_open('issues/save_service_points'); ?>
+<div class="row">
+		
+		<div class="col-md-6" id=""><p class="bg-info"><span class="badge ">1</span>Enter the name of the Service Point
+			</span></p>
+		
+	</div>
+	<div class="col-md-6" id=""><p class="bg-info"><span class="badge ">2</span>Click save when done
+			</span></p>
+		
+	</div>
+	</div>
 <div class="table-responsive" style="height:417px; overflow-y: auto;">
-<span  class='label label-info'>i)Enter the name of the Service Point,<br>
-ii)Click save when done</span><br>
 <table  class="table table-hover table-bordered table-update" id="facility_service_points" >
 <thead style="background-color: white">
 <tr><th>Service Point Name</th><th>Action</th></tr>
@@ -201,12 +215,14 @@ $(".add").click(function() { //add row here
 	} );
 
 		function  clone_the_last_row_of_the_table(){
-	        var selector_object=$('#facility_service_points tr:last');
+	        var selector_object = $('#facility_service_points tr:last');
             var cloned_object = selector_object.clone(true);
             var table_row = cloned_object.attr("row_id");
-            var next_table_row = parseInt(table_row) + 1;           
+            var next_table_row = parseInt(table_row) + 1; 
+            var blank_value = "";          
 		    cloned_object.attr("row_id", next_table_row);
-			cloned_object.find(".service_point").attr('name','service_point['+next_table_row+']').attr('value',"");           
+			cloned_object.find(".service_point").attr('name','service_point['+next_table_row+']');   
+			cloned_object.find(".service_point").val(blank_value);          
 			cloned_object.insertAfter('#facility_service_points tr:last');	
 	}
 } );

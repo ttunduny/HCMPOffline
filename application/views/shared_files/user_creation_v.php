@@ -551,6 +551,12 @@
 </div><!-- end Modal edit user -->
 <script>
       $(document).ready(function () {
+      	$(".edit_user,#create_new").attr("disabled", "disabled");
+      	$('#myModal').on('hidden.bs.modal', function () {
+      		alert('jack');
+				$("#datatable,.modal-content").hide().fadeIn('fast');
+				 location.reload();
+			});
 	$('.dataTables_filter label input').addClass('form-control');
 	$('.dataTables_length label select').addClass('form-control');
 $('#datatable').dataTable( {
@@ -587,7 +593,7 @@ $("#district_name").change(function() {
     }
     else{
 var drop_down='';
- var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+$("#district_name").val();
+ var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json/"+$("#district_name").val();
   $.getJSON( hcmp_facility_api ,function( json ) {
      $("#facility_id").html('<option value="NULL" selected="selected">Select Facility</option>');
       $.each(json, function( key, val ) {
@@ -608,7 +614,7 @@ var drop_down='';
     }
     else{
 var drop_down='';
- var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+$("#district_name_edit").val();
+ var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json/"+$("#district_name_edit").val();
   $.getJSON( hcmp_facility_api ,function( json ) {
      $("#facility_id_edit").html('<option value="NULL" selected="selected">Select Facility</option>');
       $.each(json, function( key, val ) {
@@ -706,11 +712,13 @@ $('#facility_id_edit_district').val(facility_id)
 						
 						 $('.err').html(data.msg);
 							$( '.err' ).addClass( "alert-danger alert-dismissable" );
+							$(".edit_user,#create_new").attr("disabled", "disabled");
 							}else if(data.response=='true'){
 								
 								$(".err").empty();
 								$(".err").removeClass("alert-danger alert-dismissable");
 								$( '.err' ).addClass( "alert-success alert-dismissable" );
+								$(".edit_user,#create_new").attr("disabled", false);
 								$('.err').html(data.msg);
 								
 								
@@ -760,11 +768,13 @@ $('#email').keyup(function() {
 						
 						 $('#err').html(data.msg);
 							$( '#err' ).addClass( "alert-danger alert-dismissable" );
+							$(".edit_user,#create_new").attr("disabled", "disabled");
 							}else if(data.response=='true'){
 								
 								$("#err").empty();
 								$("#err").removeClass("alert-danger alert-dismissable");
 								$( '#err' ).addClass( "alert-success alert-dismissable" );
+								$(".edit_user,#create_new").attr("disabled", false);
 								$('#err').html(data.msg);
 								
 								
@@ -827,12 +837,15 @@ $("#create_new").click(function() {
           	$('.modal-body').html("<div class='bg-warning' style='height:30px'>"+
 							"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"+
 							"<h3>Success!!! A new user was added to the system. Please Close to continue</h3></div>")
+							
+			$('.modal-footer').html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>")
 				
         }, 4000);
             
                   
           }
         }); 
+        
 }
 $(".edit_user").click(function() {
 
@@ -883,10 +896,7 @@ $(".edit_user").click(function() {
            
         }); 
 }
-			$('#myModal').on('hidden.bs.modal', function () {
-				$("#datatable,.modal-content").hide().fadeIn('fast');
-				 location.reload();
-			})
+			
 			
 			oTable = $('#datatable').dataTable();
 			
