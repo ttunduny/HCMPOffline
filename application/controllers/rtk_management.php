@@ -2662,6 +2662,135 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
 
     }
 
+    public function get_all_zone_a_facilities(){
+        $sql = "select facilities.*,districts.district,counties.county from facilities,counties,districts 
+        where facilities.zone = 'Zone A' 
+        and facilities.rtk_enabled=1
+        and districts.id = facilities.district
+        and counties.id=districts.county";
+        $res = $this->db->query($sql);
+        $facilities = $res->result_array(); 
+        $amcs = array();
+        foreach ($facilities as $key => $value) {
+            $fcode = $value['facility_code'];
+            $q = "select lab_commodities.*, facility_amc.* from lab_commodities, facility_amc 
+            where lab_commodities.id = facility_amc.commodity_id and facility_amc.facility_code=$fcode";
+            $res1 = $this->db->query($q);
+            $amc_details = $res1->result_array();
+            $amcs[$fcode] = $amc_details;
+        }
+
+        $data['title'] = 'Zone A List';
+        $data['banner_text'] = 'Facilities in Zone A';
+        $data['content_view'] = 'rtk/allocation_committee/zone_a';        
+        $data['facilities'] = $facilities;
+        $data['amcs'] = $amcs;
+        $this->load->view('rtk/template', $data);        
+        
+    }
+       public function zone_a_non_reported_facilities(){
+        
+        $firstday = '2014-05-01';
+        $lastday = '2014-07-30';        
+      // ini_set('memory_limit', '750M');
+         $sql = "select distinct facilities.facility_code,facilities.facility_name,districts.district,counties.county from facilities,counties,districts 
+        where facilities.zone = 'Zone A' 
+        and facilities.rtk_enabled=1
+        and districts.id = facilities.district
+        and counties.id=districts.county
+        and facilities.facility_code not in (select 
+        distinct facilities.facility_code
+        from
+            facilities,
+            lab_commodity_orders
+        where
+            lab_commodity_orders.order_date between '$firstday' and '$lastday'
+                and facilities.facility_code = lab_commodity_orders.facility_code
+        group by facilities.facility_code)
+        group by facilities.facility_code
+        ";
+        $res = $this->db->query($sql);
+        $facilities = $res->result_array(); 
+
+        $amcs = array();
+        foreach ($facilities as $key => $value) {
+            $fcode = $value['facility_code'];
+            $q = "select lab_commodities.*, facility_amc.* from lab_commodities, facility_amc 
+            where lab_commodities.id = facility_amc.commodity_id and facility_amc.facility_code=$fcode";
+            $res1 = $this->db->query($q);
+            $amc_details = $res1->result_array();
+            $amcs[$fcode] = $amc_details;
+        }
+    // echo "<pre>";
+    //     print_r($amcs);
+    //     die;
+        $data['title'] = 'Unreported Facilities in Zone A';
+        $data['banner_text'] = 'Unreported Facilities in Zone A';
+        $data['content_view'] = 'rtk/allocation_committee/zone_a';        
+        $data['facilities'] = $facilities;
+        $data['amcs'] = $amcs;
+        $this->load->view('rtk/template', $data);   
+    }
+    public function get_all_zone_a_non_allocated_facilities(){
+        
+        $firstday = '2014-05-01';
+        $lastday = '2014-08-30';
+         //ini_set('memory_limit', '-1');       
+        
+        $sql = "select distinct facilities.facility_code,facilities.facility_name,districts.district,counties.county 
+        from facilities,counties,districts, lab_commodity_details
+        where facilities.zone = 'Zone A' 
+        and facilities.rtk_enabled=1
+        and districts.id = facilities.district
+        and counties.id=districts.county
+        and facilities.facility_code = lab_commodity_details.facility_code
+        and lab_commodity_details.allocated_date = 0
+        and facilities.facility_code in (select 
+        distinct facilities.facility_code
+        from
+            facilities,
+            lab_commodity_orders
+        where
+            lab_commodity_orders.order_date between '$firstday' and '$lastday'
+                and facilities.facility_code = lab_commodity_orders.facility_code
+        group by facilities.facility_code)
+        group by facilities.facility_code
+        ";
+
+        /*$sql = "select distinct facilities.*,lab_commodity_details.created_at,lab_commodity_details.allocated_date, districts.district,counties.county 
+        from facilities,counties,districts,lab_commodity_details,lab_commodity_orders 
+        where facilities.zone = 'Zone A' 
+        and facilities.rtk_enabled=1
+        and districts.id = facilities.district
+        and counties.id=districts.county  
+        and facilities.facility_code = lab_commodity_details.facility_code 
+        and lab_commodity_orders.id = lab_commodity_details.order_id
+        and lab_commodity_details.allocated_date = 0
+        
+        group by facilities.facility_code";*/
+        //echo "$sql";die();
+        $res = $this->db->query($sql);
+        $facilities = $res->result_array(); 
+        $amcs = array();
+        foreach ($facilities as $key => $value) {
+            $fcode = $value['facility_code'];
+            $q = "select lab_commodities.*, facility_amc.* from lab_commodities, facility_amc 
+            where lab_commodities.id = facility_amc.commodity_id and facility_amc.facility_code=$fcode";
+            $res1 = $this->db->query($q);
+            $amc_details = $res1->result_array();
+            $amcs[$fcode] = $amc_details;
+        }
+
+        $data['title'] = 'Unallocated Facilities in Zone A';
+        $data['banner_text'] = 'Unallocated Facilities in Zone A';
+        $data['content_view'] = 'rtk/allocation_committee/zone_b';        
+        $data['facilities'] = $facilities;
+        $data['amcs'] = $amcs;
+        $this->load->view('rtk/template', $data);        
+        
+    }
+
+
     public function save_lab_report_data() {
 
         date_default_timezone_set("EUROPE/Moscow");

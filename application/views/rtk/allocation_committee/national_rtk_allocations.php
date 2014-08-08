@@ -108,10 +108,17 @@
                     <td><?php echo $allocations[$i]['Zone']; ?></td>
                     <td><?php echo $allocations[$i]['contactperson']; ?></td>
                     <td>0<?php echo $allocations[$i]['cellphone']; ?></td>
-                    <td><?php echo $allocations[$i]['allocated'];$i++;$i++?></td>
+                    <?php 
+                        for ($i=0; $i <6 ; $i++) { ?>
+                        <td>Echo</td>
+                    <?php                           
+                        }
+                    ?>
+
+                    <!--td><?php echo $allocations[$i]['allocated'];$i++;$i++?></td>
                     <td><?php echo $allocations[$i]['allocated']; ?></td>
                     <td><?php echo $allocation_date; ?></td>
-                    <td><?php echo $quarter; ?></td>
+                    <td><?php echo $quarter; ?></td-->
                 </tr>
                 <?php
                 $i++;
@@ -145,7 +152,7 @@
                         "aButtons": ["csv", "xls", "pdf"]
                     }
                 ],
-                "sSwfPath": "../v2/assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+                "sSwfPath": "../assets/datatable/media/swf/copy_csv_xls_pdf.swf"
             }
         });
 
