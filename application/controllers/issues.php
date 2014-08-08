@@ -63,8 +63,8 @@ if (!defined('BASEPATH'))
 		$view = 'shared_files/template/template';
 		    $data['content_view'] = "subcounty/subcounty_drug_store_home";	
 			$data['district_dashboard_notifications']=$this->get_district_dashboard_notifications_graph_data();
-			$data['title'] = "System Home";
-		$data['banner_text'] = "Home";
+			$data['title'] = "Drug Store Home";
+		$data['banner_text'] = "Drug Store";
 		$this -> load -> view($view, $data);
 	}
 
@@ -433,17 +433,18 @@ redirect();
 	$facility_code=$this -> session -> userdata('facility_id');
 	$data['title'] ="Confirm Redistribution";	
 	$data['banner_text'] = "Confirm Redistribution";
-	$data['redistribution_data']=redistribution_data::get_all_active($facility_code,$editable);	
+	$data['redistribution_data']=redistribution_data::get_all_active($facility_code,$editable);
 	$data['editable']=$editable;
 	$data['content_view'] = "facility/facility_issues/facility_redistribute_items_confirmation_v";
 	$this -> load -> view("shared_files/template/template", $data);		
 	}
 	// get_all_active_drug_store
 	public function confirm_store_external_issue($editable_=null){
+		//seth
 	$district_id = $this -> session -> userdata('district_id');
 	$data['title'] ="Confirm Redistribution";	
 	$data['banner_text'] = "Confirm Redistribution";
-	$data['redistribution_data']=redistribution_data::get_all_active_drug_store($district_id,$editable_);	
+	$data['redistribution_data']=redistribution_data::get_all_active_drug_store($district_id,$editable_);
 	$data['editable']=$editable_;
 	$data['content_view'] = "subcounty/drug_store/drug_store_redistribute_items_confirmation_v";
 	$this -> load -> view("shared_files/template/template", $data);		

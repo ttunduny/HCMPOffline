@@ -8,7 +8,7 @@
 
 <div class="container" style="width: 96%; margin: auto;">
 	<span  class='label label-info'>To avoid adding items to your stock, leave the values as zero</span>
- <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('stock/add_more_stock_level_external',$att); ?>
+ <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('stock/add_more_stock_level_store_external',$att); ?>
  <table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
 		<tr>
