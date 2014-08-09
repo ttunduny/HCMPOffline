@@ -477,7 +477,8 @@ class Rtk_Management extends Home_controller {
         $County = $this->session->userdata('county_name');
         $Countyid = $this->session->userdata('county_id');
         $districts = districts::getDistrict($Countyid);         
-        $sql = "select * from facilities where facility_code=$mfl";        
+        $sql = "select * from facilities where facility_code=$mfl"; 
+       
         $facility = $this->db->query($sql)->result_array();
         //$facility = facilities::get_facility_name($mfl);        
         $mfl =  $facility[0]['facility_code'];       
