@@ -178,7 +178,7 @@ function update_rtk(val){
     }
     else
       {        
-        echo ' <a href="../../rtk_management/facility_profile/' . $code. ' title="View">View</a>';
+        echo ' <a href="../../rtk_management/facility_profile/' . $code. '">View</a>';
       }?></td>
   </tr>
   <?php }?>

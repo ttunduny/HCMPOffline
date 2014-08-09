@@ -1,32 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>   
-	<link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
-	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
-	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
-	<link href="<?php echo base_url().'assets/css/jquery-ui.css'?>" type="text/css" rel="stylesheet"/>
-	<link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
-	
-	<script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url().'assets/scripts/typehead/handlebars.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script> 
-	<script src="<?php echo base_url().'assets/scripts/validator.js'?>" type="text/javascript"></script> 
-	<script src="<?php echo base_url().'assets/scripts/waypoints.js'?>" type="text/javascript"></script> 
-	<script src="<?php echo base_url().'assets/scripts/waypoints-sticky.min.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url().'assets/scripts/typehead/typeahead.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
+  <link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
+  <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
+  <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
+  <link href="<?php echo base_url().'assets/css/jquery-ui.css'?>" type="text/css" rel="stylesheet"/>
+  <link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
+  
+  <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/typehead/handlebars.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script> 
+  <script src="<?php echo base_url().'assets/scripts/validator.js'?>" type="text/javascript"></script> 
+  <script src="<?php echo base_url().'assets/scripts/waypoints.js'?>" type="text/javascript"></script> 
+  <script src="<?php echo base_url().'assets/scripts/waypoints-sticky.min.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/typehead/typeahead.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/tagsinput/tagmanager.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/tagsinput/bootstrap-tagsinput.js'?>" type="text/javascript"></script>
+  <link rel="stylesheet" href="<?php echo base_url().'assets/tagsinput/bootstrap-tagsinput.css'?>" />
+
 
   <script>
   paceOptions = {
-	  ajax: false, // disabled
-	  document: true, // 
-	  eventLag: true,
-	  restartOnPushState: false,
-	  elements:{
-	  	selectors:['body']
-	  } // 
+    ajax: false, // disabled
+    document: true, // 
+    eventLag: true,
+    restartOnPushState: false,
+    elements:{
+      selectors:['body']
+    } // 
+
 
   };
   function load(time){
@@ -147,8 +151,9 @@
         <tr>
           <label>To:</label>
         </tr><br/>
-        <tr>                    
-            <input class="typeahead form-control tm-input" id="receipient" type="text" placeholder="Enter Receipient" data-role="tagsinput" data-provide="typeahead" style="width:96%" />   
+        <tr>  
+                              
+            <input class="typeahead form-control tm-input" id="receipient" type="text" placeholder="Enter Receipient" style="width:96%" />   
           
         </tr><br/>    
         <tr>
@@ -220,11 +225,8 @@ var substringMatcher = function(strs) {
             
             facilities.initialize();
             
-            $(".tm-input").tagsManager({               
-              replace:false,                              
-              onlyTagList: false,  
-              
-            });
+            
+            //$('#receipient').tagsinput();
 
             $('.typeahead').typeahead({
               highlight: true

@@ -507,9 +507,6 @@ $count = count($res);
                     <tr>
                         <td colspan = "14" style = "text-align:left"><b><?php echo $lab_category->category_name; ?></b></td>            
                     </tr>
-                    <tr>
-                        <td colspan = "14" style = "text-align:left"><b>Old Algorithm</b></td>            
-                    </tr>
                     <?php foreach ($lab_category->category_lab_commodities as $lab_commodities) { ?>
                     <tr commodity_id="<?php echo $checker ?>"><input type="hidden" id="commodity_id_<?php echo $checker ?>" name="commodity_id[<?php echo $checker ?>]" value="<?php echo $lab_commodities['id']; ?>" >
                         <input type="hidden" id="facilityCode" name="facilityCode">

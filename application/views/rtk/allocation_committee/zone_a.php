@@ -92,15 +92,15 @@ table{
           <td><?php echo $value['facility_code'];?></td>
           <td><?php echo $value['facility_name'];?></td>     
           <td><?php echo $amcs[$facil][0]['amc'];?></td>     
-          <td><?php echo ceil($amcs[$facil][0]['amc']/100);?></td>     
+          <td><?php echo ceil((($amcs[$facil][0]['amc'])*4)/100);?></td>     
           <td><?php echo $amcs[$facil][1]['amc'];?></td>     
-          <td><?php echo ceil($amcs[$facil][1]['amc']/20);?></td>                 
+          <td><?php echo ceil((($amcs[$facil][1]['amc'])*4)/20);?></td>                 
           <td><?php echo $amcs[$facil][3]['amc'];?></td>     
-          <td><?php echo ceil($amcs[$facil][3]['amc']/50);?></td>     
+          <td><?php echo ceil((($amcs[$facil][3]['amc'])*4)/50);?></td>     
           <td><?php echo $amcs[$facil][2]['amc'];?></td>     
-          <td><?php echo ceil($amcs[$facil][2]['amc']/30);?></td>     
+          <td><?php echo ceil((($amcs[$facil][2]['amc'])*4)/30);?></td>     
           <td><?php echo $amcs[$facil][4]['amc'];?></td>     
-          <td><?php echo ceil($amcs[$facil][4]['amc']/20);?></td>     
+          <td><?php echo ceil((($amcs[$facil][4]['amc'])*4)/20);?></td>     
           
         </tr>
         <?php }

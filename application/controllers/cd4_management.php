@@ -22,8 +22,6 @@ class cd4_Management extends MY_Controller {
         $res = $this->db->query('SELECT date_sync FROM  `api_gen` ORDER BY  `api_gen`.`date_sync` DESC  LIMIT 0 ,1');
         $date_synced_res = $res->result_array();
         $data['date_sync'] = $date_synced_res[0]['date_sync'];
-
-
         $data['content_view'] = "rtk/cd4/dashboard";
         $data['title'] = "CD4 Home";
         $data['banner_text'] = "CD4";

@@ -101,7 +101,7 @@ $(function(){
                 </div>
                 <div id="report-<?php echo $value['id']; ?>" class="accordion-body collapse" style="height: 0px;">
                     <div class="accordion-inner">
-                        <table class="table" style="font-size: 100%;">
+                        <table class="table" style="font-size:12px;">
                             <thead>
                                 <tr>
                                     <th>Kit</th>
