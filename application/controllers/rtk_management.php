@@ -293,7 +293,7 @@ class Rtk_Management extends Home_controller {
         $data['county'] = $County;
         $data['pending_facility'] = $pending_facilities;
         $data['title'] = 'RTK County Admin';
-        $data['banner_text'] = 'RTK County Admin: Pending Facilities';
+        $data['banner_text'] = 'RTK County Admin: Non-Reported Facilities';
         $data['content_view'] = "rtk/rtk/rca/pending_facilities_v";
         $this->load->view("rtk/template", $data);
     }
@@ -495,7 +495,7 @@ class Rtk_Management extends Home_controller {
         $data['mfl'] = $mfl;
         $data['countyid'] = $Countyid;
         $data['title'] = $facility[0]['facility_name'] . '-' . $mfl;
-        $data['facility_name'] = $facility['facility_name'];
+        $data['facility_name'] = $facility[0]['facility_name'];
         $data['banner_text'] = 'Facility Profile: ' . $facility[0]['facility_name'] . '-' . $mfl;
         $data['content_view'] = "rtk/rtk/facility_profile_view";
 
