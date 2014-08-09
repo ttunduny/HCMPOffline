@@ -2742,8 +2742,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         where facilities.zone = 'Zone A' 
         and facilities.rtk_enabled=1
         and districts.id = facilities.district
-        and counties.id=districts.county
-        and facilities.facility_code = lab_commodity_details.facility_code
+        and counties.id=districts.county        
         and lab_commodity_details.allocated_date = 0
         and facilities.facility_code in (select 
         distinct facilities.facility_code
@@ -2783,7 +2782,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
 
         $data['title'] = 'Unallocated Facilities in Zone A';
         $data['banner_text'] = 'Unallocated Facilities in Zone A';
-        $data['content_view'] = 'rtk/allocation_committee/zone_b';        
+        $data['content_view'] = 'rtk/allocation_committee/zone_a';        
         $data['facilities'] = $facilities;
         $data['amcs'] = $amcs;
         $this->load->view('rtk/template', $data);        
