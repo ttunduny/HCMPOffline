@@ -545,10 +545,17 @@ class Rtk_Management extends Home_controller {
         $district_summary1 = $this->rtk_summary_district($district, $year_previous_1, $previous_month_1);
         $district_summary2 = $this->rtk_summary_district($district, $year_previous_2, $previous_month_2);
 
-
-        $county_id = districts::get_county_id($district_summary['district_id']);
+        // get districts_id and county_id to put on the header link for sub counties 
+        $county_id = districts::get_county_id($district);
         $county_name = counties::get_county_name($county_id['county']);
-       
+        
+        $myres =$this->db->select('*')->get_where('districts', array('id' => $district))->result_array();
+
+        foreach ($myres as $key => $value) {
+            $cid = $value['county']  ;
+
+        }
+        $myres1 =$this->db->select('*')->get_where('districts', array('county' => $cid))->result_array(); 
 
         $data['district_balances_current'] = $this->district_totals($year_current, $previous_month, $district);
         $data['district_balances_previous'] = $this->district_totals($year_previous, $previous_month, $district);
@@ -558,7 +565,7 @@ class Rtk_Management extends Home_controller {
 
         $data['district_summary'] = $district_summary;
         
-        $data['districts'] = $this->_districts_from_county($county_name['id']);
+        $data['districts'] = $myres1;
         $data['facilities'] = $this->_facilities_in_district($district);
 
         $data['district_name'] = $district_summary['district'];
@@ -627,7 +634,12 @@ class Rtk_Management extends Home_controller {
         $data['title'] = 'National Summary: ';
         $this->load->view("rtk/template", $data);
     }
+    //  function to get district and county
+    // function get_district_county_id(){
+    //     $dis_id = $this->
+    //     $sql = "select districts.id, districts.name, county.id from counties, districts where districts.county = county.id and "
 
+    // }
     function zone_allocation_stats($zone) {
 
         $last_allocation_sql = "SELECT lab_commodity_details.allocated_date 
