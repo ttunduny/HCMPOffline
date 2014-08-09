@@ -545,10 +545,10 @@ class Rtk_Management extends Home_controller {
         $district_summary1 = $this->rtk_summary_district($district, $year_previous_1, $previous_month_1);
         $district_summary2 = $this->rtk_summary_district($district, $year_previous_2, $previous_month_2);
 
-
-        $county_id = districts::get_county_id($district_summary['district_id']);
+        
+        $county_id = districts::get_county_id($district);
         $county_name = counties::get_county_name($county_id['county']);
-       
+        
 
         $data['district_balances_current'] = $this->district_totals($year_current, $previous_month, $district);
         $data['district_balances_previous'] = $this->district_totals($year_previous, $previous_month, $district);
@@ -3631,9 +3631,9 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
             $lastmonth = date('F', strtotime("last day of previous month"));
             $allocation = '';
             if ($allocated > 0) {
-                $allocation = '<span class=\"label label-success\">Allocated for  ' . $lastmonth . '</span>';
+                $allocation = '<span class="label label-success">Allocated for  ' . $lastmonth . '</span>';
             } else {
-                $allocation = '<span class=\"label label-important\">Pending Allocation for  ' . $lastmonth . '</span>';
+                $allocation = '<span class="label label-important">Pending Allocation for  ' . $lastmonth . '</span>';
                 $allocated = ($amc_4month / $unit_of_issue);
                 $allocated = ceil($allocated);
             }
