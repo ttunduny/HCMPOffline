@@ -24,16 +24,16 @@ class cd4_Management extends MY_Controller {
         $data['date_sync'] = $date_synced_res[0]['date_sync'];
 
 
-        $data['content_view'] = "cd4/dashboard";
+        $data['content_view'] = "rtk/cd4/dashboard";
         $data['title'] = "CD4 Home";
         $data['banner_text'] = "CD4";
         $data ['table_data'] = $this->cd4_sidebar();
-        $this->load->view('template', $data);
+        $this->load->view('rtk/template', $data);
     }
 
     public function get_cd4_allocation_kenyan_map() {
 
-        $this->load->view("allocation_committee/ajax_view/cd4_allocation_county_map");
+        $this->load->view("rtk/allocation_committee/ajax_view/cd4_allocation_county_map");
     }
 
     function objectToArray($object) {
@@ -184,10 +184,10 @@ class cd4_Management extends MY_Controller {
     }
 
     public function get_kenyan_county_map() {
-        $data['content_view'] = "cd4/ajax_view/kenyan_county_v";
+        $data['content_view'] = "rtk/cd4/ajax_view/kenyan_county_v";
         $data['title'] = "CD4";
         $data['banner_text'] = "CD4";
-        $this->load->view("template", $data);
+        $this->load->view("rtk/template", $data);
     }
 
     function _get_id_of_county($id) {
@@ -300,7 +300,7 @@ class cd4_Management extends MY_Controller {
 
 
         $county_id = $county_id - 1;
-        $data['content_view'] = 'cd4/ajax_view/county_allocation_v';
+        $data['content_view'] = 'rtk/cd4/ajax_view/county_allocation_v';
         $htm = '';
         $htm.='<ul class="facility-list">';
 
@@ -329,7 +329,7 @@ class cd4_Management extends MY_Controller {
         $data['title'] = 'CD4 Allocation ' . $countyname;
         $data['countyname'] = $countyname;
 
-        $this->load->view('template', $data);
+        $this->load->view('rtk/template', $data);
     }
 
     //c ounty value needed
@@ -337,7 +337,7 @@ class cd4_Management extends MY_Controller {
 
         $county_id = $county_id - 1;
 
-        $data['content_view'] = 'cd4/ajax_view/county_allocation_v';
+        $data['content_view'] = 'rtk/cd4/ajax_view/county_allocation_v';
         $htm = '';
         $htm.='<ul class="facility-list">';
 
@@ -592,8 +592,8 @@ class cd4_Management extends MY_Controller {
         $data['table_body'] = "Hello World";
         $data['title'] = "County View";
         $data['banner_text'] = "County View";
-        $data['content_view'] = "cd4/ajax_view/county_detail_zoom_v";
-        $this->load->view("template", $data);
+        $data['content_view'] = "rtk/cd4/ajax_view/county_detail_zoom_v";
+        $this->load->view("rtk/template", $data);
     }
 
     function national_yearly_reporting_chart() {
@@ -656,7 +656,7 @@ class cd4_Management extends MY_Controller {
         }
 
         $data['table_body'] = $table_body;
-        $this->load->view("cd4/ajax_view/facility_zoom_v", $data);
+        $this->load->view("rtk/cd4/ajax_view/facility_zoom_v", $data);
     }
 
     function sendmail($message, $output, $reportname) {
@@ -788,7 +788,7 @@ $today
         $data['table_body'] = "Hello World";
         $data['title'] = "Cd4 Allocations";
         $data['banner_text'] = "CD4 Allocations Countrywide";
-        $data['content_view'] = "cd4/ajax_view/cd4_overall_allocations";
+        $data['content_view'] = "rtk/cd4/ajax_view/cd4_overall_allocations";
         $data['counties'] = array();
         $countiesid[] = array();
         $countiesnames[] = array();
@@ -807,7 +807,7 @@ AND cd4_allocation.qty>0');
 // echo "<pre>";print_r($resarr); echo "</pre>";die;
 
         $data['allocations'] = $resarr;
-        $this->load->view('template', $data);
+        $this->load->view('rtk/template', $data);
     }
 
     public function allocations_county($County) {
@@ -816,7 +816,7 @@ AND cd4_allocation.qty>0');
         $data['table_body'] = "Hello World";
         $data['title'] = "Cd4 Allocations";
         $data['banner_text'] = "CD4 Allocations";
-        $data['content_view'] = "cd4/ajax_view/cd4_allocations";
+        $data['content_view'] = "rtk/cd4/ajax_view/cd4_allocations";
         $data['counties'] = array();
         $countiesid[] = array();
         $countiesnames[] = array();
@@ -956,7 +956,7 @@ AND cd4_countys.ID = ' . $County . ' ');
         $data['table_body'] = "Hello World";
         $data['title'] = "CD4 Allocations";
         $data['banner_text'] = "County View";
-        $data['content_view'] = "cd4/ajax_view/county_detail_zoom_v";
+        $data['content_view'] = "rtk/cd4/ajax_view/county_detail_zoom_v";
         $data['counties'] = array();
         $countiesid[] = array();
         $countiesnames[] = array();
@@ -1018,7 +1018,7 @@ AND cd4_countys.ID = ' . $County . ' ');
           }
          */
         $this->db->close();
-        $this->load->view("template", $data);
+        $this->load->view("rtk/template", $data);
     }
 
     function loaddistricts($county) {
