@@ -149,7 +149,7 @@ endforeach;
          $(".subcounty-download").on('click',function(e) {
 		e.preventDefault();	
         var url_ = 'reports/get_county_cost_of_expiries_new/'+
-        $("#year_filter").val()+"/"+$("#month_filter").val()+ "/"+$("#district_filter").val()+"/"+$("#plot_value_filter").val()+"/NULL"+"/csv_data";	 
+        $("#year_filter").val()+"/"+$("#month_filter").val()+ "/"+$("#district_filter").val()+"/"+$("#plot_value_filter").val()+"/"+$("#facility_filter").val()+"/csv_data";	 
 		 window.open(url+url_ ,'_blank');		
           }); 
 

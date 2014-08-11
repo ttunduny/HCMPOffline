@@ -248,10 +248,10 @@ public static function get_county_cost_of_exipries_new($facility_code=null,$dist
            $computation ="ifnull((SUM(ROUND(fs.current_balance/ d.total_commodity_units)))*d.unit_cost ,0) AS total";
              break;
          case 'units':
-           $computation ="ifnull(CEIL(SUM(fs.current_balance)),0) AS total" ;
+           $computation =" ifnull(CEIL(SUM(fs.current_balance)),0) AS total" ;
              break;
              case 'packs':
-           $computation ="ifnull(SUM(ROUND(fs.current_balance/d.total_commodity_units)),0) AS total" ;
+           $computation =" ifnull(SUM(ROUND(fs.current_balance/d.total_commodity_units)),0) AS total" ;
              break;
          default:
       $computation ="ifnull((SUM(ROUND(fs.current_balance/ d.total_commodity_units)))*d.unit_cost ,0) AS total";
@@ -274,7 +274,7 @@ public static function get_county_cost_of_exipries_new($facility_code=null,$dist
 		 
 	 //exit;
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-     ->fetchAll("SELECT $select_option $computation
+     ->fetchAll("SELECT $select_option  date_format(expiry_date,'%M') AS month, $computation  
      FROM facility_stocks fs, facilities f, commodities d, counties c, districts di
      WHERE fs.facility_code = f.facility_code
      AND fs.`expiry_date` <= NOW( )
