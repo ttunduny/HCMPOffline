@@ -43,13 +43,13 @@ class national extends MY_Controller
         $data['maps'] = json_encode($finalMap);
         $data['counties']=$county_name;
 		
-        $this -> load -> view("national/national_v.php",$data);
+        $this -> load -> view("national/national_v",$data);
     } 
     public function search()
     {
     	$data['title'] = "National Dashboard";
         $data['c_data'] = Commodities::get_all_2();
-        $this -> load -> view("national/national_search_v.php",$data);
+        $this -> load -> view("national/national_search_v",$data);
     }
     public function create_json(){
         $facility = $this->db->get('counties');
@@ -1278,7 +1278,7 @@ order by user.id asc
 		$data['county'] = Counties::getAll();
 		$data['commodities'] = Commodities::get_all();
 		$data['sub_county'] = Districts::getAll();
-	 	$this -> load -> view('national/reports_v', $data);
+	 	$this -> load -> view('national/reports_home', $data);
 		
 	 }
 	 public function facilities_json(){

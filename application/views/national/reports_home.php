@@ -1,4 +1,5 @@
-<html lang="en"><head>
+<html lang="en">
+	<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,7 +17,6 @@
     <link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
-    
     <script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
     <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
@@ -62,17 +62,14 @@ padding-top: 4.5%;
 {
   border-radius: 0 !important;
 }
-#radioBtn .notActive{
-    color: #3276b1;
-    background-color: #fff;
-}
-.main_criteria #radioBtn .active{
-    color: white;
-    background-color: #3c763d;
-    border-color: #3c763d;
-}
+
 legend{
 	font-size:16px;
+}
+#main_c{
+	
+	-webkit-box-shadow: 0px 0px 1px 1px #615961;
+	box-shadow: 0px 0px 1px 1px #615961;
 }
 </style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -80,11 +77,11 @@ legend{
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </script>
-  </head>
-  <body screen_capture_injected="true" style="background-color: whitesmoke;">
-  	
-  	<div class="container-fluid navbar-default navbar-fixed-top" role="navigation" style="background-color:white">
+</head>
+  
+<body screen_capture_injected="true">
+	
+	<div class="container-fluid navbar-default navbar-fixed-top" role="navigation" style="background-color:white">
         <div class="container-fluid">
             <div class="navbar-header" id="st-trigger-effects">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -108,12 +105,8 @@ legend{
             <li class=""><a href="<?php echo base_url().'national';?>">Home</a></li>
             <li class="active"><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>
             <li class=""><a href="<?php echo base_url().'national/search';?>">Search</a></li>
-            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Log in</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-log-in" style="margin-right: 2%;"></span> Log in</a></li>
-                            
-                        </ul>
-                    </li>
+            <li class=""><a href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-user"></span>Log In</a></li>
+            
           </ul>
           
                                         
@@ -122,8 +115,8 @@ legend{
       </div>
     </div>
     
-    
-    <div class="container">
+    <div class="container" style="max-width:80% " id="main_c">
+    	
     	<div class="row-fluid" style="margin-top: 1%">
     		<fieldset>
     			<legend>County, Sub-county, Facility</legend>
@@ -161,80 +154,73 @@ legend{
 			  
 		</div>
 		
-				
 		<div class="row-fluid" style="margin-top: 1%">
-				<fieldset style="font-size: 16px;">
-					
-					<legend>Select Criteria</legend>
-					<section class="row-fluid" style="">
-						<section class="col-md-6">
-							<section class="col-md-4">
-							<input type="radio" name="criteria" value="Consumption" class=" " checked/> Consumption
-						</section>
-						<section class="col-md-4">
-							<input type="radio" name="criteria" value="Stock"/> Stock Status
-						</section>
-						
-						<section class="col-md-4">
-							<input type="radio" name="criteria" value="Orders"/> Orders
-						</section>
-						</section>
-						
-						
-						<section class="col-md-6">
-							<section class="col-md-6">
-								<input type="radio" name="criteria" value="Potential" class=" "/> Potential Expiries
-								
-								<section class="col-md-12" style="margin-top: 2%">
-							<label for="county">Select Interval</label>
-						   		<select class="form-control input-md" id="interval"> 
+			<fieldset>
+				<legend>Select Report type</legend>
+				
+				<div class="row">
+				<div class="col-md-3">
+					<input type="radio" name="criteria" value="Consumption" class=" " checked/> Consumption
+				</div>
+				<div class="col-md-3">
+					<input type="radio" name="criteria" value="Stock"/> Stock Status
+				</div>
+				<div class="col-md-6">
+					<div class="row-fluid">
+						<div class="col-md-4" style="padding: 0"><input type="radio" name="criteria" value="Potential" class=" "/> Potential Expiries</div>
+						<div class="col-md-8" style="padding: 0">
+							<select class="form-control input-md" id="interval"> 
 						    	<option value="0">Select Interval</option>
 						    	<option value="3">Next 3 Months</option>
 						    	<option value="6">Next 6 Months</option>
 						    	<option value="12">Next 1 Year</option>
 						    	
 						    	</select>
-							</section>
-							</section>
-							
-							
-							<section class="col-md-6">
-							
-						   		<input type="radio" name="criteria" value ="Actual"/> Actual Expiries
-						   		
-						   		
-							</section>
-							
-						</section>
-						
-					</section>
-					
-					
-					
-										
-				</fieldset>
+						</div>
+					</div>
+				</div>
 				
 				
-				
+			</div>
+			
+			<div class="row" style="margin-top: 2%">
+				<div class="col-md-3">
+					<input type="radio" name="criteria" value="Orders"/> Orders
+				</div>
+				<div class="col-md-3">
+					<input type="radio" name="criteria" value ="Actual"/> Actual Expiries
+				</div>
+				<div class="col-md-6">
+					
+				</div>
+			</div>
+			</fieldset>
+			
+			
 		</div>
 		
-		
 		<div class="row-fluid" style="margin-top: 1%">
-			  
-			 <fieldset style="font-size: 16px;">
+			<fieldset>
+				<legend>Select Report type</legend>
+				
+			<div class="row" style="">
+				<div class="col-md-3">
+					<input type="radio" name="commodity_s" value="Tracer" class=" " checked/> Tracer Commodities
+				</div>
+				<div class="col-md-3">
 					
-					<legend>Select Commodity</legend>
+				</div>
+				<div class="col-md-6">
 					
-					<section class="row-fluid" style="">
-						<section class="col-md-12">
-							<section class="col-md-3">
-							<input type="radio" name="commodity_s" value="Tracer" class=" " checked/> Tracer Commodities
-						</section>
-						<section class="col-md-6">
-							<input type="radio" name="commodity_s" value="Specify"/> Specify Commodity
-							
-							<div class="" style="margin-top: 2%">
-			  	<label for="county">Select Commodity</label>
+				</div>
+			</div>
+			<div class="row" style="margin-top: 2%">
+				<div class="col-md-2">
+					<input type="radio" name="commodity_s" value="Specify"/> Specify Commodity
+				</div>
+				<div class="col-md-4" style="padding: 0">
+					<div class="" style="margin-top: 2%">
+			  	
 			    <select class="form-control input-md" id="commodity"> 
 			    	<option>All Commodities</option>
 			    	<?php
@@ -246,30 +232,32 @@ legend{
 					?>
 			    	</select>
 			  </div>
-						</section>
-						
-						<section class="col-md-3">
-							<input type="radio" name="commodity_s" value="All"/> All Commodities
-						</section>
-						</section>
-						
-						
-						
-						
-					</section>
+				</div>
+				<div class="col-md-3">
 					
+				</div>
+			</div>
+			
+			<div class="row" style="margin-top: 0.5%">
+				<div class="col-md-3">
+					<input type="radio" name="commodity_s" value="All"/> All Commodities
+				</div>
+				<div class="col-md-3">
+				</div>
+				<div class="col-md-6">
 					
-					
-										
-				</fieldset> 
+				</div>
+			</div>
+			
+			</fieldset>
+			
+			
 		</div>
 		
-		<div class="row" style="margin-top: 1%">
-			
+		<div class="row-fluid" style="margin-top: 1%">
 			<fieldset>
 				
 				<legend>Duration</legend>
-				
 				<div class="col-xs-3">
 			  	<label for="Year">Year</label>
 			   <select class="form-control input-md" id="year"> 
@@ -284,22 +272,19 @@ legend{
 			  <div class="col-xs-9">
 			  	
 			  </div>
+				
 			</fieldset>
-			  
-			  
-			  
-		
-          
-			 
 		</div>
-		<div class="row" style="margin-top: 1%">
-			  <div class="col-xs-12">
-			  	<fieldset style="font-size: 16px;">
+    	
+    	<div class="row-fluid" style="margin-top: 1%">
+			<fieldset>
+				
+				<fieldset style="">
 			  		<legend>View as</legend>
 			  		
-			  		<section class="col-md-6">
-							<section class="col-md-3">
-							<input type="radio" name="doctype" value="PDF" class=" " checked/> PDF
+			  		<section class="col-md-8">
+						<section class="col-md-3">
+							<input type="radio" name="doctype" value="PDF" class="" checked/> PDF
 						</section>
 						<section class="col-md-3">
 							<input type="radio" name="doctype" value="Excel"/> Excel
@@ -313,35 +298,25 @@ legend{
 						</section>
 						</section>
 			  	</fieldset>
-			  	
-			  	
-			  
-			  </div>
-			  
-			  
-		
-          
-			 
+			</fieldset>
 		</div>
-    	
-    	<div class="modal-footer">
+		
+		
+			<div class="modal-footer">
 				<button type="button" class="btn btn-success edit_user">
 				<span class="glyphicon glyphicon-file"></span>	Generate
 				</button>
 			</div>
+    	
     </div>
-  	
-  </body>
-  
-  
-    
-
     
     
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script>
+    
+    
+    
+</body>
+</html>
+<script>
     var url='<?php echo base_url(); ?>';
      $(document).ready(function () {
      	
@@ -420,7 +395,7 @@ $("input:radio[name=commodity_s]").click(function() {
     
     
     </script>
-  <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
+ <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
     <!-- Bootstrap core JavaScript===================== --> 
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>

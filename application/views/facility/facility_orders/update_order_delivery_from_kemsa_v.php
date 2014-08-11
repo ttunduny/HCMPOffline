@@ -2,6 +2,9 @@
  	.input-small{
  		width: 80px !important;
  	}
+ 	.row div p{
+	padding:10px;
+}
  </style>
 <?php $att = array("name" => 'myform', 'id' => 'myform');
 echo form_open('stock/update_facility_stock_from_kemsa_order', $att);
@@ -16,13 +19,17 @@ echo form_open('stock/update_facility_stock_from_kemsa_order', $att);
 	 echo "<input type ='hidden' name='hcmp_order_id' value='$general_order_details->id' />"
  ?>
 <div class="container" style="width: 96%; margin: auto;">
-<span  class='label label-info'>
-		Please enter Order Delivery details and Received commodities in Packs and NOT units
 
-		* Commodities as supplied by KEMSA
-	</span>
-<div style=" font-size: 15px; margin-bottom: 1em;">
-	<a href="#" class="show_hide" >Delivery Dispatch Details. Click to Hide</a>
+	<div class="row">
+		<div class="col-md-12" id=""><p class="bg-info">Please enter Order Delivery details and Received commodities in Packs and NOT units
+
+	&nbsp;&nbsp;<strong>*NB</strong>	&nbsp;Commodities as supplied by KEMSA</p></div>
+		
+	</div>
+	</div>
+<div class="container" style=" font-size: 15px; margin-bottom: 1em;">
+	
+	<button type="button" class="btn btn-success show_hide">Delivery Dispatch Details. Click to Hide</button>
 </div>
 
 <div class="row-fluid" id="updateord">
@@ -104,9 +111,10 @@ echo form_open('stock/update_facility_stock_from_kemsa_order', $att);
 
 </div>
 <?php endforeach;  ?>
-<div >
-</div>
-	<table  id="main" width="100%" class="row-fluid table table-hover table-bordered table-update">
+
+<div class="container-fluid"  style="margin-top: 2%">
+
+	<table  id="main" width="100%" class="row-fluid table table-hover table-bordered table-update"  >
 		<thead>
 			<tr>
 				<th>Description</th>
@@ -125,7 +133,7 @@ echo form_open('stock/update_facility_stock_from_kemsa_order', $att);
 				<th>Total Cost(KSH)</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody >
  <?php  $new_count=0; foreach($order_details as $order_details):
         $cost=$order_details['unit_cost']*$order_details['quantity_ordered_pack'];
         $expiry_date=strtotime($order_details['expiry_date'])  ? $order_details['expiry_date'] : null ;
@@ -163,14 +171,15 @@ echo form_open('stock/update_facility_stock_from_kemsa_order', $att);
 		</tbody>
 
 	</table>
+	</div>
 	<hr />
-<div class="container-fluid">
+<div class="container">
 <div style="float: right;">
-<button type="button" class="add btn  btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
-<button type="button" class="test btn btn-success"><span class="glyphicon glyphicon-open"></span>Update Stocks</button></div>
+<button type="button" class="add btn  btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
+<button type="button" class="test btn btn-success btn-sm"><span class="glyphicon glyphicon-open"></span>Update Stocks</button>
+</div>
  </div>
-</div>
-</div>
+
 <script>
 	$(document).ready(function() {
 		var new_count =count;

@@ -28,6 +28,9 @@ class Stock extends MY_Controller {
 |4. save the data in the facility stock, facility transaction , issues table
 */	
 	public function import($facility_code=null){
+		
+		redirect("stock/facility_stock_first_run/first_run");
+		
 		$facility_code=isset($facility_code)? $facility_code : $this -> session -> userdata('facility_id'); 
 		$reset_facility_update_stock_first_temp = Doctrine_Manager::getInstance()->getCurrentConnection();
 	    $reset_facility_update_stock_first_temp->execute("DELETE FROM `facility_stocks_temp` WHERE  facility_code=$facility_code; ");
