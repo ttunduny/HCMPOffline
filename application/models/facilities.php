@@ -28,7 +28,7 @@ class Facilities extends Doctrine_Record {
 
 	public static function getAll_json() {
 		$query = Doctrine_Query::create() -> select("*") -> from("facilities");
-		$drugs = $query -> execute();
+		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $drugs;
 	}
 
