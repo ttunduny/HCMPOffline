@@ -108,11 +108,11 @@ class Stock extends MY_Controller {
         hcmp_rtk.facility_order_status
         where facility_order_status.status_desc like '%$order_status%'");
          $new_name_id=Doctrine_Manager::getInstance()->getCurrentConnection()
-        ->fetchAll("select 
+        ->fetchAll('select 
         *
         from
         kemsa2.user
-        where concat (user.fname,' ',user.lname) like '%$name%'");
+        where concat (user.fname," ",user.lname) like "%'.$name.'%"');
           $temp=array('order_date'=>$old_facility_orders['orderDate'],
                          'approval_date'=>$old_facility_orders['approvalDate'],
                          'dispatch_date'=>$old_facility_orders['dispatchDate'],
@@ -995,18 +995,21 @@ endif;
             
             $highestColumn = $sheet->getHighestColumn();
             $temp=$super_cat=$sub_cat=array();
-            $super_cat_id=$sub_cat_id=0;
+            $temp['Updated commodity']=array();;
+            $temp['Added New commodity_category']=array();;
+            $temp['Added New commodity_sub_category']=array();;
+            $temp['Added New commodities']=array();;
+            $row_has_no_commodities=false;
            //  Loop through each row of the worksheet in turn
         for ($row = 15; $row <= $highestRow; $row++){ 
             //  Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);                                    
            if(isset($rowData[0][1]) && $rowData[0][1]!='' ){
            $cell = $sheet->getCell('C'.$row);// super category
-           $cell2=$sheet->getCell('E'.$row); //sub category 
            // Check if cell is merged super category
            foreach ($sheet->getMergeCells() as $cells) {
            if ($cell->isInRange($cells)) {// check for the super cat name 
-           
+
            $data_new=$rowData[0][2];
            
            $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
@@ -1016,14 +1019,20 @@ endif;
            if($does_it_exits==0){//set the super cat id here
            $this -> db -> insert('commodity_category', array('category_name'=>$rowData[0][2],'status'=>1));
            $super_cat=array_merge($super_cat,array($rowData[0][2]=>$this -> db -> insert_id()));
+
+           array_push($temp['Added New commodity_category'],$rowData[0][2]);
+
            }else{
-           $super_cat=array_merge($super_cat,array($rowData[0][2]=>$q['id']));   
+           $super_cat=array_merge($super_cat,array($rowData[0][2]=>$q[0]['id']));   
            }
+          
+           }
+           else{
+           $row_has_no_commodities=false;
            } 
            }
 
-           // Check if cell is merged sub category
-           if (isset($rowData[0][4])) {// check for the super cat name 
+           if ($rowData[0][4] && $rowData[0][4]!='' ) {// check for the sub cat name 
            
            $data_new=$rowData[0][4];
            
@@ -1031,21 +1040,69 @@ endif;
            select * from commodity_sub_category where sub_category_name like '%$data_new%'");
            $does_it_exits=count($q);
           
-           if($does_it_exits==0){//set the super cat id here
-          // $this -> db -> insert('commodity_sub_category', array('commodity_sub_category'=>$data_new,
-          // 'status'=>1,'commodity_category_id'=>end($super_cat)));
-           echo end($super_cat);print_r($super_cat); exit;
-           array_push($sub_cat,array($data_new=>$this -> db -> insert_id()));
-           }else{
-           array_push($sub_cat,array($data_new=>$q['id']));   
-           }
-           } 
-
+           if($does_it_exits==0){//set the sub cat id here
           
-           //echo $rowData[0][4]."$row<br>";
+           $ar_k=array_keys($super_cat);
+           $lastindex=$ar_k[count($ar_k)-1];
+           $new_word=ucwords(strtolower($data_new));// captialize the first word of each letter 
+           $this -> db -> insert('commodity_sub_category', array('sub_category_name'=>$new_word,
+           'status'=>1,'commodity_category_id'=>$super_cat[$lastindex]));
+
+           array_push($temp['Added New commodity_sub_category'],$rowData[0][4]);
+
+           $sub_cat= array_merge($sub_cat,array($data_new=>$this -> db -> insert_id()));
+           
+           }else{
+           $sub_cat=array_merge($sub_cat,array($data_new=>$q[0]['id']));  
+           //print_r($sub_cat); exit; 
+           }
+           
+           } 
+           // now for the commodities
+           if($rowData[0][5] && $rowData[0][5]!='' ){
+           $data_new=preg_replace('/[^A-Za-z0-9\-]/', ' ', $rowData[0][2]); $unit_size=$rowData[0][5];$unit_cost=$rowData[0][6];$total_commodity_units=$rowData[0][7];
+           $new_unit_size=mysql_escape_string($unit_size);
+           $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+           select * from commodities where commodity_code like '%$data_new%' and unit_size like  '%$new_unit_size%' ");
+           $does_it_exits=count($q);
+           
+           if($does_it_exits==0){//set the sub cat id here
+          // echo "  $does_it_exits
+           //select * from commodities where commodity_code like \'%$data_new%\' and unit_size like  \'%$new_unit_size%\' "; exit;
+           $new_word=$data_new;// captialize the first word of each letter 
+           $this -> db -> insert('commodities', array('commodity_name'=>$rowData[0][3],'unit_size'=>$unit_size,'unit_cost'=>$unit_cost,
+           'commodity_code'=>$data_new,'commodity_sub_category_id'=>$sub_cat[$rowData[0][4]],'total_commodity_units'=>$total_commodity_units,
+           'commodity_source_id'=>1,'tracer_item'=>0,'status'=>1));
+           array_push($temp['Added New commodities'],$rowData[0][3]);
+           }else{
+           $array_update = array('commodity_name'=>$rowData[0][3],
+                          'unit_size'=>$unit_size, 
+                          'unit_cost'=>$unit_cost,
+                          'commodity_code'=>$data_new,
+                          'commodity_sub_category_id'=>$sub_cat[$rowData[0][4]],
+                          'total_commodity_units'=>$total_commodity_units,
+                          'commodity_source_id'=>1,
+                          );
+           $array_where = array(
+                          'unit_size'=>$unit_size, 
+                          'commodity_code'=>$data_new,
+                          );
+                          
+           $this->db->where($array_where);
+           $this->db->update("commodities", $array_update);
+          
+          if( $this->db->affected_rows() > 0){
+
+             array_push($temp['Updated commodity'],$rowData[0][3]." unit price ".$sub_cat[$rowData[0][4]]);
+ 
+            } 
+           }
+               
+           }
+           
            }// end if
            }// end for loop
-          print_r($super_cat);
+          echo "<pre>";;print_r($temp);echo "</pre>";;
            unset($objPHPExcel);
            endif;   
                }

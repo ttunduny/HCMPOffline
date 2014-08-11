@@ -202,15 +202,32 @@
        }); 
                $(".order-for-excel").on('click', function(e) {
                   e.preventDefault(); 
-    var body_content='<?php  $att=array("name"=>'myform','id'=>'myform'); 
+    var body_content='<?php  $att=array("name"=>'myform','id'=>'myform');
     echo form_open_multipart('orders/facility_order',$att)?>'+
 '<input type="file" name="file" id="file" required="required" class="form-control"><br>'+
-'<button type="submit" name="submit"  value="Upload">Upload</button>'+
+'<button class="upload">Upload</button>'+
 '</form>';
    //hcmp custom message dialog
-    dialog_box(body_content,
-    '');        
+    dialog_box(body_content,'');        
     });
+       $('#main-content').on('click', '.upload',function(e){
+          e.preventDefault(); 
+     var file = $('#file').val();
+         var exts = ['xls','xlsx'];
+      // first check if file field has any value
+      if ( file ) {
+        // split file name at dot
+        var get_ext = file.split('.');
+        // reverse name to check extension
+        get_ext = get_ext.reverse();
+        // check file type is valid as given in 'exts' array
+        if ( $.inArray ( get_ext[0].toLowerCase(), exts ) > -1 ){
+          $('#myform').submit();
+        } else {
+          alert( 'Invalid file format given!' );
+        }
+      } });
+
     
  <?php echo $facility_dashboard_notifications['faciliy_stock_graph'] ?>
 
