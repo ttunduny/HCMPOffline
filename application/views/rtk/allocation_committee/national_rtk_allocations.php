@@ -6,10 +6,10 @@
 
     $(document).ready(function() {
 
-        $('.nav li a').click(function(e) {
+        $('.navtbl li a').click(function(e) {
             var $this = $(this);
             var thistext = $(this).text();
-            $('.nav li').removeClass('active');
+            $('.navtbl li').removeClass('active');
             $this.parent().addClass('active');
             $(".dataTables_filter label input").focus();
             $('.dataTables_filter label input').val(thistext).trigger($.Event("keyup", {keyCode: 13}));
@@ -50,7 +50,7 @@
  
 
 <div style="width:100%;font-size: 15px;background: #F8F8F8;padding: 10px 10px 10px 10px;border-bottom: solid 1px #ccc;">
-    <ul class="nav nav-pills">
+    <ul class="navtbl nav nav-pills">
 
                     <li class=""><a href="#">Quarter-1</a></li>
                     <li class=""><a href="#">Quarter-2</a></li>
@@ -108,10 +108,17 @@
                     <td><?php echo $allocations[$i]['Zone']; ?></td>
                     <td><?php echo $allocations[$i]['contactperson']; ?></td>
                     <td>0<?php echo $allocations[$i]['cellphone']; ?></td>
-                    <td><?php echo $allocations[$i]['allocated'];$i++;$i++?></td>
+                    <?php 
+                        for ($i=0; $i <6 ; $i++) { ?>
+                        <td>Echo</td>
+                    <?php                           
+                        }
+                    ?>
+
+                    <!--td><?php echo $allocations[$i]['allocated'];$i++;$i++?></td>
                     <td><?php echo $allocations[$i]['allocated']; ?></td>
                     <td><?php echo $allocation_date; ?></td>
-                    <td><?php echo $quarter; ?></td>
+                    <td><?php echo $quarter; ?></td-->
                 </tr>
                 <?php
                 $i++;
@@ -145,7 +152,7 @@
                         "aButtons": ["csv", "xls", "pdf"]
                     }
                 ],
-                "sSwfPath": "../v2/assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+                "sSwfPath": "../assets/datatable/media/swf/copy_csv_xls_pdf.swf"
             }
         });
 
