@@ -2638,7 +2638,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
                     $table_body .="<span class='label label-success'>Submitted  for    $lastmonth </span><a href=" . site_url('rtk_management/rtk_orders') . " class='link'> View</a></td>";
                 } else {
                     $nonreported = $nonreported + 1;
-                    $table_body .="<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link'> Report</a></td>";
+                    $table_body .="<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'> Report</a></td>";
                 }
 
                 $table_body .="</td>";
@@ -2898,7 +2898,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
                 $table_body .= "<span class='label label-success'>Submitted  for    $lastmonth </span> <!--<img src='" . base_url() . "/Images/check_mark_resize.png'></img>--><a href=" . site_url('rtk_management/rtk_orders') . " class='link'>View</a></td>";
             } else {
                 $nonreported = $nonreported + 1;
-                $table_body .= "<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link'>Report</a></td>";
+                $table_body .= "<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'>Report</a></td>";
             }
 
             $table_body .= "</td>";

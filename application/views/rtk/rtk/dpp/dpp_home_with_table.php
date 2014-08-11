@@ -387,6 +387,12 @@ function loadcountysummary(county) {
 <script type="text/javascript">
 $(document).ready(function() {
     $("table").tablecloth({theme: "paper"});
+    var deadline = '<?php echo $deadline_date;?>';
+    var date = '<?php echo $date;?>';
+   // alert(date);
+    if(date>deadline){
+        $('.report').hide();
+    }
 });
 
 </script>
