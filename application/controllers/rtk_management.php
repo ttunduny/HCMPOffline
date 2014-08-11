@@ -3178,9 +3178,12 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $object_id = $myobj->get('id');
         // echo "$object_id";die();
         $this->logData('14', $object_id);
+        $q = "select id from lab_commodity_details where order_id = $order_id";
+        $res = $this->db->query($q);
+        $ids = $res->result_array();  
 
         for ($i = 0; $i < $detail_count; $i++) {
-            $myobj = Doctrine::getTable('Lab_Commodity_Details')->find($detail_id[$i]);
+            /*$myobj = Doctrine::getTable('Lab_Commodity_Details')->find($detail_id[$i]);
             $myobj->beginning_bal = $b_balance[$i];
             $myobj->q_received = $q_received[$i];
             $myobj->q_used = $q_used[$i];
@@ -3192,7 +3195,13 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
             $myobj->q_expiring = $q_expiring[$i];
             $myobj->days_out_of_stock = $days_out_of_stock[$i];
             $myobj->q_requested = $q_requested[$i];
-            $myobj->save();
+            $myobj->save();*/
+            $id = $ids[$i]['id'];           
+            $sql = "UPDATE `lab_commodity_details` SET `beginning_bal`=$b_balance[$i],
+            `q_received`='$q_received[$i]',`q_used`=$q_used[$i],`no_of_tests_done`=$tests_done[$i],`losses`=$losses[$i],
+            `positive_adj`=$pos_adj[$i],`negative_adj`=$neg_adj[$i],`closing_stock`=$physical_count[$i],
+            `q_expiring`=$q_expiring[$i],`days_out_of_stock`=$days_out_of_stock[$i],`q_requested`=$q_requested[$i] WHERE id= $id ";
+            $this->db->query($sql);
         }
         //  Need to change
         //      $district=$this->session->userdata('district_id');
