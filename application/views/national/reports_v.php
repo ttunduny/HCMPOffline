@@ -71,6 +71,9 @@ padding-top: 4.5%;
     background-color: #3c763d;
     border-color: #3c763d;
 }
+legend{
+	font-size:16px;
+}
 </style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -105,11 +108,10 @@ padding-top: 4.5%;
             <li class=""><a href="<?php echo base_url().'national';?>">Home</a></li>
             <li class="active"><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>
             <li class=""><a href="<?php echo base_url().'national/search';?>">Search</a></li>
-            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Welcome, Guest</a>
+            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Log in</a>
                         <ul class="dropdown-menu">
-                            <li><a href="<?php echo base_url();?>"><span class="glyphicon glyphicon-log-in" style="margin-right: 2%;"></span> Login</a></li>
+                            <li><a href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-log-in" style="margin-right: 2%;"></span> Log in</a></li>
                             
-                            <li class="divider"></li>
                         </ul>
                     </li>
           </ul>
@@ -122,11 +124,14 @@ padding-top: 4.5%;
     
     
     <div class="container">
-    	<div class="row" style="margin-top: 2%">
-			  <div class="col-xs-4">
-			  	<label for="county">Select County(s)</label>
-			    <select class="form-control input-md"> 
-			    	<option>All County</option>
+    	<div class="row-fluid" style="margin-top: 1%">
+    		<fieldset>
+    			<legend>County, Sub-county, Facility</legend>
+    			
+    			<div class="col-xs-4">
+			  	<label for="county">Select County</label>
+			    <select class="form-control input-md" id="county"> 
+			    	<option>All Counties</option>
 			    	<?php
 							foreach ($county as $value => $county_list) :
 									 $c_id = $county_list['id'];
@@ -138,31 +143,26 @@ padding-top: 4.5%;
 			  </div>
 			  <div class="col-xs-4">
 			  	<label for="county">Select Sub-County</label>
-			    <select class="form-control input-md"> 
-			    	<option>All Sub-County(s)</option>
-			    	<?php
-							foreach ($sub_county as $value => $sub_county_list) :
-									 $sub_cid = $sub_county_list['id'];
-									$d_name = $sub_county_list['district'];
-								    echo "<option value='$sub_cid'>$d_name</option>";
-							endforeach;
-					?>
+			    <select class="form-control input-md" id="sub_county"> 
+			    	<option value="NULL">All Sub-Counties</option>
+			    	
 			    	</select>
 			  </div>
 			  
 			  <div class="col-xs-4">
 			  	<label for="county">Select Facility</label>
 			    <select class="form-control input-md" id="facility_id"> 
-			    	<option>All Facility</option>
+			    	<option>All Facilities</option>
 			    	
 			    	</select>
 			  </div>
 			  
+    		</fieldset>
+			  
 		</div>
 		
 				
-		<div class="row-fluid" style="margin-top: 2%">
-			<div class="col-md-12">
+		<div class="row-fluid" style="margin-top: 1%">
 				<fieldset style="font-size: 16px;">
 					
 					<legend>Select Criteria</legend>
@@ -189,7 +189,7 @@ padding-top: 4.5%;
 							<label for="county">Select Interval</label>
 						   		<select class="form-control input-md" id="interval"> 
 						    	<option value="0">Select Interval</option>
-						    	<option value="2">Next 2 Months</option>
+						    	<option value="3">Next 3 Months</option>
 						    	<option value="6">Next 6 Months</option>
 						    	<option value="12">Next 1 Year</option>
 						    	
@@ -202,17 +202,7 @@ padding-top: 4.5%;
 							
 						   		<input type="radio" name="criteria" value ="Actual"/> Actual Expiries
 						   		
-						   		<section class="col-md-12" style="margin-top: 2%">
-								<div class="col-xs-6">
-				  	<label for="From">From</label>
-				   <input class="form-control" type="text" placeholder="From" id="expfrom">
-				  </div>
-			  
-					  <div class="col-xs-6">
-					  	<label for="To">To</label>
-					   <input class="form-control" type="text" placeholder="To" id="expto">
-					  </div>
-							</section>
+						   		
 							</section>
 							
 						</section>
@@ -226,11 +216,10 @@ padding-top: 4.5%;
 				
 				
 				
-			</div>
 		</div>
 		
 		
-		<div class="row-fluid" style="margin-top: 2%">
+		<div class="row-fluid" style="margin-top: 1%">
 			  
 			 <fieldset style="font-size: 16px;">
 					
@@ -247,7 +236,7 @@ padding-top: 4.5%;
 							<div class="" style="margin-top: 2%">
 			  	<label for="county">Select Commodity</label>
 			    <select class="form-control input-md" id="commodity"> 
-			    	<option>All Commodity(s)</option>
+			    	<option>All Commodities</option>
 			    	<?php
 							foreach ($commodities as $value => $commodity) :
 									 $c_id = $commodity['id'];
@@ -275,8 +264,13 @@ padding-top: 4.5%;
 				</fieldset> 
 		</div>
 		
-		<div class="row" style="margin-top: 2%">
-			  <div class="col-xs-3">
+		<div class="row" style="margin-top: 1%">
+			
+			<fieldset>
+				
+				<legend>Duration</legend>
+				
+				<div class="col-xs-3">
 			  	<label for="Year">Year</label>
 			   <select class="form-control input-md" id="year"> 
 						    	<option>Select Year</option>
@@ -288,20 +282,40 @@ padding-top: 4.5%;
 			  </div>
 			  
 			  <div class="col-xs-9">
-			  	<div class="form-group">
-    		
-    		<div class="col-md-12">
-    			<label for="" class="control-label text-right">View as</label>
-    			<div class="input-group">
-    				<div id="radioBtn" class="btn-group">
-    					<a class="btn btn-primary btn-sm active" data-toggle="a" data-title="PDF">PDF</a>
-    					<a class="btn btn-primary btn-sm notActive" data-toggle="a" data-title="Excel">Excel</a>
-    					<a class="btn btn-primary btn-sm notActive" data-toggle="a" data-title="Graph">Graph</a>
-    				</div>
-    				<input type="hidden" name="happy" id="happy">
-    			</div>
-    		</div>
-    	</div>
+			  	
+			  </div>
+			</fieldset>
+			  
+			  
+			  
+		
+          
+			 
+		</div>
+		<div class="row" style="margin-top: 1%">
+			  <div class="col-xs-12">
+			  	<fieldset style="font-size: 16px;">
+			  		<legend>View as</legend>
+			  		
+			  		<section class="col-md-6">
+							<section class="col-md-3">
+							<input type="radio" name="doctype" value="PDF" class=" " checked/> PDF
+						</section>
+						<section class="col-md-3">
+							<input type="radio" name="doctype" value="Excel"/> Excel
+						</section>
+						
+						<section class="col-md-3">
+							<input type="radio" name="doctype" value="Graph"/> Web Graph
+						</section>
+						<section class="col-md-3">
+							<input type="radio" name="doctype" value="Table"/> Web Table
+						</section>
+						</section>
+			  	</fieldset>
+			  	
+			  	
+			  
 			  </div>
 			  
 			  
@@ -309,7 +323,6 @@ padding-top: 4.5%;
           
 			 
 		</div>
-		
     	
     	<div class="modal-footer">
 				<button type="button" class="btn btn-success edit_user">
@@ -333,25 +346,35 @@ padding-top: 4.5%;
      $(document).ready(function () {
      	
      	$("#interval,#expfrom,#expto,#commodity").attr("disabled", 'disabled');
-     			
-			var drop_down='';
-	 var facility_select = "<?php echo base_url(); ?>national/facilities_json/";
+     	
+     	$('#county').on('change', function(){
+     		var county_val=$('#county').val()
+    var drop_down='';
+	 var facility_select = "<?php echo base_url(); ?>reports/get_sub_county_json_data/"+county_val;
   	$.getJSON( facility_select ,function( json ) {
-     $("#facility_id").html('<option value="NULL" selected="selected">All Facility(s)</option>');
+     $("#sub_county").html('<option value="NULL" selected="selected">All Sub-Counties</option>');
+      $.each(json, function( key, val ) {
+        drop_down +="<option value='"+json[key]["id"]+"'>"+json[key]["district"]+"</option>"; 
+      });
+      $("#sub_county").append(drop_down);
+    });
+    
+})	
+
+$('#sub_county').on('change', function(){
+     		var subcounty_val=$('#sub_county').val()
+    var drop_down='';
+	 var facility_select = "<?php echo base_url(); ?>reports/get_facility_json/"+subcounty_val;
+  	$.getJSON( facility_select ,function( json ) {
+     $("#facility_id").html('<option value="NULL" selected="selected">All Facilities</option>');
       $.each(json, function( key, val ) {
         drop_down +="<option value='"+json[key]["facility_code"]+"'>"+json[key]["facility_name"]+"</option>"; 
       });
       $("#facility_id").append(drop_down);
     });
     
-     $('#radioBtn a').on('click', function(){
-    var sel = $(this).data('title');
-    var tog = $(this).data('toggle');
-    $('#'+tog).prop('value', sel);
-    
-    $('a[data-toggle="'+tog+'"]').not('[data-title="'+sel+'"]').removeClass('active').addClass('notActive');
-    $('a[data-toggle="'+tog+'"][data-title="'+sel+'"]').removeClass('notActive').addClass('active');
 })	
+    		
     
     $( "#expfrom,#expto" ).datepicker();
     
@@ -368,7 +391,7 @@ padding-top: 4.5%;
 						}else if(value=="Actual"){
 							
 							$("#expfrom,#expto").attr("disabled", false);
-							$("#year").attr("disabled", 'disabled');
+							$("#year,#interval").attr("disabled", 'disabled');
 							
 						}else{
 							$("#interval,#expfrom,#expto").attr("disabled", 'disabled');

@@ -4,8 +4,7 @@
  */
 class Hcmp_functions extends MY_Controller {
 	
-	var $test_mode=true;
-	
+	var $test_mode=TRUE;
 		function __construct() {
 		parent::__construct();
 		$this -> load -> helper(array('url','file','download'));
