@@ -28,7 +28,7 @@ class Facilities extends Doctrine_Record {
 
 	public static function getAll_json() {
 		$query = Doctrine_Query::create() -> select("*") -> from("facilities");
-		$drugs = $query -> execute();
+		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $drugs;
 	}
 
@@ -36,6 +36,12 @@ class Facilities extends Doctrine_Record {
 		
 		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");
 		$drugs = $query -> execute();
+		return $drugs;
+	}
+	public static function getFacilities_json($district){
+		
+		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");
+		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $drugs;
 	}
 	public static function get_Facilities_using_HCMP($county_id = null, $district = null, $facility_code = null)
