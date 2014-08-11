@@ -267,7 +267,6 @@ class Rtk_Management extends Home_controller {
         $data['graphdata'] = $this->county_reporting_percentages($countyid, $year, $month);
         $data['county_summary'] = $this->_requested_vs_allocated($year, $month, $countyid);
         $data['tdata'] = $tdata;
-
         $data['county'] = $County;
         $data['title'] = 'RTK County Admin';
         $data['banner_text'] = 'RTK County Admin';
@@ -1386,7 +1385,8 @@ class Rtk_Management extends Home_controller {
         FROM lab_commodities, lab_commodity_details, lab_commodity_orders, facilities, districts, counties 
         WHERE lab_commodity_details.commodity_id = lab_commodities.id 
         AND lab_commodity_orders.id = lab_commodity_details.order_id 
-        AND facilities.facility_code = lab_commodity_details.facility_code AND facilities.district = districts.id 
+        AND facilities.facility_code = lab_commodity_details.facility_code 
+        AND facilities.district = districts.id 
         AND districts.county = counties.id 
         AND lab_commodity_orders.order_date BETWEEN  '$firstday' AND  '$lastdate'";
         if (isset($county)) {
@@ -1410,20 +1410,18 @@ class Rtk_Management extends Home_controller {
 
         $q4 = $common_q . " AND lab_commodities.id = 4";
         $res4 = $this->db->query($q4);
-        $result4 = $res3->result_array();
+        $result4 = $res4->result_array();
         array_push($returnable, $result4[0]);
 
         $q5 = $common_q . " AND lab_commodities.id = 5";
         $res5 = $this->db->query($q5);
-        $result5 = $res3->result_array();
+        $result5 = $res5->result_array();
         array_push($returnable, $result5[0]);
 
         $q6 = $common_q . " AND lab_commodities.id = 6";
         $res6 = $this->db->query($q6);
-        $result6 = $res3->result_array();
+        $result6 = $res6->result_array();
         array_push($returnable, $result6[0]);
-
-
 
         return $returnable;
     }

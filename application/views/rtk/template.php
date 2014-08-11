@@ -115,7 +115,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script>
         var url = '<?php echo base_url(); ?>';
-        $('table').tablecloth({theme: "paper",         
+        $('#change_password_table').tablecloth({theme: "paper",         
               bordered: true,
               condensed: true,
               striped: true,
