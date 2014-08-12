@@ -12,12 +12,15 @@ $(document).ready(function(){
 	
 	$(window).trigger('hashchange');
 	$(document).on("click",".top_menu",function(event){
-		sub_menu_click = 0;
-		event.preventDefault();
-		document.location.hash =$(this).attr('id');
+		
 		if($(this).attr('id')=="eid_management"){
-			
+			document.location.hash = '';
+			sub_menu_click = 0;
+			event.preventDefault();
+			document.location.hash =$(this).attr('id');
 		}
+		
+		
 		
 	});
 	

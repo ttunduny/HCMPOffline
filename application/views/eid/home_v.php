@@ -3,10 +3,26 @@
 	$('#inner_wrapper').prepend( $('<link rel="stylesheet" type="text/css" />').attr('href', '<?php echo base_url() ?>assets/CSS/eid/eid.css') );
 </script>
 <div class="container-fluid" id="eid_container">
+	<div class="row">
+		<div class="col-md-10 col-sm-10"  style="margin-left: 2%">
+			<!--menu-->
+			<div class="navigation" id="sub-nav">
+				<ul class="tabbed">
+					<li><a href="<?php echo base_url(); ?>eid_management"><i class="fa fa-3x fa-home"></i></a></li>
+					<li>&nbsp;|&nbsp;</li>				
+					<li id="health_facility"><a href="../kits/requisitionslist.php">Health Facility Requisitions</a></li>
+					<li>&nbsp;|&nbsp;</li>
+				</ul>
+				
+				<div class="clearer">&nbsp;</div>
+			</div>
+		</div>
+			
+	</div>
   <div class="eid_sidebar row">
     <div class="well col-sm-2 col-md-2" id="eid_side" style="margin-left: 2%">
     	<ul class="nav nav-list">
-			<li class="nav-header sidebar_title">
+			<li class="nav-header sidebar_title side_menu">
 				<div style="margin-bottom: 25px"><?php echo $last_period; ?> REPORT SUBMISSIONS</div>
 				<!--<select id="subm_month" class="input-small"></select><select class="input-small" id="subm_year"></select>  -->
 			</li>

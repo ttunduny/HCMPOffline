@@ -814,19 +814,20 @@ class Eid_Management extends Home_controller {
 				$data['r1000disposable']	= $abbott_info_result_a[0]['request1000disposable'];
 				$data['r200disposable']		= $abbott_info_result_a[0]['request200disposable'];
 				
-				$data['comments']		= $abbott_info_result_a[0]['comments'];
-				$data['submittedby']	= $abbott_info_result_a[0]['submittedby'];
-				$data['datesubmitted']	= $abbott_info_result_a[0]['datesubmitted'];
-				$data['datesubmitted']	= date("d-M-Y",strtotime($datesubmitted));
-				$data['approve']		= $abbott_info_result_a[0]['approve'];
+				$data['comments']			= $abbott_info_result_a[0]['comments'];
+				$data['submittedby']		= $abbott_info_result_a[0]['submittedby'];
+				$datesubmitted				= $abbott_info_result_a[0]['datesubmitted'];
+				$data['datesubmitted']		= date("d-M-Y",strtotime($datesubmitted));
+				$data['approve']			= $abbott_info_result_a[0]['approve'];
 			}
 			//..END -> EID
 			
 			//..VIRAL LOAD
-			$abbott_info_b			= $this -> db ->query("select testsdone, endingqualkit, endingcalibration, endingcontrol, endingbuffer, endingpreparation, endingadhesive, endingdeepplate, endingmixtube, endingreactionvessels, endingreagent, endingreactionplate, ending1000disposable, ending200disposable, wastedqualkit, wastedcalibration, wastedcontrol, wastedbuffer, wastedpreparation, wastedadhesive, wasteddeepplate, wastedmixtube, wastedreactionvessels, wastedreagent, wastedreactionplate, wasted1000disposable, wasted200disposable, issuedqualkit, issuedcalibration, issuedcontrol, issuedbuffer, issuedpreparation, issuedadhesive, issueddeepplate, issuedmixtube, issuedreactionvessels, issuedreagent, issuedreactionplate, issued1000disposable, issued200disposable, requestqualkit, requestcalibration, requestcontrol, requestbuffer, requestpreparation, requestadhesive, requestdeepplate, requestmixtube, requestreactionvessels, requestreagent, requestreactionplate, request1000disposable, request200disposable, monthofrecordset, yearofrecordset, datesubmitted, submittedby, comments, issuedcomments from `eid_abbottprocurement` where monthofrecordset = '$lastmonth' and yearofrecordset = '$year' and testtype ='2' and lab='$lab'") or die(mysql_error());
+			$abbott_info_b			= $this -> db ->query("select testsdone, endingqualkit, endingcalibration, endingcontrol, endingbuffer, endingpreparation, endingadhesive, endingdeepplate, endingmixtube, endingreactionvessels, endingreagent, endingreactionplate, ending1000disposable, ending200disposable, wastedqualkit, wastedcalibration, wastedcontrol, wastedbuffer, wastedpreparation, wastedadhesive, wasteddeepplate, wastedmixtube, wastedreactionvessels, wastedreagent, wastedreactionplate, wasted1000disposable, wasted200disposable, issuedqualkit, issuedcalibration, issuedcontrol, issuedbuffer, issuedpreparation, issuedadhesive, issueddeepplate, issuedmixtube, issuedreactionvessels, issuedreagent, issuedreactionplate, issued1000disposable, issued200disposable, requestqualkit, requestcalibration, requestcontrol, requestbuffer, requestpreparation, requestadhesive, requestdeepplate, requestmixtube, requestreactionvessels, requestreagent, requestreactionplate, request1000disposable, request200disposable, monthofrecordset, yearofrecordset, datesubmitted, submittedby, comments, issuedcomments from `eid_abbottprocurement` where monthofrecordset = '$lastmonth' and yearofrecordset = '$year' and testtype ='2' and lab='$lab'");
+			//echo "select testsdone, endingqualkit, endingcalibration, endingcontrol, endingbuffer, endingpreparation, endingadhesive, endingdeepplate, endingmixtube, endingreactionvessels, endingreagent, endingreactionplate, ending1000disposable, ending200disposable, wastedqualkit, wastedcalibration, wastedcontrol, wastedbuffer, wastedpreparation, wastedadhesive, wasteddeepplate, wastedmixtube, wastedreactionvessels, wastedreagent, wastedreactionplate, wasted1000disposable, wasted200disposable, issuedqualkit, issuedcalibration, issuedcontrol, issuedbuffer, issuedpreparation, issuedadhesive, issueddeepplate, issuedmixtube, issuedreactionvessels, issuedreagent, issuedreactionplate, issued1000disposable, issued200disposable, requestqualkit, requestcalibration, requestcontrol, requestbuffer, requestpreparation, requestadhesive, requestdeepplate, requestmixtube, requestreactionvessels, requestreagent, requestreactionplate, request1000disposable, request200disposable, monthofrecordset, yearofrecordset, datesubmitted, submittedby, comments, issuedcomments from `eid_abbottprocurement` where monthofrecordset = '$lastmonth' and yearofrecordset = '$year' and testtype ='2' and lab='$lab'";die();
 			$abbott_info_result_b	= $abbott_info_b ->result_array();
 			if(count($abbott_info_result_b)>0){
-				$data['vtestsdone']		= $abbott_info_result_b[0]['testsdone']; 
+				$data['vtestsdone']		= $vtestsdone = $abbott_info_result_b[0]['testsdone']; 
 			
 				//..used
 				$vuqualkit				=($vtestsdone / 93);
@@ -843,68 +844,67 @@ class Eid_Management extends Home_controller {
 				$data['vu1000disposable']= ($vuqualkit * 1)*(841/192);
 				$data['vu200disposable'] = ($vuqualkit * 1)*(96/192);
 				
-				
 				//..wasted
-				$data['vwqualkit']			= $abbott_info_result_b['wastedqualkit'];
-				$data['vwcalibration']		= $abbott_info_result_b['wastedcalibration'];
-				$data['vwcontrol']			= $abbott_info_result_b['wastedcontrol'];
-				$data['vwbuffer']			= $abbott_info_result_b['wastedbuffer'];
-				$data['vwpreparation']		= $abbott_info_result_b['wastedpreparation'];
-				$data['vwadhesive']			= $abbott_info_result_b['wastedadhesive'];
-				$data['vwdeepplate']		= $abbott_info_result_b['wasteddeepplate'];
-				$data['vwmixtube']			= $abbott_info_result_b['wastedmixtube'];
-				$data['vwreactionvessels']	= $abbott_info_result_b['wastedreactionvessels'];
-				$data['vwreagent']			= $abbott_info_result_b['wastedreagent'];
-				$data['vwreactionplate']	= $abbott_info_result_b['wastedreactionplate'];
-				$data['vw1000disposable']	= $abbott_info_result_b['wasted1000disposable'];
-				$data['vw200disposable']	= $abbott_info_result_b['wasted200disposable'];
+				$data['vwqualkit']			= $abbott_info_result_b[0]['wastedqualkit'];
+				$data['vwcalibration']		= $abbott_info_result_b[0]['wastedcalibration'];
+				$data['vwcontrol']			= $abbott_info_result_b[0]['wastedcontrol'];
+				$data['vwbuffer']			= $abbott_info_result_b[0]['wastedbuffer'];
+				$data['vwpreparation']		= $abbott_info_result_b[0]['wastedpreparation'];
+				$data['vwadhesive']			= $abbott_info_result_b[0]['wastedadhesive'];
+				$data['vwdeepplate']		= $abbott_info_result_b[0]['wasteddeepplate'];
+				$data['vwmixtube']			= $abbott_info_result_b[0]['wastedmixtube'];
+				$data['vwreactionvessels']	= $abbott_info_result_b[0]['wastedreactionvessels'];
+				$data['vwreagent']			= $abbott_info_result_b[0]['wastedreagent'];
+				$data['vwreactionplate']	= $abbott_info_result_b[0]['wastedreactionplate'];
+				$data['vw1000disposable']	= $abbott_info_result_b[0]['wasted1000disposable'];
+				$data['vw200disposable']	= $abbott_info_result_b[0]['wasted200disposable'];
 				
 				//..issued
-				$data['viqualkit']			= $abbott_info_result_b['issuedqualkit'];
-				$data['vicalibration']		= $abbott_info_result_b['issuedcalibration'];
-				$data['vicontrol']			= $abbott_info_result_b['issuedcontrol'];
-				$data['vibuffer']			= $abbott_info_result_b['issuedbuffer'];
-				$data['vipreparation']		= $abbott_info_result_b['issuedpreparation'];
-				$data['viadhesive']			= $abbott_info_result_b['issuedadhesive'];
-				$data['videepplate']		= $abbott_info_result_b['issueddeepplate'];
-				$data['vimixtube']			= $abbott_info_result_b['issuedmixtube'];
-				$data['vireactionvessels']	= $abbott_info_result_b['issuedreactionvessels'];
-				$data['vireagent']			= $abbott_info_result_b['issuedreagent'];
-				$data['vireactionplate']	= $abbott_info_result_b['issuedreactionplate'];
-				$data['vi1000disposable']	= $abbott_info_result_b['issued1000disposable'];
-				$data['vi200disposable']	= $abbott_info_result_b['issued200disposable'];
+				$data['viqualkit']			= $abbott_info_result_b[0]['issuedqualkit'];
+				$data['vicalibration']		= $abbott_info_result_b[0]['issuedcalibration'];
+				$data['vicontrol']			= $abbott_info_result_b[0]['issuedcontrol'];
+				$data['vibuffer']			= $abbott_info_result_b[0]['issuedbuffer'];
+				$data['vipreparation']		= $abbott_info_result_b[0]['issuedpreparation'];
+				$data['viadhesive']			= $abbott_info_result_b[0]['issuedadhesive'];
+				$data['videepplate']		= $abbott_info_result_b[0]['issueddeepplate'];
+				$data['vimixtube']			= $abbott_info_result_b[0]['issuedmixtube'];
+				$data['vireactionvessels']	= $abbott_info_result_b[0]['issuedreactionvessels'];
+				$data['vireagent']			= $abbott_info_result_b[0]['issuedreagent'];
+				$data['vireactionplate']	= $abbott_info_result_b[0]['issuedreactionplate'];
+				$data['vi1000disposable']	= $abbott_info_result_b[0]['issued1000disposable'];
+				$data['vi200disposable']	= $abbott_info_result_b[0]['issued200disposable'];
 				
-				$data['vicomments']			= $abbott_info_result_b['issuedcomments'];
+				$data['vicomments']			= $abbott_info_result_b[0]['issuedcomments'];
 				
 				//..end balance
-				$data['vequalkit']			= $abbott_info_result_b['endingqualkit'];
-				$data['vecalibration']		= $abbott_info_result_b['endingcalibration'];
-				$data['vecontrol']			= $abbott_info_result_b['endingcontrol'];
-				$data['vebuffer']			= $abbott_info_result_b['endingbuffer'];
-				$data['vepreparation']		= $abbott_info_result_b['endingpreparation'];
-				$data['veadhesive']			= $abbott_info_result_b['endingadhesive'];
-				$data['vedeepplate']		= $abbott_info_result_b['endingdeepplate'];
-				$data['vemixtube']			= $abbott_info_result_b['endingmixtube'];
-				$data['vereactionvessels']	= $abbott_info_result_b['endingreactionvessels'];
-				$data['vereagent']			= $abbott_info_result_b['endingreagent'];
-				$data['vereactionplate']	= $abbott_info_result_b['endingreactionplate'];
-				$data['ve1000disposable']	= $abbott_info_result_b['ending1000disposable'];
-				$data['ve200disposable']	= $abbott_info_result_b['ending200disposable'];
+				$data['vequalkit']			= $abbott_info_result_b[0]['endingqualkit'];
+				$data['vecalibration']		= $abbott_info_result_b[0]['endingcalibration'];
+				$data['vecontrol']			= $abbott_info_result_b[0]['endingcontrol'];
+				$data['vebuffer']			= $abbott_info_result_b[0]['endingbuffer'];
+				$data['vepreparation']		= $abbott_info_result_b[0]['endingpreparation'];
+				$data['veadhesive']			= $abbott_info_result_b[0]['endingadhesive'];
+				$data['vedeepplate']		= $abbott_info_result_b[0]['endingdeepplate'];
+				$data['vemixtube']			= $abbott_info_result_b[0]['endingmixtube'];
+				$data['vereactionvessels']	= $abbott_info_result_b[0]['endingreactionvessels'];
+				$data['vereagent']			= $abbott_info_result_b[0]['endingreagent'];
+				$data['vereactionplate']	= $abbott_info_result_b[0]['endingreactionplate'];
+				$data['ve1000disposable']	= $abbott_info_result_b[0]['ending1000disposable'];
+				$data['ve200disposable']	= $abbott_info_result_b[0]['ending200disposable'];
 				
 				//..request
-				$data['vrqualkit']			= $abbott_info_result_b['requestqualkit'];
-				$data['vrcalibration']		= $abbott_info_result_b['requestcalibration'];
-				$data['vrcontrol']			= $abbott_info_result_b['requestcontrol'];
-				$data['vrbuffer']			= $abbott_info_result_b['requestbuffer'];
-				$data['vrpreparation']		= $abbott_info_result_b['requestpreparation'];
-				$data['vradhesive']			= $abbott_info_result_b['requestadhesive'];
-				$data['vrdeepplate']		= $abbott_info_result_b['requestdeepplate'];
-				$data['vrmixtube']			= $abbott_info_result_b['requestmixtube'];
-				$data['vrreactionvessels']	= $abbott_info_result_b['requestreactionvessels'];
-				$data['vrreagent']			= $abbott_info_result_b['requestreagent'];
-				$data['vrreactionplate']	= $abbott_info_result_b['requestreactionplate'];
-				$data['vr1000disposable']	= $abbott_info_result_b['request1000disposable'];
-				$data['vr200disposable']	= $abbott_info_result_b['request200disposable'];
+				$data['vrqualkit']			= $abbott_info_result_b[0]['requestqualkit'];
+				$data['vrcalibration']		= $abbott_info_result_b[0]['requestcalibration'];
+				$data['vrcontrol']			= $abbott_info_result_b[0]['requestcontrol'];
+				$data['vrbuffer']			= $abbott_info_result_b[0]['requestbuffer'];
+				$data['vrpreparation']		= $abbott_info_result_b[0]['requestpreparation'];
+				$data['vradhesive']			= $abbott_info_result_b[0]['requestadhesive'];
+				$data['vrdeepplate']		= $abbott_info_result_b[0]['requestdeepplate'];
+				$data['vrmixtube']			= $abbott_info_result_b[0]['requestmixtube'];
+				$data['vrreactionvessels']	= $abbott_info_result_b[0]['requestreactionvessels'];
+				$data['vrreagent']			= $abbott_info_result_b[0]['requestreagent'];
+				$data['vrreactionplate']	= $abbott_info_result_b[0]['requestreactionplate'];
+				$data['vr1000disposable']	= $abbott_info_result_b[0]['request1000disposable'];
+				$data['vr200disposable']	= $abbott_info_result_b[0]['request200disposable'];
 			}
 						
 			//..END -> VIRAL LOAD

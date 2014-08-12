@@ -55,7 +55,34 @@ table,tr, td, table>thead>tr,table>thead>tr>th,table>tbody>tr>td{
 	background-color:#FFFFFF;
 	border-radius: 0px;
 }
-
+ul.tabbed {
+	display: inline;
+	margin: 0;
+}
+#sub-nav li:first-child {
+	margin-left: 0;
+}
+ul.tabbed li {
+	float: left;
+}
+#sub-nav li {
+	margin: 0 1em;
+}
+#sub-nav li>a:hover{
+	color:black;
+}
+ul.tabbed li {
+	list-style: none;	
+	margin-top: 0;
+}
+#sub-nav a {
+	font-size: 1.2em;
+	text-decoration: none;
+}
+.navigation a {
+	color: #888;
+	text-decoration: none;
+}
 select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input{
 	margin-bottom: 0px;
 	height:30px !important;

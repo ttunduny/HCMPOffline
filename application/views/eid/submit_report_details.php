@@ -4,6 +4,22 @@
 </script>
 <div class="container-fluid">
 	<div class="row">
+		<div class="col-md-10 col-sm-10"  style="margin-left: 2%">
+			<!--menu-->
+			<div class="navigation" id="sub-nav">
+				<ul class="tabbed">
+					<li><a href="<?php echo base_url(); ?>eid_management"><i class="fa fa-3x fa-home"></i></a></li>
+					<li>&nbsp;|&nbsp;</li>				
+					<li id="health_facility"><a href="../kits/requisitionslist.php">Health Facility Requisitions</a></li>
+					<li>&nbsp;|&nbsp;</li>
+				</ul>
+				
+				<div class="clearer">&nbsp;</div>
+			</div>
+		</div>
+			
+	</div>
+	<div class="row">
 		<div class="col-sm-12 col-md-12">
 			<ul class="breadcrumb">
 			  <li><a href="#" class="btn_back_eid" id="">EID - VL</a> </li>
@@ -18,6 +34,9 @@
 		$reporttitle=$platform.' KIT CONSUMPTION REPORT FOR ['.  strtoupper($labname) . ' '. $monthname.' '.$year.' ]';
 		//echo $reporttitle;
 		?>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 col-md-12"><a href="<?php echo base_url();?>"> Download Excel <i class="fa fa-file-excel-o fa-3x"></i> </a></div>
 	</div>
 	
 	<div class="row">
@@ -51,7 +70,7 @@
 							</tr>
 							<tr>
 								<td rowspan="2" style="background-color:#FFFFFF">&nbsp;</td>
-								<th style="width:250px" rowspan="2">DESCRIPTION OF GOODS </th>
+								<th style="width:300px" rowspan="2">DESCRIPTION OF GOODS </th>
 								<?php if(strtoupper($platform)=='TAQMAN'){ ?>
 								<th rowspan="2"><small>UNIT OF ISSUE</small></th>
 								<?php } ?>
@@ -97,7 +116,7 @@
 							</tr>
 							<tr>
 								<td rowspan="2" style="background-color:#FFFFFF">&nbsp;</td>
-								<th style="width:250px" rowspan="2">DESCRIPTION OF GOODS </th>
+								<th style="width:300px" rowspan="2">DESCRIPTION OF GOODS </th>
 								<?php if(strtoupper($platform)=='TAQMAN'){ ?>
 								<th rowspan="2"><small>UNIT OF ISSUE</small></th>
 								<?php } ?>
