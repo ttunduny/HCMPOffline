@@ -33,7 +33,7 @@
 <?php   foreach($commodities as $facility_commodities):
        $status=isset($facility_commodities['selected_option']) ? 'checked="true"'  : null;  $pack_size=$unit_size=null;
 	   isset($facility_commodities['selected_option']) ? 
-	   ($facility_commodities['selected_option']=='Pack_Size')? $pack_size='selected="selected"' :$unit_size='selected="selected"'  : null; 
+	   (($facility_commodities['selected_option']=='Pack_Size')? $pack_size='selected="selected"' :$unit_size='selected="selected"')  : null; 
 	   echo "<tr><input type='hidden' name='actual_units[]' class='actual_units' value='$facility_commodities[total_commodity_units]'/>
 	   <input type='hidden' name='commodity_id[]' class='commodity_id' value='$facility_commodities[commodity_id]'/>
 	   <td>$facility_commodities[sub_category_name]</td>
@@ -42,8 +42,8 @@
 	   <td><input type='checkbox' class='checkbox'  $status/></td>
 	   <td>$facility_commodities[unit_size]</td>
 	   <td><select class='form-control commodity_unit_of_issue input-small' name='commodity_unit_of_issue[]'>
-			<option value='Pack_Size'>Pack Size</option>
-			<option value='Unit_Size'>Unit Size</option>
+			<option value='Pack_Size' $pack_size>Pack Size</option>
+			<option value='Unit_Size' $unit_size>Unit Size</option>
 			</select></td>
 	<td><input class='form-control input-small quantity' type='text' name='quantity[]' value='$facility_commodities[consumption_level]' </td>
 	<td><input class='form-control input-small actual_quantity' type='text' name='actual_quantity[]' value='$facility_commodities[total_units]'</td>

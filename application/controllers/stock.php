@@ -111,11 +111,11 @@ class Stock extends MY_Controller {
         hcmp_rtk.facility_order_status
         where facility_order_status.status_desc like '%$order_status%'");
          $new_name_id=Doctrine_Manager::getInstance()->getCurrentConnection()
-        ->fetchAll("select 
+        ->fetchAll('select 
         *
         from
         kemsa2.user
-        where concat (user.fname,' ',user.lname) like '%$name%'");
+        where concat (user.fname," ",user.lname) like "%'.$name.'%"');
           $temp=array('order_date'=>$old_facility_orders['orderDate'],
                          'approval_date'=>$old_facility_orders['approvalDate'],
                          'dispatch_date'=>$old_facility_orders['dispatchDate'],
@@ -406,7 +406,8 @@ if($this->input->post('commodity_id')):
 
          //collect n set the data in the array
 		for($i=0;$i<$count;$i++):
-			$status=($total_unit_count[$i]>0)? 1: 2;
+			$status=($total_unit_count[$i]>0)? true: false;
+            $status=($status && strtotime(str_replace(",", " ",$expiry_date[$i]))>strtotime('now'))? 1:2;
             $date_of_entry=($form_type=='first_run') ? date('y-m-d H:i:s') :date('Y-m-d',strtotime($date_of_entry_[$i])) ;
 			$mydata=array('facility_code'=>$facility_code,
 			'commodity_id'=>$commodity_id[$i],
@@ -417,7 +418,7 @@ if($this->input->post('commodity_id')):
 			'current_balance'=>$total_unit_count[$i],
 			'source_of_commodity'=>$source_of_item[$i],
 			'date_added'=>$date_of_entry,
-			'status' =>(strtotime(str_replace(",", " ",$expiry_date[$i]))>strtotime('now')) ? $status : 2 );
+			'status' =>$status);
 			
              //get the closing stock of the given item  
             $facility_stock_=facility_stocks::get_facility_commodity_total($facility_code,$commodity_id[$i], $date_of_entry)->toArray();
@@ -427,6 +428,37 @@ if($this->input->post('commodity_id')):
 			$facility_has_commodity=facility_transaction_table::get_if_commodity_is_in_table($facility_code,$commodity_id[$i]);
      
 			$total_unit_count_=$total_unit_count[$i]*-1;
+	
+          if($facility_has_commodity>0 && $status==1): //update the opening balance for the transaction table 
+		   	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
+			$inserttransaction->execute("UPDATE `facility_transaction_table` SET `opening_balance` =`opening_balance`+$total_unit_count[$i],
+			`closing_stock` =`closing_stock`+$total_unit_count[$i]
+            WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code=$facility_code");  
+            $mydata_=array('facility_code'=>$facility_code,
+            's11_No' =>  '(+ve Adj) Stock Addition',
+            'commodity_id'=>$commodity_id[$i],
+            'batch_no'=>(!isset($batch_no[$i])) ? "N/A" : $batch_no[$i],
+            'expiry_date'=>  date('y-m-d', strtotime(str_replace(",", " ",$expiry_date[$i]))),
+            'balance_as_of'=>isset($facility_stock_[0]['commodity_balance']) ? $facility_stock_[0]['commodity_balance']: 0,
+            'qty_issued' => $total_unit_count_,
+            'date_issued' => date('y-m-d'),
+            'issued_to' => 'N/A',
+            'issued_by' =>$this -> session -> userdata('user_id') ); 
+             //create the array to push to the db
+            array_push($data_array_facility_issues, $mydata_);                                                  		   
+else:       //get the data to send to the facility_transaction_table
+		    if($status==1):
+		    $mydata2=array('facility_code'=>$facility_code,
+			'commodity_id'=>$commodity_id[$i],
+			'opening_balance'=>$total_unit_count[$i],
+			'total_issues'=>0,
+			'total_receipts'=>0,
+			'adjustmentpve'=>0,
+			'adjustmentnve'=>0,
+			'date_added'=>$date_of_entry,
+			'closing_stock'=>$total_unit_count[$i],
+			'status'=>1);	//send the data to the facility_transaction_table		
+            $this -> db -> insert('facility_transaction_table', $mydata2);
             $mydata_=array('facility_code'=>$facility_code,
             's11_No' =>  ($form_type=='first_run') ? 'initial stock update' : '(+ve Adj) Stock Addition',
             'commodity_id'=>$commodity_id[$i],
@@ -438,30 +470,11 @@ if($this->input->post('commodity_id')):
             'issued_to' => 'N/A',
             'issued_by' =>$this -> session -> userdata('user_id') ); 
              //create the array to push to the db
-            array_push($data_array_facility_issues, $mydata_);		
-          if($facility_has_commodity>0): //update the opening balance for the transaction table 
-		   	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
-			$inserttransaction->execute("UPDATE `facility_transaction_table` SET `opening_balance` =`opening_balance`+$total_unit_count[$i],
-			`closing_stock` =`closing_stock`+$total_unit_count[$i]
-                                        WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code=$facility_code");                                                  		   
-else:       //get the data to send to the facility_transaction_table
-		   	$mydata2=array('facility_code'=>$facility_code,
-			'commodity_id'=>$commodity_id[$i],
-			'opening_balance'=>$total_unit_count[$i],
-			'total_issues'=>0,
-			'total_receipts'=>0,
-			'adjustmentpve'=>0,
-			'adjustmentnve'=>0,
-			'date_added'=>$date_of_entry,
-			'closing_stock'=>$total_unit_count[$i],
-			'status'=>1);	//send the data to the facility_transaction_table		
-			array_push($data_array_facility_transaction, $mydata2);		
+            array_push($data_array_facility_issues, $mydata_); 
+endif; 	
 endif;			
 endfor;		 
-        if(count($data_array_facility_transaction)>0){
-        $this -> db -> insert_batch('facility_transaction_table', $data_array_facility_transaction); 
-         }
-       
+
             $this -> db -> insert_batch('facility_issues', $data_array_facility_issues); 	
             //delete the record from the db
 		    facility_stocks_temp::delete_facility_temp(null, null,$facility_code);
@@ -918,6 +931,185 @@ public function amc(){
 	$this->session->set_flashdata('system_success_message', "AMC Details Have Been Saved");
 	redirect('home');
 }
+public function fix(){
+   // get the facility_codes 
+   $facility_codes=Doctrine_Manager::getInstance()->getCurrentConnection()
+   ->fetchAll("select distinct `facility_code` from `facility_issues` WHERE status=1");
+   foreach( $facility_codes as $key=> $facility_code){
+   //step one reset refrence table
+   $facility_code=$facility_code['facility_code'];
+   $min_date= Doctrine_Manager::getInstance()->getCurrentConnection()
+   ->fetchAll("select min(date_issued) as min_date,issued_by from `facility_issues` WHERE  facility_code=$facility_code and status=1");
+   $reset_facility_transaction_table = Doctrine_Manager::getInstance()->getCurrentConnection();
+   $reset_facility_transaction_table->execute("DELETE FROM `facility_transaction_table` WHERE  facility_code=$facility_code; "); 
+   $reset_facility_transaction_table->execute("DELETE FROM `facility_issues` WHERE  facility_code=$facility_code and s11_No='initial stock update'
+   and status=1");
+   //step two get the facility stocks 
+   $facility_stocks=facility_stocks::get_facility_commodity_total($facility_code);
+   $data_array_facility_transaction=$data_array_facility_issues=array();
+   foreach($facility_stocks as $facility_stock){
+   $commodity_id=   $facility_stock['commodity_id'];
+   if($commodity_id>0):
+   $total= Doctrine_Manager::getInstance()->getCurrentConnection()
+   ->fetchAll("select ifnull(sum(qty_issued),0) as total from `facility_issues` WHERE  facility_code=$facility_code and status=1 and commodity_id=$commodity_id");
+            $mydata2=array('facility_code'=>$facility_code,
+            'commodity_id'=>$facility_stock['commodity_id'],
+            'opening_balance'=>$facility_stock['commodity_balance'],
+            'total_issues'=>$total[0]['total'],
+            'total_receipts'=>0,
+            'adjustmentpve'=>0,
+            'adjustmentnve'=>0,
+            'date_added'=>$min_date[0]['min_date'],
+            'closing_stock'=>$facility_stock['commodity_balance'],
+            'status'=>1);   //send the data to the facility_transaction_table 
+                  
+            array_push($data_array_facility_transaction, $mydata2); 
+            $total_unit_count_=$facility_stock['commodity_balance']*-1;
+            $mydata_=array('facility_code'=>$facility_code,
+            's11_No' =>'initial stock update',
+            'commodity_id'=>$facility_stock['commodity_id'],
+            'batch_no'=> "N/A",
+            'expiry_date'=>"N/A",
+            'balance_as_of'=>0,
+            'qty_issued' => $total_unit_count_,
+            'date_issued' => $min_date[0]['min_date'],
+            'issued_to' => 'N/A',
+            'issued_by' => $min_date[0]['issued_by']); 
+             //create the array to push to the db
+            array_push($data_array_facility_issues, $mydata_);
+            
+endif; 
+   }  
+            $this -> db -> insert_batch('facility_transaction_table', $data_array_facility_transaction);
+            $this -> db -> insert_batch('facility_issues', $data_array_facility_issues); 
+            echo "<br>$key fixed facility code ".$facility_code; 
+   }
+
+}
+            public function upload_new_list(){
+            if(isset($_FILES['file']) && $_FILES['file']['size'] > 0):
+            $item_details = Commodities::get_all_from_supllier(1);
+            
+            $excel2 = PHPExcel_IOFactory::createReader('Excel2007');
+            $excel2=$objPHPExcel= $excel2->load($_FILES["file"]["tmp_name"]); // Empty Sheet
+            
+            $sheet = $objPHPExcel->getSheet(0); 
+            $highestRow = $sheet->getHighestRow(); 
+            
+            $highestColumn = $sheet->getHighestColumn();
+            $temp=$super_cat=$sub_cat=array();
+            $temp['Updated commodity']=array();;
+            $temp['Added New commodity_category']=array();;
+            $temp['Added New commodity_sub_category']=array();;
+            $temp['Added New commodities']=array();;
+            $row_has_no_commodities=false;
+           //  Loop through each row of the worksheet in turn
+        for ($row = 15; $row <= $highestRow; $row++){ 
+            //  Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);                                    
+           if(isset($rowData[0][1]) && $rowData[0][1]!='' ){
+           $cell = $sheet->getCell('C'.$row);// super category
+           // Check if cell is merged super category
+           foreach ($sheet->getMergeCells() as $cells) {
+           if ($cell->isInRange($cells)) {// check for the super cat name 
+
+           $data_new=$rowData[0][2];
+           
+           $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+           select * from commodity_category where category_name like '%$data_new%'");
+           $does_it_exits=count($q);
+          
+           if($does_it_exits==0){//set the super cat id here
+           $this -> db -> insert('commodity_category', array('category_name'=>$rowData[0][2],'status'=>1));
+           $super_cat=array_merge($super_cat,array($rowData[0][2]=>$this -> db -> insert_id()));
+
+           array_push($temp['Added New commodity_category'],$rowData[0][2]);
+
+           }else{
+           $super_cat=array_merge($super_cat,array($rowData[0][2]=>$q[0]['id']));   
+           }
+          
+           }
+           else{
+           $row_has_no_commodities=false;
+           } 
+           }
+
+           if ($rowData[0][4] && $rowData[0][4]!='' ) {// check for the sub cat name 
+           
+           $data_new=$rowData[0][4];
+           
+           $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+           select * from commodity_sub_category where sub_category_name like '%$data_new%'");
+           $does_it_exits=count($q);
+          
+           if($does_it_exits==0){//set the sub cat id here
+          
+           $ar_k=array_keys($super_cat);
+           $lastindex=$ar_k[count($ar_k)-1];
+           $new_word=ucwords(strtolower($data_new));// captialize the first word of each letter 
+           $this -> db -> insert('commodity_sub_category', array('sub_category_name'=>$new_word,
+           'status'=>1,'commodity_category_id'=>$super_cat[$lastindex]));
+
+           array_push($temp['Added New commodity_sub_category'],$rowData[0][4]);
+
+           $sub_cat= array_merge($sub_cat,array($data_new=>$this -> db -> insert_id()));
+           
+           }else{
+           $sub_cat=array_merge($sub_cat,array($data_new=>$q[0]['id']));  
+           //print_r($sub_cat); exit; 
+           }
+           
+           } 
+           // now for the commodities
+           if($rowData[0][5] && $rowData[0][5]!='' ){
+           $data_new=preg_replace('/[^A-Za-z0-9\-]/', ' ', $rowData[0][2]); $unit_size=$rowData[0][5];$unit_cost=$rowData[0][6];$total_commodity_units=$rowData[0][7];
+           $new_unit_size=mysql_escape_string($unit_size);
+           $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+           select * from commodities where commodity_code like '%$data_new%' and unit_size like  '%$new_unit_size%' ");
+           $does_it_exits=count($q);
+           
+           if($does_it_exits==0){//set the sub cat id here
+          // echo "  $does_it_exits
+           //select * from commodities where commodity_code like \'%$data_new%\' and unit_size like  \'%$new_unit_size%\' "; exit;
+           $new_word=$data_new;// captialize the first word of each letter 
+           $this -> db -> insert('commodities', array('commodity_name'=>$rowData[0][3],'unit_size'=>$unit_size,'unit_cost'=>$unit_cost,
+           'commodity_code'=>$data_new,'commodity_sub_category_id'=>$sub_cat[$rowData[0][4]],'total_commodity_units'=>$total_commodity_units,
+           'commodity_source_id'=>1,'tracer_item'=>0,'status'=>1));
+           array_push($temp['Added New commodities'],$rowData[0][3]);
+           }else{
+           $array_update = array('commodity_name'=>$rowData[0][3],
+                          'unit_size'=>$unit_size, 
+                          'unit_cost'=>$unit_cost,
+                          'commodity_code'=>$data_new,
+                          'commodity_sub_category_id'=>$sub_cat[$rowData[0][4]],
+                          'total_commodity_units'=>$total_commodity_units,
+                          'commodity_source_id'=>1,
+                          );
+           $array_where = array(
+                          'unit_size'=>$unit_size, 
+                          'commodity_code'=>$data_new,
+                          );
+                          
+           $this->db->where($array_where);
+           $this->db->update("commodities", $array_update);
+          
+          if( $this->db->affected_rows() > 0){
+
+             array_push($temp['Updated commodity'],$rowData[0][3]." unit price ".$sub_cat[$rowData[0][4]]);
+ 
+            } 
+           }
+               
+           }
+           
+           }// end if
+           }// end for loop
+          echo "<pre>";;print_r($temp);echo "</pre>";;
+           unset($objPHPExcel);
+           endif;   
+               }
+
 }
 
 ?>

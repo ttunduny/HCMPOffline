@@ -30,14 +30,7 @@ foreach ($res->result_array() as $key => $value) {
 
 <script type="text/javascript">
 
-    $(document).ready(function() {
-
-        $('#example_mainw').dataTable({
-            "bJQueryUI": true,
-            "bPaginate": true,
-            "aaSorting": [[3, "desc"]]
-        });
-    });
+    
     var county = <?php echo $this->session->userdata('county_id'); ?>;
 
 
@@ -73,7 +66,7 @@ foreach ($res->result_array() as $key => $value) {
 <br />
 <?php include('rca_sidabar.php');?>
 
-<div class="dash_main" style="width: 80%;float: right; overflow: scroll; height: 500px">
+<div class="dash_main" style="width: 80%;float: right; overflow: scroll; height: auto">
 
     <?php
 //echo "<pre>";var_dump($reports);echo "</pre>";
@@ -128,8 +121,26 @@ foreach ($res->result_array() as $key => $value) {
                 <a href="<?php echo base_url() . 'rtk_management/switch_district/0/rtk_manager/0/home_controller/0/'; ?>/" class="btn btn-primary" id="switch_idenity" style="margin-top: -10px;">Go</a>
             </div>
 <?php } ?>
+       <?php 
+        $county_id = $this->session->userdata('county_id');
+         $sql1 = "select distinct rtk_alerts.*, rtk_alerts_reference.* from rtk_alerts,rtk_alerts_reference,counties,facilities,districts 
+                where (facilities.Zone = rtk_alerts_reference.description or rtk_alerts_reference.description = 'All Counties')
+                and facilities.district = districts.id
+                and counties.id = districts.county
+                and rtk_alerts.reference = rtk_alerts_reference.id                                    
+                and rtk_alerts.status = 0
+                ";
+                $res_alerts = $this->db->query($sql1);                                    
+                $notif_alerts = $res_alerts->result_array();
+                foreach ($notif_alerts as $value) {
+                    $notification = $value['message'];?>
+                    <div class="alert notices alert-warning" style="margin-top:0px;"><?php echo '<p>'.$notification.'</p>';
+                    ?> </div> <?php
+
+                }
+                ?>
         <div>
-            <table class="table" style="font-size: 120%;">
+            <table class="table" style="font-size:13px;">
                 <thead>
                     <tr>
                         <th>Kit</th>
@@ -144,7 +155,24 @@ foreach ($res->result_array() as $key => $value) {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <?php
+                        
+                        for ($i=0; $i <count($county_summary) ; $i++) {?>
+                            <tr>
+                                <td><?php echo $county_summary[$i]['commodity_name']; ?></td>
+                                <td><?php echo number_format($county_summary[$i]['sum_opening'], $decimals = 0); ?></td>
+                                <td><?php echo number_format($county_summary[$i]['sum_received'], $decimals = 0); ?></td>
+                                <td><?php echo number_format($county_summary[$i]['sum_used'], $decimals = 0); ?></td>
+                                <td><?php echo number_format($county_summary[$i]['sum_tests'], $decimals = 0); ?></td>
+                                <td><?php echo number_format($county_summary[$i]['sum_positive'], $decimals = 0); ?></td>
+                                <td><?php echo number_format($county_summary[$i]['sum_negative'], $decimals = 0); ?></td>
+                                <td><?php echo number_format($county_summary[$i]['sum_losses'], $decimals = 0); ?></td>
+                                <td><?php echo number_format($county_summary[$i]['sum_closing_bal'], $decimals = 0); ?></td>
+                            </tr>                                               
+                            
+                        <?php }
+                    ?>
+                    <!--tr>
                         <td>Determine</td>
                         <td><?php echo number_format($county_summary[0]['sum_opening'], $decimals = 0); ?></td>
                         <td><?php echo number_format($county_summary[0]['sum_received'], $decimals = 0); ?></td>
@@ -165,13 +193,29 @@ foreach ($res->result_array() as $key => $value) {
                         <td><?php echo number_format($county_summary[1]['sum_negative'], $decimals = 0); ?></td>
                         <td><?php echo number_format($county_summary[1]['sum_losses'], $decimals = 0); ?></td>
                         <td><?php echo number_format($county_summary[1]['sum_closing_bal'], $decimals = 0); ?></td>
-                    </tr>
+                    </tr-->
                 </tbody>
             </table>
         </div>
 
-        <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        <div id="container" style="min-width: 310px; height: auto; margin: 0 auto"></div>
 
     </div>
 
 </div>
+<script>
+    $(document).ready(function() {
+
+       /* $('.table').dataTable({
+            "bJQueryUI": false,
+            "bPaginate": true,
+            "aaSorting": [[3, "desc"]]
+        });*/
+        $('.table').tablecloth({theme: "paper",         
+              bordered: true,
+              condensed: true,
+              striped: true,
+              sortable: true,             
+            });
+        });
+</script>

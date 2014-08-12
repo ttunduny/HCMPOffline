@@ -218,7 +218,7 @@ public function send_sms($phones,$message) {
 /*****************************************Email function for HCMP, all the deafult email addresses and email content have been set ***************/
 
 public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL){
-      return true;
+    //  return true;
 		$mail_list=($this->test_mode)?'kariukijackson@ymail.com,': 'kariukijackson@gmail.com,';
 			
 		$fromm='info-noreply@health-cmp.or.ke';
@@ -379,7 +379,7 @@ if(count($excel_data)>0):
 
 		// Save Excel 2007 file
 		//echo date('H:i:s') . " Write to Excel2007 format\n";
-		$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 
 		// We'll be outputting an excel file
 		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
@@ -397,14 +397,14 @@ if(count($excel_data)>0):
 endif;
 }
  public function clone_excel_order_template($order_id,$report_type,$file_name=null){
-    $inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx';
+    $inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xls';
     $facility_details = facility_orders::get_facility_order_details($order_id);
 	if(count($facility_details)==1):
 	$facility_stock_data_item = facility_order_details::get_order_details($order_id);
 
-    $file_name =isset($file_name) ? $file_name.'.xlsx' : time().'.xlsx';
+    $file_name =isset($file_name) ? $file_name.'.xls' : time().'.xls';
 	
-	$excel2 = PHPExcel_IOFactory::createReader('Excel2007');
+	$excel2 = PHPExcel_IOFactory::createReader('Excel5');
     $excel2=$objPHPExcel= $excel2->load($inputFileName); // Empty Sheet
     
     $sheet = $objPHPExcel->getSheet(0); 
@@ -424,7 +424,7 @@ endif;
 for ($row = 17; $row <= $highestRow; $row++){ 
     //  Read a row of data into an array
     $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);							  
-   if(isset($rowData[0][2])){
+   if(isset($rowData[0][2]) && $rowData[0][2]!=''){
    	foreach($facility_stock_data_item as $facility_stock_data_item_){
    	if(in_array($rowData[0][2], $facility_stock_data_item_)){
    	$key = array_search($rowData[0][2], $facility_stock_data_item_);
@@ -434,7 +434,7 @@ for ($row = 17; $row <= $highestRow; $row++){
    }
 }
 
-   $objWriter = PHPExcel_IOFactory::createWriter($excel2, 'Excel2007');
+   $objWriter = PHPExcel_IOFactory::createWriter($excel2, 'Excel5');
    if($report_type=='download_file'){
    	// We'll be outputting an excel file
 		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
@@ -459,8 +459,14 @@ for ($row = 17; $row <= $highestRow; $row++){
 
 	if(isset($inputFileName)):
 	$item_details = Commodities::get_all_from_supllier(1);
-
-	$excel2 = PHPExcel_IOFactory::createReader('Excel2007');
+    $ext = pathinfo($inputFileName, PATHINFO_EXTENSION);
+    if($ext=='xls'){
+    $excel2 = PHPExcel_IOFactory::createReader('Excel5');    
+    }else if($ext=='xlsx'){
+    $excel2 = PHPExcel_IOFactory::createReader('Excel2007');    
+    }else{
+    die('Invalid file format given'.$inputFileName);   
+    }
     $excel2=$objPHPExcel= $excel2->load($inputFileName); // Empty Sheet
     
     $sheet = $objPHPExcel->getSheet(0); 
