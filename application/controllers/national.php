@@ -356,7 +356,8 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			        f_s.expiry_date < NOW()
 			            and d.id = f_s.commodity_id
 			            and year(f_s.expiry_date) = $year
-			            AND f_s.status = (1 or 2)
+			            AND  (f_s.status =1 or f_s.status =2 )
+
 			    GROUP BY d.id , f_s.facility_code having total > 1) 
 		    temp ON temp.facility_code = f.facility_code
 				where
