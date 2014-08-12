@@ -10,7 +10,7 @@ class national extends MY_Controller
     {
         parent::__construct();
         $this -> load -> helper(array('form', 'url','file'));
-       // $this -> load -> library(array('form_validation','PHPExcel/PHPExcel'));
+        $this -> load -> library(array('form_validation','PHPExcel/PHPExcel'));
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
     }
     public function index() {
@@ -124,7 +124,7 @@ class national extends MY_Controller
       $and
       ");
       
-      //echo count($q);
+      echo count($q);
         else:
         $excel_data = array('doc_creator' => "HCMP", 'doc_title' => "facilities rolled out $title", 'file_name' => "facilities rolled out $title");
         $row_data = array(); 
@@ -157,7 +157,7 @@ class national extends MY_Controller
         endforeach;
         $excel_data['row_data'] = $row_data;
 
-        $this->hcmp_functions->create_excel($excel_data);
+        $this  -> create_excel($excel_data);
 endif;
     }  
     
@@ -201,7 +201,7 @@ endif;
         $and 
         ");
       
-     // echo count($q);
+      echo count($q);
     else:
         $excel_data = array('doc_creator' => "HCMP", 'doc_title' => "hcw trained $title", 'file_name' => 'hcw trained');
         $row_data = array(); 
@@ -227,7 +227,7 @@ endif;
         endforeach;
         $excel_data['row_data'] = $row_data;
 
-        $this->hcmp_functions->create_excel($excel_data);
+        $this  -> create_excel($excel_data);
 endif;
     }  
     
@@ -355,7 +355,7 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			        f_s.expiry_date < NOW()
 			            and d.id = f_s.commodity_id
 			            and year(f_s.expiry_date) = $year
-			            AND  (f_s.status =1 or f_s.status =2)
+			            AND f_s.status = (1 or 2)
 			    GROUP BY d.id , f_s.facility_code having total > 1) 
 		    temp ON temp.facility_code = f.facility_code
 				where
@@ -384,7 +384,7 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 
         $data = array();
         $data['graph_id']='dem_graph_';
-        $data['high_graph']= $this->hcmp_functions->create_high_chart_graph($graph_data);
+        $data['high_graph']= $this->create_high_chart_graph($graph_data);
         
        // print_r($data['high_graph']);
 		//exit;
@@ -446,7 +446,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
         endforeach;
         $excel_data['row_data'] = $row_data;
 
-        $this->hcmp_functions->create_excel($excel_data);
+        $this  -> create_excel($excel_data);
 endif;
      
     }
@@ -531,7 +531,7 @@ endif;
         $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
         $data = array();
        
-       $data['high_graph']= $this->hcmp_functions->create_high_chart_graph($graph_data);
+       $data['high_graph']= $this->create_high_chart_graph($graph_data);
        $data['graph_id']='dem_graph_1';
         return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
         
@@ -594,7 +594,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
         endforeach;
         $excel_data['row_data'] = $row_data;
 
-        $this->hcmp_functions->create_excel($excel_data);
+        $this  -> create_excel($excel_data);
 endif;
      
     }
@@ -684,7 +684,7 @@ endif;
         $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
         $data = array();
        
-       $data['high_graph']= $this->hcmp_functions->create_high_chart_graph($graph_data);//
+       $data['high_graph']= $this->create_high_chart_graph($graph_data);
        $data['graph_id']='dem_graph_mos';
        return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
        //
@@ -734,7 +734,7 @@ order by c.county asc,d1.district asc
         endforeach;
         $excel_data['row_data'] = $row_data;
 
-        $this->hcmp_functions->create_excel($excel_data);
+        $this  -> create_excel($excel_data);
 endif;
 
         
@@ -815,7 +815,7 @@ endif;
         $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
         $data = array();
        
-       $data['high_graph']= $this->hcmp_functions->create_high_chart_graph($graph_data);
+       $data['high_graph']= $this->create_high_chart_graph($graph_data);
        $data['graph_id']='dem_graph_consuption';
        return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
        else:
@@ -859,7 +859,7 @@ order by c.county asc , d1.district asc
         endforeach;
         $excel_data['row_data'] = $row_data;
 
-        $this->hcmp_functions->create_excel($excel_data);
+        $this  -> create_excel($excel_data);
 endif;
 
         
@@ -932,7 +932,7 @@ group by month(o.`order_date`)
         $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
         $data = array();
        
-       $data['high_graph']= $this->hcmp_functions->create_high_chart_graph($graph_data);
+       $data['high_graph']= $this->create_high_chart_graph($graph_data);
        $data['graph_id']='dem_graph_order';
         return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
        else:
@@ -977,7 +977,7 @@ group by month(o.`order_date`)
         endforeach;
         $excel_data['row_data'] = $row_data;
 
-        $this->hcmp_functions->create_excel($excel_data);
+        $this  -> create_excel($excel_data);
 endif;
         
     }
@@ -1066,7 +1066,7 @@ where
         endforeach;
         $excel_data['row_data'] = $row_data;
 
-        $this->hcmp_functions->create_excel($excel_data);
+        $this  -> create_excel($excel_data);
 endif;
     }
    public function get_time($days){
@@ -1116,6 +1116,118 @@ endif;
       return $time;
    }
     
+  //// /////HCMP Create high chart graph
+  public function create_high_chart_graph($graph_data=null)
+  {
+    $high_chart='';
+    if(isset($graph_data)):
+        $graph_id=$graph_data['graph_id'];
+        $graph_title=$graph_data['graph_title'];
+        $graph_type=$graph_data['graph_type'];
+        $stacking=isset($graph_data['stacking']) ? $graph_data['stacking'] : null;
+        $graph_categories=json_encode($graph_data['graph_categories']);
+        //echo json_encode($graph_data['graph_categories']);
+        $graph_yaxis_title=$graph_data['graph_yaxis_title'];
+        $graph_series_data=$graph_data['series_data'];
+        //$new_array=$graph_series_data;
+        //return ($graph_series_data[0]); key       
+        //$size_of_graph=sizeof($graph_series_data[key($graph_series_data)])*200;
+        //set up the graph here
+        $high_chart .="
+        $('#$graph_id').highcharts({
+            
+            chart: { zoomType:'x', type: '$graph_type'},
+            credits: { enabled:false},
+            title: {text: '$graph_title'},
+            yAxis: { min: 0, title: {text: '$graph_yaxis_title' }},
+            subtitle: {text: 'Source: HCMP', x: -20 },
+            xAxis: { categories: $graph_categories },
+            tooltip: { crosshairs: [true,true] },
+               plotOptions: {
+                column: {
+                    stacking: '$stacking',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
+            },
+            series: [";          
+            foreach($graph_series_data as $key=>$raw_data):
+                    $temp_array=array();
+                    $high_chart .="{ name: '$key', data:";                   
+                      foreach($raw_data as $key_data):
+                        $temp_array=array_merge($temp_array,array((int)$key_data));
+                        endforeach;
+                      $high_chart .= json_encode($temp_array)."},";               
+                   endforeach;
+         $high_chart .="]  })";
+
+    endif;
+    return $high_chart;     
+  }
+  /**************************************** creating excel sheet for the system *************************/
+    public function create_excel($excel_data=NUll) {
+        
+ //check if the excel data has been set if not exit the excel generation    
+     
+if(count($excel_data)>0):
+        
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel -> getProperties() -> setCreator("HCMP");
+        $objPHPExcel -> getProperties() -> setLastModifiedBy($excel_data['doc_creator']);
+        $objPHPExcel -> getProperties() -> setTitle($excel_data['doc_title']);
+        $objPHPExcel -> getProperties() -> setSubject($excel_data['doc_title']);
+        $objPHPExcel -> getProperties() -> setDescription("");
+
+        $objPHPExcel -> setActiveSheetIndex(0);
+
+        $rowExec = 1;
+
+        //Looping through the cells
+        $column = 0;
+
+        foreach ($excel_data['column_data'] as $column_data) {
+            $objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $column_data);
+            $objPHPExcel -> getActiveSheet() -> getColumnDimension(PHPExcel_Cell::stringFromColumnIndex($column)) -> setAutoSize(true);
+            //$objPHPExcel->getActiveSheet()->getStyle($column, $rowExec)->getFont()->setBold(true);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($column, $rowExec)->getFont()->setBold(true);
+            $column++;
+        }       
+        $rowExec = 2;
+                
+        foreach ($excel_data['row_data'] as $row_data) {
+        $column = 0;
+        foreach($row_data as $cell){
+         //Looping through the cells per facility
+        $objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $cell);
+                
+        $column++;  
+         }
+        $rowExec++;
+        }
+
+      //  $objPHPExcel -> getActiveSheet() -> setTitle('Simple');
+
+        // Save Excel 2007 file
+        //echo date('H:i:s') . " Write to Excel2007 format\n";
+        $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+        $date=date('d-m-y');
+        // We'll be outputting an excel file
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header("Cache-Control: no-store, no-cache, must-revalidate");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+        // It will be called file.xls
+        header("Content-Disposition: attachment; filename=".$excel_data['file_name'].'-date-'.$date.".xlsx");
+
+        // Write file to the browser
+        $objWriter -> save('php://output');
+       $objPHPExcel -> disconnectWorksheets();
+       unset($objPHPExcel);
+        // Echo done
+endif;
+}
  public function demo_accounts(){
  	       $facility_user_data = Doctrine_Manager::getInstance()
         ->getCurrentConnection()
