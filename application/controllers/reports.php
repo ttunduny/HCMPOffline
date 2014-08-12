@@ -2409,14 +2409,17 @@ $month = $data['expiry_month'];
 			
 			$category_data = array_merge($category_data, $months);
 			$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,$county_id, $year, null,$option ,"all");   
-		
+			$column_data_ = array("stock expired in $title $month_ $year","Name","stock expired in $option_new");		
 			foreach ($commodity_array as $data) :
-			$temp_array = array_merge($temp_array, array($data["cal_month"] => (int)$data['total']));
+				$temp_array = array_merge($temp_array, array($data["cal_month"] => (int)$data['total']));
+				$series_data_ = array_merge($series_data_, array(array($data["cal_month"],$data['name'],(int)$data['total'])));
+				
 			endforeach;
 			foreach ($months as $key => $data) :
 			$val = (array_key_exists($data, $temp_array)) ? (int)$temp_array[$data] : (int)0;
 			$series_data = array_merge($series_data, array($val));
-			array_push($series_data_, array($data,$val));
+			//$series_data_ = array_merge($series_data_, array($data,$val));
+			
 			endforeach;
 			
 			$graph_type='spline';
@@ -2426,21 +2429,23 @@ $month = $data['expiry_month'];
 		{
 			
 			$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,$county_id, $year, $month,$option ,"all_");
-
+			$column_data_ = array("stock expired in $title $month_ $year","stock expired in $option_new");
 			foreach ($commodity_array as $data) :
-			$series_data  = array_merge($series_data , array($data["name"] => (int) $data['total']));
-			$category_data=array_merge($category_data, array($data["name"]));
-			array_push($series_data_, array($data["name"], (int) $data['total']));
+				$series_data  = array_merge($series_data , array($data["name"] => (int) $data['total']));
+				$series_data_ = array_merge($series_data_, array(array($data["name"],(int)$data['total'])));
+				$category_data=array_merge($category_data, array($data["name"]));
+				//array_push($series_data_, array($data["name"], (int) $data['total']));
 			endforeach;
 	        $graph_type='column';
 		}
 		
 		if($report_type=="csv_data"):
+			
 			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "stock expired in $commodity_name $title $month_ $year", 'file_name' => "Stock_expired_$commodity_name_$title_$month_$year");
-			$row_data = array(array("stock expired in $title $month_ $year","stock expired in $option_new"));
-			$column_data = array("");
+			$row_data = array();
+			$column_data = $column_data_;
 			$excel_data['column_data'] = $column_data;
-			$row_data=array_merge($row_data,$series_data_);
+			$row_data = array_merge($row_data,$series_data_);
 			$excel_data['row_data'] = $row_data;
 			$this -> hcmp_functions -> create_excel($excel_data);
 		else:   
