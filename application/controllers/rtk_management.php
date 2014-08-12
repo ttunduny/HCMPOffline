@@ -556,7 +556,6 @@ class Rtk_Management extends Home_controller {
         }
         $mycounties = $this->db->select('districts.district')->get_where('districts', array('county' =>$myres))->result_array(); 
 
-
         $data['district_balances_current'] = $this->district_totals($year_current, $previous_month, $district);
         $data['district_balances_previous'] = $this->district_totals($year_previous, $previous_month, $district);
         $data['district_balances_previous_1'] = $this->district_totals($year_previous_1, $previous_month_1, $district);
