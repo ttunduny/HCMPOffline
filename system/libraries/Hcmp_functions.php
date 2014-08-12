@@ -409,7 +409,7 @@ if(count($excel_data)>0):
         header("Cache-Control: post-check=0, pre-check=0", false);
         header("Pragma: no-cache");
 		// It will be called file.xls
-		header("Content-Disposition: attachment; filename=".$excel_data['file_name'].".xlsx");
+		header("Content-Disposition: attachment; filename=".$excel_data['file_name'].".xls");
 
 		// Write file to the browser
         $objWriter -> save('php://output');
