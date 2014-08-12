@@ -136,8 +136,9 @@
             <h5>Orders</h5>
         </div>
          <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
-            <a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>KEMSA</h5></a>
-            <a href=""><h5>MEDS</h5></a> 
+            <a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>KEMSA online</h5></a>
+            <a href="" class="order-for-excel"><h5>KEMSA via excel</h5></a>
+            
         </div>  
 
             
@@ -180,7 +181,7 @@
 
 	
    $(document).ready(function() {
-
+    
    	var stock=$('#stocklevel').val()
 
    	if(stock==0){
@@ -199,7 +200,35 @@
            /* Act on the event */
            $('#update_order_hide').toggle('slow')
        }); 
+               $(".order-for-excel").on('click', function(e) {
+                  e.preventDefault(); 
+    var body_content='<?php  $att=array("name"=>'myform','id'=>'myform');
+    echo form_open_multipart('orders/facility_order',$att)?>'+
+'<input type="file" name="file" id="file" required="required" class="form-control"><br>'+
+'<button class="upload">Upload</button>'+
+'</form>';
+   //hcmp custom message dialog
+    dialog_box(body_content,'');        
+    });
+       $('#main-content').on('click', '.upload',function(e){
+          e.preventDefault(); 
+     var file = $('#file').val();
+         var exts = ['xls','xlsx'];
+      // first check if file field has any value
+      if ( file ) {
+        // split file name at dot
+        var get_ext = file.split('.');
+        // reverse name to check extension
+        get_ext = get_ext.reverse();
+        // check file type is valid as given in 'exts' array
+        if ( $.inArray ( get_ext[0].toLowerCase(), exts ) > -1 ){
+          $('#myform').submit();
+        } else {
+          alert( 'Invalid file format given!' );
+        }
+      } });
 
+    
  <?php echo $facility_dashboard_notifications['faciliy_stock_graph'] ?>
 
     });
@@ -245,5 +274,6 @@
 
           intro.start();
       }
+      
     </script>
    

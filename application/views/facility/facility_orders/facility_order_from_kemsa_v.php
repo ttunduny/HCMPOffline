@@ -147,7 +147,7 @@ $(document).ready(function() {
 							 $unit_size=preg_replace('/[^A-Za-z0-9\-]/', ' ',$commodity['unit_size']);
 							 $unit_cost=$commodity['unit_cost'];
 							 $total_commodity_units=$commodity['total_commodity_units'];
-							 $commodity_name=preg_replace('/[^A-Za-z0-9\-]/', ' ', $commodity['commodity_name']);?>'+						
+							 $commodity_name= preg_replace('/[^A-Za-z0-9\-]/', ' ', $commodity['commodity_name']);?>'+					
 						'<option <?php echo 'special_data="'.$commodity_id.'^'.$unit_cost.'^'.$unit_size.
 	'^'.$sub_category_name.'^'.$commodity_code.'^'.$total_commodity_units.'" value="'.$commodity_id.'">'.$commodity_name ;?></option><?php endforeach;?>'+
 	'</select></td><td><input readonly="readonly" class="form-control" type="text" name="commodity_code"    /></td>'+
@@ -169,11 +169,12 @@ $(document).ready(function() {
 				$('input:text[name=unit_size]').val(code_array[2]);
 				$('input:text[name=unit_cost]').val(code_array[1]);
 				$('input:hidden[name=cat_name]').val(code_array[3]);
-				$('input:hidden[name=commodity_name_]').val($("#desc option:selected").text());
+				$('input:hidden[name=commodity_name_]').val($(".desc option:selected").text());
 				$('input:hidden[name=total_commodity_units_]').val(code_array[5]);});
 	// add the item to the order list			
-	$('#main-content').on("click", '.add_item',function (){
-	 var check_if_the_user_has_selected_a_commodity=$('.desc').val();
+	$('#main-content').on("click", ".add_item", function (){
+	 var check_if_the_user_has_selected_a_commodity=$('#desc').val();
+
 	 if(check_if_the_user_has_selected_a_commodity==0){
 	 	alert("Please select a commodity first");
 	 	return;
@@ -188,7 +189,7 @@ $(document).ready(function() {
          '<input type="hidden" class="unit_cost" name="price['+new_count+']" value="'+$('input:text[name=unit_cost]').val()+'" />'+
          '<input type="hidden" name="unit_size['+new_count+']" value="'+$('input:text[name=unit_size]').val()+'" />'+
 							"" + $('input:hidden[name=cat_name]').val() + "" ,  
-							"" + $("#desc option:selected").text() + "" , 
+							"" + $('input:hidden[name=commodity_name_]').val() + "" , 
 							"" + $('input:text[name=commodity_code]').val() + "" ,
 							"" + $('input:text[name=unit_size]').val() + "" ,
 							"" + $('input:text[name=unit_cost]').val() + "" ,

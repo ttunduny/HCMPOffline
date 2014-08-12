@@ -10,7 +10,7 @@ class User extends MY_Controller {
 
 	function __construct() {
 		parent::__construct();
-
+ 
 		$this -> load -> helper(array('form', 'url'));
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
 	}
@@ -514,6 +514,7 @@ class User extends MY_Controller {
 			$facility_id=$this -> session -> userdata('facility_id');
 			$district_code=$this -> session -> userdata('district_id');
 			$county=$this -> session -> userdata('county_id');
+
 			break;
 			case 'district':
 				

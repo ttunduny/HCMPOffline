@@ -1,10 +1,11 @@
-<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>Scripts/jquery.dataTables.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/datatable/jquery.dataTables.js"></script>
 <script src="http://tableclothjs.com/assets/js/jquery.tablecloth.js"></script>
 
 
 <script type="text/javascript">
 
     $(document).ready(function() {
+
         /* Build the DataTable with third column using our custom sort functions */
 
         $('#example').dataTable({
@@ -15,8 +16,10 @@
         });
 
         $("#allocate").button().click(function() {
-        	var loading = '<div id="loading"> &nbsp;&nbsp;<img src="<?php echo base_url(); ?>Images/ajax-loader.gif"><span style="font-size: 13px;color: #92CA8F;font-family: calibri;">Saving Allocations</span></div>';
-        	$('#system_alerts').html(loading);
+
+        	var loading = '<div id="loading"> &nbsp;&nbsp;<img src="<?php echo base_url(); ?>assets/img/ajax-loader.gif"><span style="font-size: 13px;color: #92CA8F;margin-left:100px; font-family: calibri;">Saving Allocations</span></div>';
+        	$('#allocation-response').html(loading);
+
       	
 
             var data = $('#myform').serialize();
@@ -24,8 +27,8 @@
                     '../rtk_allocation_data/',
                     {data: data},
             function(response) {
-                $('#system_alerts').html(response);
-                $('#system_alerts').addClass('alert alert-success');
+                $('#allocation-response').html(response);
+                $('#allocation-response').addClass('alert alert-success');
                location.reload(true);
 //                $( "#loading" ).hide();
             }
@@ -34,7 +37,7 @@
 
         });
 
-        $('.nav li a').click(function(e) {
+        $('.navtbl li a').click(function(e) {
             var $this = $(this);
             var thistext = $(this).text();
             $('.nav li').removeClass('active');
@@ -51,7 +54,7 @@
 </script>
 
 <style>
-    @import "<?php echo base_url(); ?>DataTables-1.9.3 /media/css/jquery.dataTables.css";
+    @import "<?php echo base_url(); ?>assets/datatable/media/css/jquery.dataTables.css";
     @import "http://tableclothjs.com/assets/css/tablecloth.css";
 
     .alerts{
@@ -74,13 +77,20 @@
     .nav{
         margin-bottom: 0px;
     } 
+    table{
+        font-size: 13px;
+        text-align: center;
+        width: 100%;
+    }
     table:tr{
         height: 10px;
+        
 
     }
 </style> 
+
 <div style="width:100%;font-size: 15px;background: #F8F8F8;padding: 10px 10px 10px 10px;border-bottom: solid 1px #ccc;">
-    <ul class="nav nav-pills">
+    <ul class="navtbl nav nav-pills">
 
         <?php foreach ($districts_in_county as $value) { ?>
             <li class=""><a href="#"><?php echo $value['district']; ?></a></li>
@@ -90,13 +100,7 @@
 
             <li class=""><a href="#">Old-Algorithm</a></li>
             <li class=""><a href="#">New-Algorithm</a></li>
-       <a class="pull-right" href="../county_allocation/<?php echo $county_id;?>" 
-style="
-    line-height: 20px;
-    margin: 8px 26px 0px 0px;
-    text-decoration: none;
-    color: #0088cc;
-">View <?php echo $countyname;?>  Allocations</a> 
+       <a class="pull-right" href="../county_allocation/<?php echo $county_id;?>" style="line-height: 20px;margin: 8px 26px 0px 0px;text-decoration: none;color: #0088cc;">View <?php echo $countyname;?>  Allocations</a> 
 
     </ul>
 </div>
@@ -105,11 +109,12 @@ style="
     $attributes = array('name' => 'myform', 'id' => 'myform');
     echo form_open('rtk_management/rtk_allocation_data/' . $county_id, $attributes);
     ?>
-    <table id="example">
+
+    <table id="example" style="width:96%">
         <thead>
             <tr>
                 <th colspan="3">Facility Details</th>
-                <th rowspan="2"><b>Commodity</b></th>
+                <th rowspan="2"><br/><b>Commodity</b></th>
                 <th colspan="5">Quantity(tests)</th>
               
                 <th rowspan="2"><b>Qty to allocate</b>(Kits)</th>
@@ -119,7 +124,7 @@ style="
             <tr>
                 <th><b>MFL</b></th>
                 <th><b>Facility Name</b></th>
-                <th><b>District</b></th>
+                <th><b>Sub-County</b></th>
                 <th><b>Received</b></th>
                 <th><b> Consumed</b></th>
                 <th><b>End balance<br />Physical Count</b></th>
@@ -132,8 +137,8 @@ style="
     <br />
 <div id="clear">&nbsp;</div>
     <div>
-<input type="button" id="allocate" value="Allocate" style="background: #F8F7F7; padding: 7px;margin: 8px 0px 5px 19px;color: #0088cc;font-family: calibri;font-size: 18px;border: 1px solid #ccc;">
-
+<input class="pull-left" type="button" id="allocate" value="Allocate" style="background: #F8F7F7; padding: 7px;margin: 8px 0px 5px 19px;color: #0088cc;font-family: calibri;font-size: 18px;border: 1px solid #ccc;">
+<div id="allocation-response"></div>
 </div>
 <?php echo form_close(); ?>	
 </div>
