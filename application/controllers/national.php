@@ -784,7 +784,7 @@ endif;
       $commodity_array = Doctrine_Manager::getInstance()
         ->getCurrentConnection()
         ->fetchAll("select d.commodity_name as drug_name,  
-		 round(avg(IFNULL(f_i.`qty_issued`,0) / IFNULL(d.total_commodity_units,0)),1) as total
+		 round(avg(IFNULL(ABS(f_i.`qty_issued`),0) / IFNULL(d.total_commodity_units,0)),1) as total
 		 from facilities f,  districts d1, counties c, commodities d left join facility_issues f_i on f_i.`commodity_id`=d.id 
 		where f_i.facility_code = f.facility_code 
 		and f.district=d1.id 
@@ -831,7 +831,7 @@ endif;
         ->getCurrentConnection()
         ->fetchAll("select 
     c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.drug_name,
-    round(avg(IFNULL(f_i.`qty_issued`, 0) / IFNULL(d.total_units, 0)),
+    round(avg(IFNULL(ABS(f_i.`qty_issued`), 0) / IFNULL(d.total_units, 0)),
             1) as total
 from
     facilities f,
@@ -844,6 +844,7 @@ where
     f_i.facility_code = f.facility_code
         and f.district = d1.id
         and d1.county = c.id
+        and f_i.`qty_issued`>0
         and f_i.created_at between '$from' and '$to'
 $and_data
 group by d.id , f.facility_code
