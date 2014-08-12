@@ -105,7 +105,7 @@ legend{
             <li class=""><a href="<?php echo base_url().'national';?>">Home</a></li>
             <li class="active"><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>
             <li class=""><a href="<?php echo base_url().'national/search';?>">Search</a></li>
-            <li class=""><a href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-user"></span>Log In</a></li>
+            <li class="" style="background: #144d6e; color: white;"><a style="background: #144d6e; color: white;" href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-user"></span>Log in</a></li>
             
           </ul>
           
@@ -392,6 +392,8 @@ $("input:radio[name=commodity_s]").click(function() {
 
 });
 
+    //Run report downloads
+    
     
     
     </script>
