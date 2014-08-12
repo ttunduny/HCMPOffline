@@ -124,7 +124,7 @@ class national extends MY_Controller
       $and
       ");
       
-      //echo count($q);
+        echo count($q);
         else:
         $excel_data = array('doc_creator' => "HCMP", 'doc_title' => "facilities rolled out $title", 'file_name' => "facilities rolled out $title");
         $row_data = array(); 
@@ -201,7 +201,7 @@ endif;
         $and 
         ");
       
-     // echo count($q);
+      echo count($q);
     else:
         $excel_data = array('doc_creator' => "HCMP", 'doc_title' => "hcw trained $title", 'file_name' => 'hcw trained');
         $row_data = array(); 
@@ -639,7 +639,7 @@ endif;
     $commodity_array = Doctrine_Manager::getInstance()
         ->getCurrentConnection()
         ->fetchAll("select 
-		    d.commodity_name,
+		    d.commodity_name as drug_name,
 		    round(avg(IFNULL(f_s.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),
 		            1) as total
 			from
@@ -670,7 +670,7 @@ endif;
 
         
         foreach ($commodity_array as $data) :
-        $series_data = array_merge($series_data, array($data["drug_name"] => $data['total']));
+        $series_data = array_merge($series_data, array($data["drug_name"] => (int)$data['total']));
         $category_data = array_merge($category_data, array($data["drug_name"]));
         endforeach;
  
@@ -781,7 +781,7 @@ endif;
     // echo    .$to; exit;
       $commodity_array = Doctrine_Manager::getInstance()
         ->getCurrentConnection()
-        ->fetchAll("select d.commodity_name, 
+        ->fetchAll("select d.commodity_name as drug_name,  
 		 round(avg(IFNULL(f_i.`qty_issued`,0) / IFNULL(d.total_commodity_units,0)),1) as total
 		 from facilities f,  districts d1, counties c, commodities d left join facility_issues f_i on f_i.`commodity_id`=d.id 
 		where f_i.facility_code = f.facility_code 
@@ -801,7 +801,7 @@ endif;
 
         
         foreach ($commodity_array as $data) :
-        $series_data = array_merge($series_data, array($data["drug_name"] => $data['total']));
+        $series_data = array_merge($series_data, array($data["drug_name"] => (int)$data['total']));
         $category_data = array_merge($category_data, array($data["drug_name"]));
         endforeach;
  
