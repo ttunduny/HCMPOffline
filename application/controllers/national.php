@@ -406,15 +406,17 @@ temp.packs
 from districts d1, counties c, facilities f left join
      (
 select  ROUND( SUM(
-f_s.balance  / d.total_units ) * d.unit_cost, 1) AS total, ROUND( SUM( f_s.balance  / d.total_units ), 1) as packs,SUM( f_s.balance) as units,
-f_s.facility_code,d.id,d.drug_name, f_s.manufacture,
+f_s.current_balance  / d.total_commodity_units ) * d.unit_cost, 1) AS total,
+ ROUND( SUM( f_s.current_balance  / d.total_commodity_units  ), 1) as packs,
+SUM( f_s.current_balance) as units,
+f_s.facility_code,d.id,d.commodity_name as drug_name, f_s.manufacture,
 f_s.expiry_date,d.unit_size,d.unit_cost
 
- from facility_stock f_s, drug d
+ from facility_stocks f_s, commodities d
 where f_s.expiry_date < NOW( ) 
-and d.id=f_s.kemsa_code
+and d.id=f_s.commodity_id
 and year(f_s.expiry_date) !=1970
-AND f_s.status =(1 or 2)
+AND (f_s.status =1 or f_s.status =2)
 GROUP BY d.id,f_s.facility_code having total >1
 
      ) temp
@@ -480,7 +482,7 @@ endif;
 		    $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
 		    $title=$facility_code_['facility_name'];
 	    else:
-	    	$title="National";
+	    	$title="Nationally";
 	    endif;
 
      $and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
@@ -554,15 +556,17 @@ temp.packs
 from districts d1, counties c, facilities f left join
      (
 select  ROUND( SUM(
-f_s.balance  / d.total_units ) * d.unit_cost, 1) AS total, ROUND( SUM( f_s.balance  / d.total_units ), 1) as packs,SUM( f_s.balance) as units,
-f_s.facility_code,d.id,d.drug_name, f_s.manufacture,
+f_s.current_balance  / d.total_commodity_units ) * d.unit_cost, 1) AS total,
+ ROUND( SUM( f_s.current_balance  / d.total_commodity_units  ), 1) as packs,
+SUM( f_s.current_balance) as units,
+f_s.facility_code,d.id,d.commodity_name as drug_name, f_s.manufacture,
 f_s.expiry_date,d.unit_size,d.unit_cost
 
- from facility_stock f_s, drug d
+ from facility_stocks f_s, commodities d
 where f_s.expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and  DATE_ADD(CURDATE(), INTERVAL $interval MONTH)
-and d.id=f_s.kemsa_code
+and d.id=f_s.commodity_id
 and year(f_s.expiry_date) !=1970
-AND f_s.status =(1 or 2)
+AND (f_s.status =1 or f_s.status =2)
 GROUP BY d.id,f_s.facility_code having total >1
 
      ) temp
@@ -574,7 +578,8 @@ $and_data
 group by temp.id,f.facility_code
 order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
         ");
-        array_push($row_data, array("The below commodities will expire in the next $interval months from (current date) $title  "));
+        $date=date( "d M y");
+        array_push($row_data, array("The below commodities will expire in the next $interval months from $date $title  "));
         foreach ($facility_stock_data as $facility_stock_data_item) :
         array_push($row_data, array($facility_stock_data_item["drug_name"],
         $facility_stock_data_item["unit_size"],
@@ -632,7 +637,7 @@ endif;
 		    $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code): null;
 		    $title=$facility_code_['facility_name'];
 	    else:
-	    	$title="National";
+	    	$title="Nationally";
 	    endif;
    // echo .$commodity_id ; exit;
     if( $graph_type!="excel"):
@@ -698,7 +703,7 @@ endif;
         $facility_stock_data = Doctrine_Manager::getInstance()
         ->getCurrentConnection()
         ->fetchAll("select 
-   c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.commodity_name,
+   c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.commodity_name as drug_name,
 case 
   when (ifnull( round(avg(IFNULL(f_s.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),
             1) ,0)) >0 then (ifnull( round(avg(IFNULL(f_s.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),
@@ -707,7 +712,7 @@ from
     facilities f,
     districts d1,
     counties c,
-    facility_stock f_s,
+    facility_stocks f_s,
     commodities d
         left join
     facility_monthly_stock f_m_s ON f_m_s.`commodity_id` = d.id
@@ -775,7 +780,7 @@ endif;
 	    $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
 	    $title=$facility_code_['facility_name'];
     else:
-    	$title="National";
+    	$title="Nationally";
     endif;
     if($graph_type!="excel"):
     // echo    .$to; exit;
@@ -787,6 +792,7 @@ endif;
 		where f_i.facility_code = f.facility_code 
 		and f.district=d1.id 
 		and d1.county=c.id 
+		and f_i.`qty_issued`>0
 		and f_i.created_at between '$from' and '$to'
 		$and_data
 		group by d.id
@@ -828,24 +834,22 @@ endif;
         $facility_stock_data = Doctrine_Manager::getInstance()
         ->getCurrentConnection()
         ->fetchAll("select 
-    c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.drug_name,
-    round(avg(IFNULL(ABS(f_i.`qty_issued`), 0) / IFNULL(d.total_units, 0)),
+    c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.commodity_name as drug_name,
+    round(avg(IFNULL(ABS(f_i.`qty_issued`), 0) / IFNULL(d.total_commodity_units, 0)),
             1) as total
 from
     facilities f,
     districts d1,
     counties c,
-    drug d
-        left join
-    facility_issues f_i ON f_i.`kemsa_code` = d.id
-where
-    f_i.facility_code = f.facility_code
-        and f.district = d1.id
-        and d1.county = c.id
+    commodities d
+left join facility_issues f_i on f_i.`commodity_id`=d.id 
+        where f_i.facility_code = f.facility_code 
+        and f.district=d1.id 
+        and d1.county=c.id 
         and f_i.`qty_issued`>0
         and f_i.created_at between '$from' and '$to'
-$and_data
-group by d.id , f.facility_code
+        $and_data
+        group by d.id , f.facility_code
 order by c.county asc , d1.district asc
         ");
         
@@ -915,7 +919,7 @@ group by month(o.`order_date`)
     $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
     $title=$facility_code_['facility_name'];
     else:
-    $title="National";
+    $title="Nationally";
     endif;
         
         foreach ($commodity_array as $data) :
