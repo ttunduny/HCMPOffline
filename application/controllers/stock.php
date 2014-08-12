@@ -29,7 +29,7 @@ class Stock extends MY_Controller {
 */	
 	public function import($facility_code=null){
 		
-		redirect("stock/facility_stock_first_run/first_run");
+		//redirect("stock/facility_stock_first_run/first_run");
 		
 		$facility_code=isset($facility_code)? $facility_code : $this -> session -> userdata('facility_id'); 
 
