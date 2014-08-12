@@ -495,7 +495,7 @@ class Rtk_Management extends Home_controller {
         $data['mfl'] = $mfl;
         $data['countyid'] = $Countyid;
         $data['title'] = $facility[0]['facility_name'] . '-' . $mfl;
-        $data['facility_name'] = $facility['facility_name'];
+        $data['facility_name'] = $facility[0]['facility_name'];
         $data['banner_text'] = 'Facility Profile: ' . $facility[0]['facility_name'] . '-' . $mfl;
         $data['content_view'] = "rtk/rtk/facility_profile_view";
 
@@ -549,6 +549,13 @@ class Rtk_Management extends Home_controller {
         $county_id = districts::get_county_id($district);
         $county_name = counties::get_county_name($county_id['county']);
         
+        $cid = $this->db->select('districts.county')->get_where('districts', array('id' =>$district))->result_array();
+        
+        foreach ($cid as $key => $value) {
+           $myres = $cid[0]['county'];
+        }
+        $mycounties = $this->db->select('districts.district')->get_where('districts', array('county' =>$myres))->result_array(); 
+
 
         $data['district_balances_current'] = $this->district_totals($year_current, $previous_month, $district);
         $data['district_balances_previous'] = $this->district_totals($year_previous, $previous_month, $district);
@@ -558,7 +565,7 @@ class Rtk_Management extends Home_controller {
 
         $data['district_summary'] = $district_summary;
         
-        $data['districts'] = $this->_districts_from_county($county_name['id']);
+        $data['districts'] = $mycounties;
         $data['facilities'] = $this->_facilities_in_district($district);
 
         $data['district_name'] = $district_summary['district'];
