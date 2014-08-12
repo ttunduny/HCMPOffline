@@ -5028,6 +5028,15 @@ WHERE
         echo "Deadline Updated succesfully";
     }
 
+    public function delete_alert() {       
+        $id = $_POST['id'];
+        $sql = "DELETE FROM `rtk_alerts` WHERE id='$id'";
+        $this->db->query($sql);
+        $object_id = $edit_id;
+        $this->logData('12', $object_id);
+        echo "Alert Deleted Succesfully";
+    }
+
     public function create_Alert() {
         $message = $_POST['message'];
         $type = $_POST['type'];
@@ -5100,6 +5109,34 @@ WHERE
         $this->db->query($sql);
         $object_id = $this->db->insert_id();
         $this->logData('23', $object_id);
+        echo "Email Sent";
+    }
+
+    public function trigger_emails() {
+        $sql = "select email from user where usertype_id=7 and status =1";
+        $res = $this->db->query($sql)->result_array();
+        $to ="";
+        foreach ($res as $key => $value) {
+            $one = $value['email'];
+            $to.= $one.',';
+        }       
+        
+        $subject = 'Login Page Changes';
+        $message = "Dear All,<br/><br/> Please Note that the Login Page has been Changed to A National Data Page. However, on the top right hand corner of the page, is a link to Login.<br/> Please use that link to login to the system.<br/><br/><br/>Regards, <br/> Development Team";
+        $attach_file = null;
+        $bcc_email = 'ttunduny@gmail.com,tngugi@clintonhealthaccess.org,annchemu@gmail.com';
+       // $receipient = array();
+       // $receipient =$to; 
+     
+        //parse_str($_POST['receipients'], $receipient);
+        //$receipient = $receipient['hidden-receipients'];
+        include 'rtk_mailer.php';
+        $newmail = new rtk_mailer();
+        $response = $newmail->send_email($to, $message, $subject, $attach_file, $bcc_email);
+        //$sql = "INSERT INTO `rtk_messages`(`id`, `sender`, `subject`, `message`, `receipient`, `state`) VALUES (NULL,'$sender','$subject','$message','$receipient','0')";
+        //$this->db->query($sql);
+        //$object_id = $this->db->insert_id();
+       // $this->logData('23', $object_id);
         echo "Email Sent";
     }
 

@@ -152,8 +152,8 @@
           <label>To:</label>
         </tr><br/>
         <tr>  
-                              
-            <input class="typeahead form-control tm-input" id="receipient" type="text" placeholder="Enter Receipient" style="width:96%" />   
+            <input type="text" id="tagFilter" data-provide="typeahead" value="test,arlington">          
+            <input class="typeahead form-control" id="receipient" type="text" placeholder="Enter Receipient" style="width:96%" data-role="tagsinput"/>   
           
         </tr><br/>    
         <tr>
@@ -227,8 +227,12 @@ var substringMatcher = function(strs) {
             
             
             //$('#receipient').tagsinput();
-
-            $('.typeahead').typeahead({
+            $('#tagFilter').tagsinput({
+              typeahead: {
+                source: ['Amsterdam', 'Washington', 'Sydney', 'Beijing', 'Cairo']
+              }
+            });
+            $('#receipients').typeahead({
               highlight: true
             },
             {
