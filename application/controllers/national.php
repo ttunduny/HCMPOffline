@@ -841,6 +841,7 @@ where
     f_i.facility_code = f.facility_code
         and f.district = d1.id
         and d1.county = c.id
+        and f_i.`qty_issued`>0
         and f_i.created_at between '$from' and '$to'
 $and_data
 group by d.id , f.facility_code
