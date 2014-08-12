@@ -10,7 +10,7 @@ class national extends MY_Controller
     {
         parent::__construct();
         $this -> load -> helper(array('form', 'url','file'));
-        $this -> load -> library(array('form_validation','PHPExcel/PHPExcel'));
+       // $this -> load -> library(array('form_validation','PHPExcel/PHPExcel'));
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
     }
     public function index() {
@@ -43,13 +43,13 @@ class national extends MY_Controller
         $data['maps'] = json_encode($finalMap);
         $data['counties']=$county_name;
 		
-        $this -> load -> view("national/national_v.php",$data);
+        $this -> load -> view("national/national_v",$data);
     } 
     public function search()
     {
     	$data['title'] = "National Dashboard";
         $data['c_data'] = Commodities::get_all_2();
-        $this -> load -> view("national/national_search_v.php",$data);
+        $this -> load -> view("national/national_search_v",$data);
     }
     public function create_json(){
         $facility = $this->db->get('counties');
@@ -123,7 +123,7 @@ class national extends MY_Controller
       $and
       ");
       
-      echo count($q);
+        echo count($q);
         else:
         $excel_data = array('doc_creator' => "HCMP", 'doc_title' => "facilities rolled out $title", 'file_name' => "facilities rolled out $title");
         $row_data = array(); 
@@ -156,7 +156,7 @@ class national extends MY_Controller
         endforeach;
         $excel_data['row_data'] = $row_data;
 
-        $this  -> create_excel($excel_data);
+        $this->hcmp_functions->create_excel($excel_data);
 endif;
     }  
     
@@ -226,7 +226,7 @@ endif;
         endforeach;
         $excel_data['row_data'] = $row_data;
 
-        $this  -> create_excel($excel_data);
+        $this->hcmp_functions->create_excel($excel_data);
 endif;
     }  
     
@@ -354,7 +354,7 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			        f_s.expiry_date < NOW()
 			            and d.id = f_s.commodity_id
 			            and year(f_s.expiry_date) = $year
-			            AND f_s.status = (1 or 2)
+			            AND  (f_s.status =1 or f_s.status =2)
 			    GROUP BY d.id , f_s.facility_code having total > 1) 
 		    temp ON temp.facility_code = f.facility_code
 				where
@@ -383,7 +383,7 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 
         $data = array();
         $data['graph_id']='dem_graph_';
-        $data['high_graph']= $this->create_high_chart_graph($graph_data);
+        $data['high_graph']= $this->hcmp_functions->create_high_chart_graph($graph_data);
         
        // print_r($data['high_graph']);
 		//exit;
@@ -405,15 +405,17 @@ temp.packs
 from districts d1, counties c, facilities f left join
      (
 select  ROUND( SUM(
-f_s.balance  / d.total_units ) * d.unit_cost, 1) AS total, ROUND( SUM( f_s.balance  / d.total_units ), 1) as packs,SUM( f_s.balance) as units,
-f_s.facility_code,d.id,d.drug_name, f_s.manufacture,
+f_s.current_balance  / d.total_commodity_units ) * d.unit_cost, 1) AS total,
+ ROUND( SUM( f_s.current_balance  / d.total_commodity_units  ), 1) as packs,
+SUM( f_s.current_balance) as units,
+f_s.facility_code,d.id,d.commodity_name as drug_name, f_s.manufacture,
 f_s.expiry_date,d.unit_size,d.unit_cost
 
- from facility_stock f_s, drug d
+ from facility_stocks f_s, commodities d
 where f_s.expiry_date < NOW( ) 
-and d.id=f_s.kemsa_code
+and d.id=f_s.commodity_id
 and year(f_s.expiry_date) !=1970
-AND f_s.status =(1 or 2)
+AND (f_s.status =1 or f_s.status =2)
 GROUP BY d.id,f_s.facility_code having total >1
 
      ) temp
@@ -445,7 +447,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
         endforeach;
         $excel_data['row_data'] = $row_data;
 
-        $this  -> create_excel($excel_data);
+        $this->hcmp_functions->create_excel($excel_data);
 endif;
      
     }
@@ -479,7 +481,7 @@ endif;
 		    $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
 		    $title=$facility_code_['facility_name'];
 	    else:
-	    	$title="National";
+	    	$title="Nationally";
 	    endif;
 
      $and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
@@ -530,7 +532,7 @@ endif;
         $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
         $data = array();
        
-       $data['high_graph']= $this->create_high_chart_graph($graph_data);
+       $data['high_graph']= $this->hcmp_functions->create_high_chart_graph($graph_data);
        $data['graph_id']='dem_graph_1';
         return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
         
@@ -553,15 +555,17 @@ temp.packs
 from districts d1, counties c, facilities f left join
      (
 select  ROUND( SUM(
-f_s.balance  / d.total_units ) * d.unit_cost, 1) AS total, ROUND( SUM( f_s.balance  / d.total_units ), 1) as packs,SUM( f_s.balance) as units,
-f_s.facility_code,d.id,d.drug_name, f_s.manufacture,
+f_s.current_balance  / d.total_commodity_units ) * d.unit_cost, 1) AS total,
+ ROUND( SUM( f_s.current_balance  / d.total_commodity_units  ), 1) as packs,
+SUM( f_s.current_balance) as units,
+f_s.facility_code,d.id,d.commodity_name as drug_name, f_s.manufacture,
 f_s.expiry_date,d.unit_size,d.unit_cost
 
- from facility_stock f_s, drug d
+ from facility_stocks f_s, commodities d
 where f_s.expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and  DATE_ADD(CURDATE(), INTERVAL $interval MONTH)
-and d.id=f_s.kemsa_code
+and d.id=f_s.commodity_id
 and year(f_s.expiry_date) !=1970
-AND f_s.status =(1 or 2)
+AND (f_s.status =1 or f_s.status =2)
 GROUP BY d.id,f_s.facility_code having total >1
 
      ) temp
@@ -573,7 +577,8 @@ $and_data
 group by temp.id,f.facility_code
 order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
         ");
-        array_push($row_data, array("The below commodities will expire in the next $interval months from (current date) $title  "));
+        $date=date( "d M y");
+        array_push($row_data, array("The below commodities will expire in the next $interval months from $date $title  "));
         foreach ($facility_stock_data as $facility_stock_data_item) :
         array_push($row_data, array($facility_stock_data_item["drug_name"],
         $facility_stock_data_item["unit_size"],
@@ -593,7 +598,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
         endforeach;
         $excel_data['row_data'] = $row_data;
 
-        $this  -> create_excel($excel_data);
+        $this->hcmp_functions->create_excel($excel_data);
 endif;
      
     }
@@ -631,14 +636,14 @@ endif;
 		    $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code): null;
 		    $title=$facility_code_['facility_name'];
 	    else:
-	    	$title="National";
+	    	$title="Nationally";
 	    endif;
    // echo .$commodity_id ; exit;
     if( $graph_type!="excel"):
     $commodity_array = Doctrine_Manager::getInstance()
         ->getCurrentConnection()
         ->fetchAll("select 
-		    d.commodity_name,
+		    d.commodity_name as drug_name,
 		    round(avg(IFNULL(f_s.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),
 		            1) as total
 			from
@@ -669,7 +674,7 @@ endif;
 
         
         foreach ($commodity_array as $data) :
-        $series_data = array_merge($series_data, array($data["drug_name"] => $data['total']));
+        $series_data = array_merge($series_data, array($data["drug_name"] => (int)$data['total']));
         $category_data = array_merge($category_data, array($data["drug_name"]));
         endforeach;
  
@@ -683,7 +688,7 @@ endif;
         $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
         $data = array();
        
-       $data['high_graph']= $this->create_high_chart_graph($graph_data);
+       $data['high_graph']= $this->hcmp_functions->create_high_chart_graph($graph_data);//
        $data['graph_id']='dem_graph_mos';
        return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
        //
@@ -697,7 +702,7 @@ endif;
         $facility_stock_data = Doctrine_Manager::getInstance()
         ->getCurrentConnection()
         ->fetchAll("select 
-   c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.commodity_name,
+   c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.commodity_name as drug_name,
 case 
   when (ifnull( round(avg(IFNULL(f_s.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),
             1) ,0)) >0 then (ifnull( round(avg(IFNULL(f_s.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),
@@ -706,7 +711,7 @@ from
     facilities f,
     districts d1,
     counties c,
-    facility_stock f_s,
+    facility_stocks f_s,
     commodities d
         left join
     facility_monthly_stock f_m_s ON f_m_s.`commodity_id` = d.id
@@ -733,7 +738,7 @@ order by c.county asc,d1.district asc
         endforeach;
         $excel_data['row_data'] = $row_data;
 
-        $this  -> create_excel($excel_data);
+        $this->hcmp_functions->create_excel($excel_data);
 endif;
 
         
@@ -774,18 +779,19 @@ endif;
 	    $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
 	    $title=$facility_code_['facility_name'];
     else:
-    	$title="National";
+    	$title="Nationally";
     endif;
     if($graph_type!="excel"):
     // echo    .$to; exit;
       $commodity_array = Doctrine_Manager::getInstance()
         ->getCurrentConnection()
-        ->fetchAll("select d.commodity_name, 
-		 round(avg(IFNULL(f_i.`qty_issued`,0) / IFNULL(d.total_commodity_units,0)),1) as total
+        ->fetchAll("select d.commodity_name as drug_name,  
+		 round(avg(IFNULL(ABS(f_i.`qty_issued`),0) / IFNULL(d.total_commodity_units,0)),1) as total
 		 from facilities f,  districts d1, counties c, commodities d left join facility_issues f_i on f_i.`commodity_id`=d.id 
 		where f_i.facility_code = f.facility_code 
 		and f.district=d1.id 
 		and d1.county=c.id 
+		and f_i.`qty_issued`>0
 		and f_i.created_at between '$from' and '$to'
 		$and_data
 		group by d.id
@@ -800,7 +806,7 @@ endif;
 
         
         foreach ($commodity_array as $data) :
-        $series_data = array_merge($series_data, array($data["drug_name"] => $data['total']));
+        $series_data = array_merge($series_data, array($data["drug_name"] => (int)$data['total']));
         $category_data = array_merge($category_data, array($data["drug_name"]));
         endforeach;
  
@@ -814,7 +820,7 @@ endif;
         $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
         $data = array();
        
-       $data['high_graph']= $this->create_high_chart_graph($graph_data);
+       $data['high_graph']= $this->hcmp_functions->create_high_chart_graph($graph_data);
        $data['graph_id']='dem_graph_consuption';
        return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
        else:
@@ -827,23 +833,22 @@ endif;
         $facility_stock_data = Doctrine_Manager::getInstance()
         ->getCurrentConnection()
         ->fetchAll("select 
-    c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.drug_name,
-    round(avg(IFNULL(f_i.`qty_issued`, 0) / IFNULL(d.total_units, 0)),
+    c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.commodity_name as drug_name,
+    round(avg(IFNULL(ABS(f_i.`qty_issued`), 0) / IFNULL(d.total_commodity_units, 0)),
             1) as total
 from
     facilities f,
     districts d1,
     counties c,
-    drug d
-        left join
-    facility_issues f_i ON f_i.`kemsa_code` = d.id
-where
-    f_i.facility_code = f.facility_code
-        and f.district = d1.id
-        and d1.county = c.id
+    commodities d
+left join facility_issues f_i on f_i.`commodity_id`=d.id 
+        where f_i.facility_code = f.facility_code 
+        and f.district=d1.id 
+        and d1.county=c.id 
+        and f_i.`qty_issued`>0
         and f_i.created_at between '$from' and '$to'
-$and_data
-group by d.id , f.facility_code
+        $and_data
+        group by d.id , f.facility_code
 order by c.county asc , d1.district asc
         ");
         
@@ -858,7 +863,7 @@ order by c.county asc , d1.district asc
         endforeach;
         $excel_data['row_data'] = $row_data;
 
-        $this  -> create_excel($excel_data);
+        $this->hcmp_functions->create_excel($excel_data);
 endif;
 
         
@@ -913,7 +918,7 @@ group by month(o.`order_date`)
     $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
     $title=$facility_code_['facility_name'];
     else:
-    $title="National";
+    $title="Nationally";
     endif;
         
         foreach ($commodity_array as $data) :
@@ -931,7 +936,7 @@ group by month(o.`order_date`)
         $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
         $data = array();
        
-       $data['high_graph']= $this->create_high_chart_graph($graph_data);
+       $data['high_graph']= $this->hcmp_functions->create_high_chart_graph($graph_data);
        $data['graph_id']='dem_graph_order';
         return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
        else:
@@ -976,7 +981,7 @@ group by month(o.`order_date`)
         endforeach;
         $excel_data['row_data'] = $row_data;
 
-        $this  -> create_excel($excel_data);
+        $this->hcmp_functions->create_excel($excel_data);
 endif;
         
     }
@@ -1065,7 +1070,7 @@ where
         endforeach;
         $excel_data['row_data'] = $row_data;
 
-        $this  -> create_excel($excel_data);
+        $this->hcmp_functions->create_excel($excel_data);
 endif;
     }
    public function get_time($days){
@@ -1115,118 +1120,6 @@ endif;
       return $time;
    }
     
-  //// /////HCMP Create high chart graph
-  public function create_high_chart_graph($graph_data=null)
-  {
-    $high_chart='';
-    if(isset($graph_data)):
-        $graph_id=$graph_data['graph_id'];
-        $graph_title=$graph_data['graph_title'];
-        $graph_type=$graph_data['graph_type'];
-        $stacking=isset($graph_data['stacking']) ? $graph_data['stacking'] : null;
-        $graph_categories=json_encode($graph_data['graph_categories']);
-        //echo json_encode($graph_data['graph_categories']);
-        $graph_yaxis_title=$graph_data['graph_yaxis_title'];
-        $graph_series_data=$graph_data['series_data'];
-        //$new_array=$graph_series_data;
-        //return ($graph_series_data[0]); key       
-        //$size_of_graph=sizeof($graph_series_data[key($graph_series_data)])*200;
-        //set up the graph here
-        $high_chart .="
-        $('#$graph_id').highcharts({
-            
-            chart: { zoomType:'x', type: '$graph_type'},
-            credits: { enabled:false},
-            title: {text: '$graph_title'},
-            yAxis: { min: 0, title: {text: '$graph_yaxis_title' }},
-            subtitle: {text: 'Source: HCMP', x: -20 },
-            xAxis: { categories: $graph_categories },
-            tooltip: { crosshairs: [true,true] },
-               plotOptions: {
-                column: {
-                    stacking: '$stacking',
-                    dataLabels: {
-                        enabled: true,
-                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
-                    }
-                }
-            },
-            series: [";          
-            foreach($graph_series_data as $key=>$raw_data):
-                    $temp_array=array();
-                    $high_chart .="{ name: '$key', data:";                   
-                      foreach($raw_data as $key_data):
-                        $temp_array=array_merge($temp_array,array((int)$key_data));
-                        endforeach;
-                      $high_chart .= json_encode($temp_array)."},";               
-                   endforeach;
-         $high_chart .="]  })";
-
-    endif;
-    return $high_chart;     
-  }
-  /**************************************** creating excel sheet for the system *************************/
-    public function create_excel($excel_data=NUll) {
-        
- //check if the excel data has been set if not exit the excel generation    
-     
-if(count($excel_data)>0):
-        
-        $objPHPExcel = new PHPExcel();
-        $objPHPExcel -> getProperties() -> setCreator("HCMP");
-        $objPHPExcel -> getProperties() -> setLastModifiedBy($excel_data['doc_creator']);
-        $objPHPExcel -> getProperties() -> setTitle($excel_data['doc_title']);
-        $objPHPExcel -> getProperties() -> setSubject($excel_data['doc_title']);
-        $objPHPExcel -> getProperties() -> setDescription("");
-
-        $objPHPExcel -> setActiveSheetIndex(0);
-
-        $rowExec = 1;
-
-        //Looping through the cells
-        $column = 0;
-
-        foreach ($excel_data['column_data'] as $column_data) {
-            $objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $column_data);
-            $objPHPExcel -> getActiveSheet() -> getColumnDimension(PHPExcel_Cell::stringFromColumnIndex($column)) -> setAutoSize(true);
-            //$objPHPExcel->getActiveSheet()->getStyle($column, $rowExec)->getFont()->setBold(true);
-            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($column, $rowExec)->getFont()->setBold(true);
-            $column++;
-        }       
-        $rowExec = 2;
-                
-        foreach ($excel_data['row_data'] as $row_data) {
-        $column = 0;
-        foreach($row_data as $cell){
-         //Looping through the cells per facility
-        $objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $cell);
-                
-        $column++;  
-         }
-        $rowExec++;
-        }
-
-      //  $objPHPExcel -> getActiveSheet() -> setTitle('Simple');
-
-        // Save Excel 2007 file
-        //echo date('H:i:s') . " Write to Excel2007 format\n";
-        $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
-        $date=date('d-m-y');
-        // We'll be outputting an excel file
-        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-        header("Cache-Control: no-store, no-cache, must-revalidate");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Pragma: no-cache");
-        // It will be called file.xls
-        header("Content-Disposition: attachment; filename=".$excel_data['file_name'].'-date-'.$date.".xlsx");
-
-        // Write file to the browser
-        $objWriter -> save('php://output');
-       $objPHPExcel -> disconnectWorksheets();
-       unset($objPHPExcel);
-        // Echo done
-endif;
-}
  public function demo_accounts(){
  	       $facility_user_data = Doctrine_Manager::getInstance()
         ->getCurrentConnection()
@@ -1278,7 +1171,7 @@ order by user.id asc
 		$data['county'] = Counties::getAll();
 		$data['commodities'] = Commodities::get_all();
 		$data['sub_county'] = Districts::getAll();
-	 	$this -> load -> view('national/reports_v', $data);
+	 	$this -> load -> view('national/reports_home', $data);
 		
 	 }
 	 public function facilities_json(){

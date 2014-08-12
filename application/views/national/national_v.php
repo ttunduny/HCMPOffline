@@ -112,34 +112,43 @@ border-color: #e7e7e7;
 </style>
   </head> 
 <body style="padding-top: 0;">
-    <div id="header_container" class="" id="top-panel"  >
-   <div class="banner_logo">
-            <a class="logo" href="<?php echo base_url();?>" ></a> 
-        </div>
-	<div id="logo_text">
-                    <span style="display: block; font-weight: bold; font-size: 14px; margin:2px;">Ministry of Health</span>
-                    <span style="display: block; font-size: 12px;">Health Commodities Management Platform(HCMP)</span>  
-                </div>
-      
- <div id="main_menu"> 
+     
+ 
+	<div class="container-fluid navbar-default navbar-fixed-top" role="navigation" style="background-color:white">
+        <div class="container-fluid">
+            <div class="navbar-header" id="st-trigger-effects">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand " href="<?php echo base_url().'national';?>" >HCMP</a>
 
-<div class="navbar-collapse collapse" id="navigate">
-<ul>
-    <li class="<?php
-if (@@$current == "national") {echo "active";
-}
-?>"><a  href="<?php echo base_url(); ?>national">National </a></li>
-    <li class="<?php
-if (@@$current == "national") {echo "active";
-}
-?>"><a  href="<?php echo base_url(); ?>national/search">Search</a></li>
-</ul>
-</div>
-</div>
-<div style="font-size:0.75em; float:right; padding: 0.5em "><?php  echo date('l, dS F Y'); ?>&nbsp;<div id="clock" style="font-size:0.75em; float:right; " ></div>
-     </div>
-    
-</div>
+        </div>
+        <div class="navbar-header" >
+  
+            <a href="<?php echo base_url().'national';?>">   
+            <img style="display:inline-block;"  src="<?php echo base_url();?>assets/img/coat_of_arms_dash.png" class="img-responsive " alt="Responsive image" id="logo" ></a>
+            
+        </div>
+        
+        <div class="collapse navbar-collapse navbar-right">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a href="<?php echo base_url().'national';?>">Home</a></li>
+            <li class=""><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>
+            <li class=""><a href="<?php echo base_url().'national/search';?>">Search</a></li>
+            <li class=""><a href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-user"></span>Log in</a></li>
+            
+                    
+          </ul>
+          
+                                        
+        </div><!--/.nav-collapse -->
+
+      </div>
+    </div>
+
 <div style="margin-left: 2%;margin-right: 2%;margin-top: 0%;" class="inner_wrapper"> 
  <div class="row" style="margin-top: 0%;">
      <div class="col-md-4" style="margin-top: 6.5%;"> <!-- map -->
