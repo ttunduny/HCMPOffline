@@ -1,0 +1,951 @@
+<?php
+
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
+
+include_once ('home_controller.php');
+
+class Eid_Management extends Home_controller {
+
+    function __construct() {
+        parent::__construct();
+    }
+	
+	function index(){
+		$data = array();
+		$data['labs'] = $this ->getLabs();
+		$last_period =strtoupper(date('M  Y',strtotime("-1 month")));
+		$data['last_period'] = $last_period;
+		$data['lab_submissions'] = $this ->getLabSubmissions();
+		$data['banner_text'] = 'EID / VL Home';
+        $data['content_view'] = 'eid/home_v';
+        $data['title'] = 'eid/home_v';
+        $this->load->view("eid/template", $data);
+		
+		
+	}
+	function home(){
+		$data = array();
+		$data['labs'] = $this ->getLabs();
+		$last_period =strtoupper(date('M  Y',strtotime("-1 month")));
+		$data['last_period'] = $last_period;
+		$data['lab_submissions'] = $this ->getLabSubmissions();
+		$this ->load ->view('eid/home_v',$data);
+	}
+	
+	function getLabs(){
+		$query = $this ->db ->query("SELECT id,labname, name FROM `eid_labs`");
+		$results = $query ->result_array();
+		return $results;
+	}
+	
+	function GetLab($lab){
+		$labquery=$this ->db ->query("SELECT name FROM `eid_labs` where ID='$lab' "); 
+		$dd=$labquery ->result_array();
+		$labname=$dd[0]['name'];
+		return $labname;
+	}
+	
+	function menus($type ="submission_tracking"){
+		$data = array();
+		
+		if($type=="submission_report"){
+			$data['content'] ="eid/".$type;
+			//Max year 
+			$sql = "SELECT MAX(t.yearofrecordset) as max_year
+				FROM
+				(SELECT yearofrecordset FROM `eid_abbottprocurement` 
+						UNION SELECT yearofrecordset FROM `eid_taqmanprocurement` 
+				) AS t";
+			$query = $this ->db ->query($sql);
+			$result = $query ->result_array();
+			$max_year = $result[0]['max_year'];
+			//Min year
+			$sql = "SELECT MIN(t.yearofrecordset) as min_year
+				FROM
+				(SELECT yearofrecordset FROM `eid_abbottprocurement` 
+						UNION SELECT yearofrecordset FROM `eid_taqmanprocurement` 
+				) AS t";
+				$query = $this ->db ->query($sql);
+			$result = $query ->result_array();
+			$min_year = $result[0]['min_year'];
+			
+			$years = range ($max_year, $min_year); 
+			
+			//List of labs
+			$sql = "SELECT id,name FROM `eid_labs`";
+			$query = $this ->db ->query($sql);
+			$result = $query ->result_array();
+			$data["labs"] = $result;
+			$data['years'] = $years;
+		}
+		else if($type=="submission_tracking"){
+			//$data = $this ->submission_tracking($type);
+		}
+		$this ->load ->view("eid/".$type,$data);
+		
+	}
+	
+	function submission_tracking(){
+		$data = array();
+		$color = array(
+           'low' => 'FF654F', //red
+           'moderate' =>'F6BD0F', //orange
+           'done' => '8BBA00' //Green
+      	);
+		
+		$color_submission = '';
+        $color_approval = '';
+        $color_distribution = '';
+        $percentDone_submission = 7;
+		$percentDone_approval = 0;
+		$percentDone_Distribution = 0;
+		
+		for($i=1;$i<8;$i++){
+    	    $lab_submitted = $this->lab_submission($i);
+		    if($lab_submitted['kisumu_kit_imgtype'] === 'red'){
+		     $percentDone_submission --;
+		    }else{
+		        if($lab_submitted['approved'] === '1'){
+		            $percentDone_approval++;
+		        }
+		    }
+		}
+		
+		$data['percentDone_submission'] = ceil($percentDone_submission*100/7);
+		
+		if ($percentDone_submission < 70 ){
+    		$color_submission = $color['low'];
+		}elseif ($percentDone_submission > 70  && $percentDone_submission < 99 ) {
+		     $color_submission = $color['moderate'];
+		}else {
+		     $color_submission = $color['done'];
+		}
+		
+		
+		
+		$percentDone_approval = ceil($percentDone_approval*100/7);
+
+		if ($percentDone_approval < 70 ){
+		    $color_approval = $color['low'];
+		}elseif ($percentDone_approval > 70  && $percentDone_approval < 99 ) {
+		     $color_approval = $color['moderate'];
+		}else {
+		     $color_approval = $color['done'];
+		}
+		
+		$data['color_submission'] = $color_submission;
+		$data['color_approval'] = $color_approval;
+		$data['color_distribution'] = $color_distribution;
+		$data['max_submission'] = '10';
+		$data['max_approval'] = '18';
+       	$data['percentage_submission'] = 'Report Submission ('.$percentDone_submission."% )";
+       	$data['percentage_approval'] = 'Report Approval ('.$percentDone_approval."%)";
+       	$data['percentage_distribution'] = 'Report Distribution ('. ceil($percentDone_Distribution/7)."% )";
+		$this ->load ->view("eid/submission_tracking_chart",$data);
+	}
+
+	function consumption_trend($table="eid_taqmanprocurement",$testtype="1"){
+		$data = array();
+		$currentyear = date('Y');
+		$data['currentyear'] = $currentyear;
+		$result = $this ->db ->query("select id,name,labname from `eid_labs`");
+		$results  = $result ->result_array();
+		$dataset = "";
+		foreach ($results as $key => $value) {
+			$id = $value['id'];
+			$labname = $value['labname'];
+			$name = $value['name'];
+			$dataset .= "<dataset seriesName='$labname'>";
+			$startmonth =  1; 
+			$endmonth =  12; 
+			$testsdone = 0;
+			for ( $startmonth;  $startmonth<=$endmonth;  $startmonth++){ 	
+				//select the tests done values from the procurement table
+				$openingquery= $this ->db ->query("SELECT testsdone as total_test from `$table` where monthofrecordset = '$startmonth' and testtype = '$testtype' and lab='$id' and yearofrecordset='$currentyear'"); 
+				$opening = $openingquery ->result_array();
+				$testsdone = '';
+				foreach ($opening as $key => $value) {
+					$testsdone= $value['total_test'];
+					
+				}
+				
+				$dataset .="<set value='$testsdone'/>";
+				
+			}//end for
+			$dataset .="</dataset>";
+		}
+		
+		$data['dataset'] = $dataset;
+		$this ->load ->view("eid/consumptiontrend",$data);
+		
+	}
+	
+	
+	function lab_submission ($lab_id){
+		$month = date('m');
+		$lastmonth = $month - 1;
+		if ($lastmonth == '0'){
+			$lastmonth = 12;
+			$year = date('Y') - 1;
+		}else if ($lastmonth != '0'){
+			$year = date('Y');
+		}
+		
+		
+		if 		($month == 1) 	{ $monthname = 'JAN'; $lastmonthname = 'DEC';}
+		else if ($month == 2) 	{ $monthname = 'FEB'; $lastmonthname = 'JAN';}
+		else if ($month == 3) 	{ $monthname = 'MAR'; $lastmonthname = 'FEB';}
+		else if ($month == 4) 	{ $monthname = 'APR'; $lastmonthname = 'MAR';}
+		else if ($month == 5) 	{ $monthname = 'MAY'; $lastmonthname = 'APR';}
+		else if ($month == 6) 	{ $monthname = 'JUN'; $lastmonthname = 'MAY';}
+		else if ($month == 7) 	{ $monthname = 'JUL'; $lastmonthname = 'JUN';}
+		else if ($month == 8) 	{ $monthname = 'AUG'; $lastmonthname = 'JUL';}
+		else if ($month == 9) 	{ $monthname = 'SEP'; $lastmonthname = 'AUG';}
+		else if ($month == 10) 	{ $monthname = 'OCT'; $lastmonthname = 'SEP';}
+		else if ($month == 11) 	{ $monthname = 'NOV'; $lastmonthname = 'OCT';}
+		else if ($month == 12) 	{ $monthname = 'DEC'; $lastmonthname = 'NOV';}
+		
+		$lab_detail = $this -> lab_type($lab_id);
+		$cpplatabb = $lab_detail['abb'];
+		$cpplattaq = $lab_detail['taq'];
+		$db = 'eid_abbottprocurement';
+		$kisumu_showview = '';
+		$approved = '';
+		$kisumu_kit_imgtype = 'red';
+		
+			if ( ($cpplatabb > 0) && ($cpplattaq > 0) ){//..lab has both abbott and taqman
+				//.taqman
+				$lab_detail_submission = $this ->lab_both_taqman_abbot_report_submission($lab_id, $year, $lastmonth);
+                $ctchecktaq = $lab_detail_submission['taq'];
+                $ctcheckabb = $lab_detail_submission['abb'];
+                $ctkit = $lab_detail_submission['ctkit'];
+		                
+				if ($ctkit){//..both have been submitted then show green
+					$kisumu_kit_imgtype = 'green';
+					
+					if ( ($ctchecktaq == 0) and ($ctcheckabb == 0) ){ //..if both taqman & abbott have been received at SCMS / KEMSA
+					    $kisumu_showview = '<small><u><a class="btn_approve" href="'.base_url().'eid_management/consumption/2/'.$lab_id.'/'.$lastmonth.'/'.$year.'">Approve</a></u></small>';
+						$approved = '0';
+						
+					}else if ( ($ctchecktaq > 0) and ($ctcheckabb > 0) ){ //..if both taqman & abbott have been received at SCMS / KEMSA
+						$approved = '1';
+                        $kisumu_showview = '<br><small>Approved</small>';
+                    }         
+				}else{//..show red
+					$kisumu_kit_imgtype = 'red';
+				}
+			
+			}else {
+				if(($cpplatabb == 0) && ($cpplattaq > 0)){
+					$db = "eid_taqmanprocurement";
+				}else{
+					$db = "eid_abbottprocurement";
+				}
+			}
+		        
+			
+			//.taqman or abbot
+            $sql = "SELECT COUNT(taq.ID) as 'ctaqsubmission',taq.received as taqr  from `$db` taq where
+			taq.monthofrecordset='$lastmonth' and taq.yearofrecordset='$year' and taq.lab='$lab_id'";
+			
+            $ctquery= $this -> db -> query($sql); 
+			$ctss = $ctquery ->result_array();
+	             
+			$ctkit = $ctss[0]['ctaqsubmission'];
+			$ctchecktaq = $ctss[0]['taqr'];
+	                
+				
+			if ($ctkit > 0){//..both have been submitted then show green
+				
+				$kisumu_kit_imgtype = 'green';
+				
+				if  ($ctchecktaq == 0){ //..if both taqman & abbott have been received at SCMS / KEMSA
+				    $kisumu_showview = '<small><img src="'.base_url().'assets/img//arrow.gif" alt="..">&nbsp;<u><a class="btn_approve" href="'.base_url().'eid_management/consumption/2/'.$lab_id.'/'.$lastmonth.'/'.$year.'">Approve</a></u></small>';
+					$approved = '0';
+				}else if ($ctchecktaq > 0){  //..if both taqman & abbott have been received at SCMS / KEMSA     
+					$kisumu_showview = '<br><small>Approved</small>';
+	                $approved = '1';
+				}else{//..show red
+					$kisumu_kit_imgtype = 'red';
+	            }
+	        }
+	        
+	        // echo $kisumu_showview;
+	        $display = array(
+	            'show_view' => $kisumu_showview,
+	            'kisumu_kit_imgtype' => $kisumu_kit_imgtype,
+	            'approved' => $approved
+	        );
+	        
+	        //print_r($display);
+	        return $display;
+	}
+	
+	function consumption($left='',$lab='',$lastmonth='',$year=''){
+		$data = array();
+		$approve_left		= $left; 
+		$approve_lab		= $lab;
+		$labname 			= $this->GetLab($approve_lab);
+		$approve_lastmonth	= $lastmonth;
+		$approve_year		= $year;
+		$formaction = "";
+		
+		if 		($approve_lastmonth == 1) 	{ $monthname = 'JAN'; $lastmonthname = 'DEC';}
+		else if ($approve_lastmonth == 2) 	{ $monthname = 'FEB'; $lastmonthname = 'JAN';}
+		else if ($approve_lastmonth == 3) 	{ $monthname = 'MAR'; $lastmonthname = 'FEB';}
+		else if ($approve_lastmonth == 4) 	{ $monthname = 'APR'; $lastmonthname = 'MAR';}
+		else if ($approve_lastmonth == 5) 	{ $monthname = 'MAY'; $lastmonthname = 'APR';}
+		else if ($approve_lastmonth == 6) 	{ $monthname = 'JUN'; $lastmonthname = 'MAY';}
+		else if ($approve_lastmonth == 7) 	{ $monthname = 'JUL'; $lastmonthname = 'JUN';}
+		else if ($approve_lastmonth == 8) 	{ $monthname = 'AUG'; $lastmonthname = 'JUL';}
+		else if ($approve_lastmonth == 9) 	{ $monthname = 'SEP'; $lastmonthname = 'AUG';}
+		else if ($approve_lastmonth == 10) 	{ $monthname = 'OCT'; $lastmonthname = 'SEP';}
+		else if ($approve_lastmonth == 11) 	{ $monthname = 'NOV'; $lastmonthname = 'OCT';}
+		else if ($approve_lastmonth == 12) 	{ $monthname = 'DEC'; $lastmonthname = 'NOV';}
+		
+		if 		($approve_left == 2) 						 { $left = 'TAQMAN & ABBOTT'; $formaction = 'eid_management/approve/approvetaqmanreport';}
+		else if (($approve_left == 1) and ($approve_plat = 1)) { $left = 'TAQMAN';  $formaction = 'eid_management/approve/approvetaqmanreport';}
+		else if (($approve_left == 1) and ($approve_plat = 2)) { $left = 'ABBOTT';  $formaction = 'eid_management/approve/approveabbottreport';}
+		
+		$data['formaction'] = $formaction;
+		$data['approve_left'] = $approve_left;
+		$data['labname'] = $labname;
+		$data['left'] = $left;
+		$data['monthname'] = $monthname;
+		$data['approve_lab'] = $approve_lab;
+		$data['approve_lastmonth'] = $approve_lastmonth;
+		$data['approve_year'] = $approve_year;
+		
+		$this ->load ->view("eid/approval_form",$data);
+	}
+	
+	function getLabSubmissions(){
+		$labs = $this ->getLabs();
+		$data = '<li class="divider"></li>';
+		foreach ($labs as $key => $value) {
+			$id = $value['id'];
+			$lab = $this ->lab_submission($id);
+			$data .='<li class="side_menu">
+						<div class="row-fluid">
+							<div class="span2">'.$lab['show_view'].'</div>
+							<div class="span2"><img src="'.base_url().'assets/img//'.$lab['kisumu_kit_imgtype'].'.gif" width="20" /></div>
+							<div class="span8 submission_title" title="'.$value['name'].'">'.$value['labname'].'</div>
+						</div>
+					</li>
+					<li class="divider"></li>';
+		}
+		return $data;
+	}
+			
+			
+	
+	function displayconsumption(){
+		
+		$data = array();
+		$lab  = $this ->input ->post("testinglab");
+		$data['labname'] = $this ->input ->post("lab_name");
+		$platform 	= $this ->input ->post("platform");
+		$lastmonth = $this ->input ->post("month");
+		$monthname = date("M", mktime(0, 0, 0, $lastmonth));
+		
+		$year = $this ->input ->post("monthyear");
+		$report_text = $this ->input ->post("report_text");
+		$data['report_text'] = $report_text;
+		$data['monthname'] = $monthname;
+		$data['year'] = $year;
+		$data['lastmonth'] = $lastmonth;
+		$data['lab'] = $lab;
+		
+		$qualkitused = 0;
+		$vqualkitused = 0;
+				
+		$previousmonth = date('n', strtotime(date($year.'-'.$lastmonth, mktime()) . " - 1 months"));//..eg if current month = May; submission should be for Apr; opening balance Apr should be end bal Mar
+		$pyear = date('Y', strtotime(date($year.'-'.$lastmonth, mktime()) . " - 1 months"));
+		
+		//TAQMAN
+		if($platform==1){
+			$openingqualkit		=0;
+			$openingspexagent	=0;
+			$openingampinput	=0;
+			$openingampflapless	=0;
+			$openingampktips	=0;
+			$openingampwash		=0;
+			$openingktubes		=0;
+			$openingconsumables	=0;
+			 
+			$openingquery=$this -> db ->query("SELECT endingqualkit, endingspexagent, endingampinput, endingampflapless, endingampktips, endingampwash, endingktubes, endingconsumables from `eid_taqmanprocurement` where monthofrecordset = '$previousmonth' and testtype = 1 and lab='$lab' and yearofrecordset='$pyear'") ; 
+			$opening = $openingquery ->result_array(); 
+			
+			if(count($opening)>0){
+				$openingqualkit=$opening[0]['endingqualkit'];
+				$openingspexagent=$opening[0]['endingspexagent'];
+				$openingampinput=$opening[0]['endingampinput'];
+				$openingampflapless=$opening[0]['endingampflapless'];
+				$openingampktips=$opening[0]['endingampktips'];
+				$openingampwash=$opening[0]['endingampwash'];
+				$openingktubes=$opening[0]['endingktubes'];
+				$openingconsumables=$opening[0]['endingconsumables'];
+			}
+			
+			
+			$vopeningqualkit	=0;
+			$vopeningspexagent	=0;
+			$vopeningampinput	=0;
+			$vopeningampflapless=0;
+			$vopeningampktips	=0;
+			$vopeningampwash	=0;
+			$vopeningktubes		=0;
+			$vopeningconsumables=0;
+			
+			//..VIRAL LOAD
+			$openingquery=$this -> db ->query("SELECT endingqualkit as a, endingspexagent as b, endingampinput as c, endingampflapless as d, endingampktips as e, endingampwash as f, endingktubes as g, endingconsumables as h from `eid_taqmanprocurement` where monthofrecordset = '$previousmonth' and testtype = 2 and lab='$lab' and yearofrecordset='$pyear'"); 
+			$opening = $openingquery ->result_array();
+			
+			if(count($opening)>0){
+				$vopeningqualkit=$opening[0]['a'];
+				$vopeningspexagent=$opening[0]['b'];
+				$vopeningampinput=$opening[0]['c'];
+				$vopeningampflapless=$opening[0]['d'];
+				$vopeningampktips=$opening[0]['e'];
+				$vopeningampwash=$opening[0]['f'];
+				$vopeningktubes=$opening[0]['g'];
+				$vopeningconsumables=$opening[0]['h'];
+			}
+			
+			
+			//..end -> get the opening balances to display
+	
+			//..get the actual items for the tables
+			//..EID ITEMS
+			$taqman_info_a			=$this -> db ->query("select testsdone, endingqualkit, endingspexagent, endingampinput, endingampflapless, endingampktips, endingampwash, endingktubes, endingconsumables, wastedqualkit, wastedspexagent, wastedampinput, wastedampflapless, wastedampktips, wastedampwash, wastedktubes, wastedconsumables, issuedqualkit, issuedspexagent, issuedampinput, issuedampflapless, issuedampktips, issuedampwash, issuedktubes, issuedconsumables, requestqualkit, requestspexagent, requestampinput, requestampflapless, requestampktips, requestampwash, requestktubes, requestconsumables, monthofrecordset, yearofrecordset, datesubmitted, submittedby, comments, issuedcomments, approve  from `eid_taqmanprocurement` where monthofrecordset = '$lastmonth' and yearofrecordset = '$year' and testtype ='1' and lab='$lab'");
+			$taqman_info_result_a	=$taqman_info_a ->result_array();
+			
+			//Initialize variables
+			$testsdone 		= $equalkit	=$espexagent = $eampinput = $eampflapless = $eampktips = $eampktips	= $eampwash	= $ektubes = $econsumables = 
+			$wqualkit		= $wspexagent 	= $wampinput	= $wampflapless	= $wampktips= $wampwash	= $wktubes	= $wconsumables	= $iqualkit		= $ispexagent 	= 
+			$iampinput		= $iampflapless	= $iampktips	= $iampwash	= $iktubes	= $iconsumables	= $icomments	= $rqualkit= $rspexagent = $rampinput= 
+			$rampflapless	= $rampktips	= $rampwash	= $rktubes	= $rconsumables	= $comments	= $submittedby	= $datesubmitted= $approve	= 0;
+			if(count($taqman_info_result_a)>0){
+				$testsdone		= $taqman_info_result_a[0]['testsdone'];	
+				//..used [calculate by the ratios]				
+				$uqualkit		= ($testsdone / 44); 
+				$uspexagent 	= $uqualkit 		* 0.15; 
+				$uampinput 		= $uqualkit			* 0.2; 
+				$uampflapless	= $uqualkit 		* 0.2; 
+				$uampktips 		= $uqualkit 		* 0.15; 
+				$uampwash		= $uqualkit 		* 0.5; 
+				$uktubes		= $uqualkit 		* 0.05; 
+				$uconsumables	= $uqualkit 		* 0.05; 
+				//..end balance
+				$equalkit		= $taqman_info_result_a[0]['endingqualkit'];
+				$espexagent 	= $taqman_info_result_a[0]['endingspexagent'];
+				$eampinput		= $taqman_info_result_a[0]['endingampinput'];
+				$eampflapless	= $taqman_info_result_a[0]['endingampflapless'];
+				$eampktips		= $taqman_info_result_a[0]['endingampktips'];
+				$eampwash		= $taqman_info_result_a[0]['endingampwash'];
+				$ektubes		= $taqman_info_result_a[0]['endingktubes'];
+				$econsumables	= $taqman_info_result_a[0]['endingconsumables'];
+				//..wasted
+				$wqualkit		= $taqman_info_result_a[0]['wastedqualkit'];
+				$wspexagent 	= $taqman_info_result_a[0]['wastedspexagent'];
+				$wampinput		= $taqman_info_result_a[0]['wastedampinput'];
+				$wampflapless	= $taqman_info_result_a[0]['wastedampflapless'];
+				$wampktips		= $taqman_info_result_a[0]['wastedampktips'];
+				$wampwash		= $taqman_info_result_a[0]['wastedampwash'];
+				$wktubes		= $taqman_info_result_a[0]['wastedktubes'];
+				$wconsumables	= $taqman_info_result_a[0]['wastedconsumables'];
+				//..issued
+				$iqualkit		= $taqman_info_result_a[0]['issuedqualkit'];
+				$ispexagent 	= $taqman_info_result_a[0]['issuedspexagent'];
+				$iampinput		= $taqman_info_result_a[0]['issuedampinput'];
+				$iampflapless	= $taqman_info_result_a[0]['issuedampflapless'];
+				$iampktips		= $taqman_info_result_a[0]['issuedampktips'];
+				$iampwash		= $taqman_info_result_a[0]['issuedampwash'];
+				$iktubes		= $taqman_info_result_a[0]['issuedktubes'];
+				$iconsumables	= $taqman_info_result_a[0]['issuedconsumables'];
+				$icomments		= $taqman_info_result_a[0]['issuedcomments'];
+				//..requests
+				$rqualkit		= $taqman_info_result_a[0]['requestqualkit'];
+				$rspexagent 	= $taqman_info_result_a[0]['requestspexagent'];
+				$rampinput		= $taqman_info_result_a[0]['requestampinput'];
+				$rampflapless	= $taqman_info_result_a[0]['requestampflapless'];
+				$rampktips		= $taqman_info_result_a[0]['requestampktips'];
+				$rampwash		= $taqman_info_result_a[0]['requestampwash'];
+				$rktubes		= $taqman_info_result_a[0]['requestktubes'];
+				$rconsumables	= $taqman_info_result_a[0]['requestconsumables'];
+				
+				$comments		= $taqman_info_result_a[0]['comments'];
+				$submittedby	= $taqman_info_result_a[0]['submittedby'];
+				$datesubmitted	= $taqman_info_result_a[0]['datesubmitted'];
+				$datesubmitted	= date("d-M-Y",strtotime($datesubmitted));
+				$approve		= $taqman_info_result_a[0]['approve'];
+			}
+
+			
+						
+							
+			$vtestsdone 		= $vequalkit	=$vespexagent = $veampinput = $veampflapless = $veampktips = $veampktips	= $veampwash	= $vektubes = $veconsumables = 
+			$vwqualkit		= $vwspexagent 	= $vwampinput	= $vwampflapless	= $vwampktips= $vwampwash	= $vwktubes	= $vwconsumables	= $viqualkit		= $vispexagent 	= 
+			$viampinput		= $viampflapless	= $viampktips	= $viampwash	= $viktubes	= $viconsumables	= $vicomments	= $vrqualkit= $vrspexagent = $vrampinput= 
+			$vrampflapless	= $vrampktips	= $vrampwash	= $vrktubes	= $vrconsumables	= $vcomments	= $vsubmittedby	= $vdatesubmitted= $vapprove	= 0;				
+							
+			//..VIRAL LOAD ITEMS
+			
+			$taqman_info_b			= $this -> db ->query("select testsdone, endingqualkit, endingspexagent, endingampinput, endingampflapless, endingampktips, endingampwash, endingktubes, endingconsumables, wastedqualkit, wastedspexagent, wastedampinput, wastedampflapless, wastedampktips, wastedampwash, wastedktubes, wastedconsumables, issuedqualkit, issuedspexagent, issuedampinput, issuedampflapless, issuedampktips, issuedampwash, issuedktubes, issuedconsumables, requestqualkit, requestspexagent, requestampinput, requestampflapless, requestampktips, requestampwash, requestktubes, requestconsumables, monthofrecordset, yearofrecordset, datesubmitted, submittedby, comments, issuedcomments  from `eid_taqmanprocurement` where monthofrecordset = '$lastmonth' and yearofrecordset = '$year' and testtype ='2' and lab='$lab'") ;
+			$taqman_info_result_b	= $taqman_info_b ->result_array();
+			if(count($taqman_info_result_b)>0){
+				$vtestsdone		= $taqman_info_result_b[0]['testsdone'];
+			
+				//..used [calculate by the ratios]				
+				$vuqualkit		= ($vtestsdone / 42); 
+				$vuspexagent 	= $vuqualkit 		* 0.15; 
+				$vuampinput 	= $vuqualkit		* 0.2; 
+				$vuampflapless	= $vuqualkit 		* 0.2; 
+				$vuampktips 	= $vuqualkit 		* 0.15; 
+				$vuampwash		= $vuqualkit 		* 0.5; 
+				$vuktubes		= $vuqualkit 		* 0.05; 
+				$vuconsumables	= $vuqualkit 		* 0.05; 
+				//..end balance
+				$vequalkit		= $taqman_info_result_b[0]['endingqualkit'];
+				$vespexagent 	= $taqman_info_result_b[0]['endingspexagent'];
+				$veampinput		= $taqman_info_result_b[0]['endingampinput'];
+				$veampflapless	= $taqman_info_result_b[0]['endingampflapless'];
+				$veampktips		= $taqman_info_result_b[0]['endingampktips'];
+				$veampwash		= $taqman_info_result_b[0]['endingampwash'];
+				$vektubes		= $taqman_info_result_b[0]['endingktubes'];
+				$veconsumables	= $taqman_info_result_b[0]['endingconsumables'];
+				//..wasted
+				$vwqualkit		= $taqman_info_result_b[0]['wastedqualkit'];
+				$vwspexagent 	= $taqman_info_result_b[0]['wastedspexagent'];
+				$vwampinput		= $taqman_info_result_b[0]['wastedampinput'];
+				$vwampflapless	= $taqman_info_result_b[0]['wastedampflapless'];
+				$vwampktips		= $taqman_info_result_b[0]['wastedampktips'];
+				$vwampwash		= $taqman_info_result_b[0]['wastedampwash'];
+				$vwktubes		= $taqman_info_result_b[0]['wastedktubes'];
+				$vwconsumables	= $taqman_info_result_b[0]['wastedconsumables'];
+				//..issued
+				$viqualkit		= $taqman_info_result_b[0]['issuedqualkit'];
+				$vispexagent 	= $taqman_info_result_b[0]['issuedspexagent'];
+				$viampinput		= $taqman_info_result_b[0]['issuedampinput'];
+				$viampflapless	= $taqman_info_result_b[0]['issuedampflapless'];
+				$viampktips		= $taqman_info_result_b[0]['issuedampktips'];
+				$viampwash		= $taqman_info_result_b[0]['issuedampwash'];
+				$viktubes		= $taqman_info_result_b[0]['issuedktubes'];
+				$viconsumables	= $taqman_info_result_b[0]['issuedconsumables'];
+				$vicomments		= $taqman_info_result_b[0]['issuedcomments'];
+				//..requests
+				$vrqualkit		= $taqman_info_result_b[0]['requestqualkit'];
+				$vrspexagent 	= $taqman_info_result_b[0]['requestspexagent'];
+				$vrampinput		= $taqman_info_result_b[0]['requestampinput'];
+				$vrampflapless	= $taqman_info_result_b[0]['requestampflapless'];
+				$vrampktips		= $taqman_info_result_b[0]['requestampktips'];
+				$vrampwash		= $taqman_info_result_b[0]['requestampwash'];
+				$vrktubes		= $taqman_info_result_b[0]['requestktubes'];
+				$vrconsumables	= $taqman_info_result_b[0]['requestconsumables'];
+				
+				$vcomments		= $taqman_info_result_b[0]['comments'];
+				$vsubmittedby	= $taqman_info_result_b[0]['submittedby'];
+				$vdatesubmitted	= $taqman_info_result_b[0]['datesubmitted'];
+				$vdatesubmitted	= date("d-M-Y",strtotime($vdatesubmitted));
+				//..END -> get the actual items for the tables
+			}
+
+			//VIRAL LOAD
+			$data['vtestsdone'] 		= $vtestsdone;
+			$data['vopeningqualkit'] 	= $vopeningqualkit;
+			$data['vdatesubmitted'] 	= $vdatesubmitted;
+			$data['vuqualkit'] 			= ceil($vuqualkit);
+			$data['vwqualkit']			= $vwqualkit;
+			$data['viqualkit'] 			= $viqualkit;
+			$data['vequalkit'] 			= $vequalkit;
+			$data['vrqualkit'] 			= $vrqualkit;
+			$data['vopeningspexagent'] 	= $vopeningspexagent;
+			$data['vuspexagent'] 		= ceil($vuspexagent);
+			$data['vwspexagent'] 		= $vwspexagent;
+			$data['vispexagent'] 		= $vispexagent;
+			$data['vespexagent'] 		= $vespexagent;
+			$data['vrspexagent'] 		= $vrspexagent;
+			$data['vopeningampinput'] 	= $vopeningampinput;
+			$data['vuampinput'] 		= $vuampinput;
+			$data['vwampinput'] 		= $vwampinput;
+			$data['viampinput'] 		= $viampinput;
+			$data['veampinput'] 	 	= $veampinput;
+			$data['vrampinput'] 		= $vrampinput;
+			$data['vopeningampflapless'] = $vopeningampflapless;
+			$data['vuampflapless'] 		= ceil($vuampflapless);
+			$data['vwampflapless'] 		= $vwampflapless;
+			$data['viampflapless'] 		= $viampflapless;
+			$data['veampflapless'] 		= $veampflapless;
+			$data['vrampflapless'] 		= $vrampflapless;
+			$data['vopeningampwash'] 	= $vopeningampwash;
+			$data['vuampwash'] 			= ceil($vuampwash);
+			$data['vwampwash'] 			= $vwampwash;
+			$data['viampwash'] 			= $viampwash;
+			$data['veampwash'] 			= $veampwash;
+			$data['vrampwash'] 			= $vrampwash;
+			$data['vopeningampktips'] 	= $vopeningampktips;
+			$data['vuampktips'] 		= ceil($vuampktips);
+			$data['vwampktips'] 		= $vwampktips;
+			$data['viampktips'] 		= $viampktips;
+			$data['veampktips'] 		= $veampktips;
+			$data['vrampktips'] 		= $vrampktips;
+			$data['vopeningktubes'] 	= $vopeningktubes;
+			$data['vuktubes'] 			= $vuktubes;
+			$data['vwktubes'] 			= $vwktubes;
+			$data['viktubes'] 			= $viktubes;
+			$data['vektubes'] 			= $vektubes;
+			$data['vicomments'] 		= $vicomments;
+			$data['vrktubes'] 			= $vrktubes;
+			$data['vrktubes'] 			= $vrktubes;
+			$data['vrktubes'] 			= $vrktubes;
+			
+			
+			//EID
+			$data['testsdone'] 			= $testsdone;
+			$data['openingqualkit'] 	= $openingqualkit;
+			$data['datesubmitted'] 		= $datesubmitted;
+			$data['uqualkit'] 			= ceil($uqualkit);
+			$data['wqualkit']			= $wqualkit;
+			$data['iqualkit'] 			= $iqualkit;
+			$data['equalkit'] 			= $equalkit;
+			$data['rqualkit'] 			= $rqualkit;
+			$data['openingspexagent'] 	= $openingspexagent;
+			$data['uspexagent'] 		= ceil($uspexagent);
+			$data['wspexagent'] 		= $wspexagent;
+			$data['ispexagent'] 		= $ispexagent;
+			$data['espexagent'] 		= $espexagent;
+			$data['rspexagent'] 		= $rspexagent;
+			$data['openingampinput'] 	= $openingampinput;
+			$data['uampinput'] 			= $uampinput;
+			$data['wampinput'] 			= $wampinput;
+			$data['iampinput'] 			= $iampinput;
+			$data['eampinput'] 	 		= $eampinput;
+			$data['rampinput'] 			= $rampinput;
+			$data['openingampflapless'] = $openingampflapless;
+			$data['uampflapless'] 		= ceil($uampflapless);
+			$data['wampflapless'] 		= $wampflapless;
+			$data['iampflapless'] 		= $iampflapless;
+			$data['eampflapless'] 		= $eampflapless;
+			$data['rampflapless'] 		= $rampflapless;
+			$data['openingampwash'] 	= $openingampwash;
+			$data['uampwash'] 			= ceil($uampwash);
+			$data['wampwash'] 			= $wampwash;
+			$data['iampwash'] 			= $iampwash;
+			$data['eampwash'] 			= $eampwash;
+			$data['rampwash'] 			= $rampwash;
+			$data['openingampktips'] 	= $openingampktips;
+			$data['uampktips'] 			= ceil($uampktips);
+			$data['wampktips'] 			= $wampktips;
+			$data['iampktips'] 			= $iampktips;
+			$data['eampktips'] 			= $eampktips;
+			$data['rampktips'] 			= $rampktips;
+			$data['openingktubes'] 		= $openingktubes;
+			$data['uktubes'] 			= $uktubes;
+			$data['wktubes'] 			= $wktubes;
+			$data['iktubes'] 			= $iktubes;
+			$data['ektubes'] 			= $ektubes;
+			$data['icomments'] 			= $icomments;
+			$data['rktubes'] 			= $rktubes;
+			$data['rktubes'] 			= $rktubes;
+			$data['rktubes'] 			= $rktubes;
+			
+			
+			$data["platform"] = "TAQMAN";
+			$this ->load ->view("eid/submit_report_details",$data);
+		
+		}elseif($platform==2){//ABOTT CONSUMPTION REPORT
+			//Initialize
+			$openingqualkit 		= 0;
+			$openingcalibration  	= 0;
+			$openingcontrol  		= 0;
+			$openingbuffer 	 		= 0;
+			$openingpreparation  	= 0;
+			$openingadhesive  		= 0;
+			$openingdeepplate  		= 0;
+			$openingmixtube  		= 0;
+			$openingreactionvessels = 0;
+			$openingreagent  		= 0;
+			$openingreactionplate 	= 0;
+			$opening1000disposable  = 0;
+			$opening200disposable  	= 0;
+			
+			$openingquery=$this -> db ->query("SELECT testsdone as tottest, endingqualkit as a, endingcalibration as b, endingcontrol as c, endingbuffer as d, endingpreparation as e, endingadhesive as f, endingdeepplate as g, endingmixtube as h, endingreactionvessels as i, endingreagent as j, endingreactionplate as k, ending1000disposable as l, ending200disposable as m from eid_abbottprocurement where monthofrecordset = '$previousmonth' and testtype = 1 and lab='$lab' and yearofrecordset='$pyear'") ; 
+			$opening = $openingquery ->result_array(); 
+			
+			if(count($opening)>0){
+				$data['openingtotaltest']		=$opening[0]['tottest'];
+				$data['openingqualkit']			=$opening[0]['a'];
+				$data['openingcalibration']		=$opening[0]['b'];
+				$data['openingcontrol']			=$opening[0]['c'];
+				$data['openingbuffer']			=$opening[0]['d'];
+				$data['openingpreparation']		=$opening[0]['e'];
+				$data['openingadhesive']		=$opening[0]['f'];
+				$data['openingdeepplate']		=$opening[0]['g'];
+				$data['openingmixtube']			=$opening[0]['h'];
+				$data['openingreactionvessels'] =$opening[0]['i'];
+				$data['openingreagent'] 		=$opening[0]['j'];
+				$data['openingreactionplate'] 	=$opening[0]['k'];
+				$data['opening1000disposable'] 	=$opening[0]['l'];
+				$data['opening200disposable'] 	=$opening[0]['m'];
+			}
+			//..END -> GET THE OPENING BALANCES (EID)
+			
+			//..GET THE OPENING BALANCES (VIRAL LOAD)
+			
+			//..sanitize the empty records
+			$vopeningqualkit 		= 0;
+			$vopeningcalibration 	= 0;
+			$vopeningcontrol  		= 0;
+			$vopeningbuffer  		= 0;
+			$vopeningpreparation  	= 0;
+			$vopeningadhesive  		= 0;
+			$vopeningdeepplate  	= 0;
+			$vopeningmixtube  		= 0;
+			$vopeningreactionvessels= 0;
+			$vopeningreagent  		= 0;
+			$vopeningreactionplate  = 0;
+			$vopening1000disposable = 0;
+			$vopening200disposable  = 0;
+			
+			$vopeningquery		=$this -> db ->query("SELECT testsdone as vtottest, endingqualkit as va, endingcalibration as vb, endingcontrol as vc, endingbuffer as vd, endingpreparation as ve, endingadhesive as vf, endingdeepplate as vg, endingmixtube as vh, endingreactionvessels as vi, endingreagent as vj, endingreactionplate as vk, ending1000disposable as vl, ending200disposable as vm from `eid_abbottprocurement` where monthofrecordset = '$previousmonth' and testtype = 2 and lab='$lab' and yearofrecordset='$pyear'"); 
+			$vopening 			=$vopeningquery ->result_array(); 
+			if(count($opening)>0){
+				$data['vopeningtotaltest']		=$vopening[0]['vtottest'];
+				$data['vopeningqualkit']		=$vopening[0]['va'];
+				$data['vopeningcalibration']	=$vopening[0]['vb'];
+				$data['vopeningcontrol']		=$vopening[0]['vc'];
+				$data['vopeningbuffer']			=$vopening[0]['vd'];
+				$data['vopeningpreparation']	=$vopening[0]['ve'];
+				$data['vopeningadhesive']		=$vopening[0]['vf'];
+				$data['vopeningdeepplate']		=$vopening[0]['vg'];
+				$data['vopeningmixtube']		=$vopening[0]['vh'];
+				$data['vopeningreactionvessels']=$vopening[0]['vi'];
+				$data['vopeningreagent'] 		= $vopening[0]['vj'];
+				$data['vopeningreactionplate'] 	= $vopening[0]['vk'];
+				$data['vopening1000disposable'] = $vopening[0]['vl'];
+				$data['vopening200disposable'] 	= $vopening[0]['vm'];
+			}
+			//echo $vopeningqualkit;die();
+			//..END -> GET THE OPENING BALANCES (VIRAL LOAD)
+			
+			//..get the other items for abbott
+			//..EID
+			$abbott_info_a			= $this -> db ->query("select testsdone, endingqualkit, endingcalibration, endingcontrol, endingbuffer, endingpreparation, endingadhesive, endingdeepplate, endingmixtube, endingreactionvessels, endingreagent, endingreactionplate, ending1000disposable, ending200disposable, wastedqualkit, wastedcalibration, wastedcontrol, wastedbuffer, wastedpreparation, wastedadhesive, wasteddeepplate, wastedmixtube, wastedreactionvessels, wastedreagent, wastedreactionplate, wasted1000disposable, wasted200disposable, issuedqualkit, issuedcalibration, issuedcontrol, issuedbuffer, issuedpreparation, issuedadhesive, issueddeepplate, issuedmixtube, issuedreactionvessels, issuedreagent, issuedreactionplate, issued1000disposable, issued200disposable, requestqualkit, requestcalibration, requestcontrol, requestbuffer, requestpreparation, requestadhesive, requestdeepplate, requestmixtube, requestreactionvessels, requestreagent, requestreactionplate, request1000disposable, request200disposable, monthofrecordset, yearofrecordset, datesubmitted, submittedby, comments, issuedcomments, approve from `eid_abbottprocurement` where monthofrecordset = '$lastmonth' and yearofrecordset = '$year' and testtype ='1' and lab='$lab'") or die(mysql_error());
+			$abbott_info_result_a	= $abbott_info_a ->result_array();
+			if(count($abbott_info_result_a)>0){
+				$data['testsdone']		= $abbott_info_result_a[0]['testsdone']; 
+				//..used
+				$uqualkit			=	($testsdone / 94);
+				//..if TESTTYPE == VIRAL LOAD
+				//..$uqualkit		=	($testsdone / 93);
+				$data['uqualkit']			= $uqualkit;
+				$data['ucontrol'] 			= ($uqualkit * 2) * (2/24);
+				$data['ubuffer'] 			= $uqualkit * 1;
+				$data['upreparation'] 		= $uqualkit * 1;
+				$data['uadhesive'] 			= ($uqualkit * 2)/100;
+				$data['udeepplate'] 		= ($uqualkit * 2)*(2/4);
+				$data['umixtube'] 			= ($uqualkit * 2)*(1/25);
+				$data['ureactionvessels'] 	= ($uqualkit * 192)/500;
+				$data['ureagent'] 			= ($uqualkit * 2)*(5/6);
+				$data['ureactionplate'] 	= ($uqualkit * 192)/500;
+				$data['u1000disposable']	= ($uqualkit * 2)*(421/192);
+				$data['u200disposable'] 	= ($uqualkit * 2)*(48/192);
+				
+				//..wasted
+				$data['wqualkit']			= $abbott_info_result_a[0]['wastedqualkit'];
+				$data['wcalibration']		= $abbott_info_result_a[0]['wastedcalibration'];
+				$data['wcontrol']			= $abbott_info_result_a[0]['wastedcontrol'];
+				$data['wbuffer']			= $abbott_info_result_a[0]['wastedbuffer'];
+				$data['wpreparation']		= $abbott_info_result_a[0]['wastedpreparation'];
+				$data['wadhesive']			= $abbott_info_result_a[0]['wastedadhesive'];
+				$data['wdeepplate']			= $abbott_info_result_a[0]['wasteddeepplate'];
+				$data['wmixtube']			= $abbott_info_result_a[0]['wastedmixtube'];
+				$data['wreactionvessels']	= $abbott_info_result_a[0]['wastedreactionvessels'];
+				$data['wreagent']			= $abbott_info_result_a[0]['wastedreagent'];
+				$data['wreactionplate']		= $abbott_info_result_a[0]['wastedreactionplate'];
+				$data['w1000disposable']	= $abbott_info_result_a[0]['wasted1000disposable'];
+				$data['w200disposable']		= $abbott_info_result_a[0]['wasted200disposable'];
+				
+				//..issued
+				$data['iqualkit']			= $abbott_info_result_a[0]['issuedqualkit'];
+				$data['icalibration']		= $abbott_info_result_a[0]['issuedcalibration'];
+				$data['icontrol']			= $abbott_info_result_a[0]['issuedcontrol'];
+				$data['ibuffer']			= $abbott_info_result_a[0]['issuedbuffer'];
+				$data['ipreparation']		= $abbott_info_result_a[0]['issuedpreparation'];
+				$data['iadhesive']			= $abbott_info_result_a[0]['issuedadhesive'];
+				$data['ideepplate']			= $abbott_info_result_a[0]['issueddeepplate'];
+				$data['imixtube']			= $abbott_info_result_a[0]['issuedmixtube'];
+				$data['ireactionvessels']	= $abbott_info_result_a[0]['issuedreactionvessels'];
+				$data['ireagent']			= $abbott_info_result_a[0]['issuedreagent'];
+				$data['ireactionplate']		= $abbott_info_result_a[0]['issuedreactionplate'];
+				$data['i1000disposable']	= $abbott_info_result_a[0]['issued1000disposable'];
+				$data['i200disposable']		= $abbott_info_result_a[0]['issued200disposable'];
+				
+				$data['icomments']			= $abbott_info_result_a[0]['issuedcomments'];
+				
+				//..end balance
+				$data['equalkit']			= $abbott_info_result_a[0]['endingqualkit'];
+				$data['ecalibration']		= $abbott_info_result_a[0]['endingcalibration'];
+				$data['econtrol']			= $abbott_info_result_a[0]['endingcontrol'];
+				$data['ebuffer']			= $abbott_info_result_a[0]['endingbuffer'];
+				$data['epreparation']		= $abbott_info_result_a[0]['endingpreparation'];
+				$data['eadhesive']			= $abbott_info_result_a[0]['endingadhesive'];
+				$data['edeepplate']			= $abbott_info_result_a[0]['endingdeepplate'];
+				$data['emixtube']			= $abbott_info_result_a[0]['endingmixtube'];
+				$data['ereactionvessels']	= $abbott_info_result_a[0]['endingreactionvessels'];
+				$data['ereagent']			= $abbott_info_result_a[0]['endingreagent'];
+				$data['ereactionplate']		= $abbott_info_result_a[0]['endingreactionplate'];
+				$data['e1000disposable']	= $abbott_info_result_a[0]['ending1000disposable'];
+				$data['e200disposable']		= $abbott_info_result_a[0]['ending200disposable'];
+				
+				//..request
+				$data['rqualkit']			= $abbott_info_result_a[0]['requestqualkit'];
+				$data['rcalibration']		= $abbott_info_result_a[0]['requestcalibration'];
+				$data['rcontrol']			= $abbott_info_result_a[0]['requestcontrol'];
+				$data['rbuffer']			= $abbott_info_result_a[0]['requestbuffer'];
+				$data['rpreparation']		= $abbott_info_result_a[0]['requestpreparation'];
+				$data['radhesive']			= $abbott_info_result_a[0]['requestadhesive'];
+				$data['rdeepplate']			= $abbott_info_result_a[0]['requestdeepplate'];
+				$data['rmixtube']			= $abbott_info_result_a[0]['requestmixtube'];
+				$data['rreactionvessels']	= $abbott_info_result_a[0]['requestreactionvessels'];
+				$data['rreagent']			= $abbott_info_result_a[0]['requestreagent'];
+				$data['rreactionplate']		= $abbott_info_result_a[0]['requestreactionplate'];
+				$data['r1000disposable']	= $abbott_info_result_a[0]['request1000disposable'];
+				$data['r200disposable']		= $abbott_info_result_a[0]['request200disposable'];
+				
+				$data['comments']		= $abbott_info_result_a[0]['comments'];
+				$data['submittedby']	= $abbott_info_result_a[0]['submittedby'];
+				$data['datesubmitted']	= $abbott_info_result_a[0]['datesubmitted'];
+				$data['datesubmitted']	= date("d-M-Y",strtotime($datesubmitted));
+				$data['approve']		= $abbott_info_result_a[0]['approve'];
+			}
+			//..END -> EID
+			
+			//..VIRAL LOAD
+			$abbott_info_b			= $this -> db ->query("select testsdone, endingqualkit, endingcalibration, endingcontrol, endingbuffer, endingpreparation, endingadhesive, endingdeepplate, endingmixtube, endingreactionvessels, endingreagent, endingreactionplate, ending1000disposable, ending200disposable, wastedqualkit, wastedcalibration, wastedcontrol, wastedbuffer, wastedpreparation, wastedadhesive, wasteddeepplate, wastedmixtube, wastedreactionvessels, wastedreagent, wastedreactionplate, wasted1000disposable, wasted200disposable, issuedqualkit, issuedcalibration, issuedcontrol, issuedbuffer, issuedpreparation, issuedadhesive, issueddeepplate, issuedmixtube, issuedreactionvessels, issuedreagent, issuedreactionplate, issued1000disposable, issued200disposable, requestqualkit, requestcalibration, requestcontrol, requestbuffer, requestpreparation, requestadhesive, requestdeepplate, requestmixtube, requestreactionvessels, requestreagent, requestreactionplate, request1000disposable, request200disposable, monthofrecordset, yearofrecordset, datesubmitted, submittedby, comments, issuedcomments from `eid_abbottprocurement` where monthofrecordset = '$lastmonth' and yearofrecordset = '$year' and testtype ='2' and lab='$lab'") or die(mysql_error());
+			$abbott_info_result_b	= $abbott_info_b ->result_array();
+			if(count($abbott_info_result_b)>0){
+				$data['vtestsdone']		= $abbott_info_result_b[0]['testsdone']; 
+			
+				//..used
+				$vuqualkit				=($vtestsdone / 93);
+				$data['vuqualkit'] 		= $vuqualkit;
+				$data['vucontrol'] 		= ($vuqualkit * 3)/24;
+				$data['vubuffer'] 		= $vuqualkit * 1;
+				$data['vupreparation'] 	= $vuqualkit * 1;
+				$data['vuadhesive'] 	= ($vuqualkit * 1)/100;
+				$data['vudeepplate'] 	= ($vuqualkit * 3)/4;
+				$data['vumixtube'] 		= ($vuqualkit * 1)/25;
+				$data['vureactionvessels']= ($vuqualkit * 192)/500;
+				$data['vureagent'] 		= ($vuqualkit * 6)/6;
+				$data['vureactionplate']= ($vuqualkit * 1)/20;
+				$data['vu1000disposable']= ($vuqualkit * 1)*(841/192);
+				$data['vu200disposable'] = ($vuqualkit * 1)*(96/192);
+				
+				
+				//..wasted
+				$data['vwqualkit']			= $abbott_info_result_b['wastedqualkit'];
+				$data['vwcalibration']		= $abbott_info_result_b['wastedcalibration'];
+				$data['vwcontrol']			= $abbott_info_result_b['wastedcontrol'];
+				$data['vwbuffer']			= $abbott_info_result_b['wastedbuffer'];
+				$data['vwpreparation']		= $abbott_info_result_b['wastedpreparation'];
+				$data['vwadhesive']			= $abbott_info_result_b['wastedadhesive'];
+				$data['vwdeepplate']		= $abbott_info_result_b['wasteddeepplate'];
+				$data['vwmixtube']			= $abbott_info_result_b['wastedmixtube'];
+				$data['vwreactionvessels']	= $abbott_info_result_b['wastedreactionvessels'];
+				$data['vwreagent']			= $abbott_info_result_b['wastedreagent'];
+				$data['vwreactionplate']	= $abbott_info_result_b['wastedreactionplate'];
+				$data['vw1000disposable']	= $abbott_info_result_b['wasted1000disposable'];
+				$data['vw200disposable']	= $abbott_info_result_b['wasted200disposable'];
+				
+				//..issued
+				$data['viqualkit']			= $abbott_info_result_b['issuedqualkit'];
+				$data['vicalibration']		= $abbott_info_result_b['issuedcalibration'];
+				$data['vicontrol']			= $abbott_info_result_b['issuedcontrol'];
+				$data['vibuffer']			= $abbott_info_result_b['issuedbuffer'];
+				$data['vipreparation']		= $abbott_info_result_b['issuedpreparation'];
+				$data['viadhesive']			= $abbott_info_result_b['issuedadhesive'];
+				$data['videepplate']		= $abbott_info_result_b['issueddeepplate'];
+				$data['vimixtube']			= $abbott_info_result_b['issuedmixtube'];
+				$data['vireactionvessels']	= $abbott_info_result_b['issuedreactionvessels'];
+				$data['vireagent']			= $abbott_info_result_b['issuedreagent'];
+				$data['vireactionplate']	= $abbott_info_result_b['issuedreactionplate'];
+				$data['vi1000disposable']	= $abbott_info_result_b['issued1000disposable'];
+				$data['vi200disposable']	= $abbott_info_result_b['issued200disposable'];
+				
+				$data['vicomments']			= $abbott_info_result_b['issuedcomments'];
+				
+				//..end balance
+				$data['vequalkit']			= $abbott_info_result_b['endingqualkit'];
+				$data['vecalibration']		= $abbott_info_result_b['endingcalibration'];
+				$data['vecontrol']			= $abbott_info_result_b['endingcontrol'];
+				$data['vebuffer']			= $abbott_info_result_b['endingbuffer'];
+				$data['vepreparation']		= $abbott_info_result_b['endingpreparation'];
+				$data['veadhesive']			= $abbott_info_result_b['endingadhesive'];
+				$data['vedeepplate']		= $abbott_info_result_b['endingdeepplate'];
+				$data['vemixtube']			= $abbott_info_result_b['endingmixtube'];
+				$data['vereactionvessels']	= $abbott_info_result_b['endingreactionvessels'];
+				$data['vereagent']			= $abbott_info_result_b['endingreagent'];
+				$data['vereactionplate']	= $abbott_info_result_b['endingreactionplate'];
+				$data['ve1000disposable']	= $abbott_info_result_b['ending1000disposable'];
+				$data['ve200disposable']	= $abbott_info_result_b['ending200disposable'];
+				
+				//..request
+				$data['vrqualkit']			= $abbott_info_result_b['requestqualkit'];
+				$data['vrcalibration']		= $abbott_info_result_b['requestcalibration'];
+				$data['vrcontrol']			= $abbott_info_result_b['requestcontrol'];
+				$data['vrbuffer']			= $abbott_info_result_b['requestbuffer'];
+				$data['vrpreparation']		= $abbott_info_result_b['requestpreparation'];
+				$data['vradhesive']			= $abbott_info_result_b['requestadhesive'];
+				$data['vrdeepplate']		= $abbott_info_result_b['requestdeepplate'];
+				$data['vrmixtube']			= $abbott_info_result_b['requestmixtube'];
+				$data['vrreactionvessels']	= $abbott_info_result_b['requestreactionvessels'];
+				$data['vrreagent']			= $abbott_info_result_b['requestreagent'];
+				$data['vrreactionplate']	= $abbott_info_result_b['requestreactionplate'];
+				$data['vr1000disposable']	= $abbott_info_result_b['request1000disposable'];
+				$data['vr200disposable']	= $abbott_info_result_b['request200disposable'];
+			}
+						
+			//..END -> VIRAL LOAD
+			
+			
+			$data["platform"] = "ABBOTT";
+			$this ->load ->view("eid/submit_report_details",$data);
+			
+		}
+		
+		
+	}
+	
+	function lab_type ($lab_id){
+    
+	    $cpquery= $this -> db ->query("select abbott as abb, taqman as taq from `eid_labs` where id = $lab_id "); 
+		$cpss = $cpquery ->result_array();
+		$data['abb'] =$cpss[0]['abb'];
+		$data['taq'] =$cpss[0]['taq'];
+		return $data;
+	}
+	
+	function lab_both_taqman_abbot_report_submission($lab_id,$year,$lastmonth){
+            $ctquery=$this -> db ->query("SELECT COUNT(taq.ID) as 'ctaqsubmission',taq.received as taqr from `eid_taqmanprocurement` taq where
+			taq.monthofrecordset='$lastmonth' and taq.yearofrecordset='$year' and taq.lab='$lab_id' "); 
+			
+			$ctss = $ctquery ->result_array();
+	                
+            $ctquery1=$this -> db ->query("SELECT COUNT(abb.ID) as 'ctaqsubmission', abb.received as abbr from `eid_abbottprocurement` abb where
+			abb.monthofrecordset='$lastmonth' and abb.yearofrecordset='$year' and abb.lab='$lab_id' "); 
+			
+			$ctss1 = $ctquery1 ->result_array();
+	                
+			$data['ctkit'] = $ctss[0]['ctaqsubmission'] + $ctss1[0]['ctaqsubmission'];
+			$data['taq'] = $ctss[0]['taqr'];
+			$data['abb'] = $ctss1[0]['abbr'];
+            return $data;
+	    
+	}
+
+   
+}
+
+?>

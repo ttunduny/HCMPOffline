@@ -7,7 +7,7 @@ class Users extends Doctrine_Record {
 		$this -> hasColumn('email', 'string', 255, array('unique' => 'true'));
 		$this -> hasColumn('username', 'string', 255, array('unique' => 'true'));
 		$this -> hasColumn('password', 'string', 255);
-		$this -> hasColumn('activation', 'string', 255);
+		$this -> hasColumn('activation', 'varchar', 255);
 		$this -> hasColumn('usertype_id', 'integer', 11);
 		$this -> hasColumn('telephone', 'varchar', 255);
 		$this -> hasColumn('district', 'varchar', 255);
