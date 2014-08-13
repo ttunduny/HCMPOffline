@@ -1182,6 +1182,15 @@ order by user.id asc
 		echo json_encode(Commodities::getAll_json());
 		
 	 }
+	 public function consumption_report(){
+	 	
+		$county = $_POST['county'];
+		$sub_county = $_POST['sub_county'];
+		$facility_id = $_POST['facility_id'];
+		$email_address = $_POST[''];
+		$username = $_POST['username'];
+		$facility_id = $_POST['facility_id'];
+	 }
 }   
     
 

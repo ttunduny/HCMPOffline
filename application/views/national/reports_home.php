@@ -124,7 +124,7 @@ legend{
     			<div class="col-xs-4">
 			  	<label for="county">Select County</label>
 			    <select class="form-control input-md" id="county"> 
-			    	<option>All Counties</option>
+			    	<option value="NULL">All Counties</option>
 			    	<?php
 							foreach ($county as $value => $county_list) :
 									 $c_id = $county_list['id'];
@@ -257,19 +257,15 @@ legend{
 		<div class="row-fluid" style="margin-top: 1%">
 			<fieldset>
 				
-				<legend>Duration</legend>
-				<div class="col-xs-3">
-			  	<label for="Year">Year</label>
-			   <select class="form-control input-md" id="year"> 
-						    	<option>Select Year</option>
-						    	<option>2014</option>
-						    	<option>2013</option>
-						    	<option>2012</option>
-						    	
-						    	</select>
+				<legend>Duration From-To</legend>
+				<div class="col-xs-2">
+			  	<input type="text" class="form-control input-md" id="from" placeholder="From">
+			  </div>
+			  <div class="col-xs-2">
+			  	<input type="text" class="form-control input-md" id="to" placeholder="To">
 			  </div>
 			  
-			  <div class="col-xs-9">
+			  <div class="col-xs-6">
 			  	
 			  </div>
 				
@@ -287,14 +283,14 @@ legend{
 							<input type="radio" name="doctype" value="PDF" class="" checked/> PDF
 						</section>
 						<section class="col-md-3">
-							<input type="radio" name="doctype" value="Excel"/> Excel
+							<input type="radio" name="doctype"  value="excel"/> Excel
 						</section>
 						
 						<section class="col-md-3">
-							<input type="radio" name="doctype" value="Graph"/> Web Graph
+							<input type="radio" name="doctype"  value="Graph"/> Web Graph
 						</section>
 						<section class="col-md-3">
-							<input type="radio" name="doctype" value="Table"/> Web Table
+							<input type="radio" name="doctype"  value="Table"/> Web Table
 						</section>
 						</section>
 			  	</fieldset>
@@ -303,7 +299,7 @@ legend{
 		
 		
 			<div class="modal-footer">
-				<button type="button" class="btn btn-success edit_user">
+				<button type="button" class="btn btn-success generate">
 				<span class="glyphicon glyphicon-file"></span>	Generate
 				</button>
 			</div>
@@ -311,7 +307,7 @@ legend{
     </div>
     
     
-    
+   <div id="graph"></div> 
     
     
 </body>
@@ -321,7 +317,7 @@ legend{
      $(document).ready(function () {
      	
      	$("#interval,#expfrom,#expto,#commodity").attr("disabled", 'disabled');
-     	
+     	$( "#from,#to" ).datepicker();
      	$('#county').on('change', function(){
      		var county_val=$('#county').val()
     var drop_down='';
@@ -390,10 +386,67 @@ $("input:radio[name=commodity_s]").click(function() {
 						}
 });
 
+
+ //Run report downloads
+    
+    $(".generate").click(function() {
+
+      	var county_id=$('#county').val();
+        var district=$("#sub_county").val();
+        var facility=$("#facility_id").val();
+        var type = $('input[name=doctype]:checked').val()
+        var link='';
+                   
+      if(type=='excel'){ 
+      	var from =$("#from").val();
+        var to =$("#to").val();
+        var commodity_id=$('#commodity').val();
+        var commodity_type = $('input[name=commodity_s]:checked').val()
+	        if(commodity_type=='Tracer'){ 
+	        
+	        
+	        if(from==''){from="NULL";}
+	        if(to==''){to="NULL";}
+	
+	        link='national/consumption/'+county_id+'/'+district+'/'+facility+'/NULL/excel/'+encodeURI(from)+ '/'+encodeURI(to);
+	        }
+	        
+	        if(commodity_type=='All'){ 
+	        var commodity_id=$('#commodity').val();
+	        
+	        
+	        if(from==''){from="NULL";   }
+	        if(to==''){to="NULL";}
+	        
+	        link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel/'+encodeURI(from)+ '/'+encodeURI(to);
+	        
+	        }
+	        
+        }
+        window.open(url+link,'_parent');   
+    });
+    
+    	function ajax_return(function_url,div){
+        var function_url =url+function_url;
+        var loading_icon=url+"assets/img/loader2.gif";
+        $.ajax({
+	        type: "POST",
+	        url: function_url,
+	        beforeSend: function() {
+	        $(div).html("<img style='margin-left:20%;' src="+loading_icon+">");
+        },
+        success: function(msg) {
+        $(div).html(msg);
+        }
+        });
+        } 
+    
+
 });
 
-    //Run report downloads
-    
+   
+   
+
     
     
     </script>
