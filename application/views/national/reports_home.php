@@ -145,7 +145,7 @@ legend{
 			  <div class="col-xs-4">
 			  	<label for="county">Select Facility</label>
 			    <select class="form-control input-md" id="facility_id"> 
-			    	<option>All Facilities</option>
+			    	<option value="NULL">All Facilities</option>
 			    	
 			    	</select>
 			  </div>
@@ -163,7 +163,7 @@ legend{
 					<input type="radio" name="criteria" value="Consumption" class=" " checked/> Consumption
 				</div>
 				<div class="col-md-3">
-					<input type="radio" name="criteria" value="Stock"/> Stock Status
+					<input type="radio" name="criteria" value="Stock"/> Stock Level(MOS)
 				</div>
 				<div class="col-md-6">
 					<div class="row-fluid">
@@ -222,7 +222,7 @@ legend{
 					<div class="" style="margin-top: 2%">
 			  	
 			    <select class="form-control input-md" id="commodity"> 
-			    	<option>All Commodities</option>
+			    	<option value="NULL">All Commodities</option>
 			    	<?php
 							foreach ($commodities as $value => $commodity) :
 									 $c_id = $commodity['id'];
@@ -287,7 +287,7 @@ legend{
 						</section>
 						
 						<section class="col-md-3">
-							<input type="radio" name="doctype"  value="Graph"/> Web Graph
+							<input type="radio" name="doctype"  value="graph"/> Web Graph
 						</section>
 						<section class="col-md-3">
 							<input type="radio" name="doctype"  value="Table"/> Web Table
@@ -307,7 +307,23 @@ legend{
     </div>
     
     
-   <div id="graph"></div> 
+  <!-- Modal -->
+<div class="modal fade" id="graph_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body" id="graph_content">
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
     
     
 </body>
@@ -378,11 +394,12 @@ $("input:radio[name=commodity_s]").click(function() {
    					 if(val=="Specify"){
 						
 						$("#commodity").attr("disabled", false);
+						
 						 
 						}else{
 							
 							$("#commodity").attr("disabled", 'disabled');
-							
+							$("#commodity").val("NULL");
 						}
 });
 
@@ -394,20 +411,24 @@ $("input:radio[name=commodity_s]").click(function() {
       	var county_id=$('#county').val();
         var district=$("#sub_county").val();
         var facility=$("#facility_id").val();
+        var criteria = $('input[name=criteria]:checked').val()
         var type = $('input[name=doctype]:checked').val()
-        var link='';
-                   
-      if(type=='excel'){ 
-      	var from =$("#from").val();
+        var from =$("#from").val();
         var to =$("#to").val();
         var commodity_id=$('#commodity').val();
         var commodity_type = $('input[name=commodity_s]:checked').val()
+        var link='';
+        
+        if(from==''){from="NULL";}
+	        if(to==''){to="NULL";}
+	       
+	       //check criteria 
+	        if(criteria=='Consumption'){
+                   
+      if(type=='excel'){ 
+      	
 	        if(commodity_type=='Tracer'){ 
 	        
-	        
-	        if(from==''){from="NULL";}
-	        if(to==''){to="NULL";}
-	
 	        link='national/consumption/'+county_id+'/'+district+'/'+facility+'/NULL/excel/'+encodeURI(from)+ '/'+encodeURI(to);
 	        }
 	        
@@ -415,20 +436,87 @@ $("input:radio[name=commodity_s]").click(function() {
 	        var commodity_id=$('#commodity').val();
 	        
 	        
-	        if(from==''){from="NULL";   }
-	        if(to==''){to="NULL";}
-	        
 	        link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel/'+encodeURI(from)+ '/'+encodeURI(to);
 	        
 	        }
 	        
+	        if(commodity_type=='Specify'){ 
+	        var commodity_id=$('#commodity').val();
+	        
+	        
+	        link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel/'+encodeURI(from)+ '/'+encodeURI(to);
+	        
+	        }
+	        window.open(url+link,'_parent');
+	        
+	        //graphs
+        }else if(type=='graph'){
+        	
+        	$('#graph_Modal').modal('show');
+        	
+       if(commodity_type=='Tracer'){
+
+        ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/NULL/NULL/'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content");
         }
-        window.open(url+link,'_parent');   
+        
+        if(commodity_type=='All'){ 
+	        var commodity_id=$('#commodity').val();
+	        
+        ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/NULL/'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content");
+	        
+	        }
+	        
+        }
+       }else if(criteria=='Stock'){
+       	
+       	if(type=='excel'){ 
+      	
+	        if(commodity_type=='Tracer'){ 
+	        
+	        link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/NULL/excel';
+	        }
+	        
+	        if(commodity_type=='All'){ 
+	        var commodity_id=$('#commodity').val();
+	        
+	        
+	        link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel';
+	        
+	        }
+	        window.open(url+link,'_parent');
+	        
+	        //graphs
+	        
+	        }else if(type=='graph'){
+        	
+        	$('#graph_Modal').modal('show');
+        	
+       if(commodity_type=='Tracer'){
+
+        ajax_return('national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'',"#graph_content");
+        }
+        
+        if(commodity_type=='All'){ 
+	        var commodity_id=$('#commodity').val();
+	        
+	       ajax_return('national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/ALL',"#graph_content"); 
+	        }
+	    
+	    if(commodity_type=='Specify'){ 
+	        var commodity_id=$('#commodity').val();
+	        
+	       ajax_return('national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'',"#graph_content"); 
+	        }
+	        
+        }
+        }
+       
+           
     });
     
     	function ajax_return(function_url,div){
         var function_url =url+function_url;
-        var loading_icon=url+"assets/img/loader2.gif";
+        var loading_icon=url+"assets/img/Preloader_4.gif";
         $.ajax({
 	        type: "POST",
 	        url: function_url,
