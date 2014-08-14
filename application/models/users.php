@@ -222,7 +222,11 @@ public static function get_dpp_details($distirct){
 		$level = $query -> execute();
 		return $level;
 }
-
+public static function get_county_emails($county_id){
+	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("county_id = $county_id and usertype_id='3' ");
+		$level = $query -> execute();
+		return $level;
+}
 	public static function get_users_district($district) {
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
 			SELECT count(*) as count FROM user u 

@@ -9,6 +9,7 @@
     margin: none;
   }
  </style>
+
  <?php $facility_code=$this -> session -> userdata('facility_id');
 		$district_id=$this -> session -> userdata('district_id');
 		$county_id =$this -> session -> userdata('county_id');  ?>
@@ -59,7 +60,7 @@
 		        
 		        if(from==''){from="NULL";}
 		        if(to==''){to="NULL";}
-		        
+	        
 		        //($commodity_id = null, $option = null,$from = null,$to = null,$report_type = null)
 		        //($commodity_id = null,$category_id = null, $district_id = null, $facility_code=null, $option = null,$from=null,$to=null,$report_type=null)
 		        var url = "reports/consumption_stats_graph/"+
@@ -81,8 +82,7 @@
 	changeMonth: true,
 	changeYear: true,
 	buttonImage: baseUrl,       });	
-	
-	
+
 		
   });
 </script>

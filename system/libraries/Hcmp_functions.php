@@ -219,7 +219,7 @@ public function send_sms($phones,$message) {
 
 public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL){
     //  return true;
-		$mail_list=($this->test_mode)?'kariukijackson@ymail.com,': 'kariukijackson@gmail.com,';
+   	$mail_list=($this->test_mode)?'kariukijackson@ymail.com,': 'kariukijackson@gmail.com,';
 			
 		$fromm='info-noreply@health-cmp.or.ke';
 		$messages=$message;
@@ -261,8 +261,6 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
                     </td>
                   </tr>
                 </table>
-
-
                 <table class="row">
                   <tr>
                     <td class="wrapper last">
@@ -324,7 +322,9 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
  
   if($this->email->send())
  {
-return TRUE;
+ 	$this->email->clear(TRUE);
+	return TRUE;
+
  }
  else
 {
@@ -381,19 +381,24 @@ if(count($excel_data)>0):
 		//echo date('H:i:s') . " Write to Excel2007 format\n";
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 
-		// We'll be outputting an excel file
+		if(isset($excel_data['report_type'])){
+
+	   $objWriter->save("./print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
+   } else{
+   	
+   	    	// We'll be outputting an excel file
 		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
         header("Cache-Control: no-store, no-cache, must-revalidate");
         header("Cache-Control: post-check=0, pre-check=0", false);
         header("Pragma: no-cache");
 		// It will be called file.xls
-		header("Content-Disposition: attachment; filename=".$excel_data['file_name'].".xls");
-
+		header("Content-Disposition: attachment; filename=$file_name");
 		// Write file to the browser
         $objWriter -> save('php://output');
        $objPHPExcel -> disconnectWorksheets();
        unset($objPHPExcel);
-		// Echo done
+   }
+		
 endif;
 }
  public function clone_excel_order_template($order_id,$report_type,$file_name=null){
