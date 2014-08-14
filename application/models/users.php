@@ -33,11 +33,12 @@ class Users extends Doctrine_Record {
 		$this -> _set('password', md5($salt . $value));
 
 	}
-    public static function getUsers($facility_c){
-        $query = Doctrine_Query::create() -> select("*") -> from("Users")->where("facility=$facility_c");
-        $level = $query -> execute();
-        return $level;
-    }
+	public static function getUsers($facility_c){
+		$query = Doctrine_Query::create() -> select("*") -> from("Users")->where("facility=$facility_c");
+		$level = $query -> execute();
+		return $level;
+	}
+
 	public static function login($username, $password) {
 
 		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username = '" . $username . "' AND status=1");
@@ -221,7 +222,11 @@ public static function get_dpp_details($distirct){
 		$level = $query -> execute();
 		return $level;
 }
-
+public static function get_county_emails($county_id){
+	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("county_id = $county_id and usertype_id='3' ");
+		$level = $query -> execute();
+		return $level;
+}
 	public static function get_users_district($district) {
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
 			SELECT count(*) as count FROM user u 

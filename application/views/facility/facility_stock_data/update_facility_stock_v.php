@@ -1,10 +1,18 @@
+<style>
+	.row div p{
+	padding:10px;
+}
+</style>
 <div class="container" style="width: 99%;">
-<span  class='label label-info' >Please note this is a one off activity Stock level as of <?php $today = ( date('d M Y'));
+	<div class="row">
+		<div class="col-md-12" id=""><p class="bg-info">
+<strong>Please note this is a one off activity Stock level as of <?php $today = ( date('d M Y'));
     //get today's date in full
 ?>
 <input type="hidden" name="datepicker" readonly="readonly" value="<?php echo $today; ?>"/><?php echo $today; ?> 
-To add facility stock data, first do physical stock count</span>
-<hr />
+To add facility stock data, first do physical stock count</strong></p></div>
+		
+	</div>
 <?php $att = array("name" => 'myform', 'id' => 'myform');
     echo form_open('stock/add_stock_level', $att);
  ?>
@@ -370,7 +378,7 @@ To add facility stock data, first do physical stock count</span>
         //insert the data
         cloned_object.insertAfter('#facility_stock_table tr:last').find('input').val('');;
         // refresh the datepickers
-       // refresh_clone_datepicker_normal_limit_today(); 
+       //refresh_clone_datepicker_normal_limit_today(); 
        refreshDatePickers();
       
         }
