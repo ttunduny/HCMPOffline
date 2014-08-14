@@ -7,8 +7,7 @@
 		
 	}
 	<?php 
- 	$link = base_url('reports/get_facility_report_pdf/'.'1101'.'/'.$facility_code.'/expiries');	
-
+ 	$link = base_url('reports/get_facility_report_pdf/'.'1101'.'/'.$facility_code.'/expiries'.'/'.$commodity_id.'/'.$from.'/'.$to);	
 	 ?>
 </style>
 <html>

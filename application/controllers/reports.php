@@ -672,13 +672,19 @@ class Reports extends MY_Controller
 
 	}
 	public function stock_control_ajax() {
-
 		$facility_code = $this -> session -> userdata('facility_id');
 		$commodity_id = $_POST['commodity_select'];
 		$to = $_POST['to'];
-		$from = $_POST['from'];	
-		$data=	Facility_issues::get_bin_card($facility_code,$commodity_id,$from,$to);	
-		$data['bin_card'] =$data ;
+		$from = $_POST['from'];
+
+
+		//to enable pdf download
+		$data['commodity_id'] =$commodity_id;
+		$data['from'] =$from;
+		$data['to'] =$to;
+		$data['facility_code']= $this -> session -> userdata('facility_id');
+		$data_=	Facility_issues::get_bin_card($facility_code,$commodity_id,$from,$to);	
+		$data['bin_card'] =$data_ ;
 		$count_records=count($data);
 		
 		if ($count_records<=0) {
@@ -1642,10 +1648,113 @@ class Reports extends MY_Controller
 			$this -> hcmp_functions -> create_pdf($pdf_data);
 		redirect();
 	}
+
+	public function get_facility_bin_card_pdf($facility_code, $report_type,$commodity_id) 
+	{
+		  $county_id = $this -> session -> userdata('county_id');
+		  $district_id = $this -> session -> userdata('district_id');
+		  $param = implode('/', func_get_args());
+		  $args = array();
+		  $args = func_get_args();
+
+		  $facility_code = $args[0];
+		  $commodity_id = $args[1];
+		  $from_ = array($args[2],$args[3],$args[4]);
+		  $to_= array($args[5],$args[6],$args[7]);
+		  $from=implode('/',$from_);
+		  $to=implode('/',$to_);
+
+		  $commodity_name = Commodities::get_commodity_name($commodity_id);
+		  $county = Counties::get_county_name($county_id);
+		  $district = Districts::get_district_name_($district_id);
+		  $county_name = $county['county'];
+		  $district_name=$district['district'];
+
+		  $bin_card_data=Facility_issues::get_bin_card($facility_code,$commodity_id,$from,$to);
+
+			$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($facility_code);
+			$facility_name = $myobj -> facility_name;
+
+			$bin_card_data_count = count(Facility_issues::get_bin_card($facility_code,$commodity_id,$from,$to));
+	
+		//create the table for displaying the order details
+		$html_body = "<table class='data-table' width=100%>
+			<tr>
+			<td>MFL No: $facility_code</td> 
+			<td>Health Facility Name:<br/> $facility_name</td>
+			<td>Level:</td>
+			<td>Dispensary</td>
+			<td>Health Centre</td>
+			</tr>
+			<tr>
+			<td>County: $county_name</td> 
+			<td> District: $district_name</td>
+			<td >Reporting Period <br/>
+			Start Date:  <br/>  End Date: " . date('d M, Y') . "
+			</td>
+			</tr>
+			</table>";
+		$html_body .= "
+		<table class='data-table'>
+		<thead>
+		<tr>
+			<th><b>Commodity Name</b></th>
+			<th><b>Date of Issue</b></th>
+			<th><b>Reference No/S11 No</b></th>
+			<th ><b>Commodity Unit Size</b></th>
+			<th ><b>Batch No -Issued</b></th>
+			<th ><b>Expiry Date</b></th>
+			<th ><b>Opening Bal.</b></th>
+			<th ><b>+ADJ</b></th>
+			<th ><b>-ADJ</b></th>
+			<th ><b>Receipts/Issues</b></th>
+			<th ><b>Closing Bal.</b></th>
+			<th ><b>Service Point</b></th>
+			<th ><b>Issuing/Receiving Officer</b></th>
+		</tr> 
+		</thead>
+		<tbody>";
+
+		$html_body .= '<ol type="a">';
+		for ($i = 0; $i < $bin_card_data_count; $i++) 
+		{
+			$closing_balance =$bin_card_data[$i]['balance_as_of'] - $bin_card_data[$i]['qty_issued'];
+			$mydrug_name = $commodity_name;
+			$html_body .= "<tr>";
+			$html_body .= "<td>" . $commodity_name[0]['commodity_name']. "</td>";
+			$html_body .= "<td>". $bin_card_data[$i]['date_issued']."</td>";
+			$html_body .= "<td>" . $bin_card_data[$i]['s11_No'] . "</td>";
+			$html_body .= "<td>" . $bin_card_data[$i]['unit_size'] . "</td>";
+			$html_body .= "<td>" . $bin_card_data[$i]['batch_no'] . "</td>";
+			$html_body .= "<td>" . $bin_card_data[$i]['expiry_date'] . "</td>";
+			$html_body .= "<td>" . $bin_card_data[$i]['balance_as_of'] . "</td>";
+			$html_body .= "<td>" . $bin_card_data[$i]['adjustmentpve']. "</td>";
+			$html_body .= "<td>" . $bin_card_data[$i]['adjustmentnve']. "</td>";
+			$html_body .= "<td>" . $bin_card_data[$i]['qty_issued'] . "</td>";
+			$html_body .= "<td>" . $closing_balance . "</td>";
+			$html_body .= "<td>" . $bin_card_data[$i]['service_point_name'] . "</td>";
+			$html_body .= "<td>" . $bin_card_data[$i]['fname'] ." ".$bin_card_data[$i]['fname']. "</td>";
+			$html_body .= "</tr>";
+			
+			
+			
+		}
+	$html_body .= '</tbody></table></ol>';
+
+			$pdf_body = $html_body;
+			//end of bin card pdf
+
+			$file_name = $facility_name . '_facility_program_report_date_created_'. date('d-m-y');
+			
+			$pdf_data = array("pdf_title" => "Program Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'download', 'file_name' => $file_name);
+
+			$this -> hcmp_functions -> create_pdf($pdf_data);
+		redirect();
+	}//end of bin card pdf generation
 	
 	public function create_program_report_pdf_template($report_id, $facility_code, $report_type) 
 	{
-		if($report_type == "malaria")
+	if($report_type == "malaria")
 		{
 			//$report_time= strtotime($report_time);
 			$from_malaria_data_table = Malaria_Data::get_facility_report($report_id, $facility_code);
