@@ -2252,9 +2252,9 @@ class Rtk_Management extends Home_controller {
 
     public function kemsa_district_reports($district) {
         $pdf_htm = '';
-        $month = date('mY', strtotime('-6 month', time()));
+        $month = date('mY', strtotime('-1 month', time()));
         $year = substr($month, -4);
-        $month = date('m', strtotime('-6 month', time()));
+        $month = date('m', strtotime('-1 month', time()));
         $date = date('F-Y', mktime(0, 0, 0, $month, 1, $year));
         $q = 'SELECT * FROM  `districts` WHERE  `id` =' . $district;
         $res = $this->db->query($q);
@@ -2268,7 +2268,7 @@ class Rtk_Management extends Home_controller {
 //      $email_address = "cecilia.wanjala@kemsa.co.ke,jbatuka@usaid.gov";
 //        $email_address = "lab@kemsa.co.ke,shamim.kuppuswamy@kemsa.co.ke,onjathi@clintonhealthaccess.org,jbatuka@usaid.gov,williamnguru@gmail.com,ttunduny@gmail.com";
 //        $email_address = "lab@kemsa.co.ke,skadima@clintonhealthaccess.org,williamnguru@gmail.com,ttunduny@gmail.com";
-        $email_address = "williamnguru@gmail.com,ttunduny@gmail.com";
+        $email_address = "ttunduny@gmail.com";
         $this->sendmail($reports_html, $reportname, $email_address);
     }
 
@@ -4960,37 +4960,10 @@ WHERE
     }
 
     public function rtk_manager_admin_messages() {
-        
-        /*$users = array('email' =>'All SCMLTs' , 
-                        'email' =>'All CLCs' ,
-                        'email' =>'Sub-Counties with Less than 25% Reported' ,
-                        'email' =>'Sub-Counties with Less than 50% Reported' ,
-                        'email' =>'Sub-Counties with Less than 75% Reported' ,
-                        'email' =>'Sub-Counties with Less than 90% Reported' );             
-        echo "<pre>";
-        print_r($users);die();
-
-
-
-        $data['emails'] = json_encode($emails);
-        $data['emails'] = str_replace('"', "'", $data['emails']);
-        // echo "<pre>";
-        //print_r( $data['emails']);*/
-
-
-
-        /* $sql1 = "select fname from user";
-          $res1 = $this->db->query($sql1);
-          $fname = $res1->result_array();
-          $data['fname'] = json_encode($fname);
-          $data['fname'] = str_replace('"', "'", $data['fname']); */
-        //$data['details'] = $details;
+                
         $data['title'] = 'RTK Manager Messages';
-        $data['banner_text'] = 'RTK Manager';
-        //$data['content_view'] = "rtk/rtk/admin/admin_home_view";
-        $data['content_view'] = "rtk/rtk/admin/messages";
-        //$users = $this->_get_rtk_users();
-       // $data['users'] = $users;
+        $data['banner_text'] = 'RTK Manager';        
+        $data['content_view'] = "rtk/rtk/admin/messages";        
         $this->load->view('rtk/template', $data);
     }
 
@@ -5100,15 +5073,10 @@ WHERE
         $attach_file = null;
         $bcc_email = null;
         $receipient = array();
-        parse_str($_POST['receipients'], $receipient);
+        parse_str($_POST['receipients'], $receipient);                
         $receipient = $receipient['hidden-receipients'];
-        include 'rtk_mailer.php';
-        $newmail = new rtk_mailer();
-        $response = $newmail->send_email($receipient, $message, $subject, $attach_file, $bcc_email);
-        $sql = "INSERT INTO `rtk_messages`(`id`, `sender`, `subject`, `message`, `receipient`, `state`) VALUES (NULL,'$sender','$subject','$message','$receipient','0')";
-        $this->db->query($sql);
-        $object_id = $this->db->insert_id();
-        $this->logData('23', $object_id);
+        $new_recepients = explode(',', $receipient);
+        $count = count($new_recepients);        
         echo "Email Sent";
     }
 
