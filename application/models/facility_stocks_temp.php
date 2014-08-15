@@ -95,7 +95,7 @@ class facility_stocks_temp extends Doctrine_Record {
 				$group_by
 
 		 ");
-		//echo "string";
+
 		return $query_1;
 	}
 	public static function get_division_commodities_stock($district_id = NULL, $county_id = NULL, $facility_code = NULL, $division_id = NULL) 
