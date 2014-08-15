@@ -372,7 +372,6 @@ To add facility stock data, first do physical stock count</span>
         // refresh the datepickers
        // refresh_clone_datepicker_normal_limit_today(); 
        refreshDatePickers();
-      
         }
         
         });
