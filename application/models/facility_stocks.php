@@ -107,6 +107,7 @@ WHERE
         AND fs.status = '1'
 GROUP BY c.id
 			");
+
 return $stocks ;      
     }
 	public static function get_facility_expired_stuff($facility_code){
@@ -154,10 +155,11 @@ AND f.district = d.id
 AND f_s.status =1  
 GROUP BY c.id having current_balance=0
 $group_by ");
+
         return $stocks ;	  	
 	  }
 	
- 		public static function potential_expiries($district_id){
+ 		public static function potential_expiries($facility_code){
 		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date 
 		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code' and current_balance>0");
 		
@@ -194,34 +196,7 @@ $group_by ");
 			$and_data
 			group by temp.id,f.facility_code
 			order by temp.commodity_name asc,temp.total asc, temp.expiry_date desc");
-		/*
-		echo "select  c.county, d1.district as subcounty ,temp.commodity_name,
-			 f.facility_code, f.facility_name,temp.manufacture, sum(temp.total) as total_ksh,
-			temp.unit_cost,temp.expiry_date,temp.unit_size,temp.units,
-			temp.packs
-			from districts d1, counties c, facilities f left join
-			     (
-			select  ROUND( SUM(
-			f_s.current_balance  / d.total_commodity_units ) * d.unit_cost, 1) AS total, ROUND( SUM( f_s.current_balance  / d.total_commodity_units ), 1) as packs,SUM( f_s.current_balance) as units,
-			f_s.facility_code,d.id,d.commodity_name, f_s.manufacture,
-			f_s.expiry_date,d.unit_size,d.unit_cost
-			
-			 from facility_stocks f_s, commodities d
-			where f_s.expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and  DATE_ADD(CURDATE(), INTERVAL 3 MONTH)
-			and d.id=f_s.commodity_id
-			and year(f_s.expiry_date) !=1970
-			AND f_s.status =(1 or 2)
-			GROUP BY d.id,f_s.facility_code having total >1
-			
-			     ) temp
-			     on temp.facility_code = f.facility_code
-			where  f.district = d1.id
-			and c.id=d1.county
-			and temp.total>0
-			$and_data
-			group by temp.id,f.facility_code
-			order by temp.commodity_name asc,temp.total asc, temp.expiry_date desc";
-		exit;*/
+	
 		return $query;
 	}
 		//Used for the SMS notificatin
@@ -487,13 +462,9 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
       $computation ="ifnull((SUM(ROUND(fs.current_balance/ d.total_commodity_units)))*d.unit_cost ,0) AS total";
           break;
      endswitch;		
-	 	
      $and_data .=(isset($category_id)&& ($category_id>0)) ?"AND d.commodity_sub_category_id = '$category_id'" : null;
      $and_data .=(isset($commodity_id)&& ($commodity_id>0)) ?"AND d.id = '$commodity_id'" : null;
-
-
      $and_data .=(isset($division_id)&& ($division_id>0)) ?"AND d.commodity_division = '$division_id' " :null;
-
 	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND di.id = '$district_id'" : null;
 	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;
      $and_data .=($county_id>0) ?" AND di.county='$county_id'" : null;
@@ -516,6 +487,7 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
      $and_data
       $group_by_a_month
      ");	
+	
 	
      return $inserttransaction ;
 }   
@@ -606,25 +578,7 @@ GROUP BY f_s.commodity_id,f_s.facility_code having total >1
 where  f.district = d1.id
 $and_data
 group by f.facility_code");	
-/*
-echo "select  d1.id as district_id, d1.district, f.facility_code, f.facility_name, sum(temp.total) as total
-from districts d1, facilities f left join
-     (
-select  ROUND( (
-SUM( f_s.current_balance ) / d.total_commodity_units ) * d.unit_cost, 1
-) AS total, f_s.facility_code from facility_stocks f_s, commodities d
-where f_s.expiry_date < NOW( ) 
-and d.id=f_s.commodity_id
-and year(f_s.expiry_date)=$year
-AND f_s.status =(1 or 2)
-GROUP BY f_s.commodity_id,f_s.facility_code having total >1
-     ) temp
-     on temp.facility_code = f.facility_code
-where  f.district = d1.id
-$and_data
-and temp.total>0
-group by f.facility_code";
-exit;*/
+
 
 		return $query;
 	}
@@ -651,26 +605,7 @@ where  f.district = d1.id
 $and_data
 and temp.total>0
 group by f.facility_code");	
-/*
-echo "select  d1.id as district_id, d1.district, f.facility_code, f.facility_name, sum(temp.total) as total
-from districts d1, facilities f left join
-     (
-select  ROUND( (
-SUM( f_s.current_balance ) / d.total_commodity_units ) * d.unit_cost, 1
-) AS total, f_s.facility_code from facility_stocks f_s, commodities d
-where d.id=f_s.commodity_id
-AND f_s.expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and  DATE_ADD(CURDATE(), INTERVAL $interval MONTH)
-AND f_s.status =(1 or 2)
-and year(f_s.expiry_date)=year(NOW())
-GROUP BY f_s.commodity_id,f_s.facility_code having total >1
-    ) temp
-     on temp.facility_code = f.facility_code
-where  f.district = d1.id
-$and_data
-and temp.total>0
-group by f.facility_code";
-exit;
-*/
+
 
 /////
 		return $query;
