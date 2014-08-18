@@ -1,3 +1,7 @@
+<?php
+$facility_id = $this -> session -> userdata('facility_id');
+$district_id =  $this -> session -> userdata('district_id');
+?>
 <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Stock Level</h1>
 <div class="alert alert-info" style="width: 100%">
   <b>Below are the Stocking Levels in the County </b> :Select filter Options
@@ -125,7 +129,7 @@ var drop_down='';
 		$(".county-filter").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+
-$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+'/table_data';	
+$("#county_commodity_filter").val()+"/NULL/"+"<?php echo $district_id;?>"+"/"+"<?php echo $facility_id;?>"+"/"+$("#county_plot_value_filter").val()+'/table_data';	
 		ajax_request_replace_div_content(url_,'.graph_content');	
 
           });

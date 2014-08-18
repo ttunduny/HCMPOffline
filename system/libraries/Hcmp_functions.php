@@ -4,7 +4,8 @@
  */
 class Hcmp_functions extends MY_Controller {
 
-	var $test_mode=false;
+	var $test_mode=FALSE;
+
 
 		function __construct() {
 		parent::__construct();
@@ -229,17 +230,27 @@ public function send_sms($phones,$message) {
 
 public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL){
     //  return true;
-   	$mail_list=($this->test_mode)?'kariukijackson@ymail.com,': 'kariukijackson@gmail.com,';
+
+   	/*$mail_list=($this->test_mode)?'collinsojenge@gmail.com,kelvinmwas@gmail.com,': 
+   		'smutheu@clintonhealthaccess.org,
+   		tngugi@clintonhealthaccess.org,
+		bwariari@clintonhealthaccess.org,
+		amwaura@clintonhealthaccess.org,
+		eongute@clintonhealthaccess.org,
+		rkihoto@clintonhealthaccess.org,
+  		kariukijackson@gmail.com,
+  		kelvinmwas@gmail.com,
+  		collinsojenge@gmail.com,';*/
 			
-		$fromm='info-noreply@health-cmp.or.ke';
+		$fromm='hcmpkenya@gmail.com';
 		$messages=$message;
   		$config['protocol']    = 'smtp';
-        $config['smtp_host']    = 'ssl://host05.safaricombusiness.co.ke';
+        $config['smtp_host']    = 'ssl://smtp.gmail.com';
         $config['smtp_port']    = '465';
         $config['smtp_timeout'] = '7';
-        $config['smtp_user']    = 'info-noreply@health-cmp.or.ke';
-        $config['smtp_pass']    = 'hcmp@#2012';//healthkenya //hcmpkenya@gmail.com
-        $config['charset']    = 'utf-8';
+        $config['smtp_user']    = 'hcmpkenya@gmail.com';
+       	$config['smtp_pass']    = 'healthkenya';//healthkenya //hcmpkenya@gmail.com
+	 	$config['charset']    = 'utf-8';
         $config['newline']    = "\r\n";
         $config['mailtype'] = 'html'; // or html
         $config['validation'] = TRUE; // bool whether to validate email or not  
@@ -328,11 +339,13 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
 		endif;
 			
   		$this->email->subject($subject);
- 		$this->email->message($mail_header.$message.$mail_tail);
+ 		$this->email->message($mail_header.$message);
  
   if($this->email->send())
  {
  	$this->email->clear(TRUE);
+
+	unlink($attach_file);
 	return TRUE;
 
  }
@@ -391,19 +404,21 @@ if(count($excel_data)>0):
 		//echo date('H:i:s') . " Write to Excel2007 format\n";
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 
+   	    	// We'll be outputting an excel file
+	
 		if(isset($excel_data['report_type'])){
 
 	   $objWriter->save("./print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
    } else{
    	
-   	    	// We'll be outputting an excel file
+    	// We'll be outputting an excel file
 		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
         header("Cache-Control: no-store, no-cache, must-revalidate");
         header("Cache-Control: post-check=0, pre-check=0", false);
         header("Pragma: no-cache");
 		// It will be called file.xls
 
-		header("Content-Disposition: attachment; filename=$file_name");
+		header("Content-Disposition: attachment; filename=".$excel_data['file_name'].'.xls');
 		// Write file to the browser
         $objWriter -> save('php://output');
        $objPHPExcel -> disconnectWorksheets();

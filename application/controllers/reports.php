@@ -2680,19 +2680,19 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 
     }
    public function facility_stock_level_dashboard(){
-   				$county_id = $this -> session -> userdata('county_id');
-   				$view = 'shared_files/template/dashboard_template_v';
-	            $data['district_data'] = districts::getDistrict($county_id);
-	            $data['c_data'] = Commodities::get_all_2();
-				$data['categories']=commodity_sub_category::get_all_pharm();
-				$data['banner_text'] = "Stocking Levels";
-				$data['title'] = "Stocking Levels";
-				$data['content_view'] = "facility/facility_reports/reports_v";
-				$view = 'shared_files/template/template';
-				$data['report_view'] = "subcounty/reports/county_stock_level_filter_v";
-				$data['sidebar'] = "shared_files/report_templates/side_bar_v";
-				$data['active_panel']='other';
-		 		$data['title'] = "Reports";
+		$county_id = $this -> session -> userdata('county_id');
+		$view = 'shared_files/template/dashboard_template_v';
+        $data['district_data'] = districts::getDistrict($county_id);
+        $data['c_data'] = Commodities::get_all_2();
+		$data['categories']=commodity_sub_category::get_all_pharm();
+		$data['banner_text'] = "Stocking Levels";
+		$data['title'] = "Stocking Levels";
+		$data['content_view'] = "facility/facility_reports/reports_v";
+		$view = 'shared_files/template/template';
+		$data['report_view'] = "subcounty/reports/county_stock_level_filter_v";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		$data['active_panel']='other';
+ 		$data['title'] = "Reports";
 		
 		$this -> load -> view($view, $data);
 
@@ -2724,11 +2724,11 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 		$option = ($option=="NULL" || $option=="null") ? null :$option;	
 		
 		//get_county_stock_level_new/12/1
-		if($option=="mos"){
+		/*if($option=="mos"){
         	
         	$this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id,$report_type);
 			exit;
-        }
+        }*/
 		
 
 		$county_id = $this -> session -> userdata('county_id');
@@ -2751,6 +2751,8 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 		$title = isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
 	 	isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
 
+//echo $facility_code;
+//exit;
 		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code, $district_id, $county_id,
 		$category_id, $commodity_id, $option_new, $report_type);
 		
