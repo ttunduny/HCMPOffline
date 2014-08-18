@@ -131,6 +131,7 @@ class Home extends MY_Controller
      }
     //get potential expiries infor here
     $potential_expiries=Facility_stocks::potential_expiries($facility_code)->count();
+	
     //get actual Expiries infor here
     $actual_expiries=count(Facility_stocks::All_expiries($facility_code));
 	//get items they have been donated for

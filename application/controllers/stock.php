@@ -1071,6 +1071,73 @@ endif;
    }
 
 }
+            public function upload_new_list(){
+            if(isset($_FILES['file']) && $_FILES['file']['size'] > 0):
+            $item_details = Commodities::get_all_from_supllier(1);
+            
+            $excel2 = PHPExcel_IOFactory::createReader('Excel2007');
+            $excel2=$objPHPExcel= $excel2->load($_FILES["file"]["tmp_name"]); // Empty Sheet
+            
+            $sheet = $objPHPExcel->getSheet(0); 
+            $highestRow = $sheet->getHighestRow(); 
+            
+            $highestColumn = $sheet->getHighestColumn();
+            $temp=$super_cat=$sub_cat=array();
+            $super_cat_id=$sub_cat_id=0;
+           //  Loop through each row of the worksheet in turn
+        for ($row = 15; $row <= $highestRow; $row++){ 
+            //  Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);                                    
+           if(isset($rowData[0][1]) && $rowData[0][1]!='' ){
+           $cell = $sheet->getCell('C'.$row);// super category
+           $cell2=$sheet->getCell('E'.$row); //sub category 
+           // Check if cell is merged super category
+           foreach ($sheet->getMergeCells() as $cells) {
+           if ($cell->isInRange($cells)) {// check for the super cat name 
+           
+           $data_new=$rowData[0][2];
+           
+           $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+           select * from commodity_category where category_name like '%$data_new%'");
+           $does_it_exits=count($q);
+          
+           if($does_it_exits==0){//set the super cat id here
+           $this -> db -> insert('commodity_category', array('category_name'=>$rowData[0][2],'status'=>1));
+           $super_cat=array_merge($super_cat,array($rowData[0][2]=>$this -> db -> insert_id()));
+           }else{
+           $super_cat=array_merge($super_cat,array($rowData[0][2]=>$q['id']));   
+           }
+           } 
+           }
+
+           // Check if cell is merged sub category
+           if (isset($rowData[0][4])) {// check for the super cat name 
+           
+           $data_new=$rowData[0][4];
+           
+           $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+           select * from commodity_sub_category where sub_category_name like '%$data_new%'");
+           $does_it_exits=count($q);
+          
+           if($does_it_exits==0){//set the super cat id here
+          // $this -> db -> insert('commodity_sub_category', array('commodity_sub_category'=>$data_new,
+          // 'status'=>1,'commodity_category_id'=>end($super_cat)));
+           echo end($super_cat);print_r($super_cat); exit;
+           array_push($sub_cat,array($data_new=>$this -> db -> insert_id()));
+           }else{
+           array_push($sub_cat,array($data_new=>$q['id']));   
+           }
+           } 
+
+          
+           //echo $rowData[0][4]."$row<br>";
+           }// end if
+           }// end for loop
+          print_r($super_cat);
+           unset($objPHPExcel);
+           endif;   
+               }
+
 }
 
 ?>

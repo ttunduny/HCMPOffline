@@ -36,7 +36,13 @@ class Facilities extends Doctrine_Record {
 		$drugs = $query -> execute();
 		return $drugs;
 	}
-	public static function get_Facilities_using_HCMP($county_id = null, $district = null, $facility_code = null)
+	public static function getFacilities_for_email($district){
+		
+		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district' AND using_hcmp=1")->OrderBy("facility_name asc");
+		$drugs = $query -> execute();
+		return $drugs;
+	}
+	public static function get_Facilities_using_HCMP($county_id = null, $district_id = null, $facility_code = null)
 	{
 		$and_data =(isset($county_id)&& ($county_id>0)) ?" AND d.county = $county_id" : null;
 	    $and_data .=(isset($district_id)&& ($district_id>0)) ?" AND f.district = $district_id" : null;
@@ -50,11 +56,37 @@ class Facilities extends Doctrine_Record {
 	
 	//gets all the facilitites using HCMP in the system
 	//For weekly email updates
-	public static function get_all_using_HCMP()
+	public static function get_all_using_HCMP($county_id)
 	{
-		$query = Doctrine_Query::create() ->select("*") ->from("facilities")->where("using_hcmp = 1")->OrderBy("facility_name asc");
-		$query = $query -> execute();
-		return $query;
+		$and_data = (isset($county_id)&&$county_id>0)?" AND d.county = $county_id" :null;
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT DISTINCT
+		    (f.district) as district, d.district as name
+		from
+		    facilities f,
+		    districts d
+		where
+		    f.district = d.id 
+		    $and_data
+		    AND using_hcmp = 1");
+			
+		return $q;
+	}
+	public static function get_counties_all_using_HCMP()
+	{
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT DISTINCT
+		    (d.county) as county, c.county as county_name
+		from
+		    facilities f,
+		    districts d,
+		    counties c
+		where
+		c.id = d.county
+		AND f.district = d.id 
+		AND using_hcmp = 1");
+			
+		return $q;
 	}
 	//get the facility codes of facilities in a particular district
 	public static function get_district_facilities($district)
