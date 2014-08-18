@@ -511,8 +511,6 @@ class User extends MY_Controller {
 			$facility_id=$this -> session -> userdata('facility_id');
 			$district_code=$this -> session -> userdata('district_id');
 			$county=$this -> session -> userdata('county_id');
-
-
 			break;
 			case 'district':
 			$district_code=$this -> session -> userdata('district_id');

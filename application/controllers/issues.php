@@ -91,9 +91,9 @@ if (!defined('BASEPATH'))
          
 	endfor;
 
-			$user = $this -> session -> userdata('user_id');
-			$user_action = "issue";
-			Log::log_user_action($user, $user_action);
+			//$user = $this -> session -> userdata('user_id');
+			//$user_action = "issue";
+			//Log::log_user_action($user, $user_action);
 		 	$this->session->set_flashdata('system_success_message', "You have issued $total_items item(s)");
 			redirect();
 	endif;

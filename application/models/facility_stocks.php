@@ -157,7 +157,7 @@ $group_by ");
         return $stocks ;	  	
 	  }
 	
- 		public static function potential_expiries($facility_code){
+ 		public static function potential_expiries($district_id){
 		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date 
 		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code' and current_balance>0");
 		
