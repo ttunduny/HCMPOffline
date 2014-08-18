@@ -442,7 +442,8 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
 }
  public static function get_county_drug_stock_level_new($facility_code=null,$district_id=null,
  $county_id,$category_id=NULL,$commodity_id=NULL,$option=null,$graph_type=null,$division_id=NULL)
- { 
+ {
+ 	
      $selection_for_a_month = (isset($facility_code) && isset($district_id))||(($category_id>0))? " d.commodity_name as name," : 
 			 (($district_id>0) && !isset($facility_code) ? " f.facility_name as name,":
 			 ($graph_type=='table_data')&& ($commodity_id>0) ?" di.district , f.facility_name, f.facility_code, " : " di.district as name,") ; 
@@ -463,7 +464,7 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
           break;
      endswitch;		
      $and_data .=(isset($category_id)&& ($category_id>0)) ?"AND d.commodity_sub_category_id = '$category_id'" : null;
-     $and_data .=(isset($commodity_id)&& ($commodity_id>0)) ?"AND d.id = '$commodity_id'" : null;
+     $and_data .=(isset($commodity_id)&& ($commodity_id>0)) ?"AND fs.commodity_id = d.id AND d.id = '$commodity_id'" : null;
      $and_data .=(isset($division_id)&& ($division_id>0)) ?"AND d.commodity_division = '$division_id' " :null;
 	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND di.id = '$district_id'" : null;
 	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;
@@ -487,8 +488,16 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
      $and_data
       $group_by_a_month
      ");	
-	
-	
+	/*
+	echo "SELECT  $selection_for_a_month $computation
+     FROM facility_stocks fs, facilities f, commodities d,  districts di
+     WHERE fs.facility_code = f.facility_code
+     AND f.district =di.id
+     and fs.expiry_date>NOW()
+     AND fs.status=1
+     $and_data
+      $group_by_a_month";
+      exit;*/
      return $inserttransaction ;
 }   
   public static function get_county_consumption_level_new($facility_code, $district_id,$county_id,$category_id,$commodity_id, $option,$from,$to,$graph_type=null){
