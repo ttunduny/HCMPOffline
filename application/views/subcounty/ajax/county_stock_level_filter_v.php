@@ -280,7 +280,7 @@ var drop_down='';
          $(".tracer-download").button().click(function(e) {
         e.preventDefault(); 
         var url_ = "reports/get_county_stock_level_new/"+"NULL/"+"NULL/"+
-        $("#tracer_district_filter").val()+"/NULL/"+$("#tracer_plot_value_filter").val()+"/csv_data";   
+        $("#tracer_district_filter").val()+"/"+$("#tracer_facility_filter").val()+"/"+$("#tracer_plot_value_filter").val()+"/csv_data";   
          window.open(url+url_ ,'_blank');   
           });
           

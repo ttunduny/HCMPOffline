@@ -107,6 +107,7 @@ WHERE
         AND fs.status = '1'
 GROUP BY c.id
 			");
+
 return $stocks ;      
     }
 	public static function get_facility_expired_stuff($facility_code){
@@ -154,6 +155,7 @@ AND f.district = d.id
 AND f_s.status =1  
 GROUP BY c.id having current_balance=0
 $group_by ");
+
         return $stocks ;	  	
 	  }
 	
@@ -194,6 +196,7 @@ $group_by ");
 			$and_data
 			group by temp.id,f.facility_code
 			order by temp.commodity_name asc,temp.total asc, temp.expiry_date desc");
+
 		/*
 		echo "select  c.county, d1.district as subcounty ,temp.commodity_name,
 			 f.facility_code, f.facility_name,temp.manufacture, sum(temp.total) as total_ksh,
@@ -222,6 +225,7 @@ $group_by ");
 			group by temp.id,f.facility_code
 			order by temp.commodity_name asc,temp.total asc, temp.expiry_date desc";
 		exit;*/
+
 		return $query;
 	}
 		//Used for the SMS notificatin
@@ -487,13 +491,9 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
       $computation ="ifnull((SUM(ROUND(fs.current_balance/ d.total_commodity_units)))*d.unit_cost ,0) AS total";
           break;
      endswitch;		
-	 	
      $and_data .=(isset($category_id)&& ($category_id>0)) ?"AND d.commodity_sub_category_id = '$category_id'" : null;
      $and_data .=(isset($commodity_id)&& ($commodity_id>0)) ?"AND d.id = '$commodity_id'" : null;
-
-
      $and_data .=(isset($division_id)&& ($division_id>0)) ?"AND d.commodity_division = '$division_id' " :null;
-
 	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND di.id = '$district_id'" : null;
 	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;
      $and_data .=($county_id>0) ?" AND di.county='$county_id'" : null;
@@ -516,6 +516,7 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
      $and_data
       $group_by_a_month
      ");	
+	
 	
      return $inserttransaction ;
 }   

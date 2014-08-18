@@ -1,3 +1,5 @@
+
+
 <style>
 	.input-small{
  		width: 100px !important;
@@ -40,6 +42,8 @@ endforeach;
 ?>
 </select> 
 <select id="category_facility_filter" class="form-control col-md-3">
+
+
 <option value="NULL">Select facility</option>
 </select>
 <input type="text" name="from"  id="category_from" 
