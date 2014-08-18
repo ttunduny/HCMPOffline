@@ -690,8 +690,8 @@ class sms extends MY_Controller {
 				$subject = "Potential Expiries: ".$district_name." Sub County (Next 3 Months)";
 				$message = $district_name . "'s Weekly Potential Expiries Report. ";
 				$message .= " Find attached an excel sheet with the breakdown for the Potential Expiries for ".$district_name. " Sub County";
-				$email_address = "collinsojenge2014@gmail.com";
-				//$email_address = $this->get_ddp_email($district_id);
+				//$email_address = "collinsojenge2014@gmail.com";
+				$email_address = $this->get_ddp_email($district_id);
 
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
@@ -725,9 +725,9 @@ class sms extends MY_Controller {
 			$subject = "Potential Expiries: ".$county_name." County (Next 3 Months)";
 			$message = $county_name . "'s Weekly Potential Expiries Report.";
 			$message .= " Find attached an excel sheet with the breakdown for the Potential Expiries for ".$county_name. " County";
-			$email_address = "collinsojenge@gmail.com,smutheu@clintonfoundation.org,kelvinmwas@gmail.com,smutheu@gmail.com";
-			//$email_address = $this->get_county_email($county_id);
-			//$bcc = $this->get_bcc_notifications();
+			//$email_address = "collinsojenge@gmail.com,smutheu@clintonfoundation.org,kelvinmwas@gmail.com,smutheu@gmail.com";
+			$email_address = $this->get_county_email($county_id);
+			$bcc = $this->get_bcc_notifications();
 			//$cc_email = "";
 
 			$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc_email);
