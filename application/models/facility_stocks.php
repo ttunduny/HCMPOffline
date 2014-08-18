@@ -196,7 +196,36 @@ $group_by ");
 			$and_data
 			group by temp.id,f.facility_code
 			order by temp.commodity_name asc,temp.total asc, temp.expiry_date desc");
-	
+
+		/*
+		echo "select  c.county, d1.district as subcounty ,temp.commodity_name,
+			 f.facility_code, f.facility_name,temp.manufacture, sum(temp.total) as total_ksh,
+			temp.unit_cost,temp.expiry_date,temp.unit_size,temp.units,
+			temp.packs
+			from districts d1, counties c, facilities f left join
+			     (
+			select  ROUND( SUM(
+			f_s.current_balance  / d.total_commodity_units ) * d.unit_cost, 1) AS total, ROUND( SUM( f_s.current_balance  / d.total_commodity_units ), 1) as packs,SUM( f_s.current_balance) as units,
+			f_s.facility_code,d.id,d.commodity_name, f_s.manufacture,
+			f_s.expiry_date,d.unit_size,d.unit_cost
+			
+			 from facility_stocks f_s, commodities d
+			where f_s.expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and  DATE_ADD(CURDATE(), INTERVAL 3 MONTH)
+			and d.id=f_s.commodity_id
+			and year(f_s.expiry_date) !=1970
+			AND f_s.status =(1 or 2)
+			GROUP BY d.id,f_s.facility_code having total >1
+			
+			     ) temp
+			     on temp.facility_code = f.facility_code
+			where  f.district = d1.id
+			and c.id=d1.county
+			and temp.total>0
+			$and_data
+			group by temp.id,f.facility_code
+			order by temp.commodity_name asc,temp.total asc, temp.expiry_date desc";
+		exit;*/
+
 		return $query;
 	}
 		//Used for the SMS notificatin
@@ -587,7 +616,25 @@ GROUP BY f_s.commodity_id,f_s.facility_code having total >1
 where  f.district = d1.id
 $and_data
 group by f.facility_code");	
-
+/*
+echo "select  d1.id as district_id, d1.district, f.facility_code, f.facility_name, sum(temp.total) as total
+from districts d1, facilities f left join
+     (
+select  ROUND( (
+SUM( f_s.current_balance ) / d.total_commodity_units ) * d.unit_cost, 1
+) AS total, f_s.facility_code from facility_stocks f_s, commodities d
+where f_s.expiry_date < NOW( ) 
+and d.id=f_s.commodity_id
+and year(f_s.expiry_date)=$year
+AND f_s.status =(1 or 2)
+GROUP BY f_s.commodity_id,f_s.facility_code having total >1
+     ) temp
+     on temp.facility_code = f.facility_code
+where  f.district = d1.id
+$and_data
+and temp.total>0
+group by f.facility_code";
+exit;*/
 
 		return $query;
 	}
@@ -614,7 +661,26 @@ where  f.district = d1.id
 $and_data
 and temp.total>0
 group by f.facility_code");	
-
+/*
+echo "select  d1.id as district_id, d1.district, f.facility_code, f.facility_name, sum(temp.total) as total
+from districts d1, facilities f left join
+     (
+select  ROUND( (
+SUM( f_s.current_balance ) / d.total_commodity_units ) * d.unit_cost, 1
+) AS total, f_s.facility_code from facility_stocks f_s, commodities d
+where d.id=f_s.commodity_id
+AND f_s.expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and  DATE_ADD(CURDATE(), INTERVAL $interval MONTH)
+AND f_s.status =(1 or 2)
+and year(f_s.expiry_date)=year(NOW())
+GROUP BY f_s.commodity_id,f_s.facility_code having total >1
+    ) temp
+     on temp.facility_code = f.facility_code
+where  f.district = d1.id
+$and_data
+and temp.total>0
+group by f.facility_code";
+exit;
+*/
 
 /////
 		return $query;

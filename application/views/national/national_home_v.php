@@ -18,8 +18,37 @@
     <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
     <script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
     <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
-    <title>HCMP | <?php echo $title;?></title>
+     <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
+    <title>HCMP | National</title>
+<script>
+   paceOptions = {
+  ajax: false, // disabled
+  document: true, // 
+  eventLag: true,
+  restartOnPushState: false,
+  elements:{
+  	selectors:['body']
+  } // 
+  
+};
+ 
+    function load(time){
+      var x = new XMLHttpRequest()
+      x.open('GET', document.URL , true);
+      x.send();
+    };
+    setTimeout(function(){
+      Pace.ignore(function(){
+        load(3100);
+      });
+    },4500);
 
+    Pace.on('hide', function(){
+   //   console.log('done');
+    });
+
+    var url="<?php echo base_url(); ?>";
+    </script>
 <style>
 	.active-panel{
     	border-left: 6px solid #36BB24;
@@ -121,7 +150,7 @@ h4{
     <![endif]-->
   </script></head>
   <body screen_capture_injected="true" style="">
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+<div class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color:white">
         <div class="container-fluid">
             <div class="navbar-header" id="st-trigger-effects">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -144,6 +173,8 @@ h4{
           <ul class="nav navbar-nav navbar-right">
             <li class="active"><a href="<?php echo base_url().'national';?>">Home</a></li>
             <li class=""><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>
+            <li class=""><a href="<?php echo base_url().'national/search';?>">Search</a></li>
+
             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Welcome, Guest</a>
                         <ul class="dropdown-menu">
                             <li><a href="<?php echo base_url();?>"><span class="glyphicon glyphicon-log-in" style="margin-right: 2%;"></span> Login</a></li>
@@ -166,8 +197,13 @@ h4{
 			
 			<div class="row">
 				<div class="col-md-12" style="/*border: 1px solid #000;*/height: 620px">
-					<div id="map" ></div>
-				<script>
+					<div style="/*border: 1px solid #000;*/height: 500px"><div id="map" ></div></div>
+					<div style="width:130px;margin-left:30%;padding:2%">
+            <div style="display:inline-block;width:10px;height:10px;background:#FFCC99">
+                
+            </div>
+            <div style="width:80px;display:inline-block;margin-left:5px;font-size:120%">Using HCMP</div></div>
+					<script>
 					var map= new FusionMaps ("assets/FusionMaps/FCMap_KenyaCounty.swf","KenyaMap","100%","100%","0","0");
 					map.setJSONData(<?php echo $maps; ?>);
 					
@@ -193,7 +229,7 @@ h4{
                           </div>
                           <div class="value">
                           	<p>Health Workers Trained</p>
-                              <h1 class="count">495</h1>
+                              <h1 class="count" id="hcw_trained"></h1>
                               
                           </div>
                       </section>
@@ -205,7 +241,7 @@ h4{
                           </div>
                           <div class="value">
                           	<p>Facilities Rolled Out</p>
-                              <h1 class=" count2">947</h1>
+                              <h1 class=" count2" id="facilities_rolled_out"></h1>
                               
                           </div>
                       </section>
@@ -289,10 +325,142 @@ h4{
 				</div>
 				
 			</div>
-			
-			
-			
-			
+
+			<div class="row">
+				<div class="col-md-12" style="border: 1px solid #000;height: 420px">
+					
+					<div class="panel panel-success">
+       <div class="panel-heading">
+       <h3 class="panel-title" style="display:inline-block;"><div class="county-name" style="display:inline-block"></div>Expiries</h3>
+       </div>
+       
+        <div class="row" style="margin-left: 2px">
+
+       <div class="col-md-6" style="border: 1px solid #DDD;height: 530px; ">
+
+      
+       <div class="panel-heading">
+       <h4 class="panel-title">Actual Expiries </h4>
+       </div>
+        <div class="panel-body" style="margin-left: 2px">
+      <ul class='nav nav-tabs' id="actual_">
+      <li class="active"><a href="#acounty" data-toggle="tab">County View</a></li>
+      <li class=""><a href="#asubcounty" data-toggle="tab">Sub County View</a></li>
+       </ul>
+       <div id="myTabContent" class="tab-content ">
+            <div  id="acounty" class="tab-pane active fade in">
+       <div class="filter row" style="margin-left: 2px;">
+<form class="form-inline" role="form">
+<select id="ecounty_filter" class="form-control col-md-2 county">
+<option value="NULL">Select County</option>
+<?php
+foreach($counties as $data):
+    foreach($data as $key=>$name):
+      echo "<option value='$key'>$name</option>";
+    endforeach;
+       
+endforeach;
+?>
+</select>   
+<select id="eyear" class="form-control col-md-2">
+<option selected="selected" value="NULL">Select Year</option>
+<option  value="2014">2014</option>
+<option  value="2013">2013</option>
+</select> 
+<div class="col-md-2">
+<button class="btn btn-sm btn-success ecounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+</div>
+
+</form>
+</div>
+       </div> 
+        <div  id="asubcounty" class="tab-pane fade in">
+            <!-- -->
+<div class="filter row" style="margin-left: 2px;">
+<form class="form-inline" role="form">
+<select id="asubcounty_filter" class="form-control col-md-2 subcounty">
+<option value="NULL">Select Sub-County</option>
+</select>
+<select id="asubcounty_facility_filter" class="form-control col-md-3 facility">
+<option value="NULL">Select facility</option>
+</select>   
+<select id="asubcountyyear" class="form-control col-md-2">
+<option selected="selected" value="NULL">Select Year</option>
+<option  value="2014">2014</option>
+<option  value="2013">2013</option>
+</select> 
+<div class="col-md-2">
+<button class="btn btn-sm btn-success asubcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+</div>
+
+</form>
+</div>
+       </div>   
+      </div>
+       <div id="actual">test</div>
+       </div> 
+        </div> 
+       <div class="col-md-6" style="border: 1px solid #DDD;height: 530px;" >
+
+      
+       <div class="panel-heading">
+       <h4 class="panel-title">Potential Expiries </h4>
+       </div>
+        <div class="panel-body">
+        <ul class='nav nav-tabs' id="potential_">
+      <li class="active"><a href="#pcounty" data-toggle="tab">County View</a></li>
+      <li class=""><a href="#psubcounty" data-toggle="tab">Sub County View</a></li>
+       </ul>
+       <div id="myTabContent" class="tab-content">
+            <div  id="pcounty" class="tab-pane active fade in">
+       <div class="filter row" style="margin-left: 2px;">
+<form class="form-inline" role="form">
+<select id="pcounty_filter" class="form-control col-md-2 county">
+<option value="NULL">Select County</option>
+<?php
+foreach($counties as $data):
+    foreach($data as $key=>$name):
+      echo "<option value='$key'>$name</option>";
+    endforeach;
+       
+endforeach;
+?>
+</select>   
+<div class="col-md-2">
+<button class="btn btn-sm btn-success pcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+</div>
+
+</form>
+</div>
+       </div> 
+        <div  id="psubcounty" class="tab-pane fade in">
+                        <!-- -->
+<div class="filter row" >
+<form class="form-inline" role="form">
+<select id="psubcounty_filter" class="form-control col-md-2 subcounty">
+<option value="NULL">Select Sub-County</option>
+</select> 
+<select id="psubcounty_facility_filter" class="form-control col-md-3 facility">
+<option value="NULL">Select facility</option>
+</select>   
+<div class="col-md-2">
+<button class="btn btn-sm btn-success psubcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+</div>
+<div class="col-md-1">
+<button class="btn btn-sm btn-success psubcounty-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
+</div>
+</form>
+</div>
+            </div>   
+      </div>
+      <div id="potential">test</div>
+       </div>    
+      
+       </div> 
+        </div>
+          
+       </div> 
+
 			<div class="row" style="margin-bottom: 5.5%;">
 				<div class="col-md-12" style="/*border: 1px solid #000;*/height: 420px" id="expiries">
 					
@@ -303,7 +471,7 @@ h4{
        <div class="panel-heading">
        <h5 class="panel-title">Actual Expiries </h5>
        </div>
-       
+
        
        <div id="actual" style=""></div>
        
@@ -324,15 +492,14 @@ h4{
 			
 		</div>
 	</div>
+	
+	<div class="container-fluid">
 			
     <div class="row">
                 <div class="col-md-6">
-       <div class="panel panel-success">
-       <div class="panel-heading">
-       <h3 class="panel-title"><div class="county-name" style="display:inline-block"></div>Stock Level in Months of Stock (MOS)</h3>
-       </div>
-        <div class="panel-body" style="height:500px;">
-        <ul class='nav nav-tabs'>
+       <h4>Stock Level in Months of Stock (MOS)</h4>
+      
+      <ul class='nav nav-tabs'style="margin-top: 1%">
       <li class="active"><a href="#stracer" data-toggle="tab">Tracer Items</a></li>
       </ul>
       <div id="myTabContent" class="tab-content">
@@ -346,19 +513,14 @@ h4{
 </div>
       </div>
        </div>
-        <div id="mos"></div> <!--- MOS -->
-       </div>
-       
-       </div>
-      
-       </div>
+        <div id="mos" style="width: "></div> <!--- MOS -->
+        
+        
+      			 </div>
        <div class="col-md-6">
-       <div class="panel panel-success">
-       <div class="panel-heading">
-       <h3 class="panel-title"><div class="county-name" style="display:inline-block"></div>Consumption</h3>
-       </div>
-        <div class="panel-body" style="height: 500px;">
-       <ul class='nav nav-tabs'>
+       <h4>Consumption</h4>
+       
+       <ul class='nav nav-tabs' style="margin-top: 1%">
       <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items</a></li>
        </ul>
    <div id="myTabContent" class="tab-content">
@@ -375,18 +537,17 @@ h4{
       </div>
       </div>
       <div id="consumption"></div> <!-- consumption -->
-       </div>    
-       </div>
+       
        </div>
  </div><!--- row 2 -->
  
  <div class="row">
                 <div class="col-md-6">
-       <div class="panel panel-success">
-       <div class="panel-heading">
-       <h3 class="panel-title"><div class="county-name" style="display:inline-block"></div>Cost of Orders</h3>
-       </div>
-        <div class="panel-body" style="height:500px;">
+       <div class="">
+       
+       <h4 class=""><div class="county-name" style="display:inline-block"></div>Cost of Orders</h4>
+       
+        <div class="" style="height:500px;">
         <ul class='nav nav-tabs'>
       <li class="active"><a href="#corders" data-toggle="tab">Year</a></li>
       </ul>
@@ -408,11 +569,11 @@ h4{
       
        </div>
        <div class="col-md-6">
-       <div class="panel panel-success">
-       <div class="panel-heading">
-       <h3 class="panel-title"><div class="county-name" style="display:inline-block"></div>Order Lead Time</h3>
-       </div>
-        <div class="panel-body" style="height: 500px;">
+       <div class="">
+       
+       <h4 class=""><div class="county-name" style="display:inline-block"></div>Order Lead Time</h4>
+       
+        <div class="" style="height: 500px;">
   <hr />
     <a href="national/search" target="_blank">
     <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
@@ -446,12 +607,13 @@ h4{
        </div>
        </div>
      </div>
+     </div>
     </div> <!-- /container -->
-    
+    <input type="hidden" name="county_id" id="county_id" />
     
 
     
-    <script>
+   <script>
          //auto run
          var url ='<?php echo base_url()?>';
          $('#potential_').on('shown.bs.tab', function (e) {
@@ -589,6 +751,7 @@ h4{
     	 <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
     <!-- Bootstrap core JavaScript===================== --> 
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
+ 
   <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
    <script src="<?php echo base_url().'assets/scripts/exporting.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>  

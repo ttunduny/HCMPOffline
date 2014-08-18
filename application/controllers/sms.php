@@ -548,7 +548,6 @@ class sms extends MY_Controller {
 						$facility_potential_expiries_total += $facility_potential_expiries["total_ksh"];
 					endforeach;
 
-					
 					if(empty($row_data))
 					{
 						//do nothing
@@ -570,6 +569,7 @@ class sms extends MY_Controller {
 						
 					}
 					
+
 					//End foreach for facility
 				endforeach;
 
@@ -589,6 +589,7 @@ class sms extends MY_Controller {
 						endforeach;
 					endforeach;
 				endforeach;
+
 				if(empty($row_data))
 					{
 						//do nothing
@@ -608,6 +609,7 @@ class sms extends MY_Controller {
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 						}
 				
+
 			}
 
 			//Building the excel sheet to be sent to the district admin
@@ -653,6 +655,7 @@ class sms extends MY_Controller {
 		}
 
 	}
+
 
 	public function weekly_stockouts_report() {
 		//Set the current year
@@ -801,6 +804,7 @@ class sms extends MY_Controller {
 	public function expiries_report() {
 		//Set the current year
 		$year = date("Y");
+
 		//get the facilities in the district
 		$counties = Facilities::get_counties_all_using_HCMP();
 

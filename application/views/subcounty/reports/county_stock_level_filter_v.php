@@ -94,7 +94,7 @@ endforeach;
 var drop_down='';
  var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+option_value;
   $.getJSON( hcmp_facility_api ,function( json ) {
-     $("#subcounty_facility_filter").html('<option value="NULL" selected="selected">--select facility--</option>');
+     $("#subcounty_facility_filter").html('<option value="NULL" selected="selected">Select Facility</option>');
       $.each(json, function( key, val ) {
       	drop_down +="<option value='"+json[key]["facility_code"]+"'>"+json[key]["facility_name"]+"</option>";	
       });
@@ -112,7 +112,7 @@ var drop_down='';
 var drop_down='';
  var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+option_value;
   $.getJSON( hcmp_facility_api ,function( json ) {
-     $("#facility_filter").html('<option value="NULL" selected="selected">--select facility--</option>');
+     $("#facility_filter").html('<option value="NULL" selected="selected">Select Facility</option>');
       $.each(json, function( key, val ) {
       	drop_down +="<option value='"+json[key]["facility_code"]+"'>"+json[key]["facility_name"]+"</option>";	
       });

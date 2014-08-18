@@ -1014,7 +1014,7 @@ class Reports extends MY_Controller
 	}
 
 	public function get_facility_json($district) {
-	echo json_encode(Facilities::getFacilities($district));
+	echo json_encode(Facilities::getFacilities_json($district));
 				
 	}
 	public function get_sub_county_json_data($county_id) {

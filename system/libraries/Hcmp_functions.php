@@ -3,12 +3,16 @@
  * @author Kariuki
  */
 class Hcmp_functions extends MY_Controller {
-	
-	var $test_mode=TRUE;
+
+	var $test_mode=FALSE;
+
+
 		function __construct() {
 		parent::__construct();
 		$this -> load -> helper(array('url','file','download'));
+
 		$this -> load -> library(array('PHPExcel/PHPExcel','mpdf/mpdf'));
+
 	}
 public function send_stock_update_sms(){
        $facility_name = $this -> session -> userdata('full_name');
@@ -171,7 +175,14 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 	  $email_address=$this->get_facility_email($facility_code);
 	  $cc_email .=$this->get_ddp_email($data['district']);	  
 	  else:		  
-		  $email_address=($this->test_mode)?'kariuki.jackson@outlook.com,': 'kariuki.jackson@outlook.com,'; 
+
+		   $email_address=($this->test_mode)?'kariukijackson@gmail.com,': 'shamim.kuppuswamy@kemsa.co.ke,
+samuel.wataku@kemsa.co.ke,
+jmunyu@kemsa.co.ke,
+imugada@kemsa.co.ke,
+laban.okune@kemsa.co.ke,
+samuel.wataku@kemsa.co.ke,'; 
+
        
 	  $cc_email .=$this->get_ddp_email($data['district']);
 	   $cc_email .=$this->get_facility_email($facility_code);
@@ -222,6 +233,7 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
   
    
     //  return true;
+
    	/*$mail_list=($this->test_mode)?'collinsojenge@gmail.com,kelvinmwas@gmail.com,': 
    		'smutheu@clintonhealthaccess.org,
    		tngugi@clintonhealthaccess.org,
@@ -278,6 +290,7 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
   if($this->email->send())
  {
  	$this->email->clear(TRUE);
+
 	unlink($attach_file);
 	return TRUE;
 
@@ -336,6 +349,8 @@ if(count($excel_data)>0):
 		// Save Excel 2007 file
 		//echo date('H:i:s') . " Write to Excel2007 format\n";
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+
+   	    	// We'll be outputting an excel file
 	
 		if(isset($excel_data['report_type'])){
 
@@ -348,6 +363,7 @@ if(count($excel_data)>0):
         header("Cache-Control: post-check=0, pre-check=0", false);
         header("Pragma: no-cache");
 		// It will be called file.xls
+
 		header("Content-Disposition: attachment; filename=".$excel_data['file_name'].'.xls');
 		// Write file to the browser
         $objWriter -> save('php://output');
