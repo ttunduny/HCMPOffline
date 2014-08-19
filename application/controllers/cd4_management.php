@@ -19,12 +19,13 @@ class cd4_Management extends MY_Controller {
     }
 
     public function index() {
-        $res = $this->db->query('SELECT date_sync FROM  `api_gen` ORDER BY  `api_gen`.`date_sync` DESC  LIMIT 0 ,1');
-        $date_synced_res = $res->result_array();
+        $res = $this->db->query('SELECT * FROM  `api_gen` ORDER BY  `api_gen`.`date_sync` DESC  LIMIT 0 ,1');
+        $date_synced_res = $res->result_array();       
         $data['date_sync'] = $date_synced_res[0]['date_sync'];
+        $data['counties_rates'] = json_decode($date_synced_res[0]['json']);
         $data['content_view'] = "rtk/cd4/dashboard";
         $data['title'] = "CD4 Home";
-        $data['banner_text'] = "CD4";
+        $data['banner_text'] = "CD4 Allocation";
         $data ['table_data'] = $this->cd4_sidebar();
         $this->load->view('rtk/template', $data);
     }
@@ -96,6 +97,7 @@ class cd4_Management extends MY_Controller {
         $res_arr = objectToArray($res_arr);
         return $res_arr;
     }
+    public function _dashboard_reporting_rates(){}
 
     public function cd4_sidebar() {
         $previous_month = date('mY', strtotime("last day of previous month"));
