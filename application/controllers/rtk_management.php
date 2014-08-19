@@ -2693,27 +2693,24 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $this->load->view('rtk/template', $data);        
         
     }
-       public function zone_a_non_reported_facilities(){
+       public function non_reported_facilities(){
         
         $firstday = '2014-05-01';
         $lastday = '2014-07-30';        
       // ini_set('memory_limit', '750M');
-         $sql = "select distinct facilities.facility_code,facilities.facility_name,districts.district,counties.county from facilities,counties,districts 
-        where facilities.zone = 'Zone A' 
-        and facilities.rtk_enabled=1
+        $sql = "select distinct facilities.facility_code,facilities.facility_name,districts.district,counties.county from facilities,counties,districts 
+        where facilities.rtk_enabled=1
         and districts.id = facilities.district
         and counties.id=districts.county
         and facilities.facility_code not in (select 
         distinct facilities.facility_code
-        from
-            facilities,
-            lab_commodity_orders
-        where
-            lab_commodity_orders.order_date between '$firstday' and '$lastday'
-                and facilities.facility_code = lab_commodity_orders.facility_code
+        from facilities, lab_commodity_orders
+        where lab_commodity_orders.order_date between '$firstday' and '$lastday'
+        and facilities.facility_code = lab_commodity_orders.facility_code
         group by facilities.facility_code)
         group by facilities.facility_code
         ";
+        // echo $sql; die;
         $res = $this->db->query($sql);
         $facilities = $res->result_array(); 
 
@@ -2731,7 +2728,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
     //     die;
         $data['title'] = 'Unreported Facilities in Zone A';
         $data['banner_text'] = 'Unreported Facilities in Zone A';
-        $data['content_view'] = 'rtk/allocation_committee/zone_a';        
+        $data['content_view'] = 'rtk/allocation_committee/allocation_non_reported';        
         $data['facilities'] = $facilities;
         $data['amcs'] = $amcs;
         $this->load->view('rtk/template', $data);   
@@ -5496,7 +5493,7 @@ WHERE
 
     public function show_allocation_pending($month=null,$year=null) {
         $data['title'] = 'RTK Allocation';
-        $data['banner_text'] = 'Pending Facilities for Allocations';
+        $data['banner_text'] = 'Facilities Pending for Allocations';
         $data['content_view'] = 'rtk/allocation_committee/allocation_pending_v';
 
         $pending_facility = $this->rtk_facilities_not_reported(NULL, NULL, NULL, NULL, NULL, NULL);
