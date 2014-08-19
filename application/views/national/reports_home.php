@@ -285,14 +285,10 @@ legend{
 			  		<section class="col-md-8">
 						
 						<section class="col-md-3">
-<<<<<<< HEAD
-							<input type="radio" name="doctype"  value="excel" checked/> Excel
-=======
 							<input type="radio" name="doctype" value="PDF" class="" checked/> PDF
 						</section>
 						<section class="col-md-3">
 							<input type="radio" name="doctype"  value="excel"/> Excel
->>>>>>> 0b17a6899945abf848ed1bff113834defc10ecc9
 						</section>
 						
 						<section class="col-md-3">
@@ -322,11 +318,8 @@ legend{
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-<<<<<<< HEAD
-        <h4 class="modal-title" id="myModalLabel">Graph Title</h4>
-=======
+
         <h4 class="modal-title" id="myModalLabel">Modal title</h4>
->>>>>>> 0b17a6899945abf848ed1bff113834defc10ecc9
       </div>
       <div class="modal-body" id="graph_content">
        
@@ -524,48 +517,7 @@ $("input:radio[name=commodity_s]").click(function() {
 	        }
 	        
         }
-<<<<<<< HEAD
-        }else if(criteria=='Potential'){
-        	var year=$('#interval').val();
-        	if(type=='excel'){ 
-      	
-	        
-	        link='national/potential/'+county_id+'/'+district+'/'+facility+'/excel/'+year;
-	        window.open(url+link,'_parent');
-	        }
-	        
-	        //graphs
-	        
-	        else if(type=='graph'){
-        	
-        	$('#graph_Modal').modal('show');
-        	
-      		ajax_return('national/potential/'+county_id+'/'+district+'/'+facility+'/NULL/'+year,"#graph_content");
-	        
         }
-        }else if(criteria=='Actual'){
-        	var year=$('#interval').val();
-        	if(type=='excel'){ 
-      	
-	        
-	        link='national/expiry/'+year+'/'+county_id+'/'+district+'/'+facility+'/excel'; 
-	        window.open(url+link,'_parent');
-	        }
-	        
-	        //graphs
-	        
-	        else if(type=='graph'){
-        	
-        	$('#graph_Modal').modal('show');
-        	
-      		ajax_return('national/expiry/'+year+'/'+county_id+'/'+district+'/'+facility,"#actual");  
-	        
-        }
-        }
-        
-=======
-        }
->>>>>>> 0b17a6899945abf848ed1bff113834defc10ecc9
        
            
     });

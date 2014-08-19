@@ -145,16 +145,34 @@ $group_by=isset($facility_code)? " order by c.commodity_name asc" :
 (isset($district_id)? " order by f.facility_name asc" : " order by d.district asc" );
 
 $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
-->fetchAll("SELECT d.district, f_s.`facility_code` , f.facility_name, c.`id` AS commodity_id,
- c.`commodity_code` , c.`commodity_name`, max( date_modified ) AS last_day, sum(current_balance) as current_balance
-FROM facilities f, commodities c, districts d, facility_stocks f_s
-WHERE f.facility_code = f_s.facility_code
-and $where_clause
-AND f_s.commodity_id = c.id
-AND f.district = d.id
-AND f_s.status =1  
-GROUP BY c.id having current_balance=0
-$group_by ");
+->fetchAll("SELECT 
+			    d.district,
+			    f_s.`facility_code`,
+			    f.facility_name,
+			    c.`id` AS commodity_id,
+			    c.unit_size,
+			    cs.source_name,
+			    f_s.manufacture,
+			    c.`commodity_code`,
+			    c.`commodity_name`,
+			    max(date_modified) AS last_day,
+			    sum(current_balance) as current_balance
+			FROM
+			    facilities f,
+			    commodities c,
+			    districts d,
+			    facility_stocks f_s,
+			    commodity_source cs
+			WHERE
+			    f.facility_code = f_s.facility_code
+			        AND cs.id = c.commodity_source_id
+			        and $where_clause
+			        AND f_s.commodity_id = c.id
+			        AND f.district = d.id
+			        AND f_s.status = 1
+			GROUP BY c.id
+			having current_balance = 0
+			$group_by");
 
         return $stocks ;	  	
 	  }

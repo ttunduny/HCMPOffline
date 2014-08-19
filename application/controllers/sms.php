@@ -543,11 +543,11 @@ class sms extends MY_Controller {
 					$excel_data = array();
 					$excel_data = array('doc_creator' => $facility_name, 'doc_title' => 'facility stokouts weekly report ', 'file_name' => 'facility weekly report');
 					$row_data = array();
-					$column_data = array("County", "Subcounty", "Facility Code", "Facility Name", "Commodity Code", "Commodity Name", "Last Day");
+					$column_data = array("County", "Subcounty", "Facility Code", "Facility Name", "Commodity Code", "Commodity Name","Unit Size","Manufacturer","Supplier", "Last Day");
 					$excel_data['column_data'] = $column_data;
 
 					foreach ($facility_potential_expiries as $facility_potential_expiries) :
-						array_push($row_data, array($facility_potential_expiries["county"], $facility_potential_expiries["district"], $facility_potential_expiries["facility_code"], $facility_potential_expiries["facility_name"], $facility_potential_expiries["commodity_name"], $facility_potential_expiries["last_day"]));
+						array_push($row_data, array($facility_potential_expiries["county"], $facility_potential_expiries["district"], $facility_potential_expiries["facility_code"], $facility_potential_expiries["facility_name"], $facility_potential_expiries["commodity_name"],$facility_potential_expiries["unit_size"],$facility_potential_expiries["manufacture"],$facility_potential_expiries["source_name"], $facility_potential_expiries["last_day"]));
 
 					endforeach;
 					if (empty($row_data)) {
@@ -575,13 +575,13 @@ class sms extends MY_Controller {
 				$excel_data = array();
 				$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'district stock outs weekly report ', 'file_name' => 'district weekly report');
 				$row_data = array();
-				$column_data = array("County", "Subcounty", "Facility Code", "Facility Name", "Commodity Code", "Commodity Name", "Last Day");
+				$column_data = array("County", "Subcounty", "Facility Code", "Facility Name", "Commodity Code", "Commodity Name","Unit Size","Manufacturer","Supplier", "Last Day");
 				$excel_data['column_data'] = $column_data;
 
 				foreach ($facility_total as $facility_total_1) :
 					foreach ($facility_total_1 as $facility_total_2) :
 						foreach ($facility_total_2 as $facility_total1) :
-							array_push($row_data, array($facility_total1["county"], $facility_total1["district"], $facility_total1["facility_code"], $facility_total1["facility_name"], $facility_total1["commodity_name"], $facility_total1["last_day"]));
+							array_push($row_data, array($facility_total1["county"], $facility_total1["district"], $facility_total1["facility_code"], $facility_total1["facility_name"], $facility_total1["commodity_name"], $facility_total1["unit_size"], $facility_total1["manufacture"],$facility_total1["source_name"],$facility_total1["last_day"]));
 
 						endforeach;
 					endforeach;
@@ -618,7 +618,7 @@ class sms extends MY_Controller {
 					foreach ($facility_total_2 as $facility_total_3) :
 						foreach ($facility_total_3 as $facility_total_4) :
 							foreach ($facility_total_4 as $facility_total1) :
-								array_push($row_data, array($facility_total1["county"], $facility_total1["district"], $facility_total1["facility_code"], $facility_total1["facility_name"], $facility_total1["commodity_name"], $facility_total1["last_day"]));
+								array_push($row_data, array($facility_total1["county"], $facility_total1["district"], $facility_total1["facility_code"], $facility_total1["facility_name"], $facility_total1["commodity_name"], $facility_total1["unit_size"], $facility_total1["manufacture"],$facility_total1["source_name"],$facility_total1["last_day"]));
 
 							endforeach;
 						endforeach;
