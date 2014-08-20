@@ -651,7 +651,7 @@ class sms extends MY_Controller {
 						$facility_potential_expiries_total += $facility_potential_expiries["total_ksh"];
 					endforeach;
 
-					$excel_data['row_data'] = $row_data;
+					/*$excel_data['row_data'] = $row_data;
 					$excel_data['report_type'] = "download_file";
 					$excel_data['file_name'] = $facility_name . "_Potential_Expiries_Report";
 	
@@ -663,7 +663,7 @@ class sms extends MY_Controller {
 					$email_address = $this->get_facility_email($facility_code);
 
 					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
-
+*/
 					//End foreach for facility
 				endforeach;
 
@@ -686,17 +686,17 @@ class sms extends MY_Controller {
 				$excel_data['row_data'] = $row_data;
 				$excel_data['report_type'] = "download_file";
 				$excel_data['file_name'] = $district_name . "_Weekly_District_Potential_Expiries_Report";
-				$this -> hcmp_functions -> create_excel($excel_data);
+				/*$this -> hcmp_functions -> create_excel($excel_data);
 				$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 
 				$subject = "Potential Expiries: ".$district_name." Sub County (Next 3 Months)";
 				$message = $district_name . "'s Weekly Potential Expiries Report. ";
 				$message .= " Find attached an excel sheet with the breakdown for the Potential Expiries for ".$district_name. " Sub County";
-				//$email_address = "collinsojenge2014@gmail.com";
-				$email_address = $this->get_ddp_email($district_id);
+				//$email_address = "";
+				//$email_address .= $this->get_ddp_email($district_id);
 
-				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
-
+				//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+*/
 			}
 
 			//Building the excel sheet to be sent to the district admin
@@ -728,9 +728,16 @@ class sms extends MY_Controller {
 			$subject = "Potential Expiries: ".$county_name." County (Next 3 Months)";
 			$message = $county_name . "'s Weekly Potential Expiries Report.";
 			$message .= " Find attached an excel sheet with the breakdown for the Potential Expiries for ".$county_name. " County";
-			//$email_address = "collinsojenge@gmail.com,smutheu@clintonfoundation.org,kelvinmwas@gmail.com,smutheu@gmail.com";
-			$email_address = $this->get_county_email($county_id);
-			$bcc = $this->get_bcc_notifications();
+			$email_address = "smutheu@clintonhealthaccess.org,
+   		tngugi@clintonhealthaccess.org,
+		bwariari@clintonhealthaccess.org,
+		amwaura@clintonhealthaccess.org,
+		eongute@clintonhealthaccess.org,
+		rkihoto@clintonhealthaccess.org,
+  		kelvinmwas@gmail.com,
+  		collinsojenge@gmail.com,";
+			//$email_address = $this->get_county_email($county_id);
+			//$bcc = $this->get_bcc_notifications();
 			//$cc_email = "";
 
 			$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc_email);
@@ -796,17 +803,18 @@ class sms extends MY_Controller {
 						
 					endforeach;
 
-					$excel_data['row_data'] = $row_data;
+					/*$excel_data['row_data'] = $row_data;
 					$excel_data['report_type'] = "download_file";
 					$excel_data['file_name'] = $facility_name . "_Stock_Outs_Report";
-					$message = "Find attached an excel sheet with the breakdown for the Stock Outs in the facility";
+					$message = $facility_name . "'s Weekly Stock Outs Report. ";
+					$message .= "Find attached an excel sheet with the breakdown for the Stock Outs in the facility";
 					$this -> hcmp_functions -> create_excel($excel_data);
 					$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 					$subject = "Stock Outs: ".$facility_name;
 					//$email_address = "collinsojenge2014@gmail.com";
 					$email_address = $this->get_facility_email($facility_code);
 
-					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);*/
 
 					//End foreach for facility
 				endforeach;
@@ -827,18 +835,18 @@ class sms extends MY_Controller {
 						endforeach;
 					endforeach;
 				endforeach;
-				$excel_data['row_data'] = $row_data;
+				/*$excel_data['row_data'] = $row_data;
 				$excel_data['report_type'] = "download_file";
 				$excel_data['file_name'] = $district_name . "_Weekly_District_Stock_Outs_Report";
 				$this -> hcmp_functions -> create_excel($excel_data);
 				$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 				$subject = "Stock Outs: ".$district_name." Sub County";
-				$message = $district_name . "'s Weekly Stock Outs Report";
+				$message = $district_name . "'s Weekly Stock Outs Report. ";
 				$message .= "Find attached an excel sheet with the breakdown for the Stock Outs for the district";
 				//$email_address = "collinsojenge2014@gmail.com";
 				$email_address = $this->get_ddp_email($district_id);
 
-				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);*/
 
 			}
 
@@ -864,17 +872,17 @@ class sms extends MY_Controller {
 
 			$excel_data['row_data'] = $row_data;
 			$excel_data['report_type'] = "download_file";
-			$excel_data['file_name'] = $county_name . "_Weekly_County_Potential_Expiries_Report";
+			$excel_data['file_name'] = $county_name . "_Weekly_County_Stock_outs_Report";
 			$this -> hcmp_functions -> create_excel($excel_data);
 			$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 			$subject = "Stock Outs: ".$county_name." County";
-			$message = $county_name . "'s Weekly Stock Outs Report";
+			$message = $county_name . "'s Weekly Stock Outs Report. ";
 			$message .= "Find attached an excel sheet with the breakdown for the Stock Outs for the county";
 				
-			//$email_address = "collinsojenge@gmail.com,smutheu@clintonfoundation.org,kelvinmwas@gmail.com";
-			$email_address = $this->get_county_email($county_id);
-			$bcc = $this->get_bcc_notifications();
-			$cc_email = "";
+			$email_address = "kelvinmwas@gmail.com,collinsojenge@gmail.com,smutheu@clintonhealthacces.org,";
+			//$email_address = $this->get_county_email($county_id);
+			//$bcc = $this->get_bcc_notifications();
+			//$cc_email = "";
 
 			$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc_email);
 

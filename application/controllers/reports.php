@@ -2763,7 +2763,7 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 					array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"], $data['total']));
 
 				else:
-					array_push($series_data , array($data["commodity_name"],$data["facility_name"],$data["name"],(int) $data['total']));
+					array_push($series_data , array($data["commodity_name"],$data["facility_name"],$data["name"],$data['total']));
 				endif;						
 			else:
 				$series_data  = array_merge($series_data , array((int)$data['total']));

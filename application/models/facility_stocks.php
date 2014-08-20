@@ -492,7 +492,7 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
           break;
      endswitch;		
      $and_data .=(isset($category_id)&& ($category_id>0)) ?"AND d.commodity_sub_category_id = '$category_id'" : null;
-     $and_data .=(isset($commodity_id)&& ($commodity_id>0)) ?"AND d.id = '$commodity_id'" : null;
+     $and_data .=(isset($commodity_id)&& ($commodity_id>0)) ?"AND fs.commodity_id = d.id AND d.id = '$commodity_id' AND d.id = '$commodity_id'" : null;
      $and_data .=(isset($division_id)&& ($division_id>0)) ?"AND d.commodity_division = '$division_id' " :null;
 	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND di.id = '$district_id'" : null;
 	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;

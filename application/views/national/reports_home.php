@@ -71,6 +71,10 @@ legend{
 	-webkit-box-shadow: 0px 0px 1px 1px #615961;
 	box-shadow: 0px 0px 1px 1px #615961;
 }
+.modal-dialog {
+		
+		width: 54%;
+	}
 </style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -279,11 +283,9 @@ legend{
 			  		<legend>View as</legend>
 			  		
 			  		<section class="col-md-8">
+						
 						<section class="col-md-3">
-							<input type="radio" name="doctype" value="PDF" class="" checked/> PDF
-						</section>
-						<section class="col-md-3">
-							<input type="radio" name="doctype"  value="excel"/> Excel
+							<input type="radio" name="doctype"  value="excel" checked/> Excel
 						</section>
 						
 						<section class="col-md-3">
@@ -313,7 +315,7 @@ legend{
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        <h4 class="modal-title" id="myModalLabel">Graph Title</h4>
       </div>
       <div class="modal-body" id="graph_content">
        
@@ -379,10 +381,12 @@ $('#sub_county').on('change', function(){
 							
 							$("#expfrom,#expto").attr("disabled", false);
 							$("#year,#interval").attr("disabled", 'disabled');
+							$("#interval").val(0);
 							
 						}else{
 							$("#interval,#expfrom,#expto").attr("disabled", 'disabled');
 							$("#year").attr("disabled", false);
+							$("#interval").val(0);
 							
 						}
 });
@@ -509,7 +513,44 @@ $("input:radio[name=commodity_s]").click(function() {
 	        }
 	        
         }
+        }else if(criteria=='Potential'){
+        	var year=$('#interval').val();
+        	if(type=='excel'){ 
+      	
+	        
+	        link='national/potential/'+county_id+'/'+district+'/'+facility+'/excel/'+year;
+	        window.open(url+link,'_parent');
+	        }
+	        
+	        //graphs
+	        
+	        else if(type=='graph'){
+        	
+        	$('#graph_Modal').modal('show');
+        	
+      		ajax_return('national/potential/'+county_id+'/'+district+'/'+facility+'/NULL/'+year,"#graph_content");
+	        
         }
+        }else if(criteria=='Actual'){
+        	var year=$('#interval').val();
+        	if(type=='excel'){ 
+      	
+	        
+	        link='national/expiry/'+year+'/'+county_id+'/'+district+'/'+facility+'/excel'; 
+	        window.open(url+link,'_parent');
+	        }
+	        
+	        //graphs
+	        
+	        else if(type=='graph'){
+        	
+        	$('#graph_Modal').modal('show');
+        	
+      		ajax_return('national/expiry/'+year+'/'+county_id+'/'+district+'/'+facility,"#actual");  
+	        
+        }
+        }
+        
        
            
     });

@@ -502,7 +502,8 @@ class User extends MY_Controller {
 		$district_code = ($_POST['district_name']=='NULL')? 0: $_POST['district_name'];
 		$user_type = $_POST['user_type'];
 		$full_name= $fname .''.$lname; 
-		$county=$_POST['county'];
+		$county=$_POST['county_id'];
+		
 		switch ($identifier):
 			case 'moh':
 			
@@ -518,7 +519,7 @@ class User extends MY_Controller {
 			
 			break;
 			case 'super_admin':
-			
+				
 			case 'county':
 			$county=$this -> session -> userdata('county_id');
 			
@@ -527,7 +528,8 @@ class User extends MY_Controller {
 		     if($email_address!=''):
 		switch ($user_type):
 			case 10:
-			$savethis =  new Users();
+				$county=$_POST['county_id'];
+				$savethis =  new Users();
 				$savethis -> fname = $fname;
 				$savethis -> lname = $lname;
 				$savethis -> email = $email_address;
