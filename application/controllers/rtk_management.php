@@ -5899,10 +5899,10 @@ WHERE
         $returnable = array();
 
         $firstdate = $year . '-' . $month . '-01';
-        $firstday = date("Y-m-d", strtotime("$firstdate +1 Month "));
+        $firstday = date("Y-m-d", strtotime("$firstdate Month "));
 
-        $month = date("m", strtotime("$firstdate +1 Month "));
-        $year = date("Y", strtotime("$firstdate +1 Month "));
+        $month = date("m", strtotime("$firstdate  Month "));
+        $year = date("Y", strtotime("$firstdate  Month "));
         $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
         $lastdate = $year . '-' . $month . '-' . $num_days;
         $sql = "SELECT 
@@ -5934,7 +5934,7 @@ WHERE
                 AND facilities.facility_code = lab_commodity_details.facility_code
                 AND facilities.district = districts.id
                 AND districts.county = counties.id
-                AND lab_commodity_orders.order_date BETWEEN '$firstdate' AND '$lastdate'";
+                AND lab_commodity_orders.order_date BETWEEN '2014-08-01' AND '2014-08-30'";
 
         $sql2 = $sql . " AND lab_commodities.id = 1 Group By counties.county";
 
@@ -5953,7 +5953,7 @@ WHERE
         $result3 = $res3->result_array();
         array_push($returnable, $result3);
 //        echo "<pre>";print_r($returnable);die;
-//        echo($sql2);die;
+        echo($sql2);die;
         return $returnable;
 
         /*
