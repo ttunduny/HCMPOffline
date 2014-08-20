@@ -359,8 +359,8 @@ var county = $(this).closest('tr').find('.county').attr('data-attr');
 var usertype = $(this).closest('tr').find('.level').attr('data-attr');
 var district_id = $(this).closest('tr').find('.district').attr('data-attr');
 var facility_id = $(this).closest('tr').find('.facility_name').attr('data-attr');
-var email_recieve =  $('#email_recieve').val();
-var sms_recieve =  $('#sms_recieve').val();
+var email_recieve = $(this).closest('tr').find('.email_recieve').attr('data-attr');
+var sms_recieve = $(this).closest('tr').find('.sms_recieve').attr('data-attr');
    //fill inputs with relevant data
 $('#email_edit').val(email)
 $('#email_edit').attr('data-id',$(this).closest('tr').find('.email').attr('data-attr'))
@@ -372,18 +372,24 @@ $('#user_type_edit_district').val(usertype)
 $('#county_edit').val(county)
 $('#edit_district').val(district_id)
 $('#edit_facility').val(facility_id)
+//seth
+if (email_recieve=2) {
+// alert(email_recieve);return;
+  // $('#email_recieve_edit_yes').attr('checked', 'checked');
+  $('#email_recieve_selection').val(email_recieve);
+}else if (email_recieve=1) {
+  $('#email_recieve_edit_no').attr('checked', false);
+  $('#email_recieve_selection').val(email_recieve);
+};
 
-if($('#email_recieve').val() = 2){
-  var  recieve_mail = 2;   
-}else{
-  var  recieve_mail = 1;   
-}
+if (sms_recieve=2) {
+  // $('#sms_recieve_edit_yes').attr('checked', 'checked');
+  $('#sms_recieve_selection').val(sms_recieve);
+}else if (sms_recieve=1) {
+  $('#sms_recieve_edit_no').attr('checked', false);
+  $('#sms_recieve_selection').val(sms_recieve);
+};
 
-if($('#email_recieve').val() = 2){
-  var  recieve_sms = 2;   
-}else{
- var  recieve_sms = 1;   
-}
 
 if($(this).closest('tr').find('.status_item').attr('data-attr')=="false"){
 	$('.onoffswitch-checkbox').prop('checked', false) 	
@@ -492,9 +498,6 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
 
    function ajax_post (url,div){
     var url =url;
-    // karsan
-     alert($('#sms_recieve_edit').val());
-    return;
      var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";
      $.ajax({
           type: "POST",
@@ -503,7 +506,7 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
           'username_edit': $('#username_edit').val(),'facility_id_edit_district': $('#edit_facility').val(),
           'user_type_edit_district': $('#user_type_edit_district').val(),'district_name_edit': $('#edit_district').val(),
 			'facility_id_edit': $('#edit_facility').val(),'status': $('.onoffswitch-checkbox').prop('checked'),'user_id':$('#email_edit').attr('data-id'),
-      'email_edit_recieve':2,'sms_edit_recieve': 2},
+      'email_edit_recieve':$('#email_recieve_selection').val(),'sms_edit_recieve':$('#sms_recieve_selection').val()},
           url: url,
           beforeSend: function() {
             //$(div).html("");

@@ -106,21 +106,21 @@
 								//<td style="display:none;" class="sms_recieve"><'.$list['sms_recieve'];'</td>
 								if ($list['email_recieve']==2):
 									echo'
-									<td data-attr="'.$list['email_recieve'].'"><input id="email_recieve" value="'.$list['email_recieve'].'" type="checkbox" disabled checked ="checked"></td>
+									<td><input class="email_recieve" data-attr="'.$list['email_recieve'].'" value="'.$list['email_recieve'].'" type="checkbox" disabled checked ="checked"></td>
 									';
 								else:
 									echo'
-									<td data-attr="'.$list['email_recieve'].'"><input id="email_recieve" value="'.$list['email_recieve'].'" type="checkbox" disabled></td>
+									<td><input class="email_recieve" data-attr="'.$list['email_recieve'].'" value="'.$list['email_recieve'].'" type="checkbox" disabled></td>
 									';
 								endif;
 
 								if ($list['sms_recieve']==2):
 									echo'
-									<td  data-attr="'.$list['sms_recieve'].'"><input id="sms_recieve" value="'.$list['sms_recieve'].'" type="checkbox" disabled checked ="checked"></td>
+									<td ><input class="sms_recieve" data-attr="'.$list['sms_recieve'].'" value="'.$list['sms_recieve'].'" type="checkbox" disabled checked ="checked"></td>
 									';
 								else:
 									echo'
-									<td data-attr="'.$list['sms_recieve'].'"><input id="sms_recieve" value="'.$list['sms_recieve'].'" type="checkbox" disabled></td>
+									<td><input class="sms_recieve" data-attr="'.$list['sms_recieve'].'" value="'.$list['sms_recieve'].'" type="checkbox" disabled></td>
 									';
 								endif;
 								 ?>
@@ -382,35 +382,17 @@
 								<div class=" col-md-6">
 									<label> Enable Email Recieval </label>
 									<div class="form-group">
-									<?php 
-									if ($list['email_recieve']==2):
-									echo'
-									Yes <input type="radio" data-attr = "2" name="email_recieve_edit"  id="email_recieve_edit" checked required="required" readonly>
-									No <input type="radio" data-attr = "1" name="email_recieve_edit"  id="email_recieve_edit" checked required="required" readonly>
-									';
-								else:
-									echo'
-									Yes <input type="radio" data-attr = "2" name="email_recieve_edit" id="email_recieve_edit" required="required" readonly>
-									No <input type="radio" data-attr = "1" name="email_recieve_edit" id="email_recieve_edit" required="required" readonly>
-									';
-								endif;
-									 ?>	
+									Yes <input type="radio" data-attr = "2" name="email_recieve_edit_yes" id="email_recieve_edit_yes" required="required" readonly>
+									No <input type="radio" data-attr = "1" name="email_recieve_edit_no"  id="email_recieve_edit_no" required="required" readonly>
+									<input type="hidden" name="email_recieve_selection" id="email_recieve_selection" class="email_recieve_selection">
 									</div>
 								</div>
 								<div class=" col-md-6">
 									<label> Enable Text Recieval </label>
 									<div class="form-group">
-									<?php 
-									if ($list['sms_recieve']==2):
-									echo'
-									<input type="radio" name="sms_recieve_edit" id="sms_recieve_edit" checked required="required" readonly>
-									';
-									else:
-									echo'
-									<input type="radio" name="sms_recieve_edit" id="sms_recieve_edit" required="required" readonly>
-									';
-									endif;
-									 ?>
+									Yes <input type="radio" data-attr = "2" name="sms_recieve_edit_yes" id="sms_recieve_edit_yes" required="required" readonly>
+									No <input type="radio" data-attr = "1" name="sms_recieve_edit_no"  id="sms_recieve_edit_no" required="required" readonly>
+									<input type="hidden" name="sms_recieve_selection" id="sms_recieve_selection" class="sms_recieve_selection">
 									</div>
 								</div>
 								<div class="col-md-6">
