@@ -315,7 +315,12 @@ legend{
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+<<<<<<< HEAD
         <h4 class="modal-title" id="myModalLabel">Graph Title</h4>
+=======
+
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+>>>>>>> 1701f27ab7bbae9059759f16973e2c596bb2daae
       </div>
       <div class="modal-body" id="graph_content">
        
@@ -513,6 +518,7 @@ $("input:radio[name=commodity_s]").click(function() {
 	        }
 	        
         }
+<<<<<<< HEAD
         }else if(criteria=='Potential'){
         	var year=$('#interval').val();
         	if(type=='excel'){ 
@@ -551,6 +557,9 @@ $("input:radio[name=commodity_s]").click(function() {
         }
         }
         
+=======
+        }
+>>>>>>> 1701f27ab7bbae9059759f16973e2c596bb2daae
        
            
     });

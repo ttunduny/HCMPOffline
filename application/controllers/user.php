@@ -237,7 +237,6 @@ class User extends MY_Controller {
                           Hi ' . $Usersname . ', </br>
 		<p>
 		HCMP account username '.$email_address.'.You recently requested for a password reset.</br>
-		You are HCMP account username '.$email_address.'.You recently requested for a password reset.</br>
 		If you made this request ,this is your reset code.</br></p> 
 	
 		<table class="twelve columns">
@@ -262,6 +261,10 @@ class User extends MY_Controller {
                           <td class="expander"></td>
                         </tr>
                       </table>
+
+                    </td>
+                  </tr>
+                </table>
 
                 <table class="row callout">
                   <tr>
@@ -512,8 +515,10 @@ class User extends MY_Controller {
 			$facility_id=$this -> session -> userdata('facility_id');
 			$district_code=$this -> session -> userdata('district_id');
 			$county=$this -> session -> userdata('county_id');
+
 			break;
 			case 'district':
+				
 			$district_code=$this -> session -> userdata('district_id');
 			$county=$this -> session -> userdata('county_id');
 			
@@ -659,11 +664,21 @@ class User extends MY_Controller {
 
                     </td>
                   </tr>
-                </table>';
+                </table>
 
+                <table class="row callout">
+                  <tr>
+                    <td class="wrapper last">
 
-				//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
+                  </tr>
+                </table>'; 
 
+				
+				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
+
+				//exit;
+
+		//save user
 				$savethis =  new Users();
 				$savethis -> fname = $fname;
 				$savethis -> lname = $lname;
@@ -678,13 +693,7 @@ class User extends MY_Controller {
 				$savethis -> status = 0;
 				$savethis -> county_id = $county;
 				$savethis -> save();
-
-				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
-
-				//exit;
-
 endif;
-
 
 
 	}
