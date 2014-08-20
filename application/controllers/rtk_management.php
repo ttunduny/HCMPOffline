@@ -5899,10 +5899,10 @@ WHERE
         $returnable = array();
 
         $firstdate = $year . '-' . $month . '-01';
-        $firstday = date("Y-m-d", strtotime("$firstdate +0 Month "));
+        $firstday = date("Y-m-d", strtotime("$firstdate +1 Month "));
 
-        $month = date("m", strtotime("$firstdate  +0 Month "));
-        $year = date("Y", strtotime("$firstdate  +0 Month "));
+        $month = date("m", strtotime("$firstdate  +1 Month "));
+        $year = date("Y", strtotime("$firstdate  +1 Month "));
         $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
         $lastdate = $year . '-' . $month . '-' . $num_days;
         $sql = "SELECT 
@@ -5953,7 +5953,7 @@ WHERE
         $result3 = $res3->result_array();
         array_push($returnable, $result3);
 //        echo "<pre>";print_r($returnable);die;
-        echo($sql);die;
+        echo($sql4);die;
         return $returnable;
 
         /*
