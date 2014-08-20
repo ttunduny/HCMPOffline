@@ -76,84 +76,21 @@ h4{
 	margin:0;	
 	font-size:15px;
 }
-/*state overview*/
 
-.state-overview .symbol, .state-overview .value {
-    display: inline-block;
-    text-align: center;
-}
-
-.state-overview .value  {
-    float: right;
-
-}
-
-.state-overview .value h1, .state-overview .value p  {
-    margin: 0;
-    padding: 0;
-    color: #c6cad6;
-}
-
-.state-overview .value h1 {
-    font-weight: 300;
-    font-size:30px;
-}
-
-.state-overview .symbol i {
-    color: #fff;
-    font-size: 50px;
-}
-
-.state-overview .symbol {
-    width: 35%;
-    padding: 25px 15px;
-    -webkit-border-radius: 4px 0px 0px 4px;
-    border-radius: 4px 0px 0px 4px;
-}
-
-.state-overview .value {
-    width: 58%;
-    padding-top: 0;
-}
-
-.state-overview .terques {
-    background: #6ccac9;
-}
-
-.state-overview .red {
-    background: #ff6c60;
-}
-
-.state-overview .yellow {
-    background: #f8d347;
-}
-
-.state-overview .blue {
-    background: #a7cfdf;
-}
-.state-overview .purple {
-    background: #e7b7dd;
-}
-.state-overview .seagreen {
-    background: #39b7ac;
-}
-.state-overview .b {
-    background: #8075c4;
-}
-.state-overview .b2 {
-    background: #fd7998;
-}
-#notification_dash p {
-	color: #c6cad6;
-	padding-top:10px;
-	height:40px;
-}
-.badge_color{
-	background-color: darkcyan;
-}
-.count{
-	font-size:14px;
-}
+.stat_item {
+		height: 54px;
+		padding: 2px 5px;
+		color: #fff;
+		text-align: center;
+		font-size: 1em;
+		-webkit-box-shadow: 3px 0px 5px 0px rgba(51, 50, 50, 0.59);
+-moz-box-shadow:    3px 0px 5px 0px rgba(51, 50, 50, 0.59);
+box-shadow:         3px 0px 5px 0px rgba(51, 50, 50, 0.59);
+	}	
+	
+	#notify .col-md-2,.col-md-1{
+		padding:3px;
+	}
 </style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -206,82 +143,78 @@ h4{
     </div>
     
    <div class="container-fluid">
-   	<div class="row-fluid">
-   		<div class="col-md-12">
-   			<div class="row state-overview">
-                  <div class="col-lg-2 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol terques">
-                          	<span class="count" id="hcw_trained"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Health Workers Trained</p>
-                              
-                              
-                          </div>
-                      </section>
-                  </div>
-                  <div class="col-lg-2 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol red">
-                            <span class=" count" id="facilities_rolled_out"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Facilities Rolled Out</p>
-                              
-                              
-                          </div>
-                      </section>
-                  </div>
-                  
-                  <div class="col-lg-2 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol yellow">
-                              <span class=" count" id="facilities_rolled_out"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Facilities Using HCMP</p>
-                                                           
-                          </div>
-                      </section>
-                  </div>
-                  <div class="col-lg-6 col-sm-12">
-                      <section class="panel" style="height: 76px;text-align: center">
-                      		<div class="row-fluid" id="notification_dash">
-                      			<div class="col-lg-4">                      				
-                      				<p>Total Private Health Facilities</p>
-                      				<span class="badge badge_color">361</span>
 
-                      			</div>
-                      			<div class="col-lg-2">
-                      				<p>Faith-based Facilities</p>
-                      				<span class="badge badge_color">114</span>
-                      			</div>
-                      			<div class="col-lg-2">
-                      				<p>Public Health Facilities</p>
-                      				<span class="badge badge_color">6210</span>
-                      			</div>
-                      			<div class="col-lg-2">
-                      				<p>Other Facilities</p>
-                      				<span class="badge badge_color">238</span>
-                      			</div>
-                      			<div class="col-lg-2">
-                      				<p>Total Facilities</p>
-                      				<span class="badge badge_color">7213</span>
-                      			</div>
-                      		
-                      		</div>
-                          
-                      </section>
-                  </div>
+<div class="row-fluid" style="" id="notify" >
+	
+	<div class="col-md-2">
+					<div class="color_g stat_item">
+						<span class="glyphicon glyphicon-user"></span>
+                  	HCW Trained <br/> 3132
+                            
+                   </div>
+	</div>
+	
+	<div class="col-md-2">
+					<div class="color_e stat_item">
+						<span class="glyphicon glyphicon-shopping-cart"></span>
+                 	Facilities Rolled Out <br/> 12312
+                            
+                   </div>
+	</div>
+	
+	<div class="col-md-2">
+		<div class="color_a stat_item">
+					<span class="glyphicon glyphicon-dashboard"></span>
                   
-              </div>
-              
-              
-   		</div>
-   		
-   	</div><!--/row for notifications -->
-   	
+                    Facilities using HCMP <br/> 243      
+                   </div>			
+	</div>
+	<div class="col-md-1">
+					
+	</div>
+	
+	<div class="col-md-1">
+					<div class="color_c stat_item">
+						
+                  
+                     Total Facilities <br/>  4255    
+                   </div>
+	</div>
+	<div class="col-md-1">
+					<div class="color_b stat_item">
+						
+                  
+                    Public Health Facilities<br/> 565	    
+                   </div>
+	</div>
+	<div class="col-md-1">
+					<div class="color_g stat_item">
+					
+                  
+                     Private Facilities <br/>  342 
+                   </div>
+	</div>
+	<div class="col-md-1">
+					<div class="color_f stat_item">
+					
+                  
+                    Faith-based Facilities <br/>   34  
+                   </div>
+	</div>
+	<div class="col-md-1">
+					<div class="color_a stat_item">
+					
+                  
+                    Other Facilities <br/> 134   
+                   </div>
+	</div>
+	
+	
+	
+</div>
+
+</div>
+   	<div class="container-fluid">
    	<div class="row-fluid" style="">
    		<div class="col-md-5">
    			<div class="row">
@@ -351,11 +284,11 @@ h4{
    		</div>
    	<!--/row for map and graph 1 -->
    	
-   </div>
+   </div></div>
    
    <div class="container-fluid">
 			
-    <div class="row">
+    <div class="row-fluid">
                 <div class="col-md-6">
        <h4>Stock Level in Months of Stock (MOS)</h4>
       
@@ -401,7 +334,7 @@ h4{
        </div>
  </div><!--- row 2 -->
  
- <div class="row">
+ <div class="row-fluid">
                 <div class="col-md-6">
        <div class="">
        

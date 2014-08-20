@@ -745,6 +745,7 @@ endif;
         
     }
     public function consumption($county_id=null, $district_id=null,$facility_code=null,$commodity_id=null,$graph_type=null,$from=null,$to=null){
+    $title='';	
     $district_id=($district_id=="NULL") ? null :$district_id;
     $graph_type=($graph_type=="NULL") ? null :$graph_type;
     $facility_code=($facility_code=="NULL") ? null :$facility_code;
@@ -803,7 +804,7 @@ endif;
         $temp_array =$temp_array_ = array();
         $graph_data=array();
         $graph_type='';
-        $title='';
+       
 
         
         foreach ($commodity_array as $data) :
@@ -1170,6 +1171,10 @@ order by user.id asc
 	 public function reports(){
 	 	
 		$data['county'] = Counties::getAll();
+		//Added function to display oonly the counties that are currently using HCMP
+		//$counties = Counties::get_counties_all_using_HCMP();
+		//$data['county'] = $counties;
+		
 		$data['commodities'] = Commodities::get_all();
 		$data['sub_county'] = Districts::getAll();
 	 	$this -> load -> view('national/reports_home', $data);
@@ -1188,6 +1193,15 @@ order by user.id asc
 		
 	 }
 
+	 public function consumption_report(){
+	 	
+		$county = $_POST['county'];
+		$sub_county = $_POST['sub_county'];
+		$facility_id = $_POST['facility_id'];
+		$email_address = $_POST[''];
+		$username = $_POST['username'];
+		$facility_id = $_POST['facility_id'];
+	 }
 }   
     
 
