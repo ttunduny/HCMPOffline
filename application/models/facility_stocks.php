@@ -282,7 +282,85 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 
         return $stocks ;	  	
 	  }
-	
+	public static function get_stocked_out_commodities_for_report($facility_code=null,$district_id=null,$county_id=null)
+	{
+		$where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+		$group_by=isset($facility_code)? " order by c.commodity_name asc" : 
+		(isset($district_id)? " order by f.facility_name asc" : " order by d.district asc" );
+		
+		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT 
+					    d.district,
+					    f_s.`facility_code`,
+					    f.facility_name,
+					    c.`id` AS commodity_id,
+					    cnts.county,
+					    c.unit_size,
+					    cs.source_name,
+					    f_s.manufacture,
+					    c.`commodity_code`,
+					    c.`commodity_name`,
+					    sum(f_s.current_balance/c.total_commodity_units) as current_balance_packs,
+						sum(f_s.current_balance) as current_balance_units,
+					ROUND(temp.total_units / temp.consumption_level,1)AS amc
+					FROM
+					    facilities f,
+						districts d,
+						counties cnts,
+						counties c_s,
+					    facility_stocks f_s,
+					    commodity_source cs,
+					    commodities c
+					LEFT JOIN
+					    facility_monthly_stock temp ON temp.commodity_id = c.id
+					        and temp.facility_code = 11840
+					    
+					WHERE
+					    f.facility_code = f_s.facility_code
+					        AND cs.id = c.commodity_source_id
+					        and $where_clause
+					        AND f_s.commodity_id = c.id
+					        AND f.district = d.id
+					        AND f_s.status = 1
+					GROUP BY c.id
+					having amc <=3
+					$group_by");
+					/*echo "SELECT 
+					    d.district,
+					    f_s.`facility_code`,
+					    f.facility_name,
+					    c.`id` AS commodity_id,
+					    c.unit_size,
+					    cs.source_name,
+					    f_s.manufacture,
+					    c.`commodity_code`,
+					    c.`commodity_name`,
+					    sum(f_s.current_balance/c.total_commodity_units) as current_balance_packs,
+						sum(f_s.current_balance) as current_balance_units,
+					ROUND(temp.total_units / temp.consumption_level,1)AS amc
+					FROM
+					    facilities f,
+						districts d,
+					    facility_stocks f_s,
+					    commodity_source cs,
+					    commodities c
+					LEFT JOIN
+					    facility_monthly_stock temp ON temp.commodity_id = c.id
+					        and temp.facility_code = 11840
+					    
+					WHERE
+					    f.facility_code = f_s.facility_code
+					        AND cs.id = c.commodity_source_id
+					        and $where_clause
+					        AND f_s.commodity_id = c.id
+					        AND f.district = d.id
+					        AND f_s.status = 1
+					GROUP BY c.id
+					having amc <=3
+					$group_by";
+					exit;*/
+		return $stocks;
+	}
  		public static function potential_expiries($facility_code){
 		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date 
 		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code' and current_balance>0");
