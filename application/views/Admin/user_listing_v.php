@@ -280,7 +280,7 @@
 									<div class=" col-md-6">
 										<div class="form-group">
 											<select class="form-control " id="user_type" name="user_type" required="required">
-												<option value=''>Select User Type</option>
+												<option value='NULL'>Select User Type</option>
 												<?php
 													foreach ($user_types as $user_type) :
 														$id = $user_type ['id'];
@@ -483,7 +483,7 @@
 										<div class="form-group">
 											<label> User-type</label>
 											<select class="form-control " id="user_type_edit_district" name="user_type_edit_district" required="required">
-												<option value=''>Select User Type</option>
+												<option value='NULL'>Select User Type</option>
 												<?php
 													foreach ($user_types as $user_t) :
 														$id = $user_t ['id'];

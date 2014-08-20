@@ -42,47 +42,48 @@ table{
 
 
 </style>
-<!--div style="width:100%;font-size: 12px;height:20px;padding: 10px 10px 10px 10px;margin-bottom:10px;" class="navtbl">
-    <select id="switch_month" class="form-control" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;float:left;margin-left:20px;">      
-        <?php 
-
-            for ($i=1; $i <=12 ; $i++) { 
-            $month = date('m', strtotime("-$i month")); 
-            $year = date('Y', strtotime("-$i month")); 
-            $month_value = $month.$year;
-            $month_text =  date('F', strtotime("-$i month")); 
-            $month_text = "-- ".$month_text." ".$year." --";
-         ?>
-        <option value="<?php echo $month_value ?>"><?php echo $month_text ?></option>;
-    <?php } ?>
-    </select>
-  </div-->
-<div style="width:100%;font-size: 12px;height:20px;padding: 10px 10px 10px 10px;margin-bottom:10px;">
-  <ul class="navtbl top-navigation nav" style="margin-top:0px;float:left;">        
-    <li class=""><a href="#">Zone-A</a></li>
-    <li class=""><a href="#">Zone-B</a></li>
-    <li class=""><a href="#">Zone-C</a></li>
-    <li class=""><a href="#">Zone-D</a></li>
-  </ul>
-</div>
-
 
 
 <div class="main-container" style="width: 100%;float: right;">
-	<table id="pending_facilities" class="data-table"> 
-		<thead>	      
+
+  <table id="pending_facilities" class="data-table"> 
+    <thead>
+    <tr>        
       <th>County</th>
       <th>Sub-County</th>
-			<th>MFL</th>
-			<th>Facility Name</th>			
-			<th>Zone</th>
-			<th>Report For:</th>
-		</thead>
-		<tbody>
-			<?php
-      if(count($pending_facility)>0){
-       foreach ($pending_facility as $value) {
-        $zone = str_replace(' ', '-',$value['zone']);
+      <th>MFL</th>
+      <th>Facility Name</th>      
+      <th colspan="2">Screening - Determine</th>    
+      <th colspan="2">Confirmatory - Unigold</th>      
+      <th colspan="2">First Response</th>      
+      <th colspan="2">Colloidal</th>      
+      <th colspan="2">TieBreaker - Unigold</th>      
+    </tr>    
+    <tr>
+          
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>      
+      <th>AMC</th>
+      <th>Quantity to Allocate</th>
+      <th>AMC</th>
+      <th>Quantity to Allocate</th>
+      <th>AMC</th>
+      <th>Quantity to Allocate</th>
+      <th>AMC</th>
+      <th>Quantity to Allocate</th>
+      <th>AMC</th>
+      <th>Quantity to Allocate</th>
+    </tr>
+      
+    </thead>
+
+    <tbody>
+      <?php
+      if(count($facilities)>0){
+       foreach ($facilities as $value) {
+        //$zone = str_replace(' ', '-',$value['zone']);
         $facil = $value['facility_code'];
         ?> 
         <tr>   
@@ -90,30 +91,30 @@ table{
           <td><?php echo $value['district'];?></td>              
           <td><?php echo $value['facility_code'];?></td>
           <td><?php echo $value['facility_name'];?></td>     
+          <td><?php echo $amcs[$facil][0]['amc'];?></td>     
+          <td><?php echo ceil((($amcs[$facil][0]['amc'])*4)/100);?></td>     
+          <td><?php echo $amcs[$facil][1]['amc'];?></td>     
+          <td><?php echo ceil((($amcs[$facil][1]['amc'])*4)/20);?></td>                 
+          <td><?php echo $amcs[$facil][3]['amc'];?></td>     
+          <td><?php echo ceil((($amcs[$facil][3]['amc'])*4)/50);?></td>     
+          <td><?php echo $amcs[$facil][2]['amc'];?></td>     
+          <td><?php echo ceil((($amcs[$facil][2]['amc'])*4)/30);?></td>     
+          <td><?php echo $amcs[$facil][4]['amc'];?></td>     
+          <td><?php echo ceil((($amcs[$facil][4]['amc'])*4)/20);?></td>     
           
-          <td><?php echo $zone;?></td>
-          <td><?php echo $value['report_for'];?></td>
         </tr>
-        <?php	}
+        <?php }
       }else{ ?>
       <tr>There are No Facilities which did not Report</tr>
       <?php }
-      ?>			
+      ?>      
 
     </tbody>
   </table>
 </div>
 <script>
 $(document).ready(function() {
-  $("table").tablecloth({theme: "paper",         
-          bordered: true,
-          condensed: true,
-          striped: true,
-          sortable: true,
-          clean: true,
-          cleanElements: "th td",
-          customClass: "my-table"
-        });
+ 
   var table = $('#pending_facilities').dataTable({
     "sDom": "T lfrtip",
     "sScrollY": "377px",
@@ -150,21 +151,7 @@ $(document).ready(function() {
       select.append('<option value="' + d + '">' + d + '</option>')
     });
   });
-  $('.navtbl li a').click(function(e) {
-    var $this = $(this);
-    var thistext = $(this).text();
-    $('.navtbl li').removeClass('active');
-    $this.parent().addClass('active');
-    $(".dataTables_filter label input").focus();
-    $('.dataTables_filter label input').val(thistext).trigger($.Event("keyup", {keyCode: 13}));
-
-    e.preventDefault();
-  });
-  $('#switch_month').change(function() {
-            var value = $('#switch_month').val();
-            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/allocation_committee/'; ?>" + value + "<?php '/show_allocation_pending/'?>";
-            window.location.href = path;
-        });
+  
 
 });
 </script>

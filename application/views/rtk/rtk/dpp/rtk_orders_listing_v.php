@@ -15,7 +15,7 @@ $englishdate = date('F, Y', strtotime($monthyear));
 
 $(document).ready(function() {
 
-    $('table').dataTable({
+    $('#example').dataTable({
                         "sDom": "T lfrtip",
                         "bPaginate": true,
                         "aaSorting": [[0, "desc"]],
@@ -187,6 +187,7 @@ window.location.href = path;
     <div class="sidebar">
         <?php
         $option = '';
+        $date = date('d', time());
         $id = $this->session->userdata('user_id');
         $q = 'SELECT * from dmlt_districts,districts 
                                 where dmlt_districts.district=districts.id
@@ -195,6 +196,19 @@ window.location.href = path;
         foreach ($res->result_array() as $key => $value) {
             $option .= '<option value = "' . $value['id'] . '">' . $value['district'] . '</option>';
         }
+        $sql = "select distinct rtk_settings.* 
+                    from rtk_settings, facilities 
+                    where facilities.zone = rtk_settings.zone 
+                    and facilities.rtk_enabled = 1";
+                    $res_ddl = $this->db->query($sql);
+                    $deadline_date = null;
+                    $settings = $res_ddl->result_array();
+                    foreach ($settings as $key => $value) {
+                        $deadline_date = $value['deadline'];
+                        $five_day_alert = $value['5_day_alert'];
+                        $report_day_alert = $value['report_day_alert'];
+                        $overdue_alert = $value['overdue_alert'];
+                    }
         ?>
         <span style="" class="label label-info">Switch Sub-Counties</span>
         <br />
@@ -277,7 +291,8 @@ window.location.href = path;
                 <td><?php echo $order['compiled_by']; ?></td>
                 <!--td><?php echo "Lab Commodities"; ?></td-->
                 <td><?php echo $english_date; ?></td>
-                <td><a href="<?php echo site_url('rtk_management/lab_order_details/' . $order['id']); ?>"class="link">View</a> | <a href="<?php echo site_url('rtk_management/edit_lab_order_details/' . $order['id']); ?>"class="link">Edit</a></td>
+                <td><a href="<?php echo site_url('rtk_management/lab_order_details/' . $order['id']); ?>"class="link">View</a>
+                    <a href="<?php echo site_url('rtk_management/edit_lab_order_details/' . $order['id']); ?>"class="link report">| Edit</a></td>
               </tr> 
               <?php
             }
@@ -301,9 +316,13 @@ window.location.href = path;
                 <script type="text/javascript">
                 $(document).ready(function() {
                     $("table").tablecloth({theme: "paper"});
+                    var deadline = '<?php echo $deadline_date;?>';
+                    var date = '<?php echo $date;?>';
+                   // alert(date);
+                    if(date>deadline){
+                        $('.report').hide();
+                    }
                 });
-
-
                 </script>
     </div>
   </div>

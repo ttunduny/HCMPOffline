@@ -214,7 +214,7 @@
 										<div class="form-group">
 
 											<select class="form-control " id="facility_id" required="required">
-												<option value=''>Select Facility</option>
+												<option value='NULL'>Select Facility</option>
 
 												<?php
 												foreach ($facilities as $facility) :
@@ -231,7 +231,7 @@
 										<div class=" col-md-6">
 											<div class="form-group">
 												<select class="form-control " id="user_type" name="user_type" required="required">
-													<option value=''>Select User type</option>
+													<option value='NULL'>Select User type</option>
 													<?php
 													foreach ($user_types as $user_types) :
 														$id = $user_types ['id'];
@@ -805,7 +805,10 @@ $("#create_new").click(function() {
       var district_name = $('#district_name').val()
       var user_type = $('#user_type').val()
 
-       
+       if(first_name==""||last_name==""||telephone==""||email==""||user_type=="NULL"||district_name=="NULL"){
+						alert('Please make sure you have selected all relevant fields.');
+							return;
+							}
       
       var div="#processing";
       var url = "<?php echo base_url()."user/addnew_user";?>";

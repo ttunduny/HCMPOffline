@@ -31,6 +31,9 @@
     	h2{
     		font-size:1.6em;
     	}
+    	button{
+    		border-radius: 0 !important;
+    	}
     </style>
     <script>
    paceOptions = {
@@ -68,7 +71,11 @@ window.setInterval(function () {
           <span style="font-size: 1.7em;font-weight: bold">Ministry of Health</span><br />
           <span style="font-size: 1.3em">Health Commodities Management Platform (HCMP)</span> 
         </div>
-				
+        
+		<div class="pull-right" style="top: 0">
+			<a href="<?php echo base_url('national') ?>"><button class="btn btn-success ">
+				<span class="glyphicon glyphicon-dashboard"></span> Dashboard </button></a>
+		</div>		
 				
 	</div>
 	<div class="container-fluid">
@@ -115,7 +122,9 @@ unset($popup);
                 
  <div class="row">
         <div class="col-md-3">
-        	<a href="<?php echo base_url('national/demo_accounts') ?>"><button class="btn btn-primary ">Demo Site Login Credentials </button></div></a>
+
+       <!--<a href="<?php echo base_url('national/demo_accounts') ?>"><button class="btn btn-primary ">Demo Site Login Credentials </button></a>--></div>
+
   <div class="col-md-6"> 
   			<div class="row">
           <div class="col-md-1"></div>

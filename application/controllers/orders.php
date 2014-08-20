@@ -33,7 +33,7 @@ class orders extends MY_Controller {
 	$inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx'; 
 
     $file_name=time().'.xlsx';
-	$excel2 = PHPExcel_IOFactory::createReader('Excel2007');
+	$excel2 = PHPExcel_IOFactory::createReader('Excel5');
     $excel2=$objPHPExcel= $excel2->load($inputFileName); // Empty Sheet
     
     $sheet = $objPHPExcel->getSheet(0); 
@@ -60,7 +60,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 
 }
 
-   $objWriter = PHPExcel_IOFactory::createWriter($excel2, 'Excel2007');
+   $objWriter = PHPExcel_IOFactory::createWriter($excel2, 'Excel5');
    $objWriter->save("print_docs/excel/excel_files/".$file_name);
 
 	}
@@ -105,7 +105,16 @@ for ($row = 1; $row <= $highestRow; $row++){
 
         $items=Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
         if(isset($_FILES['file']) && $_FILES['file']['size'] > 0){
-        $excel2 = PHPExcel_IOFactory::createReader('Excel2007');
+        $ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
+            echo $ext; 
+        if($ext=='xls'){
+        $excel2 = PHPExcel_IOFactory::createReader('Excel5');    
+        }else if($ext=='xlsx'){
+        $excel2 = PHPExcel_IOFactory::createReader('Excel2007');    
+        }else{
+        die('Invalid file format given'.$_FILES['file']);   
+        }
+
         $excel2=$objPHPExcel= $excel2->load($_FILES["file"]["tmp_name"]); // Empty Sheet
     
         $sheet = $objPHPExcel->getSheet(0); 
@@ -278,7 +287,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 			$subject='Pending Approval Order Report For '.$facility_name;
 
 			$attach_file1='./pdf/'.$file_name.'.pdf';
-			$attach_file2="./print_docs/excel/excel_files/".$file_name.'.xlsx';
+			$attach_file2="./print_docs/excel/excel_files/".$file_name.'.xls';
 
 			$message=$message_1.$pdf_body;
 
@@ -286,7 +295,7 @@ for ($row = 1; $row <= $highestRow; $row++){
             
 			if($response){
 			delete_files($attach_file1);
-            delete_files($attach_file2);
+            unlink($attach_file2);
 			}
 			else{
 

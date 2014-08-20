@@ -27,13 +27,19 @@ class Facilities extends Doctrine_Record {
 	}
 	public static function getAll_json() {
 		$query = Doctrine_Query::create() -> select("*") -> from("facilities");
-		$drugs = $query -> execute();
+		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $drugs;
 	}
 	public static function getFacilities($district){
 		
 		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");
 		$drugs = $query -> execute();
+		return $drugs;
+	}
+	public static function getFacilities_json($district){
+		
+		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");
+		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $drugs;
 	}
 	public static function getFacilities_for_email($district){
@@ -56,7 +62,6 @@ class Facilities extends Doctrine_Record {
 	
 	//gets all the facilitites using HCMP in the system
 	//For weekly email updates
-
 	public static function get_all_using_HCMP($county_id)
 	{
 		$and_data = (isset($county_id)&&$county_id>0)?" AND d.county = $county_id" :null;

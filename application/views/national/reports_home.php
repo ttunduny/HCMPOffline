@@ -1,4 +1,5 @@
-<html lang="en"><head>
+<html lang="en">
+	<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,7 +17,6 @@
     <link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
-    
     <script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
     <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
@@ -62,29 +62,30 @@ padding-top: 4.5%;
 {
   border-radius: 0 !important;
 }
-#radioBtn .notActive{
-    color: #3276b1;
-    background-color: #fff;
-}
-.main_criteria #radioBtn .active{
-    color: white;
-    background-color: #3c763d;
-    border-color: #3c763d;
-}
+
 legend{
 	font-size:16px;
 }
+#main_c{
+	
+	-webkit-box-shadow: 0px 0px 1px 1px #615961;
+	box-shadow: 0px 0px 1px 1px #615961;
+}
+.modal-dialog {
+		
+		width: 54%;
+	}
 </style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </script>
-  </head>
-  <body screen_capture_injected="true" style="background-color: whitesmoke;">
-  	
-  	<div class="container-fluid navbar-default navbar-fixed-top" role="navigation" style="background-color:white">
+</head>
+  
+<body screen_capture_injected="true">
+	
+	<div class="container-fluid navbar-default navbar-fixed-top" role="navigation" style="background-color:white">
         <div class="container-fluid">
             <div class="navbar-header" id="st-trigger-effects">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -108,12 +109,8 @@ legend{
             <li class=""><a href="<?php echo base_url().'national';?>">Home</a></li>
             <li class="active"><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>
             <li class=""><a href="<?php echo base_url().'national/search';?>">Search</a></li>
-            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Log in</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-log-in" style="margin-right: 2%;"></span> Log in</a></li>
-                            
-                        </ul>
-                    </li>
+            <li class="" style="background: #144d6e; color: white;"><a style="background: #144d6e; color: white;" href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-user"></span>Log in</a></li>
+            
           </ul>
           
                                         
@@ -122,8 +119,8 @@ legend{
       </div>
     </div>
     
-    
-    <div class="container">
+    <div class="container" style="max-width:80% " id="main_c">
+    	
     	<div class="row-fluid" style="margin-top: 1%">
     		<fieldset>
     			<legend>County, Sub-county, Facility</legend>
@@ -131,7 +128,7 @@ legend{
     			<div class="col-xs-4">
 			  	<label for="county">Select County</label>
 			    <select class="form-control input-md" id="county"> 
-			    	<option>All Counties</option>
+			    	<option value="NULL">All Counties</option>
 			    	<?php
 							foreach ($county as $value => $county_list) :
 									 $c_id = $county_list['id'];
@@ -152,7 +149,7 @@ legend{
 			  <div class="col-xs-4">
 			  	<label for="county">Select Facility</label>
 			    <select class="form-control input-md" id="facility_id"> 
-			    	<option>All Facilities</option>
+			    	<option value="NULL">All Facilities</option>
 			    	
 			    	</select>
 			  </div>
@@ -161,82 +158,75 @@ legend{
 			  
 		</div>
 		
-				
 		<div class="row-fluid" style="margin-top: 1%">
-				<fieldset style="font-size: 16px;">
-					
-					<legend>Select Criteria</legend>
-					<section class="row-fluid" style="">
-						<section class="col-md-6">
-							<section class="col-md-4">
-							<input type="radio" name="criteria" value="Consumption" class=" " checked/> Consumption
-						</section>
-						<section class="col-md-4">
-							<input type="radio" name="criteria" value="Stock"/> Stock Status
-						</section>
-						
-						<section class="col-md-4">
-							<input type="radio" name="criteria" value="Orders"/> Orders
-						</section>
-						</section>
-						
-						
-						<section class="col-md-6">
-							<section class="col-md-6">
-								<input type="radio" name="criteria" value="Potential" class=" "/> Potential Expiries
-								
-								<section class="col-md-12" style="margin-top: 2%">
-							<label for="county">Select Interval</label>
-						   		<select class="form-control input-md" id="interval"> 
+			<fieldset>
+				<legend>Select Report type</legend>
+				
+				<div class="row">
+				<div class="col-md-3">
+					<input type="radio" name="criteria" value="Consumption" class=" " checked/> Consumption
+				</div>
+				<div class="col-md-3">
+					<input type="radio" name="criteria" value="Stock"/> Stock Level(MOS)
+				</div>
+				<div class="col-md-6">
+					<div class="row-fluid">
+						<div class="col-md-4" style="padding: 0"><input type="radio" name="criteria" value="Potential" class=" "/> Potential Expiries</div>
+						<div class="col-md-8" style="padding: 0">
+							<select class="form-control input-md" id="interval"> 
 						    	<option value="0">Select Interval</option>
 						    	<option value="3">Next 3 Months</option>
 						    	<option value="6">Next 6 Months</option>
 						    	<option value="12">Next 1 Year</option>
 						    	
 						    	</select>
-							</section>
-							</section>
-							
-							
-							<section class="col-md-6">
-							
-						   		<input type="radio" name="criteria" value ="Actual"/> Actual Expiries
-						   		
-						   		
-							</section>
-							
-						</section>
-						
-					</section>
-					
-					
-					
-										
-				</fieldset>
+						</div>
+					</div>
+				</div>
 				
 				
-				
+			</div>
+			
+			<div class="row" style="margin-top: 2%">
+				<div class="col-md-3">
+					<input type="radio" name="criteria" value="Orders"/> Orders
+				</div>
+				<div class="col-md-3">
+					<input type="radio" name="criteria" value ="Actual"/> Actual Expiries
+				</div>
+				<div class="col-md-6">
+					
+				</div>
+			</div>
+			</fieldset>
+			
+			
 		</div>
 		
-		
 		<div class="row-fluid" style="margin-top: 1%">
-			  
-			 <fieldset style="font-size: 16px;">
+			<fieldset>
+				<legend>Select Report type</legend>
+				
+			<div class="row" style="">
+				<div class="col-md-3">
+					<input type="radio" name="commodity_s" value="Tracer" class=" " checked/> Tracer Commodities
+				</div>
+				<div class="col-md-3">
 					
-					<legend>Select Commodity</legend>
+				</div>
+				<div class="col-md-6">
 					
-					<section class="row-fluid" style="">
-						<section class="col-md-12">
-							<section class="col-md-3">
-							<input type="radio" name="commodity_s" value="Tracer" class=" " checked/> Tracer Commodities
-						</section>
-						<section class="col-md-6">
-							<input type="radio" name="commodity_s" value="Specify"/> Specify Commodity
-							
-							<div class="" style="margin-top: 2%">
-			  	<label for="county">Select Commodity</label>
+				</div>
+			</div>
+			<div class="row" style="margin-top: 2%">
+				<div class="col-md-2">
+					<input type="radio" name="commodity_s" value="Specify"/> Specify Commodity
+				</div>
+				<div class="col-md-4" style="padding: 0">
+					<div class="" style="margin-top: 2%">
+			  	
 			    <select class="form-control input-md" id="commodity"> 
-			    	<option>All Commodities</option>
+			    	<option value="NULL">All Commodities</option>
 			    	<?php
 							foreach ($commodities as $value => $commodity) :
 									 $c_id = $commodity['id'];
@@ -246,107 +236,110 @@ legend{
 					?>
 			    	</select>
 			  </div>
-						</section>
-						
-						<section class="col-md-3">
-							<input type="radio" name="commodity_s" value="All"/> All Commodities
-						</section>
-						</section>
-						
-						
-						
-						
-					</section>
+				</div>
+				<div class="col-md-3">
 					
+				</div>
+			</div>
+			
+			<div class="row" style="margin-top: 0.5%">
+				<div class="col-md-3">
+					<input type="radio" name="commodity_s" value="All"/> All Commodities
+				</div>
+				<div class="col-md-3">
+				</div>
+				<div class="col-md-6">
 					
-					
-										
-				</fieldset> 
+				</div>
+			</div>
+			
+			</fieldset>
+			
+			
 		</div>
 		
-		<div class="row" style="margin-top: 1%">
-			
+		<div class="row-fluid" style="margin-top: 1%">
 			<fieldset>
 				
-				<legend>Duration</legend>
-				
-				<div class="col-xs-3">
-			  	<label for="Year">Year</label>
-			   <select class="form-control input-md" id="year"> 
-						    	<option>Select Year</option>
-						    	<option>2014</option>
-						    	<option>2013</option>
-						    	<option>2012</option>
-						    	
-						    	</select>
+				<legend>Duration From-To</legend>
+				<div class="col-xs-2">
+			  	<input type="text" class="form-control input-md" id="from" placeholder="From">
+			  </div>
+			  <div class="col-xs-2">
+			  	<input type="text" class="form-control input-md" id="to" placeholder="To">
 			  </div>
 			  
-			  <div class="col-xs-9">
+			  <div class="col-xs-6">
 			  	
 			  </div>
+				
 			</fieldset>
-			  
-			  
-			  
-		
-          
-			 
 		</div>
-		<div class="row" style="margin-top: 1%">
-			  <div class="col-xs-12">
-			  	<fieldset style="font-size: 16px;">
+    	
+    	<div class="row-fluid" style="margin-top: 1%">
+			<fieldset>
+				
+				<fieldset style="">
 			  		<legend>View as</legend>
 			  		
-			  		<section class="col-md-6">
-							<section class="col-md-3">
-							<input type="radio" name="doctype" value="PDF" class=" " checked/> PDF
+			  		<section class="col-md-8">
+						
+						<section class="col-md-3">
+							<input type="radio" name="doctype" value="PDF" class="" checked/> PDF
 						</section>
 						<section class="col-md-3">
-							<input type="radio" name="doctype" value="Excel"/> Excel
+							<input type="radio" name="doctype"  value="excel"/> Excel
 						</section>
 						
 						<section class="col-md-3">
-							<input type="radio" name="doctype" value="Graph"/> Web Graph
+							<input type="radio" name="doctype"  value="graph"/> Web Graph
 						</section>
 						<section class="col-md-3">
-							<input type="radio" name="doctype" value="Table"/> Web Table
+							<input type="radio" name="doctype"  value="Table"/> Web Table
 						</section>
 						</section>
 			  	</fieldset>
-			  	
-			  	
-			  
-			  </div>
-			  
-			  
-		
-          
-			 
+			</fieldset>
 		</div>
-    	
-    	<div class="modal-footer">
-				<button type="button" class="btn btn-success edit_user">
+		
+		
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success generate">
 				<span class="glyphicon glyphicon-file"></span>	Generate
 				</button>
 			</div>
+    	
     </div>
-  	
-  </body>
-  
-  
     
+    
+  <!-- Modal -->
+<div class="modal fade" id="graph_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body" id="graph_content">
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
     
     
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script>
+</body>
+</html>
+<script>
     var url='<?php echo base_url(); ?>';
      $(document).ready(function () {
      	
      	$("#interval,#expfrom,#expto,#commodity").attr("disabled", 'disabled');
-     	
+     	$( "#from,#to" ).datepicker();
      	$('#county').on('change', function(){
      		var county_val=$('#county').val()
     var drop_down='';
@@ -392,10 +385,12 @@ $('#sub_county').on('change', function(){
 							
 							$("#expfrom,#expto").attr("disabled", false);
 							$("#year,#interval").attr("disabled", 'disabled');
+							$("#interval").val(0);
 							
 						}else{
 							$("#interval,#expfrom,#expto").attr("disabled", 'disabled');
 							$("#year").attr("disabled", false);
+							$("#interval").val(0);
 							
 						}
 });
@@ -407,20 +402,151 @@ $("input:radio[name=commodity_s]").click(function() {
    					 if(val=="Specify"){
 						
 						$("#commodity").attr("disabled", false);
+						
 						 
 						}else{
 							
 							$("#commodity").attr("disabled", 'disabled');
-							
+							$("#commodity").val("NULL");
 						}
 });
 
+
+ //Run report downloads
+    
+    $(".generate").click(function() {
+
+      	var county_id=$('#county').val();
+        var district=$("#sub_county").val();
+        var facility=$("#facility_id").val();
+        var criteria = $('input[name=criteria]:checked').val()
+        var type = $('input[name=doctype]:checked').val()
+        var from =$("#from").val();
+        var to =$("#to").val();
+        var commodity_id=$('#commodity').val();
+        var commodity_type = $('input[name=commodity_s]:checked').val()
+        var link='';
+        
+        if(from==''){from="NULL";}
+	        if(to==''){to="NULL";}
+	       
+	       //check criteria 
+	        if(criteria=='Consumption'){
+                   
+      if(type=='excel'){ 
+      	
+	        if(commodity_type=='Tracer'){ 
+	        
+	        link='national/consumption/'+county_id+'/'+district+'/'+facility+'/NULL/excel/'+encodeURI(from)+ '/'+encodeURI(to);
+	        }
+	        
+	        if(commodity_type=='All'){ 
+	        var commodity_id=$('#commodity').val();
+	        
+	        
+	        link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel/'+encodeURI(from)+ '/'+encodeURI(to);
+	        
+	        }
+	        
+	        if(commodity_type=='Specify'){ 
+	        var commodity_id=$('#commodity').val();
+	        
+	        
+	        link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel/'+encodeURI(from)+ '/'+encodeURI(to);
+	        
+	        }
+	        window.open(url+link,'_parent');
+	        
+	        //graphs
+        }else if(type=='graph'){
+        	
+        	$('#graph_Modal').modal('show');
+        	
+       if(commodity_type=='Tracer'){
+
+        ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/NULL/NULL/'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content");
+        }
+        
+        if(commodity_type=='All'){ 
+	        var commodity_id=$('#commodity').val();
+	        
+        ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/NULL/'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content");
+	        
+	        }
+	        
+        }
+       }else if(criteria=='Stock'){
+       	
+       	if(type=='excel'){ 
+      	
+	        if(commodity_type=='Tracer'){ 
+	        
+	        link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/NULL/excel';
+	        }
+	        
+	        if(commodity_type=='All'){ 
+	        var commodity_id=$('#commodity').val();
+	        
+	        
+	        link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel';
+	        
+	        }
+	        window.open(url+link,'_parent');
+	        
+	        //graphs
+	        
+	        }else if(type=='graph'){
+        	
+        	$('#graph_Modal').modal('show');
+        	
+       if(commodity_type=='Tracer'){
+
+        ajax_return('national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'',"#graph_content");
+        }
+        
+        if(commodity_type=='All'){ 
+	        var commodity_id=$('#commodity').val();
+	        
+	       ajax_return('national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/ALL',"#graph_content"); 
+	        }
+	    
+	    if(commodity_type=='Specify'){ 
+	        var commodity_id=$('#commodity').val();
+	        
+	       ajax_return('national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'',"#graph_content"); 
+	        }
+	        
+        }
+        }
+       
+           
+    });
+    
+    	function ajax_return(function_url,div){
+        var function_url =url+function_url;
+        var loading_icon=url+"assets/img/Preloader_4.gif";
+        $.ajax({
+	        type: "POST",
+	        url: function_url,
+	        beforeSend: function() {
+	        $(div).html("<img style='margin-left:20%;' src="+loading_icon+">");
+        },
+        success: function(msg) {
+        $(div).html(msg);
+        }
+        });
+        } 
+    
+
 });
+
+   
+   
 
     
     
     </script>
-  <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
+ <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
     <!-- Bootstrap core JavaScript===================== --> 
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>

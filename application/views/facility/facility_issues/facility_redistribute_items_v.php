@@ -49,6 +49,10 @@ if (isset($donate_destination)&&($donate_destination == 'district')) {
 					</thead>
 					<tbody>
 						<tr row_id='0'>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
 							<td>
 								<select name="district[0]" class="form-control input-small district" style="width:110px !important;">
 								<option value="0">Select Sub-county</option>
@@ -63,6 +67,43 @@ if (isset($donate_destination)&&($donate_destination == 'district')) {
 							<td>
 						<select name="mfl[0]" class="form-control input-small facility" style="width:110px !important;">
                        <option value="0">Select Facility</option>
+<<<<<<< HEAD
+=======
+=======
+						<td>
+								<select name="district[0]" class="form-control input-small district">
+						<?php 
+
+								if (isset($donate_destination)&&($donate_destination == 'district')) {
+									echo '<option value="'.$district_id.' "> '.$district_data['district'].'</option>';
+								}
+								else{
+									echo '<option value="0">--select subcounty---</option>';
+									foreach ($subcounties as $district) {
+									$id=$district->id;
+									$name=$district->district;		
+									echo '<option value="'.$id.'"> '.$name.'</option>';
+								}
+							}
+							 ?>
+								</select>
+							</td>
+							<?php 
+								$dropdown2=isset($donate_destination)&&($donate_destination == 'district')? 
+								'<td>
+						<select  name="mfl[0]" class="form-control input-small">
+						<!-- donate_destination -->
+                       <option value="0">District Store</option>
+					   </select>
+						</td>
+						'
+								:'
+								<td>
+						<select  name="mfl[0]" class="form-control input-small facility">
+						<!-- donate_destination -->
+                       <option value="0">--select facility---</option>
+>>>>>>> 71f6b73604172b8170a8ed178c9286775e75c12c
+>>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
 					   </select>
 						</td>'
 						;

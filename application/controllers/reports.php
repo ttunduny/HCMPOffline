@@ -544,6 +544,7 @@ class Reports extends MY_Controller
 		$this -> load -> view("shared_files/template/template", $data);
 
 	}
+
 		public function store_expiries() {
         $district_id=isset($district_id) ? $district_id: $this -> session -> userdata('district_id');
 		$district_name=Districts::get_district_name($district_id)->toArray();
@@ -1065,7 +1066,7 @@ class Reports extends MY_Controller
 	}
 
 	public function get_facility_json($district) {
-	echo json_encode(Facilities::getFacilities($district));
+	echo json_encode(Facilities::getFacilities_json($district));
 				
 	}
 	public function get_sub_county_json_data($county_id) {
@@ -2525,6 +2526,7 @@ $month = $data['expiry_month'];
 	 }
 
 	 public function get_county_cost_of_expiries_new($year = null, $month = null, $district_id = null, $option = null, $facility_code = null,$report_type=null) {
+	 	
 	 	//get_county_cost_of_expiries_new/0/null/88/0/17401
 	 	$year=($year=="NULL") ? null :$year;
 	 	$month=($month=="NULL") ? NULL :$month;
@@ -2560,14 +2562,12 @@ $month = $data['expiry_month'];
          
 		if (!isset($month)) 
 		{
-			
 			$category_data = array_merge($category_data, $months);
 			$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,$county_id, $year, null,$option ,"all");   
-			$column_data_ = array("stock expired in $title $month_ $year","Name","stock expired in $option_new");		
+			$column_data_ = array("stock expired in $title $month_ $year", "stock expired in $option_new");		
 			foreach ($commodity_array as $data) :
 				$temp_array = array_merge($temp_array, array($data["cal_month"] => (int)$data['total']));
-				$series_data_ = array_merge($series_data_, array(array($data["cal_month"],$data['name'],(int)$data['total'])));
-				
+				$series_data_ = array_merge($series_data_, array(array($data["cal_month"], (int)$data['total'])));
 			endforeach;
 			foreach ($months as $key => $data) :
 			$val = (array_key_exists($data, $temp_array)) ? (int)$temp_array[$data] : (int)0;
@@ -2581,26 +2581,48 @@ $month = $data['expiry_month'];
         //get the expiry for a specific month base on the set parameters
 		if (isset($month) && $month>0) 
 		{
-			
 			$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,$county_id, $year, $month,$option ,"all_");
-			$column_data_ = array("stock expired in $title $month_ $year","stock expired in $option_new");
+			$column_data_ = array("stock expired in $title $month_ $year", "Month", "Stock expired in $option");
+
 			foreach ($commodity_array as $data) :
 				$series_data  = array_merge($series_data , array($data["name"] => (int) $data['total']));
-				$series_data_ = array_merge($series_data_, array(array($data["name"],(int)$data['total'])));
+				$category_data=array_merge($category_data, array($data["name"]));
+				//array_push($series_data_, array($data["name"], (int) $data['total']));
+			endforeach;
+	        $graph_type='column';
+			
+			$commodity_array_for_excel = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,$county_id, $year, null,$option ,null);
+			
+			foreach ($commodity_array_for_excel as $data_csv) :
+				$series_data_ = array_merge($series_data_, array(array($data_csv["name"],$data_csv["month"], (int)$data_csv['total'])));
+			endforeach;
+			
+			
+		}
+		/*
+		 * if ((isset($month) && $month>0) && ((isset($facility_code) && isset($district_id))))
+		{
+			
+			$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,$county_id, $year, $month,$option ,"all_");
+			$column_data_ = array("stock expired in $title $month_ $year", "Month", "stock expired in $option_new");
+			foreach ($commodity_array as $data) :
+				$series_data  = array_merge($series_data , array($data["name"] => (int) $data['total']));
+				$series_data_ = array_merge($series_data_, array(array($data["name"], $data["month"], (int)$data['total'])));
 				$category_data=array_merge($category_data, array($data["name"]));
 				//array_push($series_data_, array($data["name"], (int) $data['total']));
 			endforeach;
 	        $graph_type='column';
 		}
-		
+		 * */
+		//
 		if($report_type=="csv_data"):
-			
 			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "stock expired in $commodity_name $title $month_ $year", 'file_name' => "Stock_expired_$commodity_name_$title_$month_$year");
 			$row_data = array();
 			$column_data = $column_data_;
 			$excel_data['column_data'] = $column_data;
 			$row_data = array_merge($row_data,$series_data_);
 			$excel_data['row_data'] = $row_data;
+			
 			$this -> hcmp_functions -> create_excel($excel_data);
 		else:   
 		    $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_'));
@@ -2834,19 +2856,19 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 
     }
    public function facility_stock_level_dashboard(){
-   				$county_id = $this -> session -> userdata('county_id');
-   				$view = 'shared_files/template/dashboard_template_v';
-	            $data['district_data'] = districts::getDistrict($county_id);
-	            $data['c_data'] = Commodities::get_all_2();
-				$data['categories']=commodity_sub_category::get_all_pharm();
-				$data['banner_text'] = "Stocking Levels";
-				$data['title'] = "Stocking Levels";
-				$data['content_view'] = "facility/facility_reports/reports_v";
-				$view = 'shared_files/template/template';
-				$data['report_view'] = "subcounty/reports/county_stock_level_filter_v";
-				$data['sidebar'] = "shared_files/report_templates/side_bar_v";
-				$data['active_panel']='other';
-		 		$data['title'] = "Reports";
+		$county_id = $this -> session -> userdata('county_id');
+		$view = 'shared_files/template/dashboard_template_v';
+        $data['district_data'] = districts::getDistrict($county_id);
+        $data['c_data'] = Commodities::get_all_2();
+		$data['categories']=commodity_sub_category::get_all_pharm();
+		$data['banner_text'] = "Stocking Levels";
+		$data['title'] = "Stocking Levels";
+		$data['content_view'] = "facility/facility_reports/reports_v";
+		$view = 'shared_files/template/template';
+		$data['report_view'] = "subcounty/reports/county_stock_level_filter_v";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		$data['active_panel']='other';
+ 		$data['title'] = "Reports";
 		
 		$this -> load -> view($view, $data);
 
@@ -2878,11 +2900,11 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 		$option = ($option=="NULL" || $option=="null") ? null :$option;	
 		
 		//get_county_stock_level_new/12/1
-		if($option=="mos"){
+		/*if($option=="mos"){
         	
         	$this->load_stock_level_graph($district_id, $county_id, $facility_code,$commodity_id,$report_type);
 			exit;
-        }
+        }*/
 		
 
 		$county_id = $this -> session -> userdata('county_id');
@@ -2905,21 +2927,28 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 		$title = isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
 	 	isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
 
+//echo $facility_code;
+//exit;
+
 		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code, $district_id, $county_id,
 		$category_id, $commodity_id, $option_new, $report_type);
-		
-		
+		/*
+		echo"<pre>";
+		print_r($district_id);
+		echo "</pre>";
+		exit;
+		*/
         foreach ($commodity_array as $data) :
 			if($report_type=="table_data"):
 				if($commodity_id>0):
-					array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"], $data['total']));
+					array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"],(int)$data['total']));
 
 				else:
-					array_push($series_data , array($data["commodity_name"],$data["facility_name"],$data["name"],(int) $data['total']));
+					array_push($series_data , array($data["commodity_name"],$data["facility_name"],$data["name"],(int)$data['total']));
 				endif;						
 			else:
 				$series_data  = array_merge($series_data , array((int)$data['total']));
-				$series_data_  = array_merge($series_data_ , array(array($data['district'],$data["facility_name"],$data["facility_code"],$data["commodity_name"],$data['total'])));
+				$series_data_  = array_merge($series_data_ , array(array($data['district'],$data["facility_name"],$data["facility_code"],$data["commodity_name"],(int)$data['total'])));
 				$category_data = array_merge($category_data, array($data["commodity_name"]));
 			endif;
 
