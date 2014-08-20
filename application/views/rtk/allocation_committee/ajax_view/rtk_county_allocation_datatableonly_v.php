@@ -15,7 +15,7 @@
         });
 
         $("#allocate").button().click(function() {
-        	var loading = '<div id="loading"> &nbsp;&nbsp;<img src="<?php echo base_url(); ?>Images/ajax-loader.gif"><span style="font-size: 13px;color: #92CA8F;font-family: calibri;">Saving Allocations</span></div>';
+        	var loading = '<div id="loading"> &nbsp;&nbsp;<img src="<?php echo base_url(); ?>assets/img/loader.gif"><span style="font-size: 13px;color: #92CA8F;font-family: calibri;">Saving Allocations</span></div>';
         	$('#system_alerts').html(loading);
       	
 
@@ -74,11 +74,18 @@
     .nav{
         margin-bottom: 0px;
     } 
+    table{
+        font-size: 13px;
+        text-align: center;
+        width: 100%;
+    }
     table:tr{
         height: 10px;
+        
 
     }
 </style> 
+
 <div style="width:100%;font-size: 15px;background: #F8F8F8;padding: 10px 10px 10px 10px;border-bottom: solid 1px #ccc;">
     <ul class="navtbl nav nav-pills">
 
@@ -90,13 +97,7 @@
 
             <li class=""><a href="#">Old-Algorithm</a></li>
             <li class=""><a href="#">New-Algorithm</a></li>
-       <a class="pull-right" href="../county_allocation/<?php echo $county_id;?>" 
-style="
-    line-height: 20px;
-    margin: 8px 26px 0px 0px;
-    text-decoration: none;
-    color: #0088cc;
-">View <?php echo $countyname;?>  Allocations</a> 
+       <a class="pull-right" href="../county_allocation/<?php echo $county_id;?>" style="line-height: 20px;margin: 8px 26px 0px 0px;text-decoration: none;color: #0088cc;">View <?php echo $countyname;?>  Allocations</a> 
 
     </ul>
 </div>
@@ -105,11 +106,12 @@ style="
     $attributes = array('name' => 'myform', 'id' => 'myform');
     echo form_open('rtk_management/rtk_allocation_data/' . $county_id, $attributes);
     ?>
-    <table id="example">
+
+    <table id="example" style="width:96%">
         <thead>
             <tr>
                 <th colspan="3">Facility Details</th>
-                <th rowspan="2"><b>Commodity</b></th>
+                <th rowspan="2"><br/><b>Commodity</b></th>
                 <th colspan="5">Quantity(tests)</th>
               
                 <th rowspan="2"><b>Qty to allocate</b>(Kits)</th>

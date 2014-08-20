@@ -726,9 +726,25 @@ endif;
 		$username_edit = $_POST['username_edit'];
 		$user_type_edit_district = $_POST['user_type_edit_district'];
 		$district_name_edit = $_POST['district_name_edit'];
-		
+		$email_recieve_edit = $_POST['email_edit_recieve'];
+		$sms_recieve_edit = $_POST['sms_edit_recieve'];
+
 		$user_id= $_POST['user_id'];
-		
+		// echo $email_recieve_edit;exit;
+		if ($email_recieve_edit =="true"){
+			$email_recieve = 2;
+		}
+		elseif($email_recieve_edit =="false"){
+			$email_recieve = 1;
+		}
+
+		if ($sms_recieve_edit =="true"){
+			$sms_recieve = 2;
+		}
+		elseif($sms_recieve_edit =="false"){
+			$sms_recieve = 1;
+		}
+
 		if ($status=="true") {
 			
 			$status=1;
@@ -750,7 +766,7 @@ endif;
 		//update user
 			$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
 			$update_user->execute("UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
-									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county'
+									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county',email_recieve ='$email_recieve',sms_recieve ='$sms_recieve'
                                   	WHERE `id`= '$user_id'");
 		
 	}

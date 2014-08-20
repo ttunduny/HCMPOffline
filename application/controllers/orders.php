@@ -297,7 +297,8 @@ for ($row = 1; $row <= $highestRow; $row++){
 			$user_action = "order";
 
 		 	Log::log_user_action($user, $user_action);
-			//$this -> hcmp_functions -> send_order_sms();
+
+			$this -> hcmp_functions -> send_order_sms();
 
 			$this -> session -> set_flashdata('system_success_message', "Facility Order No $new_order_no has Been Saved");
 			redirect("reports/order_listing/$order_listing");

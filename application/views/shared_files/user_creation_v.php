@@ -553,7 +553,7 @@
       $(document).ready(function () {
       	$(".edit_user,#create_new").attr("disabled", "disabled");
       	$('#myModal').on('hidden.bs.modal', function () {
-      		alert('jack');
+      		// alert('jack');
 				$("#datatable,.modal-content").hide().fadeIn('fast');
 				 location.reload();
 			});
@@ -628,12 +628,15 @@ var drop_down='';
     
     //handle edits
 $("#test").on('click','.edit',function() {
+	//seth
 	//capture relevant data
 var email = $(this).closest('tr').find('.email').html();
 var phone = $(this).closest('tr').find('.phone').html();
 var district = $(this).closest('tr').find('.district').html();
 var fname = $(this).closest('tr').find('.fname').html();
 var lname = $(this).closest('tr').find('.lname').html();
+var email_recieve = $(this).closest('tr').find('.email_recieve').html();
+var sms_recieve = $(this).closest('tr').find('.sms_recieve').html();
 //populate dropdown on click and selected current 
 var drop_down='';
 var facility_id=$(this).closest('tr').find('.facility_name').attr('data-attr');
@@ -656,6 +659,8 @@ $('#fname_edit').val(fname)
 $('#lname_edit').val(lname)
 $('#username_edit').val(email)
 
+
+//seth
 $('#user_type_edit').val($(this).closest('tr').find('.level').attr('data-attr'))
 $('#district_name_edit').val($(this).closest('tr').find('.district').attr('data-attr'))
 
