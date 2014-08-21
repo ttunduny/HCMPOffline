@@ -349,14 +349,13 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			$data['graph_id'] = 'dem_graph_';
 			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
 
-			
 			return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
-		elseif($graph_type=="excel") :
+		elseif ($graph_type == "excel") :
 			$excel_data = array('doc_creator' => "HCMP", 'doc_title' => "Expiry  $title", 'file_name' => "Stock Expired in $title  $year");
 			$row_data = array();
 			$column_data = array("Commodity", "Unit Size", "Quantity (Packs)", "Quantity (Units)", "Unit Cost (Ksh)", "Total Cost Expired (Ksh)", "Date of Expiry", "Supplier", "Manufacturer", "Facility Name", "Facility Code", "Sub-County", "County");
 			$excel_data['column_data'] = $column_data;
-			
+
 			$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select  c.county, d1.district as subcounty ,temp.drug_name,
 				 f.facility_code, f.facility_name,temp.manufacture, sum(temp.total) as total_ksh,temp.units,
 				temp.unit_cost,temp.expiry_date,temp.unit_size,
@@ -393,8 +392,8 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			$excel_data['row_data'] = $row_data;
 
 			$this -> hcmp_functions -> create_excel($excel_data);
-		elseif($graph_type=="pdf") :
-			
+		elseif ($graph_type == "pdf") :
+
 			$pdf_body = "";
 			$pdf_body .= "<table class='data-table'><tr><th>County</th><th>Sub County</th><th>Facility Code</th><th>Facility Name</th><th>Drug Name</th><th>Manufacturer</th><th>Units</th><th>Unit Cost</th><th>Expiry Date</th><th>Packs</th><th>Total Cost(KSH)</th></tr>";
 			$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select  c.county, d1.district as subcounty ,temp.drug_name,
@@ -426,30 +425,29 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 				group by temp.id,f.facility_code
 				order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 				        ");
-				        
-	        foreach ($facility_stock_data as $facility_stock_data_item) :
-				$pdf_body .="
+
+			foreach ($facility_stock_data as $facility_stock_data_item) :
+				$pdf_body .= "
 					<tr>
-					<td>".$facility_stock_data_item['county']."</td>
-					<td>".$facility_stock_data_item['subcounty']."</td>
-					<td>".$facility_stock_data_item['facility_code']."</td>
-					<td>".$facility_stock_data_item['facility_name']."</td>
-					<td>".$facility_stock_data_item['drug_name']."</td>
-					<td>".$facility_stock_data_item["manufacture"]."</td>
-					<td>".$facility_stock_data_item["units"]."</td>
-					<td>".$facility_stock_data_item["unit_cost"]."</td>
-					<td>".$facility_stock_data_item["expiry_date"]."</td>
-					<td>".$facility_stock_data_item["packs"]."</td>
-					<td>".$facility_stock_data_item["total_ksh"]."</td>
+					<td>" . $facility_stock_data_item['county'] . "</td>
+					<td>" . $facility_stock_data_item['subcounty'] . "</td>
+					<td>" . $facility_stock_data_item['facility_code'] . "</td>
+					<td>" . $facility_stock_data_item['facility_name'] . "</td>
+					<td>" . $facility_stock_data_item['drug_name'] . "</td>
+					<td>" . $facility_stock_data_item["manufacture"] . "</td>
+					<td>" . $facility_stock_data_item["units"] . "</td>
+					<td>" . $facility_stock_data_item["unit_cost"] . "</td>
+					<td>" . $facility_stock_data_item["expiry_date"] . "</td>
+					<td>" . $facility_stock_data_item["packs"] . "</td>
+					<td>" . $facility_stock_data_item["total_ksh"] . "</td>
 				</tr>";
-				
-		
+
 			endforeach;
-			
-			$pdf_body .="</table>";
-			$pdf_data['pdf_html_body']=$pdf_body;
+
+			$pdf_body .= "</table>";
+			$pdf_data['pdf_html_body'] = $pdf_body;
 			$this -> hcmp_functions -> create_pdf($pdf_data);
-		elseif($graph_type=="table") :
+		elseif ($graph_type == "table") :
 		endif;
 
 	}
@@ -534,15 +532,14 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
 			$data['graph_id'] = 'dem_graph_1';
 			return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
-		elseif($graph_type == "excel") :
+		elseif ($graph_type == "excel") :
 
 			$excel_data = array('doc_creator' => "HCMP", 'doc_title' => "Potential Expiry  $title", 'file_name' => "Stock Expiring $title in the Next $interval Months");
 			$row_data = array();
 			$column_data = array("Commodity", "Unit Size", "Quantity (Packs)", "Quantity (Units)", "Unit Cost (Ksh)", "Total Cost Expired (Ksh)", "Date of Expiry", "Supplier", "Manufacturer", "Facility Name", "Facility Code", "Sub-County", "County");
 			$excel_data['column_data'] = $column_data;
 			//echo  ; exit;
-			$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> 
-			fetchAll("select  c.county, d1.district as subcounty ,temp.drug_name,
+			$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select  c.county, d1.district as subcounty ,temp.drug_name,
 						 f.facility_code, f.facility_name,temp.manufacture, sum(temp.total) as total_ksh,
 						temp.unit_cost,temp.expiry_date,temp.unit_size,temp.units,
 						temp.packs
@@ -579,10 +576,9 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			$excel_data['row_data'] = $row_data;
 
 			$this -> hcmp_functions -> create_excel($excel_data);
-		
-		elseif($graph_type == "pdf") :
-		$pdf_body = "";
-		$pdf_body .= "<table class='data-table'><tr><th>County</th><th>Sub County</th><th>Facility Code</th><th>Facility Name</th>
+		elseif ($graph_type == "pdf") :
+			$pdf_body = "";
+			$pdf_body .= "<table class='data-table'><tr><th>County</th><th>Sub County</th><th>Facility Code</th><th>Facility Name</th>
 		<th>Commodity Name</th>
 		<th>Unit Size</th>
 		<th>Manufacturer</th>
@@ -592,9 +588,8 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 		<th>Expiry Date</th>
 		<th>Total Cost (Ksh)</th>
 		</tr>";
-				
-		$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> 
-			fetchAll("select  c.county, d1.district as subcounty ,temp.drug_name,
+
+			$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select  c.county, d1.district as subcounty ,temp.drug_name,
 						 f.facility_code, f.facility_name,temp.manufacture, sum(temp.total) as total_ksh,
 						temp.unit_cost,temp.expiry_date,temp.unit_size,temp.units,
 						temp.packs
@@ -623,31 +618,29 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 						group by temp.id,f.facility_code
 						order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 		        ");
-		        
-        foreach ($facility_stock_data as $facility_stock_data_item) :
-				$pdf_body .="
+
+			foreach ($facility_stock_data as $facility_stock_data_item) :
+				$pdf_body .= "
 					<tr>
-					<td>".$facility_stock_data_item['county']."</td>
-					<td>".$facility_stock_data_item['subcounty']."</td>
-					<td>".$facility_stock_data_item['facility_code']."</td>
-					<td>".$facility_stock_data_item['facility_name']."</td>
-					<td>".$facility_stock_data_item['drug_name']."</td>
-					<td>".$facility_stock_data_item["unit_size"]."</td>
-					<td>".$facility_stock_data_item["manufacture"]."</td>
-					<td>".$facility_stock_data_item["packs"]."</td>
-					<td>".$facility_stock_data_item["units"]."</td>
-					<td>".$facility_stock_data_item["unit_cost"]."</td>
-					<td>".$facility_stock_data_item["expiry_date"]."</td>
-					<td>".$facility_stock_data_item["total_ksh"]."</td>
+					<td>" . $facility_stock_data_item['county'] . "</td>
+					<td>" . $facility_stock_data_item['subcounty'] . "</td>
+					<td>" . $facility_stock_data_item['facility_code'] . "</td>
+					<td>" . $facility_stock_data_item['facility_name'] . "</td>
+					<td>" . $facility_stock_data_item['drug_name'] . "</td>
+					<td>" . $facility_stock_data_item["unit_size"] . "</td>
+					<td>" . $facility_stock_data_item["manufacture"] . "</td>
+					<td>" . $facility_stock_data_item["packs"] . "</td>
+					<td>" . $facility_stock_data_item["units"] . "</td>
+					<td>" . $facility_stock_data_item["unit_cost"] . "</td>
+					<td>" . $facility_stock_data_item["expiry_date"] . "</td>
+					<td>" . $facility_stock_data_item["total_ksh"] . "</td>
 				</tr>";
-				
-		
+
 			endforeach;
-			$pdf_body .="</table>";
-			$pdf_data['pdf_html_body']=$pdf_body;
+			$pdf_body .= "</table>";
+			$pdf_data['pdf_html_body'] = $pdf_body;
 			$this -> hcmp_functions -> create_pdf($pdf_data);
-       
-		elseif($graph_type == "table") :
+		elseif ($graph_type == "table") :
 		endif;
 
 	}
@@ -737,7 +730,7 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			$data['graph_id'] = 'dem_graph_mos';
 			return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
 		//
-		elseif($graph_type=='excel') :
+		elseif ($graph_type == 'excel') :
 			$excel_data = array('doc_creator' => "HCMP", 'doc_title' => "Stock Level in Months of Stock $title", 'file_name' => 'MOS');
 			$row_data = array();
 			$column_data = array("County", "Sub-County", "Facility Name", "Facility Code", "Item Name", "MOS");
@@ -775,12 +768,12 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			$excel_data['row_data'] = $row_data;
 
 			$this -> hcmp_functions -> create_excel($excel_data);
-		elseif($graph_type=='pdf'):
+		elseif ($graph_type == 'pdf') :
 			$pdf_body = "";
 			//$column_data = array("County", "Sub-County", "Facility Name", "Facility Code", "Item Name", "MOS");
-			
+
 			$pdf_body .= "<table class='data-table'><tr><th>County</th><th>Sub County</th><th>Facility Code</th><th>Facility Name</th><th>Commodity Name</th><th>Stock Level(MOS)</th></tr>";
-			
+
 			//get the data
 			$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select 
 			   c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.commodity_name as drug_name,
@@ -808,29 +801,28 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			order by c.county asc,d1.district asc
 			        ");
 			foreach ($facility_stock_data as $facility_stock_data_item) :
-				$pdf_body .="
+				$pdf_body .= "
 					<tr>
-					<td>".$facility_stock_data_item['county']."</td>
-					<td>".$facility_stock_data_item['subcounty']."</td>
-					<td>".$facility_stock_data_item['facility_code']."</td>
-					<td>".$facility_stock_data_item['facility_name']."</td>
-					<td>".$facility_stock_data_item['drug_name']."</td>
-					<td>".$facility_stock_data_item['total']."</td>
+					<td>" . $facility_stock_data_item['county'] . "</td>
+					<td>" . $facility_stock_data_item['subcounty'] . "</td>
+					<td>" . $facility_stock_data_item['facility_code'] . "</td>
+					<td>" . $facility_stock_data_item['facility_name'] . "</td>
+					<td>" . $facility_stock_data_item['drug_name'] . "</td>
+					<td>" . $facility_stock_data_item['total'] . "</td>
 					</tr>";
 				//array_push($row_data, array($facility_stock_data_item["county"], $facility_stock_data_item["subcounty"], $facility_stock_data_item["facility_name"], $facility_stock_data_item["facility_code"], $facility_stock_data_item["drug_name"], $facility_stock_data_item["total"]));
-			endforeach;		
-			$pdf_body .="</table>";
-				
-			$pdf_data['pdf_html_body']=$pdf_body;
+			endforeach;
+			$pdf_body .= "</table>";
+
+			$pdf_data['pdf_html_body'] = $pdf_body;
 			$this -> hcmp_functions -> create_pdf($pdf_data);
-			
+
 		endif;
 
 	}
 
 	public function consumption($county_id = null, $district_id = null, $facility_code = null, $commodity_id = null, $graph_type = null, $from = null, $to = null) {
-			
-		//$title = '';
+		$title = '';
 		
 		$district_id = ($district_id == "NULL") ? null : $district_id;
 		$graph_type = ($graph_type == "NULL") ? null : $graph_type;
@@ -840,7 +832,7 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 
 		$from = ($from == "NULL" || !isset($from)) ? date('Y-m-01') : date('Y-m-d', strtotime(urldecode($from)));
 		$to = ($to == "NULL" || !isset($to)) ? date('Y-m-d') : date('Y-m-d', strtotime(urldecode($to)));
-	
+		
 		$and_data = ($district_id > 0) ? " AND d1.id = '$district_id'" : null;
 		$and_data .= ($facility_code > 0) ? " AND f.facility_code = '$facility_code'" : null;
 		$and_data .= ($county_id > 0) ? " AND c.id='$county_id'" : null;
@@ -856,21 +848,25 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 
 		if (isset($county_id)) :
 			$county_name = counties::get_county_name($county_id);
-			$name = $county_name[0]['county'];
-			$title = "$name County";
+			$name = $county_name['county'];
+			$title = $name." County";
+			
 		elseif (isset($district_id)) :
 			$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
-			$district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " Subcounty" : null;
-			$title = isset($facility_code) && isset($district_id) ? "$district_name_ : $facility_name" : (isset($district_id) && !isset($facility_code) ? "$district_name_" : "$name County");
-		elseif (isset($facility_code)) :
+			$district_name_ = (isset($district_data)) ? " :" . $district_data['district'] . " Subcounty" : null;
+			$title .= isset($facility_code) && isset($district_id) ? "$district_name_ : $facility_name" : (isset($district_id) && !isset($facility_code) ? "$district_name_" : "$name County");
+		
+		elseif (isset($facility_code)  && $facility_code>0):
 			$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
 			$title = $facility_code_['facility_name'];
 		else :
-			$title = "Nationally";
+			$title = "National";
 		endif;
-
-//Builds for the different options selected
-//FOr the graph
+		
+//echo $title;
+//exit;
+		//Builds for the different options selected
+		//For the graph
 		if ($graph_type == "graph") :
 			// echo    .$to; exit;
 			$commodity_array = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select d.commodity_name as drug_name,  
@@ -908,10 +904,11 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 
 			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
 			$data['graph_id'] = 'dem_graph_consuption';
+			//$data['title'] = 'dem_graph_consuption';
 			return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
-			
+
 		//for the excel sheet
-		elseif($graph_type == "excel") :
+		elseif ($graph_type == "excel") :
 			$excel_data = array('doc_creator' => "HCMP", 'doc_title' => "$title Consumption (Packs) $time", 'file_name' => 'Consumption');
 			$row_data = array();
 			$column_data = array("County", "Sub-County", "Facility Name", "Facility Code", "Item Name", "Consumption (Packs)");
@@ -944,9 +941,9 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 
 			$this -> hcmp_functions -> create_excel($excel_data);
 		//For generating the PDF
-		elseif($graph_type == "pdf") :
-		$pdf_body = "";
-		$pdf_body .= "
+		elseif ($graph_type == "pdf") :
+			$pdf_body = "";
+			$pdf_body .= "
 		<table class='data-table'><tr><th>County</th><th>Sub County</th><th>Facility Code</th><th>Facility Name</th><th>Drug Name</th><th>Total Consumption(Packs)</th></tr>";
 			$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select 
 			    c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.commodity_name as drug_name,
@@ -968,27 +965,26 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			order by c.county asc , d1.district asc
 			        ");
 			foreach ($facility_stock_data as $facility_stock_data_item) :
-				$pdf_body .="
+				$pdf_body .= "
 					<tr>
-					<td>".$facility_stock_data_item['county']."</td>
-					<td>".$facility_stock_data_item['subcounty']."</td>
-					<td>".$facility_stock_data_item['facility_code']."</td>
-					<td>".$facility_stock_data_item['facility_name']."</td>
-					<td>".$facility_stock_data_item['drug_name']."</td>
-					<td>".$facility_stock_data_item['total']."</td>
+					<td>" . $facility_stock_data_item['county'] . "</td>
+					<td>" . $facility_stock_data_item['subcounty'] . "</td>
+					<td>" . $facility_stock_data_item['facility_code'] . "</td>
+					<td>" . $facility_stock_data_item['facility_name'] . "</td>
+					<td>" . $facility_stock_data_item['drug_name'] . "</td>
+					<td>" . $facility_stock_data_item['total'] . "</td>
 					</tr>";
 				//array_push($row_data, array($facility_stock_data_item["county"], $facility_stock_data_item["subcounty"], $facility_stock_data_item["facility_name"], $facility_stock_data_item["facility_code"], $facility_stock_data_item["drug_name"], $facility_stock_data_item["total"]));
 			endforeach;
-			$pdf_body .="</table>";
-				
-			$pdf_data['pdf_html_body']=$pdf_body;
+			$pdf_body .= "</table>";
+
+			$pdf_data['pdf_html_body'] = $pdf_body;
 			$this -> hcmp_functions -> create_pdf($pdf_data);
-			
-		elseif($graph_type == "table"):
-		
-		$category_data = $series_data = $graph_data = array();
-		//Pick the data from the db
-		$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select 
+		elseif ($graph_type == "table") :
+
+			$category_data = $series_data = $graph_data = array();
+			//Pick the data from the db
+			$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select 
 			    c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.commodity_name as drug_name,
 			    round(avg(IFNULL(ABS(f_i.`qty_issued`), 0) / IFNULL(d.total_commodity_units, 0)),
 			            1) as total
@@ -1007,19 +1003,18 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			        group by d.id , f.facility_code
 			order by c.county asc , d1.district asc
 			        ");
-		foreach ($facility_stock_data as $facility_stock_data_item) :
-			array_push($series_data, array($facility_stock_data_item["county"], $facility_stock_data_item["subcounty"], $facility_stock_data_item["facility_name"], $facility_stock_data_item["facility_code"], $facility_stock_data_item["drug_name"], $facility_stock_data_item["total"]));
-		endforeach;
-		$category_data=array(array("County", "Sub-County", "Facility Name", "Facility Code", "Item Name", "Consumption (Packs)"));
-		$graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_'));
-	    $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
-	    $graph_data=array_merge($graph_data,array("table_body"=>$series_data));
-		
-		$data['table'] = $this->hcmp_functions->create_data_table($graph_data);
-		$data['table_id'] ="dem_graph_";
-		return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
-		
-		
+			foreach ($facility_stock_data as $facility_stock_data_item) :
+				array_push($series_data, array($facility_stock_data_item["county"], $facility_stock_data_item["subcounty"], $facility_stock_data_item["facility_name"], $facility_stock_data_item["facility_code"], $facility_stock_data_item["drug_name"], $facility_stock_data_item["total"]));
+			endforeach;
+			$category_data = array( array("County", "Sub-County", "Facility Name", "Facility Code", "Item Name", "Consumption (Packs)"));
+			$graph_data = array_merge($graph_data, array("table_id" => 'dem_graph_'));
+			$graph_data = array_merge($graph_data, array("table_header" => $category_data));
+			$graph_data = array_merge($graph_data, array("table_body" => $series_data));
+
+			$data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);
+			$data['table_id'] = "dem_graph_";
+			return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
+
 		//end of if statement that checks graph type
 		endif;
 
@@ -1031,15 +1026,14 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
 		$county_id = ($county_id == "NULL") ? null : $county_id;
 		$year = ($year == "NULL") ? date('Y') : $year;
-		
+
 		$and_data = ($district_id > 0) ? " AND d.id = '$district_id'" : null;
 		$and_data .= ($facility_code > 0) ? " AND f.facility_code = '$facility_code'" : null;
 		$and_data .= ($county_id > 0) ? " AND c.id='$county_id'" : null;
 		$and_data .= ($year > 0) ? " and year(o.`order_date`) =$year" : null;
 		$and_data = isset($year) ? $and_data : null;
-		
-		$commodity_array = Doctrine_Manager::getInstance() -> getCurrentConnection() -> 
-			fetchAll("SELECT 
+
+		$commodity_array = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT 
 				    sum(o.`order_total`) as total,DATE_FORMAT( o.`order_date`,  '%b' ) AS cal_month
 				FROM
 				    facilities f, districts d, counties c,`facility_orders` o
@@ -1071,7 +1065,7 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			else :
 				$title = "Nationally";
 			endif;
-			
+
 			foreach ($commodity_array as $data) :
 				$series_data = array_merge($series_data, array($data["cal_month"] => (int)$data['total']));
 				$category_data = array_merge($category_data, array($data["cal_month"]));
@@ -1090,8 +1084,7 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
 			$data['graph_id'] = 'dem_graph_order';
 			return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
-		
-		elseif($graph_type=="excel") :
+		elseif ($graph_type == "excel") :
 			$excel_data = array('doc_creator' => "HCMP", 'doc_title' => "$year $title Order Cost", 'file_name' => "$year $title Order Cost (KSH)");
 			$row_data = array();
 			$column_data = array("Date of Order Placement", "Date of Order Approval", "Total Order Cost (Ksh)", "Date of Delivery", "Lead Time (Order Placement to Delivery)", "Supplier", "Facility Name", "Facility Code", "Sub-County", "County");
@@ -1118,11 +1111,10 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			$excel_data['row_data'] = $row_data;
 
 			$this -> hcmp_functions -> create_excel($excel_data);
-		elseif($graph_type=="pdf") :
-		//$pdf_body = "";
-		$pdf_body = "<table class='data-table'><tr><th>Date of Order Placement</th><th>Date of Order Approval</th><th>Total Order Cost (Ksh)</th><th>Date of Delivery</th><th>Lead Time (Order Placement to Delivery)</th><th>Supplier</th><th>Supplier</th><th>Facility Name</th><th>Facility Code</th><th>Sub-County</th><th>County</th></tr>";
-			$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> 
-			fetchAll("SELECT c.county,d.district as sub_county, f.facility_name, f.facility_code, 
+		elseif ($graph_type == "pdf") :
+			//$pdf_body = "";
+			$pdf_body = "<table class='data-table'><tr><th>Date of Order Placement</th><th>Date of Order Approval</th><th>Total Order Cost (Ksh)</th><th>Date of Delivery</th><th>Lead Time (Order Placement to Delivery)</th><th>Supplier</th><th>Supplier</th><th>Facility Name</th><th>Facility Code</th><th>Sub-County</th><th>County</th></tr>";
+			$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT c.county,d.district as sub_county, f.facility_name, f.facility_code, 
 		        DATE_FORMAT(`order_date`,'%d %b %y') as order_date, 
 		        DATE_FORMAT(`approval_date`,'%d %b %y')  as approval_date,
 		        DATE_FORMAT(`deliver_date`,'%d %b %y')  as delivery_date, 
@@ -1136,15 +1128,15 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 		        group by o.id order by c.county asc ,d.district asc , 
 		         f.facility_name asc 
 		        ");
-		        
+
 			foreach ($facility_stock_data as $facility_stock_data_item) :
-				$pdf_body .="<tr><td>".$facility_stock_data_item["order_date"]."</td><td>".$facility_stock_data_item["approval_date"]."</td><td>".$facility_stock_data_item["total"]."</td><td>".$facility_stock_data_item["delivery_date"]."</td><td>".$facility_stock_data_item["tat_order_delivery"]."</td><td>KEMSA</td><td>".$facility_stock_data_item["facility_name"]."</td><td>".$facility_stock_data_item['facility_code']."</td><td>".$facility_stock_data_item["sub_county"]."</td><td>".$facility_stock_data_item["county"]."</td></tr>";
+				$pdf_body .= "<tr><td>" . $facility_stock_data_item["order_date"] . "</td><td>" . $facility_stock_data_item["approval_date"] . "</td><td>" . $facility_stock_data_item["total"] . "</td><td>" . $facility_stock_data_item["delivery_date"] . "</td><td>" . $facility_stock_data_item["tat_order_delivery"] . "</td><td>KEMSA</td><td>" . $facility_stock_data_item["facility_name"] . "</td><td>" . $facility_stock_data_item['facility_code'] . "</td><td>" . $facility_stock_data_item["sub_county"] . "</td><td>" . $facility_stock_data_item["county"] . "</td></tr>";
 			endforeach;
-			$pdf_body .="</table>";
-			$pdf_data['pdf_html_body']=$pdf_body;
+			$pdf_body .= "</table>";
+			$pdf_data['pdf_html_body'] = $pdf_body;
 			$this -> hcmp_functions -> create_pdf($pdf_data);
-		elseif($graph_type=="table") :
-		
+		elseif ($graph_type == "table") :
+
 		endif;
 
 	}
@@ -1311,10 +1303,10 @@ order by user.id asc
 
 	public function reports() {
 
-		$data['county'] = Counties::getAll();
+		//$data['county'] = Counties::getAll();
 		//Added function to display oonly the counties that are currently using HCMP
-		//$counties = Counties::get_counties_all_using_HCMP();
-		//$data['county'] = $counties;
+		$counties = Counties::get_counties_all_using_HCMP();
+		$data['county'] = $counties;
 
 		$data['commodities'] = Commodities::get_all();
 		$data['sub_county'] = Districts::getAll();

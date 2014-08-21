@@ -130,9 +130,10 @@ legend{
 			    <select class="form-control input-md" id="county"> 
 			    	<option value="NULL">All Counties</option>
 			    	<?php
-							foreach ($county as $value => $county_list) :
-									 $c_id = $county_list['id'];
-									$c_name = $county_list['county'];
+			    	
+							foreach ($county as $county) :
+									 $c_id = $county['county'];
+									$c_name = $county['county_name'];
 								    echo "<option value='$c_id'>$c_name</option>";
 							endforeach;
 					?>
@@ -262,12 +263,12 @@ legend{
 		<div class="row-fluid" style="margin-top: 1%">
 			<fieldset>
 				
-				<legend>Duration From-To</legend>
+				<legend>Duration From - To</legend>
 				<div class="col-xs-2">
-			  	<input type="text" class="form-control input-md" id="from" placeholder="From">
-			  </div>
+			  	<input type="text" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" id="from" placeholder="From">
+			  	</div>
 			  <div class="col-xs-2">
-			  	<input type="text" class="form-control input-md" id="to" placeholder="To">
+			  	<input type="text" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" id="to" placeholder="To">
 			  </div>
 			  
 			  <div class="col-xs-6">
@@ -286,7 +287,7 @@ legend{
 			  		<section class="col-md-8">
 						
 						<section class="col-md-3">
-							<input type="radio" name="doctype" value="pdf" class="" checked/> PDF
+							<input type="radio" name="doctype" value="pdf" checked/> PDF
 						</section>
 						<section class="col-md-3">
 							<input type="radio" name="doctype"  value="excel"/> Excel
@@ -320,7 +321,7 @@ legend{
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
-        <h4 class="modal-title" id="myModalLabel">Graph Title</h4>
+      <h4 class="modal-title" id="myModalLabel">Graph Title</h4>
       </div>
       <div class="modal-body" id="graph_content">
        
@@ -338,9 +339,18 @@ legend{
 <script>
     var url='<?php echo base_url(); ?>';
      $(document).ready(function () {
+     	json_obj = { "url" : "assets/img/calendar.gif'",};
+		var baseUrl=json_obj.url;
+	  //	-- Datepicker	limit today	
+     	$(".clone_datepicker_normal_limit_today").datepicker({
+	    maxDate: new Date(),				
+		dateFormat: 'd M yy', 
+		changeMonth: true,
+		changeYear: true,
+		buttonImage: baseUrl,});
      	
      	$("#interval,#expfrom,#expto,#commodity").attr("disabled", 'disabled');
-     	$( "#from,#to" ).datepicker();
+     	//$( "#to" ).datepicker();
      	//When County is selected
      	$('#county').on('change', function(){
      		var county_val=$('#county').val()
@@ -369,22 +379,18 @@ $('#sub_county').on('change', function(){
     });
     
 })	
-    		
     
-    $( "#expfrom,#expto" ).datepicker();
-    
+    //$("#expfrom,#expto" ).datepicker();
      $("input:radio[name=criteria]").click(function() {
     	var value = $(this).val();
-	 if(value=="Potential"){
-		$("#interval").attr("disabled", false);
-		$("#year").attr("disabled", 'disabled');
-	 	$("#from,#to").attr("disabled", 'disabled');
-	 	document.getElementById("commodity_s").checked = true;
-		document.getElementById("tracer_commodities").disabled = true;
-		document.getElementById("specify_commodities").disabled = true;
-			
+	 	if(value=="Potential"){
+			$("#interval").attr("disabled", false);
+			$("#year").attr("disabled", 'disabled');
+		 	$("#from,#to").attr("disabled", 'disabled');
+		 	document.getElementById("commodity_s").checked = true;
+			document.getElementById("tracer_commodities").disabled = true;
+			document.getElementById("specify_commodities").disabled = true;
 		}else if(value=="Actual"){
-			
 			$("#expfrom,#expto").attr("disabled", false);
 			$("#year,#interval").attr("disabled", 'disabled');
 			$("#from,#to").attr("disabled", 'disabled');
@@ -392,49 +398,34 @@ $('#sub_county').on('change', function(){
 			document.getElementById("commodity_s").checked = true;
 			document.getElementById("tracer_commodities").disabled = true;
 			document.getElementById("specify_commodities").disabled = true;
-			
-			
 		}else if(value=="Orders"){
 			$("#year,#interval").attr("disabled", 'disabled');
 			$("#from,#to").attr("disabled", 'disabled');
 			document.getElementById("commodity_s").checked = true;
 			document.getElementById("tracer_commodities").disabled = true;
 			document.getElementById("specify_commodities").disabled = true;
-			
-		}else if(value=="Consumption"){
-			$("#year,#interval").attr("disabled", 'disabled');
-			$("#from,#to").attr("disabled", 'disabled');
-			document.getElementById("commodity_s").checked = false;
-			document.getElementById("tracer_commodities").disabled = false;
-			document.getElementById("specify_commodities").disabled = false;
-			
 		}else{
 			$("#interval,#expfrom,#expto").attr("disabled", 'disabled');
+			$("#from,#to").attr("disabled", false);
 			$("#year").attr("disabled", false);
 			$("#interval").val(0);
 			document.getElementById("commodity_s").disabled = false;
 			document.getElementById("tracer_commodities").disabled = false;
 			document.getElementById("specify_commodities").disabled = false;
-			
-			
 		}
 });
 
 $("input:radio[name=commodity_s]").click(function() {
-    var val = $(this).val();
-   if(val=="Specify"){
-	$("#commodity").attr("disabled", false);
+	var val = $(this).val();
+   	if(val=="Specify"){
+		$("#commodity").attr("disabled", false);
 	}else{
 		$("#commodity").attr("disabled", 'disabled');
 		$("#commodity").val("NULL");
 	}
 });
-
-
- //Run report downloads
-    
+//Generate the reports after user has selected the options
     $(".generate").click(function() {
-
       	var county_id=$('#county').val();
         var district=$("#sub_county").val();
         var facility=$("#facility_id").val();
@@ -448,7 +439,7 @@ $("input:radio[name=commodity_s]").click(function() {
         var link='';
         
         if(from==''){from="NULL";}
-	        if(to==''){to="NULL";}
+        if(to==''){to="NULL";}
 	       
 	       //check criteria 
         if(criteria=='Consumption'){
@@ -469,18 +460,18 @@ $("input:radio[name=commodity_s]").click(function() {
 	        
         }else if(type=='pdf'){
         	if(commodity_type=='Tracer'){ 
-	        	link='national/consumption/'+county_id+'/'+district+'/'+facility+'/NULL/pdf/'+encodeURI(from)+ '/'+encodeURI(to);
+	        	link='national/consumption/'+county_id+'/'+district+'/'+facility+'/NULL/pdf/'+encodeURI(from)+'/'+encodeURI(to);
 	        }
 	        if(commodity_type=='All'){ 
 	        	var commodity_id=$('#commodity').val();
-	        	link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel/'+encodeURI(from)+ '/'+encodeURI(to);
+	        	link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel/'+encodeURI(from)+'/'+encodeURI(to);
 	        }
 	        if(commodity_type=='Specify'){ 
 	        	var commodity_id=$('#commodity').val();
 	        	link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel/'+encodeURI(from)+ '/'+encodeURI(to);
 	        }
 	        window.open(url+link,'_parent');
-        }/*else if(type=='table'){
+        }else if(type=='table'){
         	$('#graph_Modal').modal('show');
         	
        		if(commodity_type=='Tracer'){
@@ -491,186 +482,125 @@ $("input:radio[name=commodity_s]").click(function() {
         		ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/table/'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content");
 	        }
 	        
-        }*/
-        else if(type=='graph'){
+        }else if(type=='graph'){
         	$('#graph_Modal').modal('show');
        		if(commodity_type=='Tracer'){
-       			ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/NULL/graph/'+encodeURI(from)+ '/'+encodeURI(to),"#graph_content");
+       			ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/NULL/graph/'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content");
         	}
         	if(commodity_type=='All'){ 
 	        	var commodity_id=$('#commodity').val();
-        		ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph/'+encodeURI(from)+ '/'+encodeURI(to),"#graph_content");
+        		ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph/'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content");
 	        
 	        }
 	        if(commodity_type=='Specify'){ 
 	        	var commodity_id=$('#commodity').val();
-	       		ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph',"#graph_content"); 
+	       		ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content"); 
 	        }
 	        
         }
        }else if(criteria=='Stock'){
-       	
-       	if(type=='excel'){ 
-      	
-	        if(commodity_type=='Tracer'){ 
+       		if(type=='excel'){ 
+      			if(commodity_type=='Tracer'){ 
+	        		link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/NULL/excel';
+	        	}
+	        	if(commodity_type=='All'){ 
+	        		var commodity_id=$('#commodity').val();
+	                link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel';
 	        
-	        link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/NULL/excel';
-	        }
-	        
-	        if(commodity_type=='All'){ 
-	        var commodity_id=$('#commodity').val();
-	        
-	        
-	        link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel';
-	        
-	        }
+	        	}
 	        window.open(url+link,'_parent');
 	        
-	        //graphs
+	        }else if(type=='pdf'){ 
+	        	if(commodity_type=='Tracer'){ 
+	        	link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/NULL/pdf';
+	        	}
 	        
-	        }	else if(type=='pdf'){ 
-      	
-	        if(commodity_type=='Tracer'){ 
+	        	if(commodity_type=='All'){ 
+	        		var commodity_id=$('#commodity').val();
+	        		link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/pdf';
 	        
-	        link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/NULL/pdf';
-	        }
+	        	}
+	       	 	window.open(url+link,'_parent');
 	        
-	        if(commodity_type=='All'){ 
-	        var commodity_id=$('#commodity').val();
+	        }else if(type=='graph'){
+        		$('#graph_Modal').modal('show');
+       			if(commodity_type=='Tracer'){
+        			ajax_return('national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph',"#graph_content");
+        		}
+        		if(commodity_type=='All'){ 
+	        		var commodity_id=$('#commodity').val();
+	       			ajax_return('national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/ALL'+'/graph',"#graph_content"); 
+	        	}
+	    		if(commodity_type=='Specify'){ 
+	        		var commodity_id=$('#commodity').val();
+	       			ajax_return('national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph',"#graph_content"); 
+	        	}
 	        
-	        
-	        link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/pdf';
-	        
-	        }
-	        window.open(url+link,'_parent');
-	        
-	        //graphs
-	        
-	        }
-	        else if(type=='graph'){
-        	
-        	$('#graph_Modal').modal('show');
-        	
-       if(commodity_type=='Tracer'){
-
-        ajax_return('national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph',"#graph_content");
-        }
-        
-        if(commodity_type=='All'){ 
-	        var commodity_id=$('#commodity').val();
-	        
-	       ajax_return('national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/ALL'+'/graph',"#graph_content"); 
-	        }
-	    
-	    if(commodity_type=='Specify'){ 
-	        var commodity_id=$('#commodity').val();
-	        
-	       ajax_return('national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph',"#graph_content"); 
-	        }
-	        
-        }
+        	}
         }else if(criteria=='Potential'){
-        	//$county_id = null, $district_id = null, $facility_code = null, $graph_type = null, $interval = null
-       	
-       	if(type=='excel'){ 
-      	    link='national/potential/'+county_id+'/'+district+'/'+facility+'/excel/'+interval;
-	        window.open(url+link,'_parent');
-	
-	        
-	        }	else if(type=='pdf'){ 
-	        link='national/potential/'+county_id+'/'+district+'/'+facility+'/pdf/'+interval;
-	        window.open(url+link,'_parent');
+       		if(type=='excel'){ 
+      	    	link='national/potential/'+county_id+'/'+district+'/'+facility+'/excel/'+interval;
+	        	window.open(url+link,'_parent');
+	        }else if(type=='pdf'){ 
+		        link='national/potential/'+county_id+'/'+district+'/'+facility+'/pdf/'+interval;
+		        window.open(url+link,'_parent');
 
-	        }
-	        else if(type=='graph'){
+	        }else if(type=='graph'){
 	        	$('#graph_Modal').modal('show');
         		ajax_return('national/potential/'+county_id+'/'+district+'/'+facility+'/graph/'+interval,"#graph_content");
       
         	}
         }else if(criteria=='Orders'){
-       	
-       	if(type=='excel')
-       	{ 
-      	  	//$year = null, $county_id = null, $district_id = null, $facility_code = null, $graph_type = null,$commodity_id = null
-	        link='national/order/NULL/'+county_id+'/'+district+'/'+facility+'/excel';
-	        window.open(url+link,'_parent');
+	       	if(type=='excel')
+	       	{ 
+      	  		link='national/order/NULL/'+county_id+'/'+district+'/'+facility+'/excel';
+	        	window.open(url+link,'_parent');
 	        
-	    }else if(type=='pdf'){
-	    	//$year = null, $county_id = null, $district_id = null, $facility_code = null, $graph_type = null,$commodity_id = null
-	        link='national/order/NULL/'+county_id+'/'+district+'/'+facility+'/pdf';
-       		window.open(url+link,'_parent');
-	        
-	    }else if(type=='graph'){
-	    	$('#graph_Modal').modal('show');
-       		//$year = null, $county_id = null, $district_id = null, $facility_code = null, $graph_type = null,$commodity_id = null
-       		ajax_return('national/order/NULL/'+county_id+'/'+district+'/'+facility+'/graph',"#graph_content");
+	    	}else if(type=='pdf'){
+	    		link='national/order/NULL/'+county_id+'/'+district+'/'+facility+'/pdf';
+       			window.open(url+link,'_parent');
+	    	}else if(type=='graph'){
+	    		$('#graph_Modal').modal('show');
+       			ajax_return('national/order/NULL/'+county_id+'/'+district+'/'+facility+'/graph',"#graph_content");
 	     	        
-        }
+        	}
         }else if(criteria=='Actual'){
-       	
-       	if(type=='excel'){ 
-      	
-	        if(commodity_type=='Tracer'){ 
-	        
-	        link='national/expiry/'+county_id+'/'+district+'/'+facility+'/NULL/excel';
-	        }
-	        
-	        if(commodity_type=='All'){ 
-	        var commodity_id=$('#commodity').val();
-	        
-	        
-	        link='national/expiry/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel';
-	        
-	        }
+       		if(type=='excel'){ 
+	        	if(commodity_type=='Tracer'){ 
+	        		link='national/expiry/'+county_id+'/'+district+'/'+facility+'/NULL/excel';
+	        	}
+	        	if(commodity_type=='All'){ 
+	        		var commodity_id=$('#commodity').val();
+	        		link='national/expiry/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel';
+	        	}
 	        window.open(url+link,'_parent');
 	        
-	        //graphs
+	        }else if(type=='pdf'){ 
+	        	if(commodity_type=='Tracer'){ 
+	        		link='national/expiry/'+county_id+'/'+district+'/'+facility+'/NULL/pdf';
+	        	}
+	        	if(commodity_type=='All'){ 
+	        		var commodity_id=$('#commodity').val();
+	        		link='national/expiry/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/pdf';
+	        	}
+	        	window.open(url+link,'_parent');
+	        }else if(type=='graph'){
+        		$('#graph_Modal').modal('show');
+       			if(commodity_type=='Tracer'){
+        			ajax_return('national/expiry/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph',"#graph_content");
+        		}
+        		if(commodity_type=='All'){ 
+	        		var commodity_id=$('#commodity').val();
+	       			ajax_return('national/expiry/'+county_id+'/'+district+'/'+facility+'/ALL'+'/graph',"#graph_content"); 
+	        	}
+	    		if(commodity_type=='Specify'){ 
+	        		var commodity_id=$('#commodity').val();
+	       			ajax_return('national/expiry/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph',"#graph_content"); 
+	        	}
 	        
-	        }	else if(type=='pdf'){ 
-      	
-	        if(commodity_type=='Tracer'){ 
-	        
-	        link='national/expiry/'+county_id+'/'+district+'/'+facility+'/NULL/pdf';
-	        }
-	        
-	        if(commodity_type=='All'){ 
-	        var commodity_id=$('#commodity').val();
-	        
-	        
-	        link='national/expiry/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/pdf';
-	        
-	        }
-	        window.open(url+link,'_parent');
-	        
-	        //graphs
-	        
-	        }
-	        else if(type=='graph'){
-        	
-        	$('#graph_Modal').modal('show');
-        	
-       if(commodity_type=='Tracer'){
-
-        ajax_return('national/expiry/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph',"#graph_content");
+        	}
         }
-        
-        if(commodity_type=='All'){ 
-	        var commodity_id=$('#commodity').val();
-	        
-	       ajax_return('national/expiry/'+county_id+'/'+district+'/'+facility+'/ALL'+'/graph',"#graph_content"); 
-	        }
-	    
-	    if(commodity_type=='Specify'){ 
-	        var commodity_id=$('#commodity').val();
-	        
-	       ajax_return('national/expiry/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph',"#graph_content"); 
-	        }
-	        
-        }
-        }
-       
-           
-    });
+   });
     
     	function ajax_return(function_url,div){
         var function_url =url+function_url;
@@ -690,12 +620,7 @@ $("input:radio[name=commodity_s]").click(function() {
 
 });
 
-   
-   
-
-    
-    
-    </script>
+     </script>
  <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
     <!-- Bootstrap core JavaScript===================== --> 
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
