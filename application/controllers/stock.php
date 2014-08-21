@@ -110,11 +110,11 @@ class Stock extends MY_Controller {
              $order_status=$old_facility_orders["orderStatus"];
              $name=$old_facility_orders["reciever_name"];
              $new_order_id=Doctrine_Manager::getInstance()->getCurrentConnection()
-        ->fetchAll("select 
+        ->fetchAll('select 
         *
         from
         hcmp_rtk.facility_order_status
-        where facility_order_status.status_desc like '%$order_status%'");
+        where facility_order_status.status_desc like "%'.$order_status.'%"');
          $new_name_id=Doctrine_Manager::getInstance()->getCurrentConnection()
         ->fetchAll('select 
         *
