@@ -20,6 +20,13 @@
 			<option value="11">Nov</option>
 			<option value="12">Dec</option>
 </select>
+<select name="plot_value" id="plot_value_filter">
+<option value="NULL" selected="selected">Select Plot value</option>
+<option value="packs">Packs</option>
+<option value="units">Units</option>
+<option value="ksh">KSH</option>
+
+</select>
 	<button class="btn btn-small btn-success" id="filter" name="filter" style="margin-left: 1em;">Filter <i class="icon-filter"></i></button> 
 	
 </h5>
@@ -34,13 +41,14 @@
 	
 			$("#filter").click(function() 
 			{
-				var url = "reports/filter_facility_orders/<?php echo $this -> session -> userdata('facility_id')?>"+
-				        "/NULL/NULL/"+
-				        $("#year_filter").val()+
-				        "/"+$("#month_filter").val();
+				<?php $facility_code = $this -> session -> userdata('facility_id')?>
+				var url = "reports/filter_facility_orders/<?php echo $facility_code?>"+
+				        "/"+$("#year_filter").val()+
+				        "/"+$("#month_filter").val()+
+				        "/"+$("#plot_value_filter").val();
 
-				ajax_request_replace_div_content(url,'.graph-section');
-		
+				 ajax_request_replace_div_content(url,'.graph-section');
+				
           });
 
 	

@@ -129,9 +129,10 @@ class Reports extends MY_Controller
 	 | FACILITY REPORTS
 	 |--------------------------------------------------------------------------
 	 */
+	 //facility user manual
 	 public function get_manual()
 	 {
-	 	
+	 	//$file_name = $facility_name . '_facility_user_manual_downloaded as'. date('d-m-y');
 	 	$this -> hcmp_functions -> download_file(base_url('assets/manual/Manual.pdf'));
 	 }
 	
@@ -336,11 +337,11 @@ class Reports extends MY_Controller
 	
 	}
 	//facility user manual
-	public function get_facility_user_manual()
+	/*public function get_facility_user_manual()
 	{
 		$this -> hcmp_functions ->  download_file(assets/manual/HCMPV2_User_Guide);
 		
-	}
+	}*/
 
 	// get the facility transaction data for ordering or quick analysis
 	public function facility_transaction_data() {
@@ -957,32 +958,6 @@ class Reports extends MY_Controller
 
 	public function order_report()
 	{
-		$facility_code = $this -> session -> userdata('facility_id'); 
-		$facility_name = Facilities::get_facility_name2($facility_code);
-		$year = date("Y");
-						
-		$orders = facility_orders::get_facility_orders($facility_code, $year);
-
-		//Holds all the months of the year
-		//Build the line graph showing the expiries graph
-		$graph_data = array();
-		$graph_data = array_merge($graph_data,array("graph_id"=>'graph-section'));
-		$graph_data = array_merge($graph_data,array("graph_title"=>'Total Orders for '.$facility_name['facility_name'].' for '.$year));
-		$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
-		$graph_data = array_merge($graph_data,array("graph_yaxis_title"=>'Total Orders (values in KSH)'));
-		$graph_data = array_merge($graph_data,array("graph_categories"=>array()));
-		$graph_data = array_merge($graph_data,array("series_data"=>array("Total Orders"=>array())));
-		
-		
-		foreach($orders as $facility_orders):
-			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_orders['month']));	
-			$graph_data['series_data']['Total Orders'] = array_merge($graph_data['series_data']['Total Orders'],array((int)$facility_orders['total']));	
-		endforeach;
-		//create the graph here
-		$facility_order_data = $this->hcmp_functions->create_high_chart_graph($graph_data);
-			
-		$facility_order_data = isset($facility_order_data)? $facility_order_data : "$('#graph-section').html('<img src=$loading_icon>')'" ;
-   			
 		$data['title'] = "Facility Orders"	;
 		$data['banner_text'] = "Facility Orders"	;
 		$data['graph_data'] = $facility_order_data;
@@ -995,7 +970,7 @@ class Reports extends MY_Controller
 		
 	}
 
-	public function filter_facility_orders($year, $month, $option)
+	public function filter_facility_orders($facility_code, $year, $month, $option)
 	{
 		
 		$facility_code = isset($facility_code) ? $facility_code: $this -> session -> userdata('facility_id');
@@ -1013,7 +988,7 @@ class Reports extends MY_Controller
 		if ($year ==0 && $month == 0)
 		{
 			//Where the month and year have not been selected
-			$year = date("Y");
+			//$year = date("Y");
 			$orders = facility_orders::get_facility_orders($facility_code, $year);
 			$graph_data = array_merge($graph_data,array("graph_type"=>'line'));
 			foreach($orders as $facility_orders):
@@ -1025,7 +1000,7 @@ class Reports extends MY_Controller
 		elseif($year ==0 && $month != 0)
 		{
 			//When only the month is selected
-			$year = date("Y");
+			//$year = date("Y");
 			$m = date('F',strtotime('2000-'.$month.'-01'));
 			$orders = facility_orders::get_filtered_facility_orders($facility_code, $year, $month, $option);
 			
@@ -1038,7 +1013,7 @@ class Reports extends MY_Controller
 		elseif($year !=0 && $month == 0)
 		{
 			//When the $year is not set but the month is
-			$year = date("Y");
+			//$year = date("Y");
 			$orders = facility_orders::get_filtered_facility_orders($facility_code, $year,$month, $option);
 			foreach($orders as $facility_orders):
 				$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_orders['name']));	
@@ -1262,7 +1237,7 @@ class Reports extends MY_Controller
 	{
 		//$district_id = $this -> session -> userdata('district_id');
 		$county_id = $this -> session -> userdata('county_id');
-		
+		//echo $county_id;
 		$district_data = districts::getDistrict($county_id);
 		$table_data = "<tbody>";
 		$table_data_summary = "<tbody>";
@@ -1288,7 +1263,8 @@ class Reports extends MY_Controller
 		$percentage_coverage_total_using = 0;
 		
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
-
+		
+		
 		foreach ($get_dates_facility_went_online as $facility_dates) :
 
 			$monthly_total = 0;
@@ -1296,7 +1272,7 @@ class Reports extends MY_Controller
 			$table_data .= "<tr>
 	    <td>" . $date . "</td>";
 			foreach ($district_data as $district_detail) :
-
+				
 				$district_id = $district_detail -> id;		
 				$district_name = $district_detail -> district;
 				$get_facilities_which_went_online_ = facilities::get_facilities_which_went_online_($district_id, $facility_dates['date_when_facility_went_online']);
@@ -1305,6 +1281,8 @@ class Reports extends MY_Controller
 				$total_facilities = $get_facilities_which_went_online_[0]['total_facilities'];
 				$total_facilities_targetted = $get_facilities_which_went_online_[0]['total_facilities_targetted'];
 				$total_facilitites_using_hcmp = $get_facilities_which_went_online_[0]['total_using_hcmp'];
+				
+				
 				
 				$monthly_total = $monthly_total + $total;
 				$all_facilities = $all_facilities + $total;
@@ -1319,7 +1297,7 @@ class Reports extends MY_Controller
 				
 				$table_data .= ($total > 0) ? "<td><a href='#' id='$district_id' class='ajax_call2 link' date='$date'> $total</a></td>" : "<td>$total</td>";
 				 
-			endforeach;
+			endforeach;exit;
 	
 			$table_data .= "<td>$monthly_total</td></tr>";
 

@@ -135,7 +135,7 @@ class facility_orders extends Doctrine_Record {
 		return $query_results;
  }
 
- /*public static function get_facility_orders($facility_code, $year)
+ public static function get_facility_orders($facility_code, $year)
  {
  	  $query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
  	    ->fetchAll("
@@ -143,13 +143,13 @@ class facility_orders extends Doctrine_Record {
 		from facilities f, facility_orders f_o 
 		where f_o.facility_code=f.facility_code 
 		and f_o.facility_code = $facility_code
-		and 
 		GROUP BY MONTH( f_o.order_date ) asc");
 		
 		return $query_results;
  }
  public static function get_filtered_facility_orders($facility_code, $year, $month, $option)
  {
+ 	//echo $option;die;
  	switch ($option) :
          case 'ksh':
            $computation ="(fod.quantity_ordered_unit*d.unit_cost) as total";
@@ -201,7 +201,7 @@ $query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
 	
  }
  
- public static function get_cost_of_orders($facility_code,$year = null, $district_id = null, $county_id = null)
+ /*public static function get_cost_of_orders($facility_code,$year = null, $district_id = null, $county_id = null)
  {
  	$year = (isset($year)) ? $year: date("Y");
  	if(isset($district_id) && $district_id>0):
