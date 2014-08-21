@@ -500,6 +500,7 @@ force_download(basename($path), $data);
 public function create_pdf($pdf_data=NULL){
 
 if(count($pdf_data)>0):	
+	
 $url=base_url().'assets/img/coat_of_arms.png';
 $html_title="<div align=center><img src='$url' height='70' width='70'style='vertical-align: top;'> </img></div>
 <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>$pdf_data[pdf_title]</div>
