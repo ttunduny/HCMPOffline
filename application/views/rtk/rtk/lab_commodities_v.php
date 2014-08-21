@@ -632,7 +632,9 @@ $("table").tablecloth({
     clean: true,                
 });
    
-    $('#commodity_name_0').css('background-color','#99FFFF');
-    $('#commodity_name_1').css('background-color','#99FFFF');
+    //$('#commodity_name_0').css('background-color','#99FFFF');
+    //$('#commodity_name_1').css('background-color','#99FFFF');
+    $('#commodity_name_0').append(' <br/>(Old Algorithm)');
+    $('#commodity_name_1').append(' <br/>(Old Algorithm)');
 </script>
 

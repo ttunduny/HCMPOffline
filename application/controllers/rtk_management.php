@@ -2623,7 +2623,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
 
     public function scmlt_home($msg=null,$popout=null){
 
-        if(isset($msq)){
+        if(isset($msg)){
             $data['notif_message'] = $msg;
         }
         if(isset($popout)){
@@ -2880,62 +2880,64 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
             Lab_Commodity_Details::save_lab_commodities($mydata);
             // }
         }
+        $msg = 'The report has been saved';
+        redirect('rtk_management/scmlt_home',$msg);
         // }
         //  $report_type='lab';
         //  $data='Your details have been saved.';
         // $this->get_report($report_type, $data);
-        $district = $this->session->userdata('district_id');
-        $data['facilities'] = Facilities::get_total_facilities_rtk_in_district($district);
-        $facilities = Facilities::get_total_facilities_rtk_in_district($district);
-        $district_name = districts::get_district_name_($district);
-        // $facilities=Facilities::get_facility_details(6);
-        $table_body = '';
-        $reported = 0;
-        $nonreported = 0;
-        foreach ($facilities as $facility_detail) {
+        // $district = $this->session->userdata('district_id');
+        // $data['facilities'] = Facilities::get_total_facilities_rtk_in_district($district);
+        // $facilities = Facilities::get_total_facilities_rtk_in_district($district);
+        // $district_name = districts::get_district_name_($district);
+        // // $facilities=Facilities::get_facility_details(6);
+        // $table_body = '';
+        // $reported = 0;
+        // $nonreported = 0;
+        // foreach ($facilities as $facility_detail) {
 
-            date_default_timezone_set("EUROPE/Moscow");
-            $lastmonth = date('F', strtotime("last day of previous month"));
-            $table_body .= "<tr><td><a class='ajax_call_1' id='county_facility' name='" . base_url() . "rtk_management/get_rtk_facility_detail/$facility_detail[facility_code]' href='#'>" . $facility_detail["facility_code"] . "</td>";
-            $table_body .= "<td>" . $facility_detail['facility_name'] . "</td><td>" . $district_name['district'] . "</td>";
-            $table_body .= "<td>";
+        //     date_default_timezone_set("EUROPE/Moscow");
+        //     $lastmonth = date('F', strtotime("last day of previous month"));
+        //     $table_body .= "<tr><td><a class='ajax_call_1' id='county_facility' name='" . base_url() . "rtk_management/get_rtk_facility_detail/$facility_detail[facility_code]' href='#'>" . $facility_detail["facility_code"] . "</td>";
+        //     $table_body .= "<td>" . $facility_detail['facility_name'] . "</td><td>" . $district_name['district'] . "</td>";
+        //     $table_body .= "<td>";
 
-            $lab_count = lab_commodity_orders::get_recent_lab_orders($facility_detail['facility_code']);
-            //            $fcdrr_count = rtk_fcdrr_order_details::get_facility_order_count($facility_detail['facility_code']);
-            //          echo "<pre>";print_r($lab_count);echo "</pre>";
+        //     $lab_count = lab_commodity_orders::get_recent_lab_orders($facility_detail['facility_code']);
+        //     //            $fcdrr_count = rtk_fcdrr_order_details::get_facility_order_count($facility_detail['facility_code']);
+        //     //          echo "<pre>";print_r($lab_count);echo "</pre>";
 
-            if ($lab_count > 0) {
-                $reported = $reported + 1;
-                //".site_url('rtk_management/get_report/'.$facility_detail['facility_code'])."
-                $table_body .= "<span class='label label-success'>Submitted  for    $lastmonth </span> <!--<img src='" . base_url() . "/Images/check_mark_resize.png'></img>--><a href=" . site_url('rtk_management/rtk_orders') . " class='link'>View</a></td>";
-            } else {
-                $nonreported = $nonreported + 1;
-                $table_body .= "<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'>Report</a></td>";
-            }
+        //     if ($lab_count > 0) {
+        //         $reported = $reported + 1;
+        //         //".site_url('rtk_management/get_report/'.$facility_detail['facility_code'])."
+        //         $table_body .= "<span class='label label-success'>Submitted  for    $lastmonth </span> <!--<img src='" . base_url() . "/Images/check_mark_resize.png'></img>--><a href=" . site_url('rtk_management/rtk_orders') . " class='link'>View</a></td>";
+        //     } else {
+        //         $nonreported = $nonreported + 1;
+        //         $table_body .= "<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'>Report</a></td>";
+        //     }
 
-            $table_body .= "</td>";
-        }
-        $county = $this->session->userdata('county_name');
-        $countyid = $this->session->userdata('county_id');
-        $data['countyid'] = $countyid;
-        $data['county'] = $county;
-        $data['notif_message'] = 'The report has been saved';
+        //     $table_body .= "</td>";
+        // }
+        // $county = $this->session->userdata('county_name');
+        // $countyid = $this->session->userdata('county_id');
+        // $data['countyid'] = $countyid;
+        // $data['county'] = $county;
+        // $data['notif_message'] = 'The report has been saved';
 
 
-        $total = $reported + $nonreported;
-        $percentage_complete = $reported / $total * 100;
-        $percentage_complete = number_format($percentage_complete, 0);
-        $data['percentage_complete'] = $percentage_complete;
-        $data['reported'] = $reported;
-        $data['nonreported'] = $nonreported;
+        // $total = $reported + $nonreported;
+        // $percentage_complete = $reported / $total * 100;
+        // $percentage_complete = number_format($percentage_complete, 0);
+        // $data['percentage_complete'] = $percentage_complete;
+        // $data['reported'] = $reported;
+        // $data['nonreported'] = $nonreported;
 
-        $data['table_body'] = $table_body;
-        $data['title'] = "Home";
-        $data['popout'] = "Your order has been saved.";
-        $data['content_view'] = "rtk/rtk/dpp/dpp_home_with_table";
-        $data['banner_text'] = "Home";
-        $data['link'] = "home";
-        $this->load->view('rtk/template', $data);
+        // $data['table_body'] = $table_body;
+        // $data['title'] = "Home";
+        // $data['popout'] = "Your order has been saved.";
+        // $data['content_view'] = "rtk/rtk/dpp/dpp_home_with_table";
+        // $data['banner_text'] = "Home";
+        // $data['link'] = "home";
+        // $this->load->view('rtk/template', $data);
         //        $this->generate_lastpdf();
         // redirect('home_controller');
     }
@@ -5713,7 +5715,7 @@ public function allstats(){
                 AND '$last_date'
                 GROUP BY lab_commodity_orders.facility_code having total>1
                 ORDER BY COUNT( lab_commodity_orders.facility_code ) DESC";
-        echo "$sql";die();
+        //echo "$sql";die();
         $result = $this->db->query($sql)->result_array();
         $facils = array();
         foreach ($result as $key => $value) {
