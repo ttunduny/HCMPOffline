@@ -1432,14 +1432,18 @@ class Rtk_Management extends Home_controller {
         return $returnable;
     }
 
-    function _facility_amc($mfl_code, $commodity = null) {
+
+    public function _facility_amc($mfl_code, $commodity = null) {
         $three_months_ago = date("Y-m-", strtotime("-3 Month "));
         $three_months_ago .='1';
+        $end_date = date("Y-m-", strtotime("-1 Month "));
+        $end_date .='31';
+        //echo "Three months ago = $three_months_ago and End Date =$end_date ";die();
         $q = "SELECT avg(lab_commodity_details.q_used) as avg_used
         FROM  lab_commodity_details,lab_commodity_orders
         WHERE lab_commodity_orders.id =  lab_commodity_details.order_id
         AND lab_commodity_details.facility_code =  $mfl_code
-        AND lab_commodity_orders.order_date BETWEEN '$three_months_ago' AND NOW()";
+        AND lab_commodity_orders.order_date BETWEEN '$three_months_ago' AND '$end_date'";
         
         if (isset($commodity)) {
             $q.=" AND lab_commodity_details.commodity_id = $commodity";
@@ -5699,10 +5703,49 @@ WHERE
 
 public function allstats(){
     for ($i=1; $i <48 ; $i++) { 
- $this->summary_tab_display($i,2014,7);
+ $this->summary_tab_display($i,2014,8);
 }
+}
+ public function get_duplicates(){
+        $first_date = "2014-08-01";
+        $last_date = "2014-08-31"; 
+        $sql = "SELECT lab_commodity_orders.facility_code, COUNT( lab_commodity_orders.facility_code ) as total
+                FROM lab_commodity_orders
+                WHERE lab_commodity_orders.order_date
+                BETWEEN '$first_date'
+                AND '$last_date'
+                GROUP BY lab_commodity_orders.facility_code having total>1
+                ORDER BY COUNT( lab_commodity_orders.facility_code ) DESC";
+        echo "$sql";die();
+        $result = $this->db->query($sql)->result_array();
+        $facils = array();
+        foreach ($result as $key => $value) {
+            $mfl = $value['facility_code'];
+            array_push($facils, $mfl);
+        }
+        for($i=0;$i<count($facils);$i++){
+        //for($i=0;$i<6;$i++){
+            $code= $facils[$i];
+            $sql1 = "select id from lab_commodity_orders where facility_code=$code and order_date  BETWEEN '$first_date'
+                AND '$last_date' order by id asc";
+            $dups = $this->db->query($sql1)->result_array();
+            $new_dups = array();                       
+            foreach ($dups as $key=>$value) {
+                $id = $value['id'];
+                array_push($new_dups,$id);                
+            }
+            for ($a=1; $a <count($new_dups) ; $a++) { 
+                $id = $new_dups[$a];
+                $sql2 ="DELETE FROM `lab_commodity_orders` WHERE id='$id'";                
+                $this->db->query($sql2);
+                
+            }
+        }
+        $this->rtk_manager();
 
-}
+    }
+
+
 }
 
 ?>
