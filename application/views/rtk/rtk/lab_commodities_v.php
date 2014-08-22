@@ -512,7 +512,7 @@ $count = count($res);
                         <input type="hidden" id="facilityCode" name="facilityCode">
                         <input type="hidden" id="district" name="district" value="<?php echo $district_id; ?>">
                         <input type="hidden" id="unit_of_issue_<?php echo $checker ?>" name = "unit_of_issue[<?php echo $checker ?>]" value="<?php echo $lab_commodities['unit_of_issue']; ?>">
-                        <td colspan = "2" style = "text-align:left"></b><?php echo $lab_commodities['commodity_name']; ?></td>
+                        <td class="commodity_names" id="commodity_name_<?php echo $checker;?>" colspan = "2" style = "text-align:left"></b><?php echo $lab_commodities['commodity_name']; ?></td>
                         <td style = "color:#000; border:none; text; text-align:center"><?php //echo $lab_commodities['unit_of_issue'];  ?>TESTS</td>
                         <td><input id="b_balance_<?php echo $checker ?>" name = "b_balance[<?php echo $checker ?>]" class='bbal' size="10" type="text" value="0" style = "text-align:center"/></td>
                         <td><input id="q_received_<?php echo $checker ?>" name = "q_received[<?php echo $checker ?>]" class='qty_rcvd' size="10" type="text" value="0" style = "text-align:center"/></td>
@@ -631,5 +631,10 @@ $("table").tablecloth({
     striped: true,            
     clean: true,                
 });
+   
+    //$('#commodity_name_0').css('background-color','#99FFFF');
+    //$('#commodity_name_1').css('background-color','#99FFFF');
+    $('#commodity_name_0').append(' <br/>(Old Algorithm)');
+    $('#commodity_name_1').append(' <br/>(Old Algorithm)');
 </script>
 
