@@ -19,8 +19,7 @@ class Counties extends Doctrine_Record {
 	public static function get_counties_all_using_HCMP()
 	{
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-		SELECT DISTINCT
-		    (d.county) as county, c.county as county_name
+		SELECT DISTINCT (d.county) as county, c.county as county_name
 		from
 		    facilities f,
 		    districts d,

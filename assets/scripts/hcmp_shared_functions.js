@@ -75,7 +75,8 @@ dateFormat: 'd My',
 		$(div).html("<img style='margin-left:20%;' src="+loading_icon+">");
 		},
 		success: function(msg) {
-		$(div).html(msg);
+			
+			$(div).html(msg);
 		}
 		});
 		}	

@@ -75,7 +75,6 @@ $(document).ready(function() {
    
     });
 	$(".ajax_call2").click(function(){
-			
 		var url = "<?php echo base_url().'reports/get_district_drill_down_detail'?>";
 		// this is the data from the function
 		var id  = $(this).attr("id"); 				

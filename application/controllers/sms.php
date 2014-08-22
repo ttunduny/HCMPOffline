@@ -637,13 +637,8 @@ class sms extends MY_Controller {
 				$subject = "Stock Outs: " . $county_name . " County";
 				$message = $county_name . "'s Weekly Stock Outs Report. ";
 				$message .= "Find attached an excel sheet with the breakdown for the Stock Outs for the county";
-
-				$email_address = "collinsojenge@gmail.com";
 				$email_address = $this -> get_county_email($county_id);
-				
 				$bcc = $this -> get_bcc_notifications();
-			
-
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc_email);
 			}
 

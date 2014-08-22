@@ -1,33 +1,18 @@
-<?php echo "<pre>";print_r($commodities);echo "</pre>";exit; ?>
+<?php //echo "<pre>";print_r($commodities);echo "</pre>";exit; ?>
 <style>
 	.big{ width: 150px !important; }
-	.row div p{
-	padding:10px;
-}
 </style>
-<div class="container" style="width: 100%; margin: auto;">
-
-	<div class="row">
-		<div class="col-md-4" id=""><p class="bg-info"><span class="badge ">1</span>Select commodity to issue</p></div>
-		<div class="col-md-5" id=""><p class="bg-info"><span class="badge ">2</span>Enter the Service Point and Quanitity you wish to issue and select the Batch No</p></div>
-		<div class="col-md-3" id=""><p class="bg-info"><span class="badge ">3</span>To add more Issues click Add Row
-		<span class="glyphicon glyphicon-question-sign toolt" data-toggle="tooltip" data-placement="left" title="click for help" href="javascript:void(0);" onclick="startIntro();" style="margin-left:20%;"></span></p>
-		
-	</div>
-	</div>
-	<div class="row">
-		<div class="col-md-6"><p class="text-danger">*Available Batch Stock is for a specific 
-	batch, Total Balance is the total for the commodity</p></div>
-		
-	</div>
+<div class="container" style="width: 94%; margin: auto;">
+<span  class='label label-info'>To Issue Commodities 
+	i) Select commodity to issue 
+	ii) Enter the Service Point and Quanitity you wish to issue and select the Batch No
+	iii) To add more Issues press Add Row</span><br /><span class="label label-danger">Available Batch Stock is for a specific 
+	batch, Total Balance is the total for the commodity</span>
+	<hr />
 <div class="table-responsive" style="height:400px; overflow-y: auto;">
 
  <?php
-if (isset($donate_destination)&&($donate_destination == 'district')) {
-  $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/district_store_issue',$att); 
-}else{
-  $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/external_issue',$att); 
-}
+  $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/district_store_external_issue',$att); 
   ?>
 <table width="100%"  class="table table-hover table-bordered table-update" id="facility_issues_table" >
 <thead style="background-color: white">
@@ -49,22 +34,6 @@ if (isset($donate_destination)&&($donate_destination == 'district')) {
 					</thead>
 					<tbody>
 						<tr row_id='0'>
-<<<<<<< HEAD
-							<td>
-								<select name="district[0]" class="form-control input-small district" style="width:110px !important;">
-								<option value="0">Select Sub-county</option>
-								<?php 
-		foreach ($subcounties as $district) {
-			$id=$district->id;
-			$name=$district->district;		
-			echo '<option value="'.$id.'"> '.$name.'</option>';
-		}?>	
-								</select>
-							</td>
-							<td>
-						<select name="mfl[0]" class="form-control input-small facility" style="width:110px !important;">
-                       <option value="0">Select Facility</option>
-=======
 						<td>
 								<select name="district[0]" class="form-control input-small district">
 						<?php 
@@ -97,7 +66,6 @@ if (isset($donate_destination)&&($donate_destination == 'district')) {
 						<select  name="mfl[0]" class="form-control input-small facility">
 						<!-- donate_destination -->
                        <option value="0">--select facility---</option>
->>>>>>> 71f6b73604172b8170a8ed178c9286775e75c12c
 					   </select>
 						</td>'
 						;
@@ -105,8 +73,8 @@ if (isset($donate_destination)&&($donate_destination == 'district')) {
 							 ?>
 							
 						<td>
-	<select class="form-control input-small service desc" name="desc[0]" style="width:110px !important;">
-    <option special_data="0" value="0" selected="selected">Select Commodity -</option>
+	<select class="form-control input-small service desc" name="desc[0]">
+    <option special_data="0" value="0" selected="selected">-Select Commodity -</option>
 		<?php 
 foreach ($commodities as $commodities) :						
 			$commodity_name=$commodities['commodity_name'];
@@ -128,21 +96,21 @@ endforeach;
 						<input type="hidden" name="manufacture[0]" value="0" class="manufacture"/>	
 						<input type="text" class="form-control input-small supplier_name" readonly="readonly" name="supplier_name[]"/></td>
 			            <td><input  type="text" class="form-control input-small unit_size" readonly="readonly"  /></td>
-						<td><select class="form-control batch_no big" style="width:80px !important;" name="batch_no[0]"></select></td>
+						<td><select class="form-control big batch_no big" name="batch_no[0]"></select></td>
 						<td><input type='text' class='form-control input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
 												<td>
 <input class='form-control input-small clone_datepicker_normal_limit_today' 
-type="text" style="width:100px !important;" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
+type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
 						<td><input class='form-control input-small available_stock' type="text" name="available_stock[0]" readonly="readonly" /></td>
 
-						<td><select class="form-control commodity_unit_of_issue big" style="width:80px !important;" name="commodity_unit_of_issue[]">
+						<td><select class="form-control commodity_unit_of_issue big" name="commodity_unit_of_issue[]">
 			<option value="Pack_Size">Pack Size</option>
 			<option value="Unit_Size">Unit Size</option>
 			</select></td>
-						<td><input class='form-control  quantity_issued' style="width:80px !important;" type="text" value="0"  name="quantity_issued[0]"  required="required"/></td>
-						<td><input class='form-control  input-small balance' type="text" value="" readonly="readonly" /></td>
+						<td><input class='form-control big quantity_issued' type="text" value="0"  name="quantity_issued[0]"  required="required"/></td>
+						<td><input class='form-control big input-small balance' type="text" value="" readonly="readonly" /></td>
 
-						<td><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Row</button></td>
+						<td><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Remove Row</button></td>
 			</tr>
 		           </tbody>
 		           </table>
@@ -179,7 +147,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			 * 3 arguments(the ajax url, value POSTed and the id of the object to populated)
 			 */
 	        var locator =$('option:selected', this);
-			json_obj={"url":"<?php echo site_url("reports/get_facilities");?>",}
+			json_obj={"url":"<?php echo site_url("Reports/get_facilities");?>",}
 			var baseUrl=json_obj.url;
 			var id=$(this).val();
 		    var dropdown;
@@ -455,11 +423,11 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 					var facility_stock_id=facility_stock_data[i]['facility_stock_id'];	
 					
 			  		dropdown+="<option selected='selected' "+
-			  		 "special_data="+facility_stock_data[i]['expiry_date']+
+			  		 "special_data='"+facility_stock_data[i]['expiry_date']+
 			  		 "^"+facility_stock_data[i]['commodity_balance']+
 			  		 "^"+facility_stock_data[i]['facility_stock_id']+
 			  		 "^"+facility_stock_data[i]['commodity_balance']+
-			  		 "^"+facility_stock_data[i]['manufacture']+">";
+			  		 "^"+facility_stock_data[i]['manufacture']+"'>";
 			  				 expiry_date=$.datepicker.formatDate('dMy', new Date(facility_stock_data[i]['expiry_date']));
 			  				 bal=facility_stock_data[i]['commodity_balance'];
 			  				 facility_stock_id_=facility_stock_data[i]['facility_stock_id'];
