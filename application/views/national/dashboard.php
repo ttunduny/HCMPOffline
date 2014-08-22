@@ -150,7 +150,7 @@ h4{
 
 <div class="row-fluid">
 	
-	<div class="col-md-4 ">
+	<div class="col-md-4 " style="padding-right: 0">
 		<div class="row-fluid" style="" id="notify" >
 		<div class="col-md-6">
 					<div class="color_g stat_item">
@@ -172,7 +172,7 @@ h4{
 	
 	
 	<div class="row-fluid" style="" id="" >
-		<div class="col-md-12 ">
+		<div class="col-md-12 " style="">
 			<div class="tile" id="map" style="max-height: 500px;">
 						
 					</div>
@@ -198,7 +198,7 @@ h4{
 	
 	</div>
 	
-	<div class="col-md-8 ">
+	<div class="col-md-8 " style="padding-left: 0;style="padding-right: 0"">
 		
 		<div class="row-fluid">
 			<div class="col-md-6" style="border: 0px solid #036;">
@@ -212,8 +212,8 @@ h4{
 			</div>
 			
 			<div class="col-md-6" style="border: 0px solid #036;">
-				<div class="tile" id="filter" style="height: 100px"></div>
-				<div class="tile" id="mos" style="height: 420px">
+				<div class="tile" id="filter" style="height: 80px"></div>
+				<div class="tile" id="mos" style="height: 440px">
 					
 				</div>
 			</div>
@@ -228,36 +228,31 @@ h4{
 
 <div class="row-fluid">
 		
-		<div class="col-md-4" style="border: 1px solid #036;">
+		<div class="col-md-6" style="border: 0px solid #036;">
 			<div class="tile" id="consumption" style="height: 450px">
 				
 			</div>
 			
 		</div>
-		<div class="col-md-4" style="border: 1px solid #036;">
+		<div class="col-md-6" style="border: 0px solid #036;">
 			<div class="tile" id="actual_ex" style="height: 450px">
 				
 			</div>
 			
 		</div>
-		<div class="col-md-4" style="border: 1px solid #036;">
-			<div class="tile" id="potential_ex" style="height: 450px">
-				
-			</div>
-			
-		</div>
+		
 	</div>
 	
 	<div class="row-fluid">
 		
-		<div class="col-md-6" style="border: 1px solid #036;">
-			<div class="tile" id="actual_ex" style="height: 450px">
+		<div class="col-md-6" style="border: 0px solid #036;">
+			<div class="tile" id="potential_ex" style="height: 450px">
 				
 			</div>
 			
 		</div>
-		<div class="col-md-6" style="border: 1px solid #036;">
-			<div class="tile" id="potential_ex" style="height: 450px">
+		<div class="col-md-6" style="border: 0px solid #036;">
+			<div class="tile" id="orders" style="height: 450px">
 				
 			</div>
 			
@@ -273,9 +268,10 @@ h4{
    ajax_fill_data('Kenya/facility_breakdown_pie',"#facility_breakdown");
    ajax_fill_data('Kenya/mos_graph',"#mos");
    ajax_fill_data('Kenya/roll_out',"#roll_out");
-   ajax_fill_data('Kenya/roll_out',"#consumption");
-   ajax_fill_data('Kenya/roll_out',"#actual_ex");
-   ajax_fill_data('Kenya/roll_out',"#potential_ex");
+   ajax_fill_data('Kenya/consumption',"#consumption");
+   ajax_fill_data('Kenya/actual_expiries/NULL/NULL/NULL/NULL/NULL',"#actual_ex");
+   ajax_fill_data('Kenya/potential_expiries',"#potential_ex");
+   ajax_fill_data('Kenya/orders',"#orders");
    
    function ajax_fill_data(function_url,div){
         var function_url =url+function_url;

@@ -29,18 +29,13 @@
             series: [{
                 type: 'pie',
                 name: 'In Numbers',
-                data: [
-                    ['Public',   45.0],
-                    ['Private',       26.8],
-                    {
-                        name: 'Faith based	',
-                        y: 12.8,
-                        sliced: true,
-                        selected: true
-                    },
-                    ['Others',    8.5]
-                    
-                ]
+                data: [ ['Public',   <?php echo $public ;?>], 
+		                ['Private', <?php echo $private ;?>],
+		                ['Faith-Based',  <?php echo $fbo ;?>], 
+		                ['Others',    <?php echo $other;?>] 
+                
+                 ]
+                
             }]
         });
     });

@@ -16,15 +16,16 @@
         },
         plotOptions: {
             pie: {
-                innerSize: 100,
-                depth: 45
+                innerSize: 65,
+                depth: 50
             }
         },
         series: [{
             name: 'Roll Out',
             data: [
-                ['Rolled Out', 181],
-                ['Targeted', 300]
+                
+                ['Using HCMP', <?php echo $using ;?>],
+                ['Targeted', <?php echo $targetted ;?>]
                
             ]
         }]

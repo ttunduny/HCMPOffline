@@ -160,7 +160,8 @@ public function send_order_submission_email($message,$subject,$attach_file){
 	   $email_address=$this->get_facility_email($facility_code);
 	    
 	   $email_address .=$this->get_ddp_email($data[0]['district']);	   
-	   $cc_email=($this->test_mode)?'kelvinmwas@gmail.com,': $this->get_county_email($data[0]['district']) ;
+	   $cc_email=($this->test_mode)?'kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,':
+	    $this->get_county_email($data[0]['district']) ;
 
 	  return $this->send_email(substr($email_address,0,-1),$message, $subject,$attach_file,null,substr( $cc_email,0,-1));
 	
@@ -176,12 +177,13 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 	  $cc_email .=$this->get_ddp_email($data['district']);	  
 	  else:		  
 
-		   $email_address=($this->test_mode)?'kelvinmwas@gmail.com,': 'shamim.kuppuswamy@kemsa.co.ke,
-samuel.wataku@kemsa.co.ke,
-jmunyu@kemsa.co.ke,
-imugada@kemsa.co.ke,
-laban.okune@kemsa.co.ke,
-samuel.wataku@kemsa.co.ke,'; 
+		   $email_address=($this->test_mode)?'kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,
+		   ': 'shamim.kuppuswamy@kemsa.co.ke,
+				samuel.wataku@kemsa.co.ke,
+				jmunyu@kemsa.co.ke,
+				imugada@kemsa.co.ke,
+				laban.okune@kemsa.co.ke,
+				samuel.wataku@kemsa.co.ke,'; 
 
        
 	  $cc_email .=$this->get_ddp_email($data['district']);

@@ -1,19 +1,20 @@
  <script>
    $(function () {
    	
-    $('#mos').highcharts({
+    $('#<?php echo $graph_id; ?>').highcharts({
         chart: {
-            type: 'bar'
+            type: '<?php echo $graph_type; ?>'
         },
         
         title: {
-            text: 'MOS'
+            text: '<?php echo $graph_title; ?>'
         },
         subtitle: {
             text: 'Source: HCMP'
         },
         xAxis: {
-            categories: ['Afrsadasdasdadasica', 'Ameasdasdasdaqwerica', 'Aseqweqqewia', 'Eweqweqqwurope', 'Oceqweqeqeweweqeania', 'cwqeewqeeqweqeqeac', 'Oceasqweqweqeecnia', 'Ocewwwwwwwwaniqwea'],
+        	
+            categories: <?php echo $category_data ;?>,
             title: {
                 text: null
             }
@@ -21,7 +22,7 @@
         yAxis: {
             min: 0,
             title: {
-                text: 'Population (millions)',
+                text: '<?php echo $graph_yaxis_title; ?>',
                 align: 'high'
             },
             labels: {
@@ -29,12 +30,12 @@
             }
         },
         tooltip: {
-            valueSuffix: ' millions'
+            valueSuffix: ' '
         },
         plotOptions: {
             bar: {
                 dataLabels: {
-                    enabled: true
+                    enabled: false
                 }
             }
         },
@@ -54,8 +55,8 @@
             enabled: false
         },
         series: [{
-            name: 'Year 1800',
-            data: [107, 31, 635, 203, 50,90,17,88]
+            name: '<?php echo $legend ;?>',
+            data: <?php echo $series_data ;?>,
         }]
     });
 });
