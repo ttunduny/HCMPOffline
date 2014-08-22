@@ -147,6 +147,57 @@ class Rtk_Management extends Home_controller {
         $data['banner_text'] = "RTK Manager";
         $data['title'] = "RTK Manager";
         $this->load->view('rtk/template', $data);
+    }    
+    public function county_trend() {  
+        $countyid = $this->session->userdata('county_id');       
+        $county_name = counties::get_county_name($countyid);        
+        $County = $county_name['county'];
+
+
+        $res = $this->db->query("select count(facilities.id) as total_facilities from facilities,districts,counties 
+            where facilities.rtk_enabled=1 and facilities.district = districts.id and districts.county = counties.id and counties.id =$countyid");
+        $result = $res->result_array();
+        // echo "<pre>";
+        // print_r($result);die();
+        $data['total_facilities'] = $result[0]['total_facilities'];
+
+        $month = $this->session->userdata('Month');
+        if ($month == '') {
+            $month = date('mY', time());
+        }
+        $year = substr($month, -4);
+        $month = substr_replace($month, "", -4);
+        $monthyear = $year . '-' . $month . '-1';
+        $englishdate = date('F, Y', strtotime($monthyear));
+        $reporting_rates = $this->reporting_rates($countyid);
+        $xArr = array();
+        $yArr = array();
+        $xArr1 = array();
+        $cumulative_result = 0;
+        foreach ($reporting_rates as $value) {
+            $count = $value['count'];
+            $order_date = substr($value['order_date'], -2);
+            $order_date = date('jS', strtotime($value['order_date']));
+
+            $cumulative_result +=$count;
+            array_push($xArr1, $cumulative_result);
+
+            array_push($yArr, $order_date);
+            array_push($xArr, $count);
+        }       
+        $data['cumulative_result'] = $cumulative_result;
+        $data['jsony'] = json_encode($yArr);
+        $data['jsonx'] = str_replace('"', "", json_encode($xArr));
+        $data['jsonx1'] = str_replace('"', "", json_encode($xArr1));
+        $data['englishdate'] = $englishdate;      
+        
+        $data['county'] = $County;
+        $Countyid = $this->session->userdata('county_id');
+        $data['user_logs'] = $this->rtk_logs();
+        $data['content_view'] = "rtk/rtk/rca/trend";
+        $data['banner_text'] = "$County County Monthly Reporting Trends";
+        $data['title'] = "RTK County Admin Trends";
+        $this->load->view('rtk/template', $data);
     }
 
     public function rtk_manager_home() {
@@ -5559,10 +5610,14 @@ WHERE
         return ($res->result_array());
     }
 
-    function reporting_rates($year = NULL, $month = NULL) {
+    function reporting_rates($County = NULL,$year = NULL, $month = NULL) {
         if ($year == NULL) {
             $year = date('Y', time());
             $month = date('m', time());
+        }
+        $conditions = '';
+        if(isset($County)){
+            $conditions .="and lab_commodity_orders.district_id= districts.id and districts.county = counties.id and counties.id = $County";
         }
 
         $firstdate = $year . '-' . $month . '-01';
@@ -5576,10 +5631,10 @@ WHERE
                 lab_commodity_orders.order_date as order_date,
                 count(lab_commodity_orders.id) as count
             from
-                lab_commodity_orders
+                lab_commodity_orders,districts,counties
             WHERE
-                lab_commodity_orders.order_date between '$firstdate' and '$lastdate'
-            Group BY lab_commodity_orders.order_date";
+                lab_commodity_orders.order_date between '$firstdate' and '$lastdate' $conditions
+            Group BY lab_commodity_orders.order_date";            
         $res = $this->db->query($sql);
 //        echo"<pre>";print_r($res->result_array());die;
         return ($res->result_array());
