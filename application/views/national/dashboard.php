@@ -78,20 +78,24 @@ h4{
 }
 
 .stat_item {
-		height: 54px;
+		height: 36px;
 		padding: 2px 5px;
 		color: #fff;
 		text-align: center;
 		font-size: 1em;
-		-webkit-box-shadow: 3px 0px 5px 0px rgba(51, 50, 50, 0.59);
--moz-box-shadow:    3px 0px 5px 0px rgba(51, 50, 50, 0.59);
-box-shadow:         3px 0px 5px 0px rgba(51, 50, 50, 0.59);
+		
 	}	
 	
 	#notify .col-md-2,.col-md-1{
 		padding:3px;
 	}
-</style>
+	#notify {
+		margin-bottom: 5px;
+	}
+	.tile{
+		box-shadow:  0px 1px 5px 0px #d3d3d3;
+	}
+	</style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -144,85 +148,32 @@ box-shadow:         3px 0px 5px 0px rgba(51, 50, 50, 0.59);
     
    <div class="container-fluid">
 
-<div class="row-fluid" style="" id="notify" >
+<div class="row-fluid">
 	
-	<div class="col-md-2">
+	<div class="col-md-4 " style="padding-right: 0">
+		<div class="row-fluid" style="" id="notify" >
+		<div class="col-md-6">
 					<div class="color_g stat_item">
 						<span class="glyphicon glyphicon-user"></span>
-                  	HCW Trained <br/> 3132
+                  	HCW Trained <br/> 132
                             
                    </div>
-	</div>
-	
-	<div class="col-md-2">
+		</div>
+	<div class="col-md-6">
 					<div class="color_e stat_item">
 						<span class="glyphicon glyphicon-shopping-cart"></span>
-                 	Facilities Rolled Out <br/> 12312
+                 	Facilities Rolled Out <br/> 2312
                             
                    </div>
 	</div>
 	
-	<div class="col-md-2">
-		<div class="color_a stat_item">
-					<span class="glyphicon glyphicon-dashboard"></span>
-                  
-                    Facilities using HCMP <br/> 243      
-                   </div>			
-	</div>
-	<div class="col-md-1">
-					
-	</div>
 	
-	<div class="col-md-1">
-					<div class="color_c stat_item">
-						
-                  
-                     Total Facilities <br/>  4255    
-                   </div>
-	</div>
-	<div class="col-md-1">
-					<div class="color_b stat_item">
-						
-                  
-                    Public Health Facilities<br/> 565	    
-                   </div>
-	</div>
-	<div class="col-md-1">
-					<div class="color_g stat_item">
-					
-                  
-                     Private Facilities <br/>  342 
-                   </div>
-	</div>
-	<div class="col-md-1">
-					<div class="color_f stat_item">
-					
-                  
-                    Faith-based Facilities <br/>   34  
-                   </div>
-	</div>
-	<div class="col-md-1">
-					<div class="color_a stat_item">
-					
-                  
-                    Other Facilities <br/> 134   
-                   </div>
 	</div>
 	
 	
-	
-</div>
-
-</div>
-   	<div class="container-fluid">
-   	<div class="row-fluid" style="">
-   		<div class="col-md-5">
-   			<div class="row">
-			
-			<div class="col-md-12">
-				
-				
-					<div id="map" style="max-height: 80%;">
+	<div class="row-fluid" style="" id="" >
+		<div class="col-md-12 " style="">
+			<div class="tile" id="map" style="max-height: 500px;">
 						
 					</div>
 			<div style="width:130px;margin-left:30%;padding:2%">
@@ -240,283 +191,89 @@ box-shadow:         3px 0px 5px 0px rgba(51, 50, 50, 0.59);
     				map.render("map");
     				
                     </script>
-				
-			
-			
+						
 		</div>
-   			
-   		</div>
-   		
-   		
-   		
-   	</div>
-   		<div class="col-md-7" style="background-color: white;">
-   			
-   			<div class="row" style="margin-bottom: 5.5%;">
-				<div class="col-md-12" style="/*border: 1px solid #000;*/height: 420px" id="expiries">
+	
+	</div>
+	
+	</div>
+	
+	<div class="col-md-8 " style="padding-left: 0;style="padding-right: 0"">
+		
+		<div class="row-fluid">
+			<div class="col-md-6" style="border: 0px solid #036;">
+				
+				<div class="tile" id="facility_breakdown" style="height: 270px;border: 0px solid #036;">
 					
-					<h4>National  Expiries</h4>
-       
-       <div class="col-md-6" style="border: 1px solid #DDD; ">
-      
-       <div class="">
-       <h4 class="">Actual Expiries </h4>
-       </div>
-       
-       
-       <div id="actual" style=""></div>
-       
-        </div> 
-        
-        <div class="col-md-6" style="border: 1px solid #DDD;" >
-      
-       <div class="">
-       <h4 class="">Potential Expiries </h4>
-       </div>
-        
-      <div id="potential"></div>
-          
-      
-       </div> 
+				</div>
+				<div class="tile" id="roll_out" style="height: 250px;border: 0px solid #036;">
+					
 				</div>
 			</div>
 			
-   		</div>
-   	<!--/row for map and graph 1 -->
-   	
-   </div></div>
-   
-   <div class="container-fluid">
+			<div class="col-md-6" style="border: 0px solid #036;">
+				<div class="tile" id="filter" style="height: 80px"></div>
+				<div class="tile" id="mos" style="height: 440px">
+					
+				</div>
+			</div>
+		</div>
+		
+		
+	</div>
+	
+	
+	
+</div>
+
+<div class="row-fluid">
+		
+		<div class="col-md-6" style="border: 0px solid #036;">
+			<div class="tile" id="consumption" style="height: 450px">
+				
+			</div>
 			
-    <div class="row-fluid">
-                <div class="col-md-6">
-       <h4>Stock Level in Months of Stock (MOS)</h4>
-      
-      <ul class='nav nav-tabs'style="margin-top: 1%">
-      <li class="active"><a href="#stracer" data-toggle="tab">Tracer Items</a></li>
-      </ul>
-      <div id="myTabContent" class="tab-content">
-      <div  id="stracer" class="tab-pane fade active in">
-<br>
-<div class="col-md-1">
-    <a href="national/search" target="_blank">
-    <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
-</a>
-
+		</div>
+		<div class="col-md-6" style="border: 0px solid #036;">
+			<div class="tile" id="actual_ex" style="height: 450px">
+				
+			</div>
+			
+		</div>
+		
+	</div>
+	
+	<div class="row-fluid">
+		
+		<div class="col-md-6" style="border: 0px solid #036;">
+			<div class="tile" id="potential_ex" style="height: 450px">
+				
+			</div>
+			
+		</div>
+		<div class="col-md-6" style="border: 0px solid #036;">
+			<div class="tile" id="orders" style="height: 450px">
+				
+			</div>
+			
+		</div>
+	</div>
 </div>
-      </div>
-       </div>
-        <div id="mos" style="width: "></div> <!--- MOS -->
-        
-        
-      			 </div>
-       <div class="col-md-6">
-       <h4>Consumption</h4>
-       
-       <ul class='nav nav-tabs' style="margin-top: 1%">
-      <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items</a></li>
-       </ul>
-   <div id="myTabContent" class="tab-content">
-                <div  id="tracer" class="tab-pane fade active in">
-<br>
-<div class="col-md-1">
-    <a href="national/search" target="_blank">
-    <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
-</a>
-
-</div>
-
-        
-      </div>
-      </div>
-      <div id="consumption"></div> <!-- consumption -->
-       
-       </div>
- </div><!--- row 2 -->
- 
- <div class="row-fluid">
-                <div class="col-md-6">
-       <div class="">
-       
-       <h4 class=""><div class="county-name" style="display:inline-block"></div>Cost of Orders</h4>
-       
-        <div class="" style="height:500px;">
-        <ul class='nav nav-tabs'>
-      <li class="active"><a href="#corders" data-toggle="tab">Year</a></li>
-      </ul>
-      <div id="myTabContent" class="tab-content">
-      <div  id="corders" class="tab-pane fade active in">
-<br>
-<div class="col-md-1">
-    <a href="national/search" target="_blank">
-    <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
-</a>
-
-</div>
-      </div>
-       </div>
-        <div id="orders"></div> <!--- MOS -->
-       </div>
-       
-       </div>
-      
-       </div>
-       <div class="col-md-6">
-       <div class="">
-       
-       <h4 class=""><div class="county-name" style="display:inline-block"></div>Order Lead Time</h4>
-       
-        <div class="" style="height: 500px;">
-  <hr />
-    <a href="national/search" target="_blank">
-    <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
-</a>
-      <div class="row">
-          <div class="col-md-12">
-       <div class="panel-heading">
-       <h3 class="panel-title">Fill Rate</h3>
-       </div>
-       <div id="fill_rate">
-            <div class="progress">
-    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 80%;">
-        80%
-    </div>
-      </div>
-       </div>
-       </div>  
-       <div class="col-md-12">
-       <div class="panel-heading">
-       <h3 class="panel-title">Order Lead Time</h3>
-       </div>
-       <div id="lead_infor">
-         
-
-
-       </div>
-       </div>  
-      </div>
-    
-       </div>    
-       </div>
-       </div>
-     </div>
-     </div>
+   	
+   
+   
    
    <script>
-         //auto run
-         var url ='<?php echo base_url()?>';
-         $('#potential_').on('shown.bs.tab', function (e) {
-         $('#potential').html('');
-         });
-         $('#actual_').on('shown.bs.tab', function (e) {
-         $('#actual').html('');
-         });
-
-      $('.county-name').html("National "+" &nbsp;");
-      ajax_request_replace_div_content('national/expiry/NULL/NULL/NULL/NULL/NULL',"#actual"); 
-      ajax_request_replace_div_content('national/potential/NULL/NULL/NULL/NULL/NULL',"#potential"); 
-      ajax_request_replace_div_content('national/facility_over_view/',"#facilities_rolled_out");
-      ajax_request_replace_div_content('national/hcw/',"#hcw_trained");
-      ajax_request_replace_div_content('national/stock_level_mos/NULL/NULL/NULL/NULL',"#mos");
-      ajax_request_replace_div_content('national/consumption/NULL/NULL/NULL/NULL',"#consumption");
-      ajax_request_replace_div_content('national/get_facility_infor/NULL/NULL/NULL/NULL',"#facilities");
-      ajax_request_replace_div_content('national/order/NULL/NULL/NULL/NULL/NULL',"#orders");
-      ajax_request_replace_div_content('national/get_lead_infor/NULL/NULL/NULL/NULL/NULL',"#lead_infor");
-      
-        $(".ecounty-filter").button().click(function(e) {
-        e.preventDefault(); 
-        var year = $("#eyear").val();
-        var county = $("#ecounty_filter").val();
-       // var district=$(this).closest("tr").find("#ecounty_filter").val();
-       // var facility=$(this).closest("tr").find("#ecounty_filter").val();
-           ajax_request_replace_div_content('national/expiry/'+year+'/'+county+'/NULL/NULL/NULL',"#actual");
-        });
-        
-        $(".asubcounty-filter").button().click(function(e) {
-        e.preventDefault(); 
-        var year=$("#asubcountyyear").val();
-        var county_id=$('#county_id').val();
-        var district=$("#asubcounty_filter").val();
-        var facility=$("#asubcounty_facility_filter").val();
-        ajax_request_replace_div_content('national/expiry/'+year+'/'+county_id+'/'+district+'/'+facility+'/NULL',"#actual");
-        });
-        /////potential
-        $(".pcounty-filter").button().click(function(e) {
-        e.preventDefault(); 
-        var county=$("#pcounty_filter").val();
-        ajax_request_replace_div_content('national/potential/'+county+'/NULL/NULL/NULL',"#potential");
-        });
-        
-        $(".psubcounty-filter").button().click(function(e) {
-        e.preventDefault(); 
-        var county_id=$('#county_id').val();
-        var district=$("#psubcounty_filter").val();
-        var facility=$("#psubcounty_facility_filter").val();
-        ajax_request_replace_div_content('national/potential/'+county_id+'/'+district+'/'+facility+'/NULL',"#potential");
-        });
-     
-         $(".subcounty").click(function(){
-            /*
-             * when clicked, this object should populate facility names to facility dropdown list.
-             * Initially it sets a default value to the facility drop down list then ajax is used 
-             * is to retrieve the district names using the 'dropdown()' method used above.
-             */
-            json_obj = {"url":"<?php echo site_url("orders/getFacilities");?>",}
-            var baseUrl = json_obj.url;
-            var id = $(this).attr("value");
-            $('.subcounty').val(id);
-            dropdown(baseUrl,"district="+id,".facility");
- 
-          
-        });
-
-      
-    function run(data){
-        var county_data=data.split('^');
-        $('.county-name').html(county_data[1]+"&nbsp;County &nbsp;");
-        ajax_request_replace_div_content('national/facility_over_view/'+county_data[0],"#facilities_rolled_out");
-        ajax_request_replace_div_content('national/hcw/'+county_data[0],"#hcw_trained");
-        $('.county').val(county_data[0]);
-        $('#county_id').val(county_data[0]);
-        json_obj={"url":"<?php echo site_url("orders/getDistrict");?>",}
-        var baseUrl=json_obj.url;
-        dropdown(baseUrl,"county="+county_data[0],".subcounty");
-        ajax_request_replace_div_content('national/expiry/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#actual");
-        ajax_request_replace_div_content('national/potential/'+county_data[0]+'/NULL/NULL/NULL/NULL',"#potential"); 
-        ajax_request_replace_div_content('national/stock_level_mos/'+county_data[0]+'/NULL/NULL/NULL/ALL',"#mos");
-        ajax_request_replace_div_content('national/consumption/'+county_data[0]+'/NULL/NULL/NULL',"#consumption");
-        ajax_request_replace_div_content('national/get_facility_infor/'+county_data[0]+'/NULL/NULL/NULL',"#facilities");
-        ajax_request_replace_div_content('national/order/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#orders");
-        ajax_request_replace_div_content('national/get_lead_infor/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#lead_infor");
-    }
-            function dropdown(baseUrl,post,identifier){
-            /*
-             * ajax is used here to retrieve values from the server side and set them in dropdown list.
-             * the 'baseUrl' is the target ajax url, 'post' contains the a POST varible with data and
-             * 'identifier' is the id of the dropdown list to be populated by values from the server side
-             */
-            $.ajax({
-              type: "POST",
-              url: baseUrl,
-              data: post,
-              success: function(msg){
-                    var values=msg.split("_")
-                    var dropdown="<option value='NULL'>All</option>";
-                    for (var i=0; i < values.length-1; i++) {
-                        var id_value=values[i].split("*")
-                        dropdown+="<option value="+id_value[0]+">";
-                        dropdown+=id_value[1];
-                        dropdown+="</option>";
-                    };
-                    $(identifier).html(dropdown);
-              },
-              error: function(XMLHttpRequest, textStatus, errorThrown) {
-                   if(textStatus == 'timeout') {}
-               }
-            }).done(function( msg ) {
-            });
-        }
-       function ajax_request_replace_div_content(function_url,div){
+   
+   ajax_fill_data('Kenya/facility_breakdown_pie',"#facility_breakdown");
+   ajax_fill_data('Kenya/mos_graph',"#mos");
+   ajax_fill_data('Kenya/roll_out',"#roll_out");
+   ajax_fill_data('Kenya/consumption',"#consumption");
+   ajax_fill_data('Kenya/actual_expiries/NULL/NULL/NULL/NULL/NULL',"#actual_ex");
+   ajax_fill_data('Kenya/potential_expiries',"#potential_ex");
+   ajax_fill_data('Kenya/orders',"#orders");
+   
+   function ajax_fill_data(function_url,div){
         var function_url =url+function_url;
         var loading_icon=url+"assets/img/loader2.gif";
         $.ajax({
@@ -530,6 +287,7 @@ box-shadow:         3px 0px 5px 0px rgba(51, 50, 50, 0.59);
         }
         });
         }   
+         
 </script>
     <!-- Bootstrap core JavaScript
     ================================================== -->
