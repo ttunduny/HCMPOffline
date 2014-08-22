@@ -46,8 +46,6 @@ class Districts extends Doctrine_Record {
 	$query = Doctrine_Query::create() -> select("*") -> from("districts")->where("id='$district'");
 	$drugs = $query -> execute();
 	$drugs = $drugs->toArray();
-	print_r($drugs[0]);
-	exit;
 	return $drugs[0];
 	}
 	
