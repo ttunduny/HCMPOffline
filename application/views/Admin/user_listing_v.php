@@ -1,4 +1,4 @@
-
+<?php //echo "<pre>";print_r($listing);echo "</pre>";exit; ?>
 <div class="container">
 	
 	<?php $x = array();
@@ -78,6 +78,8 @@
 								<th>Sub-County</th>
 								<th>Health Facility</th>
 								<th>User Type</th>
+								<th>Recieve Email</th>
+								<th>Recieve Text Msg</th>
 								<th>Status</th>
 								<th>Action</th>
 
@@ -98,6 +100,31 @@
 								<td class="district" data-attr="<?php echo $list['district_id']; ?>"><?php echo $list['district']; ?></td>
 								<td class="facility_name" data-attr="<?php echo $list['facility_code']; ?>"><?php echo $list['facility_name']; ?></td>
 								<td class="level" data-attr="<?php echo $list['level_id']; ?>"><?php echo $list['level']; ?></td>
+								<?php 
+								//for text and email receivals
+								//<td style="display:none;" class="email_recieve"><'.$list['email_recieve'];'</td>
+								//<td style="display:none;" class="sms_recieve"><'.$list['sms_recieve'];'</td>
+								if ($list['email_recieve']==2):
+									echo'
+									<td><input class="email_recieve" data-attr="'.$list['email_recieve'].'" value="'.$list['email_recieve'].'" type="checkbox" disabled checked ="checked"></td>
+									';
+								else:
+									echo'
+									<td><input class="email_recieve" data-attr="'.$list['email_recieve'].'" value="'.$list['email_recieve'].'" type="checkbox" disabled></td>
+									';
+								endif;
+
+								if ($list['sms_recieve']==2):
+									echo'
+									<td ><input class="sms_recieve" data-attr="'.$list['sms_recieve'].'" value="'.$list['sms_recieve'].'" type="checkbox" disabled checked ="checked"></td>
+									';
+								else:
+									echo'
+									<td><input class="sms_recieve" data-attr="'.$list['sms_recieve'].'" value="'.$list['sms_recieve'].'" type="checkbox" disabled></td>
+									';
+								endif;
+								 ?>
+
 								<td >
 								<?php
 									if ($list['status']==1) {
@@ -348,7 +375,24 @@
 								<div class=" col-md-6">
 									<label> User Name </label>
 									<div class="form-group">
-										<input type="email" name="username_edit" id="username_edit" required="required" class="form-control " placeholder="email@domain.com" tabindex="5" readonly>
+										<input type="email" name="username_edit" id="username_edit" required="required" class="form-control " placeholder="email@domain.com" tabindex="6" readonly>
+									</div>
+								</div>
+
+								<div class=" col-md-6">
+									<label> Enable Email Recieval </label>
+									<div class="form-group">
+									Yes <input type="radio" data-attr = "2" name="email_recieve_edit_yes" id="email_recieve_edit_yes" required="required" readonly>
+									No <input type="radio" data-attr = "1" name="email_recieve_edit_no"  id="email_recieve_edit_no" required="required" readonly>
+									<input type="hidden" name="email_recieve_selection" id="email_recieve_selection" class="email_recieve_selection">
+									</div>
+								</div>
+								<div class=" col-md-6">
+									<label> Enable Text Recieval </label>
+									<div class="form-group">
+									Yes <input type="radio" data-attr = "2" name="sms_recieve_edit_yes" id="sms_recieve_edit_yes" required="required" readonly>
+									No <input type="radio" data-attr = "1" name="sms_recieve_edit_no"  id="sms_recieve_edit_no" required="required" readonly>
+									<input type="hidden" name="sms_recieve_selection" id="sms_recieve_selection" class="sms_recieve_selection">
 									</div>
 								</div>
 								<div class="col-md-6">

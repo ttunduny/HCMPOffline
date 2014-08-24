@@ -51,7 +51,6 @@ class Commodities extends Doctrine_Record {
 		return $commodities;
 	}
 
-
 	public static function get_commodity_name($commodity_id) {
 		$query =$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll( "select commodity_name from commodities where status=1 and id=$commodity_id");

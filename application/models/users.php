@@ -202,7 +202,9 @@ class Users extends Doctrine_Record {
     a.id as level_id,
     f.level,
     a.level,
-    u.status
+    u.status,
+    u.email_recieve,
+    u.sms_recieve
 FROM
    user u
         LEFT JOIN

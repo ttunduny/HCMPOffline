@@ -63,14 +63,12 @@ table{
     <li class=""><a href="#">Zone-B</a></li>
     <li class=""><a href="#">Zone-C</a></li>
     <li class=""><a href="#">Zone-D</a></li>
-
   </ul>
 </div>
 
 
 
 <div class="main-container" style="width: 100%;float: right;">
-
 	<table id="pending_facilities" class="data-table"> 
 		<thead>	      
       <th>County</th>

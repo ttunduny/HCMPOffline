@@ -545,7 +545,6 @@ class Reports extends MY_Controller
 
 	}
 
-
 		public function store_expiries() {
         $district_id=isset($district_id) ? $district_id: $this -> session -> userdata('district_id');
 		$district_name=Districts::get_district_name($district_id)->toArray();

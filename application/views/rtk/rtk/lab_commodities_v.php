@@ -65,7 +65,11 @@ $(function() {
         compute_tests_done();           
     })    
 
+<<<<<<< HEAD
+function validate_vct(){
+=======
 function validate_vct(){            
+>>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
         var input_value  = $('#vct').val();            
         if(isNaN(input_value)){
          $('#vct').attr("value",0);
@@ -215,7 +219,10 @@ $("#end_date").datepicker({
     var bal = $('#b_balance_' + row).val();
     var num_bal = parseInt(bal);
 //  alert(num_bal);
+<<<<<<< HEAD
+=======
 
+>>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
     var qty_rcvd = $('#q_received_' + row).val();
     var num_qty_rcvd = parseInt(qty_rcvd);
     //  alert(num_qty_rcvd);
@@ -330,7 +337,10 @@ function sub(prev, value, row_id) {
 }
 
 });     
+<<<<<<< HEAD
+=======
 
+>>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
 
 $('#save1')
 .button()

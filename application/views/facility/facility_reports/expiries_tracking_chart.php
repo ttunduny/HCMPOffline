@@ -6,11 +6,7 @@
 		border: none;
 		
 	}
-	<?php 
-
- 	$link = base_url('reports/get_facility_report_pdf/'.'1101'.'/'.$facility_code.'/expiries'.'/'.$commodity_id.'/'.$from.'/'.$to);	
-
-	 ?>
+	<?php $link = base_url('reports/get_facility_report_pdf/'.'1101'.'/'.$facility_code.'/expiries'.'/'.$commodity_id.'/'.$from.'/'.$to);?>
 </style>
 <html>
 <div class="container" style="width: 96%; margin: auto;">
