@@ -293,8 +293,8 @@ class sms extends MY_Controller {
 		$data = Users::get_dpp_details($district_id);
 		$user_email = "";
 		foreach ($data as $info) {
-			$user_email .= "collinsojenge2014@gmail.com";
-			//$user_email .= $info -> email . ',';
+			
+			$user_email .= $info -> email . ',';
 
 		}
 		return $user_email;
@@ -311,8 +311,8 @@ class sms extends MY_Controller {
 	}
 
 	public function get_bcc_notifications() {
-		$bcc_emails = "smutheu@clintonhealthaccess.org,jhungu@clintonhealthacces.org,gmacharia@clintonhealthacces.org,tngugi@clintonhealthaccess.org,bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org,eongute@clintonhealthaccess.org,rkihoto@clintonhealthaccess.org";
-		//	$bcc_emails = "collinsojenge@gmail.com,";
+		$bcc_emails = "collinsojenge@gmail.com,kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,jhungu@clintonhealthacces.org,gmacharia@clintonhealthacces.org,tngugi@clintonhealthaccess.org,bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org,eongute@clintonhealthaccess.org,rkihoto@clintonhealthaccess.org";
+		
 		return $bcc_emails;
 	}
 
@@ -322,8 +322,8 @@ class sms extends MY_Controller {
 		$data = Users::get_user_info($facility_code);
 		$user_email = "";
 		foreach ($data as $info) {
-			$user_email .= "collinsojenge2014@gmail.com";
-			//$user_email .= $info -> email . ',';
+			
+			$user_email .= $info -> email . ',';
 
 		}
 		return $user_email;
@@ -561,7 +561,7 @@ class sms extends MY_Controller {
 						
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						$subject = "Stock Outs: " . $facility_name;
-						//$email_address = "collinsojenge2014@gmail.com";
+						
 						$email_address = $this -> get_facility_email($facility_code);
 
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
@@ -598,7 +598,7 @@ class sms extends MY_Controller {
 					$subject = "Stock Outs: " . $district_name . " Sub County";
 					$message = $district_name . "'s Weekly Stock Outs Report. ";
 					$message .= "Find attached an excel sheet with the breakdown for the Stock Outs for the district";
-					//$email_address = "collinsojenge2014@gmail.com";
+					
 					$email_address = $this -> get_ddp_email($district_id);
 
 					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
@@ -640,9 +640,9 @@ class sms extends MY_Controller {
 
 				$email_address = "collinsojenge@gmail.com";
 				$email_address = $this -> get_county_email($county_id);
-				//$bcc = "collinsojenge@gmail.com,smutheu@clintonhealthaccess.org,smutheu@gmail.com";
+				
 				$bcc = $this -> get_bcc_notifications();
-				//$cc_email = "";
+			
 
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc_email);
 			}

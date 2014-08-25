@@ -5,6 +5,7 @@
           </p>
         <div class="col-sm-3 col-md-2 sidebar-offcanvas"  id="bar" role="navigation" style="margin-left:0.5%">
            <div class="panel-group " id="accordion" style="padding: 0;">
+                <!--To be removed once the redesign is done-->
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
@@ -33,7 +34,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" id="consumption"><span class="glyphicon glyphicon-cutlery">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" id="consumption"><span class="glyphicon glyphicon-file">
                             </span>Consumption</a>
                         </h4>
                     </div>
@@ -63,9 +64,9 @@
  */
   $(document).ready(function () {
   	//default 
-  $('.page-header').html('Notifications');
-  $('#notifications').parent().parent().parent().addClass('active-panel');
-  ajax_request_replace_div_content('reports/notification_dashboard',"#notification");
+  $('.page-header').html('Stocking Levels');
+  $('#stocking_levels').parent().parent().parent().addClass('active-panel');
+  ajax_request_replace_div_content('reports/stock_level_dashboard',"#notification");
  
  
   $('[data-toggle=offcanvas]').click(function () {
@@ -78,7 +79,12 @@
         $( ".col-md-2,.col-md-10" ).css( "position", "" );
     };
 });
-
+//expiries function
+$("#notifications").on('click', function(){
+$('.page-header').html('Notifications');
+active_panel(this);
+ajax_request_replace_div_content('reports/notification_dashboard',"#notification");
+});
 //expiries function
 $("#expiries").on('click', function(){
 $('.page-header').html('Expiries');

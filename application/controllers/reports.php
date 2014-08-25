@@ -1037,7 +1037,7 @@ class Reports extends MY_Controller
 		elseif($year !=0 && $month == 0)
 		{
 			//When the $year is not set but the month is
-			$year = date("Y");
+			//$year = date("Y");
 			$orders = facility_orders::get_filtered_facility_orders($facility_code, $year,$month, $option);
 			foreach($orders as $facility_orders):
 				$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'],array($facility_orders['name']));	
