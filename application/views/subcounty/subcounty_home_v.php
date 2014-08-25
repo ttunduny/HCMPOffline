@@ -5,7 +5,7 @@
           </p>
         <div class="col-sm-3 col-md-2 sidebar-offcanvas"  id="bar" role="navigation" style="margin-left:0.5%">
            <div class="panel-group " id="accordion" style="padding: 0;">
-                <!--To be removed once the redesign is done-->
+                <!--To be removed once the redesign is done
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
@@ -13,7 +13,7 @@
                             </span>Notifications</a>
                         </h4>
                     </div>
-                </div>
+                </div>-->
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
@@ -133,14 +133,32 @@ active_panel(this);
 $('.page-header').html('Consumption');
 ajax_request_replace_div_content('reports/consumption_data_dashboard',"#notification");
 });
-//Consumption function
+//Redistributiions Functions
+$("#redistributions").on('click', function(){
+active_panel(this);
+$('.page-header').html('Commodity Redistribution');
+ajax_request_replace_div_content('reports/county_donation',"#notification");
+});
+//Orders
+$("#orders").on('click', function(){
+active_panel(this);
+$('.page-header').html('Orders');
+ajax_request_replace_div_content('reports/order_listing/subcounty/true',"#notification");
+});
+//Program Reports
+$("#program_reports").on('click', function(){
+active_panel(this);
+$('.page-header').html('');
+ajax_request_replace_div_content('divisional_reports/program_reports',"#notification");
+});
+//System Usage function
 $("#system_usage").on('click', function(){
 active_panel(this);
 $('.page-header').html('System Usage');
 ajax_request_replace_div_content('reports/get_sub_county_facility_mapping_data',"#notification");
 });
 
-
+//
      
 });
 </script>

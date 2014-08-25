@@ -419,11 +419,12 @@ class Reports extends MY_Controller
 			$data['report_view'] = "facility/facility_orders/order_listing_v";
 			$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
 			$data['active_panel'] = "orders";
+			if($this->input->is_ajax_request()):
+				return $this -> load -> view("facility/facility_orders/order_listing_v", $data);
+			endif;
 		else:
 		$data['title'] = $desc;
 		$data['banner_text'] = $desc;
-
-		
 		$data['content_view'] = "facility/facility_orders/order_listing_v";	
 		endif;
 		
@@ -3313,16 +3314,23 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		$data['active_panel']='consumption';
 		$this -> load -> view("shared_files/template/template", $data);
 	}
+//Function for commodity redistributions
 		public function county_donation() {
 			$data['year'] = date('Y');
-		$county_id=$this -> session -> userdata('county_id');
-	    $data['district_data'] = districts::getDistrict($county_id);
-		$data['title'] = $data['banner_text']="Donations";
-		$data['content_view'] = "facility/facility_reports/reports_v";
-		$data['report_view'] = "subcounty/reports/county_donation_filter_v";
-		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
-		$data['active_panel']='donations';
-		$this -> load -> view("shared_files/template/template", $data);
+			$county_id=$this -> session -> userdata('county_id');
+		    $data['district_data'] = districts::getDistrict($county_id);
+			$data['title'] = $data['banner_text']="Donations";
+			$data['content_view'] = "facility/facility_reports/reports_v";
+			$data['report_view'] = "subcounty/reports/county_donation_filter_v";
+		if($this->input->is_ajax_request()):
+			return $this -> load -> view("subcounty/reports/county_donation_filter_v", $data);
+		
+		else:
+			$data['report_view'] = "subcounty/reports/county_donation_filter_v";
+			$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
+			$data['active_panel']='donations';
+			$this -> load -> view("shared_files/template/template", $data);
+		endif;
 	}
 		public function stock_out(){
         $county_id=$this -> session -> userdata('county_id');
