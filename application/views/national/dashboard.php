@@ -95,6 +95,11 @@ h4{
 	.tile{
 		box-shadow:  0px 1px 5px 0px #d3d3d3;
 	}
+	.tile h4{
+		padding: 5px;
+		background-color:#528f42;
+		color: white;
+	}
 	</style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -131,12 +136,8 @@ h4{
             <li class="active"><a href="<?php echo base_url().'national';?>">Home</a></li>
             <li class=""><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>
             <li class=""><a href="<?php echo base_url().'national/search';?>">Search</a></li>
-            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Welcome, Guest</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="<?php echo base_url();?>"><span class="glyphicon glyphicon-log-in" style="margin-right: 2%;"></span> Login</a></li>
-                            
-                            <li class="divider"></li>
-                        </ul>
+            <li class="" style="background: #144d6e; color: white;"><a style="background: #144d6e; color: white;" href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-user"></span>Log in</a></li>
+                        
                     </li>
           </ul>
           
@@ -161,7 +162,7 @@ h4{
 		</div>
 	<div class="col-md-6">
 					<div class="color_e stat_item">
-						<span class="glyphicon glyphicon-shopping-cart"></span>
+						<span class="glyphicon "></span>
                  	Facilities Rolled Out <br/> 2312
                             
                    </div>
@@ -203,17 +204,21 @@ h4{
 		<div class="row-fluid">
 			<div class="col-md-6" style="border: 0px solid #036;">
 				
-				<div class="tile" id="facility_breakdown" style="height: 270px;border: 0px solid #036;">
+				<div class="tile" id="" style="height: 50px;border: 0px solid #036;">
+					<h4>M</h4>
+				</div>
+				
+				<div class="tile" id="facility_breakdown" style="height: 370px;border: 0px solid #036;">
 					
 				</div>
-				<div class="tile" id="roll_out" style="height: 250px;border: 0px solid #036;">
-					
-				</div>
+				
 			</div>
 			
 			<div class="col-md-6" style="border: 0px solid #036;">
-				<div class="tile" id="filter" style="height: 80px"></div>
-				<div class="tile" id="mos" style="height: 440px">
+				<div class="tile" id="filter" style="height: 100px">
+					<h4>M</h4>
+				</div>
+				<div class="tile" id="mos" style="height: 420px">
 					
 				</div>
 			</div>
@@ -229,12 +234,18 @@ h4{
 <div class="row-fluid">
 		
 		<div class="col-md-6" style="border: 0px solid #036;">
+			<div class="tile" id="" style="height: 100px;border: 0px solid #036;">
+				<h4>M</h4>	
+				</div>
 			<div class="tile" id="consumption" style="height: 450px">
 				
 			</div>
 			
 		</div>
 		<div class="col-md-6" style="border: 0px solid #036;">
+			<div class="tile" id="" style="height: 100px;border: 0px solid #036;">
+					<h4>M</h4>
+				</div>
 			<div class="tile" id="actual_ex" style="height: 450px">
 				
 			</div>
@@ -243,15 +254,22 @@ h4{
 		
 	</div>
 	
-	<div class="row-fluid">
+	<div class="row-fluid"style="margin-top: 12px;">
+		
 		
 		<div class="col-md-6" style="border: 0px solid #036;">
+			<div class="tile" id="" style="height: 100px;border: 0px solid #036;">
+				<h4>M</h4>	
+				</div>
 			<div class="tile" id="potential_ex" style="height: 450px">
 				
 			</div>
 			
 		</div>
 		<div class="col-md-6" style="border: 0px solid #036;">
+			<div class="tile" id="" style="height: 100px;border: 0px solid #036;">
+				<h4>M</h4>	
+				</div>
 			<div class="tile" id="orders" style="height: 450px">
 				
 			</div>
@@ -275,12 +293,12 @@ h4{
    
    function ajax_fill_data(function_url,div){
         var function_url =url+function_url;
-        var loading_icon=url+"assets/img/loader2.gif";
+        var loading_icon=url+"assets/img/Preloader_1.gif";
         $.ajax({
         type: "POST",
         url: function_url,
         beforeSend: function() {
-        $(div).html("<img style='margin-left:20%;' src="+loading_icon+">");
+        $(div).html("<img style='margin:40% 50% 0 50%;' src="+loading_icon+">");
         },
         success: function(msg) {
         $(div).html(msg);
