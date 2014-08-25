@@ -94,11 +94,15 @@ h4{
 	}
 	.tile{
 		box-shadow:  0px 1px 5px 0px #d3d3d3;
+		background:white;
 	}
 	.tile h4{
 		padding: 5px;
 		background-color:#528f42;
 		color: white;
+	}
+	.btn{
+		border-radius: 0;
 	}
 	</style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -156,14 +160,14 @@ h4{
 		<div class="col-md-6">
 					<div class="color_g stat_item">
 						<span class="glyphicon glyphicon-user"></span>
-                  	HCW Trained <br/> 132
+                  	HCW Trained <br/> <span id="hcw_trained"></span>
                             
                    </div>
 		</div>
 	<div class="col-md-6">
 					<div class="color_e stat_item">
 						<span class="glyphicon "></span>
-                 	Facilities Rolled Out <br/> 2312
+                 	Facilities Rolled Out <br/><span id="facilities_rolled_out"></span> 
                             
                    </div>
 	</div>
@@ -204,7 +208,7 @@ h4{
 		<div class="row-fluid">
 			<div class="col-md-6" style="border: 0px solid #036;">
 				
-				<div class="tile" id="" style="height: 50px;border: 0px solid #036;">
+				<div class="tile" id="" style="height: 30px;border: 0px solid #036;">
 					<h4>Facilities In Numbers</h4>
 				</div>
 				
@@ -215,8 +219,9 @@ h4{
 			</div>
 			
 			<div class="col-md-6" style="border: 0px solid #036;">
-				<div class="tile" id="filter" style="height: 100px">
+				<div class="tile" id="filter" style="height: 70px">
 					<h4>Stock Levels (M.O.S)</h4>
+					<button type="button" class="btn btn-success btn-sm" style="margin:5 0 5 12; ">Other Options</button>
 				</div>
 				<div class="tile" id="mos" style="height: 420px">
 					
@@ -234,8 +239,9 @@ h4{
 <div class="row-fluid">
 		
 		<div class="col-md-6" style="border: 0px solid #036;">
-			<div class="tile" id="" style="height: 100px;border: 0px solid #036;">
+			<div class="tile" id="" style="height: 70px;border: 0px solid #036;">
 				<h4>Consumption</h4>	
+				<button type="button" class="btn btn-success btn-sm" style="margin:5 0 5 12; ">Other Options</button>
 				</div>
 			<div class="tile" id="consumption" style="height: 450px">
 				
@@ -267,8 +273,9 @@ h4{
 			
 		</div>
 		<div class="col-md-6" style="border: 0px solid #036;">
-			<div class="tile" id="" style="height: 100px;border: 0px solid #036;">
+			<div class="tile" id="" style="height: 70px;border: 0px solid #036;">
 				<h4>Cost Of Orders</h4>	
+				<button type="button" class="btn btn-success btn-sm" style="margin:5 0 5 12; ">Other Options</button>
 				</div>
 			<div class="tile" id="orders" style="height: 450px">
 				
@@ -290,6 +297,8 @@ h4{
    ajax_fill_data('Kenya/actual_expiries/NULL/NULL/NULL/NULL/NULL',"#actual_ex");
    ajax_fill_data('Kenya/potential_expiries',"#potential_ex");
    ajax_fill_data('Kenya/orders',"#orders");
+   ajax_fill_data('Kenya/write_dashboard_html',"#hcw_trained");
+   ajax_fill_data('Kenya/facility_over_view/',"#facilities_rolled_out");
    
    function ajax_fill_data(function_url,div){
         var function_url =url+function_url;
@@ -309,8 +318,9 @@ h4{
         function run(data){
         var county_data=data.split('^');
         $('.county-name').html(county_data[1]+"&nbsp;County &nbsp;");
-        ajax_fill_data('national/facility_over_view/'+county_data[0],"#facilities_rolled_out");
-        ajax_fill_data('national/hcw/'+county_data[0],"#hcw_trained");
+        ajax_fill_data('Kenya/facility_breakdown_pie/'+county_data[0],"#facility_breakdown");
+        ajax_fill_data('Kenya/facility_over_view/'+county_data[0],"#facilities_rolled_out");
+        ajax_fill_data('Kenya/write_dashboard_html/'+county_data[0],"#hcw_trained");
         $('.county').val(county_data[0]);
         $('#county_id').val(county_data[0]);
         json_obj={"url":"<?php echo site_url("orders/getDistrict");?>",}
