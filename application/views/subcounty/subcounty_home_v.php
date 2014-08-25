@@ -39,10 +39,34 @@
                         </h4>
                     </div>
                 </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" id="redistributions"><span class="glyphicon glyphicon-retweet">
+                            </span>Redistributions</a>
+                        </h4>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix" id="orders"><span class="glyphicon glyphicon-list-alt">
+                            </span>Orders</a>
+                        </h4>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" id="program_reports"><span class="glyphicon glyphicon-folder-open">
+                            </span>Program Reports</a>
+                        </h4>
+                    </div>
+                </div>
                  <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" id="system_usage"><span class="glyphicon glyphicon-sort">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseEight" id="system_usage"><span class="glyphicon glyphicon-sort">
                             </span>System Usage</a>
                         </h4>
                     </div>
