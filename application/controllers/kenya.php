@@ -117,6 +117,82 @@ class Kenya extends MY_Controller
 endif;
 	}
 
+public function facility_over_view($county_id=null, $district_id=null,$facility_code=null,$graph_type=null)
+    {
+	    $district_id=($district_id=="NULL") ? null :$district_id;
+	    $graph_type=($graph_type=="NULL") ? null :$graph_type;
+	    $facility_code=($facility_code=="NULL") ? null :$facility_code;
+	    $county_id=($county_id=="NULL") ? null :$county_id;
+	    
+	    $and =($district_id>0) ?" AND d.id = '$district_id'" : null;
+	    $and .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
+	    $and.=($county_id>0) ?" AND c.id='$county_id'" : null;
+	    $and =isset( $and) ?  $and:null;
+    
+	    if(isset($county_id)):
+		    $county_name = counties::get_county_name($county_id);   
+		    $name = $county_name[0]['county'] ;
+		    $title = "$name County" ;
+	    elseif(isset($district_id)):
+		    $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
+		    $district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " Subcounty" : null;
+		    $title=isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
+	    isset($district_id) && !isset($facility_code) ?  "$district_name_": "$name County") ;
+	    elseif(isset($facility_code)):
+		    $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code): null;
+		    $title=$facility_code_['facility_name'];
+	    else:
+	    	$title="National";
+	    endif;
+    
+    if( $graph_type!="excel"):
+     $q = Doctrine_Manager::getInstance()
+        ->getCurrentConnection()
+        ->fetchAll(" SELECT f.`using_hcmp`
+      from facilities f, districts d, 
+      counties c where f.district=d.id 
+      and d.county=c.id and 
+      f.`using_hcmp`=1 
+      $and
+      ");
+      
+        echo count($q);
+        else:
+        $excel_data = array('doc_creator' => "HCMP", 'doc_title' => "facilities rolled out $title", 'file_name' => "facilities rolled out $title");
+        $row_data = array(); 
+        $column_data = array("County", "Sub-County", "Facility Name","Facility Code","Facility Level");
+        $excel_data['column_data'] = $column_data;
+        
+        $facility_stock_data = Doctrine_Manager::getInstance()
+        ->getCurrentConnection()
+        ->fetchAll("SELECT 
+		    c.county, d.district as subcounty, f.facility_name,f.facility_code, f.`level`
+		from
+		    facilities f,
+		    districts d,
+		    counties c
+		where
+		    f.district = d.id and d.county = c.id
+		        and f.`using_hcmp` = 1
+		        $and
+		group by f.`level`,f.facility_code
+		order by c.county asc
+		        ");
+        
+        foreach ($facility_stock_data as $facility_stock_data_item) :
+        array_push($row_data, array($facility_stock_data_item["county"],
+        $facility_stock_data_item["subcounty"],
+        $facility_stock_data_item["facility_name"],
+        $facility_stock_data_item["facility_code"],
+        $facility_stock_data_item["level"]
+         ));
+        endforeach;
+        $excel_data['row_data'] = $row_data;
+
+        $this->hcmp_functions->create_excel($excel_data);
+endif;
+    }  
+
 
 	public function facility_breakdown_pie($county_id=null, $district_id=null,$facility_code=null,$graph_type=null)
 	{

@@ -216,13 +216,14 @@ echo form_open('stock/update_facility_stock_from_kemsa_order', $att);
 		'<th>Quantity Received</th><th>Total Unit Count</th></tr></thead><tbody><tr>'+			   	    
 		'<td><select id="desc" name="desc" class="form-control desc"><option value="0">--Select Commodity Name--</option>'+
                     '<?php	foreach($facility_commodity_list as $commodity):
+					 		$commodity_name=preg_replace('/[^A-Za-z0-9\-]/', ' ',$commodity['commodity_name']);
 						     $commodity_id=$commodity['commodity_id'];
-							 $commodity_code=$commodity['commodity_code'];							
-							 $sub_category_name=$commodity['sub_category_name'];
+							 $commodity_code=$commodity['commodity_code'];	
+							 $sub_category_name=preg_replace('/[^A-Za-z0-9\-]/', ' ',$commodity['sub_category_name']);						
 							 $unit_size=$commodity['unit_size'];
 							 $unit_cost=$commodity['unit_cost'];
 							 $total_commodity_units=$commodity['total_commodity_units'];
-							 $commodity_name= $commodity['commodity_name'];?>'+					
+							 ;?>'+					
 						'<option <?php echo 'special_data="'.$commodity_id.'^'.$unit_cost.'^'.$unit_size.
 	'^'.$sub_category_name.'^'.$commodity_code.'^'.$total_commodity_units.'" value="'.$commodity_id.'">'.$commodity_name ;?></option><?php endforeach;?>'+
 	'</select></td><td><input readonly="readonly" class="form-control" type="text" name="commodity_code"    /></td>'+
