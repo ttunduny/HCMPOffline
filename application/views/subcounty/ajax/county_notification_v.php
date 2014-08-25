@@ -14,10 +14,10 @@ $district_id =  $this -> session -> userdata('district_id');
             <div class="panel-body">
     <?php if($county_dashboard_notifications['facility_donations']>0): ?>
       	 <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
-       	 <h5>Inter Facility Donation</h5> 
+       	 <h5>Commodity Redistribution</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('reports/county_donation/')?>"><span class="badge"><?php 
-				echo $county_dashboard_notifications['facility_donations'];?></span> Items have been donated in your area</a> 
+				echo $county_dashboard_notifications['facility_donations'];?></span> Commodities have been redistributed in your area</a> 
 			</p>
  		 </div>
 		  <?php endif; // Potential Expiries?>

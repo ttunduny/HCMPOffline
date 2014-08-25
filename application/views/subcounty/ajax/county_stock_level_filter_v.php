@@ -3,10 +3,10 @@
 </div>
 
 <ul class='nav nav-tabs'>
-	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items <?php echo " ($number_of_tracer_items)"; ?></a></li>
+	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Commodities <?php echo " ($number_of_tracer_items)"; ?></a></li>
       <li class=""><a href="#division" data-toggle="tab">Program Commodities</a></li>
       <!--<li class=""><a href="#cat" data-toggle="tab">Categories</a></li>-->
-      <li class=""><a href="#county" data-toggle="tab">County View</a></li>
+      <li class=""><a href="#county" data-toggle="tab">Commodities</a></li>
       <li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>
 </ul>
     <div id="myTabContent" class="tab-content">
@@ -164,11 +164,13 @@ endforeach;
 </div>
 </div>
 <div class="graph_content" id="graph_default">	
-	
+<div class="graph_content" id="default_graph_"  ></div>	
 </div>
 
+	
 <script>
 	 $(function () { 
+<?php echo $graph_data_default; ?>
 <?php echo $default_graph; ?>
 });
 	$(document).ready(function() {
@@ -261,7 +263,7 @@ var drop_down='';
         $("#tracer_district_filter").val()+"/"+
         $("#tracer_facility_filter").val()+"/"+
         $("#tracer_plot_value_filter").val()+
-        "/NULL/1";
+        "/1/1";
         ajax_request_replace_div_content(url_,'.graph_content');    
           });
           
@@ -280,7 +282,7 @@ var drop_down='';
          $(".tracer-download").button().click(function(e) {
         e.preventDefault(); 
         var url_ = "reports/get_county_stock_level_new/"+"NULL/"+"NULL/"+
-        $("#tracer_district_filter").val()+"/"+$("#tracer_facility_filter").val()+"/"+$("#tracer_plot_value_filter").val()+"/csv_data";   
+        $("#tracer_district_filter").val()+"/"+$("#tracer_facility_filter").val()+"/"+$("#tracer_plot_value_filter").val()+"/csv_data"+"/1";   
          window.open(url+url_ ,'_blank');   
           });
           
@@ -341,5 +343,5 @@ $(".general_stock_info").on(function(e)
            });
 	
           		
-		});
+		});			
 </script>
