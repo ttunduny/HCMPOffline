@@ -99,10 +99,16 @@ endforeach;
 </div>
 </div>
 <div class="graph_content">	
+
 </div>
 <script>
-	
+
 	$(document).ready(function() {
+		    window.onload = function(){
+    var url_ = 'reports/get_county_cost_of_expiries_new/NULL/NULL/NULL/NULL/NULL';  
+		ajax_request_replace_div_content(url_,'.graph_content');	
+  }
+		// reports/get_county_cost_of_expiries_new/NULL/NULL/NULL/NULL/NULL
         //setting up the report
 		$("#facility_filter").hide();
 		$("#district_filter").change(function() {

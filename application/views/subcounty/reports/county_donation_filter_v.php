@@ -51,7 +51,16 @@ endforeach;
 </div>
 <div class="graph_content">	
 </div>
-<script>	
+<script>
+$(window).load(function(){
+		var year  = '<?php echo $year; ?>';
+        var url_ = "reports/donation_reports/"+
+        year+
+        "/NULL"+
+        "/NULL";	
+		ajax_request_replace_div_content(url_,'.graph_content');	
+	
+});	
 	$(document).ready(function() {
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           $('.graph_content').html('');

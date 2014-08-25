@@ -424,7 +424,6 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
 							$( '.err_edit' ).addClass( "alert-danger alert-dismissable" );
               $("#edit_user,#create_new").attr("disabled", "disabled");
 							}else if(data.response=='true'){
-								
 								$(".err_edit").empty();
 								$(".err_edit").removeClass("alert-danger alert-dismissable");
 								$( '.err_edit' ).addClass( "alert-success alert-dismissable" );
@@ -499,6 +498,7 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
    function ajax_post (url,div){
     var url =url;
      var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";
+
      $.ajax({
           type: "POST",
           data:{ 'fname_edit': $('#fname_edit').val(),'lname_edit': $('#lname_edit').val(),'county_edit': $('#county_edit').val(),
@@ -506,10 +506,12 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
           'username_edit': $('#username_edit').val(),'facility_id_edit_district': $('#edit_facility').val(),
           'user_type_edit_district': $('#user_type_edit_district').val(),'district_name_edit': $('#edit_district').val(),
 			'facility_id_edit': $('#edit_facility').val(),'status': $('.onoffswitch-checkbox').prop('checked'),'user_id':$('#email_edit').attr('data-id'),
-      'email_edit_recieve':$('#email_recieve_selection').val(),'sms_edit_recieve':$('#sms_recieve_selection').val()},
+      'email_recieve_edit':$('#email_recieve_edit').prop('checked'),'sms_recieve_edit':$('#email_recieve_edit').prop('checked')
+    },
           url: url,
           beforeSend: function() {
             //$(div).html("");
+            // alert($('#email_recieve_edit').prop('checked'));return;
             var answer = confirm("Are you sure you want to proceed?");
         if (answer){
             $('.modal-body').html("<img style='margin:30% 0 20% 42%;' src="+loading_icon+">");
@@ -521,7 +523,8 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
           },
           success: function(msg) {
           //success message
-          
+          // $('.modal-body').html(msg);
+          // return;
           setTimeout(function () {
           	$('.modal-body').html("<div class='bg-warning' style='height:30px'>"+
 							"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"+
