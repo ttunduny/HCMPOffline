@@ -184,9 +184,13 @@ endforeach;
 </div>
 </div>
 
-<div class="graph_content">	
+<div class="graph_content" id="dem_graph_">	
 </div>
 <script>
+	 $(function () { 
+<?php echo $consumption_default; ?>
+});
+
 	$(document).ready(function() {
 		json_obj = { "url" : "assets/img/calendar.gif'",};
 var baseUrl=json_obj.url;
