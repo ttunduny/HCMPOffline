@@ -1,5 +1,18 @@
+<style>
+	.row div p{
+	padding:10px;
+}
+</style>
 <div class="test"><div class="container" style="width: 96%; margin: auto;">
-<span  class='label label-info' style="padding-left: 1%"> Select the Commodities that are used in this facility by inputing the AMC or selecting the check box</span>
+	
+	<div class="row">
+		<div class="col-md-12" id=""><p class="bg-info">
+			<strong>Select the Commodities that are used in this facility by inputing the AMC or selecting the check box</strong>
+		</p></div>
+		
+	</div>
+	</div>
+
 </div>
 <div style="max-height:600px; overflow-y:auto; width: 100%">
 <table width="100%" class="row-fluid table table-hover table-bordered table-update"  id="example">

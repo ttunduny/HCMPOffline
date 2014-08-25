@@ -27,15 +27,14 @@ class Home extends MY_Controller
 		
 		$reset_facility_issues_table = Doctrine_Manager::getInstance()->getCurrentConnection();
 	    $reset_facility_issues_table->execute("DELETE FROM `redistribution_data` WHERE  source_facility_code=$facility_code or receive_facility_code=$facility_code;");
-		
-		$facility_order_details_table = Doctrine_Manager::getInstance()->getCurrentConnection();
-	    $facility_order_details_table->fetchAll("select id from `facility_orders` WHERE  facility_code=$facility_code;");
-		
+
+		$facility_order_details_table = Doctrine_Manager::getInstance()->getCurrentConnection()
+        ->fetchAll("select id from `facility_orders` WHERE  facility_code=$facility_code;");
+
 		foreach ( $facility_order_details_table as $key => $value) {
 		$reset_facility_order_table = Doctrine_Manager::getInstance()->getCurrentConnection();
-	    $reset_facility_order_table->execute("DELETE FROM `facility_order_details` WHERE  order_number_idr=$value; ");	
-		}
-	
+	    $reset_facility_order_table->execute("DELETE FROM `facility_order_details` WHERE  order_number_id=$value[id]; ");	
+        }
 	    $reset_facility_order_table = Doctrine_Manager::getInstance()->getCurrentConnection();
 	    $reset_facility_order_table->execute("DELETE FROM `facility_orders` WHERE  facility_code=$facility_code; ");
 		
@@ -81,7 +80,6 @@ class Home extends MY_Controller
 			$view = 'shared_files/template/dashboard_v';
 			$data['content_view'] = "shared_files/template/super_admin_template";
 			break;
-				
 			case 'allocation_committee':
 			$view = '';
 			break;	

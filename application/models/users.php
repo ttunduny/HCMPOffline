@@ -14,6 +14,8 @@ class Users extends Doctrine_Record {
 		$this -> hasColumn('facility', 'varchar', 255);
 		$this -> hasColumn('status', 'int', 11);
 		$this -> hasColumn('county_id', 'int', 11);
+		$this -> hasColumn('email_recieve', 'int', 1);
+		$this -> hasColumn('sms_recieve', 'int', 1);
 
 	}
 
@@ -33,11 +35,12 @@ class Users extends Doctrine_Record {
 		$this -> _set('password', md5($salt . $value));
 
 	}
-    public static function getUsers($facility_c){
-        $query = Doctrine_Query::create() -> select("*") -> from("Users")->where("facility=$facility_c");
-        $level = $query -> execute();
-        return $level;
-    }
+	public static function getUsers($facility_c){
+		$query = Doctrine_Query::create() -> select("*") -> from("Users")->where("facility=$facility_c");
+		$level = $query -> execute();
+		return $level;
+	}
+
 	public static function login($username, $password) {
 
 		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username = '" . $username . "' AND status=1");
@@ -201,7 +204,9 @@ class Users extends Doctrine_Record {
     a.id as level_id,
     f.level,
     a.level,
-    u.status
+    u.status,
+    u.email_recieve,
+    u.sms_recieve
 FROM
    user u
         LEFT JOIN

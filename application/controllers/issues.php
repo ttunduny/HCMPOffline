@@ -51,7 +51,12 @@ if (!defined('BASEPATH'))
 			endswitch;			
 		$data['service_point']=service_points::get_all_active($facility_code);		
 		$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_facility($facility_code,1);
-	    $data['facility_stock_data']=json_encode(facility_stocks::get_distinct_stocks_for_this_facility($facility_code,"batch_data"));	
+		$data_=facility_stocks::get_distinct_stocks_for_this_facility($facility_code,"batch_data");
+		foreach($data_ as $key=> $data_1){
+		$data_[$key]['commodity_name']=preg_replace('/[^A-Za-z0-9\-]/', ' ',$data_1['commodity_name']);
+	      }
+	   $data['facility_stock_data']=json_encode($data_);	
+
      	$this -> load -> view("shared_files/template/template", $data);
 	}
 
@@ -177,9 +182,9 @@ if (!defined('BASEPATH'))
 			$user_action = "issue";
 			Log::log_user_action($user, $user_action);
 		 	$this->session->set_flashdata('system_success_message', "You have issued $total_items item(s)");
-			redirect();
+			redirect(home);
 	endif;
-	redirect();		
+	redirect(home);		
 	}
 	public function district_store_issue()
 		{
@@ -370,6 +375,7 @@ redirect();
 		{
 			//security check
 			if($this->input->post('mfl')):
+			$district_id = $this -> session -> userdata('district_id');
 			$facility_code=$this -> session -> userdata('facility_id');
 			$service_point=array_values($this->input->post('mfl'));
 			$commodity_id=array_values($this->input->post('desc'));
@@ -425,9 +431,9 @@ endfor;
          $this->db->insert_batch('facility_issues', $data_array_issues_table); 
 		 $this->db->insert_batch('redistribution_data', $data_array_redistribution_table); 
          $this->session->set_flashdata('system_success_message', "You have issued $total_items item(s)");
-		 redirect();
+		 redirect(home);
 endif;
-redirect();		
+redirect(home);		
 	}//confirm the external issue
 	public function confirm_external_issue($editable=null){
 	$facility_code=$this -> session -> userdata('facility_id');
@@ -477,7 +483,7 @@ endforeach;
 $this->session->set_flashdata('system_success_message', "service points Have Been Updated"); 
 redirect('issues/add_service_points');	
 endif;	
-redirect();
+redirect(home);
 }
 //update the service point incase smthin changes
 public function update_service_point(){
@@ -491,7 +497,7 @@ service_points::edit_service_point($service_point_id,$service_point_name,
 $service_for_all_facilities,$this -> session -> userdata('user_id'),$service_status);
 $this->session->set_flashdata('system_success_message', "service points Have Been Updated"); redirect('issues/add_service_points');		
 endif;	
-redirect();
+redirect(home);
 }
 }
 

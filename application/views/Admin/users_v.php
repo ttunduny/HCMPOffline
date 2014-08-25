@@ -59,7 +59,7 @@
 	$(document).ready(function () {
 		$("#create_new,#edit_user").attr("disabled", "disabled");
 		       $('#main-content').on('hidden.bs.modal','#myModal', function () {
-               alert('jack');
+
 				$("#datatable").hide().fadeIn('fast');
 				// location.reload();
 			});
@@ -185,13 +185,13 @@ var drop_down='';
 							$('.err').html(data.msg);
 							console.log(data.msg)
 							$( '.err' ).addClass( "alert-danger alert-dismissable" );
-							$(".edit_user,#create_new").attr("disabled", "disabled");
+              $("#edit_user,#create_new").attr("disabled", "disabled");
 							}else if(data.response=='true'){
 								console.log(data.msg)
 								$(".err").empty();
 								$(".err").removeClass("alert-danger alert-dismissable");
 								$( '.err' ).addClass( "alert-success alert-dismissable" );
-								$(".edit_user,#create_new").attr("disabled", false);
+								$("#edit_user,#create_new").attr("disabled", false);
 								$('.err').html(data.msg);
 								
 								
@@ -217,13 +217,14 @@ var drop_down='';
 						
 						 	$('.err').html(data.msg);
 							$( '.err' ).addClass( "alert-danger alert-dismissable" );
-							$(".edit_user,#create_new").attr("disabled", "disabled");
+              $("#edit_user,#create_new").attr("disabled", "disabled");
 							}else if(data.response=='true'){
-								
+                //var alt = $('#email_recieve').val();
+								//alert(alt);
 								$(".err").empty();
 								$(".err").removeClass("alert-danger alert-dismissable");
 								$( '.err' ).addClass( "alert-success alert-dismissable" );
-								$(".edit_user,#create_new").attr("disabled", false);
+								$("#edit_user,#create_new").attr("disabled", false);
 								$('.err').html(data.msg);
 								
 								
@@ -243,8 +244,33 @@ var drop_down='';
       var username = $('#username').val()
       var facility_id = $('#facility_name').val()
       var district_name = $('#district_name').val()
+      var sub_county = $('#sub_county').val()
+      var county = $('#county').val()
       var user_type = $('#user_type').val()
 
+
+		if(user_type==10){
+			
+			if(first_name==""||last_name==""||telephone==""||email==""||county=="NULL"||user_type=="NULL"){
+						alert('Please make sure you have selected all relevant fields.');
+							return;
+							}
+			
+		}else if (user_type==3){
+			
+			if(first_name==""||last_name==""||telephone==""||email==""||county=="NULL"||sub_county=="NULL"||user_type=="NULL"){
+						alert('Please make sure you have selected all relevant fields.');
+							return;
+							}
+			
+		}
+		else{
+			if(first_name==""||last_name==""||telephone==""||email==""||county=="NULL"||sub_county=="NULL"||facility_id=="NULL"||user_type=="NULL"){
+						alert('Please make sure you have selected all relevant fields.');
+							return;
+							}
+		}
+		
        
       
       var div="#processing";
@@ -255,17 +281,17 @@ var drop_down='';
 
    function ajax_post_process (url,div){
     var url =url;
-
-     //alert(url);
     // return;
      var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";
      $.ajax({
           type: "POST",
           data:{ 'first_name': $('#first_name').val(),'last_name': $('#last_name').val(),
           'telephone': $('#telephone').val(),'email': $('#email').val(),
-          'username': $('#username').val(),'facility_id': $('#facility_id').val(),
+          'username': $('#username').val(),'facility_id': $('#facility_name').val(),
           'county':$('#county').val(),
-          'district_name': $('#sub_county').val(),'user_type': $('#user_type').val()},
+          'district_name': $('#sub_county').val(),'user_type': $('#user_type').val()
+
+        },
           url: url,
           beforeSend: function() {
            
@@ -333,7 +359,8 @@ var county = $(this).closest('tr').find('.county').attr('data-attr');
 var usertype = $(this).closest('tr').find('.level').attr('data-attr');
 var district_id = $(this).closest('tr').find('.district').attr('data-attr');
 var facility_id = $(this).closest('tr').find('.facility_name').attr('data-attr');
-
+var email_recieve = $(this).closest('tr').find('.email_recieve').attr('data-attr');
+var sms_recieve = $(this).closest('tr').find('.sms_recieve').attr('data-attr');
    //fill inputs with relevant data
 $('#email_edit').val(email)
 $('#email_edit').attr('data-id',$(this).closest('tr').find('.email').attr('data-attr'))
@@ -341,14 +368,27 @@ $('#telephone_edit').val(phone)
 $('#fname_edit').val(fname)
 $('#lname_edit').val(lname)
 $('#username_edit').val(email)
-
 $('#user_type_edit_district').val(usertype)
 $('#county_edit').val(county)
 $('#edit_district').val(district_id)
 $('#edit_facility').val(facility_id)
+//seth
+if (email_recieve=2) {
+// alert(email_recieve);return;
+  // $('#email_recieve_edit_yes').attr('checked', 'checked');
+  $('#email_recieve_selection').val(email_recieve);
+}else if (email_recieve=1) {
+  $('#email_recieve_edit_no').attr('checked', false);
+  $('#email_recieve_selection').val(email_recieve);
+};
 
-
-
+if (sms_recieve=2) {
+  // $('#sms_recieve_edit_yes').attr('checked', 'checked');
+  $('#sms_recieve_selection').val(sms_recieve);
+}else if (sms_recieve=1) {
+  $('#sms_recieve_edit_no').attr('checked', false);
+  $('#sms_recieve_selection').val(sms_recieve);
+};
 
 
 if($(this).closest('tr').find('.status_item').attr('data-attr')=="false"){
@@ -382,11 +422,12 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
 						
 						 $('.err_edit').html(data.msg);
 							$( '.err_edit' ).addClass( "alert-danger alert-dismissable" );
+              $("#edit_user,#create_new").attr("disabled", "disabled");
 							}else if(data.response=='true'){
-								
 								$(".err_edit").empty();
 								$(".err_edit").removeClass("alert-danger alert-dismissable");
 								$( '.err_edit' ).addClass( "alert-success alert-dismissable" );
+                $("#edit_user,#create_new").attr("disabled", false);
 								$('.err_edit').html(data.msg);
 								
 								
@@ -423,11 +464,12 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
 						
 						 $('.err').html(data.msg);
 							$( '.err' ).addClass( "alert-danger alert-dismissable" );
+              $("#edit_user,#create_new").attr("disabled", "disabled");
 							}else if(data.response=='true'){
-								
 								$(".err").empty();
 								$(".err").removeClass("alert-danger alert-dismissable");
 								$( '.err' ).addClass( "alert-success alert-dismissable" );
+                $("#edit_user,#create_new").attr("disabled", false);
 								$('.err').html(data.msg);
 								
 								
@@ -455,20 +497,21 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
 
    function ajax_post (url,div){
     var url =url;
-
-     //alert(url);
-    // return;
      var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";
+
      $.ajax({
           type: "POST",
           data:{ 'fname_edit': $('#fname_edit').val(),'lname_edit': $('#lname_edit').val(),'county_edit': $('#county_edit').val(),
           'telephone_edit': $('#telephone_edit').val(),'email_edit': $('#email_edit').val(),
           'username_edit': $('#username_edit').val(),'facility_id_edit_district': $('#edit_facility').val(),
           'user_type_edit_district': $('#user_type_edit_district').val(),'district_name_edit': $('#edit_district').val(),
-			'facility_id_edit': $('#edit_facility').val(),'status': $('.onoffswitch-checkbox').prop('checked'),'user_id':$('#email_edit').attr('data-id')},
+			'facility_id_edit': $('#edit_facility').val(),'status': $('.onoffswitch-checkbox').prop('checked'),'user_id':$('#email_edit').attr('data-id'),
+      'email_recieve_edit':$('#email_recieve_edit').prop('checked'),'sms_recieve_edit':$('#email_recieve_edit').prop('checked')
+    },
           url: url,
           beforeSend: function() {
             //$(div).html("");
+            // alert($('#email_recieve_edit').prop('checked'));return;
             var answer = confirm("Are you sure you want to proceed?");
         if (answer){
             $('.modal-body').html("<img style='margin:30% 0 20% 42%;' src="+loading_icon+">");
@@ -480,7 +523,8 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
           },
           success: function(msg) {
           //success message
-          
+          // $('.modal-body').html(msg);
+          // return;
           setTimeout(function () {
           	$('.modal-body').html("<div class='bg-warning' style='height:30px'>"+
 							"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"+

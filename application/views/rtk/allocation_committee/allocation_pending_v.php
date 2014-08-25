@@ -63,20 +63,18 @@ table{
     <li class=""><a href="#">Zone-B</a></li>
     <li class=""><a href="#">Zone-C</a></li>
     <li class=""><a href="#">Zone-D</a></li>
-
   </ul>
 </div>
 
 
 
 <div class="main-container" style="width: 100%;float: right;">
-
 	<table id="pending_facilities" class="data-table"> 
 		<thead>	      
+      <th>County</th>
+      <th>Sub-County</th>
 			<th>MFL</th>
-			<th>Facility Name</th>
-			<th>Sub-County</th>
-			<th>County</th>
+			<th>Facility Name</th>			
 			<th>Zone</th>
 			<th>Report For:</th>
 		</thead>
@@ -87,11 +85,12 @@ table{
         $zone = str_replace(' ', '-',$value['zone']);
         $facil = $value['facility_code'];
         ?> 
-        <tr>                  
-          <td><?php echo $value['facility_code'];?></td>
-          <td><?php echo $value['facility_name'];?></td>
-          <td><?php echo $value['district'];?></td>
+        <tr>   
           <td><?php echo $value['county'];?></td>
+          <td><?php echo $value['district'];?></td>              
+          <td><?php echo $value['facility_code'];?></td>
+          <td><?php echo $value['facility_name'];?></td>     
+          
           <td><?php echo $zone;?></td>
           <td><?php echo $value['report_for'];?></td>
         </tr>
@@ -119,7 +118,7 @@ $(document).ready(function() {
     "sDom": "T lfrtip",
     "sScrollY": "377px",
     "sScrollX": "100%",
-    "bPaginate": true,
+    "bPaginate": false,
     "oLanguage": {
       "sLengthMenu": "_MENU_ Records per page",
       "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",

@@ -183,8 +183,7 @@ endforeach;
 </div>
 </div>
 </div>
-
-<div class="graph_content" id="dem_graph_">	
+<div class="graph_content" id="graph_content_">	
 </div>
 <script>
 	 $(function () { 
@@ -192,9 +191,11 @@ endforeach;
 });
 
 	$(document).ready(function() {
+    <?php echo $default_consumption_graph; ?>
+    
 		json_obj = { "url" : "assets/img/calendar.gif'",};
 var baseUrl=json_obj.url;
-	  //	-- Datepicker	limit today		
+    //	-- Datepicker	limit today		
 	$(".clone_datepicker_normal_limit_today").datepicker({
     maxDate: new Date(),				
 	dateFormat: 'd M yy', 

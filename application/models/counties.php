@@ -16,6 +16,21 @@ class Counties extends Doctrine_Record {
 		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $drugs;
 	}
+	public static function get_counties_all_using_HCMP()
+	{
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT DISTINCT (d.county) as county, c.county as county_name
+		from
+		    facilities f,
+		    districts d,
+		    counties c
+		where
+		c.id = d.county
+		AND f.district = d.id 
+		AND using_hcmp = 1");
+			
+		return $q;
+	}
 	
 	
 	public static function get_county_map_data() {

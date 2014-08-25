@@ -236,7 +236,7 @@ class User extends MY_Controller {
                           <td>
                           Hi ' . $Usersname . ', </br>
 		<p>
-		You are HCMP account username '.$email_address.'.You recently requested for a password reset.</br>
+		HCMP account username '.$email_address.'.You recently requested for a password reset.</br>
 		If you made this request ,this is your reset code.</br></p> 
 	
 		<table class="twelve columns">
@@ -274,9 +274,7 @@ class User extends MY_Controller {
 
                     </td>
                   </tr>
-                </table>
-
-';
+                </table>';
 
 				//exit;
 
@@ -513,17 +511,21 @@ class User extends MY_Controller {
 			
 			break;
 			case 'facility_admin':
-			
+			$facility_id=$this -> session -> userdata('facility_id');
+			$district_code=$this -> session -> userdata('district_id');
+			$county=$this -> session -> userdata('county_id');
+
 			break;
 			case 'district':
 				
 			$district_code=$this -> session -> userdata('district_id');
+			$county=$this -> session -> userdata('county_id');
 			
 			break;
 			case 'super_admin':
 			
 			case 'county':
-			
+			$county=$this -> session -> userdata('county_id');
 			
 			break;	
         endswitch;
@@ -553,9 +555,11 @@ class User extends MY_Controller {
 				$range = microtime(true);
 				$activation = rand(0, $range);
 				//encrypt code to be saved
-				$save_activation_code = md5($activation);
+				$save_activation_code = $activation;
+
+				$save_activation_code = $activation;
 			$result=base_url().'assets/img/coat_of_arms-resized1.png';
-			
+
 			$phone=$telephone;
 			$message='Hi, your activation code is '.$activation;
 			$this -> hcmp_functions -> send_sms($phones,$message);
@@ -663,32 +667,10 @@ class User extends MY_Controller {
                 <table class="row callout">
                   <tr>
                     <td class="wrapper last">
-                    </td>
+
                   </tr>
-                </table>
+                </table>'; 
 
-                <table class="row footer">
-                  <tr>
-                    <td class="wrapper">
-
-                    </td>
-                    <td class="wrapper last">
-
-                      <table class="six columns">
-                        <tr>
-                          <td class="last right-text-pad">
-                            <h5>Contact Info:</h5>
-                            <p>Phone: </p>
-                            <p>Email: <a href="mailto:hcmpkenya@gmail.com">hcmpkenya@gmail.com</a></p>
-                          </td>
-                          <td class="expander"></td>
-                        </tr>
-                      </table>
-
-                    </td>
-                  </tr>';
-
-				
 				
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
 
@@ -715,6 +697,7 @@ endif;
 	}
 	
 	public function edit_user(){
+
 		$county = $this -> session -> userdata('county_id');
 		$identifier = $this -> session -> userdata('user_indicator');
 
@@ -726,9 +709,12 @@ endif;
 		$username_edit = $_POST['username_edit'];
 		$user_type_edit_district = $_POST['user_type_edit_district'];
 		$district_name_edit = $_POST['district_name_edit'];
-		
+		$email_recieve_edit = $_POST['email_recieve_edit'];
+		$sms_recieve_edit = $_POST['sms_recieve_edit'];
+
 		$user_id= $_POST['user_id'];
-		
+		// echo $email_recieve_edit;exit;
+
 		if ($status=="true") {
 			
 			$status=1;
@@ -737,6 +723,25 @@ endif;
 			
 			$status=0;
 		}
+
+		if ($email_recieve_edit=="true") {
+			
+			$email_recieve_edit=1;
+			
+		} elseif($email_recieve_edit=="false") {
+			
+			$email_recieve_edit=0;
+		}
+
+		if ($sms_recieve_edit=="true") {
+			
+			$sms_recieve_edit=1;
+			
+		} elseif($sms_recieve_edit=="false") {
+			
+			$sms_recieve_edit=0;
+		}
+
 		if ($identifier=="district") {
 			
 			$facility_id_edit = $_POST['facility_id_edit_district'];
@@ -748,17 +753,27 @@ endif;
 		
 		
 		//update user
+		 $q="UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
+									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county',
+									email_recieve ='$email_recieve_edit',
+									sms_recieve ='$sms_recieve_edit'
+                                  	WHERE `id`= '$user_id'";
+echo json_encode($q);
+                                  	exit;
+		
 			$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
 			$update_user->execute("UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
-									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county'
+									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county',
+									email_recieve ='$email_recieve_edit',
+									sms_recieve ='$sms_recieve_edit'
                                   	WHERE `id`= '$user_id'");
 		
 	}
 		public function activation($myurl){
 			
 			$myurl=$this->uri->segment(3);
-			echo $cipher= md5($myurl);
-			exit;			
+			$cipher= $myurl;
+						
 			//query to find match 
 			Users::check_activation($cipher);
 			$restrict= count(Users::check_activation($cipher));
@@ -777,8 +792,9 @@ endif;
 			
 			$email = $_POST['username'];
 			$password = $_POST['new_password'];
+
 			$myurl=$this->uri->segment(3);
-			
+
 			//confirm user exists and is inactive
 			
 			$data=Users::check_user_exist_activate($email);
