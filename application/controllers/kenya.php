@@ -153,7 +153,14 @@ FROM  `facilities` f, districts d, counties c
 WHERE  f.district=d.id and d.county=c.id   $and  and (f.`owner` LIKE  '%gok%' or f.`owner` LIKE  '%moh%' or f.`owner` LIKE  '%ministry%'
 or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE  '%local%' or f.`owner` LIKE  '%g.o.k%' ) ");
 
-      $other=$using_hcmp[0]['total']-$public[0]['total']-$private[0]['total']-$fbo[0]['total'];
+$using_hcmp = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll(" SELECT count(f.id) as total, sum(f.`using_hcmp`) as using_hcmp
+      from facilities f, districts d, 
+      counties c where f.district=d.id 
+      and d.county=c.id 
+      $and
+      ");
+
+     $other=$using_hcmp[0]['total']-$public[0]['total']-$private[0]['total']-$fbo[0]['total'];
       
      // $pie_data = array('Private' => $private[0]['total'],'Public' =>$public[0]['total'],'Faith-Based' =>$fbo[0]['total'],'Others' =>$other);
 		
@@ -238,7 +245,7 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 		    $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code): null;
 		    $title=$facility_code_['facility_name'];
 	    else:
-	    	$title="Nationally";
+	    	$title="National";
 	    endif;
 		
 		//if( $graph_type!="excel"):
@@ -329,7 +336,7 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 	    $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
 	    $title=$facility_code_['facility_name'];
     else:
-    	$title="Nationally";
+    	$title="National";
     endif;
     if($graph_type!="excel"):
     // echo    .$to; exit;
@@ -448,7 +455,7 @@ endif;
 		    $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
 		    $title=$facility_code_['facility_name'];
 	    else:
-	    	$title="Nationally";
+	    	$title="Nationaly";
 	    endif;
 
      $and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
@@ -773,7 +780,7 @@ group by month(o.`order_date`)
     $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
     $title=$facility_code_['facility_name'];
     else:
-    $title="Nationally";
+    $title="National";
     endif;
         
        
