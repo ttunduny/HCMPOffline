@@ -167,6 +167,7 @@ $using_hcmp = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetch
 		$data['private'] = json_encode((int)$private[0]['total']);
 		$data['public'] = json_encode((int)$public[0]['total']);
 		$data['fbo'] = json_encode((int)$fbo[0]['total']);
+		$data['colors'] = "['#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']";
 		$data['other'] = json_encode((int)$other);
 		$this -> load -> view("national/ajax/pie_template",$data);
 		
@@ -294,6 +295,7 @@ $using_hcmp = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetch
         $data['graph_yaxis_title'] = "MOS";
         $data['graph_id'] = "mos";
         $data['legend'] = "M.O.S";
+        $data['colors'] = "['#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']";
         $data['category_data'] = json_encode($category_data);
         $data['series_data'] =  json_encode($arrayseries);
 				
@@ -373,6 +375,7 @@ $using_hcmp = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetch
         $data['graph_yaxis_title'] = "Packs";
         $data['graph_id'] = "consumption";
         $data['legend'] = "Packs";
+        $data['colors'] = "['#008080','#6AF9C4']";
         $data['category_data'] = json_encode($category_data);
         $data['series_data'] =  json_encode($arrayseries);
 				
@@ -504,6 +507,7 @@ endif;
         $data['graph_yaxis_title'] = "Stock expiring in KSH";
         $data['graph_id'] = "potential_ex";
         $data['legend'] = "Total";
+        $data['colors'] = "['#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']";
         $data['category_data'] = json_encode($category_data);
         $data['series_data'] =  json_encode($arrayseries);
 				
@@ -576,7 +580,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 		
 		public function actual_expiries($year=null,$county_id=null, $district_id=null,$facility_code=null,$graph_type=null){
 			
-		$year=($year=="NULL") ? date('Y') :$year;
+		$year=($year=="NULL" || $year=="") ? date('Y') :$year;
 	    //check if the district is set
 	    $district_id=($district_id=="NULL") ? null :$district_id;
 	   // $option=($optionr=="NULL") ? null :$option;
@@ -644,25 +648,32 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 				        and temp.total > 0
 				group by month(temp.expiry_date)");   
 		
-           
+          // var_dump($commodity_array);exit;
+		   $arrayseries = array();
         foreach ($commodity_array as $data) :
+			$arrayseries[] = (int)$data['total'];
+        //$series_data = array_merge($series_data, array($data["drug_name"] => (int)$data['total']));
+        $category_data = array_merge($category_data, array($data["cal_month"]));
+ 			endforeach;
+       /* foreach ($commodity_array as $data) :
         $temp_array = array_merge($temp_array, array($data["cal_month"] => $data['total']));
         endforeach;
         foreach ($months as $key => $data) :
         $val = (array_key_exists($data, $temp_array)) ? (int)$temp_array[$data] : (int)0;
         $series_data = array_merge($series_data, array($val));
         array_push($series_data_, array($data,$val));
-        endforeach;
-                		
+        endforeach;*/
+           //var_dump ($category_data);var_dump ($series_data);exit;    		
         $data['graph_type'] = 'spline';
         $data['graph_title'] = "Stock Expired in $title $year";
         $data['graph_yaxis_title'] = "Stock Expired in KSH";
         $data['graph_id'] = "actual_ex";
         $data['legend'] = "Packs";
+        $data['colors'] = "['#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']";
         $data['category_data'] = json_encode($category_data);
-        $data['series_data'] =  json_encode($series_data);
-				
-		$this -> load -> view("national/ajax/bar_template",$data);			
+        $data['series_data'] =  json_encode($arrayseries);
+		
+		return $this -> load -> view("national/ajax/bar_template",$data);			
 				
        
         else:
@@ -796,6 +807,7 @@ group by month(o.`order_date`)
         $data['graph_yaxis_title'] = "Cost in Ksh";
         $data['graph_id'] = "orders";
         $data['legend'] = "Ksh";
+		$data['colors'] = "['#4b0082', '#DDDF00', '#FFF263', '#6AF9C4']";
         $data['category_data'] = json_encode($category_data);
         $data['series_data'] =  json_encode($arrayseries);
 				

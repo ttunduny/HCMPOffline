@@ -205,7 +205,7 @@ h4{
 			<div class="col-md-6" style="border: 0px solid #036;">
 				
 				<div class="tile" id="" style="height: 50px;border: 0px solid #036;">
-					<h4>M</h4>
+					<h4>Facilities In Numbers</h4>
 				</div>
 				
 				<div class="tile" id="facility_breakdown" style="height: 370px;border: 0px solid #036;">
@@ -216,7 +216,7 @@ h4{
 			
 			<div class="col-md-6" style="border: 0px solid #036;">
 				<div class="tile" id="filter" style="height: 100px">
-					<h4>M</h4>
+					<h4>Stock Levels (M.O.S)</h4>
 				</div>
 				<div class="tile" id="mos" style="height: 420px">
 					
@@ -235,7 +235,7 @@ h4{
 		
 		<div class="col-md-6" style="border: 0px solid #036;">
 			<div class="tile" id="" style="height: 100px;border: 0px solid #036;">
-				<h4>M</h4>	
+				<h4>Consumption</h4>	
 				</div>
 			<div class="tile" id="consumption" style="height: 450px">
 				
@@ -244,7 +244,7 @@ h4{
 		</div>
 		<div class="col-md-6" style="border: 0px solid #036;">
 			<div class="tile" id="" style="height: 100px;border: 0px solid #036;">
-					<h4>M</h4>
+					<h4>Actual Expities</h4>
 				</div>
 			<div class="tile" id="actual_ex" style="height: 450px">
 				
@@ -259,7 +259,7 @@ h4{
 		
 		<div class="col-md-6" style="border: 0px solid #036;">
 			<div class="tile" id="" style="height: 100px;border: 0px solid #036;">
-				<h4>M</h4>	
+				<h4>Potential Expiries</h4>	
 				</div>
 			<div class="tile" id="potential_ex" style="height: 450px">
 				
@@ -268,7 +268,7 @@ h4{
 		</div>
 		<div class="col-md-6" style="border: 0px solid #036;">
 			<div class="tile" id="" style="height: 100px;border: 0px solid #036;">
-				<h4>M</h4>	
+				<h4>Cost Of Orders</h4>	
 				</div>
 			<div class="tile" id="orders" style="height: 450px">
 				
@@ -304,7 +304,54 @@ h4{
         $(div).html(msg);
         }
         });
-        }   
+        }  
+        
+        function run(data){
+        var county_data=data.split('^');
+        $('.county-name').html(county_data[1]+"&nbsp;County &nbsp;");
+        ajax_fill_data('national/facility_over_view/'+county_data[0],"#facilities_rolled_out");
+        ajax_fill_data('national/hcw/'+county_data[0],"#hcw_trained");
+        $('.county').val(county_data[0]);
+        $('#county_id').val(county_data[0]);
+        json_obj={"url":"<?php echo site_url("orders/getDistrict");?>",}
+        var baseUrl=json_obj.url;
+        dropdown(baseUrl,"county="+county_data[0],".subcounty");
+        ajax_fill_data('Kenya/actual_expiries/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#actual_ex");
+        ajax_fill_data('Kenya/potential_expiries/'+county_data[0]+'/NULL/NULL/NULL/NULL',"#potential_ex"); 
+        ajax_fill_data('Kenya/mos_graph/'+county_data[0]+'/NULL/NULL/NULL/ALL',"#mos");
+        ajax_fill_data('Kenya/consumption/'+county_data[0]+'/NULL/NULL/NULL',"#consumption");
+       // ajax_request_replace_div_content('national/get_facility_infor/'+county_data[0]+'/NULL/NULL/NULL',"#facilities");
+        ajax_fill_data('Kenya/orders/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#orders");
+       // ajax_request_replace_div_content('national/get_lead_infor/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#lead_infor");
+    } 
+    
+        function dropdown(baseUrl,post,identifier){
+            /*
+             * ajax is used here to retrieve values from the server side and set them in dropdown list.
+             * the 'baseUrl' is the target ajax url, 'post' contains the a POST varible with data and
+             * 'identifier' is the id of the dropdown list to be populated by values from the server side
+             */
+            $.ajax({
+              type: "POST",
+              url: baseUrl,
+              data: post,
+              success: function(msg){
+                    var values=msg.split("_")
+                    var dropdown="<option value='NULL'>All</option>";
+                    for (var i=0; i < values.length-1; i++) {
+                        var id_value=values[i].split("*")
+                        dropdown+="<option value="+id_value[0]+">";
+                        dropdown+=id_value[1];
+                        dropdown+="</option>";
+                    };
+                    $(identifier).html(dropdown);
+              },
+              error: function(XMLHttpRequest, textStatus, errorThrown) {
+                   if(textStatus == 'timeout') {}
+               }
+            }).done(function( msg ) {
+            });
+        }
          
 </script>
     <!-- Bootstrap core JavaScript
