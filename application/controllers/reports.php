@@ -3091,6 +3091,43 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		
 	}
         public function consumption_data_dashboard() {
+        $from= strtotime(date('d-m-y'));	
+		$to= strtotime(date('d-m-y'));
+		// $category_id=($category_id=="NULL") ? null :$category_id;		
+		$county_id = $this -> session -> userdata('county_id');
+		$district_id = $this -> session -> userdata('district_id');
+		$facility_code = $this -> session -> userdata('facility_id');
+		
+		$county_name = counties::get_county_name($county_id);
+		
+		$category_data = $series_data = $graph_data= $series_data_=array();
+		//check if the district is set
+		$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
+		$district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " subcounty" : null;
+		$option_new = isset($option) ? $option : "ksh";
+		// $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
+		// $facility_name=$facility_code_[0]['facility_name'];
+		$commodity_name=(isset($commodity_id))? Commodities::get_details($commodity_id)->toArray() : null;
+		$category_name_=@$commodity_name[0]['commodity_name'];
+		$commodity_name=isset($category_name_)? " for ".$category_name_ : null;
+		$title=isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
+	    $district_id>0 && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
+		$time= "between ".date('j M y', $from)." and ".date('j M y', $to);
+		
+		$consumption_data = Facility_stocks::get_county_consumption_level_new($facility_code,$district_id, $county_id,$category_id, $commodity_id, $option,$from, $to,$report_type);
+
+		$default_consumption_graph_ = array();
+		$graph_type='column';			
+        $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_id"=>'graph_content_'));
+	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_title"=>"Consumption level $commodity_name $title $time"));
+	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_type"=>$graph_type));
+	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_yaxis_title"=>"Commodity Consumption level in $option_new"));
+	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_categories"=>$category_data ));
+	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("series_data"=>array('total'=>$series_data)));
+		$data = array();
+
+		$def_cons=$this->hcmp_functions->create_high_chart_graph($default_consumption_graph_);
+		$data['default_consumption_graph'] = $def_cons;
 
 		 $county_id = $this -> session -> userdata('county_id');
 	     $data['district_data'] = districts::getDistrict($county_id);
@@ -3099,8 +3136,9 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		 $data['categories']=commodity_sub_category::get_all_pharm();
 		return $this -> load -> view("subcounty/ajax/county_consumption_data_filter_v", $data);
 	}
+
+
 	    public function consumption_stats_graph($commodity_id = null,$category_id = null, $district_id = null, $facility_code=null, $option = null,$from=null,$to=null,$report_type=null) {
-	    	
 	    //reset the values here
      	$commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
 	 	$district_id=($district_id=="NULL") ? null :$district_id;
@@ -3249,7 +3287,11 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 	 |--------------------------------------------------------------------------
 	 */
 		public function county_expiries() {
+		$county_id=$this -> session -> userdata('county_id');
+		$year = date('Y');
+
         $county_id=$this -> session -> userdata('county_id');
+        $data['year'] = $year;
 		$data['title'] = "Expired Products";
 		$data['banner_text'] = "Expired Products";
 		$data['content_view'] = "facility/facility_reports/reports_v";
@@ -3272,6 +3314,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 		public function county_donation() {
+			$data['year'] = date('Y');
 		$county_id=$this -> session -> userdata('county_id');
 	    $data['district_data'] = districts::getDistrict($county_id);
 		$data['title'] = $data['banner_text']="Donations";

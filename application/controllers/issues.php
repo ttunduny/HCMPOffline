@@ -375,6 +375,7 @@ redirect();
 		{
 			//security check
 			if($this->input->post('mfl')):
+			$district_id = $this -> session -> userdata('district_id');
 			$facility_code=$this -> session -> userdata('facility_id');
 			$service_point=array_values($this->input->post('mfl'));
 			$commodity_id=array_values($this->input->post('desc'));

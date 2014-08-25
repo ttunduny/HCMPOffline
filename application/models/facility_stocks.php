@@ -218,8 +218,8 @@ ds.status
 
 from drug_store_issues ds,commodities c
 
-where ds.expiry_date  <= NOW() AND district_id = '$district_id' 
-        and qty_issued>0 and c.id = ds.commodity_id
+where ds.expiry_date  <= NOW() AND ds.district_id = '$district_id' 
+        and ds.qty_issued>0 and c.id = ds.commodity_id
 ");
 return $stocks ;		
 	}
@@ -236,7 +236,7 @@ ds.status
 from drug_store_issues ds,commodities c
 
 where ds.expiry_date 
-		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND district_id = '$district_id' 
+		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND ds.district_id = '$district_id' 
         and qty_issued>0 and c.id = ds.commodity_id
 ");
 return $stocks ;		
@@ -369,7 +369,7 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 		return $stocks;
 	}	
 		public static function potential_expiries_email($district_id=null,$facility_code=null){
-		$and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
+		$and_data =($district_id>0) ?" AND d.id = '$district_id'" : null;
 	 	$and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		select  c.county, d1.district as subcounty ,temp.commodity_name,
