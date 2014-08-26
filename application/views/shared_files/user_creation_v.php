@@ -343,7 +343,7 @@
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
-		<div class="modal-content">
+		<div class="modal-content editable">
 			<div class="modal-header" style="padding-bottom:2px;background: #27ae60;color: white">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 					&times;
@@ -551,6 +551,12 @@
 </div><!-- end Modal edit user -->
 <script>
       $(document).ready(function () {
+      	
+      	$(".editable").on('click',function() {
+		
+  				$("#edit_user").attr("disabled", false);
+		});
+		
       	$(".edit_user,#create_new").attr("disabled", "disabled");
       	$('#myModal').on('hidden.bs.modal', function () {
       		alert('jack');
