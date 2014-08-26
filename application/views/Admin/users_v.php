@@ -393,11 +393,11 @@ $("#test").on('click','.edit',function() {
 	if(chck_fac_l === 0 && chck_dis_l===0 ){
 		
 	$( "#edit_district" ).prop( "disabled", true );
-	$( "#edit_facility" ).prop( "disabled", true );
+	//$( "#edit_facility" ).prop( "disabled", true );
 	
 }else if(chck_dis_l != 0 && chck_fac_l === 0 ){
 	
-	$( "#edit_facility" ).prop( "disabled", true );
+	//$( "#edit_facility" ).prop( "disabled", true );
 }
 
 	
