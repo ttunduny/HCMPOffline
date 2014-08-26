@@ -48,8 +48,8 @@ if (isset($donate_destination)&&($donate_destination == 'district')) {
 					</thead>
 					<tbody>
 						<tr row_id='0'>
-<<<<<<< HEAD
-							<td>
+
+							<!--<td>
 								<select name="district[0]" class="form-control input-small district" style="width:110px !important;">
 								<option value="0">Select Sub-county</option>
 								<?php 
@@ -62,8 +62,8 @@ if (isset($donate_destination)&&($donate_destination == 'district')) {
 							</td>
 							<td>
 						<select name="mfl[0]" class="form-control input-small facility" style="width:110px !important;">
-                       <option value="0">Select Facility</option>
-=======
+                       <option value="0">Select Facility</option>-->
+
 						<td>
 								<select name="district[0]" class="form-control input-small district">
 						<?php 
@@ -96,7 +96,6 @@ if (isset($donate_destination)&&($donate_destination == 'district')) {
 						<select  name="mfl[0]" class="form-control input-small facility">
 						<!-- donate_destination -->
                        <option value="0">--select facility---</option>
->>>>>>> 71f6b73604172b8170a8ed178c9286775e75c12c
 					   </select>
 						</td>'
 						;
