@@ -297,7 +297,9 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
  }
  else
 {
-echo $this->email->print_debugger(); exit;
+//echo $this->email->print_debugger(); 
+$this -> load -> view('shared_files/404');
+exit;
 
  
 }
