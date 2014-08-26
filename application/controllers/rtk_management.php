@@ -872,6 +872,19 @@ class Rtk_Management extends Home_controller {
         echo "Sub-County Added Successfully";
         //redirect('rtk_management/county_admin/users');
     }
+    public function dmlt_district_action1() {
+        $action = $_POST['action'];
+        $dmlt = $_POST['dmlt_id'];
+        $district = $_POST['dmlt_district'];
+
+        if ($action == 'add') {
+            $this->_add_dmlt_to_district($dmlt, $district);
+        } elseif ($action == 'remove') {
+            $this->_remove_dmlt_from_district($dmlt, $district);
+        }
+        //echo "Sub-County Added Successfully";
+       redirect('rtk_management/rtk_manager_admin');
+    }
 
     function _get_rca_counties($rca) {
         $sql = 'SELECT rca_county.rca AS user_id, counties.county, counties.id AS county_id
@@ -898,7 +911,8 @@ class Rtk_Management extends Home_controller {
     public function add_rca_to_county() {
 
         $rca = $_POST['rca_id'];
-        $county = $_POST['county'];
+
+        $county = $_POST['county'];       
         $this->_add_rca_to_county($rca, $county);
         redirect('rtk_management/rtk_manager_admin');
     }
@@ -5913,8 +5927,10 @@ WHERE
 //        echo "<pre>";print_r($user_details);die;
         $full_name = $arr[0]['fname'].' '.$user_details[0]['lname'];
         $data['all_counties'] = $this->all_counties();
+        $data['all_subcounties'] = $this->all_districts();
 
         $data['user_logs'] = $this->rtk_logs($user_id);
+        $data['user_id'] = $user_id;
         $data['full_name'] = $full_name;
         $data['user_details'] = $user_details;
         $data['title'] = 'User Profile : '.$full_name;
@@ -5927,6 +5943,10 @@ WHERE
     function all_counties(){
         $counties = $this->db ->query("select * from counties");
         return ($counties->result_array());
+    }
+    function all_districts(){
+        $districts = $this->db ->query("select * from districts");
+        return ($districts->result_array());
     }
 
 public function allstats(){
@@ -5944,7 +5964,7 @@ public function allstats(){
                 AND '$last_date'
                 GROUP BY lab_commodity_orders.facility_code having total>1
                 ORDER BY COUNT( lab_commodity_orders.facility_code ) DESC";
-        //echo "$sql";die();
+        echo "$sql";die();
         $result = $this->db->query($sql)->result_array();
         $facils = array();
         foreach ($result as $key => $value) {
