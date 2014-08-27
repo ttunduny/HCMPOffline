@@ -29,25 +29,25 @@ if (!defined('BASEPATH'))
 					$data['title'] = "Issues to service points";
 					$data['banner_text'] = "Issues to service points";			
 					break;
-					case 'external':		
-						$data['donate_destination'] = "facility";				
-						$data['content_view'] = "facility/facility_issues/facility_redistribute_items_v";						
-						$data['subcounties']=districts::getAll();
-						$data['banner_text'] = "Redistribute Commodities";
-						$data['title'] ="Redistribute Commodities";						
-					break;	
-					case 'district_store':	
-						$district_id = $this -> session -> userdata('district_id');	
-						$dist = districts::get_district_name_($district_id);	
-						$data['district_id'] = $this -> session -> userdata('district_id');
-						$data['district_data'] = districts::get_district_name_($district_id);
-						$data['content_view'] = "facility/facility_issues/facility_redistribute_items_v";
-						$data['donate_destination'] = "district";
-						$data['subcounties']=districts::getAll();
-						$data['banner_text'] = "Redistribute Commodities";
-						$data['title'] ="Redistribute Commodities";						
-					break;						
-					default;								
+				case 'external':		
+					$data['donate_destination'] = "facility";				
+					$data['content_view'] = "facility/facility_issues/facility_redistribute_items_v";						
+					$data['subcounties']=districts::getAll();
+					$data['banner_text'] = "Redistribute Commodities";
+					$data['title'] ="Redistribute Commodities";						
+				break;	
+				case 'district_store':	
+					$district_id = $this -> session -> userdata('district_id');	
+					$dist = districts::get_district_name_($district_id);	
+					$data['district_id'] = $this -> session -> userdata('district_id');
+					$data['district_data'] = districts::get_district_name_($district_id);
+					$data['content_view'] = "facility/facility_issues/facility_redistribute_items_v";
+					$data['donate_destination'] = "district";
+					$data['subcounties']=districts::getAll();
+					$data['banner_text'] = "Redistribute Commodities";
+					$data['title'] ="Redistribute Commodities";						
+				break;						
+				default;								
 			endswitch;			
 		$data['service_point']=service_points::get_all_active($facility_code);		
 		$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_facility($facility_code,1);

@@ -71,7 +71,7 @@
                         </h4>
                     </div>
                 </div>
-                      <div class="panel panel-default <?php echo $active_panel=='divisional'? 'active-panel': null; ?>">
+              <div class="panel panel-default <?php echo $active_panel=='divisional'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-parent="#accordion" href="<?php echo base_url("divisional_reports/program_reports"); ?>" id="program_reports"><span class="glyphicon glyphicon-folder-open">
