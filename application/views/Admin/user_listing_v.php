@@ -382,30 +382,46 @@
 								<div class=" col-md-6">
 									<label> Enable Email Recieval </label>
 									<div class="form-group">
-									<input type="hidden" name="email_recieve_edit" value="0">
-									<input type="checkbox" value= "1" name="email_recieve_edit" class="email_recieve_edit" id="email_recieve_edit" required="required" readonly>
 									<?php 
-									if ($_POST['email_recieve_edit'] == '1'):
-									echo '<input type="hidden" value = "1" name="email_recieve_selection" id="email_recieve_selection" class="email_recieve_selection">
-									';elseif(!isset($_POST['email_recieve_edit'])):
-									echo '<input type="hidden" value = "0" name="email_recieve_selection" id="email_recieve_selection" class="email_recieve_selection">
-									';
-									endif;
+									echo $list['email_recieve'];
+									switch ($list['email_recieve']) {
+										case 0:
+											echo '
+												<input type="checkbox" value= "'.$list['email_recieve'].'" name="email_recieve_edit" class="email_recieve_edit" id="email_recieve_edit" required="required">
+											';
+											break;
+										case 1:
+											echo '
+												<input type="checkbox" value= "'.$list['email_recieve'].'" checked ="checked" name="email_recieve_edit" class="email_recieve_edit" id="email_recieve_edit" required="required">
+											';
+											break;
+										default:
+											# code...
+											break;
+									}
 									 ?>
 									</div>
 								</div>
 								<div class=" col-md-6">
 									<label> Enable Text Recieval </label>
 									<div class="form-group">
-									<input type="hidden" name="sms_recieve_edit" value="0">
-									<input type="checkbox" value="1" name="sms_recieve_edit" class="email_recieve_edit" id="sms_recieve_edit" required="required" readonly>
 									<?php 
-									/*if ($_POST['sms_recieve_edit'] == '1'):
-									echo '<input type="hidden" value = "1" name="sms_recieve_selection" id="sms_recieve_selection" class="sms_recieve_selection">
-									';elseif(!isset($_POST['sms_recieve_edit'])):
-									echo '<input type="hidden" value = "0" name="sms_recieve_selection" id="sms_recieve_selection" class="sms_recieve_selection">
-									';
-									endif;*/
+									echo $list['sms_recieve'];
+									switch ($list['sms_recieve']) {
+										case 0:
+											echo '
+												<input type="checkbox" value= "'.$list['sms_recieve'].'" name="email_recieve_edit" class="email_recieve_edit" id="email_recieve_edit" required="required" readonly>
+											';
+											break;
+										case 1:
+											echo '
+												<input type="checkbox" value= "'.$list['sms_recieve'].'" checked ="checked" name="email_recieve_edit" class="email_recieve_edit" id="email_recieve_edit" required="required" readonly>
+											';
+											break;
+										default:
+											# code...
+											break;
+									}
 									 ?>
 									</div>
 								</div>
