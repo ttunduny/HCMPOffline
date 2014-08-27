@@ -52,7 +52,7 @@ class facility_stocks_temp extends Doctrine_Record {
 		return $query_1;
 	}
 
-	public static function get_months_of_stock($district_id = NULL, $county_id = NULL, $facility_code = NULL,$commodity_id=null, $option = null) 
+	public static function get_months_of_stock($district_id = NULL, $county_id = NULL, $facility_code = NULL,$commodity_id=null, $option = null,$tracer = null) 
 	{ 
 		$month = date('F Y');
 		$district_id=($district_id=="NULL") ? null :$district_id;
@@ -60,18 +60,20 @@ class facility_stocks_temp extends Doctrine_Record {
     	$facility_code=($facility_code=="NULL") ? null :$facility_code;
     	$county_id=($county_id=="NULL") ? null :$county_id;
     	$commodity_id=($commodity_id=="ALL" || $commodity_id=="NULL") ? null :$commodity_id;
-
-   		//$and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
+		$option=($option=="NULL") ? null :$option;
+		$tracer=($tracer=="NULL") ? null :$tracer;
+   		$and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
     	$and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
-   		$and_data .=($county_id>0) ?" AND c.id='$county_id'" : null;
+   		$and_data .=(isset($county_id)&& $county_id>0) ?" AND c.id=$county_id" : null;
 		$and_data .=($commodity_id>0) ?" AND cm.id =$commodity_id " : null;
 		$new=str_replace(" AND", ",", $and_data);
 		$and_data .=($division_id>0) ? " AND cm.commodity_division =$division_id " :null;
+		$and_data .=(isset($tracer)&&$tracer>0)? " AND cm.tracer_item =1" : null;
+		
     	$and_data =isset( $and_data) ?  $and_data:null;
-        	
-    	$and_data .=(isset($option) && ($option>0))? " AND cm.tracer_item =1" : null;
-		$group_by=(isset($option) && ($option>0))? " group by cm.id $new" : " group by cm.id ";
- 
+    	$group_by=(isset($option))? " group by cm.id $new" : " group by cm.id ";
+		
+
     $query_1 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
 		 select 
     cm.commodity_name,
@@ -95,6 +97,7 @@ class facility_stocks_temp extends Doctrine_Record {
 				$group_by
 
 		 ");
+		 // echo $query_1;exit;
 
 		return $query_1;
 	}

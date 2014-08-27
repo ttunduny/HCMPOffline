@@ -50,9 +50,14 @@ endforeach;
 </div>
 </div>
 <div class="graph_content">	
+<div class="graph_content" id="dem_graph_1"  ></div>
 </div>
 <script>
+<<<<<<< HEAD
+	$(window).load(function(){
+=======
 $(window).load(function(){
+>>>>>>> c453e95bc142cf4a11c7b066a8f318127ac7cdaa
 		var year  = '<?php echo $year; ?>';
         var url_ = "reports/donation_reports/"+
         year+
@@ -60,7 +65,12 @@ $(window).load(function(){
         "/NULL";	
 		ajax_request_replace_div_content(url_,'.graph_content');	
 	
+<<<<<<< HEAD
+});
+
+=======
 });	
+>>>>>>> c453e95bc142cf4a11c7b066a8f318127ac7cdaa
 	$(document).ready(function() {
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           $('.graph_content').html('');
