@@ -989,7 +989,7 @@ class Reports extends MY_Controller
 		$data['report_view']="facility/facility_reports/ajax/facility_orders_filter_v";
 		$data['content_view']="facility/facility_reports/reports_v";
 		$view = 'shared_files/template/template';
-		$data['active_panel']='statistics';
+		$data['active_panel']='orders';
 		$this -> load -> view($view, $data);
 		
 	}

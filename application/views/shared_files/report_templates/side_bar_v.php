@@ -39,18 +39,18 @@
         </div>
      
     </div>
-    <div class="panel panel-default <?php echo $active_panel=='orders'? 'active-panel': null; ?>">
+    <!--<div class="panel panel-default <?php echo $active_panel=='orders'? 'active-panel': null; ?>">
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a  data-parent="#accordion" id="orders" href="<?php echo base_url("reports/order_report"); ?>"><span class="glyphicon glyphicon-list-alt">
                 </span>Orders</a>
             </h4>
         </div>
-    </div>
+    </div>-->
     <div class="panel panel-default <?php echo $active_panel=='consumption'? 'active-panel': null; ?>">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a  data-parent="#accordion" id="consumption" href="<?php echo base_url("reports/consumption"); ?>"><span class="glyphicon glyphicon-file">
+                <a  data-parent="#accordion" id="consumption" href="<?php echo base_url("reports/consumption"); ?>"><span class="glyphicon glyphicon-bookmark">
                 </span>Consumption</a>
             </h4>
         </div>
@@ -82,14 +82,14 @@
             </div>
         </div>
     </div>-->
-    <div class="panel panel-default <?php echo $active_panel=='other'? 'active-panel': null; ?>">
+    <!--<div class="panel panel-default <?php echo $active_panel=='other'? 'active-panel': null; ?>">
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" id="other_reports"><span class="glyphicon glyphicon-file">
                 </span>Other Reports</a>
             </h4>
         </div>
-        <!--<div id="collapseFive" class="panel-collapse collapse <?php echo $active_panel=='other'? 'in': null; ?>">
+        <div id="collapseFive" class="panel-collapse collapse <?php echo $active_panel=='other'? 'in': null; ?>">
             <div class="panel-body">
                 <table class="table">
                   	 <tr>
@@ -112,13 +112,13 @@
                     
                 </table>
             </div>
-        </div>-->
+        </div>
         
-    </div>
+    </div>-->
     <div class="panel panel-default <?php echo $active_panel=='stock_control_card'? 'active-panel': null; ?>">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a  data-parent="#accordion" id="stock_control_card" href="<?php echo base_url("reports/stock_control"); ?>"><span class="glyphicon glyphicon-sort">
+                <a  data-parent="#accordion" id="stock_control_card" href="<?php echo base_url("reports/stock_control"); ?>"><span class="glyphicon glyphicon-calendar">
                 </span>Stock Control Card</a>
             </h4>
         </div>
