@@ -29,12 +29,15 @@ class Stock extends MY_Controller {
 */	
 	public function import($facility_code=null){
 		
-		redirect("stock/facility_stock_first_run/first_run");
+		//redirect("stock/facility_stock_first_run/first_run");
 		
 		$facility_code=isset($facility_code)? $facility_code : $this -> session -> userdata('facility_id'); 
-		$reset_facility_update_stock_first_temp = Doctrine_Manager::getInstance()->getCurrentConnection();
-	    $reset_facility_update_stock_first_temp->execute("DELETE FROM `facility_stocks_temp` WHERE  facility_code=$facility_code; ");
-		
+
+		$reset_facility_historical_stock_table = Doctrine_Manager::getInstance()->getCurrentConnection();
+	    $reset_facility_historical_stock_table->execute("DELETE FROM `facility_monthly_stock` WHERE  facility_code=$facility_code; ");
+		$reset_facility_issues_table = Doctrine_Manager::getInstance()->getCurrentConnection();
+	    $reset_facility_issues_table->execute("DELETE FROM `facility_issues` WHERE  facility_code=$facility_code;");
+
 		$old_facility_stock=facility_stocks::import_stock_from_v1($facility_code);
 		$old_facility_issues=facility_stocks::import_issues_from_v1($facility_code);
         $old_facility_orders=Doctrine_Manager::getInstance()->getCurrentConnection()
@@ -44,6 +47,7 @@ class Stock extends MY_Controller {
         kemsa2.ordertbl
         where ordertbl.facilityCode = $facility_code");;
 		$in_to_stock=$in_to_amc=$in_to_issues=$amc_ids=$in_to_orders=array();
+
 		if(count($old_facility_stock)>0){
 			foreach($old_facility_stock as $old_facility_stock){
 			if(isset($old_facility_stock['new_id'])):
@@ -77,6 +81,7 @@ class Stock extends MY_Controller {
 			}
 			endif;
 			}
+
        $this -> db -> insert_batch('facility_monthly_stock', $in_to_amc);
        $this -> db -> insert_batch('facility_stocks_temp', $in_to_stock);  
 		}
@@ -105,11 +110,11 @@ class Stock extends MY_Controller {
              $order_status=$old_facility_orders["orderStatus"];
              $name=$old_facility_orders["reciever_name"];
              $new_order_id=Doctrine_Manager::getInstance()->getCurrentConnection()
-        ->fetchAll("select 
+        ->fetchAll('select 
         *
         from
         hcmp_rtk.facility_order_status
-        where facility_order_status.status_desc like '%$order_status%'");
+        where facility_order_status.status_desc like "%'.$order_status.'%"');
          $new_name_id=Doctrine_Manager::getInstance()->getCurrentConnection()
         ->fetchAll('select 
         *
@@ -577,6 +582,94 @@ endfor;
 		  redirect('reports/facility_stock_data');			  
 endif;	
 }
+
+public function add_more_stock_level_store_external(){
+    //seth
+        if($this->input->post('facility_stock_id')):
+        $district_id = $this -> session -> userdata('district_id');
+         $commodity_id=array_values($this->input->post('commodity_id'));
+         $expiry_date=array_values($this->input->post('clone_datepicker'));
+         $batch_no=array_values($this->input->post('commodity_batch_no'));
+         $manu=array_values($this->input->post('commodity_manufacture'));
+         $total_unit_count=array_values($this->input->post('actual_quantity'));              
+         $service_point=array_values($this->input->post('service_point'));
+         $source_of_item=array_values($this->input->post('source_of_item'));
+         $count=count($commodity_id);
+         $date_of_entry=date('y-m-d H:i:s');
+         //collect n set the data in the array
+        for($i=0;$i<$count;$i++):
+
+           if($total_unit_count[$i]>0)://check if the balance is more than 0 ie they recieved something
+           if($this -> session -> userdata('user_indicator')=='district'):  
+           //check if the user is district if so the facility which was given the item is not using HCMP        
+           else:                   
+            $mydata=array('facility_code'=>$facility_code,
+            'commodity_id'=>$commodity_id[$i],
+            'batch_no'=>$batch_no[$i],
+            'manufacture'=>$manu[$i],
+            'expiry_date'=> date('y-m-d', strtotime(str_replace(",", " ",$expiry_date[$i]))),
+            'initial_quantity'=>$total_unit_count[$i],
+            'current_balance'=>$total_unit_count[$i],
+            'source_of_commodity'=>$source_of_item[$i],
+            'date_added'=>$date_of_entry );
+             //get the closing stock of the given item           
+            $district_stock=drug_store_issues::get_store_commodity_total($district_id,$commodity_id[$i]);
+            //update the facility stock table
+            drug_store_issues::update_drug_store_issues_table($mydata);
+            // save this infor in the issues table
+            
+            $total_unit_count_=$total_unit_count[$i]*-1;
+            $mydata=array('facility_code'=>$facility_code,
+            'district_id'=>$district_id,
+            's11_No' => '(+ve Adj) Stock Addition',
+            'commodity_id'=>$commodity_id[$i],
+            'batch_no'=>$batch_no[$i],
+            'expiry_date'=> date('y-m-d', strtotime(str_replace(",", " ",$expiry_date[$i]))),
+            'balance_as_of'=>$district_stock['commodity_balance'],
+            'date_issued' => date('y-m-d'),
+            'issued_to'=>"inter-facility donation: ".$facility_name,
+            'qty_issued' => $total_unit_count_,
+            'issued_by' =>$this -> session -> userdata('user_id') ); //$this -> session -> userdata('identity')
+             // update the issues table 
+            drug_store_issues::update_drug_store_issues_table($mydata);           
+             //check    
+            $facility_has_commodity=facility_transaction_table::get_if_commodity_is_in_table($facility_code,$commodity_id[$i]);
+                    
+          if($facility_has_commodity>0): //update the opening balance for the transaction table 
+            $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
+            $inserttransaction->execute("UPDATE `facility_transaction_table` SET `opening_balance` =`opening_balance`+$total_unit_count[$i]
+                                          WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code=$facility_code");                                                         
+else:       //get the data to send to the facility_transaction_table
+            $mydata2=array('facility_code'=>$facility_code,
+            'commodity_id'=>$commodity_id[$i],
+            'opening_balance'=>$total_unit_count[$i],
+            'total_issues'=>0,
+            'total_receipts'=>0,
+            'adjustmentpve'=>0,
+            'adjustmentnve'=>0,
+            'date_added'=>$date_of_entry,
+            'closing_stock'=>$total_unit_count[$i],
+            'status'=>1);   //send the data to the facility_transaction_table       
+            facility_transaction_table::update_facility_table($mydata2);            
+endif;      
+
+    //update the redistribution data
+    $myobj = Doctrine::getTable('redistribution_data')->find($facility_stock_id[$i]);
+    $myobj->quantity_received=$total_unit_count[$i];
+    $myobj->receiver_id=$this -> session -> userdata('user_id');
+    $myobj->date_received=date('y-m-d');
+    $myobj->status=1;
+    $myobj->save();
+    endif;  
+    endif;                      
+endfor;      
+          //set the notifications
+          //$this->hcmp_functions->send_stock_update_sms();
+          $this->session->set_flashdata('system_success_message', "Stock Levels Have Been Updated");
+          redirect('issues/store_home');            
+endif;  
+}//district store
+
  /*
 |--------------------------------------------------------------------------
 | End of ADDING MORE FACILITY STOCK Inter-facility donation
@@ -928,8 +1021,8 @@ endif;
 redirect();
 }
 public function amc(){
-	$this->session->set_flashdata('system_success_message', "AMC Details Have Been Saved");
-	redirect('home');
+    $this->session->set_flashdata('system_success_message', "AMC Details Have Been Saved");
+    redirect('home');
 }
 public function fix(){
    // get the facility_codes 

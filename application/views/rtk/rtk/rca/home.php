@@ -114,7 +114,7 @@ foreach ($res->result_array() as $key => $value) {
             });
         </script>
 <?php if (($this->session->userdata('switched_from') == 'rtk_manager')) { ?>
-            <div id="fixed-topbar" style="position: fixed; top: 104px;background: #708BA5; width: 100%;padding: 7px 1px 0px 13px;border-bottom: 1px solid #ccc;border-bottom: 1px solid #ccc;border-radius: 4px 0px 0px 4px;">
+            <div id="fixed-topbar" style="position: fixed; top: 70px;background: #708BA5; width: 100%;padding: 7px 1px 0px 13px;border-bottom: 1px solid #ccc;border-bottom: 1px solid #ccc;border-radius: 4px 0px 0px 4px;">
                 <span class="lead" style="color: #ccc;">Switch back to RTK Manager</span>
                 &nbsp;
                 &nbsp;

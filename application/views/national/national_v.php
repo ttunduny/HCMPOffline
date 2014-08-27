@@ -138,7 +138,7 @@ border-color: #e7e7e7;
             <li class="active"><a href="<?php echo base_url().'national';?>">Home</a></li>
             <li class=""><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>
             <li class=""><a href="<?php echo base_url().'national/search';?>">Search</a></li>
-            <li class=""><a href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-user"></span>Log in</a></li>
+            <li class="" style="background: #144d6e; color: white;"><a style="background: #144d6e; color: white;" href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-user"></span>Log in</a></li>
             
                     
           </ul>
@@ -224,7 +224,7 @@ echo $maps; ?>
        <h4 class="panel-title">Actual Expiries </h4>
        </div>
         <div class="panel-body" style="margin-left: 2px">
-      <ul class='nav nav-tabs' id="actual_">
+      <ul class='nav nav-tabs' id="">
       <li class="active"><a href="#acounty" data-toggle="tab">County View</a></li>
       <li class=""><a href="#asubcounty" data-toggle="tab">Sub County View</a></li>
        </ul>

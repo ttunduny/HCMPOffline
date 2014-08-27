@@ -99,10 +99,16 @@ endforeach;
 </div>
 </div>
 <div class="graph_content">	
+
 </div>
 <script>
-	
+
 	$(document).ready(function() {
+		    window.onload = function(){
+    var url_ = 'reports/get_county_cost_of_expiries_new/NULL/NULL/NULL/NULL/NULL';  
+		ajax_request_replace_div_content(url_,'.graph_content');	
+  }
+		// reports/get_county_cost_of_expiries_new/NULL/NULL/NULL/NULL/NULL
         //setting up the report
 		$("#facility_filter").hide();
 		$("#district_filter").change(function() {
@@ -135,7 +141,7 @@ endforeach;
         $(".county-download").on('click',function(e) {
 		e.preventDefault();			  
         var url_ = 'reports/get_county_cost_of_expiries_new/'+
-        $("#county_year_filter").val()+"/"+$("#county_month_filter").val()+ "/NULL"+"/"+$("#county_plot_value_filter").val()+"/csv_data";	
+        $("#county_year_filter").val()+"/"+$("#county_month_filter").val()+ "/NULL"+"/"+$("#county_plot_value_filter").val()+"/NULL"+"/csv_data";	
 		 window.open(url+url_ ,'_blank');
          });	
          
@@ -149,7 +155,7 @@ endforeach;
          $(".subcounty-download").on('click',function(e) {
 		e.preventDefault();	
         var url_ = 'reports/get_county_cost_of_expiries_new/'+
-        $("#year_filter").val()+"/"+$("#month_filter").val()+ "/"+$("#district_filter").val()+"/"+$("#plot_value_filter").val()+"/csv_data";	 
+        $("#year_filter").val()+"/"+$("#month_filter").val()+ "/"+$("#district_filter").val()+"/"+$("#plot_value_filter").val()+"/"+$("#facility_filter").val()+"/csv_data";	 
 		 window.open(url+url_ ,'_blank');		
           }); 
 

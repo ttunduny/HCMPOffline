@@ -1,4 +1,4 @@
-<h1 class="page-header" style="margin: 0;font-size: 1.6em;">Donations/ Redistribution</h1>
+<!--<h1 class="page-header" style="margin: 0;font-size: 1.6em;">Commodity Redistribution</h1>-->
 <div class="alert alert-info">
   <b>Below are the Donations Redistribution trends in the County</b>:Select filter Options
 </div>
@@ -51,7 +51,16 @@ endforeach;
 </div>
 <div class="graph_content">	
 </div>
-<script>	
+<script>
+$(window).load(function(){
+		var year  = '<?php echo $year; ?>';
+        var url_ = "reports/donation_reports/"+
+        year+
+        "/NULL"+
+        "/NULL";	
+		ajax_request_replace_div_content(url_,'.graph_content');	
+	
+});	
 	$(document).ready(function() {
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           $('.graph_content').html('');

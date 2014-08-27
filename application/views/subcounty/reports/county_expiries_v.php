@@ -21,7 +21,7 @@ box-shadow: 1px 1px 1px 1px #DDD3ED;
   <b>Below are the expiries in the County</b>:Select filter Options
 </div>
 	<ul class='nav nav-tabs'>
-      <li class="active"><a href="#Rejected" data-toggle="tab">Expiried Commodities</a></li>
+      <li class="active"><a href="#Rejected" data-toggle="tab">Expired Commodities</a></li>
       <li class=""><a href="#Approval" data-toggle="tab">Potential Expiries</a></li>
     </ul>
 <div id="myTabContent" class="tab-content">
@@ -39,7 +39,8 @@ box-shadow: 1px 1px 1px 1px #DDD3ED;
 </div> 
 </div>
 </form>
-<div class="graph_content" id="div_expiried">	</div>
+<div class="graph_content" id="div_expiried">
+	</div>
 </div>
 <div  id="Approval" class="tab-pane fade">
 <br>
@@ -57,10 +58,21 @@ box-shadow: 1px 1px 1px 1px #DDD3ED;
 </div>
 </form> 
 </div>
-<div class="graph_content" id="div_potential">	</div>
+<div class="graph_content" id="div_potential">	
+	</div>
 </div>
 </div>
 <script>
+$(window).load(function() {
+		var months_no= '12';//load expiries for 12 months by default
+		var url_='<?php echo "reports/potential_expiries_reports/".$this->session->userdata('county_id') ?>'+'/'+months_no;
+		ajax_request_replace_div_content(url_,'#div_potential');
+
+        var year='<?php echo $year ?>';
+		var url_='<?php echo "reports/actual_expiries_reports/".$this->session->userdata('county_id') ?>'+'/'+year;
+		ajax_request_replace_div_content(url_,'#div_expiried');	
+
+});
 	$(function(){
 	$(".filter-expired").on('click', function(e){
 		e.preventDefault();

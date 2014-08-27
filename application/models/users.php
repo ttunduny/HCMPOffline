@@ -7,13 +7,15 @@ class Users extends Doctrine_Record {
 		$this -> hasColumn('email', 'string', 255, array('unique' => 'true'));
 		$this -> hasColumn('username', 'string', 255, array('unique' => 'true'));
 		$this -> hasColumn('password', 'string', 255);
-		$this -> hasColumn('activation', 'string', 255);
+		$this -> hasColumn('activation', 'varchar', 255);
 		$this -> hasColumn('usertype_id', 'integer', 11);
 		$this -> hasColumn('telephone', 'varchar', 255);
 		$this -> hasColumn('district', 'varchar', 255);
 		$this -> hasColumn('facility', 'varchar', 255);
 		$this -> hasColumn('status', 'int', 11);
 		$this -> hasColumn('county_id', 'int', 11);
+		$this -> hasColumn('email_recieve', 'int', 1);
+		$this -> hasColumn('sms_recieve', 'int', 1);
 
 	}
 
@@ -33,6 +35,7 @@ class Users extends Doctrine_Record {
 		$this -> _set('password', md5($salt . $value));
 
 	}
+
 	public static function getUsers($facility_c){
 		$query = Doctrine_Query::create() -> select("*") -> from("Users")->where("facility=$facility_c");
 		$level = $query -> execute();
@@ -202,7 +205,9 @@ class Users extends Doctrine_Record {
     a.id as level_id,
     f.level,
     a.level,
-    u.status
+    u.status,
+    u.email_recieve,
+    u.sms_recieve
 FROM
    user u
         LEFT JOIN
@@ -222,7 +227,11 @@ public static function get_dpp_details($distirct){
 		$level = $query -> execute();
 		return $level;
 }
-
+public static function get_county_emails($county_id){
+	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("county_id = $county_id and usertype_id='3' ");
+		$level = $query -> execute();
+		return $level;
+}
 	public static function get_users_district($district) {
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
 			SELECT count(*) as count FROM user u 

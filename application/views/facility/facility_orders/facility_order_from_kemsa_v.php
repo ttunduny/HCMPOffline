@@ -143,7 +143,7 @@ $(document).ready(function() {
                     '<?php	foreach($facility_commodity_list as $commodity):
 						     $commodity_id=$commodity['commodity_id'];
 							 $commodity_code=$commodity['commodity_code'];							
-							 $sub_category_name=$commodity['sub_category_name'];
+							 $sub_category_name=preg_replace('/[^A-Za-z0-9\-]/', ' ',$commodity['sub_category_name']);
 							 $unit_size=preg_replace('/[^A-Za-z0-9\-]/', ' ',$commodity['unit_size']);
 							 $unit_cost=$commodity['unit_cost'];
 							 $total_commodity_units=$commodity['total_commodity_units'];
@@ -174,10 +174,12 @@ $(document).ready(function() {
 	// add the item to the order list			
 	$('#main-content').on("click", ".add_item", function (){
 	 var check_if_the_user_has_selected_a_commodity=$('#desc').val();
+
 	 if(check_if_the_user_has_selected_a_commodity==0){
 	 	alert("Please select a commodity first");
 	 	return;
-	 }	
+	 }
+
 	// add the items here to the order form
 	  $("#example" ).dataTable().fnAddData( [ 
   	 '<input type="hidden" class="commodity_name" name="commodity_name['+new_count+']" value="'+$("#desc option:selected").text()+'" />'+

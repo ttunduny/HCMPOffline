@@ -165,11 +165,11 @@ var $table = $('#example');
     $(".add").button().click( function (){
 	var body_content='<table class="table-update"><thead><tr><th>Description</th><th>Commodity Code</th><th>Order Unit Size</th><th>Order Unit Cost (Ksh)</th>'+				   	    
 					'</tr></thead><tbody><tr><td>'+
-                    '<select id="desc" name="desc" class="form-control"><option value="0">--Select Commodity Name--</option>'+
+                    '<select id="desc" name="desc" class="form-control"><option value="0">Select Commodity Name</option>'+
                     '<?php	foreach($facility_commodity_list as $commodity):
 						     $commodity_id=$commodity['commodity_id'];
 							 $commodity_code=$commodity['commodity_code'];							
-							 $sub_category_name=$commodity['sub_category_name'];
+							 $sub_category_name=preg_replace('/[^A-Za-z0-9\-]/', ' ',$commodity['sub_category_name']);;
 							 $unit_size=preg_replace('/[^A-Za-z0-9\-]/', ' ',$commodity['unit_size']);
 							 $unit_cost=$commodity['unit_cost'];
 							 $total_commodity_units=$commodity['total_commodity_units'];
@@ -186,19 +186,24 @@ var $table = $('#example');
         '<button type="button" class="btn btn-primary add_item"><span class="glyphicon glyphicon-plus"></span>Add</button>');
     });
     // add item modal box
-    $("#desc").on("change", function (){
+    
+	 $(document.body).on('change','#desc', function (){
     var data= $('option:selected', this).attr('special_data');  
+   
 				var code_array=data.split("^");
 				var commodity_id=code_array[0];
 				$('input:text[name=commodity_code]').val(code_array[4]);
-				$('input:text[name=commodity_id_]').val(commodity_id);
+				$('input:text[name=commodity_id]').val(commodity_id);
 				$('input:text[name=unit_size]').val(code_array[2]);
 				$('input:text[name=unit_cost]').val(code_array[1]);
 				$('input:hidden[name=cat_name]').val(code_array[3]);
 				$('input:hidden[name=commodity_name_]').val($("#desc option:selected").text());
-				$('input:hidden[name=total_commodity_units]').val(code_array[5]);});
+				$('input:hidden[name=total_commodity_units]').val(code_array[5]);
+				calculate_totals();
+				});
+				
 	// add the item to the order list			
-	$(".add_item").on("click", function (){
+	$(document.body).on("click",".add_item", function (){
 	 var check_if_the_user_has_selected_a_commodity=$('#desc').val();
 	 if(check_if_the_user_has_selected_a_commodity==0){
 	 	alert("Please select a commodity first");

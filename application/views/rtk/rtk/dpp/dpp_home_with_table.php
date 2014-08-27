@@ -14,7 +14,15 @@ $englishdate = date('F, Y', strtotime($monthyear));
 
 </style>
 <script type="text/javascript">
+<<<<<<< HEAD
+bajb_backdetect.OnBack = function()
+    {
+        //alert('You clicked it!');
+        window.location.href = "<?php echo base_url().'home_controller/home';?>";
+    }
+=======
 
+>>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
 $(document).ready(function() {
         //datatables settings 
         $('#maintable').dataTable({
@@ -208,7 +216,7 @@ function loadcountysummary(county) {
                    $five_days_prior = $deadline_date - 5;
 
                    if($date>0 && $date <$five_days_prior){
-                    $alertmsg = '<strong>Take note: ' . $d_name . ' District</strong><br /><br />
+                    $alertmsg = '<strong>Take note: ' . $d_name . ' Sub-County</strong><br /><br />
                     Reporting for ' . $lastmonth . ' is on, and the Deadline is on the '.$deadline_date.'<br > Click on <u>Report</u> for all Facilities with the red label
                     after this label within the table below<br > <span class="label label-important">  Pending for ' . $lastmonth . '</span>';            
                     $alertype = 'danger';
