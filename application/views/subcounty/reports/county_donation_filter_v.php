@@ -1,6 +1,6 @@
 <!--<h1 class="page-header" style="margin: 0;font-size: 1.6em;">Commodity Redistribution</h1>-->
 <div class="alert alert-info">
-  <b>Below are the Donations Redistribution trends in the County</b>:Select filter Options
+  <b>Below are the Commodity Redistribution trends in the County</b>:Select filter Options
 </div>
 <ul class='nav nav-tabs'>
       <li class="active"><a href="#county" data-toggle="tab">County View</a></li>
@@ -53,11 +53,8 @@ endforeach;
 <div class="graph_content" id="dem_graph_1"  ></div>
 </div>
 <script>
-<<<<<<< HEAD
-	$(window).load(function(){
-=======
+
 $(window).load(function(){
->>>>>>> c453e95bc142cf4a11c7b066a8f318127ac7cdaa
 		var year  = '<?php echo $year; ?>';
         var url_ = "reports/donation_reports/"+
         year+
@@ -65,12 +62,8 @@ $(window).load(function(){
         "/NULL";	
 		ajax_request_replace_div_content(url_,'.graph_content');	
 	
-<<<<<<< HEAD
-});
 
-=======
 });	
->>>>>>> c453e95bc142cf4a11c7b066a8f318127ac7cdaa
 	$(document).ready(function() {
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           $('.graph_content').html('');

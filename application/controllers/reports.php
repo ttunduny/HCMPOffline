@@ -3382,13 +3382,15 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 //Function for commodity redistributions
-		public function county_donation() {
+		public function county_donation() 
+		{
 			$data['year'] = date('Y');
 			$county_id=$this -> session -> userdata('county_id');
 		    $data['district_data'] = districts::getDistrict($county_id);
 			$data['title'] = $data['banner_text']="Donations";
 			$data['content_view'] = "facility/facility_reports/reports_v";
 			$data['report_view'] = "subcounty/reports/county_donation_filter_v";
+		
 		if($this->input->is_ajax_request()):
 			return $this -> load -> view("subcounty/reports/county_donation_filter_v", $data);
 		
@@ -3398,7 +3400,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 			$data['active_panel']='donations';
 			$this -> load -> view("shared_files/template/template", $data);
 		endif;
-	}
+		}
 		public function stock_out(){
         $county_id=$this -> session -> userdata('county_id');
 	    $data['district_data'] = districts::getDistrict($county_id);
