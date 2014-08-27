@@ -21,7 +21,7 @@ class Divisional_Reports extends MY_Controller
 	 public function program_reports()
 	 {
 
-	 	$user_indicator = $district_id = $this -> session -> userdata('user_indicator');
+	 	$user_indicator = $this -> session -> userdata('user_indicator');
 	 	switch ($user_indicator) 
 	 	{
 	 		case facility_admin :   
@@ -43,14 +43,9 @@ class Divisional_Reports extends MY_Controller
 				}
 					
 				$data['page_header'] = "Divisional Reports";	
-				$data['malaria'] = $report_malaria_report;
-				$data['RH'] = $report_RH_report;
-				$data['TB'] = $report_tuberculosis_report;
 				$data['title'] = "Facility Divisional Reports";
 				$data['banner_text'] = "Facility Divisional Reports";
-				$data['report_view'] = "subcounty/reports/program_reports_v";
 				$data['sidebar'] = "shared_files/report_templates/side_bar_v";
-				$data['active_panel'] = "program_reports";
 				
 			break;
 			case district :
@@ -75,17 +70,12 @@ class Divisional_Reports extends MY_Controller
 					
 					$index++;
 				}
-			//print_r($report_TB);
-			//exit;
+			
 				$data['page_header'] = "Program Reports";
-				$data['malaria'] = $report_malaria_report;
-				$data['RH'] = $report_RH_report;
-				$data['TB'] = $report_tuberculosis;
 				$data['title'] = "District Program Reports";
 				$data['banner_text'] = "District Program Reports";
-				$data['report_view'] = "subcounty/reports/program_reports_v";
 				$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
-				$data['active_panel'] = "program_reports";
+				
 			break;
 			case county:
 			 $county_id = $this -> session -> userdata('county_id');
@@ -93,7 +83,7 @@ class Divisional_Reports extends MY_Controller
 			 $index = 0;
 			 foreach ($facilities as $ids)
 			 {
-				$facility_id = $ids['facility_code'];
+				$facility_id = $ids['facilities'];
 				$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
 				$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
 				$report_TB = tb_data::get_facility_report_details($facility_id);
@@ -110,20 +100,21 @@ class Divisional_Reports extends MY_Controller
 				$index++;
 			 }
 			 $data['page_header'] = "County Program Reports";	
-			 $data['malaria'] = $report_malaria_report;
-			 $data['RH'] = $report_RH_report;
-			 $data['TB'] = $report_tuberculosis;
 			 $data['title'] = "County Program Reports";
 			 $data['banner_text'] = " County Program Reports";
-			 $data['report_view'] = "subcounty/reports/program_reports_v";	
 			 $data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
-			 $data['active_panel'] = "program_reports";
+			 
 		 break;
 		}
- 		
+ 		$data['malaria'] = $report_malaria_report;
+		$data['RH'] = $report_RH_report;
+		$data['TB'] = $report_tuberculosis_report;
+		$data['report_view'] = "subcounty/reports/program_reports_v";	
  		$data['active_panel']='divisional';
+		if($this->input->is_ajax_request()):
+			return $this -> load -> view("subcounty/reports/program_reports_v", $data);
+		endif;
 		$data['content_view'] = "facility/facility_reports/reports_v";
-		
 		$this -> load -> view('shared_files/template/template', $data);
 		
 	 }

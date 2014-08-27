@@ -224,7 +224,7 @@ echo $maps; ?>
        <h4 class="panel-title">Actual Expiries </h4>
        </div>
         <div class="panel-body" style="margin-left: 2px">
-      <ul class='nav nav-tabs' id="actual_">
+      <ul class='nav nav-tabs' id="">
       <li class="active"><a href="#acounty" data-toggle="tab">County View</a></li>
       <li class=""><a href="#asubcounty" data-toggle="tab">Sub County View</a></li>
        </ul>

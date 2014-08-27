@@ -555,13 +555,12 @@ class sms extends MY_Controller {
 					} else {
 						$excel_data['row_data'] = $row_data;
 						$excel_data['report_type'] = "download_file";
-						$excel_data['file_name'] = $facility_name . "_Stock_Outs_Report";
-						$message = "Find attached an excel sheet with the breakdown for the Stock Outs in the facility";
+						$excel_data['file_name'] = $facility_name . "_Potential_Stock_Outs_Report";
+						$message = "Find attached an excel sheet with the breakdown of Potential Stock Outs in the facility.";
 						$this -> hcmp_functions -> create_excel($excel_data);
 						
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-						$subject = "Stock Outs: " . $facility_name;
-						
+						$subject = "Potential Stock Outs: " . $facility_name;
 						$email_address = $this -> get_facility_email($facility_code);
 
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
@@ -574,7 +573,7 @@ class sms extends MY_Controller {
 				(array_key_exists($district_name, $district_total)) ? $district_total[$district_name] = array_merge($district_total[$district_name], array($facility_total)) : $district_total = array_merge($district_total, array($district_name => array($facility_total)));
 				//Building the excel sheet to be sent to the district admin
 				$excel_data = array();
-				$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'district stock outs weekly report ', 'file_name' => 'district weekly report');
+				$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'district potential stock outs weekly report ', 'file_name' => 'district weekly report');
 				$row_data = array();
 				$column_data = array("Facility Code", "Facility Name", "Commodity Code", "Commodity Name","Unit Size", "Quantity Available (Packs)","Quantity Available (MOS)","Supplier", "Manufacturer", "Subcounty", "County");
 				$excel_data['column_data'] = $column_data;
@@ -592,12 +591,13 @@ class sms extends MY_Controller {
 				} else {
 					$excel_data['row_data'] = $row_data;
 					$excel_data['report_type'] = "download_file";
-					$excel_data['file_name'] = $district_name . "_Weekly_District_Stock_Outs_Report";
+					$excel_data['file_name'] = $district_name . "_Weekly_District_Potential_Stock_Outs_Report";
 					$this -> hcmp_functions -> create_excel($excel_data);
 					$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-					$subject = "Stock Outs: " . $district_name . " Sub County";
-					$message = $district_name . "'s Weekly Stock Outs Report. ";
-					$message .= "Find attached an excel sheet with the breakdown for the Stock Outs for the district";
+					$subject = "Potential Stock Outs: " . $district_name . " Sub County";
+					$message = $district_name . "'s Weekly Potential Stock Outs Report. ";
+					$message .= "Find attached an excel sheet with the breakdown of the Potential Stock Outs for the district";
+
 					
 					$email_address = $this -> get_ddp_email($district_id);
 
@@ -631,19 +631,15 @@ class sms extends MY_Controller {
 			} else {
 				$excel_data['row_data'] = $row_data;
 				$excel_data['report_type'] = "download_file";
-				$excel_data['file_name'] = $county_name . "_Weekly_County_Stock_Outs_Report";
+				$excel_data['file_name'] = $county_name . "_Weekly_County_Potential_Stock_Outs_Report";
 				$this -> hcmp_functions -> create_excel($excel_data);
 				$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 				$subject = "Stock Outs: " . $county_name . " County";
 				$message = $county_name . "'s Weekly Stock Outs Report. ";
-				$message .= "Find attached an excel sheet with the breakdown for the Stock Outs for the county";
+				$message .= "Find attached an excel sheet with the breakdown of the Potential Stock Outs for the county";
 
-				$email_address = "collinsojenge@gmail.com";
 				$email_address = $this -> get_county_email($county_id);
-				
 				$bcc = $this -> get_bcc_notifications();
-			
-
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc_email);
 			}
 

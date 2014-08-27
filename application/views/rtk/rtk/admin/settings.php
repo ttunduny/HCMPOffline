@@ -135,7 +135,7 @@
           <th>Report Overdue Alert</th>
           <th>Applicable To</th>
           <th>Modified By</th>
-          <th>Action</th>
+          <th>Action</th>          
         </thead>
         <tbody>
           <?php foreach ($deadline_data as $row) {
@@ -174,6 +174,7 @@
           <th>State</th>            
           <th>Alert To</th>
           <th>Action</th>
+          <th>Delete</th>
         </thead> 
         <tbody>
           <?php foreach ($alerts_data as $value) { 
@@ -191,6 +192,7 @@
               <td><?php echo $status ?></td>
               <td><?php echo $value['description'] ?></td>              
               <td><button data-target="#Edit_Alert" class="edit_alert_row_btn" data-toggle="modal" id="<?php echo $id;?>" value="<?php echo $id;?>">Edit</button></td>                           
+              <td><button class="del_alert_row_btn" id="<?php echo $id;?>" value="<?php echo $id;?>">Delete</button></td>                           
             </tr>
             <?php }?>
           </tbody>
@@ -610,6 +612,15 @@
           var name =  $('td:first', $(this).parents('tr')).text();        
           $('#edit_message').val(name);
           $('#edit_id').val(id);
+        });
+        $('.del_alert_row_btn').click(function(){        
+          var id = $(this).attr('id');                  
+          $.post("<?php echo base_url() . 'rtk_management/delete_alert'; ?>", {
+            id: id,                        
+          }).done(function(data) {
+            alert("Data Loaded: " + data);            
+            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+          });
         });
 
         $('.edit_deadline_row_btn').click(function(){

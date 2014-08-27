@@ -9,7 +9,8 @@
       <div class="hero-unit center">
           <h1>Page Not Found <small><font face="Tahoma" color="red">Error 404</font></small></h1>
           <br />
-          <p><h3> The page you requested could not be found, either contact your webmaster or try again. Use your browsers 
+          <p><h3> The page you requested could not be found,or an error was encountered trying to process your request.Please
+          	 contact your Administrator or try again. Use your browser's 
           	<b>Back</b> button to navigate to the page you have prevously come from </h3> </p>
           
         </div>
