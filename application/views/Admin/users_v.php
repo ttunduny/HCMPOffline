@@ -289,7 +289,7 @@ var drop_down='';
           data:{ 'first_name': $('#first_name').val(),'last_name': $('#last_name').val(),
           'telephone': $('#telephone').val(),'email': $('#email').val(),
           'username': $('#username').val(),'facility_id': $('#facility_name').val(),
-          'county':$('#county').val(),
+          'county_id':$('#county').val(),
           'district_name': $('#sub_county').val(),'user_type': $('#user_type').val()},
           url: url,
           beforeSend: function() {
@@ -303,7 +303,7 @@ var drop_down='';
            
           },
           success: function(msg) {
-         
+          $('.modal-body').html(msg);
         setTimeout(function () {
           	$('.modal-body').html("<div class='bg-warning' style='height:30px'>"+
 							"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"+
@@ -423,7 +423,7 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
     })
 
 		
-		$("#user_type").change(function() {
+		/*$("#user_type").change(function() {
 	
       		var type = $('#user_type').val()
       		
@@ -431,7 +431,7 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
             $('#username').val($('#county option:selected').text()+'@hcmp.com')
         } 
            
-    	});	
+    	});	*/
     	
     	$('#email').on(function() {
 

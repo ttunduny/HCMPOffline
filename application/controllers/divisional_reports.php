@@ -93,7 +93,7 @@ class Divisional_Reports extends MY_Controller
 			 $index = 0;
 			 foreach ($facilities as $ids)
 			 {
-				$facility_id = $ids['facility_code'];
+				$facility_id = $ids['facilities'];
 				$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
 				$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
 				$report_TB = tb_data::get_facility_report_details($facility_id);

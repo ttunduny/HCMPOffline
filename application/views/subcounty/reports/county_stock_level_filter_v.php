@@ -125,7 +125,7 @@ var drop_down='';
 		$(".county-filter").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+
-$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+'/table_data';	
+$("#county_commodity_filter").val()+"/NULL/"+"<?php echo $this -> session -> userdata('district_id');?>"+"/"+"<?php echo $this -> session -> userdata('facility_id');?>"+"/"+$("#county_plot_value_filter").val()+'/table_data';	
 		ajax_request_replace_div_content(url_,'.graph_content');	
 
           });
