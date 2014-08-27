@@ -125,7 +125,7 @@ public function get_county_email($county_id){
 	$county_email=Users::get_county_details($county[0]['county']);
 	if($this->test_mode) return null; //check to ensure the demo site wount start looking for county admin
 	if($county[0]['county']==1){
-	return 'kariuki.jackson@outlook.com,';	
+	return 'kelvinmwas@gmail.com,';	
 	}else{
 		if(count($county_email)>0){
 		return $county_email[0]['email'].',';	
@@ -160,8 +160,9 @@ public function send_order_submission_email($message,$subject,$attach_file){
 	   $email_address=$this->get_facility_email($facility_code);
 	    
 	   $email_address .=$this->get_ddp_email($data[0]['district']);	   
-	   $cc_email=($this->test_mode)?'kariukijackson@gmail.com,': $this->get_county_email($data[0]['district']) ;
-
+	   $cc_email=($this->test_mode)?'kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,': 
+	   $this->get_county_email($data[0]['district']) ;
+	   
 	  return $this->send_email(substr($email_address,0,-1),$message, $subject,$attach_file,null,substr( $cc_email,0,-1));
 	
 }
@@ -176,12 +177,13 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 	  $cc_email .=$this->get_ddp_email($data['district']);	  
 	  else:		  
 
-		   $email_address=($this->test_mode)?'kariukijackson@gmail.com,': 'shamim.kuppuswamy@kemsa.co.ke,
-samuel.wataku@kemsa.co.ke,
-jmunyu@kemsa.co.ke,
-imugada@kemsa.co.ke,
-laban.okune@kemsa.co.ke,
-samuel.wataku@kemsa.co.ke,'; 
+		   $email_address=($this->test_mode)?'kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,
+		   ': 'shamim.kuppuswamy@kemsa.co.ke,
+				samuel.wataku@kemsa.co.ke,
+				jmunyu@kemsa.co.ke,
+				imugada@kemsa.co.ke,
+				laban.okune@kemsa.co.ke,
+				samuel.wataku@kemsa.co.ke,'; 
 
        
 	  $cc_email .=$this->get_ddp_email($data['district']);
@@ -229,8 +231,6 @@ public function send_sms($phones,$message) {
 /*****************************************Email function for HCMP, all the deafult email addresses and email content have been set ***************/
 
 public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL){
-   
-  
    
     //  return true;
    	/*$mail_list=($this->test_mode)?'collinsojenge@gmail.com,kelvinmwas@gmail.com,': 
@@ -297,7 +297,9 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
  }
  else
 {
-echo $this->email->print_debugger(); exit;
+//echo $this->email->print_debugger(); 
+$this -> load -> view('shared_files/404');
+exit;
 
  
 }
@@ -362,7 +364,6 @@ if(count($excel_data)>0):
         header("Cache-Control: post-check=0, pre-check=0", false);
         header("Pragma: no-cache");
 		// It will be called file.xls
-
 		header("Content-Disposition: attachment; filename=".$excel_data['file_name'].'.xls');
 		// Write file to the browser
         $objWriter -> save('php://output');

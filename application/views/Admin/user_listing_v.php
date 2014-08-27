@@ -1,4 +1,3 @@
-<?php //echo "<pre>";print_r($listing);echo "</pre>";exit; ?>
 <div class="container">
 	
 	<?php $x = array();
@@ -333,7 +332,7 @@
 				<h4 class="modal-title" id="editModalLabel" style="text-align: center;line-height: 1">Edit User</h4>
 			</div>
 			
-			<div class="modal-body" style="padding-top:0">
+			<div class="modal-body editable" style="padding-top:0">
 				<div id="contents">
 					
 						<form role="form">
