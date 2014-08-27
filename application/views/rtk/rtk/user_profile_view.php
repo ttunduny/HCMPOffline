@@ -72,7 +72,7 @@ foreach ($all_subcounties as $value) {
                                         <p></p>
                                         <form id="add_location_to_user" method="POST"  action="<?php echo base_url('rtk_management/add_rca_to_county'); ?>" > 
                                             <div class="modal-body">
-                                                <input type="hidden" name="rca_id" value="<?php echo $user_id; ?>"/>
+                                                <input type="hidden" id="rca_id" name="rca_id" value="<?php echo $user_id; ?>"/>
                                                 <h5>County: </h5>
                                                 <select name="county" id="county" class="form-control">
                                                 <?php echo $counties_select_html; ?>
@@ -106,7 +106,7 @@ foreach ($all_subcounties as $value) {
                                 </div>
                                 <div class="modal-body">
                                     <p></p>
-                                    <form id="add_location_to_user" method="POST" action="<?php echo base_url('rtk_management/dmlt_district_action'); ?>" > 
+                                    <form id="add_location_to_user" method="POST" action="<?php echo base_url('rtk_management/dmlt_district_action1'); ?>" > 
                                         <div class="modal-body">
                                             <input type="hidden" name="dmlt_id" value="<?php echo $user_id; ?>"/>
                                             <input type="hidden" name="action" value="add"/>
