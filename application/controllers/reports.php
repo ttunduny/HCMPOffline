@@ -636,8 +636,7 @@ class Reports extends MY_Controller
 		$data['report_data'] ;
 		$echo = Facility_stocks::specify_period_potential_expiry_store($district_id, $interval);
 		
-		// echo "<pre>";print_r($echo);echo "</pre>";exit;
-
+		
 		return $this -> load -> view("facility/facility_reports/ajax/potential_expiries_ajax", $data);
 
 	}
@@ -901,10 +900,11 @@ class Reports extends MY_Controller
 		$data['report_view']="facility/facility_reports/ajax/consumption_stats_ajax";
 		$data['content_view']="facility/facility_reports/reports_v";
 		$view = 'shared_files/template/template';
-		$data['active_panel']='consumption';
+		$data['active_panel']='statistics';
 		$this -> load -> view($view, $data);
 		
 	}	
+		
 	public function filtered_consumption($commodity_id = null, $option = null,$from = null,$to = null,$report_type = null)
 	{
 
@@ -1475,8 +1475,7 @@ class Reports extends MY_Controller
 	 //used for both the subcounty and county level program reports
 	 public function program_reports()
 	 {
-	 	//echo $data['active_tab'];
-//exit;
+	
 	 	$user_indicator = $district_id=$this -> session -> userdata('user_indicator');
 	 	switch ($user_indicator) 
 	 	{
@@ -1958,8 +1957,6 @@ class Reports extends MY_Controller
 		$district_region_name = $district_name_['district'];
 		$data['facility_name'] = ($facility_info['facility_name']);
 		$data['facility_type_'] = ($facility_info['owner']);
-		// echo "<pre>";print_r($years);echo "</pre>";exit;
-		//$data['expiry_data'] = Facility_stocks::expiries_report($facility_code);
 		$facility_name=Facilities::get_facility_name_($facility_code)->toArray();
 		$data['facility_name']=$facility_name[0]['facility_name'];
 
@@ -2069,8 +2066,6 @@ $commodity = $data['commodity_name'];
 $batch = $data['batch_no'];
 $month = $data['expiry_month'];
 
-// echo "<pre>";print_r($month);echo " </pre>";
- // echo "<pre>";print_r($final_date);echo " </pre>";exit;
 
 	$html_body.= '
 		<tr>
@@ -2380,7 +2375,6 @@ $month = $data['expiry_month'];
 
 	}
 
-	// echo "<pre>";print_r($html_body);echo "</pre>";exit;
 			
 		return $html_body;
 	}
@@ -2720,8 +2714,6 @@ $month = $data['expiry_month'];
 			
 			$data['table_id'] ="graph_default";
 			echo $data['table'];
-			//exit;
-			//echo $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
 		elseif($report_type=="csv_data"):
 			
 			foreach ($final_graph_data as $data) :
@@ -2927,18 +2919,11 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 		$title = isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
 	 	isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
 
-//echo $facility_code;
-//exit;
+
 
 		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code, $district_id, $county_id,
 		$category_id, $commodity_id, $option_new, $report_type);
-		/*
-		echo"<pre>";
-		print_r($district_id);
-		echo "</pre>";
-		exit;
-		*/
-        foreach ($commodity_array as $data) :
+		    foreach ($commodity_array as $data) :
 			if($report_type=="table_data"):
 				if($commodity_id>0):
 					array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"],(int)$data['total']));

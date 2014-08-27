@@ -41,7 +41,9 @@ class Commodities extends Doctrine_Record {
 	}
 
 	public static function get_all_2() {
-		$query=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select * from commodities where status=1 order by commodity_name asc");	
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("select * from commodities where status = 1 order by commodity_name asc");	
+		
 		return $query;
 	}
 	public static function get_details($commodity_id) {
@@ -86,7 +88,8 @@ return $inserttransaction;
                AND c.commodity_sub_category_id = c_s_c.id
                AND f_m_s.facility_code =$facility_code
                AND c.commodity_source_id = c_s.id $order_by"); 
-return $inserttransaction;
+              
+  return $inserttransaction;
 	}// set up the facility stock here
 	public static function set_facility_stock_data_amc($facility_code){
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
