@@ -1,5 +1,3 @@
-
-
 <style>
 	.input-small{
  		width: 100px !important;

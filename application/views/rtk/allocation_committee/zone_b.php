@@ -1,7 +1,4 @@
-<link rel="stylesheet" type="text/css" href="http://tableclothjs.com/assets/css/tablecloth.css">
-<script src="http://tableclothjs.com/assets/js/jquery.tablesorter.js"></script>
-<script src="http://tableclothjs.com/assets/js/jquery.metadata.js"></script>
-<script src="http://tableclothjs.com/assets/js/jquery.tablecloth.js"></script>
+
 
 
 
@@ -53,29 +50,11 @@ table{
       <th>Sub-County</th>
       <th>MFL</th>
       <th>Facility Name</th>      
-      <th colspan="2">Screening - Determine</th>    
-      <th colspan="2">Confirmatory - Unigold</th>      
-      <th colspan="2">First Response</th>      
-      <th colspan="2">Colloidal</th>      
-      <th colspan="2">TieBreaker - Unigold</th>      
-    </tr>    
-    <tr>
+      <th>Comodity</th>      
+      <th>Quantity Requested</th>      
+      <th>AMC</th>      
           
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>      
-      <th>AMC</th>
-      <th>Quantity to Allocate</th>
-      <th>AMC</th>
-      <th>Quantity to Allocate</th>
-      <th>AMC</th>
-      <th>Quantity to Allocate</th>
-      <th>AMC</th>
-      <th>Quantity to Allocate</th>
-      <th>AMC</th>
-      <th>Quantity to Allocate</th>
-    </tr>
+    </tr>        
       
     </thead>
 
@@ -91,16 +70,10 @@ table{
           <td><?php echo $value['district'];?></td>              
           <td><?php echo $value['facility_code'];?></td>
           <td><?php echo $value['facility_name'];?></td>     
-          <td><?php echo $amcs[$facil][0]['amc'];?></td>     
-          <td><?php echo ceil((($amcs[$facil][0]['amc'])*4)/100);?></td>     
-          <td><?php echo $amcs[$facil][1]['amc'];?></td>     
-          <td><?php echo ceil((($amcs[$facil][1]['amc'])*4)/20);?></td>                 
-          <td><?php echo $amcs[$facil][3]['amc'];?></td>     
-          <td><?php echo ceil((($amcs[$facil][3]['amc'])*4)/50);?></td>     
-          <td><?php echo $amcs[$facil][2]['amc'];?></td>     
-          <td><?php echo ceil((($amcs[$facil][2]['amc'])*4)/30);?></td>     
-          <td><?php echo $amcs[$facil][4]['amc'];?></td>     
-          <td><?php echo ceil((($amcs[$facil][4]['amc'])*4)/20);?></td>     
+          <td><?php echo $value['commodity_name'];?></td>     
+          <td><?php echo $value['q_requested'];?></td>     
+          <td><?php echo $value['amc'];?></td>     
+          
           
         </tr>
         <?php }
