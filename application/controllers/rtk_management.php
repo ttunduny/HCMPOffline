@@ -258,7 +258,6 @@ class Rtk_Management extends Home_controller {
         $prev_prev_monthjson = json_encode($prev_prev_month_arr);
         $prev_prev_monthjson = str_replace('"', "", $prev_prev_monthjson);
         $data['prev_prev_monthjson'] = $prev_prev_monthjson;
-
         $this->load->view('rtk/template', $data);
     }
 

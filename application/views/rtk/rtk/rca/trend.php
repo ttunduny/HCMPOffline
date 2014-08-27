@@ -29,7 +29,7 @@ table{
         <div class="tab-pane active" id="tab1">
             <ul class="thumbnails">
                 <li class="col-md-11">
-                     <?php include('rca_sidabar.php');?>
+                     <?php //include('rca_sidabar.php');?>
                     <div style="width:75%;height:450px;float:left;">
                       
                         <div id="container" style="min-width: 310px;width:100%;height: 360px;float:left; margin: 0 auto;border: ridge 1px;"></div>
