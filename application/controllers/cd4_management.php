@@ -19,8 +19,24 @@ class cd4_Management extends MY_Controller {
     }
 
     public function index() {
+
+        $month = $this->session->userdata('Month');
+        if ($month == '') {
+            $month = date('mY', strtotime('-1 Month', time()));
+        }
+        $year = substr($month, -4);
+        $month = substr_replace($month, "", -4);
+        $monthyear = $year . '-' . $month . '-1';
+        $englishdate = date('F, Y', strtotime($monthyear));
+
+        $data['prev_englishdate'] = date('F, Y', strtotime('-1 Month', strtotime($monthyear)));
+        $data['next_englishdate'] = date('F, Y', strtotime('+1 Month', strtotime($monthyear)));
+        $data['englishdate'] = $englishdate;
+        $data['month'] = $month;
+        $data['year'] = $year;
+
         $res = $this->db->query('SELECT * FROM  `api_gen` ORDER BY  `api_gen`.`date_sync` DESC  LIMIT 0 ,1');
-        $date_synced_res = $res->result_array();       
+        $date_synced_res = $res->result_array();
         $data['date_sync'] = $date_synced_res[0]['date_sync'];
         $data['counties_rates'] = json_decode($date_synced_res[0]['json']);
         $data['content_view'] = "rtk/cd4/dashboard";
@@ -97,7 +113,10 @@ class cd4_Management extends MY_Controller {
         $res_arr = objectToArray($res_arr);
         return $res_arr;
     }
-    public function _dashboard_reporting_rates(){}
+
+    public function _dashboard_reporting_rates() {
+        
+    }
 
     public function cd4_sidebar() {
         $previous_month = date('mY', strtotime("last day of previous month"));
@@ -367,6 +386,15 @@ class cd4_Management extends MY_Controller {
         $data['banner_text'] = 'Allocate ' . $countyname;
         $data['title'] = 'CD4 Allocation ' . $countyname;
         $data['countyname'] = $countyname;
+    }
+
+    // Function to check whether url is up
+    function _check_url_working($url) {
+        $result = false;
+        if (@file_get_contents($url, 0, NULL, 0, 1)) {
+            $result = true;
+        }
+        return $result;
     }
 
     function nascop_get($facil_mfl, $period = null) {
@@ -1105,43 +1133,77 @@ AND district =' . $district . '');
     }
 
     public function sync_nascop($month = null, $year = null) {
-        if ($month == NULL) {
-            $month = date('m');
-            $year = date('Y');
+        $url = 'http://nascop.org/cd4/reportingfacsummary.php?yr=' . $year . '&month=' . $month;
+        if (!$this->_check_url_working($url)) {
+            echo ("NASCOP link is down");
+            die;
         }
-        $sql = 'Delete FROM `api_gen` where month=' . $month . ' AND year =' . $year;
-        $this->db->query($sql);
-        $sql = 'Delete FROM `api_facilities` where month=' . $month . ' AND year =' . $year;
-        $this->db->query($sql);
-        $allfacilities = $this->api_get_facilities($month, $year);
-        $reported_facilities_to_sync = array();
-        $jsonfacilities = json_encode($allfacilities);
-        $now = time();
-        $data = array(
-            'id' => 'NULL',
-            'json' => $jsonfacilities,
-            'date_sync' => $now,
-            'month' => $month,
-            'year' => $year
-        );
-        $this->db->insert('api_gen', $data);
-        echo "Counties Done synchronizing. Now synchronizing Facilities...<br />";
+        $sql = 'select count(id) as count from `api_gen` where month=' . $month . ' AND year =' . $year;
+        $result = $this->db->query($sql);
+        $id = $result->result_array();
+        $num_rows = $id[0]['count'];
+        if ($num_rows == 0) {
+            // do insert
+            $allfacilities = $this->api_get_facilities($month, $year);
+            $reported_facilities_to_sync = array();
+            $jsonfacilities = json_encode($allfacilities);
+            $now = time();
+            $data = array(
+                'id' => 'NULL',
+                'json' => $jsonfacilities,
+                'date_sync' => $now,
+                'month' => $month,
+                'year' => $year
+            );
+            $this->db->insert('api_gen', $data);
+            echo "Counties Done synchronizing. Now synchronizing Facilities...<br />";
+            // done syncing main api link. now updating facilities marked as reported
+            foreach ($allfacilities as $key => $value) {
+                if ($value['particulars']['reported'] > 0) {
+                    foreach ($value['particulars']['particular'] as $reportedfacilities) {
 
-        foreach ($allfacilities as $key => $value) {
-            if ($value['particulars']['reported'] > 0) {
-                foreach ($value['particulars']['particular'] as $reportedfacilities) {
-
-                    if ($reportedfacilities['status'] == "Reported") {
-                        array_push($reported_facilities_to_sync, $reportedfacilities['mfl']);
+                        if ($reportedfacilities['status'] == "Reported") {
+                            array_push($reported_facilities_to_sync, $reportedfacilities['mfl']);
+                        }
                     }
                 }
             }
-        }
+        } elseif ($num_rows == 1) {
+            //do update
+            $allfacilities = $this->api_get_facilities($month, $year);
+            $reported_facilities_to_sync = array();
+            $jsonfacilities = json_encode($allfacilities);
+            $now = time();
+            $data = array(
+                'id' => 'NULL',
+                'json' => $jsonfacilities,
+                'date_sync' => $now,
+                'month' => $month,
+                'year' => $year
+            );
+            $this->db->where('month', $month);
+            $this->db->where('year', $year);
+            $this->db->update('api_gens', $data);
 
-        foreach ($reported_facilities_to_sync as $sync_mfl_code) {
+            echo "Counties Done synchronizing. Now synchronizing Facilities...<br />";
+
+            // done syncing main api link. now updating facilities marked as reported
+            $this->db->query("DELETE from `api_facilities` where month = $month AND year = $year");
+
+            foreach ($allfacilities as $key => $value) {
+                if ($value['particulars']['reported'] > 0) {
+                    foreach ($value['particulars']['particular'] as $reportedfacilities) {
+
+                        if ($reportedfacilities['status'] == "Reported") {
+                            array_push($reported_facilities_to_sync, $reportedfacilities['mfl']);
+                        }
+                    }
+                }
+            }
+        } foreach ($reported_facilities_to_sync as $sync_mfl_code) {
             $this->facility_api_data($sync_mfl_code, $month, $year);
         }
-        echo "Success: Facilities Sync Complete,  You are now being redirected to another planet....";
+        echo "Success: Facilities Sync Complete.";
     }
 
     public function allocated_cd4($MFLCode, $year, $month) {
