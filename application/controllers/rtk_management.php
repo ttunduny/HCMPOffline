@@ -273,7 +273,7 @@ class Rtk_Management extends Home_controller {
 
     function _get_rtk_users() {
         //get county_admins
-        $q = 'SELECT access_level.level,
+        $q = 'SELECT access_level.level,access_level.user_indicator,
         user.email, user.id AS user_id,user.fname,user.lname,user.email,user.county_id,
         user.district,counties.county,user.usertype_id FROM access_level,
         user,counties 
@@ -282,7 +282,7 @@ class Rtk_Management extends Home_controller {
        
         $res = $this->db->query($q);
         $arr = $res->result_array();
-        $q2 = 'SELECT access_level.level,user.email,user.id AS user_id,user.fname,user.lname,user.email,user.county_id,districts.district as district,counties.county,user.usertype_id
+        $q2 = 'SELECT access_level.level,access_level.user_indicator,user.email,user.id AS user_id,user.fname,user.lname,user.email,user.county_id,districts.district as district,counties.county,user.usertype_id
         FROM access_level,user,counties,districts 
         WHERE user.district = districts.id
         AND districts.county = counties.id
@@ -291,7 +291,7 @@ class Rtk_Management extends Home_controller {
         AND user.usertype_id = 7';
         $res2 = $this->db->query($q2);
         $arr2 = $res2->result_array();
-        $returnable = array_merge($arr, $arr2);
+        $returnable = array_merge($arr, $arr2);       
         return $returnable;
     }
 
