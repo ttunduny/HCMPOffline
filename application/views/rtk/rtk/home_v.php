@@ -23,8 +23,9 @@ foreach ($res_arr1->result_array() as  $value) {
 }
 
 $thismonthname  = date('F',strtotime("-1 month", time()));
-$prev_prevmonthname = date('F',strtotime("-2 month", time()));
-$prevmonthname = date('F',strtotime("-3 month", time()));
+$prevmonthname = date('F',strtotime("-2 month", time()));
+$prev_prevmonthname = date('F',strtotime("-3 month", time()));
+
 
 ?>
 <script type="text/javascript">
