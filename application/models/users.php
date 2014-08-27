@@ -7,7 +7,7 @@ class Users extends Doctrine_Record {
 		$this -> hasColumn('email', 'string', 255, array('unique' => 'true'));
 		$this -> hasColumn('username', 'string', 255, array('unique' => 'true'));
 		$this -> hasColumn('password', 'string', 255);
-		$this -> hasColumn('activation', 'string', 255);
+		$this -> hasColumn('activation', 'varchar', 255);
 		$this -> hasColumn('usertype_id', 'integer', 11);
 		$this -> hasColumn('telephone', 'varchar', 255);
 		$this -> hasColumn('district', 'varchar', 255);
@@ -35,6 +35,7 @@ class Users extends Doctrine_Record {
 		$this -> _set('password', md5($salt . $value));
 
 	}
+
 	public static function getUsers($facility_c){
 		$query = Doctrine_Query::create() -> select("*") -> from("Users")->where("facility=$facility_c");
 		$level = $query -> execute();

@@ -147,6 +147,57 @@ class Rtk_Management extends Home_controller {
         $data['banner_text'] = "RTK Manager";
         $data['title'] = "RTK Manager";
         $this->load->view('rtk/template', $data);
+    }    
+    public function county_trend() {  
+        $countyid = $this->session->userdata('county_id');       
+        $county_name = counties::get_county_name($countyid);        
+        $County = $county_name['county'];
+
+
+        $res = $this->db->query("select count(facilities.id) as total_facilities from facilities,districts,counties 
+            where facilities.rtk_enabled=1 and facilities.district = districts.id and districts.county = counties.id and counties.id =$countyid");
+        $result = $res->result_array();
+        // echo "<pre>";
+        // print_r($result);die();
+        $data['total_facilities'] = $result[0]['total_facilities'];
+
+        $month = $this->session->userdata('Month');
+        if ($month == '') {
+            $month = date('mY', time());
+        }
+        $year = substr($month, -4);
+        $month = substr_replace($month, "", -4);
+        $monthyear = $year . '-' . $month . '-1';
+        $englishdate = date('F, Y', strtotime($monthyear));
+        $reporting_rates = $this->reporting_rates($countyid);
+        $xArr = array();
+        $yArr = array();
+        $xArr1 = array();
+        $cumulative_result = 0;
+        foreach ($reporting_rates as $value) {
+            $count = $value['count'];
+            $order_date = substr($value['order_date'], -2);
+            $order_date = date('jS', strtotime($value['order_date']));
+
+            $cumulative_result +=$count;
+            array_push($xArr1, $cumulative_result);
+
+            array_push($yArr, $order_date);
+            array_push($xArr, $count);
+        }       
+        $data['cumulative_result'] = $cumulative_result;
+        $data['jsony'] = json_encode($yArr);
+        $data['jsonx'] = str_replace('"', "", json_encode($xArr));
+        $data['jsonx1'] = str_replace('"', "", json_encode($xArr1));
+        $data['englishdate'] = $englishdate;      
+        
+        $data['county'] = $County;
+        $Countyid = $this->session->userdata('county_id');
+        $data['user_logs'] = $this->rtk_logs();
+        $data['content_view'] = "rtk/rtk/rca/trend";
+        $data['banner_text'] = "$County County Monthly Reporting Trends";
+        $data['title'] = "RTK County Admin Trends";
+        $this->load->view('rtk/template', $data);
     }
 
     public function rtk_manager_home() {
@@ -495,7 +546,7 @@ class Rtk_Management extends Home_controller {
         $data['mfl'] = $mfl;
         $data['countyid'] = $Countyid;
         $data['title'] = $facility[0]['facility_name'] . '-' . $mfl;
-        $data['facility_name'] = $facility['facility_name'];
+        $data['facility_name'] = $facility[0]['facility_name'];
         $data['banner_text'] = 'Facility Profile: ' . $facility[0]['facility_name'] . '-' . $mfl;
         $data['content_view'] = "rtk/rtk/facility_profile_view";
 
@@ -549,6 +600,12 @@ class Rtk_Management extends Home_controller {
         $county_id = districts::get_county_id($district);
         $county_name = counties::get_county_name($county_id['county']);
         
+        $cid = $this->db->select('districts.county')->get_where('districts', array('id' =>$district))->result_array();
+        
+        foreach ($cid as $key => $value) {
+           $myres = $cid[0]['county'];
+        }
+        $mycounties = $this->db->select('districts.district')->get_where('districts', array('county' =>$myres))->result_array(); 
 
         $data['district_balances_current'] = $this->district_totals($year_current, $previous_month, $district);
         $data['district_balances_previous'] = $this->district_totals($year_previous, $previous_month, $district);
@@ -558,7 +615,7 @@ class Rtk_Management extends Home_controller {
 
         $data['district_summary'] = $district_summary;
         
-        $data['districts'] = $this->_districts_from_county($county_name['id']);
+        $data['districts'] = $mycounties;
         $data['facilities'] = $this->_facilities_in_district($district);
 
         $data['district_name'] = $district_summary['district'];
@@ -1426,14 +1483,18 @@ class Rtk_Management extends Home_controller {
         return $returnable;
     }
 
-    function _facility_amc($mfl_code, $commodity = null) {
+
+    public function _facility_amc($mfl_code, $commodity = null) {
         $three_months_ago = date("Y-m-", strtotime("-3 Month "));
         $three_months_ago .='1';
+        $end_date = date("Y-m-", strtotime("-1 Month "));
+        $end_date .='31';
+        //echo "Three months ago = $three_months_ago and End Date =$end_date ";die();
         $q = "SELECT avg(lab_commodity_details.q_used) as avg_used
         FROM  lab_commodity_details,lab_commodity_orders
         WHERE lab_commodity_orders.id =  lab_commodity_details.order_id
         AND lab_commodity_details.facility_code =  $mfl_code
-        AND lab_commodity_orders.order_date BETWEEN '$three_months_ago' AND NOW()";
+        AND lab_commodity_orders.order_date BETWEEN '$three_months_ago' AND '$end_date'";
         
         if (isset($commodity)) {
             $q.=" AND lab_commodity_details.commodity_id = $commodity";
@@ -2244,25 +2305,30 @@ class Rtk_Management extends Home_controller {
         $this->kemsa_district_reports($year, $month, 207);
     }
 
+    public function trigger_reports(){
+        for ($i=1; $i <=30 ; $i++) { 
+            $this->kemsa_district_reports($i);
+        }
+    }
+
     public function kemsa_district_reports($district) {
         $pdf_htm = '';
-        $month = date('mY', strtotime('-6 month', time()));
+        $month = date('mY', strtotime('-1 month', time()));
         $year = substr($month, -4);
-        $month = date('m', strtotime('-6 month', time()));
+        $month = date('m', strtotime('-1 month', time()));
         $date = date('F-Y', mktime(0, 0, 0, $month, 1, $year));
         $q = 'SELECT * FROM  `districts` WHERE  `id` =' . $district;
         $res = $this->db->query($q);
         $resval = $res->result_array();
         $reportname = $resval['0']['district'] . ' district FCDRR-RTK Reports for ' . $date;
-        $reports_html = "<h2>" . $reportname . "</h2><hr> ";
-        echo($year).'<br />';
-        echo $month;die;
+        $reports_html = "<h2>" . $reportname . "</h2><hr> ";        
+     
         $reports_html .= $this->district_reports($year, $month, $district);
         //       echo($reports_html);die;
 //      $email_address = "cecilia.wanjala@kemsa.co.ke,jbatuka@usaid.gov";
 //        $email_address = "lab@kemsa.co.ke,shamim.kuppuswamy@kemsa.co.ke,onjathi@clintonhealthaccess.org,jbatuka@usaid.gov,williamnguru@gmail.com,ttunduny@gmail.com";
-//        $email_address = "lab@kemsa.co.ke,skadima@clintonhealthaccess.org,williamnguru@gmail.com,ttunduny@gmail.com";
-        $email_address = "williamnguru@gmail.com,ttunduny@gmail.com";
+      // $email_address = "lab@kemsa.co.ke,williamnguru@gmail.com,ttunduny@gmail.com";
+        $email_address = "ttunduny@gmail.com";
         $this->sendmail($reports_html, $reportname, $email_address);
     }
 
@@ -2608,7 +2674,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
 
     public function scmlt_home($msg=null,$popout=null){
 
-        if(isset($msq)){
+        if(isset($msg)){
             $data['notif_message'] = $msg;
         }
         if(isset($popout)){
@@ -2687,27 +2753,24 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $this->load->view('rtk/template', $data);        
         
     }
-       public function zone_a_non_reported_facilities(){
+       public function non_reported_facilities(){
         
         $firstday = '2014-05-01';
         $lastday = '2014-07-30';        
       // ini_set('memory_limit', '750M');
-         $sql = "select distinct facilities.facility_code,facilities.facility_name,districts.district,counties.county from facilities,counties,districts 
-        where facilities.zone = 'Zone A' 
-        and facilities.rtk_enabled=1
+        $sql = "select distinct facilities.facility_code,facilities.facility_name,districts.district,counties.county from facilities,counties,districts 
+        where facilities.rtk_enabled=1
         and districts.id = facilities.district
         and counties.id=districts.county
         and facilities.facility_code not in (select 
         distinct facilities.facility_code
-        from
-            facilities,
-            lab_commodity_orders
-        where
-            lab_commodity_orders.order_date between '$firstday' and '$lastday'
-                and facilities.facility_code = lab_commodity_orders.facility_code
+        from facilities, lab_commodity_orders
+        where lab_commodity_orders.order_date between '$firstday' and '$lastday'
+        and facilities.facility_code = lab_commodity_orders.facility_code
         group by facilities.facility_code)
         group by facilities.facility_code
         ";
+        // echo $sql; die;
         $res = $this->db->query($sql);
         $facilities = $res->result_array(); 
 
@@ -2725,7 +2788,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
     //     die;
         $data['title'] = 'Unreported Facilities in Zone A';
         $data['banner_text'] = 'Unreported Facilities in Zone A';
-        $data['content_view'] = 'rtk/allocation_committee/zone_a';        
+        $data['content_view'] = 'rtk/allocation_committee/allocation_non_reported';        
         $data['facilities'] = $facilities;
         $data['amcs'] = $amcs;
         $this->load->view('rtk/template', $data);   
@@ -2868,62 +2931,64 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
             Lab_Commodity_Details::save_lab_commodities($mydata);
             // }
         }
+        $msg = 'The report has been saved';
+        redirect('rtk_management/scmlt_home',$msg);
         // }
         //  $report_type='lab';
         //  $data='Your details have been saved.';
         // $this->get_report($report_type, $data);
-        $district = $this->session->userdata('district_id');
-        $data['facilities'] = Facilities::get_total_facilities_rtk_in_district($district);
-        $facilities = Facilities::get_total_facilities_rtk_in_district($district);
-        $district_name = districts::get_district_name_($district);
-        // $facilities=Facilities::get_facility_details(6);
-        $table_body = '';
-        $reported = 0;
-        $nonreported = 0;
-        foreach ($facilities as $facility_detail) {
+        // $district = $this->session->userdata('district_id');
+        // $data['facilities'] = Facilities::get_total_facilities_rtk_in_district($district);
+        // $facilities = Facilities::get_total_facilities_rtk_in_district($district);
+        // $district_name = districts::get_district_name_($district);
+        // // $facilities=Facilities::get_facility_details(6);
+        // $table_body = '';
+        // $reported = 0;
+        // $nonreported = 0;
+        // foreach ($facilities as $facility_detail) {
 
-            date_default_timezone_set("EUROPE/Moscow");
-            $lastmonth = date('F', strtotime("last day of previous month"));
-            $table_body .= "<tr><td><a class='ajax_call_1' id='county_facility' name='" . base_url() . "rtk_management/get_rtk_facility_detail/$facility_detail[facility_code]' href='#'>" . $facility_detail["facility_code"] . "</td>";
-            $table_body .= "<td>" . $facility_detail['facility_name'] . "</td><td>" . $district_name['district'] . "</td>";
-            $table_body .= "<td>";
+        //     date_default_timezone_set("EUROPE/Moscow");
+        //     $lastmonth = date('F', strtotime("last day of previous month"));
+        //     $table_body .= "<tr><td><a class='ajax_call_1' id='county_facility' name='" . base_url() . "rtk_management/get_rtk_facility_detail/$facility_detail[facility_code]' href='#'>" . $facility_detail["facility_code"] . "</td>";
+        //     $table_body .= "<td>" . $facility_detail['facility_name'] . "</td><td>" . $district_name['district'] . "</td>";
+        //     $table_body .= "<td>";
 
-            $lab_count = lab_commodity_orders::get_recent_lab_orders($facility_detail['facility_code']);
-            //            $fcdrr_count = rtk_fcdrr_order_details::get_facility_order_count($facility_detail['facility_code']);
-            //          echo "<pre>";print_r($lab_count);echo "</pre>";
+        //     $lab_count = lab_commodity_orders::get_recent_lab_orders($facility_detail['facility_code']);
+        //     //            $fcdrr_count = rtk_fcdrr_order_details::get_facility_order_count($facility_detail['facility_code']);
+        //     //          echo "<pre>";print_r($lab_count);echo "</pre>";
 
-            if ($lab_count > 0) {
-                $reported = $reported + 1;
-                //".site_url('rtk_management/get_report/'.$facility_detail['facility_code'])."
-                $table_body .= "<span class='label label-success'>Submitted  for    $lastmonth </span> <!--<img src='" . base_url() . "/Images/check_mark_resize.png'></img>--><a href=" . site_url('rtk_management/rtk_orders') . " class='link'>View</a></td>";
-            } else {
-                $nonreported = $nonreported + 1;
-                $table_body .= "<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'>Report</a></td>";
-            }
+        //     if ($lab_count > 0) {
+        //         $reported = $reported + 1;
+        //         //".site_url('rtk_management/get_report/'.$facility_detail['facility_code'])."
+        //         $table_body .= "<span class='label label-success'>Submitted  for    $lastmonth </span> <!--<img src='" . base_url() . "/Images/check_mark_resize.png'></img>--><a href=" . site_url('rtk_management/rtk_orders') . " class='link'>View</a></td>";
+        //     } else {
+        //         $nonreported = $nonreported + 1;
+        //         $table_body .= "<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'>Report</a></td>";
+        //     }
 
-            $table_body .= "</td>";
-        }
-        $county = $this->session->userdata('county_name');
-        $countyid = $this->session->userdata('county_id');
-        $data['countyid'] = $countyid;
-        $data['county'] = $county;
-        $data['notif_message'] = 'The report has been saved';
+        //     $table_body .= "</td>";
+        // }
+        // $county = $this->session->userdata('county_name');
+        // $countyid = $this->session->userdata('county_id');
+        // $data['countyid'] = $countyid;
+        // $data['county'] = $county;
+        // $data['notif_message'] = 'The report has been saved';
 
 
-        $total = $reported + $nonreported;
-        $percentage_complete = $reported / $total * 100;
-        $percentage_complete = number_format($percentage_complete, 0);
-        $data['percentage_complete'] = $percentage_complete;
-        $data['reported'] = $reported;
-        $data['nonreported'] = $nonreported;
+        // $total = $reported + $nonreported;
+        // $percentage_complete = $reported / $total * 100;
+        // $percentage_complete = number_format($percentage_complete, 0);
+        // $data['percentage_complete'] = $percentage_complete;
+        // $data['reported'] = $reported;
+        // $data['nonreported'] = $nonreported;
 
-        $data['table_body'] = $table_body;
-        $data['title'] = "Home";
-        $data['popout'] = "Your order has been saved.";
-        $data['content_view'] = "rtk/rtk/dpp/dpp_home_with_table";
-        $data['banner_text'] = "Home";
-        $data['link'] = "home";
-        $this->load->view('rtk/template', $data);
+        // $data['table_body'] = $table_body;
+        // $data['title'] = "Home";
+        // $data['popout'] = "Your order has been saved.";
+        // $data['content_view'] = "rtk/rtk/dpp/dpp_home_with_table";
+        // $data['banner_text'] = "Home";
+        // $data['link'] = "home";
+        // $this->load->view('rtk/template', $data);
         //        $this->generate_lastpdf();
         // redirect('home_controller');
     }
@@ -4954,37 +5019,10 @@ WHERE
     }
 
     public function rtk_manager_admin_messages() {
-        
-        /*$users = array('email' =>'All SCMLTs' , 
-                        'email' =>'All CLCs' ,
-                        'email' =>'Sub-Counties with Less than 25% Reported' ,
-                        'email' =>'Sub-Counties with Less than 50% Reported' ,
-                        'email' =>'Sub-Counties with Less than 75% Reported' ,
-                        'email' =>'Sub-Counties with Less than 90% Reported' );             
-        echo "<pre>";
-        print_r($users);die();
-
-
-
-        $data['emails'] = json_encode($emails);
-        $data['emails'] = str_replace('"', "'", $data['emails']);
-        // echo "<pre>";
-        //print_r( $data['emails']);*/
-
-
-
-        /* $sql1 = "select fname from user";
-          $res1 = $this->db->query($sql1);
-          $fname = $res1->result_array();
-          $data['fname'] = json_encode($fname);
-          $data['fname'] = str_replace('"', "'", $data['fname']); */
-        //$data['details'] = $details;
+                
         $data['title'] = 'RTK Manager Messages';
-        $data['banner_text'] = 'RTK Manager';
-        //$data['content_view'] = "rtk/rtk/admin/admin_home_view";
-        $data['content_view'] = "rtk/rtk/admin/messages";
-        //$users = $this->_get_rtk_users();
-       // $data['users'] = $users;
+        $data['banner_text'] = 'RTK Manager';        
+        $data['content_view'] = "rtk/rtk/admin/messages";        
         $this->load->view('rtk/template', $data);
     }
 
@@ -5020,6 +5058,15 @@ WHERE
         $object_id = $edit_id;
         $this->logData('8', $object_id);
         echo "Deadline Updated succesfully";
+    }
+
+    public function delete_alert() {       
+        $id = $_POST['id'];
+        $sql = "DELETE FROM `rtk_alerts` WHERE id='$id'";
+        $this->db->query($sql);
+        $object_id = $edit_id;
+        $this->logData('12', $object_id);
+        echo "Alert Deleted Succesfully";
     }
 
     public function create_Alert() {
@@ -5080,20 +5127,48 @@ WHERE
     }
 
     public function rtk_send_message() {
+        $receipient = $_POST['receipient'];
         $subject = $_POST['subject'];
-        $message = $_POST['message'];
+        $message = $_POST['message'];        
         $attach_file = null;
         $bcc_email = null;
-        $receipient = array();
-        parse_str($_POST['receipients'], $receipient);
-        $receipient = $receipient['hidden-receipients'];
+        // $receipient = array();
+        // parse_str($_POST['receipient'], $receipient);                
+       // $receipient = $receipient['hidden-receipients'];
+        //parse_str($_POST['form'], $receipient);                
+        //$receipient = $receipient['receipient'];
+        // echo "<pre>";
+        // print_r($receipient);die();
+        //$new_recepients = explode(',', $receipient);
+        //$count = count($new_recepients);        
+        echo "Email Sent";
+    }
+
+    public function trigger_emails() {
+        $sql = "select email from user where usertype_id=7 and status =1";
+        $res = $this->db->query($sql)->result_array();
+        $to ="";
+        foreach ($res as $key => $value) {
+            $one = $value['email'];
+            $to.= $one.',';
+        }       
+        
+        $subject = 'Login Page Changes';
+        $message = "Dear All,<br/><br/> Please Note that the Login Page has been Changed to A National Data Page. However, on the top right hand corner of the page, is a link to Login.<br/> Please use that link to login to the system.<br/><br/><br/>Regards, <br/> Development Team";
+        $attach_file = null;
+        $bcc_email = 'ttunduny@gmail.com,tngugi@clintonhealthaccess.org,annchemu@gmail.com';
+       // $receipient = array();
+       // $receipient =$to; 
+     
+        //parse_str($_POST['receipients'], $receipient);
+        //$receipient = $receipient['hidden-receipients'];
         include 'rtk_mailer.php';
         $newmail = new rtk_mailer();
-        $response = $newmail->send_email($receipient, $message, $subject, $attach_file, $bcc_email);
-        $sql = "INSERT INTO `rtk_messages`(`id`, `sender`, `subject`, `message`, `receipient`, `state`) VALUES (NULL,'$sender','$subject','$message','$receipient','0')";
-        $this->db->query($sql);
-        $object_id = $this->db->insert_id();
-        $this->logData('23', $object_id);
+        $response = $newmail->send_email($to, $message, $subject, $attach_file, $bcc_email);
+        //$sql = "INSERT INTO `rtk_messages`(`id`, `sender`, `subject`, `message`, `receipient`, `state`) VALUES (NULL,'$sender','$subject','$message','$receipient','0')";
+        //$this->db->query($sql);
+        //$object_id = $this->db->insert_id();
+       // $this->logData('23', $object_id);
         echo "Email Sent";
     }
 
@@ -5490,7 +5565,7 @@ WHERE
 
     public function show_allocation_pending($month=null,$year=null) {
         $data['title'] = 'RTK Allocation';
-        $data['banner_text'] = 'Pending Facilities for Allocations';
+        $data['banner_text'] = 'Facilities Pending for Allocations';
         $data['content_view'] = 'rtk/allocation_committee/allocation_pending_v';
 
         $pending_facility = $this->rtk_facilities_not_reported(NULL, NULL, NULL, NULL, NULL, NULL);
@@ -5535,10 +5610,14 @@ WHERE
         return ($res->result_array());
     }
 
-    function reporting_rates($year = NULL, $month = NULL) {
+    function reporting_rates($County = NULL,$year = NULL, $month = NULL) {
         if ($year == NULL) {
             $year = date('Y', time());
             $month = date('m', time());
+        }
+        $conditions = '';
+        if(isset($County)){
+            $conditions .="and lab_commodity_orders.district_id= districts.id and districts.county = counties.id and counties.id = $County";
         }
 
         $firstdate = $year . '-' . $month . '-01';
@@ -5552,10 +5631,10 @@ WHERE
                 lab_commodity_orders.order_date as order_date,
                 count(lab_commodity_orders.id) as count
             from
-                lab_commodity_orders
+                lab_commodity_orders,districts,counties
             WHERE
-                lab_commodity_orders.order_date between '$firstdate' and '$lastdate'
-            Group BY lab_commodity_orders.order_date";
+                lab_commodity_orders.order_date between '$firstdate' and '$lastdate' $conditions
+            Group BY lab_commodity_orders.order_date";            
         $res = $this->db->query($sql);
 //        echo"<pre>";print_r($res->result_array());die;
         return ($res->result_array());
@@ -5678,10 +5757,49 @@ WHERE
 
 public function allstats(){
     for ($i=1; $i <48 ; $i++) { 
- $this->summary_tab_display($i,2014,7);
+ $this->summary_tab_display($i,2014,8);
 }
+}
+ public function get_duplicates(){
+        $first_date = "2014-08-01";
+        $last_date = "2014-08-31"; 
+        $sql = "SELECT lab_commodity_orders.facility_code, COUNT( lab_commodity_orders.facility_code ) as total
+                FROM lab_commodity_orders
+                WHERE lab_commodity_orders.order_date
+                BETWEEN '$first_date'
+                AND '$last_date'
+                GROUP BY lab_commodity_orders.facility_code having total>1
+                ORDER BY COUNT( lab_commodity_orders.facility_code ) DESC";
+        //echo "$sql";die();
+        $result = $this->db->query($sql)->result_array();
+        $facils = array();
+        foreach ($result as $key => $value) {
+            $mfl = $value['facility_code'];
+            array_push($facils, $mfl);
+        }
+        for($i=0;$i<count($facils);$i++){
+        //for($i=0;$i<6;$i++){
+            $code= $facils[$i];
+            $sql1 = "select id from lab_commodity_orders where facility_code=$code and order_date  BETWEEN '$first_date'
+                AND '$last_date' order by id asc";
+            $dups = $this->db->query($sql1)->result_array();
+            $new_dups = array();                       
+            foreach ($dups as $key=>$value) {
+                $id = $value['id'];
+                array_push($new_dups,$id);                
+            }
+            for ($a=1; $a <count($new_dups) ; $a++) { 
+                $id = $new_dups[$a];
+                $sql2 ="DELETE FROM `lab_commodity_orders` WHERE id='$id'";                
+                $this->db->query($sql2);
+                
+            }
+        }
+        $this->rtk_manager();
 
-}
+    }
+
+
 }
 
 ?>

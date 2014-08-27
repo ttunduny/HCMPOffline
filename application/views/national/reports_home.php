@@ -287,6 +287,7 @@ legend{
 			  		<section class="col-md-8">
 						
 						<section class="col-md-3">
+
 							<input type="radio" name="doctype" value="pdf" checked/> PDF
 						</section>
 						<section class="col-md-3">

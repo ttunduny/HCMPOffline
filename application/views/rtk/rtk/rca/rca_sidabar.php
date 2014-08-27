@@ -26,6 +26,6 @@
         <li><a href="<?php echo base_url().'rtk_management/rca_facilities_reports' ?>">Reports</a></li>
         <li><a href="<?php echo base_url().'rtk_management/county_admin/users' ?>">Users</a></li>
         <li><a href="<?php echo base_url().'rtk_management/county_admin/facilities' ?>">Facilities</a></li>
-
+        <li><a href="<?php echo base_url().'rtk_management/county_trend' ?>">Trends</a></li>
     </ul>
 </div>

@@ -2,7 +2,22 @@
 $year = date("Y");
 $county_id = $this -> session -> userdata('county_id');
 $district_id =  $this -> session -> userdata('district_id');
+
+		  $identifier = $this -> session -> userdata('user_indicator');
+		
+        switch ($identifier):
+			case 'district':
+			$link=	base_url('reports/order_listing/subcounty/true');
+			$link2=	base_url('reports/order_listing/subcounty');
+			break;
+			case 'county':
+			$link=	base_url('reports/order_listing/county/true');
+			$link2=	base_url('reports/order_listing/county');
+			break;
+			 endswitch;
+			
 ?>
+
 <div class="row" style="margin-left: 1%">
 	<div class="col-md-4">
 		<div class="row">			
@@ -53,7 +68,7 @@ $district_id =  $this -> session -> userdata('district_id');
       	<div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         	<h5>Orders Pending Approval by District Pharmacist</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('reports/order_listing/subcounty') ?>"><span class="badge"><?php 
+			<a class="link" href="<?php echo $link2 ?>"><span class="badge"><?php 
 			echo $county_dashboard_notifications['facility_order_count']['pending'] ?></span>Order(s) Pending in your area</a> 
 			</p>
         </div>
@@ -63,7 +78,7 @@ $district_id =  $this -> session -> userdata('district_id');
         <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         	<h5>Orders Rejected by District Pharmacist</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('reports/order_listing/subcounty/true') ?>"><span class="badge"><?php 
+			<a class="link" href="<?php echo $link ?>"><span class="badge"><?php 
 			echo $county_dashboard_notifications['facility_order_count']['rejected'] ?></span>Order(s) rejected in your area</a> 
 			</p>
         </div>
@@ -73,7 +88,7 @@ $district_id =  $this -> session -> userdata('district_id');
         <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         	<h5>Pending Dispatch</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('reports/order_listing/subcounty/true') ?>"><span class="badge"><?php 
+			<a class="link" href="<?php echo $link; ?>"><span class="badge"><?php 
 			echo $county_dashboard_notifications['facility_order_count']['approved'] ?></span>Order(s) pending dispatch from KEMSA</a> 
 			</p>
         </div>
