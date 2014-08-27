@@ -1,3 +1,19 @@
+<?php 
+$identifier = $this -> session -> userdata('user_indicator');
+		
+        switch ($identifier):
+			case 'district':
+			$link=	base_url('reports/order_listing/subcounty/true');
+			$link2=	base_url('reports/order_listing/subcounty');
+			break;
+			case 'county':
+			$link=	base_url('reports/order_listing/county/true');
+			$link2=	base_url('reports/order_listing/county');
+			break;
+			 endswitch;
+
+?>
+
 <div class="panel-group " id="accordion" style="padding: 0;">
                 <div class="panel panel-default <?php echo $active_panel=='stocking_levels'? 'active-panel': null; ?>">
                     <div class="panel-heading">
@@ -66,12 +82,12 @@
                  <div class="panel panel-default <?php echo $active_panel=='orders'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a  data-parent="#accordion" href="<?php echo base_url("reports/order_listing/subcounty/true"); ?>" id="orders"><span class="glyphicon glyphicon-list-alt">
+                            <a  data-parent="#accordion" href="<?php echo $link; ?>" id="orders"><span class="glyphicon glyphicon-list-alt">
                             </span>Orders</a>
                         </h4>
                     </div>
                 </div>
-                      <div class="panel panel-default <?php echo $active_panel=='divisional'? 'active-panel': null; ?>">
+              <div class="panel panel-default <?php echo $active_panel=='divisional'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-parent="#accordion" href="<?php echo base_url("divisional_reports/program_reports"); ?>" id="program_reports"><span class="glyphicon glyphicon-folder-open">

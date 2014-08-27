@@ -625,7 +625,6 @@ class Reports extends MY_Controller
 		$data['facility_name']=$facility_name[0]['facility_name'];;
 		$interval = $_POST['option_selected'];
 		$data['report_data'] = Facility_stocks::specify_period_potential_expiry($facility_code, $interval);
-		//echo "<pre>";print_r($data['report_data']);echo "</pre>";exit;
 		$this -> load -> view("facility/facility_reports/ajax/potential_expiries_ajax", $data);
 
 	}
@@ -669,7 +668,7 @@ class Reports extends MY_Controller
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['commodities']=Commodities::get_facility_commodities($facility_code);
 		$data['report_view'] = "facility/facility_reports/bin_card_v";
-		$data['active_panel'] = (!$this -> session -> userdata('facility_id')) ? "consumption": "other" ;
+		$data['active_panel'] = (!$this -> session -> userdata('facility_id')) ? "consumption": "stock_control_card" ;
 		$this -> load -> view("shared_files/template/template", $data);
 
 	}
@@ -903,7 +902,7 @@ class Reports extends MY_Controller
 		$data['report_view']="facility/facility_reports/ajax/consumption_stats_ajax";
 		$data['content_view']="facility/facility_reports/reports_v";
 		$view = 'shared_files/template/template';
-		$data['active_panel']='statistics';
+		$data['active_panel']='consumption';
 		$this -> load -> view($view, $data);
 		
 	}	
@@ -965,7 +964,7 @@ class Reports extends MY_Controller
 		$data['report_view']="facility/facility_reports/ajax/facility_orders_filter_v";
 		$data['content_view']="facility/facility_reports/reports_v";
 		$view = 'shared_files/template/template';
-		$data['active_panel']='statistics';
+		$data['active_panel']='orders';
 		$this -> load -> view($view, $data);
 		
 	}
@@ -1224,7 +1223,7 @@ class Reports extends MY_Controller
 		    $data['report_view'] = "subcounty/ajax/facility_roll_out_at_a_glance_v";		
 			$data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v":"shared_files/report_templates/side_bar_v";
 			$data['content_view'] = "facility/facility_reports/reports_v";
-			$data['active_panel'] =(!$this -> session -> userdata('facility_id')) ? "system_usage": "other";
+			$data['active_panel'] =(!$this -> session -> userdata('facility_id')) ? "system_usage": "system_usage";
 			$view = 'shared_files/template/template';
 			$this -> load -> view($view, $data);
 		
@@ -2936,7 +2935,8 @@ $graph_type = 'bar';
      return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
 
     }
-   public function facility_stock_level_dashboard(){
+   public function facility_stock_level_dashboard()
+   {
 		$county_id = $this -> session -> userdata('county_id');
 		$view = 'shared_files/template/dashboard_template_v';
         $data['district_data'] = districts::getDistrict($county_id);
@@ -2948,12 +2948,11 @@ $graph_type = 'bar';
 		$view = 'shared_files/template/template';
 		$data['report_view'] = "subcounty/reports/county_stock_level_filter_v";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
-		$data['active_panel']='other';
+		$data['active_panel']='stocking_levels';
  		$data['title'] = "Reports";
-		
 		$this -> load -> view($view, $data);
 
-	    }
+    }
 
 	    public function tb_report(){
 	    $data['title'] = "Facility Expiries";

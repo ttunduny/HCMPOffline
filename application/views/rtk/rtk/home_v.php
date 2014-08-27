@@ -178,7 +178,7 @@ code {
 
 <div>
 <?php { ?>
-<div id="fixed-topbar" style="z-index:10;position: fixed; top: 74px;background: #708BA5; width: 100%;padding: 7px 1px 0px 13px;border-bottom: 1px solid #ccc;border-bottom: 1px solid #ccc;border-radius: 4px 0px 0px 4px;">
+<div id="fixed-topbar" style="z-index:10;position: fixed; top: 70px;background: #708BA5; width: 100%;padding: 7px 1px 0px 13px;border-bottom: 1px solid #ccc;border-bottom: 1px solid #ccc;border-radius: 4px 0px 0px 4px;">
 <span class="lead" style="color: #ccc;float:left;">Switch Identities</span>
 &nbsp;
 <select id="user_switch" class="form-control" style="width:20%;float:left;margin-left:200px;"><option value="0"> -- Select UserType--</option><option value="scmlt">SCMLT</option><option value="rtk_county_admin">County Administrator</option>
@@ -195,7 +195,7 @@ code {
  
 
 
-<div class="well" style="width:97%;"> 
+<div class="well" style="width:97%;margin-top:-10px;"> 
 <div class="page-header">
  
      <h1 style="font-size: 140%;">County Summary <?php echo $englishdate;?><small> Kenya</small></h1>

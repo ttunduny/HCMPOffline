@@ -20,7 +20,7 @@ table{
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab1" data-toggle="tab">Activity</a></li>
         <li><a href="#StockStatus" data-toggle="tab">Stock Status</a></li>
-        <li><a href="#CountyProgess" data-toggle="tab">Counties Progress</a></li>
+        <!--li><a href="#CountyProgess" data-toggle="tab">Counties Progress</a></li-->
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="tab1">

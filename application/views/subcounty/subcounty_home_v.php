@@ -5,7 +5,6 @@
           </p>
         <div class="col-sm-3 col-md-2 sidebar-offcanvas"  id="bar" role="navigation" style="margin-left:0.5%">
            <div class="panel-group " id="accordion" style="padding: 0;">
-                <!--To be removed once the redesign is done
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
@@ -13,7 +12,7 @@
                             </span>Notifications</a>
                         </h4>
                     </div>
-                </div>-->
+                </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
@@ -34,39 +33,15 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" id="consumption"><span class="glyphicon glyphicon-file">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" id="consumption"><span class="glyphicon glyphicon-cutlery">
                             </span>Consumption</a>
-                        </h4>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" id="redistributions"><span class="glyphicon glyphicon-retweet">
-                            </span>Redistributions</a>
-                        </h4>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix" id="orders"><span class="glyphicon glyphicon-list-alt">
-                            </span>Orders</a>
-                        </h4>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" id="program_reports"><span class="glyphicon glyphicon-folder-open">
-                            </span>Program Reports</a>
                         </h4>
                     </div>
                 </div>
                  <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseEight" id="system_usage"><span class="glyphicon glyphicon-sort">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" id="system_usage"><span class="glyphicon glyphicon-sort">
                             </span>System Usage</a>
                         </h4>
                     </div>
@@ -88,9 +63,9 @@
  */
   $(document).ready(function () {
   	//default 
-  $('.page-header').html('Stocking Levels');
-  $('#stocking_levels').parent().parent().parent().addClass('active-panel');
-  ajax_request_replace_div_content('reports/stock_level_dashboard',"#notification");
+  $('.page-header').html('Notifications');
+  $('#notifications').parent().parent().parent().addClass('active-panel');
+  ajax_request_replace_div_content('reports/notification_dashboard',"#notification");
  
  
   $('[data-toggle=offcanvas]').click(function () {
@@ -103,12 +78,7 @@
         $( ".col-md-2,.col-md-10" ).css( "position", "" );
     };
 });
-//expiries function
-$("#notifications").on('click', function(){
-$('.page-header').html('Notifications');
-active_panel(this);
-ajax_request_replace_div_content('reports/notification_dashboard',"#notification");
-});
+
 //expiries function
 $("#expiries").on('click', function(){
 $('.page-header').html('Expiries');
@@ -133,32 +103,12 @@ active_panel(this);
 $('.page-header').html('Consumption');
 ajax_request_replace_div_content('reports/consumption_data_dashboard',"#notification");
 });
-//Redistributiions Functions
-$("#redistributions").on('click', function(){
-active_panel(this);
-$('.page-header').html('Commodity Redistribution');
-ajax_request_replace_div_content('reports/county_donation',"#notification");
-});
-//Orders
-$("#orders").on('click', function(){
-active_panel(this);
-$('.page-header').html('Orders');
-ajax_request_replace_div_content('reports/order_listing/subcounty/true',"#notification");
-});
-//Program Reports
-$("#program_reports").on('click', function(){
-active_panel(this);
-$('.page-header').html('');
-ajax_request_replace_div_content('divisional_reports/program_reports',"#notification");
-});
-//System Usage function
+//Consumption function
 $("#system_usage").on('click', function(){
 active_panel(this);
 $('.page-header').html('System Usage');
 ajax_request_replace_div_content('reports/get_sub_county_facility_mapping_data',"#notification");
 });
-
-//
      
 });
 </script>

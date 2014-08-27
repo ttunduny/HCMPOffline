@@ -57,12 +57,18 @@
 <script>
 	
 	$(document).ready(function () {
+		$(".editable").on('click',function() {
+		
+  				$("#edit_user").attr("disabled", false);
+		});
+		
 		$("#create_new,#edit_user").attr("disabled", "disabled");
 		       $('#main-content').on('hidden.bs.modal','#myModal', function () {
-
 				$("#datatable").hide().fadeIn('fast');
 				// location.reload();
 			});
+			
+				
 		$('#Tab a').click(function (e) {
  		 e.preventDefault()
   			$(this).tab('show')
@@ -80,6 +86,7 @@ $('#add_new').click(function () {
 $('.edit').click(function () {
 	
  		 $('#editModal').appendTo("body").modal('show');
+ 		 $("#edit_user").attr("disabled", 'disabled');
 })
 
 
@@ -164,6 +171,51 @@ var drop_down='';
       $("#facility_name").append(drop_down);
     });
     $("#facility_name").show('slow'); 
+  // console.log(hcmp_facility_api)  
+    }
+    }); 
+    
+    //edit
+    
+    $("#county_edit").change(function() {
+    var option_value=$(this).val();
+    $('#edit_facility').val('NULL')
+    
+    if(option_value=='NULL'){
+    $("#edit_district").hide('slow'); 
+    }
+    else{
+var drop_down='';
+ var hcmp_county_api = "<?php echo base_url(); ?>reports/get_sub_county_json_data/"+$("#county_edit").val();
+  $.getJSON( hcmp_county_api ,function( json ) {
+     $("#edit_district").html('<option value="NULL" selected="selected">Select Sub County</option>');
+      $.each(json, function( key, val ) {
+        drop_down +="<option value='"+json[key]["id"]+"'>"+json[key]["district"]+"</option>"; 
+      });
+      $("#edit_district").append(drop_down);
+    });
+    $("#edit_district").show('slow');   
+    }
+    
+    }); 
+    
+    $("#edit_district").change(function() {
+    var option_value=$(this).val();
+    
+    if(option_value=='NULL'){
+    $("#edit_facility").hide('slow'); 
+    }
+    else{
+var drop_down='';
+ var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json/"+$("#edit_district").val();
+  $.getJSON( hcmp_facility_api ,function( json ) {
+     $("#edit_facility").html('<option value="NULL" selected="selected">Select Facility</option>');
+      $.each(json, function( key, val ) {
+        drop_down +="<option value='"+json[key]["facility_code"]+"'>"+json[key]["facility_name"]+"</option>"; 
+      });
+      $("#edit_facility").append(drop_down);
+    });
+    $("#edit_facility").show('slow'); 
   // console.log(hcmp_facility_api)  
     }
     }); 
@@ -288,10 +340,8 @@ var drop_down='';
           data:{ 'first_name': $('#first_name').val(),'last_name': $('#last_name').val(),
           'telephone': $('#telephone').val(),'email': $('#email').val(),
           'username': $('#username').val(),'facility_id': $('#facility_name').val(),
-          'county':$('#county').val(),
-          'district_name': $('#sub_county').val(),'user_type': $('#user_type').val()
-
-        },
+          'county_id':$('#county').val(),
+          'district_name': $('#sub_county').val(),'user_type': $('#user_type').val()},
           url: url,
           beforeSend: function() {
            
@@ -304,7 +354,7 @@ var drop_down='';
            
           },
           success: function(msg) {
-         
+         // $('.modal-body').html(msg);
         setTimeout(function () {
           	$('.modal-body').html("<div class='bg-warning' style='height:30px'>"+
 							"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"+
@@ -341,11 +391,11 @@ $("#test").on('click','.edit',function() {
 	if(chck_fac_l === 0 && chck_dis_l===0 ){
 		
 	$( "#edit_district" ).prop( "disabled", true );
-	$( "#edit_facility" ).prop( "disabled", true );
+	//$( "#edit_facility" ).prop( "disabled", true );
 	
 }else if(chck_dis_l != 0 && chck_fac_l === 0 ){
 	
-	$( "#edit_facility" ).prop( "disabled", true );
+	//$( "#edit_facility" ).prop( "disabled", true );
 }
 
 	
@@ -439,7 +489,7 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
     })
 
 		
-		$("#user_type").change(function() {
+		/*$("#user_type").change(function() {
 	
       		var type = $('#user_type').val()
       		
@@ -447,7 +497,7 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
             $('#username').val($('#county option:selected').text()+'@hcmp.com')
         } 
            
-    	});	
+    	});	*/
     	
     	$('#email').on(function() {
 

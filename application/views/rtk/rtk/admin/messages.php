@@ -1,31 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>   
-<<<<<<< HEAD
-	<link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
-	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
-	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
-	<link href="<?php echo base_url().'assets/css/jquery-ui.css'?>" type="text/css" rel="stylesheet"/>
-	<link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
-	
-	<script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url().'assets/scripts/typehead/handlebars.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script> 
-	<script src="<?php echo base_url().'assets/scripts/validator.js'?>" type="text/javascript"></script> 
-	<script src="<?php echo base_url().'assets/scripts/waypoints.js'?>" type="text/javascript"></script> 
-	<script src="<?php echo base_url().'assets/scripts/waypoints-sticky.min.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url().'assets/scripts/typehead/typeahead.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
-
-  <script src="<?php echo base_url().'assets/tagsinput/tagmanager.js'?>" type="text/javascript"></script>
-=======
   <link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
   <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
   <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
   <link href="<?php echo base_url().'assets/css/jquery-ui.css'?>" type="text/css" rel="stylesheet"/>
   <link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
-  
   <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/typehead/handlebars.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script> 
@@ -39,7 +19,6 @@
   <script src="<?php echo base_url().'assets/tagsinput/bootstrap-tagsinput.js'?>" type="text/javascript"></script>
   <link rel="stylesheet" href="<?php echo base_url().'assets/tagsinput/bootstrap-tagsinput.css'?>" />
 
->>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
 
   <script>
   paceOptions = {
@@ -50,7 +29,6 @@
     elements:{
       selectors:['body']
     } // 
-
 
   };
   function load(time){
@@ -159,11 +137,23 @@
   width: 60%;
   height: auto;
   border: ridge 1px;
+  margin-top: 10px;
+  background-color: #E6E6E6;
+  text-align: left;
+}
+#message input{
+  float: left;
+  margin-left: 10px;
+}
+
+.twitter-typeahead{
+  width: 100%;
 }
 </style>
 </head> 
 <body style="padding-top: 0;">  
 </div>
+<center>
 <div id="message">
   <div class="panel-body">
     <form id="compose" name="compose">       
@@ -178,7 +168,7 @@
 =======
         <tr>  
                               
-            <input class="typeahead form-control tm-input" id="receipient" type="text" placeholder="Enter Receipient" style="width:96%" />   
+            <input class="typeahead form-control tm-input" id="receipient" type="text" placeholder="Enter Receipient" data-role="tagsinput" data-provide="typeahead" style="width:96%" />   
           
 >>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
         </tr><br/>    
@@ -186,15 +176,18 @@
           <label>Subject:</label>
         </tr><br/>
         <tr>                   
-          <input class="form-control" id="subject" type="text" style="width:96%" />   
+          <input class="form-control" id="subject" name="subject" type="text" style="width:96%" placeholder="RE:SUBJECT"/>   
           <tr>
             <label>Message:</label>
           </tr><br/>
           <tr>    
-            <textarea class="form-control" id="message" style="width:96%;" rows="10"></textarea>
-
+            <textarea class="form-control" id="message" name="message" style="width:96%;background:#ffffff;" rows="10" placeholder="Type your Message Here"></textarea>
           </tr> <br/>
-
+          <tr>            
+            <td><button id="save_message_btn" class="btn btn-primary">Send Message</button></td>
+            <td><button class="btn">Close</button></td>
+          </tr>
+          <input type="hidden" name="receipient_id" id="receipient_id" value="NULL"/>
         </table>
       </form>   
     </div>
@@ -202,11 +195,8 @@
   </div>
 
 </div>
-
-
-
-
-<input type="hidden" name="facility_id" id="facility_id" value="NULL"/>  
+</center>
+  
 </body>
 <script>
 jQuery.browser = {};
@@ -239,8 +229,8 @@ var substringMatcher = function(strs) {
             };
             
             
-            var facilities = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('facilities'),
+            var messages = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('receipients'),
               queryTokenizer: Bloodhound.tokenizers.whitespace,
               prefetch: { 
                 url:'../assets/scripts/typehead/json/messages.json',
@@ -249,6 +239,7 @@ var substringMatcher = function(strs) {
             });           
 
             
+<<<<<<< HEAD
             facilities.initialize();
 <<<<<<< HEAD
 
@@ -262,14 +253,24 @@ var substringMatcher = function(strs) {
             
             //$('#receipient').tagsinput();
 >>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
+=======
+            messages.initialize();
+            
+            /*$(".tm-input").tagsManager({               
+              replace:false,                              
+              onlyTagList: false,  
+              
+            });*/
+>>>>>>> 7a98ade9c7683b0377797f16b25d9afc87ad0292
 
             $('.typeahead').typeahead({
               highlight: true
             },
             {
               name: 'facilities',
-              displayKey: 'facilities',
-              source: facilities.ttAdapter(),
+              displayKey: 'receipients',
+              valueKey: 'id',
+              source: messages.ttAdapter(),
               templates: {
                 //header: '<h5 class="query-title">Facilities</h5>'
               }
@@ -292,57 +293,40 @@ var substringMatcher = function(strs) {
                 source: facilities.ttAdapter()
               }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
             });*/
 
+=======
+>>>>>>> 7a98ade9c7683b0377797f16b25d9afc87ad0292
 
-            function onSelected($e, datum) {
-              $.each(datum, function( k, v ){
-                $('#county_id').val('NULL');
-                $("#district_id").val('NULL');
-                $("#facility_id").val('NULL');
-                var query_table= datum.name
-                if(query_table=='county'){
-                  ajax_request_replace_div_content('national/get_facility_infor/'+datum.id+'/NULL/NULL/NULL',"#facilities");  
-                  ajax_request_replace_div_content('national/facility_over_view/'+datum.id,"#facilities_rolled_out");
-                  ajax_request_replace_div_content('national/hcw/'+datum.id,"#hcw_trained"); 
-                  ajax_request_replace_div_content('national/expiry/NULL/'+datum.id+'/NULL/NULL/NULL',"#actual");
-                  ajax_request_replace_div_content('national/potential/'+datum.id+'/NULL/NULL/NULL/NULL',"#potential"); 
-                  ajax_request_replace_div_content('national/stock_level_mos/'+datum.id+'/NULL/NULL/NULL/ALL',"#mos");
-                  ajax_request_replace_div_content('national/consumption/'+datum.id+'/NULL/NULL/NULL',"#consumption");
-                  ajax_request_replace_div_content('national/order/NULL/'+datum.id+'/NULL/NULL/NULL',"#orders");
-                  ajax_request_replace_div_content('national/get_lead_infor/NULL/'+datum.id+'/NULL/NULL/NULL',"#lead_infor");
-                  $('#county_id').val(datum.id);
-                }
-                if(query_table=='district'){
-                  ajax_request_replace_div_content('national/get_facility_infor/NULL/'+datum.id+'/NULL/NULL',"#facilities");  
-                  ajax_request_replace_div_content('national/facility_over_view/NULL/'+datum.id+'/NULL/NULL',"#facilities_rolled_out");
-                  ajax_request_replace_div_content('national/hcw/NULL/'+datum.id,"#hcw_trained"); 
-                  ajax_request_replace_div_content('national/expiry/NULL/NULL/'+datum.id+'/NULL/NULL',"#actual");
-                  ajax_request_replace_div_content('national/potential/NULL/'+datum.id+'/NULL/NULL/NULL',"#potential"); 
-                  ajax_request_replace_div_content('national/stock_level_mos/NULL/'+datum.id+'/NULL/NULL/ALL',"#mos");
-                  ajax_request_replace_div_content('national/consumption/NULL/'+datum.id+'/NULL/NULL',"#consumption");
-                  ajax_request_replace_div_content('national/order/NULL/NULL/'+datum.id+'/NULL/NULL',"#orders");
-                  ajax_request_replace_div_content('national/get_lead_infor/NULL/NULL/'+datum.id+'/NULL/NULL',"#lead_infor");
-                  $("#district_id").val(datum.id);
-                }
+            });*/
+      $(function(){
 
-                if(query_table=='facility'){
-                  ajax_request_replace_div_content('national/get_facility_infor/NULL/NULL/'+datum.id+'/NULL',"#facilities");  
-                  ajax_request_replace_div_content('national/facility_over_view/NULL/NULL/'+datum.id+'/NULL',"#facilities_rolled_out");
-                  ajax_request_replace_div_content('national/hcw/NULL/NULL/'+datum.id,"#hcw_trained"); 
-                  ajax_request_replace_div_content('national/expiry/NULL/NULL/NULL/'+datum.id+'/NULL',"#actual");
-                  ajax_request_replace_div_content('national/potential/NULL/NULL/'+datum.id+'/NULL/NULL',"#potential"); 
-                  ajax_request_replace_div_content('national/stock_level_mos/NULL/NULL/'+datum.id+'/NULL/ALL',"#mos");
-                  ajax_request_replace_div_content('national/consumption/NULL/NULL/'+datum.id+'/NULL',"#consumption");
-                  ajax_request_replace_div_content('national/order/NULL/NULL/NULL/'+datum.id+'/NULL',"#orders");
-                  ajax_request_replace_div_content('national/get_lead_infor/NULL/NULL/NULL/'+datum.id+'/NULL',"#lead_infor");
-                  $("#facility_id").val(datum.id);
-                }
-              });
-}
+             $('#save_message_btn').click(function(e) {         
+              e.preventDefault();          
+             // var form = $( "form[name=compose]").serialize();        
+              var receipient = $("#receipient").val();
+              var subject = $("#subject").val();
+              var message = $("#message").val(); 
+              var id = $("#receipient_id").val();
+              alert(id);
+              //alert('Receipients='+receipients+' Subject'+subject+' Message'+message);
+              
+              $.post("<?php echo base_url() . 'rtk_management/rtk_send_message'; ?>", {
+                  message: message,
+                  subject: subject,
+                  receipient: receipient,            
+                  }).done(function(data) {
+                      alert("Data Loaded: " + data);                      
+                      window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_messages'; ?>";
+                  });
+               }); 
+      });
+                  
+                 
 
 </script>
 
