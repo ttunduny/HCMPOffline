@@ -30,8 +30,8 @@ box-shadow: 1px 1px 1px 1px #DDD3ED;
 <div class="filter row">
 <form class="form-inline" role="form">
 <select id="year_expired" class="form-control col-md-2">
-	<option value="NULL" selected="selected">Select year</option>
-	<?php for($i=2014; $i<=date('Y'); $i++): echo "<option value='$i'>$i</option>"; endfor;  ?>
+	<option value="NULL">Select year</option>
+	<?php for($i=2014; $i<=date('Y'); $i++): echo "<option value='$i'selected='selected'>$i</option>"; endfor;  ?>
 </select>
 
 <div class="col-md-1">
@@ -64,9 +64,9 @@ box-shadow: 1px 1px 1px 1px #DDD3ED;
 </div>
 <script>
 $(window).load(function() {
-		var months_no= '12';//load expiries for 12 months by default
-		var url_='<?php echo "reports/potential_expiries_reports/".$this->session->userdata('county_id') ?>'+'/'+months_no;
-		ajax_request_replace_div_content(url_,'#div_potential');
+		//var months_no= '12';//load expiries for 12 months by default
+		//var url_='<?php //echo "reports/potential_expiries_reports/".$this->session->userdata('county_id') ?>'+'/'+months_no;
+		//ajax_request_replace_div_content(url_,'#div_potential');
 
         var year='<?php echo $year ?>';
 		var url_='<?php echo "reports/actual_expiries_reports/".$this->session->userdata('county_id') ?>'+'/'+year;
