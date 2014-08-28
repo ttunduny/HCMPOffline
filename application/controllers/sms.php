@@ -338,7 +338,7 @@ class sms extends MY_Controller {
 		$this -> send_email(substr($email_address, 0, -1), $message, $subject, $attach_file);
 
 	}
-/*
+
 	public function weekly_potential_expiries_report() {
 		//Set the current year
 		$year = date("Y");
@@ -494,7 +494,7 @@ class sms extends MY_Controller {
 
 		}
 
-	}*/
+	}
 
 	public function weekly_stockouts_report() {
 		//Set the current year

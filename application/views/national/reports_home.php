@@ -564,11 +564,11 @@ $("input:radio[name=commodity_s]").click(function() {
         }else if(criteria=='Actual'){
        		if(type=='excel'){ 
 	        	if(commodity_type=='Tracer'){ 
-	        		link='national/expiry/'+county_id+'/'+district+'/'+facility+'/NULL/excel';
+	        		link='national/expiry/NULL/'+county_id+'/'+district+'/'+facility+'/excel';
 	        	}
 	        	if(commodity_type=='All'){ 
 	        		var commodity_id=$('#commodity').val();
-	        		link='national/expiry/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel';
+	        		link='national/expiry/NULL/'+county_id+'/'+district+'/'+facility+'/excel';
 	        	}
 	        window.open(url+link,'_parent');
 	        
