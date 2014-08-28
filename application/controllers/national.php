@@ -855,13 +855,13 @@ order by c.county asc , d1.district asc
         ");
         
         foreach ($facility_stock_data as $facility_stock_data_item) :
-        array_push($row_data, array($facility_stock_data_item["county"],
-        $facility_stock_data_item["subcounty"],
-        $facility_stock_data_item["facility_name"],
-        $facility_stock_data_item["facility_code"],
-        $facility_stock_data_item["drug_name"],
-        $facility_stock_data_item["total"]
-        ));
+	        array_push($row_data, array($facility_stock_data_item["county"],
+	        $facility_stock_data_item["subcounty"],
+	        $facility_stock_data_item["facility_name"],
+	        $facility_stock_data_item["facility_code"],
+	        $facility_stock_data_item["drug_name"],
+	        $facility_stock_data_item["total"]
+	        ));
         endforeach;
         $excel_data['row_data'] = $row_data;
 
@@ -1170,10 +1170,10 @@ order by user.id asc
 
 	 public function reports(){
 	 	
-		$data['county'] = Counties::getAll();
+		//$data['county'] = Counties::getAll();
 		//Added function to display oonly the counties that are currently using HCMP
-		//$counties = Counties::get_counties_all_using_HCMP();
-		//$data['county'] = $counties;
+		$counties = Counties::get_counties_all_using_HCMP();
+		$data['county'] = $counties;
 		
 		$data['commodities'] = Commodities::get_all();
 		$data['sub_county'] = Districts::getAll();

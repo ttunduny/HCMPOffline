@@ -3444,31 +3444,31 @@ public function get_division_commodities_data($district_id = null, $facility_cod
          	
          }
 	     public function actual_expiries_reports($county_id,$year){
-		 $expiries_array=Facility_stocks::get_county_expiries($county_id,$year);
-		 $graph_data=$series_data=array();
-		 $total_expiry=0;
+			 $expiries_array = Facility_stocks::get_county_expiries($county_id,$year);
+			 $graph_data = $series_data = array();
+			 $total_expiry = 0;
 		 foreach($expiries_array as $facility_expiry_data):
-	     $district=$facility_expiry_data['district'];
-		 $name=$facility_expiry_data['facility_name'];
-		 $mfl=$facility_expiry_data['facility_code'];
-		 $total=$facility_expiry_data['total'];	 
-		 $total_expiry=$total_expiry+$total;
-		 $year=date('Y');
-		 $total=number_format($total, 2, '.', ',');
-		 $district_id=$facility_expiry_data['district_id'];
-		 $link=base_url("reports/expiries/$mfl");
-	     array_push($series_data, array($district,$name,$mfl,$total,'<a href="'.$link.'">
-         <button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-zoom-in"></span>View</button></a>'));
+		     $district=$facility_expiry_data['district'];
+			 $name=$facility_expiry_data['facility_name'];
+			 $mfl=$facility_expiry_data['facility_code'];
+			 $total=$facility_expiry_data['total'];	 
+			 $total_expiry=$total_expiry+$total;
+			 $year=date('Y');
+			 $total=number_format($total, 2, '.', ',');
+			 $district_id=$facility_expiry_data['district_id'];
+			 $link=base_url("reports/expiries/$mfl");
+		     array_push($series_data, array($district,$name,$mfl,$total,'<a href="'.$link.'">
+	         <button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-zoom-in"></span>View</button></a>'));
 
 	    endforeach;
-		$total_expiry=number_format($total_expiry, 2, '.', ',');
+		$total_expiry = number_format($total_expiry, 2, '.', ',');
 	    array_push($series_data, array("","","Total for $year",$total_expiry,''));
 	   
-		$category_data=array(array("Sub-county","Facility Name","Mfl","TOTAL (ksh)",''));
+		$category_data = array(array("Sub-county","Facility Name","Mfl","TOTAL (ksh)",''));
 
-        $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_'));
-	    $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
-	    $graph_data=array_merge($graph_data,array("table_body"=>$series_data));
+        $graph_data = array_merge($graph_data,array("table_id"=>'dem_graph_'));
+	    $graph_data = array_merge($graph_data,array("table_header"=>$category_data ));
+	    $graph_data = array_merge($graph_data,array("table_body"=>$series_data));
 				
 		$data['table'] = $this->hcmp_functions->create_data_table($graph_data);
 		$data['table_id'] ="dem_graph_";
