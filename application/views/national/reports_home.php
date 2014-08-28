@@ -567,6 +567,7 @@ $("input:radio[name=commodity_s]").click(function() {
 	        		link='national/expiry/NULL/'+county_id+'/'+district+'/'+facility+'/excel';
 	        	}
 	        	if(commodity_type=='All'){ 
+	        		//alert(county_id);return;
 	        		var commodity_id=$('#commodity').val();
 	        		link='national/expiry/NULL/'+county_id+'/'+district+'/'+facility+'/excel';
 	        	}
@@ -574,11 +575,11 @@ $("input:radio[name=commodity_s]").click(function() {
 	        
 	        }else if(type=='pdf'){ 
 	        	if(commodity_type=='Tracer'){ 
-	        		link='national/expiry/'+county_id+'/'+district+'/'+facility+'/NULL/pdf';
+	        		link='national/expiry/NULL/'+county_id+'/'+district+'/'+facility+'/pdf';
 	        	}
 	        	if(commodity_type=='All'){ 
 	        		var commodity_id=$('#commodity').val();
-	        		link='national/expiry/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/pdf';
+	        		link='national/expiry/NULL/'+county_id+'/'+district+'/'+facility+'/pdf';
 	        	}
 	        	window.open(url+link,'_parent');
 	        }else if(type=='graph'){
