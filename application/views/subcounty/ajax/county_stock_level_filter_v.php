@@ -75,7 +75,7 @@ $district_id =  $this -> session -> userdata('district_id');
 						<span class="bold"><?php 
 				echo $county_dashboard_notifications['facility_donations'];?></span>
                   	 <br/>
-                  	 <span id="">Items have been donated</span>
+                  	 <span id="">Items have been Redistributed</span>
                             
                    </div></a>
 		  <?php endif; // Potential Expiries?>
@@ -98,7 +98,7 @@ $district_id =  $this -> session -> userdata('district_id');
 						<span class="bold"><?php 
 				echo $county_dashboard_notifications['potential_expiries'];?></span>
                   	<br/>
-                  	 <span id="">Commodity (ies) Expiring in 6 months</span>
+                  	 <span id="">Commodity(ies) Expiring in 6 months</span>
                             
                    </div></a>
           	
