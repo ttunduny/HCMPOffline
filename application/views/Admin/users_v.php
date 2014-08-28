@@ -59,10 +59,10 @@
 	$(document).ready(function () {
 		$(".editable").on('click',function() {
 		
-  				$("#edit_user").attr("disabled", false);
+  				$(".edit_user").attr("disabled", false);
 		});
 		
-		$("#create_new,#edit_user").attr("disabled", "disabled");
+		$("#create_new,.edit_user").attr("disabled", "disabled");
 		       $('#main-content').on('hidden.bs.modal','#myModal', function () {
 				$("#datatable").hide().fadeIn('fast');
 				// location.reload();

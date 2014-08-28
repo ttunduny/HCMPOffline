@@ -183,10 +183,13 @@ endforeach;
 </div>
 </div>
 </div>
-
 <div class="graph_content" id="graph_content_">	
 </div>
 <script>
+	 $(function () { 
+<?php echo $consumption_default; ?>
+});
+
 	$(document).ready(function() {
     <?php echo $default_consumption_graph; ?>
     

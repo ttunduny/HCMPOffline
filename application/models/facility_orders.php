@@ -150,6 +150,7 @@ class facility_orders extends Doctrine_Record {
  }
  public static function get_filtered_facility_orders($facility_code, $year, $month, $option)
  {
+ 	//echo $option;die;
  	switch ($option) :
          case 'ksh':
            $computation ="(fod.quantity_ordered_unit*d.unit_cost) as total";
@@ -201,7 +202,8 @@ $query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
 	
  }
  
-/*s public static function get_cost_of_orders($facility_code,$year = null, $district_id = null, $county_id = null)
+
+ /*public static function get_cost_of_orders($facility_code,$year = null, $district_id = null, $county_id = null)
  {
  	$year = (isset($year)) ? $year: date("Y");
  	if(isset($district_id) && $district_id>0):

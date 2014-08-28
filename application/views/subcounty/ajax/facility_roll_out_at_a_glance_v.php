@@ -5,7 +5,7 @@
 	 <div id="temp"></div>
 	<?php echo @$data; ?>
 	<div style="padding-top: 25px;">
-<div class="filter" >
+<!--<div class="filter" >
 <h5>
 	<select name="year" id="year_filter" style="width: 7.8em;">
 		<option value="0">Select Year</option>
@@ -32,7 +32,7 @@
 	<button class="btn btn-small btn-success" id="download" name="download" style="margin-left: 1em;"><span class="glyphicon glyphicon-save">Download</button> 
 	
 	</h5>
-</div>
+</div>-->
 	<div>
 	<div id="container"  style="height:60%; width: 50%; margin: 0 auto; float: left">
 	</div>
@@ -47,6 +47,7 @@ $(document).ready(function() {
 	<?php echo @$graph_data_monthly; ?>
 	<?php echo @$graph_log; ?>
 	
+
 	$(".ajax_call1").click( function (){
 		
 		$('.modal-dialog').addClass("modal-lg");

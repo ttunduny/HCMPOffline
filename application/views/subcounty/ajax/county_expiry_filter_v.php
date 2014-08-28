@@ -98,10 +98,12 @@ endforeach;
 </div>
 </div>
 </div>
-<div class="graph_content">	
-
+<div class="graph_content" id="dem_graph_">	
 </div>
 <script>
+	 $(function () { 
+<?php echo $default_expiries; ?>
+});
 
 	$(document).ready(function() {
 		    window.onload = function(){
