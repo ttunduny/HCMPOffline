@@ -1,3 +1,10 @@
+<?php 	
+//Pick values from the seesion 	
+$facility_code=$this -> session -> userdata('facility_id');
+$district_id=$this -> session -> userdata('district_id');
+$county_id =$this -> session -> userdata('county_id'); 
+
+?>
 <style>
  	.input-small{
  		width: 100px !important;
@@ -5,16 +12,13 @@
  	.input-small_{
  		width: 230px !important;
  	}
-  .filter-row{
-    margin: none;
-  }
  </style>
-
- <?php $facility_code=$this -> session -> userdata('facility_id');
-		$district_id=$this -> session -> userdata('district_id');
-		$county_id =$this -> session -> userdata('county_id');  ?>
+<h1 class="page-header" style="margin: 0;font-size: 1.6em;">Consumption</h1>
+<div class="alert alert-info" style="width: 100%">
+  <b>Below is the consumption Level in the County </b> :Select filter Options
+</div>
 <div class="filter row">
-	<form class="form-inline" role="form">
+<form class="form-inline" role="form">
 <select id="commodity_filter" class="form-control col-md-2">
 	<option value="NULL">Select Commodity</option>
 	<?php
@@ -39,7 +43,9 @@
 	<option value="ksh">KSH</option>
 	<option value="service_point">Per Service Point</option>
 </select> 
+<div class="col-md-1">
 <button class="btn btn-sm btn-success" id="filter" name="filter"><span class="glyphicon glyphicon-filter">Filter</button> 
+</div>
 </form>	
 </div>
 

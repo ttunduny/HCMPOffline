@@ -1,4 +1,3 @@
-
 <div class="container">
 	
 	<?php $x = array();
@@ -78,6 +77,8 @@
 								<th>Sub-County</th>
 								<th>Health Facility</th>
 								<th>User Type</th>
+								<th>Recieve Email</th>
+								<th>Recieve Text Msg</th>
 								<th>Status</th>
 								<th>Action</th>
 
@@ -98,6 +99,31 @@
 								<td class="district" data-attr="<?php echo $list['district_id']; ?>"><?php echo $list['district']; ?></td>
 								<td class="facility_name" data-attr="<?php echo $list['facility_code']; ?>"><?php echo $list['facility_name']; ?></td>
 								<td class="level" data-attr="<?php echo $list['level_id']; ?>"><?php echo $list['level']; ?></td>
+								<?php 
+								//for text and email receivals
+								//<td style="display:none;" class="email_recieve"><'.$list['email_recieve'];'</td>
+								//<td style="display:none;" class="sms_recieve"><'.$list['sms_recieve'];'</td>
+								if ($list['email_recieve']==1):
+									echo'
+									<td><input class="email_recieve" data-attr="'.$list['email_recieve'].'" value="'.$list['email_recieve'].'" type="checkbox" disabled checked ="checked"></td>
+									';
+								else:
+									echo'
+									<td><input class="email_recieve" data-attr="'.$list['email_recieve'].'" value="'.$list['email_recieve'].'" type="checkbox" disabled></td>
+									';
+								endif;
+
+								if ($list['sms_recieve']==1):
+									echo'
+									<td ><input class="sms_recieve" data-attr="'.$list['sms_recieve'].'" value="'.$list['sms_recieve'].'" type="checkbox" disabled checked ="checked"></td>
+									';
+								else:
+									echo'
+									<td><input class="sms_recieve" data-attr="'.$list['sms_recieve'].'" value="'.$list['sms_recieve'].'" type="checkbox" disabled></td>
+									';
+								endif;
+								 ?>
+
 								<td >
 								<?php
 									if ($list['status']==1) {
@@ -348,7 +374,54 @@
 								<div class=" col-md-6">
 									<label> User Name </label>
 									<div class="form-group">
-										<input type="email" name="username_edit" id="username_edit" required="required" class="form-control " placeholder="email@domain.com" tabindex="5" readonly>
+										<input type="email" name="username_edit" id="username_edit" required="required" class="form-control " placeholder="email@domain.com" tabindex="6" readonly>
+									</div>
+								</div>
+
+								<div class=" col-md-6">
+									<label> Enable Email Recieval </label>
+									<div class="form-group">
+									<?php 
+									echo $list['email_recieve'];
+									switch ($list['email_recieve']) {
+										case 0:
+											echo '
+												<input type="checkbox" value= "'.$list['email_recieve'].'" name="email_recieve_edit" class="email_recieve_edit" id="email_recieve_edit" required="required">
+											';
+											break;
+										case 1:
+											echo '
+												<input type="checkbox" value= "'.$list['email_recieve'].'" checked ="checked" name="email_recieve_edit" class="email_recieve_edit" id="email_recieve_edit" required="required">
+											';
+											break;
+										default:
+											# code...
+											break;
+									}
+									 ?>
+									</div>
+								</div>
+								<div class=" col-md-6">
+									<label> Enable Text Recieval </label>
+									<div class="form-group">
+									<?php 
+									echo $list['sms_recieve'];
+									switch ($list['sms_recieve']) {
+										case 0:
+											echo '
+												<input type="checkbox" value= "'.$list['sms_recieve'].'" name="email_recieve_edit" class="email_recieve_edit" id="email_recieve_edit" required="required" readonly>
+											';
+											break;
+										case 1:
+											echo '
+												<input type="checkbox" value= "'.$list['sms_recieve'].'" checked ="checked" name="email_recieve_edit" class="email_recieve_edit" id="email_recieve_edit" required="required" readonly>
+											';
+											break;
+										default:
+											# code...
+											break;
+									}
+									 ?>
 									</div>
 								</div>
 								<div class="col-md-6">

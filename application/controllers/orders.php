@@ -170,7 +170,7 @@ for ($row = 1; $row <= $highestRow; $row++){
         $data['banner_text'] = "Facility New Order";
         $data['drawing_rights'] = $facility_data[0]['drawing_rights'];
         $data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
-		
+
 		$this -> load -> view('shared_files/template/template', $data);
 	}
 	public function facility_order_($facility_code=null) {
@@ -306,6 +306,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 			$user_action = "order";
 
 		 	Log::log_user_action($user, $user_action);
+
 			$this -> hcmp_functions -> send_order_sms();
 
 			$this -> session -> set_flashdata('system_success_message', "Facility Order No $new_order_no has Been Saved");

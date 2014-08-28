@@ -551,16 +551,16 @@
 </div><!-- end Modal edit user -->
 <script>
       $(document).ready(function () {
+      	$("#create_new,.edit_user").attr("disabled", 'disabled');
       	
       	$(".editable").on('click',function() {
 		
-  				$("#edit_user").attr("disabled", false);
+  				$(".edit_user").attr("disabled", false);
 		});
 		
-      	$(".edit_user,#create_new").attr("disabled", "disabled");
+      	
       	$('#myModal').on('hidden.bs.modal', function () {
-      		alert('jack');
-				$("#datatable,.modal-content").hide().fadeIn('fast');
+      			$("#datatable,.modal-content").hide().fadeIn('fast');
 				 location.reload();
 			});
 	$('.dataTables_filter label input').addClass('form-control');

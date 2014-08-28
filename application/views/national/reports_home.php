@@ -322,7 +322,7 @@ legend{
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
-      <h4 class="modal-title" id="myModalLabel">Graph Title</h4>
+      <h4 class="modal-title" id="myModalLabel"></h4>
       </div>
       <div class="modal-body" id="graph_content">
        
@@ -386,33 +386,29 @@ $('#sub_county').on('change', function(){
     	var value = $(this).val();
 	 	if(value=="Potential"){
 			$("#interval").attr("disabled", false);
-			$("#year").attr("disabled", 'disabled');
+			//$("#year").attr("disabled", 'disabled');
 		 	$("#from,#to").attr("disabled", 'disabled');
 		 	document.getElementById("commodity_s").checked = true;
 			document.getElementById("tracer_commodities").disabled = true;
 			document.getElementById("specify_commodities").disabled = true;
 		}else if(value=="Actual"){
-			$("#expfrom,#expto").attr("disabled", false);
-			$("#year,#interval").attr("disabled", 'disabled');
+			//$("#expfrom,#expto").attr("disabled", false);
+			$("#interval").attr("disabled", 'disabled');
 			$("#from,#to").attr("disabled", 'disabled');
 			$("#interval").val(0);
 			document.getElementById("commodity_s").checked = true;
 			document.getElementById("tracer_commodities").disabled = true;
 			document.getElementById("specify_commodities").disabled = true;
 		}else if(value=="Orders"){
-			$("#year,#interval").attr("disabled", 'disabled');
+			$("#interval").attr("disabled", 'disabled');
 			$("#from,#to").attr("disabled", 'disabled');
 			document.getElementById("commodity_s").checked = true;
 			document.getElementById("tracer_commodities").disabled = true;
 			document.getElementById("specify_commodities").disabled = true;
 		}else{
-			$("#interval,#expfrom,#expto").attr("disabled", 'disabled');
+			$("#interval").attr("disabled", 'disabled');
 			$("#from,#to").attr("disabled", false);
-			$("#year").attr("disabled", false);
-			$("#interval").val(0);
-			document.getElementById("commodity_s").disabled = false;
-			document.getElementById("tracer_commodities").disabled = false;
-			document.getElementById("specify_commodities").disabled = false;
+			
 		}
 });
 
@@ -465,11 +461,11 @@ $("input:radio[name=commodity_s]").click(function() {
 	        }
 	        if(commodity_type=='All'){ 
 	        	var commodity_id=$('#commodity').val();
-	        	link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel/'+encodeURI(from)+'/'+encodeURI(to);
+	        	link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/pdf/'+encodeURI(from)+'/'+encodeURI(to);
 	        }
 	        if(commodity_type=='Specify'){ 
 	        	var commodity_id=$('#commodity').val();
-	        	link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel/'+encodeURI(from)+ '/'+encodeURI(to);
+	        	link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/pdf/'+encodeURI(from)+ '/'+encodeURI(to);
 	        }
 	        window.open(url+link,'_parent');
         }else if(type=='table'){

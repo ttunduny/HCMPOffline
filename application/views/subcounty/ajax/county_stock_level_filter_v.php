@@ -1,12 +1,177 @@
+<?php
+$year = date("Y");
+$county_id = $this -> session -> userdata('county_id');
+$district_id =  $this -> session -> userdata('district_id');
+
+		  $identifier = $this -> session -> userdata('user_indicator');
+		
+        switch ($identifier):
+			case 'district':
+			$link=	base_url('reports/order_listing/subcounty/true');
+			$link2=	base_url('reports/order_listing/subcounty');
+			break;
+			case 'county':
+			$link=	base_url('reports/order_listing/county/true');
+			$link2=	base_url('reports/order_listing/county');
+			break;
+			 endswitch;
+			$temp = array_filter($county_dashboard_notifications, function($value){
+			    return $value > 0;
+			});	
+			$count_for_class=count($temp);
+			$class="";
+			if ($count_for_class==1) {
+				
+				 $class="col-md-12 stat_item";
+				
+			} elseif($count_for_class==2) {
+				
+				$class="col-md-6 stat_item";
+				
+			}elseif($count_for_class==3) {
+				
+				 $class="col-md-4 stat_item ";
+				
+			}elseif($count_for_class==4) {
+				
+				 $class="col-md-3 stat_item ";
+				
+			}else {
+				$class="col-md-2 stat_item";
+			}	
+?>
+<style>
+	
+	.stat_item {
+		height: 52px;
+		padding: 2px 5px;
+		margin:0 1px 1px 1px;
+		color: #fff;
+		text-align: center;
+		font-size: 1em;
+		
+	}	
+	.stat_item:hover{
+	-webkit-transform: scale(1.005);
+	-moz-transform: scale(1.005);
+	margin-left: 2px;
+	-webkit-transition-duration: 50ms;
+	-webkit-transition-function: ease-out;
+	-moz-transition-duration: 50ms;
+	-moz-transition-function: ease-out;
+	box-shadow: 0 1px 3px 0.5px #000;
+}
+	.bold{
+		font-weight:800;
+	}
+</style>
+
+<div class="row-fluid" style="margin-bottom: 5px">
+	
+		
+    <?php if($county_dashboard_notifications['facility_donations']>0): ?>
+ 		 <a href="<?php echo base_url('reports/county_donation/')?>">
+ 					<div class="color_e stat_item <?php echo $class; ?>">
+						<span class="bold"><?php 
+				echo $county_dashboard_notifications['facility_donations'];?></span>
+                  	 <br/>
+                  	 <span id="">Items have been donated</span>
+                            
+                   </div></a>
+		  <?php endif; // Potential Expiries?>
+         <?php if($county_dashboard_notifications['actual_expiries']>0): ?>
+         	
+         	<a href="<?php echo base_url('reports/county_expiries/')?>">
+ 					<div class="color_e stat_item <?php echo $class; ?>">
+						<span class="bold"><?php 
+				echo $county_dashboard_notifications['actual_expiries'];?></span>
+                  	<br/>
+                  	 <span id="">Expired Commodities</span>
+                            
+                   </div></a>
+      
+         <?php endif; // Actual Expiries?>
+          <?php if($county_dashboard_notifications['potential_expiries']>0): ?>
+          	
+          	<a href="<?php echo base_url('reports/county_expiries/')?>">
+ 					<div class="color_e stat_item <?php echo $class; ?>">
+						<span class="bold"><?php 
+				echo $county_dashboard_notifications['potential_expiries'];?></span>
+                  	<br/>
+                  	 <span id="">Commodity (ies) Expiring in 6 months</span>
+                            
+                   </div></a>
+          	
+      	
+		  <?php endif; // Potential Expiries?>
+         <?php if($county_dashboard_notifications['items_stocked_out_in_facility']>0): ?>
+         	
+         	<a href="<?php echo base_url('reports/stock_out/')?>">
+ 					<div class="color_e stat_item <?php echo $class; ?>">
+						<span class="bold"><?php 
+				echo $county_dashboard_notifications['items_stocked_out_in_facility'];?></span>
+                  	<br/>
+                  	 <span id="">Facilities have stock outs</span>
+                            
+                   </div></a>
+         	
+        <?php endif; // items_stocked_out_in_facility?>
+        <?php if(array_key_exists('pending', $county_dashboard_notifications['facility_order_count']) 
+        && @$county_dashboard_notifications['facility_order_count']['pending']>0): ?>
+        
+        <a href="<?php echo $link2 ?>">
+ 					<div class="color_e stat_item <?php echo $class; ?>">
+						<span class="bold"><?php 
+				echo $county_dashboard_notifications['facility_order_count']['pending'];?></span>
+                  	<br/>
+                  	 <span id="">Order(s) Pending</span>
+                            
+                   </div></a>
+      	
+        <?php endif; //pending
+         if(array_key_exists('rejected', $county_dashboard_notifications['facility_order_count']) 
+         && @$county_dashboard_notifications['facility_order_count']['rejected']>0): ?>
+         
+         <a href="<?php echo $link ?>">
+ 					<div class="color_e stat_item <?php echo $class; ?>">
+						<span class="bold"><?php 
+				echo $county_dashboard_notifications['facility_order_count']['rejected'];?></span>
+                  	<br/>
+                  	 <span id="">Order(s) rejected</span>
+                            
+                   </div></a>
+         
+        
+        <?php endif; //rejected
+        if(array_key_exists('approved', $county_dashboard_notifications['facility_order_count'])
+		 && @$county_dashboard_notifications['facility_order_count']['approved']>0): ?>
+		 
+		  <a href="<?php echo $link ?>">
+ 					<div class="color_e stat_item <?php echo $class; ?>">
+						<span class="bold"><?php 
+				echo $county_dashboard_notifications['facility_order_count']['approved'];?></span>
+                  	<br/>
+                  	 <span id="">Order(s) pending dispatch from KEMSA</span>
+                            
+                   </div></a>
+		 
+         <?php endif; //approved?>
+           
+</div>
+	
+  
+	
+
+
 <div class="alert alert-info" style="width: 100%">
   <b>Below are the Stocking Levels in the County </b> :Select filter Options
 </div>
 
 <ul class='nav nav-tabs'>
-	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items <?php echo " ($number_of_tracer_items)"; ?></a></li>
+	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Commodities <?php echo " ($number_of_tracer_items)"; ?></a></li>
       <li class=""><a href="#division" data-toggle="tab">Program Commodities</a></li>
       <!--<li class=""><a href="#cat" data-toggle="tab">Categories</a></li>-->
-      <li class=""><a href="#county" data-toggle="tab">County View</a></li>
+      <li class=""><a href="#county" data-toggle="tab">Commodities</a></li>
       <li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>
 </ul>
     <div id="myTabContent" class="tab-content">
@@ -20,6 +185,7 @@
 <?php
 foreach($district_data as $district_):
         $district_id=$district_->id;
+		$district=$district_->id;
         $district_name=$district_->district;    
         echo "<option value='$district_id'>$district_name</option>";
 endforeach;
@@ -163,14 +329,15 @@ endforeach;
 </div>
 </div>
 </div>
-<div class="graph_content" id="graph_default">	
-	
-</div>
+<div class="graph_content" id="default_graph_"  ></div>	
 
+	
 <script>
 	 $(function () { 
+<?php echo $graph_data_default; ?>
 <?php echo $default_graph; ?>
 });
+
 	$(document).ready(function() {
 
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -261,7 +428,7 @@ var drop_down='';
         $("#tracer_district_filter").val()+"/"+
         $("#tracer_facility_filter").val()+"/"+
         $("#tracer_plot_value_filter").val()+
-        "/NULL/1";
+        "/1/1";
         ajax_request_replace_div_content(url_,'.graph_content');    
           });
           
@@ -280,7 +447,7 @@ var drop_down='';
          $(".tracer-download").button().click(function(e) {
         e.preventDefault(); 
         var url_ = "reports/get_county_stock_level_new/"+"NULL/"+"NULL/"+
-        $("#tracer_district_filter").val()+"/"+$("#tracer_facility_filter").val()+"/"+$("#tracer_plot_value_filter").val()+"/csv_data";   
+        $("#tracer_district_filter").val()+"/"+$("#tracer_facility_filter").val()+"/"+$("#tracer_plot_value_filter").val()+"/csv_data"+"/1";   
          window.open(url+url_ ,'_blank');   
           });
           
@@ -294,7 +461,7 @@ var drop_down='';
 		$(".county-filter").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+
-$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+"/NULL/NULL";	
+$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+"/1/NULL";	
 		ajax_request_replace_div_content(url_,'.graph_content');	
           });
           
@@ -308,13 +475,13 @@ $("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_fil
          $(".subcounty-filter").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+
-$("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val();	
+$("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+"/1/NULL";	
 		ajax_request_replace_div_content(url_,'.graph_content');	
           });
         $(".subcounty-download").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+
-$("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+"/csv_data";	
+$("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+"/csv_data/1";	
 		 window.open(url+url_ ,'_blank');	
           });
           
@@ -328,7 +495,7 @@ $(".category-filter").button().click(function(e) {
         $(".category-download").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+
-"NULL/"+$("#category_filter").val()+"/"+$("#category_district_filter").val()+"/"+ $("#category_facility_filter").val()+"/"+$("#category_plot_value_filter").val()+"/csv_data";	
+"NULL/"+$("#category_filter").val()+"/"+$("#category_district_filter").val()+"/"+ $("#category_facility_filter").val()+"/"+$("#category_plot_value_filter").val()+"/csv_data/1";	
 		 window.open(url+url_ ,'_blank');	
           });
           
@@ -341,5 +508,5 @@ $(".general_stock_info").on(function(e)
            });
 	
           		
-		});
+		});			
 </script>

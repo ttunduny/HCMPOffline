@@ -49,9 +49,8 @@ if (isset($donate_destination)&&($donate_destination == 'district')) {
 					<tbody>
 						<tr row_id='0'>
 
-							<!--<td>
+							<td>
 								<select name="district[0]" class="form-control input-small district" style="width:110px !important;">
-								<option value="0">Select Sub-county</option>
 								<?php 
 		foreach ($subcounties as $district) {
 			$id=$district->id;
@@ -68,11 +67,12 @@ if (isset($donate_destination)&&($donate_destination == 'district')) {
 								<select name="district[0]" class="form-control input-small district">
 						<?php 
 
+
 								if (isset($donate_destination)&&($donate_destination == 'district')) {
 									echo '<option value="'.$district_id.' "> '.$district_data['district'].'</option>';
 								}
 								else{
-									echo '<option value="0">--select subcounty---</option>';
+									echo '<option value="0">Select Sub-county</option>';
 									foreach ($subcounties as $district) {
 									$id=$district->id;
 									$name=$district->district;		
@@ -82,6 +82,9 @@ if (isset($donate_destination)&&($donate_destination == 'district')) {
 							 ?>
 								</select>
 							</td>
+							<td>
+						<select name="mfl[0]" class="form-control input-small facility" style="width:110px !important;">
+                       <option value="0">Select Facility</option>
 							<?php 
 								$dropdown2=isset($donate_destination)&&($donate_destination == 'district')? 
 								'<td>
