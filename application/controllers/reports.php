@@ -624,7 +624,7 @@ class Reports extends MY_Controller
 		$data['facility_name']=$facility_name[0]['facility_name'];;
 		$interval = $_POST['option_selected'];
 		$data['report_data'] = Facility_stocks::specify_period_potential_expiry($facility_code, $interval);
-		echo "<pre>";print_r($data['report_data']);echo "</pre>";exit;
+		//echo "<pre>";print_r($data['report_data']);echo "</pre>";exit;
 		$this -> load -> view("facility/facility_reports/ajax/potential_expiries_ajax", $data);
 
 	}
@@ -2702,7 +2702,7 @@ $month = $data['expiry_month'];
 				 $facility_name = null;
 
 			 }
-			 echo $district_name[0];
+			 //echo $district_name[0];
 		if($report_type=="table_data"):
        		$graph_data = array_merge($graph_data, array("graph_title" => "Months Of Stock For ".$title.""));
 			
@@ -2737,7 +2737,7 @@ $month = $data['expiry_month'];
 			$this -> hcmp_functions -> create_excel($excel_data);
 			
 		else:
-			echo $district_name;
+			//echo $district_name;
     		$graph_type = 'bar';			
     		$graph_data = array_merge($graph_data,array("graph_id"=>'dem_graph_'));
 		    $graph_data = array_merge($graph_data,array("graph_title"=>"Months Of Stock For ".$title.""));

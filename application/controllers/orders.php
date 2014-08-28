@@ -169,8 +169,8 @@ for ($row = 1; $row <= $highestRow; $row++){
         $data['title'] = "Facility New Order";
         $data['banner_text'] = "Facility New Order";
         $data['drawing_rights'] = $facility_data[0]['drawing_rights'];
-        $data['facility_commodity_list'] = Commodities::get_facility_commodities($facility_code);
-
+        $data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
+		
 		$this -> load -> view('shared_files/template/template', $data);
 	}
 	public function facility_order_($facility_code=null) {
@@ -213,7 +213,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 		$data['option_'] = ($option == 'readonly') ? 'readonly_' : 0;
 		$data['order_details'] = $order_data;
 		$data['facility_order'] = facility_order_details::get_order_details($order_id);
-		$data['facility_commodity_list'] = Commodities::get_facility_commodities($order_data[0]['facility_code']);
+		$data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
 		$this -> load -> view('shared_files/template/template' , $data);
 			}
 
@@ -518,7 +518,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 		$facility_code = $this -> session -> userdata('facility_id');
 		$data['content_view'] = "facility/facility_orders/update_order_delivery_from_kemsa_v";
 		$data['title'] = "Facility Update Order Delivery";
-		$data['facility_commodity_list'] = Commodities::get_facility_commodities($facility_code);
+		$data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
 		$data['order_details']=facility_order_details::get_order_details($order_id);
 		$data['general_order_details']=facility_orders::get_order_($order_id);
 		$data['banner_text'] = "Facility Update Order Delivery";
