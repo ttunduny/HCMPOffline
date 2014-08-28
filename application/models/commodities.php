@@ -103,6 +103,5 @@ AND c.commodity_sub_category_id = c_s_c.id");
 return $inserttransaction;	
 	}
 
-
 }
 ?>
