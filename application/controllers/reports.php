@@ -2884,6 +2884,8 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 		$month_ = date('M d');
 
         //echo $district_id." Cty:".$county_id." Fcty:".$facility_code." Cmd_id:".$commodity_id." Report Type:".$report_type." TRacer:".$tracer;exit;
+        
+        
 
 	 $district    = $this -> session -> userdata('district_id');
 	 $county_id = $this -> session -> userdata('county_id');
@@ -2920,6 +2922,36 @@ $graph_type = 'bar';
 				$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'], array($final_graph_data_['commodity_name']));
 				$graph_data['series_data']['Stock'] = array_merge($graph_data['series_data']['Stock'],array((int)$final_graph_data_['total']));	
 			endforeach;
+			
+		//$facility_code=(!$this -> session -> userdata('facility_id')) ? null: $this -> session -> userdata('facility_id');
+		$district_id=(!$this -> session -> userdata('district_id')) ? null:$this -> session -> userdata('district_id');
+		//$county_id=(!$this -> session -> userdata('county_id')) ? null:$this -> session -> userdata('county_id');
+	    //compute stocked out items
+	    $items_stocked_out_in_facility = count(facility_stocks::get_items_that_have_stock_out_in_facility($facility_code,$district_id,$county_id));
+		//get order information from the db
+		$facility_order_count_ = facility_orders::get_facility_order_summary_count($facility_code,$district_id,$county_id);
+		$facility_order_count = array();
+	     foreach($facility_order_count_ as $facility_order_count_)
+	     {
+	     	$facility_order_count[$facility_order_count_['status']]=$facility_order_count_['total'];
+	     }
+	    //get potential expiries infor here
+	    $potential_expiries = count(Facility_stocks::get_potential_expiry_summary($county_id,6,$district_id,$facility_code));
+	    //get actual Expiries infor here
+	    $actual_expiries = count(Facility_stocks::get_county_expiries($county_id,date('Y'),$district_id,$facility_code));
+		//get items they have been donated for
+		$facility_donations = count(redistribution_data::get_redistribution_data($facility_code,$district_id,$county_id,date('Y')));
+	    $identifier = $this -> session -> userdata('user_indicator');
+	    //get the roll out status here
+	    $facility_roll_out_status = Facilities::get_tragetted_rolled_out_facilities($facility_code,$district_id,$county_id,$identifier);
+	    
+		$data['county_dashboard_notifications'] = array(
+		'items_stocked_out_in_facility'=>$items_stocked_out_in_facility,
+		'facility_order_count'=>$facility_order_count,
+		'potential_expiries'=>$potential_expiries,
+		'actual_expiries'=>$actual_expiries,
+		'facility_donations'=>$facility_donations,
+	    'facility_roll_out_status'=>$facility_roll_out_status);	
 		    
 		 	$data['graph_data_default'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 			//return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
