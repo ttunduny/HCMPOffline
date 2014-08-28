@@ -101,12 +101,14 @@ for ($row = 1; $row <= $highestRow; $row++){
 
 	public function facility_order() 
 	{
+		//$this -> load -> library('PHPExcel');
+		//ini_set("max_execution_time", "1000000");
 		$facility_code = $this -> session -> userdata('facility_id');
 
         $items=Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
         if(isset($_FILES['file']) && $_FILES['file']['size'] > 0){
         $ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
-            echo $ext; 
+            //echo $ext; 
         if($ext=='xls'){
         $excel2 = PHPExcel_IOFactory::createReader('Excel5');    
         }else if($ext=='xlsx'){
@@ -114,8 +116,8 @@ for ($row = 1; $row <= $highestRow; $row++){
         }else{
         die('Invalid file format given'.$_FILES['file']);   
         }
-
-        $excel2=$objPHPExcel= $excel2->load($_FILES["file"]["tmp_name"]); // Empty Sheet
+		
+		$excel2=$objPHPExcel= $excel2->load($_FILES["file"]["tmp_name"]); // Empty Sheet
     
         $sheet = $objPHPExcel->getSheet(0); 
         $highestRow = $sheet->getHighestRow(); 
@@ -123,7 +125,8 @@ for ($row = 1; $row <= $highestRow; $row++){
         $highestColumn = $sheet->getHighestColumn();
         $temp=array();
         $facility_code= $sheet->getCell('H4')->getValue();
-    
+   
+   
         //  Loop through each row of the worksheet in turn
         for ($row = 17; $row <= $highestRow; $row++){ 
         //  Read a row of data into an array
@@ -131,7 +134,7 @@ for ($row = 1; $row <= $highestRow; $row++){
         if(isset($rowData[0][2]) && $rowData[0][2]!='Product Code'){
         foreach($items as $key=> $data){
         if(in_array($rowData[0][2], $data)){
-        array_push($temp,array('sub_category_name'=>$data['sub_category_name'],
+       	 array_push($temp,array('sub_category_name'=>$data['sub_category_name'],
         'commodity_name'=>$data['commodity_name'],
         'unit_size'=>$data['unit_size'],
         'unit_cost'=>$data['unit_cost'],
@@ -152,12 +155,16 @@ for ($row = 1; $row <= $highestRow; $row++){
         'adjustmentpve'=>$data['adjustmentpve'],
         'adjustmentnve'=>$data['adjustmentnve'],
         'historical'=>$data['historical']));
-         unset($items[$key]);
+      //  unset($items[$key]);
             }   
             }   
             }
             }
-
+//var_dump($temp);
+foreach ($temp as $key => $value) {
+	echo $value['quantity_ordered'],"<br/>";
+}
+exit;
         unset($objPHPExcel); 
        $data['order_details'] = $data['facility_order'] = $temp;  
         }else{
@@ -169,7 +176,7 @@ for ($row = 1; $row <= $highestRow; $row++){
         $data['title'] = "Facility New Order";
         $data['banner_text'] = "Facility New Order";
         $data['drawing_rights'] = $facility_data[0]['drawing_rights'];
-        $data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
+        $data['facility_commodity_list'] = Commodities::get_facility_commodities($facility_code);
 
 		$this -> load -> view('shared_files/template/template', $data);
 	}
