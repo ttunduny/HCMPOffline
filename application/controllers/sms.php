@@ -338,7 +338,7 @@ class sms extends MY_Controller {
 		$this -> send_email(substr($email_address, 0, -1), $message, $subject, $attach_file);
 
 	}
-
+/*
 	public function weekly_potential_expiries_report() {
 		//Set the current year
 		$year = date("Y");
@@ -494,7 +494,7 @@ class sms extends MY_Controller {
 
 		}
 
-	}
+	}*/
 
 	public function weekly_stockouts_report() {
 		//Set the current year
@@ -531,15 +531,15 @@ class sms extends MY_Controller {
 					$facility_code = $facilities_ -> facility_code;
 					$facility_name = Facilities::get_facility_name2($facility_code);
 					$facility_name = $facility_name['facility_name'];
-
+					
 					$facility_potential_expiries = Facility_stocks::get_stocked_out_commodities_for_report($facility_code, $district_id, null);
-
+					
 					//get potential expiries in that particular facility
 					//$facility_potential_expiries = Facility_stocks::potential_expiries_email($district_id, $facility_code);
 
 					//push the result into another array that will be used by the distrct
 					(array_key_exists($facility_name, $facility_total)) ? $facility_total[$facility_name] = array_merge($facility_total[$facility_name], array($facility_potential_expiries)) : $facility_total = array_merge($facility_total, array($facility_name => array($facility_potential_expiries)));
-					//Start buliding the excel file
+					//Start building the excel file
 					$excel_data = array();
 					$excel_data = array('doc_creator' => $facility_name, 'doc_title' => 'facility stokouts weekly report ', 'file_name' => 'facility weekly report');
 					$row_data = array();
@@ -561,7 +561,9 @@ class sms extends MY_Controller {
 						
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						$subject = "Potential Stock Outs: " . $facility_name;
-						$email_address = $this -> get_facility_email($facility_code);
+						$email_address ="collinsojenge2014@gmail.com";
+						
+						//$email_address = $this -> get_facility_email($facility_code);
 
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
@@ -597,9 +599,9 @@ class sms extends MY_Controller {
 					$subject = "Potential Stock Outs: " . $district_name . " Sub County";
 					$message = $district_name . "'s Weekly Potential Stock Outs Report. ";
 					$message .= "Find attached an excel sheet with the breakdown of the Potential Stock Outs for the district";
-
-					
-					$email_address = $this -> get_ddp_email($district_id);
+					$email_address ="collinsojenge2014@gmail.com";
+						
+					//$email_address = $this -> get_ddp_email($district_id);
 
 					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
@@ -609,7 +611,7 @@ class sms extends MY_Controller {
 
 			//Building the excel sheet to be sent to the district admin
 			$excel_data = array();
-			$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'district stock outs weekly report ', 'file_name' => 'district weekly report');
+			$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'district potential stock outs weekly report ', 'file_name' => 'district weekly report');
 			$row_data = array();
 			$column_data = array("Facility Code", "Facility Name", "Commodity Code", "Commodity Name","Unit Size", "Quantity Available (Packs)","Quantity Available (MOS)","Supplier", "Manufacturer", "Subcounty", "County");
 			$excel_data['column_data'] = $column_data;
@@ -635,11 +637,13 @@ class sms extends MY_Controller {
 				$this -> hcmp_functions -> create_excel($excel_data);
 				$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 				$subject = "Stock Outs: " . $county_name . " County";
-				$message = $county_name . "'s Weekly Stock Outs Report. ";
+				$message = $county_name . "'s Weekly Potential Stock Outs Report. ";
 				$message .= "Find attached an excel sheet with the breakdown of the Potential Stock Outs for the county";
-
-				$email_address = $this -> get_county_email($county_id);
-				$bcc = $this -> get_bcc_notifications();
+				$email_address ="collinsojenge2014@gmail.com";
+				$bcc = "collinsojenge@gmail.com";
+						
+				//$email_address = $this -> get_county_email($county_id);
+				//$bcc = $this -> get_bcc_notifications();
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc_email);
 			}
 
