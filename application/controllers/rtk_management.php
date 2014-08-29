@@ -2773,7 +2773,8 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         echo "</table>";
     }
 
-    public function scmlt_home($msg=null,$popout=null){
+    public function scmlt_home(){
+        $msg = $this->session->flashdata('message');
 
         if(isset($msg)){
             $data['notif_message'] = $msg;
@@ -3110,8 +3111,9 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
             Lab_Commodity_Details::save_lab_commodities($mydata);
             // }
         }
-        $msg = 'The report has been saved';
-        redirect('rtk_management/scmlt_home',$msg);
+        //$msg = 'The report has been saved';
+        $this->session->set_flashdata('message', 'The report has been saved');
+        redirect('rtk_management/scmlt_home');
         // }
         //  $report_type='lab';
         //  $data='Your details have been saved.';

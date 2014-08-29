@@ -32,7 +32,8 @@ table td{
 $(function() {
 
     $('#user_order input').addClass("form-control");
-    //$('#user_order input').addClass("resize");
+
+    //Set the begining Balance for the Comodities    
     var begining_bal = <?php echo json_encode($beginning_bal);?>;
 
     for (var a = 0; a < begining_bal.length; a++) {            
@@ -40,76 +41,119 @@ $(function() {
         $('#b_balance_'+a).attr("value",current_bal); 
     };             
 
-
+    //Set the first element uneditable i.e. Screening Determine
     $('#tests_done_0').attr("readonly",'true');
 
-    /*Calculating the Value of the Number of tests done for Colloidal*/
-    $('#vct').keyup(function(){   
-        validate_vct();
-        compute_tests_done();           
-    })
-    $('#pitc').keyup(function(){
-        validate_pitc();
-        compute_tests_done();
-    })
-    $('#pmtct').keyup(function(){
-        validate_pmtct();
-        compute_tests_done();
-    })
-    $('#blood_screening').keyup(function(){
-        validate_blood();
-        compute_tests_done();           
-    })
-    $('#other2').keyup(function(){
-        validate_other();
-        compute_tests_done();           
+    //Set the Datepickers
+    $("#begin_date").datepicker({
+        defaultDate: "",
+        changeMontd: true,
+        changeYear: true,
+        numberOfMontds: 1,
+    });
+    $("#end_date").datepicker({
+        defaultDate: "",
+        changeMonth: true,
+        changeYear: true,
+        numberOfMonths: 1,
+        
+    });
+
+    /*Calculating the Value of the Number of tests done for Screening Determine*/
+
+    /*end of triggering of the calculation of Values of the Number of tests done for Screening Determine*/
+    $('#vct').change(function(){           
+        validate_tests('vct');        
     })    
+    $('#pitc').change(function(){        
+        validate_tests('pitc');       
+    })
+    $('#pmtct').change(function(){        
+        validate_tests('pmtct');        
+    })
+    $('#blood_screening').change(function(){        
+        validate_tests('blood_screening');        
+    })
+    $('#other2').change(function(){        
+         validate_tests('other2');        
+    }) 
 
-function validate_vct(){            
-        var input_value  = $('#vct').val();            
-        if(isNaN(input_value)){
-         $('#vct').attr("value",0);
-     }else if(input_value<0){
-        $('#vct').attr("value",0);
+    /* end of triggering of the calculation of Values for Screening Determine */   
+    /* Start of Validation for Tests for Screening Determine */
+    function validate_tests(top_type){
+        var input_value  = $('#'+top_type).val();
+        if(isNaN(input_value)){            
+             $('#'+top_type).css("border-color","red");
+         }else{ 
+            if(input_value<0){                
+                $('#'+top_type).css("border-color","red");                
+            }else{      
+                $('#'+top_type).css("border-color","none");
+                compute_tests_done();
+            }
+        }
+        
     }
 
-}
-function validate_pitc(){            
-    var input_value  = $('#pitc').val();            
-    if(isNaN(input_value)){
-     $('#pitc').attr("value",0);
- }else if(input_value<0){
-    $('#pitc').attr("value",0);
-}
+    /* --- Start of calculation for the no of tests done for Screening Determine  -- */
+    function compute_tests_done(){  
+        var vct_no = parseInt($('#vct').val());
+        var pitc_no = parseInt($('#pitc').val());
+        var pmtct_no = parseInt($('#pmtct').val());
+        var blood_screening_no = parseInt($('#blood_screening').val());
+        var other = parseInt($('#other2').val());
+        tests_done_no = vct_no + pitc_no + pmtct_no + blood_screening_no + other;
+        $('#tests_done_0').attr("value",tests_done_no);
+        $('#q_used_0').attr("value",tests_done_no);
+    }       
+    /* End of Validation for Tests for Screening Determine */
 
-}
-function validate_pmtct(){            
-        var input_value  = $('#pmtct').val();            
-        if(isNaN(input_value)){
-         $('#pmtct').attr("value",0);
-     }else if(input_value<0){
-        $('#pmtct').attr("value",0);
+    /* ---- Compute the Ending Balance New----*/
+    function compute_ending_balance(row,commodity_val,state){
+         var ending_balance = $('#physical_count_' + row).val();
+         var input_value = $('#' +commodity_val+ row).val();
+         if(isNaN(input_value)){             
+             $('#' +commodity_val+ row).css("border-color","red");
+         }else{ 
+            if(input_value<0){                
+                $('#' +commodity_val+ row).css("border-color","red");                
+            }else{      
+                $('#' +commodity_val+ row).css("border-color","none");
+                //State is whether to add or subtract, 0 is for add, 1 for subtract
+                var end_val = null;
+                if(state==0){
+                    end_val = ending_balance + input_value;
+                }else if(state==1){
+                    end_val = ending_balance + input_value;
+                }
+                
+                $('#physical_count_' + row).val(end_val);
+            }
+        }
+
+    }
+    /* ---- Compute the Losses New----*/    
+    function compute_losses(row){
+        var tests_done = $('#tests_done_'+row).val(); 
+        alert(tests_done);              
+        var quantity_used = $('#q_used_'+row).val();
+        if(isNaN(tests_done)||(tests_done<0)){             
+             $('#' +tests_done+ row).css("border-color","red");
+         }else if(isNaN(quantity_used)||(quantity_used<0)){             
+             $('#' +quantity_used+ row).css("border-color","red");
+         }else{ 
+            $('#' +tests_done+ row).css("border-color","none");
+            $('#' +quantity_used+ row).css("border-color","none");
+            var loss = quantity_used - tests_done;
+            $('#losses_'+row).val(loss);
+        }        
     }
 
-}
-function validate_blood(){            
-        var input_value  = $('#blood_screening').val();            
-        if(isNaN(input_value)){
-         $('#blood_screening').attr("value",0);
-     }else if(input_value<0){
-        $('#blood_screening').attr("value",0);
-    }
 
-}
-function validate_other(){            
-        var input_value  = $('#other2').val();            
-        if(isNaN(input_value)){
-         $('#other2').attr("value",0);
-     }else if(input_value<0){
-        $('#other2').attr("value",0);
-    }
 
-}
+
+
+
 
 function validateEnd(row){
     var end_val = $('#physical_count_' + row).val();
@@ -159,57 +203,29 @@ function validate_quantity_used(row){
 var tests_done_q = 0;
 var tests_done_no = parseInt(tests_done_q);
 
-function compute_tests_done(){  
-    var vct_no = parseInt($('#vct').val());
-    var pitc_no = parseInt($('#pitc').val());
-    var pmtct_no = parseInt($('#pmtct').val());
-    var blood_screening_no = parseInt($('#blood_screening').val());
-    var other = parseInt($('#other2').val());
-    tests_done_no = vct_no + pitc_no + pmtct_no + blood_screening_no + other;
-
-    $('#tests_done_0').attr("value",tests_done_no);
-    $('#q_used_0').attr("value",tests_done_no);
-
-
-
-}       
-
-/* --- end of calculation for the no of tests done for Colloidal -- */
 
 
 $(document).ready(function() {
 
-$("#begin_date").datepicker({
-    defaultDate: "",
-    changeMontd: true,
-    changeYear: true,
-    numberOfMontds: 1,
-});
-$("#end_date").datepicker({
-    defaultDate: "",
-    changeMonth: true,
-    changeYear: true,
-    numberOfMonths: 1,
-    
-});
+
 
     var final = 0;
     var num_final = parseInt(final);
 
 
-  function compute_losses(row){
-    var tests_done = $('#tests_done_'+row).val();                
-    var quantity_used = $('#q_used_'+row).val();
-    var loss = quantity_used - tests_done;
-    if(loss <0){
-        alert('Please Enter a valid number for Quantity Used and Tests Done.');
-        $('#losses_'+row).val('0');
-        $('#tests_done_'+row).val('0');
-        $('#q_used_'+row).val('0');
-    }else{
-        $('#losses_'+row).val(loss);
-    }
-}
+//   function compute_losses(row){
+//     var tests_done = $('#tests_done_'+row).val();                
+//     var quantity_used = $('#q_used_'+row).val();
+//     var loss = quantity_used - tests_done;
+//     if(loss <0){
+//         alert('Please Enter a valid number for Quantity Used and Tests Done.');
+//         $('#losses_'+row).val('0');
+//         $('#tests_done_'+row).val('0');
+//         $('#q_used_'+row).val('0');
+//     }else{
+//         $('#losses_'+row).val(loss);
+//     }
+// }
 
  function compute_end(row) {
     var bal = $('#b_balance_' + row).val();
@@ -281,22 +297,23 @@ $('.qty_rcvd').keyup(function() {
     compute_end(num);
     validateEnd(num);
 })
-$('.qty_used').keyup(function() {
+$('.qty_used').change(function() {
     row_id = $(this).closest("tr");
     number = row_id.attr("commodity_id");
     num = parseInt(number);
-    validate_quantity_used(num);
-    compute_end(num);
+    //validate_quantity_used(num);
+    compute_losses(num);
+    //compute_end(num);
     //compute_losses(num);
     //validateEnd(num);
 })
-$('.tests_done').keyup(function() {
+$('.tests_done').change(function() {
     row_id = $(this).closest("tr");
     number = row_id.attr("commodity_id");
     num = parseInt(number);
-    validate_quantity_used(num);
-    compute_end(num);
-    //compute_losses(num);
+    // validate_quantity_used(num);
+    // compute_end(num);
+    compute_losses(num);
     //validateEnd(num);
 })
 
@@ -617,23 +634,13 @@ $count = count($res);
 
 <?php form_close(); ?>
 
-<script type="text/javascript">
-$(function(){
-    var count = <?php echo $count; ?>;
-    if(count==1){
-        alert('The Report has already been SUbmitted.');
-        window.location('home_controller');
-    }
-});
-$("table").tablecloth({
-    bordered: true,
-    condensed: true,
-    striped: true,            
-    clean: true,                
-});
-   
-    //$('#commodity_name_0').css('background-color','#99FFFF');
-    //$('#commodity_name_1').css('background-color','#99FFFF');
+<script type="text/javascript">    
+    $("table").tablecloth({
+        bordered: true,
+        condensed: true,
+        striped: true,            
+        clean: true,                
+    });
     $('#commodity_name_0').append(' <br/>(Old Algorithm)');
     $('#commodity_name_1').append(' <br/>(Old Algorithm)');
 </script>
