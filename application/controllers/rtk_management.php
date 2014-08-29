@@ -177,6 +177,7 @@ class Rtk_Management extends Home_controller {
             $month = substr_replace($month, "", -4);
             $monthyear = $year . '-' . $month . '-1';
         }
+        
         $countyid = $this->session->userdata('county_id');       
         $county_name = counties::get_county_name($countyid);        
         $County = $county_name['county'];
@@ -184,13 +185,12 @@ class Rtk_Management extends Home_controller {
 
         $res = $this->db->query("select count(facilities.id) as total_facilities from facilities,districts,counties 
             where facilities.rtk_enabled=1 and facilities.district = districts.id and districts.county = counties.id and counties.id =$countyid");
-        $result = $res->result_array();
-        // echo "<pre>";
-        // print_r($result);die();
+        $result = $res->result_array();        
         $data['total_facilities'] = $result[0]['total_facilities'];
+        //echo $data['total_facilities'];die();
         
         $englishdate = date('F, Y', strtotime($monthyear));
-        $reporting_rates = $this->reporting_rates($countyid,$year,$month);
+        $reporting_rates = $this->reporting_rates($countyid,$year,$month);        
         $xArr = array();
         $yArr = array();
         $xArr1 = array();
@@ -205,7 +205,8 @@ class Rtk_Management extends Home_controller {
 
             array_push($yArr, $order_date);
             array_push($xArr, $count);
-        }       
+        }
+        //echo $cumulative_result;die();
         $data['cumulative_result'] = $cumulative_result;
         $data['jsony'] = json_encode($yArr);
         $data['jsonx'] = str_replace('"', "", json_encode($xArr));
@@ -219,6 +220,50 @@ class Rtk_Management extends Home_controller {
         $data['banner_text'] = "$County County Monthly Reporting Trends";
         $data['title'] = "RTK County Admin Trends";
         $this->load->view('rtk/template', $data);
+    }
+
+    public function clean_data($month=null){
+        if(isset($month)){           
+            $year = substr($month, -4);
+            $month = substr($month, 0,2);            
+            $monthyear = $year . '-' . $month . '-1';         
+            $monthyear1 = $year . '-' . $month . '-31';         
+            
+        }
+        for ($i=0; $i <47 ; $i++) { 
+            $sql = "select 
+                    distinct lab_commodity_orders.facility_code
+                from
+                    lab_commodity_orders,
+                    districts,
+                    counties
+                where
+                    lab_commodity_orders.district_id = districts.id
+                        and districts.county = counties.id
+                        and counties.id = $i
+                        and lab_commodity_orders.order_date between '$monthyear' and '$monthyear1'
+                        and lab_commodity_orders.facility_code not in (select 
+                            facilities.facility_code
+                        from
+                            facilities,
+                            districts,
+                            counties
+                        where
+                            facilities.district = districts.id
+                                and districts.county = counties.id
+                                and counties.id = $i
+                                and facilities.rtk_enabled = 1)";
+            $res = $this->db->query($sql)->result_array();
+        foreach ($res as $key => $value) {
+            $fcode = $value['facility_code'];
+            $q = "delete from lab_commodity_orders where lab_commodity_orders.facility_code = $fcode";
+            $this->db->query($q);
+        }
+            
+        }        
+        
+        
+        
     }
 
     public function rtk_manager_home() {
@@ -363,7 +408,7 @@ class Rtk_Management extends Home_controller {
         $data['county'] = $County;
         $data['pending_facility'] = $pending_facilities;
         $data['title'] = 'RTK County Admin';
-        $data['banner_text'] = 'RTK County Admin: Pending Facilities';
+        $data['banner_text'] = 'RTK County Admin: Non-Reported Facilities';
         $data['content_view'] = "rtk/rtk/rca/pending_facilities_v";
         $this->load->view("rtk/template", $data);
     }
@@ -5800,10 +5845,11 @@ WHERE
             $month = date('m', time());
         }
         
-        if(isset($County)){
+        if($County!=NULL){
             $from = ',districts,counties';
             $conditions .="and lab_commodity_orders.district_id= districts.id and districts.county = counties.id and counties.id = $County";
         }
+
 
 
         $firstdate = $year . '-' . $month . '-01';
@@ -5815,13 +5861,13 @@ WHERE
 
         $sql = "select 
                 lab_commodity_orders.order_date as order_date,
-                count(lab_commodity_orders.id) as count
+                count(distinct lab_commodity_orders.facility_code) as count
             from
                 lab_commodity_orders $from
             WHERE
                 lab_commodity_orders.order_date between '$firstdate' and '$lastdate' $conditions
             Group BY lab_commodity_orders.order_date";  
-        
+        //echo "$sql";die();
         $res = $this->db->query($sql);
 //        echo"<pre>";print_r($res->result_array());die;
         return ($res->result_array());
