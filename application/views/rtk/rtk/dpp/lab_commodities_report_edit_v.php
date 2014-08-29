@@ -353,6 +353,8 @@ foreach ($all_details as $detail) {
 							<th style = "text-align:center">Negative</th>
 						</tr>
 					<?php $checker=0;
+					echo "<pre>";
+					print_r($all_details);die();
 					foreach ($all_details as $detail) {?>
 					<tr commodity_id="<?php echo $checker ?>"><input type="hidden" id="commodity_id[<?php echo $checker?>]" name="commodity_id[<?php echo $checker?>]" value="<?php echo $detail['commodity_id']; ?>" >
 						<input type="hidden" id="facilityCode" name="facilityCode">
