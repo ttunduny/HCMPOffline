@@ -80,7 +80,6 @@ class Home extends MY_Controller
 			$view = 'shared_files/template/dashboard_v';
 			$data['content_view'] = "shared_files/template/super_admin_template";
 			break;
-				
 			case 'allocation_committee':
 			$view = '';
 			break;	

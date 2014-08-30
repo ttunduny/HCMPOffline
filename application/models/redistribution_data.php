@@ -38,6 +38,13 @@ class redistribution_data extends Doctrine_Record {
 		$redistribution_data = $query -> execute();
 		return $redistribution_data;
 	}
+
+		public static function get_all_active_drug_store($district_id,$option=null) {
+		$and=($option=='to-me')? " receive_facility_code=0":null;
+		$query = Doctrine_Query::create() -> select("*") -> from("redistribution_data") -> where("$and and district_id = '$district_id' and status=0");
+		$redistribution_data = $query -> execute();
+		return $redistribution_data;
+	}
 	
 	public static function get_redistribution_data($facility_code,$district_id,$county_id,$year){
 	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND d.id = '$district_id'" : null;

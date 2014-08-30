@@ -46,6 +46,7 @@
 */
 
 $active_group = 'default';
+$active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'root';
@@ -61,8 +62,7 @@ $db['default']['char_set'] = 'utf8';
 $db['default']['dbcollat'] = 'utf8_general_ci';
 $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
-$db['default']['stricton'] = FALSE;;
-
+$db['default']['stricton'] = FALSE;
 
 
 /* End of file database.php */
@@ -91,6 +91,11 @@ Doctrine_Manager::connection($db['default']['dsn'], $db['default']['database']);
 // Load the models for the autoloader
 Doctrine::loadModels(realpath(dirname(__FILE__) . '/..') . DIRECTORY_SEPARATOR . 'models');
 
-/*****/
+
+
+
+
+
+
 
 /* Location: ./application/config/database.php */

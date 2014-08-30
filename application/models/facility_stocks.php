@@ -51,8 +51,31 @@ class Facility_stocks extends Doctrine_Record {
 		return $stocks; 
 	}// get all facility stock commodity id, options check if the user wants batch data or commodity grouped data and return the total 
 	
-	public static function get_distinct_stocks_for_this_facility($facility_code,$checker=null,$exception=null){
+public static function get_distinct_stocks_for_this_district_store($district_id){
+$store_stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("SELECT DISTINCT dst.commodity_id as commodity_id,fs.id as facility_stock_id,ds.expiry_date, c.commodity_name,c.commodity_code,c.unit_size,
+dst.total_balance as commodity_balance, round(((dst.total_balance) / c.total_commodity_units) ,1) as pack_balance,c.total_commodity_units,fs.manufacture,c_s.source_name, fs.batch_no, c_s.id as source_id
+  -- ,dst.total_balance as quantity
+from facility_stocks fs, commodity_source c_s, drug_store_issues ds,commodities c,drug_store_totals dst
+ where ds.district_id= '$district_id' and ds.expiry_date >= NOW()
+ and dst.commodity_id=fs.commodity_id and c.id=dst.commodity_id and dst.total_balance>0 group by dst.commodity_id order by fs.expiry_date asc
+");
+return $store_stocks;
+}
 
+public static function get_district_store_commodities($district_id){
+$store_comm = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("SELECT DISTINCT commodity_id as commodity_id from drug_store_issues");
+return $store_comm;
+}
+
+public static function get_district_store_total_commodities($district_id){
+$store_comm = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("SELECT * from drug_store_totals");
+return $store_comm;
+}
+
+	public static function get_distinct_stocks_for_this_facility($facility_code,$checker=null,$exception=null){
 $addition=isset($checker)? ($checker==='batch_data')? 'and fs.current_balance>0 group by fs.id,c.id order by fs.expiry_date asc' 
 : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc' : null ;
 $check_expiry_date=isset($exception)? null: " and fs.expiry_date >= NOW()" ;
@@ -67,6 +90,50 @@ c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commo
 
 return $stocks ;
 }
+
+
+    public static function get_district_stock_amc($district_id){
+  $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+	->fetchAll("			
+SELECT 
+    c.id AS commodity_id,
+    ds.id AS drug_store_stock_id,
+    c.commodity_name,
+    c.commodity_code,
+    c.unit_size,
+    fs.expiry_date,
+    ROUND(SUM(ds.total_balance), 1) AS commodity_balance,
+    ROUND((SUM(ds.total_balance) / c.total_commodity_units),
+            1) AS pack_balance,
+    c.total_commodity_units,
+    c_s.source_name,
+    c_s.id AS source_id,
+    CASE temp.selected_option
+        WHEN 'Pack_Size' THEN ROUND(temp.consumption_level, 1)
+        WHEN
+            'Unit_Size'
+        THEN
+            ROUND(temp.total_units / temp.consumption_level,
+                    1)
+        ELSE 0
+    END AS amc
+FROM
+    commodity_source c_s,
+    drug_store_totals ds,
+    facility_stocks fs,
+    commodities c
+        LEFT JOIN
+    facility_monthly_stock temp ON temp.commodity_id = c.id
+WHERE
+    ds.district_id = '$district_id'
+    AND fs.expiry_date >= NOW()
+    AND fs.commodity_id= ds.commodity_id
+        AND c.id = ds.commodity_id
+GROUP BY c.id
+		");
+return $stocks ;      
+    }
+
     public static function get_facility_stock_amc($facility_code){
   $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 	->fetchAll("
@@ -139,6 +206,45 @@ return $stocks ;
 		");
 		return $stocks ;		
 	}
+
+	public static function drug_store_commodity_expiries($district_id){
+$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("SELECT ds.id,ds.commodity_id as commodity_id,c.commodity_name,c.unit_size,c.unit_cost,ds.facility_code,ds.district_id
+,ds.s11_No,ds.batch_no,
+ds.expiry_date,ds.balance_as_of,ds.adjustmentpve,
+ds.adjustmentnve,ds.qty_issued AS current_balance,ds.date_issued,
+ds.issued_to,ds.created_at,ds.issued_by,
+ds.status
+
+from drug_store_issues ds,commodities c
+
+where ds.expiry_date  <= NOW() AND ds.district_id = '$district_id' 
+        and ds.qty_issued>0 and c.id = ds.commodity_id
+");
+return $stocks ;		
+	}
+
+	public static function drug_store_potential_expiries($district_id){
+$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("SELECT ds.id,ds.commodity_id as commodity_id,c.commodity_name,c.unit_size,c.unit_cost,ds.facility_code,ds.district_id
+,ds.s11_No,ds.batch_no,
+ds.expiry_date,ds.balance_as_of,ds.adjustmentpve,
+ds.adjustmentnve,ds.qty_issued AS current_balance,ds.date_issued,
+ds.issued_to,ds.created_at,ds.issued_by,
+ds.status
+
+from drug_store_issues ds,commodities c
+
+where ds.expiry_date 
+		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND ds.district_id = '$district_id' 
+        and qty_issued>0 and c.id = ds.commodity_id
+");
+return $stocks ;		
+	}
+
+
+
+
 	  public static function get_items_that_have_stock_out_in_facility($facility_code=null,$district_id=null,$county_id=null){
 $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
 $group_by=isset($facility_code)? " order by c.commodity_name asc" : 
@@ -176,7 +282,52 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 
         return $stocks ;	  	
 	  }
-	
+	public static function get_stocked_out_commodities_for_report($facility_code=null,$district_id=null,$county_id=null)
+	{
+		$where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+		$group_by=isset($facility_code)? " order by c.commodity_name asc" : 
+		(isset($district_id)? " order by f.facility_name asc" : " order by d.district asc" );
+		
+		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT 
+					    d.district,
+					    f_s.`facility_code`,
+					    f.facility_name,
+					    c.`id` AS commodity_id,
+					    cnts.county,
+					    c.unit_size,
+					    cs.source_name,
+					    f_s.manufacture,
+					    c.`commodity_code`,
+					    c.`commodity_name`,
+					    sum(f_s.current_balance/c.total_commodity_units) as current_balance_packs,
+						sum(f_s.current_balance) as current_balance_units,
+					ROUND(temp.total_units / temp.consumption_level,1)AS amc
+					FROM
+					    facilities f,
+						districts d,
+						counties cnts,
+						counties c_s,
+					    facility_stocks f_s,
+					    commodity_source cs,
+					    commodities c
+					LEFT JOIN
+					    facility_monthly_stock temp ON temp.commodity_id = c.id
+					        and temp.facility_code = 11840
+					    
+					WHERE
+					    f.facility_code = f_s.facility_code
+					        AND cs.id = c.commodity_source_id
+					        and $where_clause
+					        AND f_s.commodity_id = c.id
+					        AND f.district = d.id
+					        AND f_s.status = 1
+					GROUP BY c.id
+					having amc <=3
+					$group_by");
+					
+		return $stocks;
+	}
  		public static function potential_expiries($facility_code){
 		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date 
 		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code' and current_balance>0");
@@ -185,7 +336,7 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 		return $stocks;
 	}	
 		public static function potential_expiries_email($district_id=null,$facility_code=null){
-		$and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
+		$and_data =($district_id>0) ?" AND d.id = '$district_id'" : null;
 	 	$and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		select  c.county, d1.district as subcounty ,temp.commodity_name,
@@ -215,34 +366,7 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 			group by temp.id,f.facility_code
 			order by temp.commodity_name asc,temp.total asc, temp.expiry_date desc");
 
-		/*
-		echo "select  c.county, d1.district as subcounty ,temp.commodity_name,
-			 f.facility_code, f.facility_name,temp.manufacture, sum(temp.total) as total_ksh,
-			temp.unit_cost,temp.expiry_date,temp.unit_size,temp.units,
-			temp.packs
-			from districts d1, counties c, facilities f left join
-			     (
-			select  ROUND( SUM(
-			f_s.current_balance  / d.total_commodity_units ) * d.unit_cost, 1) AS total, ROUND( SUM( f_s.current_balance  / d.total_commodity_units ), 1) as packs,SUM( f_s.current_balance) as units,
-			f_s.facility_code,d.id,d.commodity_name, f_s.manufacture,
-			f_s.expiry_date,d.unit_size,d.unit_cost
-			
-			 from facility_stocks f_s, commodities d
-			where f_s.expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and  DATE_ADD(CURDATE(), INTERVAL 3 MONTH)
-			and d.id=f_s.commodity_id
-			and year(f_s.expiry_date) !=1970
-			AND f_s.status =(1 or 2)
-			GROUP BY d.id,f_s.facility_code having total >1
-			
-			     ) temp
-			     on temp.facility_code = f.facility_code
-			where  f.district = d1.id
-			and c.id=d1.county
-			and temp.total>0
-			$and_data
-			group by temp.id,f.facility_code
-			order by temp.commodity_name asc,temp.total asc, temp.expiry_date desc";
-		exit;*/
+		
 
 		return $query;
 	}
@@ -310,6 +434,15 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 		 AND facility_code='$facility_code' AND current_balance>0");
 		
 		$stocks= $query -> execute();
+		return $stocks;
+	}	
+
+	public static function specify_period_potential_expiry_store($district_id,$interval){
+		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT ds.id, ds.facility_code, ds.district_id, ds.commodity_id, ds.s11_No, ds.batch_no, ds.expiry_date, ds.balance_as_of , ds.adjustmentpve, ds.adjustmentnve, ds.qty_issued, ds.date_issued, ds.issued_to, ds.created_at, ds.issued_by, ds.status 
+FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL $interval MONTH)
+		 AND ds.district_id= $district_id AND ds.district_id = dst.district_id AND dst.total_balance > 0
+		 ");
 		return $stocks;
 	}	
 
@@ -394,10 +527,10 @@ public static function get_county_cost_of_exipries_new($facility_code=null,$dist
            $computation ="ifnull((SUM(ROUND(fs.current_balance/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as name";
              break;
          case 'units':
-           $computation ="ifnull(CEIL(SUM(fs.current_balance)),0) AS total,d.commodity_name as name" ;
+           $computation =" ifnull(CEIL(SUM(fs.current_balance)),0) AS total" ;
              break;
              case 'packs':
-           $computation ="ifnull(SUM(ROUND(fs.current_balance/d.total_commodity_units)),0) AS total,d.commodity_name as name" ;
+           $computation =" ifnull(SUM(ROUND(fs.current_balance/d.total_commodity_units)),0) AS total" ;
              break;
          default:
       $computation ="ifnull((SUM(ROUND(fs.current_balance/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as name";
@@ -420,7 +553,7 @@ public static function get_county_cost_of_exipries_new($facility_code=null,$dist
 		 
 	 //exit;
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-     ->fetchAll("SELECT $select_option $computation
+     ->fetchAll("SELECT $select_option  date_format(expiry_date,'%M') AS month, $computation  
      FROM facility_stocks fs, facilities f, commodities d, counties c, districts di
      WHERE fs.facility_code = f.facility_code
      AND fs.`expiry_date` <= NOW( )
@@ -535,16 +668,7 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
      $and_data
       $group_by_a_month
      ");	
-	/*
-	echo "SELECT  $selection_for_a_month $computation
-     FROM facility_stocks fs, facilities f, commodities d,  districts di
-     WHERE fs.facility_code = f.facility_code
-     AND f.district =di.id
-     and fs.expiry_date>NOW()
-     AND fs.status=1
-     $and_data
-      $group_by_a_month";
-      exit;*/
+
      return $inserttransaction ;
 }   
   public static function get_county_consumption_level_new($facility_code, $district_id,$county_id,$category_id,$commodity_id, $option,$from,$to,$graph_type=null){
@@ -634,25 +758,7 @@ GROUP BY f_s.commodity_id,f_s.facility_code having total >1
 where  f.district = d1.id
 $and_data
 group by f.facility_code");	
-/*
-echo "select  d1.id as district_id, d1.district, f.facility_code, f.facility_name, sum(temp.total) as total
-from districts d1, facilities f left join
-     (
-select  ROUND( (
-SUM( f_s.current_balance ) / d.total_commodity_units ) * d.unit_cost, 1
-) AS total, f_s.facility_code from facility_stocks f_s, commodities d
-where f_s.expiry_date < NOW( ) 
-and d.id=f_s.commodity_id
-and year(f_s.expiry_date)=$year
-AND f_s.status =(1 or 2)
-GROUP BY f_s.commodity_id,f_s.facility_code having total >1
-     ) temp
-     on temp.facility_code = f.facility_code
-where  f.district = d1.id
-$and_data
-and temp.total>0
-group by f.facility_code";
-exit;*/
+
 
 		return $query;
 	}
@@ -679,26 +785,7 @@ where  f.district = d1.id
 $and_data
 and temp.total>0
 group by f.facility_code");	
-/*
-echo "select  d1.id as district_id, d1.district, f.facility_code, f.facility_name, sum(temp.total) as total
-from districts d1, facilities f left join
-     (
-select  ROUND( (
-SUM( f_s.current_balance ) / d.total_commodity_units ) * d.unit_cost, 1
-) AS total, f_s.facility_code from facility_stocks f_s, commodities d
-where d.id=f_s.commodity_id
-AND f_s.expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and  DATE_ADD(CURDATE(), INTERVAL $interval MONTH)
-AND f_s.status =(1 or 2)
-and year(f_s.expiry_date)=year(NOW())
-GROUP BY f_s.commodity_id,f_s.facility_code having total >1
-    ) temp
-     on temp.facility_code = f.facility_code
-where  f.district = d1.id
-$and_data
-and temp.total>0
-group by f.facility_code";
-exit;
-*/
+
 
 /////
 		return $query;

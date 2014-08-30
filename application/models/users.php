@@ -14,6 +14,8 @@ class Users extends Doctrine_Record {
 		$this -> hasColumn('facility', 'varchar', 255);
 		$this -> hasColumn('status', 'int', 11);
 		$this -> hasColumn('county_id', 'int', 11);
+		$this -> hasColumn('email_recieve', 'int', 1);
+		$this -> hasColumn('sms_recieve', 'int', 1);
 
 	}
 
@@ -203,7 +205,9 @@ class Users extends Doctrine_Record {
     a.id as level_id,
     f.level,
     a.level,
-    u.status
+    u.status,
+    u.email_recieve,
+    u.sms_recieve
 FROM
    user u
         LEFT JOIN

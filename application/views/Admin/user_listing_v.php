@@ -1,4 +1,3 @@
-
 <div class="container">
 	
 	<?php $x = array();
@@ -78,6 +77,8 @@
 								<th>Sub-County</th>
 								<th>Health Facility</th>
 								<th>User Type</th>
+								<th>Recieve Email</th>
+								<th>Recieve Text Msg</th>
 								<th>Status</th>
 								<th>Action</th>
 
@@ -98,6 +99,31 @@
 								<td class="district" data-attr="<?php echo $list['district_id']; ?>"><?php echo $list['district']; ?></td>
 								<td class="facility_name" data-attr="<?php echo $list['facility_code']; ?>"><?php echo $list['facility_name']; ?></td>
 								<td class="level" data-attr="<?php echo $list['level_id']; ?>"><?php echo $list['level']; ?></td>
+								<?php 
+								//for text and email receivals
+								//<td style="display:none;" class="email_recieve"><'.$list['email_recieve'];'</td>
+								//<td style="display:none;" class="sms_recieve"><'.$list['sms_recieve'];'</td>
+								if ($list['email_recieve']==1):
+									echo'
+									<td><input class="email_recieve" data-attr="'.$list['email_recieve'].'" value="'.$list['email_recieve'].'" type="checkbox" disabled checked ="checked"></td>
+									';
+								else:
+									echo'
+									<td><input class="email_recieve" data-attr="'.$list['email_recieve'].'" value="'.$list['email_recieve'].'" type="checkbox" disabled></td>
+									';
+								endif;
+
+								if ($list['sms_recieve']==1):
+									echo'
+									<td ><input class="sms_recieve" data-attr="'.$list['sms_recieve'].'" value="'.$list['sms_recieve'].'" type="checkbox" disabled checked ="checked"></td>
+									';
+								else:
+									echo'
+									<td><input class="sms_recieve" data-attr="'.$list['sms_recieve'].'" value="'.$list['sms_recieve'].'" type="checkbox" disabled></td>
+									';
+								endif;
+								 ?>
+
 								<td >
 								<?php
 									if ($list['status']==1) {
@@ -306,7 +332,7 @@
 				<h4 class="modal-title" id="editModalLabel" style="text-align: center;line-height: 1">Edit User</h4>
 			</div>
 			
-			<div class="modal-body" style="padding-top:0">
+			<div class="modal-body editable" style="padding-top:0">
 				<div id="contents">
 					
 						<form role="form">
@@ -348,7 +374,38 @@
 								<div class=" col-md-6">
 									<label> User Name </label>
 									<div class="form-group">
-										<input type="email" name="username_edit" id="username_edit" required="required" class="form-control " placeholder="email@domain.com" tabindex="5" readonly>
+										<input type="email" name="username_edit" id="username_edit" required="required" class="form-control " placeholder="email@domain.com" tabindex="6" readonly>
+									</div>
+								</div>
+
+								<div class=" col-md-6">
+									<label> Enable Email Recieval </label>
+									<div class="form-group">
+									<input type="hidden" name="email_recieve_edit" value="0">
+									<input type="checkbox" value= "1" name="email_recieve_edit" class="email_recieve_edit" id="email_recieve_edit" required="required" readonly>
+									<?php 
+									if ($_POST['email_recieve_edit'] == '1'):
+									echo '<input type="hidden" value = "1" name="email_recieve_selection" id="email_recieve_selection" class="email_recieve_selection">
+									';elseif(!isset($_POST['email_recieve_edit'])):
+									echo '<input type="hidden" value = "0" name="email_recieve_selection" id="email_recieve_selection" class="email_recieve_selection">
+									';
+									endif;
+									 ?>
+									</div>
+								</div>
+								<div class=" col-md-6">
+									<label> Enable Text Recieval </label>
+									<div class="form-group">
+									<input type="hidden" name="sms_recieve_edit" value="0">
+									<input type="checkbox" value="1" name="sms_recieve_edit" class="email_recieve_edit" id="sms_recieve_edit" required="required" readonly>
+									<?php 
+									/*if ($_POST['sms_recieve_edit'] == '1'):
+									echo '<input type="hidden" value = "1" name="sms_recieve_selection" id="sms_recieve_selection" class="sms_recieve_selection">
+									';elseif(!isset($_POST['sms_recieve_edit'])):
+									echo '<input type="hidden" value = "0" name="sms_recieve_selection" id="sms_recieve_selection" class="sms_recieve_selection">
+									';
+									endif;*/
+									 ?>
 									</div>
 								</div>
 								<div class="col-md-6">

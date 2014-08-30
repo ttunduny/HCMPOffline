@@ -6,7 +6,6 @@
   <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
   <link href="<?php echo base_url().'assets/css/jquery-ui.css'?>" type="text/css" rel="stylesheet"/>
   <link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
-  
   <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/typehead/handlebars.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script> 
@@ -17,6 +16,9 @@
   <script src="<?php echo base_url().'assets/scripts/typehead/typeahead.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/tagsinput/tagmanager.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/tagsinput/bootstrap-tagsinput.js'?>" type="text/javascript"></script>
+  <link rel="stylesheet" href="<?php echo base_url().'assets/tagsinput/bootstrap-tagsinput.css'?>" />
+
 
   <script>
   paceOptions = {
@@ -159,11 +161,17 @@
         <tr>
           <label>To:</label>
         </tr><br/>
+<<<<<<< HEAD
+
+        <tr>                    
+            <input class="typeahead form-control tm-input" id="receipient" type="text" placeholder="Enter Receipient" data-role="tagsinput" data-provide="typeahead" style="width:96%" />   
+=======
         <tr>  
                               
              <input type="hidden" class="form-control" id="receipient_id">
             <input class="typeahead form-control tm-input" id="receipient" type="text" placeholder="Enter Receipient" data-role="tagsinput" data-provide="typeahead" style="width:96%" />   
           
+>>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
         </tr><br/>    
         <tr>
           <label>Subject:</label>
@@ -232,6 +240,21 @@ var substringMatcher = function(strs) {
             });           
 
             
+<<<<<<< HEAD
+            facilities.initialize();
+<<<<<<< HEAD
+
+            $(".tm-input").tagsManager({               
+              replace:false,                              
+              onlyTagList: false,  
+              
+            });
+=======
+            
+            
+            //$('#receipient').tagsinput();
+>>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
+=======
             messages.initialize();
             
             /*$(".tm-input").tagsManager({               
@@ -239,6 +262,7 @@ var substringMatcher = function(strs) {
               onlyTagList: false,  
               
             });*/
+>>>>>>> 7a98ade9c7683b0377797f16b25d9afc87ad0292
 
             $('.typeahead').typeahead({
               highlight: true
@@ -257,6 +281,10 @@ var substringMatcher = function(strs) {
                 onlyTagList: true,  
                 
               });*/
+<<<<<<< HEAD
+
+=======
+>>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
             /*$('#receipient').tagsinput({
               typeaheadjs: {
                 name: 'facilities',
@@ -264,6 +292,15 @@ var substringMatcher = function(strs) {
                 valueKey: 'facilities',
                 source: facilities.ttAdapter()
               }
+<<<<<<< HEAD
+<<<<<<< HEAD
+
+=======
+>>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
+            });*/
+
+=======
+>>>>>>> 7a98ade9c7683b0377797f16b25d9afc87ad0292
 
             });*/
     function onSelected($e, datum) {
