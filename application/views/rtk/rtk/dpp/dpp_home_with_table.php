@@ -130,7 +130,7 @@ function loadcountysummary(county) {
                                 </h4>
                             </div>
                         </div>
-                        <div class="panel panel-default active-panel">
+                        <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title" id="dpp_stats">                        
                                     <a href="#" href="#collapseOne" id="notifications"><span class="glyphicon glyphicon-stats">

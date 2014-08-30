@@ -2789,11 +2789,30 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $table_body = '';
         $reported = 0;
         $nonreported = 0;
-
+        $date = date('d', time());
+         $sql = "select distinct rtk_settings.* 
+                    from rtk_settings, facilities 
+                    where facilities.zone = rtk_settings.zone 
+            and facilities.rtk_enabled = 1";
+            $res_ddl = $this->db->query($sql);
+            $deadline_date = null;
+            $settings = $res_ddl->result_array();
+            foreach ($settings as $key => $value) {
+                $deadline_date = $value['deadline'];
+                $five_day_alert = $value['5_day_alert'];
+                $report_day_alert = $value['report_day_alert'];
+                $overdue_alert = $value['overdue_alert'];
+            }
+              date_default_timezone_set("EUROPE/Moscow");
+                $lastmonth = date('F', strtotime("last day of previous month"));
+        if($date>$deadline_date){
+            $report_link = "<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'></a></td>";
+        }else{
+            $report_link = "<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'> Report</a></td>";
+        }
         foreach ($facilities as $facility_detail) {
 
-           date_default_timezone_set("EUROPE/Moscow");
-                $lastmonth = date('F', strtotime("last day of previous month"));
+         
                 $table_body .="<tr><td><a class='ajax_call_1' id='county_facility' name='" . base_url() . "rtk_management/get_rtk_facility_detail/$facility_detail[facility_code]' href='#'>" . $facility_detail["facility_code"] . "</td>";
                 $table_body .="<td>" . $facility_detail['facility_name'] . "</td><td>" . $district_name['district'] . "</td>";
                 $table_body .="<td>";
@@ -2806,7 +2825,7 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
                     $table_body .="<span class='label label-success'>Submitted  for    $lastmonth </span><a href=" . site_url('rtk_management/rtk_orders') . " class='link'> View</a></td>";
                 } else {
                     $nonreported = $nonreported + 1;
-                    $table_body .="<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'> Report</a></td>";
+                    $table_body .=$report_link;
                 }
 
                 $table_body .="</td>";
@@ -3420,26 +3439,26 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $myobj->moh_643 = $moh_643;
         $myobj->save();
         $object_id = $myobj->get('id');
-        // echo "$object_id";die();
+        //echo "$object_id";die();
         $this->logData('14', $object_id);
         $q = "select id from lab_commodity_details where order_id = $order_id";
         $res = $this->db->query($q);
         $ids = $res->result_array();  
 
         for ($i = 0; $i < $detail_count; $i++) {
-            /*$myobj = Doctrine::getTable('Lab_Commodity_Details')->find($detail_id[$i]);
-            $myobj->beginning_bal = $b_balance[$i];
-            $myobj->q_received = $q_received[$i];
-            $myobj->q_used = $q_used[$i];
-            $myobj->no_of_tests_done = $tests_done[$i];
-            $myobj->losses = $losses[$i];
-            $myobj->positive_adj = $pos_adj[$i];
-            $myobj->negative_adj = $neg_adj[$i];
-            $myobj->closing_stock = $physical_count[$i];
-            $myobj->q_expiring = $q_expiring[$i];
-            $myobj->days_out_of_stock = $days_out_of_stock[$i];
-            $myobj->q_requested = $q_requested[$i];
-            $myobj->save();*/
+            // $myobj1 = Doctrine::getTable('Lab_Commodity_Details')->find($detail_id[$i]);
+            // $myobj1->beginning_bal = $b_balance[$i];
+            // $myobj1->q_received = $q_received[$i];
+            // $myobj1->q_used = $q_used[$i];
+            // $myobj1->no_of_tests_done = $tests_done[$i];
+            // $myobj1->losses = $losses[$i];
+            // $myobj1->positive_adj = $pos_adj[$i];
+            // $myobj1->negative_adj = $neg_adj[$i];
+            // $myobj1->closing_stock = $physical_count[$i];
+            // $myobj1->q_expiring = $q_expiring[$i];
+            // $myobj1->days_out_of_stock = $days_out_of_stock[$i];
+            // $myobj1->q_requested = $q_requested[$i];
+            // $myobj1->save();
             $id = $ids[$i]['id'];           
             $sql = "UPDATE `lab_commodity_details` SET `beginning_bal`=$b_balance[$i],
             `q_received`='$q_received[$i]',`q_used`=$q_used[$i],`no_of_tests_done`=$tests_done[$i],`losses`=$losses[$i],

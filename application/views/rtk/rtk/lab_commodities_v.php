@@ -162,6 +162,12 @@ function compute_tests_done(){
         number = row_id.attr("commodity_id");
         num = parseInt(number);
         validate_inputs('neg_adj_',num);
+    })  
+    $('.phys_count').change(function() {
+        row_id = $(this).closest("tr");
+        number = row_id.attr("commodity_id");
+        num = parseInt(number);
+        validate_inputs('physical_count_',num);
     })           
 
 
@@ -207,10 +213,10 @@ function compute_tests_done(){
                         $('#tests_done_'+row).css("border-color","red"); 
                         hide_save();
                     }else{
-                        var loss = q_used - tests_done;
+                        /*var loss = q_used - tests_done;
                         $('#q_used_'+row).css("border-color",""); 
                         $('#tests_done_'+row).css("border-color",""); 
-                        $('#losses_'+row).val(loss).change();
+                        $('#losses_'+row).val(loss).change();*/
                         show_save();
                         compute_closing(row);
                     }                        
@@ -229,12 +235,12 @@ function compute_tests_done(){
         var loses = parseInt($('#losses_' + row).val());
         var pos_adj = parseInt($('#pos_adj_' + row).val());
         var neg_adj = parseInt($('#neg_adj_' + row).val());
-        var closing = b_bal + qty_rcvd - q_used + pos_adj + neg_adj;       
+        var closing = b_bal + qty_rcvd - q_used + pos_adj - neg_adj;       
         if((q_used+neg_adj)>(b_bal+qty_rcvd+pos_adj)){
             alert('You cannot use more kits than what you have in Stock. Please check your computations again');
             $('#b_balance_' + row).css('border-color','red'); 
             $('#q_received_' + row).css('border-color','red'); 
-            $('#q_used' + row).css('border-color','red'); 
+            $('#q_used_' + row).css('border-color','red'); 
             $('#tests_done_' + row).css('border-color','red'); 
             $('#losses_' + row).css('border-color','red'); 
             $('#pos_adj_' + row).css('border-color','red'); 
@@ -244,7 +250,7 @@ function compute_tests_done(){
         }else{
             $('#b_balance_' + row).css('border-color',''); 
             $('#q_received_' + row).css('border-color',''); 
-            $('#q_used' + row).css('border-color',''); 
+            $('#q_used_' + row).css('border-color',''); 
             $('#tests_done_' + row).css('border-color',''); 
             $('#losses_' + row).css('border-color',''); 
             $('#pos_adj_' + row).css('border-color',''); 
@@ -258,7 +264,7 @@ function compute_tests_done(){
     function hide_save() {
         $('#validate').show();
         $('#validate').html('NOTE: Please Correct all Input Fields with red border to Activate the Save Data Button');                                         
-        $('#validate').css('font-size','12px'); 
+        $('#validate').css('font-size','13px'); 
         $('#validate').css('color','red'); 
         $('#save1').hide();
     }
@@ -272,8 +278,8 @@ $('#save1')
 .button()
 .click(function() {               
     $('#message').html('The Report is Being Saved. Please Wait');                                         
-    $('#message').css('font-size','12px');                                         
-    //$('#message').css('border','1px solid ');                                         
+    $('#message').css('font-size','13px');                                         
+    $('#message').css('color','green'); 
     $(this).hide();
 
 });
@@ -418,7 +424,13 @@ $count = count($res);
                     <td><input class='user2'id="micro_over_tests" name="micro_over_tests" size="10" type="text"/></td>
                     <td><input class='user2'id="micro_over_positive" name="micro_over_positive" size="10" type="text"/></td>
                 </tr>
-
+                <tr>
+                        <td colspan = "14" style = "text-align:center;" id="calc">
+                            <b>The Ending Balance is Computed as follows: </b><i>Beginning Balance + Quantity Received + Positive Adjustments - Quantity Used - Negative Adjustments</i> 
+                            <b><br/>Note:</b>
+                            The Quantity Used Should Not be Less than the Tests Done
+                        </td>            
+                    </tr>
                 <tr><td colspan = "14"></td></tr>
                 <tr >       
                     <td rowspan = "2" colspan = "2"><b>Commodity Name</b></td>
@@ -444,7 +456,7 @@ $count = count($res);
                     ?>
                     <tr>
                         <td colspan = "14" style = "text-align:left"><b><?php echo $lab_category->category_name; ?></b></td>            
-                    </tr>
+                    </tr>                    
                     <?php foreach ($lab_category->category_lab_commodities as $lab_commodities) { ?>
                     <tr commodity_id="<?php echo $checker ?>"><input type="hidden" id="commodity_id_<?php echo $checker ?>" name="commodity_id[<?php echo $checker ?>]" value="<?php echo $lab_commodities['id']; ?>" >
                         <input type="hidden" id="facilityCode" name="facilityCode">
@@ -456,7 +468,7 @@ $count = count($res);
                         <td><input id="q_received_<?php echo $checker ?>" name = "q_received[<?php echo $checker ?>]" class='qty_rcvd' size="10" type="text" value="0" style = "text-align:center"/></td>
                         <td><input id="q_used_<?php echo $checker ?>" name = "q_used[<?php echo $checker ?>]" class='qty_used' size="10" type="text" value="0" style = "text-align:center"/></td>
                         <td><input id="tests_done_<?php echo $checker ?>" name = "tests_done[<?php echo $checker ?>]" class='tests_done' size="10" value="0" type="text" style = "text-align:center"/></td>
-                        <td><input id="losses_<?php echo $checker ?>" name = "losses[<?php echo $checker ?>]" class='loses' size="10" type="text" value="0" style = "text-align:center" readonly/></td>
+                        <td><input id="losses_<?php echo $checker ?>" name = "losses[<?php echo $checker ?>]" class='loses' size="10" type="text" value="0" style = "text-align:center" /></td>
                         <td><input id="pos_adj_<?php echo $checker ?>" name = "pos_adj[<?php echo $checker ?>]" class='pos_adj' size="10" type="text" value="0" style = "text-align:center"/></td>  
                         <td><input id="neg_adj_<?php echo $checker ?>" name = "neg_adj[<?php echo $checker ?>]" class='neg_adj' size="10" type="text" value="0" style = "text-align:center"/></td>
                         <td><input id="physical_count_<?php echo $checker ?>"  name = "physical_count[<?php echo $checker ?>]" class='phys_count' value="0" size="10" type="text" style = "text-align:center"/></td>
@@ -475,7 +487,7 @@ $count = count($res);
                 <td colspan = "14" style = "text-align:left;background: #EEE;">Explain Losses and Adjustments</td>
             </tr>
             <tr>                        
-                <td colspan ="14"><input class='user2'id="explanation" name="explanation" size="10" type="text" style="width:100%"/></td>
+                <td colspan = "16"><input colspan = "16" id="explanation" name="explanation" size="210" type="text" value="" style=" width: 90%;"/></td>
             </tr>
             <tr></tr>
 
@@ -563,5 +575,8 @@ $count = count($res);
     });
     $('#commodity_name_0').append(' <br/>(Old Algorithm)');
     $('#commodity_name_1').append(' <br/>(Old Algorithm)');
+    $('#calc').css('color','blue');
+    $('#calc').css('text-align','center');
+    $('#calc').css('font-size','12px');
 </script>
 
