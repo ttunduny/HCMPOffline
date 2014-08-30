@@ -172,10 +172,10 @@ function compute_tests_done(){
 
 
 
-    /*  Check if a value is a number and not less than zero */
+      /*  Check if a value is a number and not less than zero */
     function validate_inputs(input,row){        
         var input_value  = $('#'+input+row).val();
-        if(isNaN(input_value)){            
+        if((isNaN(input_value))|| (input_value=='')){            
            $('#'+input+row).css("border-color","red");
            hide_save();
          }else{ 
@@ -196,10 +196,11 @@ function compute_tests_done(){
 
     /*  Check if a value is a number and not less than zero */
     function validate_inputs_loss(input,row){        
-        var input_value  = parseInt($('#'+input+row).val());
-        if(isNaN(input_value)){            
+        var input_value  = $('#'+input+row).val();        
+        if((isNaN(input_value))||(input_value='')){            
            $('#'+input+row).css("border-color","red");
          }else{ 
+                input_value = parseInt(input_value);
                 $('#'+input+row).css("border",'');                
                 if(input_value<0){                
                     $('#'+input+row).css("border-color","red");
@@ -224,6 +225,8 @@ function compute_tests_done(){
             }
 
     }
+
+    /*  End of Input Validations */
 
     /*  End of Input Validations */
     /* Compute Closing Balance */

@@ -132,9 +132,9 @@ function compute_tests_done(){
     $('.tests_done').change(function() {
         row_id = $(this).closest("tr");
         number = row_id.attr("commodity_id");
-        num = parseInt(number);        
+        num = parseInt(number);
         validate_inputs_loss('tests_done_',num);
-        //validate_inputs('tests_done_',num);
+        //validate_inputs('q_used_',num);
         
     })
     $('.bbal').change(function() {
@@ -168,14 +168,21 @@ function compute_tests_done(){
         number = row_id.attr("commodity_id");
         num = parseInt(number);
         validate_inputs('physical_count_',num);
+    })  
+    $('.losses').change(function() {
+        row_id = $(this).closest("tr");
+        number = row_id.attr("commodity_id");
+        num = parseInt(number);
+        validate_inputs('losses_',num);
     })           
+         
 
 
 
     /*  Check if a value is a number and not less than zero */
     function validate_inputs(input,row){        
         var input_value  = $('#'+input+row).val();
-        if(isNaN(input_value)){            
+        if((isNaN(input_value))|| (input_value=='')){            
            $('#'+input+row).css("border-color","red");
            hide_save();
          }else{ 
@@ -196,10 +203,11 @@ function compute_tests_done(){
 
     /*  Check if a value is a number and not less than zero */
     function validate_inputs_loss(input,row){        
-        var input_value  = parseInt($('#'+input+row).val());
-        if(isNaN(input_value)){            
+        var input_value  = $('#'+input+row).val();        
+        if((isNaN(input_value))||(input_value='')){            
            $('#'+input+row).css("border-color","red");
          }else{ 
+                input_value = parseInt(input_value);
                 $('#'+input+row).css("border",'');                
                 if(input_value<0){                
                     $('#'+input+row).css("border-color","red");
@@ -468,7 +476,7 @@ $count = count($res);
                         <td><input id="q_received_<?php echo $checker ?>" name = "q_received[<?php echo $checker ?>]" class='qty_rcvd' size="10" type="text" value="0" style = "text-align:center"/></td>
                         <td><input id="q_used_<?php echo $checker ?>" name = "q_used[<?php echo $checker ?>]" class='qty_used' size="10" type="text" value="0" style = "text-align:center"/></td>
                         <td><input id="tests_done_<?php echo $checker ?>" name = "tests_done[<?php echo $checker ?>]" class='tests_done' size="10" value="0" type="text" style = "text-align:center"/></td>
-                        <td><input id="losses_<?php echo $checker ?>" name = "losses[<?php echo $checker ?>]" class='loses' size="10" type="text" value="0" style = "text-align:center" /></td>
+                        <td><input id="losses_<?php echo $checker ?>" name = "losses[<?php echo $checker ?>]" class='losses' size="10" type="text" value="0" style = "text-align:center" /></td>
                         <td><input id="pos_adj_<?php echo $checker ?>" name = "pos_adj[<?php echo $checker ?>]" class='pos_adj' size="10" type="text" value="0" style = "text-align:center"/></td>  
                         <td><input id="neg_adj_<?php echo $checker ?>" name = "neg_adj[<?php echo $checker ?>]" class='neg_adj' size="10" type="text" value="0" style = "text-align:center"/></td>
                         <td><input id="physical_count_<?php echo $checker ?>"  name = "physical_count[<?php echo $checker ?>]" class='phys_count' value="0" size="10" type="text" style = "text-align:center"/></td>
