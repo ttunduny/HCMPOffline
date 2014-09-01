@@ -1,18 +1,15 @@
 
+
 <?php
 $month = $this->session->userdata('Month');
-if ($month == '') {
-    $month = date('mY', strtotime('-1 month'));
+if ($month==''){
+ $month = date('mY',time());
 }
-
-$year = substr($month, -4);
-$month = substr_replace($month, "", -4);
-$monthyear = $year . '-' . $month . '-1';
+$year= substr($month, -4);
+$month= substr_replace($month,"", -4);
+$monthyear = $year . '-' . $month . '-1';        
+$englishdate1 = date('F, Y', strtotime('next month'));
 $englishdate = date('F, Y', strtotime($monthyear));
-?> 
-
-
-<?php
 $option = '';
 $id = $this->session->userdata('user_id');
 $q = 'SELECT counties.id AS countyid, counties.county

@@ -147,7 +147,7 @@ class Rtk_Management extends Home_controller {
             array_push($xArr, $count);
         }
 
-        $data['stock_status'] = $this->_national_reports_sum($year, $month);
+        //$data['stock_status'] = $this->_national_reports_sum($year, $month);
         $data['cumulative_result'] = $cumulative_result;
         $data['jsony'] = json_encode($yArr);
         $data['jsonx'] = str_replace('"', "", json_encode($xArr));
@@ -2118,7 +2118,41 @@ class Rtk_Management extends Home_controller {
         $this->session->set_userdata($session_data);
         redirect($redirect_url);
     }
+    public function switch_month($month = NULL, $redirect_url = NULL) {
+//      rtk_management/switch_district/district/switched_as/month/redirect_url/county
+        
+        if ($month == 0) {
+            $month = null;
+        }        
+        
+        if ($redirect_url == NULL) {
+            $redirect_url = 'home_controller';
+        }
+        //      $redirect_url = substr_replace($redirect_url,"rtk_management/",0,15);
 
+        $url = 'rtk_management/';
+        $url.=$redirect_url;
+   
+        $session_data = array("session_id" => $this->session->userdata('session_id'),
+         "ip_address" => $this->session->userdata('ip_address'),
+         "user_agent" => $this->session->userdata('user_agent'),
+         "last_activity" => $this->session->userdata('last_activity'),
+         "phone_no" => $this->session->userdata('phone_no'),
+         "user_email" => $this->session->userdata('user_email'),
+         "user_db_id" => $this->session->userdata('user_db_id'),
+         "full_name" => $this->session->userdata('full_name'),
+         "user_id" => $this->session->userdata('user_id'),
+         "names" => $this->session->userdata('names'),
+         "inames" => $this->session->userdata('inames'),
+         "identity" => $this->session->userdata('identity'),
+         "news" => $this->session->userdata('news'),         
+         "drawing_rights" => $this->session->userdata('drawing_rights'),         
+         "Month" => $month);
+
+
+        $this->session->set_userdata($session_data);
+        redirect($url);
+    }
     public function rtk_mapping() {
         $district = $this->session->userdata('district_id');
         $data['facilities'] = Facilities::get_total_facilities_rtk_in_district($district);
