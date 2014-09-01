@@ -5953,7 +5953,7 @@ WHERE
         $result3 = $res3->result_array();
         array_push($returnable, $result3);
 //        echo "<pre>";print_r($returnable);die;
-        echo($sql4);die;
+        //echo($sql4);die;
         return $returnable;
 
         /*
