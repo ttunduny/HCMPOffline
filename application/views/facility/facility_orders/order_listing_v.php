@@ -422,7 +422,7 @@ $(document).ready(function() {
     '<button type="button" class="btn btn-danger delete-dem-order" data-dismiss="modal">Delete</button>'
     +'<button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>');    
     $(".delete-dem-order").on('click', function() {
-    window.location="<?php     $for=$identifier=='district'? 'subcounty': (($identifier=='facility')? 'facility':'county'); 
+    window.location="<?php     $for=$identifier=='district'? 'subcounty': (($identifier=='facility'||$identifier=='facility_admin')? 'facility':'county'); 
      echo site_url("orders/delete_facility_order/$for");?>/"+id;	
     });
 	});	
