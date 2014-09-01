@@ -336,7 +336,7 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 		return $stocks;
 	}	
 		public static function potential_expiries_email($district_id=null,$facility_code=null){
-		$and_data =($district_id>0) ?" AND d.id = '$district_id'" : null;
+		$and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
 	 	$and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		select  c.county, d1.district as subcounty ,temp.commodity_name,
@@ -448,20 +448,23 @@ FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDAT
 
 	public static function All_expiries($facility_code,$checker=null){
 		$and=isset($checker)? " and (f_s.status =1 or f_s.status =2)" : " and f_s.status =1";
-		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("select     f_s.facility_code,
-    f_s.commodity_id,
-    f_s.batch_no,
-    f_s.manufacture,
-    f_s.status,
-    f_s.expiry_date,
-    c.commodity_name,
-    c.unit_size,
-    c.total_commodity_units,
-    c.unit_cost,
-    f_s.current_balance,
-    c.commodity_code from  facility_stocks f_s 
-		LEFT JOIN  commodities c ON c.id=f_s.commodity_id where facility_code=$facility_code 
-		 and f_s.current_balance>0 and expiry_date <= NOW() $and");
+		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		select    
+			f_s.facility_code,
+		    f_s.commodity_id,
+		    f_s.batch_no,
+		    f_s.manufacture,
+		    f_s.status,
+		    f_s.expiry_date,
+		    c.commodity_name,
+		    c.unit_size,
+		    c.total_commodity_units,
+		    c.unit_cost,
+		    f_s.current_balance,
+		    c.commodity_code from  facility_stocks f_s 
+				LEFT JOIN  commodities c ON c.id=f_s.commodity_id where facility_code=$facility_code 
+				 and f_s.current_balance>0 and expiry_date <= NOW() $and");
+				
 		        return $stocks ;
 	}
 	public static function All_expiries_email($facility_code,$checker=null){
@@ -654,11 +657,10 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
 	 (isset($district_id) && !isset($facility_code) ?  " GROUP BY f.facility_code having total>0": 
 	 ($graph_type=='table_data')&& ($commodity_id>0) ?" GROUP BY d.id, f.facility_code having total>0 order by di.district asc, f.facility_name asc" :
 	 " GROUP BY d.id having total > 0") ;
+	 
     $group_by_a_month =(!isset($commodity_id) && !isset($category_id) ) ? " GROUP BY d.id, f.facility_code having total>0 order by di.district asc, f.facility_name asc "
      :$group_by_a_month ;
- // echo ; exit;
- 
-	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+ 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll("SELECT  $selection_for_a_month $computation
      FROM facility_stocks fs, facilities f, commodities d,  districts di
      WHERE fs.facility_code = f.facility_code
@@ -668,9 +670,10 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
      $and_data
       $group_by_a_month
      ");	
-
+	 
      return $inserttransaction ;
 }   
+
   public static function get_county_consumption_level_new($facility_code, $district_id,$county_id,$category_id,$commodity_id, $option,$from,$to,$graph_type=null){
   	 $selection_for_a_month =((!isset($facility_code) || $facility_code=="ALL") && ($district_id)>0) || $category_id>0 ? " f.facility_name as name," :
   	 (($commodity_id=="ALL") && isset($facility_code) ? " d.commodity_name as name,": 
