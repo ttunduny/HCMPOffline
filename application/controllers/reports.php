@@ -2961,9 +2961,8 @@ $graph_type = 'bar';
 
      	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null,$tracer = null) 
      	{
-     		
      	//reset the values here
-     	//echo $report_type;exit;
+     	// echo $district_id;exit;
 		$tracer =(isset($tracer))? $tracer:null ;
 		$report_type =(isset($report_type))? $report_type:null ;
       	$commodity_id = ($commodity_id=="NULL") ? null :$commodity_id;
@@ -3037,9 +3036,16 @@ $graph_type = 'bar';
 		
 		elseif($report_type=="csv_data"):
 			//echo "This is running";exit;
+			
+			//echo "<pre>";print_r($series_data_);echo "</pre>";exit;//seth
 			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "Stock level $commodity_name $title $month_ $year", 'file_name' => "Stock_level_$commodity_name_$title_$month_$year");
 			$row_data = array();
 			$column_data = array("Sub-county Name","Facility Name","MFL Code","Commodity Name","stocks worth in $option_title ");
+
+			if(($option=="mos")&&($district_id == NULL)){
+			$series_data_ = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id,$report_type,$tracer);
+			$column_data = array("Commodity Name","stocks worth in $option_title ","District","Facility Name");
+			}
 			$excel_data['column_data'] = $column_data;
 			$row_data = array_merge($row_data,$series_data_); 
 			//echo "<pre>";print_r($mos_array);echo "</pre>";exit;
