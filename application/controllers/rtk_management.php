@@ -2118,6 +2118,36 @@ class Rtk_Management extends Home_controller {
         $this->session->set_userdata($session_data);
         redirect($redirect_url);
     }
+    public function switch_month($month = NULL, $redirect_url = NULL) {
+//      rtk_management/switch_district/district/switched_as/month/redirect_url/county
+        
+        if ($month == 0) {
+            $month = null;
+        }
+        if ($redirect_url == 0) {
+            $redirect_url = null;
+        }
+        
+        $session_data = array("session_id" => $this->session->userdata('session_id'),
+         "ip_address" => $this->session->userdata('ip_address'),
+         "user_agent" => $this->session->userdata('user_agent'),
+         "last_activity" => $this->session->userdata('last_activity'),         
+         "phone_no" => $this->session->userdata('phone_no'),
+         "user_email" => $this->session->userdata('user_email'),
+         "user_db_id" => $this->session->userdata('user_db_id'),
+         "full_name" => $this->session->userdata('full_name'),
+         "user_id" => $this->session->userdata('user_id'),
+         "names" => $this->session->userdata('names'),
+         "inames" => $this->session->userdata('inames'),
+         "identity" => $this->session->userdata('identity'),
+         "news" => $this->session->userdata('news'),
+         "drawing_rights" => $this->session->userdata('drawing_rights'),         
+         "Month" => $month);
+
+
+        $this->session->set_userdata($session_data);
+        redirect($redirect_url);
+    }
 
     public function rtk_mapping() {
         $district = $this->session->userdata('district_id');
@@ -2805,13 +2835,19 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
             }
               date_default_timezone_set("EUROPE/Moscow");
                 $lastmonth = date('F', strtotime("last day of previous month"));
-        if($date>$deadline_date){
-            $report_link = "<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'></a></td>";
-        }else{
-            $report_link = "<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'> Report</a></td>";
-        }
+                if($date>$deadline_date){
+                    $report_link = "<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'></a></td>";
+                }else{
+                    $report_link = "<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'> Report</a></td>";
+                }
         foreach ($facilities as $facility_detail) {
-
+                date_default_timezone_set("EUROPE/Moscow");
+                $lastmonth = date('F', strtotime("last day of previous month"));
+                if($date>$deadline_date){
+                    $report_link = "<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'></a></td>";
+                }else{
+                    $report_link = "<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'> Report</a></td>";
+                }
          
                 $table_body .="<tr><td><a class='ajax_call_1' id='county_facility' name='" . base_url() . "rtk_management/get_rtk_facility_detail/$facility_detail[facility_code]' href='#'>" . $facility_detail["facility_code"] . "</td>";
                 $table_body .="<td>" . $facility_detail['facility_name'] . "</td><td>" . $district_name['district'] . "</td>";
@@ -5905,6 +5941,47 @@ WHERE
         $year = date("Y", strtotime("$firstdate +1 Month "));
         $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
         $lastdate = $year . '-' . $month . '-' . $num_days;
+
+        //------> code for each facility------<<<<<
+        // $sql = "SELECT 
+        //     counties.county,
+        //     counties.id,
+        //     lab_commodities.commodity_name,
+        //     facilities.facility_name,
+        //     districts.district,
+        //     sum(lab_commodity_details.beginning_bal) as sum_opening,
+        //     sum(lab_commodity_details.q_received) as sum_received,
+        //     sum(lab_commodity_details.q_used) as sum_used,
+        //     sum(lab_commodity_details.no_of_tests_done) as sum_tests,
+        //     sum(lab_commodity_details.positive_adj) as sum_positive,
+        //     sum(lab_commodity_details.negative_adj) as sum_negative,
+        //     sum(lab_commodity_details.losses) as sum_losses,
+        //     sum(lab_commodity_details.closing_stock) as sum_closing_bal,
+        //     sum(lab_commodity_details.q_requested) as sum_requested,
+        //     sum(lab_commodity_details.allocated) as sum_allocated,
+        //     sum(lab_commodity_details.allocated) as sum_days,
+        //     sum(lab_commodity_details.q_expiring) as sum_expiring
+        // FROM
+        //     lab_commodities,
+        //     lab_commodity_details,
+        //     lab_commodity_orders,lab_commodity_categories,
+        //     facilities,
+        //     districts,
+        //     counties
+        // WHERE
+        //     lab_commodity_details.commodity_id = lab_commodities.id
+        //         AND lab_commodity_orders.id = lab_commodity_details.order_id
+        //         AND lab_commodities.category = lab_commodity_categories.id
+        //         AND lab_commodity_categories.id = 1
+        //         AND facilities.facility_code = lab_commodity_details.facility_code
+        //         AND facilities.district = districts.id
+        //         AND districts.county = counties.id
+        //         AND lab_commodity_orders.order_date BETWEEN '$firstdate' AND '$lastdate' Group By facilities.facility_code, commodity_name";
+
+        // // $sql2 = $sql . " AND lab_commodities.id = 3 Group By counties.county, commodity_name";
+        // $res = $this->db->query($sql);
+        // $result = $res->result_array();
+        // array_push($returnable, $result);
         $sql = "SELECT 
             counties.county,
             counties.id,
@@ -5924,23 +6001,23 @@ WHERE
         FROM
             lab_commodities,
             lab_commodity_details,
-            lab_commodity_orders,
+            lab_commodity_orders,lab_commodity_categories,
             facilities,
             districts,
             counties
         WHERE
             lab_commodity_details.commodity_id = lab_commodities.id
                 AND lab_commodity_orders.id = lab_commodity_details.order_id
+                AND lab_commodities.category = lab_commodity_categories.id
+                AND lab_commodity_categories.id = 1
                 AND facilities.facility_code = lab_commodity_details.facility_code
                 AND facilities.district = districts.id
                 AND districts.county = counties.id
                 AND lab_commodity_orders.order_date BETWEEN '$firstdate' AND '$lastdate'";
 
-        $sql2 = $sql . " AND lab_commodities.id = 1 Group By counties.county";
-
+        $sql2 = $sql . " AND lab_commodities.id = 1 Group By counties.county, commodity_name";
         $res = $this->db->query($sql2);
         $result = $res->result_array();
-
         array_push($returnable, $result);
 
         $sql3 = $sql . " AND lab_commodities.id = 2 Group By counties.county";
@@ -5952,8 +6029,23 @@ WHERE
         $res3 = $this->db->query($sql4);
         $result3 = $res3->result_array();
         array_push($returnable, $result3);
-//        echo "<pre>";print_r($returnable);die;
-//        echo($sql2);die;
+
+        $sql5 = $sql . " AND lab_commodities.id = 4 Group By counties.county";
+        $res5 = $this->db->query($sql5);
+        $result5 = $res5->result_array();
+        array_push($returnable, $result5);
+
+        $sql6 = $sql . " AND lab_commodities.id = 5 Group By counties.county";
+        $res6 = $this->db->query($sql6);
+        $result6 = $res6->result_array();
+        array_push($returnable, $result6);
+
+        $sql7 = $sql . " AND lab_commodities.id = 6 Group By counties.county";
+        $res7 = $this->db->query($sql7);
+        $result7 = $res7->result_array();
+        array_push($returnable, $result7);
+       // echo "<pre>";print_r($returnable);die;
+       // echo($sql2);die;
         return $returnable;
 
         /*
