@@ -3,10 +3,10 @@
 </div>
 
 <ul class='nav nav-tabs'>
-	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items <?php echo " ($number_of_tracer_items)"; ?></a></li>
+	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Commodities <?php echo " ($number_of_tracer_items)"; ?></a></li>
       <li class=""><a href="#division" data-toggle="tab">Program Commodities</a></li>
       <!--<li class=""><a href="#cat" data-toggle="tab">Categories</a></li>-->
-      <li class=""><a href="#county" data-toggle="tab">County View</a></li>
+      <li class=""><a href="#county" data-toggle="tab">Commodities</a></li>
       <li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>
 </ul>
     <div id="myTabContent" class="tab-content">
@@ -20,6 +20,7 @@
 <?php
 foreach($district_data as $district_):
         $district_id=$district_->id;
+		$district=$district_->id;
         $district_name=$district_->district;    
         echo "<option value='$district_id'>$district_name</option>";
 endforeach;
@@ -163,14 +164,15 @@ endforeach;
 </div>
 </div>
 </div>
-<div class="graph_content" id="graph_default">	
-	
-</div>
+<div class="graph_content" id="default_graph_"  ></div>	
 
+	
 <script>
 	 $(function () { 
+<?php echo $graph_data_default; ?>
 <?php echo $default_graph; ?>
 });
+
 	$(document).ready(function() {
 
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -261,7 +263,7 @@ var drop_down='';
         $("#tracer_district_filter").val()+"/"+
         $("#tracer_facility_filter").val()+"/"+
         $("#tracer_plot_value_filter").val()+
-        "/NULL/1";
+        "/1/1";
         ajax_request_replace_div_content(url_,'.graph_content');    
           });
           
@@ -280,7 +282,7 @@ var drop_down='';
          $(".tracer-download").button().click(function(e) {
         e.preventDefault(); 
         var url_ = "reports/get_county_stock_level_new/"+"NULL/"+"NULL/"+
-        $("#tracer_district_filter").val()+"/"+$("#tracer_facility_filter").val()+"/"+$("#tracer_plot_value_filter").val()+"/csv_data";   
+        $("#tracer_district_filter").val()+"/"+$("#tracer_facility_filter").val()+"/"+$("#tracer_plot_value_filter").val()+"/csv_data"+"/1";   
          window.open(url+url_ ,'_blank');   
           });
           
@@ -294,7 +296,7 @@ var drop_down='';
 		$(".county-filter").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+
-$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+"/NULL/NULL";	
+$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+"/1/NULL";	
 		ajax_request_replace_div_content(url_,'.graph_content');	
           });
           
@@ -308,13 +310,13 @@ $("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_fil
          $(".subcounty-filter").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+
-$("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val();	
+$("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+"/1/NULL";	
 		ajax_request_replace_div_content(url_,'.graph_content');	
           });
         $(".subcounty-download").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+
-$("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+"/csv_data";	
+$("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+"/csv_data/1";	
 		 window.open(url+url_ ,'_blank');	
           });
           
@@ -328,7 +330,7 @@ $(".category-filter").button().click(function(e) {
         $(".category-download").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+
-"NULL/"+$("#category_filter").val()+"/"+$("#category_district_filter").val()+"/"+ $("#category_facility_filter").val()+"/"+$("#category_plot_value_filter").val()+"/csv_data";	
+"NULL/"+$("#category_filter").val()+"/"+$("#category_district_filter").val()+"/"+ $("#category_facility_filter").val()+"/"+$("#category_plot_value_filter").val()+"/csv_data/1";	
 		 window.open(url+url_ ,'_blank');	
           });
           
@@ -341,5 +343,5 @@ $(".general_stock_info").on(function(e)
            });
 	
           		
-		});
+		});			
 </script>
