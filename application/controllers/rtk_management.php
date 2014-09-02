@@ -222,6 +222,40 @@ class Rtk_Management extends Home_controller {
         $this->load->view('rtk/template', $data);
     }
 
+    public function get_county_percentages_month($month=null){
+        if(isset($month)){           
+            $year = substr($month, -4);
+            $month = substr($month, 0,2);            
+            $monthyear = $month.$year;                    
+            
+        }
+        //echo "$monthyear";die();
+        for ($i=1; $i < 48; $i++) {             
+            $sql = "select 
+                        count(facilities.facility_code) as facilities
+                    from
+                        facilities,
+                        districts,
+                        counties
+                    where
+                        facilities.district = districts.id
+                            and districts.county = counties.id
+                            and counties.id = $i
+                            and facilities.rtk_enabled = 1";
+            $facilities = $this->db->query($sql)->result_array();            
+            foreach ($facilities as $key => $value) {
+                $facility_count = $value['facilities'];
+            }
+            $percentage = $this->rtk_summary_county($i,$year,$month);
+            $reported = $percentage['reported'];           
+            
+            $q = "insert into rtk_county_percentage (county_id, facilities,reported,month) values ($i,$facility_count,$reported,'$monthyear')";
+            $this->db->query($q);
+
+
+        }
+    }
+
     public function clean_data($month=null){
         if(isset($month)){           
             $year = substr($month, -4);
@@ -230,7 +264,7 @@ class Rtk_Management extends Home_controller {
             $monthyear1 = $year . '-' . $month . '-31';         
             
         }
-        for ($i=0; $i <47 ; $i++) { 
+        for ($i=1; $i <=47 ; $i++) { 
             $sql = "select 
                     distinct lab_commodity_orders.facility_code
                 from
@@ -253,10 +287,12 @@ class Rtk_Management extends Home_controller {
                                 and districts.county = counties.id
                                 and counties.id = $i
                                 and facilities.rtk_enabled = 1)";
+
             $res = $this->db->query($sql)->result_array();
+
         foreach ($res as $key => $value) {
             $fcode = $value['facility_code'];
-            $q = "delete from lab_commodity_orders where lab_commodity_orders.facility_code = $fcode";
+            $q = "update lab_commodity_orders set order_date='0000-00-00' where lab_commodity_orders.facility_code = $fcode and lab_commodity_orders.order_date between '$monthyear' and '$monthyear1'";
             $this->db->query($q);
         }
             
@@ -264,6 +300,95 @@ class Rtk_Management extends Home_controller {
         
         
         
+    }
+
+    public function rtk_manager_home1() {
+        $data = array();
+        $data['title'] = 'RTK Manager';
+        $data['banner_text'] = 'RTK Manager';
+        $data['content_view'] = "rtk/rtk/home_v";
+        $counties = $this->_all_counties();
+        $county_arr = array();
+        foreach ($counties as $county) {
+            array_push($county_arr, $county['county']);
+        }
+        $counties_json = json_encode($county_arr);
+        $counties_json = str_replace('"', "'", $counties_json);
+        $data['counties_json'] = $counties_json;
+
+        $thismonth = date('m', time());
+        $thismonth_year = date('Y', time());
+        $this_month_full = $thismonth.$thismonth_year;
+
+        $previous_month = date('m', strtotime("-1 month", time()));
+        $previous_month_year = date('Y', strtotime("-1 month", time()));
+        $previous_month_full = $previous_month.$previous_month_year;
+
+        $prev_prev = date('m', strtotime("-2 month", time()));
+        $prev_prev_year = date('Y', strtotime("-2 month", time()));
+        $prev_prev_month_full = $prev_prev.$prev_prev_year;
+
+        $thismonth_arr1 = array();
+
+        foreach ($counties as $key => $value) {
+            $id = $value['id'];
+            $q = "select * from rtk_county_percentage where month='$this_month_full' and county_id=$id";
+            $result = $this->db->query($q)->result_array();
+            foreach ($result as $key => $value) {
+                $facils = $value['facilities'];
+                $reported = $value['reported'];                               
+            }
+            $percentage = round((($reported/$facils)*100));
+            array_push($thismonth_arr1, $percentage);
+        }     
+
+        $previous_month_arr1 = array();
+
+        foreach ($counties as $key => $value) {
+            $id = $value['id'];
+            $q = "select * from rtk_county_percentage where month='$previous_month_full' and county_id=$id";
+            $result = $this->db->query($q)->result_array();
+            foreach ($result as $key => $value) {
+                $facils = $value['facilities'];
+                $reported = $value['reported'];                               
+            }
+            $percentage = round((($reported/$facils)*100));
+            array_push($previous_month_arr1, $percentage);
+        }  
+
+        $prev_prev_month_arr1 = array();
+
+        foreach ($counties as $key => $value) {
+            $id = $value['id'];
+            $q = "select * from rtk_county_percentage where month='$prev_prev_month_full' and county_id=$id";
+            $result = $this->db->query($q)->result_array();
+            foreach ($result as $key => $value) {
+                $facils = $value['facilities'];
+                $reported = $value['reported'];                               
+            }
+            $percentage = round((($reported/$facils)*100));
+            array_push($prev_prev_month_arr1, $percentage);
+        }  
+
+        //$thismonth_arr = $this->rtk_summary_country_wide($thismonth_year, $thismonth);
+        $thismonthjson = json_encode($thismonth_arr1);
+        $thismonthjson = str_replace('"', "", $thismonthjson);
+        $data['thismonthjson'] = $thismonthjson;
+
+        
+        //$previous_month_arr = $this->rtk_summary_country_wide($previous_month_year, $previous_month);
+        $previous_monthjson = json_encode($previous_month_arr1);
+        $previous_monthjson = str_replace('"', "", $previous_monthjson);
+        $data['previous_monthjson'] = $previous_monthjson;
+
+
+        
+
+        //$prev_prev_month_arr = $this->rtk_summary_country_wide($prev_prev_year, $prev_prev);
+        $prev_prev_monthjson = json_encode($prev_prev_month_arr1);
+        $prev_prev_monthjson = str_replace('"', "", $prev_prev_monthjson);
+        $data['prev_prev_monthjson'] = $prev_prev_monthjson;
+        $this->load->view('rtk/template', $data);
     }
 
     public function rtk_manager_home() {
@@ -305,6 +430,7 @@ class Rtk_Management extends Home_controller {
         $data['prev_prev_monthjson'] = $prev_prev_monthjson;
         $this->load->view('rtk/template', $data);
     }
+
 
     public function rtk_manager_admin() {
         $data['title'] = 'RTK Manager';
@@ -1725,6 +1851,11 @@ class Rtk_Management extends Home_controller {
         echo "</pre>";
     }
 
+    // function _update_county_percentages($county_id,$state){
+    //     if($state==1){
+    //         $action = ""
+    //     }
+    // }
     public function rtk_summary_county($county, $year, $month) {
         date_default_timezone_set('EUROPE/moscow');
         $county_summary = array();
