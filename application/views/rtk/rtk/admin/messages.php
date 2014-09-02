@@ -168,6 +168,7 @@
 =======
         <tr>  
                               
+             <input type="hidden" class="form-control" id="receipient_id">
             <input class="typeahead form-control tm-input" id="receipient" type="text" placeholder="Enter Receipient" data-role="tagsinput" data-provide="typeahead" style="width:96%" />   
           
 >>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
@@ -268,13 +269,12 @@ var substringMatcher = function(strs) {
             },
             {
               name: 'facilities',
-              displayKey: 'receipients',
-              valueKey: 'id',
+              displayKey: 'receipients',              
               source: messages.ttAdapter(),
               templates: {
                 //header: '<h5 class="query-title">Facilities</h5>'
               }
-            })/*.on('typeahead:selected',onSelected)*/;
+            }).on('typeahead:selected',onSelected);/*.on('typeahead:selected',onSelected)*/;
             /*$('#receipient').tagsinput('items');
               var receipients = $(".tm-input").tagsManager({               
                 replace:false,                              
@@ -303,22 +303,27 @@ var substringMatcher = function(strs) {
 >>>>>>> 7a98ade9c7683b0377797f16b25d9afc87ad0292
 
             });*/
+    function onSelected($e, datum) {
+          $.each(datum, function( k, v ){
+          $('#receipient_id').val('NULL');            
+          $('#receipient_id').val(datum.id);          
+        });
+        }
       $(function(){
 
              $('#save_message_btn').click(function(e) {         
               e.preventDefault();          
              // var form = $( "form[name=compose]").serialize();        
-              var receipient = $("#receipient").val();
+              //var receipient = $("#receipient").val();
               var subject = $("#subject").val();
               var message = $("#message").val(); 
-              var id = $("#receipient_id").val();
-              alert(id);
+              var id = $("#receipient_id").val();             
               //alert('Receipients='+receipients+' Subject'+subject+' Message'+message);
               
               $.post("<?php echo base_url() . 'rtk_management/rtk_send_message'; ?>", {
                   message: message,
                   subject: subject,
-                  receipient: receipient,            
+                  id: id,            
                   }).done(function(data) {
                       alert("Data Loaded: " + data);                      
                       window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_messages'; ?>";
