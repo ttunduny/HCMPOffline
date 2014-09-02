@@ -171,8 +171,8 @@ $district_id_active =  $this -> session -> userdata('district_id');
 	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Commodities <?php echo " ($number_of_tracer_items)"; ?></a></li>
       <li class=""><a href="#division" data-toggle="tab">Program Commodities</a></li>
       <!--<li class=""><a href="#cat" data-toggle="tab">Categories</a></li>-->
-       <!--<li class=""><a href="#county" data-toggle="tab">Sub County Comparison</a></li>
-     <li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>-->
+   	  <li class=""><a href="#county" data-toggle="tab">Sub County Comparison</a></li>
+     <!--<li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>-->
 </ul>
     <div id="myTabContent" class="tab-content">
  
@@ -272,11 +272,12 @@ endforeach;
 ?>
 </select>		
 <select id="county_plot_value_filter" class="form-control col-md-2">
-<option selected="selected" value="NULL">Select Plot value</option>
-<option value="packs">Packs</option>
-<option value="units">Units</option>
+<option  value="NULL">Select Plot value</option>
+<!--<option value="packs">Packs</option>
+<option value="units">Units</option>-->
+<option selected="selected" value="mos">Months Of Stock</option>
 <!--<option value="ksh">KSH</option>
-<option value="mos">Months Of Stock</option>-->
+-->
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success county-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
@@ -462,7 +463,7 @@ var drop_down='';
    
 		$(".county-filter").button().click(function(e) {
 			e.preventDefault();	
-	        var url_ = "reports/get_county_stock_level_new/"+$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+"/1/NULL/group_special";	
+	        var url_ = "reports/get_county_comparison_graph/"+$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+"/1/NULL/group_special";	
 			ajax_request_replace_div_content(url_,'.graph_content');	
           });
           

@@ -673,7 +673,67 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
 	 
      return $inserttransaction ;
 }   
-
+//For the County Comparison
+public static function get_county_comparison_data($facility_code=null,$district_id=null,$county_id,$category_id=NULL,$commodity_id=NULL,$option=null,$graph_type=null,$division_id=NULL)
+ {
+ 	
+     $selection_for_a_month = (isset($facility_code) && isset($district_id))? " d.commodity_name as name," : 
+			 (($district_id>0) && !isset($facility_code) ? " f.facility_name as name,":
+			 ($graph_type=='table_data')&& ($commodity_id>0) ?" di.district , f.facility_name, f.facility_code, " : " di.district as name,") ; 
+	 $selection_for_a_month =(!isset($commodity_id)) ? " di.district ,d.commodity_name, f.facility_name, f.facility_code,di.district as name,"
+     :$selection_for_a_month;		
+	 switch ($option) :
+         case 'units':
+           $computation ="ifnull(CEIL(SUM(fs.current_balance)),0) AS total" ;
+             break;
+             case 'packs':
+           $computation ="ifnull(SUM(ROUND(fs.current_balance/d.total_commodity_units)),0) AS total" ;
+             break;
+         default:
+      $computation ="ifnull(CEIL(SUM(fs.current_balance)),0) AS total" ;
+               break;
+     endswitch;		
+     //$and_data .=(isset($category_id)&& ($category_id>0)) ?"AND d.commodity_sub_category_id = '$category_id'" : null;
+     $and_data .=(isset($commodity_id)&& ($commodity_id>0)) ?"AND fs.commodity_id = d.id AND d.id = '$commodity_id'" : null;
+     //$and_data .=(isset($division_id)&& ($division_id>0)) ?"AND d.commodity_division = '$division_id' " :null;
+	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND di.id = '$district_id'" : null;
+	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;
+     $and_data .=($county_id>0) ?" AND di.county='$county_id'" : null;
+      $and_data .=(!isset($commodity_id)) ? 'and d.id=fs.commodity_id' : null;
+     $group_by_a_month =((isset($facility_code) && isset($district_id)))? " GROUP BY fs.commodity_id having total>0" : 
+	 (isset($district_id) && !isset($facility_code) ?  " GROUP BY f.facility_code having total>0": 
+	 ($graph_type=='table_data')&& ($commodity_id>0) ?" GROUP BY d.id, f.facility_code having total>0 order by di.district asc, f.facility_name asc" :
+	 " GROUP BY d.id having total > 0") ;
+	 
+    $group_by_a_month =(!isset($commodity_id) ) ? " GROUP BY di.id having total>0 order by di.district asc "
+     :$group_by_a_month;
+ 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+    ->fetchAll("SELECT  $selection_for_a_month $computation,
+    ifnull(round(avg(IFNULL(fs.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),1),0) as total_mos
+     FROM facility_stocks fs, facilities f, commodities d,  districts di,
+	facility_monthly_stock f_m_s
+     WHERE fs.facility_code = f.facility_code
+     AND f_m_s.`commodity_id` = d.id
+     AND f.district =di.id
+     and fs.expiry_date>NOW()
+     AND fs.status=1
+     $and_data
+     GROUP BY di.id having total>0 order by di.district asc
+     ");	
+	 /*echo "SELECT  $selection_for_a_month $computation,
+	 ifnull(round(avg(IFNULL(fs.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),1),0) as total_mos
+     FROM facility_stocks fs, facilities f, commodities d,  districts di,
+	facility_monthly_stock f_m_s
+     WHERE fs.facility_code = f.facility_code
+     AND f_m_s.`commodity_id` = d.id
+     AND f.district =di.id
+     and fs.expiry_date>NOW()
+     AND fs.status=1
+     $and_data
+     GROUP BY di.id having total>0 order by di.district asc";
+	  exit;*/
+     return $inserttransaction ;
+}
   public static function get_county_consumption_level_new($facility_code, $district_id,$county_id,$category_id,$commodity_id, $option,$from,$to,$graph_type=null){
   	 $selection_for_a_month =((!isset($facility_code) || $facility_code=="ALL") && ($district_id)>0) || $category_id>0 ? " f.facility_name as name," :
   	 (($commodity_id=="ALL") && isset($facility_code) ? " d.commodity_name as name,": 
