@@ -243,7 +243,7 @@ function compute_tests_done(){
         var loses = parseInt($('#losses_' + row).val());
         var pos_adj = parseInt($('#pos_adj_' + row).val());
         var neg_adj = parseInt($('#neg_adj_' + row).val());
-        var closing = b_bal + qty_rcvd - q_used + pos_adj - neg_adj;       
+        var closing = b_bal + qty_rcvd - q_used + pos_adj - neg_adj -loses;       
         if((q_used+neg_adj)>(b_bal+qty_rcvd+pos_adj)){
             alert('You cannot use more kits than what you have in Stock. Please check your computations again');
             $('#b_balance_' + row).css('border-color','red'); 
@@ -434,7 +434,7 @@ $count = count($res);
                 </tr>
                 <tr>
                         <td colspan = "14" style = "text-align:center;" id="calc">
-                            <b>The Ending Balance is Computed as follows: </b><i>Beginning Balance + Quantity Received + Positive Adjustments - Quantity Used - Negative Adjustments</i> 
+                            <b>The Ending Balance is Computed as follows: </b><i>Beginning Balance + Quantity Received + Positive Adjustments - Quantity Used - Negative Adjustments - Losses</i> 
                             <b><br/>Note:</b>
                             The Quantity Used Should Not be Less than the Tests Done
                         </td>            
