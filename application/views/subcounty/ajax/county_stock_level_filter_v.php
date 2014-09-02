@@ -171,8 +171,8 @@ $district_id_active =  $this -> session -> userdata('district_id');
 	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Commodities <?php echo " ($number_of_tracer_items)"; ?></a></li>
       <li class=""><a href="#division" data-toggle="tab">Program Commodities</a></li>
       <!--<li class=""><a href="#cat" data-toggle="tab">Categories</a></li>-->
-      <li class=""><a href="#county" data-toggle="tab">Sub County Comparison</a></li>
-      <!--<li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>-->
+       <!--<li class=""><a href="#county" data-toggle="tab">Sub County Comparison</a></li>
+     <li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>-->
 </ul>
     <div id="myTabContent" class="tab-content">
  

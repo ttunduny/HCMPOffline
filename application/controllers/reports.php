@@ -3066,7 +3066,7 @@ $graph_type = 'bar';
 		    $graph_data = array_merge($graph_data,array("graph_type"=>$graph_type));
 		    $graph_data = array_merge($graph_data,array("graph_yaxis_title"=>"Commodity Stock level in $option_new"));
 		    $graph_data = array_merge($graph_data,array("graph_categories"=>$category_data ));
-		    $graph_data = array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
+		    $graph_data = array_merge($graph_data,array("series_data"=>array('Total'=>$series_data)));
 			//echo $category_data;
 		 $data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
