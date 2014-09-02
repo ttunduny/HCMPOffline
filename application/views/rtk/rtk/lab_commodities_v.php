@@ -5,34 +5,35 @@
 <script src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.tablecloth.js"></script>
 
 <style>
-@import "<?php echo base_url(); ?>assets/datatable/media2/css/jquery.dataTables.css";
+    @import "<?php echo base_url(); ?>assets/datatable/media2/css/jquery.dataTables.css";
 </style>
 <style>
-.user{
-    width:70px;
-    background : none;
-    border : none;
-    text-align: center;
-}
-.user2{
-    width:70px;
+    .user{
+        width:70px;
+        background : none;
+        border : none;
+        text-align: center;
+    }
+    .user2{
+        width:70px;
 
-    text-align: center;
-}
-.col5{background:#D8D8D8;}
-table{
-    font-size: 11px;   
-}    
-table td{
-    line-height: 11px;
-}
+        text-align: center;
+    }
+    .col5{background:#D8D8D8;}
+    table{
+        font-size: 11px;   
+    }    
+    table td{
+        line-height: 11px;
+    }
 </style>
 
 <script type="text/javascript">
-$(function() {
+    $(function() {
 
-    $('#user_order input').addClass("form-control");
-    //$('#user_order input').addClass("resize");
+        $('#user_order input').addClass("form-control");
+
+    //Set the begining Balance for the Comodities    
     var begining_bal = <?php echo json_encode($beginning_bal);?>;
 
     for (var a = 0; a < begining_bal.length; a++) {            
@@ -40,129 +41,61 @@ $(function() {
         $('#b_balance_'+a).attr("value",current_bal); 
     };             
 
-
+    //Set the first element uneditable i.e. Screening Determine
     $('#tests_done_0').attr("readonly",'true');
 
-    /*Calculating the Value of the Number of tests done for Colloidal*/
-    $('#vct').keyup(function(){   
-        validate_vct();
-        compute_tests_done();           
-    })
-    $('#pitc').keyup(function(){
-        validate_pitc();
-        compute_tests_done();
-    })
-    $('#pmtct').keyup(function(){
-        validate_pmtct();
-        compute_tests_done();
-    })
-    $('#blood_screening').keyup(function(){
-        validate_blood();
-        compute_tests_done();           
-    })
-    $('#other2').keyup(function(){
-        validate_other();
-        compute_tests_done();           
-    })    
-
-<<<<<<< HEAD
-function validate_vct(){
-=======
-function validate_vct(){            
->>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
-        var input_value  = $('#vct').val();            
-        if(isNaN(input_value)){
-         $('#vct').attr("value",0);
-     }else if(input_value<0){
-        $('#vct').attr("value",0);
-    }
-
-}
-function validate_pitc(){            
-    var input_value  = $('#pitc').val();            
-    if(isNaN(input_value)){
-     $('#pitc').attr("value",0);
- }else if(input_value<0){
-    $('#pitc').attr("value",0);
-}
-
-}
-function validate_pmtct(){            
-        var input_value  = $('#pmtct').val();            
-        if(isNaN(input_value)){
-         $('#pmtct').attr("value",0);
-     }else if(input_value<0){
-        $('#pmtct').attr("value",0);
-    }
-
-}
-function validate_blood(){            
-        var input_value  = $('#blood_screening').val();            
-        if(isNaN(input_value)){
-         $('#blood_screening').attr("value",0);
-     }else if(input_value<0){
-        $('#blood_screening').attr("value",0);
-    }
-
-}
-function validate_other(){            
-        var input_value  = $('#other2').val();            
-        if(isNaN(input_value)){
-         $('#other2').attr("value",0);
-     }else if(input_value<0){
-        $('#other2').attr("value",0);
-    }
-
-}
-
-function validateEnd(row){
-    var end_val = $('#physical_count_' + row).val();
-    if(end_val<0){
-
-    //$('#losses_' + row).attr("value",5);
-    $('#pos_adj_' + row).attr("value",0);
-    $('#neg_adj_' + row).attr("value",0);
-    if($('#q_used_0').val()<end_val){
-        //alert('The Quantity used canot be Less than the Number of Tests Done. Please check your calculations again');
+    //Set the Datepickers
+    $("#begin_date").datepicker({
+        defaultDate: "",
+        changeMontd: true,
+        changeYear: true,
+        numberOfMontds: 1,
+    });
+    $("#end_date").datepicker({
+        defaultDate: "",
+        changeMonth: true,
+        changeYear: true,
+        numberOfMonths: 1,
         
-        // $('#q_used_0').attr("value",0);
+    });
+
+    /*Calculating the Value of the Number of tests done for Screening Determine*/
+
+    /*end of triggering of the calculation of Values of the Number of tests done for Screening Determine*/
+    $('#vct').change(function(){           
+        validate_tests('vct');        
+    })    
+    $('#pitc').change(function(){        
+        validate_tests('pitc');       
+    })
+    $('#pmtct').change(function(){        
+        validate_tests('pmtct');        
+    })
+    $('#blood_screening').change(function(){        
+        validate_tests('blood_screening');        
+    })
+    $('#other2').change(function(){        
+       validate_tests('other2');        
+   }) 
+
+    /* end of triggering of the calculation of Values for Screening Determine */   
+    /* Start of Validation for Tests for Screening Determine */
+    function validate_tests(top_type){
+        var input_value  = $('#'+top_type).val();
+        if(isNaN(input_value)){            
+           $('#'+top_type).css("border-color","red");
+       }else{ 
+            if(input_value<0){                
+                $('#'+top_type).css("border-color","red");                
+            }else{      
+                $('#'+top_type).css("border-color","none");
+                compute_tests_done();
+            }
+        }
+
     }
-    var end =  parseInt($('#b_balance_'+row).val()) + parseInt($('#q_received_'+row).val());
-    $('#q_used_' + row).attr("value",end);
-    }
-}
 
-
-function validate_quantity_used(){
-
-    if($('#q_used_0').val()<$('#tests_done_0').val()){
-        alert('The Quantity used cannot be Less than the Number of Tests Done. Please check your calculations again');
-        var t0 = $('#tests_done_0').val();
-        $('#q_used_0').attr("value",t0);
-    }
-    var q0 = $('#q_used_0').val();
-    if(isNaN(q0)){
-        $('#q_used_0').attr("value",0);
-    }
-
-}
-
-function validate_quantity_used(row){
-
-    if($('#q_used_'+row).val()<$('#tests_done_'+row).val()){
-        alert('The Quantity used cannot be Less than the Number of Tests Done. Please check your calculations again');                
-        $('#q_used_'+row).attr("value",0);
-    }
-    var q0 = $('#q_used_'+row).val();
-    if(isNaN(q0)){
-        $('#q_used_'+row).attr("value",0);
-    }
-
-}
-
-var tests_done_q = 0;
-var tests_done_no = parseInt(tests_done_q);
-
+/* --- Start of calculation for the no of tests done for Screening Determine  -- */
 function compute_tests_done(){  
     var vct_no = parseInt($('#vct').val());
     var pitc_no = parseInt($('#pitc').val());
@@ -170,182 +103,191 @@ function compute_tests_done(){
     var blood_screening_no = parseInt($('#blood_screening').val());
     var other = parseInt($('#other2').val());
     tests_done_no = vct_no + pitc_no + pmtct_no + blood_screening_no + other;
-
-    $('#tests_done_0').attr("value",tests_done_no);
-    $('#q_used_0').attr("value",tests_done_no);
-
-
-
+    $('#tests_done_0').attr("value",tests_done_no).change();
+    $('#q_used_0').attr("value",tests_done_no).change();
 }       
-
-/* --- end of calculation for the no of tests done for Colloidal -- */
-
-
-$(document).ready(function() {
-
-$("#begin_date").datepicker({
-    defaultDate: "",
-    changeMontd: true,
-    changeYear: true,
-    numberOfMontds: 1,
-});
-$("#end_date").datepicker({
-    defaultDate: "",
-    changeMonth: true,
-    changeYear: true,
-    numberOfMonths: 1,
-    
-});
-
-    var final = 0;
-    var num_final = parseInt(final);
+/* End of Validation for Tests for Screening Determine */
 
 
-  function compute_losses(row){
-    var tests_done = $('#tests_done_'+row).val();                
-    var quantity_used = $('#q_used_'+row).val();
-    var loss = quantity_used - tests_done;
-    if(loss <0){
-        alert('Please Enter a valid number for Quantity Used and Tests Done.');
-        $('#losses_'+row).val('0');
-        $('#tests_done_'+row).val('0');
-        $('#q_used_'+row).val('0');
-    }else{
-        $('#losses_'+row).val(loss);
+    /* ---- Compute the Losses New----*/    
+    function validate_loss(row){
+        var tests_done = $('#tests_done_'+row).val();        
+        var quantity_used = $('#q_used_'+row).val();
+        compute_loss(row,'q_used_','tests_done_');
     }
-}
 
- function compute_end(row) {
-    var bal = $('#b_balance_' + row).val();
-    var num_bal = parseInt(bal);
-//  alert(num_bal);
-<<<<<<< HEAD
-=======
+    function compute_loss(row,q_used,tests_done){        
+        var loss = $('#q_used'+row).val() - $('#tests_done'+row).val();
+        $('#losses_'+row).val(loss).change();        
+    }
 
->>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
-    var qty_rcvd = $('#q_received_' + row).val();
-    var num_qty_rcvd = parseInt(qty_rcvd);
-    //  alert(num_qty_rcvd);
+    $('.qty_used').change(function() {
+        row_id = $(this).closest("tr");
+        number = row_id.attr("commodity_id");
+        num = parseInt(number);
+        validate_inputs_loss('q_used_',num);
+        //validate_inputs('q_used_',num);
+        
+    })
+    $('.tests_done').change(function() {
+        row_id = $(this).closest("tr");
+        number = row_id.attr("commodity_id");
+        num = parseInt(number);
+        validate_inputs_loss('tests_done_',num);
+        //validate_inputs('q_used_',num);
+        
+    })
+    $('.bbal').change(function() {
+        row_id = $(this).closest("tr");
+        number = row_id.attr("commodity_id");
+        num = parseInt(number);
+        validate_inputs('b_balance_',num);
+    })
+    $('.qty_rcvd').change(function() {
+        row_id = $(this).closest("tr");
+        number = row_id.attr("commodity_id");
+        num = parseInt(number);
+        validate_inputs('q_received_',num);
+    })
 
-    var q_used = $('#q_used_' + row).val();
-    var num_q_used = parseInt(q_used);
-    //  alert(num_q_used);
 
-    var tests_done = $('#tests_done_' + row).val();
-    var num_tests_done = parseInt(tests_done);
-                    //  alert(num_tests_done);
+    $('.pos_adj').change(function() {
+        row_id = $(this).closest("tr");
+        number = row_id.attr("commodity_id");
+        num = parseInt(number);
+        validate_inputs('pos_adj_',num);
+    })
+    $('.neg_adj').change(function() {
+        row_id = $(this).closest("tr");
+        number = row_id.attr("commodity_id");
+        num = parseInt(number);
+        validate_inputs('neg_adj_',num);
+    })  
+    $('.phys_count').change(function() {
+        row_id = $(this).closest("tr");
+        number = row_id.attr("commodity_id");
+        num = parseInt(number);
+        validate_inputs('physical_count_',num);
+    })  
+    $('.losses').change(function() {
+        row_id = $(this).closest("tr");
+        number = row_id.attr("commodity_id");
+        num = parseInt(number);
+        validate_inputs('losses_',num);
+    })           
+         
 
-                    var loses = $('#losses_' + row).val();
-                    var num_loses = parseInt(loses);
-    //  alert(num_loses);
 
-    var pos_adj = $('#pos_adj_' + row).val();
-    var num_pos_adj = parseInt(pos_adj);
-    //  alert(num_pos_adj);
 
-    var neg_adj = $('#neg_adj_' + row).val();
-    var num_neg_adj = parseInt(neg_adj);
-    //  alert(num_neg_adj);
-
-   
-
-     num_final = num_bal + num_qty_rcvd - num_q_used + num_pos_adj - num_neg_adj;
-
-    //Validate Quantity Used
-    var sum_bbal_q_rec_pos_adj = num_bal + num_qty_rcvd + num_pos_adj - num_neg_adj;
-    if((num_q_used>sum_bbal_q_rec_pos_adj)&&(row!=0)){
-        $('#losses_' + row).attr("value",0);                    
-        $('#tests_done_' + row).attr("value",0);                    
-        $('#q_used_'+row).css("border-color","red");
-        $('#physical_count_' + row).attr("value",sum_bbal_q_rec_pos_adj);
-
-    }else if((num_final<0)&&(row!=0)){
-        $('#losses_' + row).attr("value",6);                    
-        $('#tests_done_' + row).attr("value",0);
-        $('#q_used_' +row).attr("value",0);
-        $('#physical_count_' + row).attr("value",sum_bbal_q_rec_pos_adj);
-        $('#neg_adj_' +row).attr("value",0);
-        $('#pos_adj_' + row).attr("value",0);
-        //$('#physical_count_' + row).attr("color","red");
-
-    }else{
-                       $('#physical_count_' + row).attr("value", num_final);
+    /*  Check if a value is a number and not less than zero */
+    function validate_inputs(input,row){        
+        var input_value  = $('#'+input+row).val();
+        if((isNaN(input_value))|| (input_value=='')){            
+           $('#'+input+row).css("border-color","red");
+           hide_save();
+         }else{ 
+                $('#'+input+row).css("border",'');                
+                if(input_value<0){                
+                    $('#'+input+row).css("border-color","red");                
+                    hide_save();
+                }else{      
+                    $('#'+input+row).css("border",'');                
+                    show_save();
+                    compute_closing(row);
+                }
+            }
 
     }
-}
 
-$('.bbal').keyup(function() {
-    row_id = $(this).closest("tr");
-    number = row_id.attr("commodity_id");
-    num = parseInt(number);
-    //compute_end(num);
-    //validateEnd(num);
-})
-$('.qty_rcvd').keyup(function() {
-    row_id = $(this).closest("tr");
-    number = row_id.attr("commodity_id");
-    num = parseInt(number);
-    compute_end(num);
-    validateEnd(num);
-})
-$('.qty_used').keyup(function() {
-    row_id = $(this).closest("tr");
-    number = row_id.attr("commodity_id");
-    num = parseInt(number);
-    validate_quantity_used(num);
-    compute_end(num);
-    //compute_losses(num);
-    //validateEnd(num);
-})
-$('.tests_done').keyup(function() {
-    row_id = $(this).closest("tr");
-    number = row_id.attr("commodity_id");
-    num = parseInt(number);
-    validate_quantity_used(num);
-    compute_end(num);
-    //compute_losses(num);
-    //validateEnd(num);
-})
+    /*  End of Input Validations */
 
-$('.pos_adj').keyup(function() {
-    row_id = $(this).closest("tr");
-    number = row_id.attr("commodity_id");
-    num = parseInt(number);
-    compute_end(num);
-    //validateEnd(num);
-})
-$('.neg_adj').keyup(function() {
-    row_id = $(this).closest("tr");
-    number = row_id.attr("commodity_id");
-    num = parseInt(number);
-    compute_end(num);
-   // validateEnd(num);
-})           
+    /*  Check if a value is a number and not less than zero */
+    function validate_inputs_loss(input,row){        
+        var input_value  = $('#'+input+row).val();        
+        if((isNaN(input_value))||(input_value='')){            
+           $('#'+input+row).css("border-color","red");
+         }else{ 
+                input_value = parseInt(input_value);
+                $('#'+input+row).css("border",'');                
+                if(input_value<0){                
+                    $('#'+input+row).css("border-color","red");
+                    hide_save();                
+                }else{      
+                    $('#'+input+row).css("border",'');
+                    var q_used = parseInt($('#q_used_'+row).val());
+                    var tests_done = parseInt($('#tests_done_'+row).val());
+                    if(q_used < tests_done){
+                        $('#q_used_'+row).css("border-color","red"); 
+                        $('#tests_done_'+row).css("border-color","red"); 
+                        hide_save();
+                    }else{
+                        /*var loss = q_used - tests_done;
+                        $('#q_used_'+row).css("border-color",""); 
+                        $('#tests_done_'+row).css("border-color",""); 
+                        $('#losses_'+row).val(loss).change();*/
+                        show_save();
+                        compute_closing(row);
+                    }                        
+                }
+            }
 
-function add(prev, value, row_id) {
-    val = $('#physical_count_' + row_id).val();
-    endbal = parseInt(val);
+    }
 
-    val = parseInt(value);
-    endbal += val;
-    $('#physical_count_' + row_id).attr("value", endbal);
-}
-function sub(prev, value, row_id) {
-    val = parseInt(value);
-    endbal -= val;
-    $('#physical_count_' + row_id).attr("value", endbal);
-}
+    /*  End of Input Validations */
+    /* Compute Closing Balance */
+    function compute_closing(row){
+        var b_bal = parseInt($('#b_balance_' + row).val()); 
+        var qty_rcvd = parseInt($('#q_received_' + row).val());
+        var q_used = parseInt($('#q_used_' + row).val());
+        var tests_done = parseInt($('#tests_done_' + row).val());
+        var loses = parseInt($('#losses_' + row).val());
+        var pos_adj = parseInt($('#pos_adj_' + row).val());
+        var neg_adj = parseInt($('#neg_adj_' + row).val());
+        var closing = b_bal + qty_rcvd - q_used + pos_adj - neg_adj;       
+        if((q_used+neg_adj)>(b_bal+qty_rcvd+pos_adj)){
+            alert('You cannot use more kits than what you have in Stock. Please check your computations again');
+            $('#b_balance_' + row).css('border-color','red'); 
+            $('#q_received_' + row).css('border-color','red'); 
+            $('#q_used_' + row).css('border-color','red'); 
+            $('#tests_done_' + row).css('border-color','red'); 
+            $('#losses_' + row).css('border-color','red'); 
+            $('#pos_adj_' + row).css('border-color','red'); 
+            $('#neg_adj_' + row).css('border-color','red'); 
+            $('#physical_count_' + row).css('border-color','red'); 
+            hide_save();
+        }else{
+            $('#b_balance_' + row).css('border-color',''); 
+            $('#q_received_' + row).css('border-color',''); 
+            $('#q_used_' + row).css('border-color',''); 
+            $('#tests_done_' + row).css('border-color',''); 
+            $('#losses_' + row).css('border-color',''); 
+            $('#pos_adj_' + row).css('border-color',''); 
+            $('#neg_adj_' + row).css('border-color',''); 
+            $('#physical_count_' + row).css('border-color',''); 
+            $('#physical_count_' + row).val(closing);
+            show_save();
+        }
+    }  
 
-});     
-<<<<<<< HEAD
-=======
+    function hide_save() {
+        $('#validate').show();
+        $('#validate').html('NOTE: Please Correct all Input Fields with red border to Activate the Save Data Button');                                         
+        $('#validate').css('font-size','13px'); 
+        $('#validate').css('color','red'); 
+        $('#save1').hide();
+    }
+    function show_save() {
+        $('#validate').hide();       
+        $('#save1').show();
+    }
 
->>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
 
 $('#save1')
 .button()
 .click(function() {               
     $('#message').html('The Report is Being Saved. Please Wait');                                         
+    $('#message').css('font-size','13px');                                         
+    $('#message').css('color','green'); 
     $(this).hide();
 
 });
@@ -359,29 +301,29 @@ $("#dialog").dialog({
 
 </script>
 <style type="text/css">
-input{
-    width: 70px;
-}
-#fixed-alert{
-    height: 24px;
-    background-color: #EEE;
-    color: rgb(255, 166, 166);
-    text-shadow: 0.5px 0.51px #949292;
-    margin-bottom: 10px;
-    position: fixed;
-    top: 104px;
-    width: 100%;
-    padding: 10px 0px 0px 13px;
-    border-bottom: 1px solid #ccc;
-    font-size: 15px;
-    text-align: center;
-}
-#banner_text{
-    margin-top: 30px;
-}
-#dialog-form{
-    margin-top: 30px;
-}
+    input{
+        width: 70px;
+    }
+    #fixed-alert{
+        height: 24px;
+        background-color: #EEE;
+        color: rgb(255, 166, 166);
+        text-shadow: 0.5px 0.51px #949292;
+        margin-bottom: 10px;
+        position: fixed;
+        top: 104px;
+        width: 100%;
+        padding: 10px 0px 0px 13px;
+        border-bottom: 1px solid #ccc;
+        font-size: 15px;
+        text-align: center;
+    }
+    #banner_text{
+        margin-top: 30px;
+    }
+    #dialog-form{
+        margin-top: 30px;
+    }
 </style>
 
 <?php
@@ -490,7 +432,13 @@ $count = count($res);
                     <td><input class='user2'id="micro_over_tests" name="micro_over_tests" size="10" type="text"/></td>
                     <td><input class='user2'id="micro_over_positive" name="micro_over_positive" size="10" type="text"/></td>
                 </tr>
-
+                <tr>
+                        <td colspan = "14" style = "text-align:center;" id="calc">
+                            <b>The Ending Balance is Computed as follows: </b><i>Beginning Balance + Quantity Received + Positive Adjustments - Quantity Used - Negative Adjustments</i> 
+                            <b><br/>Note:</b>
+                            The Quantity Used Should Not be Less than the Tests Done
+                        </td>            
+                    </tr>
                 <tr><td colspan = "14"></td></tr>
                 <tr >       
                     <td rowspan = "2" colspan = "2"><b>Commodity Name</b></td>
@@ -516,7 +464,7 @@ $count = count($res);
                     ?>
                     <tr>
                         <td colspan = "14" style = "text-align:left"><b><?php echo $lab_category->category_name; ?></b></td>            
-                    </tr>
+                    </tr>                    
                     <?php foreach ($lab_category->category_lab_commodities as $lab_commodities) { ?>
                     <tr commodity_id="<?php echo $checker ?>"><input type="hidden" id="commodity_id_<?php echo $checker ?>" name="commodity_id[<?php echo $checker ?>]" value="<?php echo $lab_commodities['id']; ?>" >
                         <input type="hidden" id="facilityCode" name="facilityCode">
@@ -528,7 +476,7 @@ $count = count($res);
                         <td><input id="q_received_<?php echo $checker ?>" name = "q_received[<?php echo $checker ?>]" class='qty_rcvd' size="10" type="text" value="0" style = "text-align:center"/></td>
                         <td><input id="q_used_<?php echo $checker ?>" name = "q_used[<?php echo $checker ?>]" class='qty_used' size="10" type="text" value="0" style = "text-align:center"/></td>
                         <td><input id="tests_done_<?php echo $checker ?>" name = "tests_done[<?php echo $checker ?>]" class='tests_done' size="10" value="0" type="text" style = "text-align:center"/></td>
-                        <td><input id="losses_<?php echo $checker ?>" name = "losses[<?php echo $checker ?>]" class='loses' size="10" type="text" value="0" style = "text-align:center" readonly/></td>
+                        <td><input id="losses_<?php echo $checker ?>" name = "losses[<?php echo $checker ?>]" class='losses' size="10" type="text" value="0" style = "text-align:center" /></td>
                         <td><input id="pos_adj_<?php echo $checker ?>" name = "pos_adj[<?php echo $checker ?>]" class='pos_adj' size="10" type="text" value="0" style = "text-align:center"/></td>  
                         <td><input id="neg_adj_<?php echo $checker ?>" name = "neg_adj[<?php echo $checker ?>]" class='neg_adj' size="10" type="text" value="0" style = "text-align:center"/></td>
                         <td><input id="physical_count_<?php echo $checker ?>"  name = "physical_count[<?php echo $checker ?>]" class='phys_count' value="0" size="10" type="text" style = "text-align:center"/></td>
@@ -546,15 +494,13 @@ $count = count($res);
             <tr>                    
                 <td colspan = "14" style = "text-align:left;background: #EEE;">Explain Losses and Adjustments</td>
             </tr>
-            <tr>                    
-                <td colspan ="14"><input class='user2'id="explanation" name="explanation" size="10" type="text" style="width: 100%"/></td>
-
+            <tr>                        
+                <td colspan = "16"><input colspan = "16" id="explanation" name="explanation" size="210" type="text" value="" style=" width: 90%;"/></td>
             </tr>
             <tr></tr>
 
 
             <tr>
-
                 <td colspan = "3" style = "text-align:left"><b>Order for Extra LMIS tools:<br/> To be requested only when your data collection or reporting tools are nearly full. Indicate quantity required for each tool type.</b></td>
                 <td><input class='user2'id="order_extra" name="order_extra" size="10" type="text"/></td>
                 <td colspan = "4"><b>(1) Daily Activity Register for Laboratory Reagents and Consumables (MOH 642):</b></td>
@@ -614,6 +560,7 @@ $count = count($res);
             </tr>
 
         </table>
+        <div id="validate" type="text" style="margin-left: 0%; width:600px;color:blue;font-size:120%"></div>
         <div id="message" type="text" style="margin-left: 0%; width:200px;color:blue;font-size:120%"></div>
         <input class="btn btn-primary" type="submit"   id="save1"  value="Save" style="margin-left: 0%; width:100px" >
     </form>
@@ -627,24 +574,17 @@ $count = count($res);
 
 <?php form_close(); ?>
 
-<script type="text/javascript">
-$(function(){
-    var count = <?php echo $count; ?>;
-    if(count==1){
-        alert('The Report has already been SUbmitted.');
-        window.location('home_controller');
-    }
-});
-$("table").tablecloth({
-    bordered: true,
-    condensed: true,
-    striped: true,            
-    clean: true,                
-});
-   
-    //$('#commodity_name_0').css('background-color','#99FFFF');
-    //$('#commodity_name_1').css('background-color','#99FFFF');
+<script type="text/javascript">    
+    $("table").tablecloth({
+        bordered: true,
+        condensed: true,
+        striped: true,            
+        clean: true,                
+    });
     $('#commodity_name_0').append(' <br/>(Old Algorithm)');
     $('#commodity_name_1').append(' <br/>(Old Algorithm)');
+    $('#calc').css('color','blue');
+    $('#calc').css('text-align','center');
+    $('#calc').css('font-size','12px');
 </script>
 

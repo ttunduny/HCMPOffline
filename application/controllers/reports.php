@@ -539,7 +539,7 @@ class Reports extends MY_Controller
 		$data['banner_text'] = "Expiries";
 		$data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v": "shared_files/report_templates/side_bar_v" ;
 		$data['content_view'] = "facility/facility_reports/reports_v";
-		$data['expiry_data'] = Facility_stocks::All_expiries($facility_code,'all');
+		$data['expiry_data'] = Facility_stocks::All_expiries($facility_code);
 		$data['report_view'] = "facility/facility_reports/expiries_v";
         $data['active_panel']='expiries';
 
@@ -2906,21 +2906,21 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 	 $tracer=$report_type=1;
 	 $final_graph_data = facility_stocks_temp::get_months_of_stock($district_id , $county_id , NULL ,NULL,$report_type,$tracer);
 		//facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id,$report_type,$tracer)
-	foreach($final_graph_data as $final_graph_data_):
+	/*foreach($final_graph_data as $final_graph_data_):
 			$graph_data_default['graph_categories'] = array_merge($graph_data_default['graph_categories'], array($final_graph_data_['commodity_name']));
 			$graph_data['series_data']['Stock'] = array_merge($graph_data['series_data']['Stock'],array((int)$final_graph_data_['total']));	
-	endforeach;
+	endforeach;*/
 $graph_type = 'bar';			
     		$graph_data = array_merge($graph_data,array("graph_id"=>'default_graph_'));
 		    $graph_data = array_merge($graph_data,array("graph_title"=>"Months Of Stock For ".$title.""));
 		    $graph_data = array_merge($graph_data,array("graph_type"=>$graph_type));
 		    $graph_data = array_merge($graph_data,array("graph_yaxis_title"=>"Months of Stock"));
 		    $graph_data = array_merge($graph_data, array("graph_categories" => array()));
-			$graph_data = array_merge($graph_data, array("series_data" => array("Stock" =>array())));	
+			$graph_data = array_merge($graph_data, array("series_data" => array("Month of Stock" =>array())));	
 			
 			foreach($final_graph_data as $final_graph_data_):
 				$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'], array($final_graph_data_['commodity_name']));
-				$graph_data['series_data']['Stock'] = array_merge($graph_data['series_data']['Stock'],array((int)$final_graph_data_['total']));	
+				$graph_data['series_data']['Month of Stock'] = array_merge($graph_data['series_data']['Month of Stock'],array((int)$final_graph_data_['total']));	
 			endforeach;
 			
 		//$facility_code=(!$this -> session -> userdata('facility_id')) ? null: $this -> session -> userdata('facility_id');
