@@ -1069,10 +1069,11 @@ class Reports extends MY_Controller
 			
 		$district_id = $this -> session -> userdata('district_id');
 		$district = $this -> session -> userdata('district_id');
-		
 		//Get the name of the county
+
 		$county_name = Counties::get_county_name($county_id);
-		$county_name = $county_name['county'];
+		$county_name = $county_name;
+		// echo $county_id."<pre>";echo $county_name;echo "</pre>";exit;
 		//get the name of the district
 		$district_name_ = (isset($district_id)&&($district_id>0) )?Districts::get_district_name_($district_id):null;
 		$district_name = $district_name_['district'];
@@ -1086,6 +1087,7 @@ class Reports extends MY_Controller
 
 		$facility_data = Facilities::get_Facilities_using_HCMP($county_id,$district,$facility_code);
 		
+		// echo "<pre>";print_r($facility_data);echo "</pre>";exit;
 		$series_data = array();
 		$category_data = array();
 		$series_data_monthly = array();
@@ -1097,7 +1099,7 @@ class Reports extends MY_Controller
 		switch ($identifier):
 		case 'county':
 			$graph_category_data = $facility_data;
-			$graph_title = $county_name." County ";
+			$graph_title = $county_name['county']." County ";
 			
 		break;
 		case 'facility_admin':
@@ -1217,6 +1219,7 @@ class Reports extends MY_Controller
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
 		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
 		
+		// echo "<pre>";print_r($data);echo "</pre>";exit;
 		if($this->input->is_ajax_request()):
 			return $this -> load -> view('subcounty/ajax/facility_roll_out_at_a_glance_v', $data);
 		else:
