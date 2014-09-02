@@ -14,7 +14,15 @@ $englishdate = date('F, Y', strtotime($monthyear));
 
 </style>
 <script type="text/javascript">
+<<<<<<< HEAD
+bajb_backdetect.OnBack = function()
+    {
+        //alert('You clicked it!');
+        window.location.href = "<?php echo base_url().'home_controller/home';?>";
+    }
+=======
 
+>>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
 $(document).ready(function() {
         //datatables settings 
         $('#maintable').dataTable({
@@ -130,7 +138,7 @@ function loadcountysummary(county) {
                                 </h4>
                             </div>
                         </div>
-                        <div class="panel panel-default">
+                        <div class="panel panel-default active-panel">
                             <div class="panel-heading">
                                 <h4 class="panel-title" id="dpp_stats">                        
                                     <a href="#" href="#collapseOne" id="notifications"><span class="glyphicon glyphicon-stats">
@@ -378,12 +386,12 @@ function loadcountysummary(county) {
 
 
 
-<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/tablecloth/assets/css/tablecloth.css">
+<link rel="stylesheet" type="text/css" href="http://tableclothjs.com/assets/css/tablecloth.css">
 
 
-<script src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.tablesorter.js"></script>
-<script src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.metadata.js"></script>
-<script src="<?php echo base_url(); ?>assets/tablecloth/assets/js/jquery.tablecloth.js"></script>
+<script src="http://tableclothjs.com/assets/js/jquery.tablesorter.js"></script>
+<script src="http://tableclothjs.com/assets/js/jquery.metadata.js"></script>
+<script src="http://tableclothjs.com/assets/js/jquery.tablecloth.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
     $("table").tablecloth({theme: "paper"});

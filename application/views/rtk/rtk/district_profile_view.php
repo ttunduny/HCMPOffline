@@ -30,7 +30,6 @@
 
                  <?php foreach ($districts as $key => $value) {
                     echo '<li><a href="'.$value['id'].'">'.$value['district'].'</a></li>';
-                   
                  } ?>
                </ul>
     
