@@ -20,18 +20,18 @@ table{
   
 $(document).ready(function(){
 
-    $('#switch_month').change(function(){
-        var value = $('#switch_month').val();
-        var red = 'rtk_management/rtk_manager';
-      var path = "<?php echo base_url().'rtk_management/switch_month/';?>"+value +"/"+red;
-    //              alert (path);
-         window.location.href=path;
-    });
+    $('#switch_month').change(function() {
+            var value = $('#switch_month').val();
+            var path_full = 'rtk_management/switch_month/'+value+'/rtk_manager/';
+            var path = "<?php echo base_url(); ?>" + path_full;
+//              alert (path);
+            window.location.href = path;
+        });
 
 
    });
 </script>
-<!--div class="tabbable">
+<div class="tabbable">
     <div>Select Month
     <?php
         $month = $this->session->userdata('Month');
@@ -40,9 +40,9 @@ $(document).ready(function(){
         }
         $year= substr($month, -4);
         $month= substr_replace($month,"", -4);
-        $monthyear = $year . '-' . $month . '-1';
-        $englishdate = date('F, Y', strtotime($monthyear));
+        $monthyear = $year . '-' . $month . '-1';        
         $englishdate = date('F, Y', strtotime('+1 month'));
+        $englishdate = date('F, Y', strtotime($monthyear));
     ?>
      <select id="switch_month" class="form-control" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;">
        <option>-- <?php echo $englishdate;?> --</option>
@@ -60,7 +60,7 @@ $(document).ready(function(){
     <?php } ?>
     </select>
         
-    </div-->
+    </div>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab1" data-toggle="tab">Activity</a></li>
         <li><a href="#StockStatus" data-toggle="tab">Stock Status</a></li>
@@ -180,7 +180,7 @@ $(document).ready(function(){
                         <?php 
                         $count = count($stock_status);
                         for ($i=0; $i<$count; $i++){
-                            foreach ($stock_status[$i] as $key => $value) { ?>
+                            /*foreach ($stock_status[$i] as $key => $value) { ?>
                             <tr>
                                 <td><?php echo $value['county']; ?></td>
                                 <td><?php echo $value['district']; ?></td>
@@ -196,7 +196,7 @@ $(document).ready(function(){
                                 <td><?php echo $value['sum_expiring']; ?></td>
                                 <td><?php echo $value['sum_allocated']; ?></td>
                             </tr>
-                            <?php } }?>
+                            <?php }*/ }?>
                         </tbody>
                     </table>
                 </div>

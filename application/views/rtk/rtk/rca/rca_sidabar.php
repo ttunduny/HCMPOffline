@@ -5,7 +5,7 @@
     </select>
 
     <select id="switch_month" class="form-control" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;">
-       <option>-- <?php echo $englishdate;?> --</option>
+       <option>-- <?php echo $englishdate;?> --</option>       
         <?php 
 
             for ($i=1; $i <=12 ; $i++) { 
