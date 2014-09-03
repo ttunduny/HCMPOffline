@@ -2497,22 +2497,24 @@ $month = $data['expiry_month'];
      */
 	 public function expiries_dashboard()
 	 {
-	 $year = date("Y");	
-	 $county_id = $this -> session -> userdata('county_id');
-	 $district_id = $this -> session -> userdata('district_id');
+	 	$year = date("Y");	
+		$county_id = $this -> session -> userdata('county_id');
+		$district_id = $this -> session -> userdata('district_id');
 	 
-	 $months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-	 
-	 $category_data = array();
+		$months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+	 	
+	 	$category_data = array();
 		$series_data =$series_data_ = array();		
 		$temp_array =$temp_array_ = array();
 		$graph_data=array();
 		$graph_type='';
 		$title='';
+	 	
+	 	$category_data = array_merge($category_data, $months);
 		
-	 $category_data = array_merge($category_data, $months);
-			$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,$county_id, $year, null,$option ,"all");   
-			$column_data_ = array("stock expired in $title $month_ $year", "stock expired in $option_new");		
+		$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,$county_id, $year, null,$option ,"all");   
+		$column_data_ = array("stock expired in $title $month_ $year", "stock expired in $option_new");		
+			
 			foreach ($commodity_array as $data) :
 				$temp_array = array_merge($temp_array, array($data["cal_month"] => (int)$data['total']));
 				$series_data_ = array_merge($series_data_, array(array($data["cal_month"], (int)$data['total'])));
