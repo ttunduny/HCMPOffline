@@ -204,10 +204,6 @@ $query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
  
 
  /*public static function get_cost_of_orders($facility_code,$year = null, $district_id = null, $county_id = null)
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 2ec5a1df029ebf60947aeec981cd58b45632d019
  {
  	$year = (isset($year)) ? $year: date("Y");
  	if(isset($district_id) && $district_id>0):
