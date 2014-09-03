@@ -1,5 +1,3 @@
-
-
 <?php
 $month = $this->session->userdata('Month');
 if ($month==''){
@@ -20,7 +18,15 @@ $res = $this->db->query($q);
 foreach ($res->result_array() as $key => $value) {
     $option .= '<option value = "' . $value['countyid'] . '">' . $value['county'] . '</option>';
 }
+$current_month = date('mY', time());     
 ?>
+<style type="text/css">
+#switch_back{    
+    font-size: 11px;
+    font-weight: bold;
+    color: green;   
+}
+</style>
 
 <script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/datatable/jquery.dataTables.js"></script>
 
@@ -61,7 +67,10 @@ foreach ($res->result_array() as $key => $value) {
 
 </script>
 <br />
+
+
 <?php include('rca_sidabar.php');?>
+
 
 <div class="dash_main" style="width: 80%;float: right; overflow: scroll; height: auto">
 
@@ -203,11 +212,21 @@ foreach ($res->result_array() as $key => $value) {
 <script>
     $(document).ready(function() {
 
-       /* $('.table').dataTable({
-            "bJQueryUI": false,
-            "bPaginate": true,
-            "aaSorting": [[3, "desc"]]
-        });*/
+    var active_month = '<?php echo $active_month ?>';
+    var current_month = '<?php echo $current_month ?>';   
+    if(active_month!=current_month){
+        $("#switch_back").show();
+        $('#switch').show();
+    }else{        
+        $('#switch_back').hide();
+        $('#switch_back').hide();
+    }
+     $('#switch_back').click(function() {
+            var value = current_month;
+            var path_full = 'rtk_management/switch_month/'+value+'/county_home/';
+            var path = "<?php echo base_url(); ?>" + path_full;
+            window.location.href = path;
+        });
         $('.table').tablecloth({theme: "paper",         
               bordered: true,
               condensed: true,

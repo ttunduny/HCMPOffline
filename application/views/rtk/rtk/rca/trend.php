@@ -6,7 +6,9 @@ if($reporting_percentage>100){
     $reporting_percentage = 100;
 }
 $reporting_percentage = number_format($reporting_percentage, $decimals = 0);
+$current_month = date('mY', time());     
 ?>
+
 <style type="text/css">
 #inner_wrapper{font-size: 80%;}
 .tab-pane{padding-left: 6px;}
@@ -16,6 +18,12 @@ $reporting_percentage = number_format($reporting_percentage, $decimals = 0);
 #stock_table{width: 100%;}
 table{
     font-size: 12px;
+}
+
+#switch_back{    
+    font-size: 11px;
+    font-weight: bold;
+    color: green;   
 }
 </style>
 <div class="tabbable">
@@ -32,7 +40,9 @@ table{
         <div class="tab-pane active" id="tab1">
             <ul class="thumbnails">
                 <li class="col-md-11">
-                     <?php include('rca_sidabar.php');?>
+                
+                    <?php include('rca_sidabar.php');?>
+             
                     <div style="width:75%;height:450px;float:left;">
                       
                         <div id="container" style="min-width: 310px;width:100%;height: 360px;float:left; margin: 0 auto;border: ridge 1px;"></div>
@@ -115,6 +125,7 @@ table{
             });
 });
 </script>
+
 <script type="text/javascript">
   
 $(document).ready(function(){
@@ -125,8 +136,23 @@ $(document).ready(function(){
             var path = "<?php echo base_url(); ?>" + path_full;
 //              alert (path);
             window.location.href = path;
+    });
+    var active_month = '<?php echo $active_month ?>';
+    var current_month = '<?php echo $current_month ?>';   
+    if(active_month!=current_month){
+        $("#switch_back").show();
+        $('#switch').show();
+    }else{        
+        $('#switch_back').hide();
+        $('#switch_back').hide();
+    }
+     $('#switch_back').click(function() {
+            var value = current_month;
+            var path_full = 'rtk_management/switch_month/'+value+'/county_trend/';
+            var path = "<?php echo base_url(); ?>" + path_full;
+//              alert (path);
+            window.location.href = path;
         });
-
 
    });
 </script>

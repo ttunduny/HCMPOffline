@@ -147,7 +147,7 @@ class Rtk_Management extends Home_controller {
             array_push($xArr, $count);
         }
 
-        //$data['stock_status'] = $this->_national_reports_sum($year, $month);
+        $data['stock_status'] = $this->_national_reports_sum($year, $month);
         $data['cumulative_result'] = $cumulative_result;
         $data['jsony'] = json_encode($yArr);
         $data['jsonx'] = str_replace('"', "", json_encode($xArr));
@@ -156,6 +156,7 @@ class Rtk_Management extends Home_controller {
         $County = $this->session->userdata('county_name');
         $data['county'] = $County;
         $Countyid = $this->session->userdata('county_id');
+        $data['active_month'] = $month.$year;
         $data['user_logs'] = $this->rtk_logs();
         $data['content_view'] = "rtk/rtk/dashboard_view";
         $data['banner_text'] = "RTK Manager";
@@ -211,9 +212,9 @@ class Rtk_Management extends Home_controller {
         $data['jsony'] = json_encode($yArr);
         $data['jsonx'] = str_replace('"', "", json_encode($xArr));
         $data['jsonx1'] = str_replace('"', "", json_encode($xArr1));
-        $data['englishdate'] = $englishdate;      
-        
+        $data['englishdate'] = $englishdate;              
         $data['county'] = $County;
+        $data['active_month'] = $month.$year;
         $Countyid = $this->session->userdata('county_id');
         $data['user_logs'] = $this->rtk_logs();
         $data['content_view'] = "rtk/rtk/rca/trend";
@@ -221,7 +222,6 @@ class Rtk_Management extends Home_controller {
         $data['title'] = "RTK County Admin Trends";
         $this->load->view('rtk/template', $data);
     }
-
     public function get_county_percentages_month($month=null){
         if(isset($month)){           
             $year = substr($month, -4);
@@ -510,11 +510,13 @@ class Rtk_Management extends Home_controller {
         $data['county_summary'] = $this->_requested_vs_allocated($year, $month, $countyid);
         $data['tdata'] = $tdata;
         $data['county'] = $County;
+        $data['active_month'] = $month.$year;
         $data['title'] = 'RTK County Admin';
         $data['banner_text'] = 'RTK County Admin';
         $data['content_view'] = "rtk/rtk/rca/home";
         $this->load->view("rtk/template", $data);
     }
+
 
     public function rca_pending_facilities() {
         $countyid = $this->session->userdata('county_id');        
