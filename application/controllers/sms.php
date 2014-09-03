@@ -531,9 +531,9 @@ class sms extends MY_Controller {
 					$facility_code = $facilities_ -> facility_code;
 					$facility_name = Facilities::get_facility_name2($facility_code);
 					$facility_name = $facility_name['facility_name'];
-
+					
 					$facility_potential_expiries = Facility_stocks::get_stocked_out_commodities_for_report($facility_code, $district_id, null);
-
+					
 					//get potential expiries in that particular facility
 					//$facility_potential_expiries = Facility_stocks::potential_expiries_email($district_id, $facility_code);
 
@@ -563,6 +563,7 @@ class sms extends MY_Controller {
 						$subject = "Potential Stock Outs: " . $facility_name;
 
 						$email_address = $this -> get_facility_email($facility_code);
+
 
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
@@ -635,11 +636,13 @@ class sms extends MY_Controller {
 				$this -> hcmp_functions -> create_excel($excel_data);
 				$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 				$subject = "Stock Outs: " . $county_name . " County";
-				$message = $county_name . "'s Weekly Stock Outs Report. ";
+				$message = $county_name . "'s Weekly Potential Stock Outs Report. ";
 				$message .= "Find attached an excel sheet with the breakdown of the Potential Stock Outs for the county";
-
-				$email_address = $this -> get_county_email($county_id);
-				$bcc = $this -> get_bcc_notifications();
+				$email_address ="collinsojenge2014@gmail.com";
+				$bcc = "collinsojenge@gmail.com";
+						
+				//$email_address = $this -> get_county_email($county_id);
+				//$bcc = $this -> get_bcc_notifications();
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc_email);
 			}
 

@@ -1,4 +1,5 @@
 <?php   $identifier = $this -> session -> userdata('user_indicator');
+				
 		$rejected_data='';
 		$delivery_data='';
 		$pending_data='';

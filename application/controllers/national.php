@@ -99,7 +99,7 @@ class national extends MY_Controller
     
 	    if(isset($county_id)):
 		    $county_name = counties::get_county_name($county_id);   
-		    $name = $county_name[0]['county'] ;
+		    $name = $county_name['county'] ;
 		    $title = "$name County" ;
 	    elseif(isset($district_id)):
 		    $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
@@ -174,7 +174,7 @@ endif;
     
 	    if(isset($county_id)):
 	    $county_name = counties::get_county_name($county_id);   
-	    $name=$county_name[0]['county'] ;
+	    $name=$county_name['county'] ;
 	    $title="$name County" ;
 	    elseif(isset($district_id)):
 	    $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
@@ -313,8 +313,9 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
         
    		if(isset($county_id)):
 		    $county_name = counties::get_county_name($county_id);   
-		    $name = $county_name[0]['county'] ;
+		    $name = $county_name['county'] ;
 		    $title="$name County" ;
+		    //print_r($county_name['county']);exit;
 	    elseif(isset($district_id)):
 		    $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
 		    $district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " Subcounty" : null;
@@ -471,7 +472,7 @@ endif;
         
 	    if(isset($county_id)):
 		    $county_name = counties::get_county_name($county_id);   
-		    $name = $county_name[0]['county'] ;
+		    $name = $county_name['county'] ;
 		    $title = "$name County" ;
 	    elseif(isset($district_id)):
 		    $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
@@ -626,7 +627,7 @@ endif;
         
   		if(isset($county_id)):
 		    $county_name = counties::get_county_name($county_id);   
-		    $name=$county_name[0]['county'] ;
+		    $name=$county_name['county'] ;
 		    $title="$name County" ;
 	    elseif(isset($district_id)):
 		    $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
@@ -695,7 +696,7 @@ endif;
        //
         else:
         $excel_data = array('doc_creator' => "HCMP", 'doc_title' => "Stock Level in Months of Stock $title",
-         'file_name' => 'MOS');
+         'file_name' => $title.' MOS');
         $row_data = array(); 
         $column_data = array("County", "Sub-County", "Facility Name","Facility Code","Item Name","MOS");
         $excel_data['column_data'] = $column_data;
@@ -745,6 +746,7 @@ endif;
         
     }
     public function consumption($county_id=null, $district_id=null,$facility_code=null,$commodity_id=null,$graph_type=null,$from=null,$to=null){
+    
     $title='';	
     $district_id=($district_id=="NULL") ? null :$district_id;
     $graph_type=($graph_type=="NULL") ? null :$graph_type;
@@ -752,6 +754,7 @@ endif;
     $county_id=($county_id=="NULL") ? null :$county_id;
     $commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
     
+
     $from=($from=="NULL" || !isset($from)) ? date('Y-m-01') : date('Y-m-d',strtotime(urldecode($from)));  
     $to=($to=="NULL"  || !isset($to)) ? date('Y-m-d') : date('Y-m-d',strtotime(urldecode($to)));
    
@@ -769,9 +772,11 @@ endif;
     $time= "Between ".date('j M y', strtotime($from))." and ".date('j M y',strtotime( $to));
     
     if(isset($county_id)):
+
 	    $county_name = counties::get_county_name($county_id);   
-	    $name=$county_name[0]['county'] ;
+	    $name=$county_name['county'] ;
 	    $title="$name County" ;
+	    //print_r($name);exit;
     elseif(isset($district_id)):
 	    $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
 	    $district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " Subcounty" : null;
@@ -813,7 +818,6 @@ endif;
         endforeach;
  
         $graph_type='bar';
-        
         $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_consuption'));
         $graph_data=array_merge($graph_data,array("graph_title"=>"$title Consumption (Packs) $time"));
         $graph_data=array_merge($graph_data,array("graph_type"=>$graph_type));
@@ -827,7 +831,7 @@ endif;
        return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
        else:
         $excel_data = array('doc_creator' => "HCMP", 'doc_title' => "$title Consumption (Packs) $time",
-         'file_name' => 'Consumption');
+         'file_name' => $title.' Consumption');
         $row_data = array(); 
         $column_data = array("County", "Sub-County", "Facility Name","Facility Code","Item Name","Consumption (Packs)");
         $excel_data['column_data'] = $column_data;
@@ -855,13 +859,13 @@ order by c.county asc , d1.district asc
         ");
         
         foreach ($facility_stock_data as $facility_stock_data_item) :
-        array_push($row_data, array($facility_stock_data_item["county"],
-        $facility_stock_data_item["subcounty"],
-        $facility_stock_data_item["facility_name"],
-        $facility_stock_data_item["facility_code"],
-        $facility_stock_data_item["drug_name"],
-        $facility_stock_data_item["total"]
-        ));
+	        array_push($row_data, array($facility_stock_data_item["county"],
+	        $facility_stock_data_item["subcounty"],
+	        $facility_stock_data_item["facility_name"],
+	        $facility_stock_data_item["facility_code"],
+	        $facility_stock_data_item["drug_name"],
+	        $facility_stock_data_item["total"]
+	        ));
         endforeach;
         $excel_data['row_data'] = $row_data;
 
@@ -909,7 +913,7 @@ group by month(o.`order_date`)
     if($graph_type!="excel"):
     if(isset($county_id)):
     $county_name = counties::get_county_name($county_id);   
-    $name=$county_name[0]['county'] ;
+    $name=$county_name['county'] ;
     $title="$name county" ;
     elseif(isset($district_id)):
     $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
@@ -1170,10 +1174,10 @@ order by user.id asc
 
 	 public function reports(){
 	 	
-		$data['county'] = Counties::getAll();
+		//$data['county'] = Counties::getAll();
 		//Added function to display oonly the counties that are currently using HCMP
-		//$counties = Counties::get_counties_all_using_HCMP();
-		//$data['county'] = $counties;
+		$counties = Counties::get_counties_all_using_HCMP();
+		$data['county'] = $counties;
 		
 		$data['commodities'] = Commodities::get_all();
 		$data['sub_county'] = Districts::getAll();
