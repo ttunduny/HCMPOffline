@@ -201,5 +201,28 @@ $query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
 		return $inserttransaction ;
 	
  }
+
+
+ /*public static function get_cost_of_orders($facility_code,$year = null, $district_id = null, $county_id = null)
+ {
+ 	$year = (isset($year)) ? $year: date("Y");
+ 	if(isset($district_id) && $district_id>0):
+		$and_data =" AND d.id ='$district_id' " ;
+		elseif(isset($county_id) && $county_id>0):
+		$and_data =" AND d.county ='$county_id' " ;
+		else: $and_data =" AND f.facility_code ='$facility_code' " ;
+		endif;
+ 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT o.order_date as date_order, date_format( o.order_date, '%b %Y' ) AS mwaka, o.order_total
+			FROM districts d, facilities f, facility_orders o
+			WHERE f.district = d.id
+			AND o.facility_code = f.facility_code
+			AND o.status != 3
+			AND YEAR( o.order_date ) = $year
+			$and_data
+			order BY date_order asc");	
+			
+	return $inserttransaction ;
+ }*/
 }
 	

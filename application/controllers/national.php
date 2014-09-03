@@ -859,13 +859,13 @@ order by c.county asc , d1.district asc
         ");
         
         foreach ($facility_stock_data as $facility_stock_data_item) :
-        array_push($row_data, array($facility_stock_data_item["county"],
-        $facility_stock_data_item["subcounty"],
-        $facility_stock_data_item["facility_name"],
-        $facility_stock_data_item["facility_code"],
-        $facility_stock_data_item["drug_name"],
-        $facility_stock_data_item["total"]
-        ));
+	        array_push($row_data, array($facility_stock_data_item["county"],
+	        $facility_stock_data_item["subcounty"],
+	        $facility_stock_data_item["facility_name"],
+	        $facility_stock_data_item["facility_code"],
+	        $facility_stock_data_item["drug_name"],
+	        $facility_stock_data_item["total"]
+	        ));
         endforeach;
         $excel_data['row_data'] = $row_data;
 

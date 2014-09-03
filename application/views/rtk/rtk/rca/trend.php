@@ -2,6 +2,9 @@
 //echo"<pre>";print_r($stock_status);die;
 
 $reporting_percentage = $cumulative_result/$total_facilities*100;
+if($reporting_percentage>100){
+    $reporting_percentage = 100;
+}
 $reporting_percentage = number_format($reporting_percentage, $decimals = 0);
 ?>
 <style type="text/css">
