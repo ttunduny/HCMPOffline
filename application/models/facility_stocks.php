@@ -536,7 +536,7 @@ public static function get_county_cost_of_exipries_new($facility_code=null,$dist
            $computation =" ifnull(SUM(ROUND(fs.current_balance/d.total_commodity_units)),0) AS total" ;
              break;
          default:
-      $computation ="ifnull((SUM(ROUND(fs.current_balance/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as name";
+      $computation ="ifnull(CEIL(SUM(fs.current_balance)),0) AS total";
           break;
      endswitch;		
  	 $selection_for_a_month = isset($facility_code) && isset($district_id)? " d.commodity_name as name," :( 
@@ -566,6 +566,16 @@ public static function get_county_cost_of_exipries_new($facility_code=null,$dist
      $and_data
      $group_by
      ");
+	/* echo "SELECT $select_option  date_format(expiry_date,'%M') AS month, $computation  
+     FROM facility_stocks fs, facilities f, commodities d, counties c, districts di
+     WHERE fs.facility_code = f.facility_code
+     AND fs.`expiry_date` <= NOW( )
+     AND f.district =di.id
+     AND di.county=c.id
+     AND d.id = fs.commodity_id
+     $and_data
+     $group_by";
+	 exit;*/
 		
  	return  $inserttransaction ;
 }
@@ -583,7 +593,7 @@ public static function get_county_cost_of_potential_expiries_new($facility_code=
            $computation =" ifnull(SUM(ROUND(fs.current_balance/d.total_commodity_units)),0) AS total_potential" ;
              break;
          default:
-      $computation ="ifnull((SUM(ROUND(fs.current_balance/ d.total_commodity_units)))*d.unit_cost ,0) AS total_potential,d.commodity_name as name";
+      $computation ="ifnull(CEIL(SUM(fs.current_balance)),0) AS total_potential";
           break;
      endswitch;		
  	 $selection_for_a_month = isset($facility_code) && isset($district_id)? " d.commodity_name as name," :( 
@@ -612,8 +622,19 @@ public static function get_county_cost_of_potential_expiries_new($facility_code=
      AND d.id = fs.commodity_id
      $and_data
      $group_by
-     ");   
-		
+     ");  
+	 
+	 /*echo "SELECT $select_option  date_format(expiry_date,'%M') AS month_potential, $computation  
+     FROM facility_stocks fs, facilities f, commodities d, counties c, districts di
+     WHERE fs.facility_code = f.facility_code
+     AND fs.`expiry_date` >= NOW( )
+     AND f.district =di.id
+     AND di.county=c.id
+     AND d.id = fs.commodity_id
+     $and_data
+     $group_by"; 
+     exit;*/
+	 		
  	return  $inserttransaction ;
 }
 public static function get_facility_cost_of_exipries_new($facility_code=null,$district_id=null,$county_id,$year=null,$month=null,$option=null,$data_for=null)
