@@ -201,7 +201,7 @@ $query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
 		return $inserttransaction ;
 	
  }
- 
+
 
  /*public static function get_cost_of_orders($facility_code,$year = null, $district_id = null, $county_id = null)
  {
