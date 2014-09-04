@@ -625,6 +625,7 @@ class Reports extends MY_Controller
 		$data['facility_name']=$facility_name[0]['facility_name'];;
 		$interval = $_POST['option_selected'];
 		$data['report_data'] = Facility_stocks::specify_period_potential_expiry($facility_code, $interval);
+
 		$this -> load -> view("facility/facility_reports/ajax/potential_expiries_ajax", $data);
 
 	}
@@ -1067,10 +1068,11 @@ class Reports extends MY_Controller
 			
 		$district_id = $this -> session -> userdata('district_id');
 		$district = $this -> session -> userdata('district_id');
-		
 		//Get the name of the county
+
 		$county_name = Counties::get_county_name($county_id);
-		$county_name = $county_name['county'];
+		$county_name = $county_name;
+		// echo $county_id."<pre>";echo $county_name;echo "</pre>";exit;
 		//get the name of the district
 		$district_name_ = (isset($district_id)&&($district_id>0) )?Districts::get_district_name_($district_id):null;
 		$district_name = $district_name_['district'];
@@ -1084,6 +1086,7 @@ class Reports extends MY_Controller
 
 		$facility_data = Facilities::get_Facilities_using_HCMP($county_id,$district,$facility_code);
 		
+		// echo "<pre>";print_r($facility_data);echo "</pre>";exit;
 		$series_data = array();
 		$category_data = array();
 		$series_data_monthly = array();
@@ -1095,7 +1098,7 @@ class Reports extends MY_Controller
 		switch ($identifier):
 		case 'county':
 			$graph_category_data = $facility_data;
-			$graph_title = $county_name." County ";
+			$graph_title = $county_name['county']." County ";
 			
 		break;
 		case 'facility_admin':
@@ -1215,6 +1218,7 @@ class Reports extends MY_Controller
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
 		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
 		
+		// echo "<pre>";print_r($data);echo "</pre>";exit;
 		if($this->input->is_ajax_request()):
 			return $this -> load -> view('subcounty/ajax/facility_roll_out_at_a_glance_v', $data);
 		else:
@@ -2665,7 +2669,6 @@ $month = $data['expiry_month'];
 		$title='';	
 		$year = date('Y');
 		$month_ = date('M d');
-		
 
 		//echo $district_id." Cty:".$county_id." Fcty:".$facility_code." Cmd_id:".$commodity_id." Report Type:".$report_type." TRacer:".$tracer;exit;
 
@@ -2764,7 +2767,6 @@ $month = $data['expiry_month'];
 			foreach($final_graph_data as $final_graph_data_):
 				$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'], array($final_graph_data_['commodity_name']));
 				$graph_data['series_data']['Month of Stock'] = array_merge($graph_data['series_data']['Month of Stock'],array((int)$final_graph_data_['total']));	
-
 			endforeach;
 		    
 		 	$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
@@ -2991,8 +2993,7 @@ $graph_type = 'bar';
 	    }
 
      	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null,$tracer = null) 
-     	{
-     		
+     	{	
      	//reset the values here
      	//echo $report_type;exit;
 		$tracer =(isset($tracer))? $tracer:null ;
@@ -3030,7 +3031,6 @@ $graph_type = 'bar';
 
 		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code, $district_id, $county_id,
 		$category_id, $commodity_id, $option_new, $report_type);
-		
 
 		$mos_array = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id,$report_type,$tracer);
 		
@@ -3068,7 +3068,7 @@ $graph_type = 'bar';
 			return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
 		
 		elseif($report_type=="csv_data"):
-			//echo "This is running";exit;
+
 			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "Stock level $commodity_name $title $month_ $year", 'file_name' => "Stock_level_$commodity_name_$title_$month_$year");
 			$row_data = array();
 			$column_data = array("Sub-county Name","Facility Name","MFL Code","Commodity Name","stocks worth in $option_title ");
