@@ -767,18 +767,7 @@ public static function get_county_comparison_data($facility_code=null,$district_
      $and_data
      GROUP BY di.id having total>0 order by di.district asc
      ");	
-	 /*echo "SELECT  $selection_for_a_month $computation,
-	 ifnull(round(avg(IFNULL(fs.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),1),0) as total_mos
-     FROM facility_stocks fs, facilities f, commodities d,  districts di,
-	facility_monthly_stock f_m_s
-     WHERE fs.facility_code = f.facility_code
-     AND f_m_s.`commodity_id` = d.id
-     AND f.district =di.id
-     and fs.expiry_date>NOW()
-     AND fs.status=1
-     $and_data
-     GROUP BY di.id having total>0 order by di.district asc";
-	  exit;*/
+	 
      return $inserttransaction ;
 }
   public static function get_county_consumption_level_new($facility_code, $district_id,$county_id,$category_id,$commodity_id, $option,$from,$to,$graph_type=null){
