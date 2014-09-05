@@ -2839,13 +2839,13 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
             }
               date_default_timezone_set("EUROPE/Moscow");
                 $lastmonth = date('F', strtotime("last day of previous month"));
-        if($date>$deadline_date){
+        
+        foreach ($facilities as $facility_detail) {
+    if($date>$deadline_date){
             $report_link = "<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'></a></td>";
         }else{
             $report_link = "<span class='label label-danger'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link report'> Report</a></td>";
         }
-        foreach ($facilities as $facility_detail) {
-
          
                 $table_body .="<tr><td><a class='ajax_call_1' id='county_facility' name='" . base_url() . "rtk_management/get_rtk_facility_detail/$facility_detail[facility_code]' href='#'>" . $facility_detail["facility_code"] . "</td>";
                 $table_body .="<td>" . $facility_detail['facility_name'] . "</td><td>" . $district_name['district'] . "</td>";
