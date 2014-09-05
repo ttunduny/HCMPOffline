@@ -5562,30 +5562,22 @@ WHERE
         // /$
     }
     public function trigger_emails() {
-        $sql = "select email from user where usertype_id=7 and status =1";
+        $sql = "select email from user where usertype_id='11' and status =1";
         $res = $this->db->query($sql)->result_array();
-        $to ="";
+        $to = array();        
         foreach ($res as $key => $value) {
             $one = $value['email'];
-            $to.= $one.',';
-        }       
-        
+            array_push($to,$one);
+        }          
+        $receipient = implode($to, ',');        
         $subject = 'Login Page Changes';
-        $message = "Dear All,<br/><br/> Please Note that the Login Page has been Changed to A National Data Page. However, on the top right hand corner of the page, is a link to Login.<br/> Please use that link to login to the system.<br/><br/><br/>Regards, <br/> Development Team";
+        $message = "Dear All,<br/><br/> Please Note that the Login Page has been Changed to A National Data Page. However, on the top right hand corner of the page, is a link to Login.<br/> Please use that link to login to the system.<br/><br/><br/>Regards, <br/>RTK Development Team";
         $attach_file = null;
-        $bcc_email = 'ttunduny@gmail.com,tngugi@clintonhealthaccess.org,annchemu@gmail.com';
-       // $receipient = array();
-       // $receipient =$to; 
-     
-        //parse_str($_POST['receipients'], $receipient);
-        //$receipient = $receipient['hidden-receipients'];
+        $bcc_email = 'ttunduny@gmail.com,tngugi@clintonhealthaccess.org,annchemu@gmail.com';      
+        //$bcc_email = 'ttunduny@gmail.com';      
         include 'rtk_mailer.php';
-        $newmail = new rtk_mailer();
-        $response = $newmail->send_email($to, $message, $subject, $attach_file, $bcc_email);
-        //$sql = "INSERT INTO `rtk_messages`(`id`, `sender`, `subject`, `message`, `receipient`, `state`) VALUES (NULL,'$sender','$subject','$message','$receipient','0')";
-        //$this->db->query($sql);
-        //$object_id = $this->db->insert_id();
-       // $this->logData('23', $object_id);
+        $newmail = new rtk_mailer();        
+        //$response = $newmail->send_email($receipient, $message, $subject, $attach_file, $bcc_email);        
         echo "Email Sent";
     }
 

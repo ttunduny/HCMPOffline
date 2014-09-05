@@ -582,7 +582,13 @@ $count = count($res);
         clean: true,                
     });
     $('#commodity_name_0').append(' <br/>(Old Algorithm)');
+    $('#commodity_name_0').css('color','red');
     $('#commodity_name_1').append(' <br/>(Old Algorithm)');
+    $('#commodity_name_1').css('color','red');
+    $('#commodity_name_2').css('color','green');
+    $('#commodity_name_3').css('color','green');
+    $('#commodity_name_4').css('color','green');
+    $('#commodity_name_5').css('color','green');
     $('#calc').css('color','blue');
     $('#calc').css('text-align','center');
     $('#calc').css('font-size','12px');
