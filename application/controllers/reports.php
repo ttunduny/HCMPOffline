@@ -3083,6 +3083,7 @@ $graph_type = 'bar';
 			$excel_data['row_data'] = $row_data;
 			$this -> hcmp_functions -> create_excel($excel_data);
 		else:
+			//echo "<pre>";print_r($category_data);echo "</pre>";exit;
     		$graph_type = 'column';			
     		$graph_data = array_merge($graph_data,array("graph_id"=>'dem_graph_'));
 		    $graph_data = array_merge($graph_data,array("graph_title"=>"Stock Level $commodity_name $title $month_ $year"));
@@ -3135,10 +3136,10 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		
 		// echo $facility_code." Dist: ". $district_id." Cty:". $county_id." Cat:".$category_id." Comm:". $commodity_id." Optn:". $option_new." Rpt typ:". $report_type." Div id:".$division_id;exit;
         foreach ($commodity_array as $data) :
-        // echo "<pre>"; print_r($data);echo "</pre>";
+         
 			if($report_type=="table_data"):
-				if($commodity_id>0):
-					array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"], (int)$data['total']));
+				if($division_id>0):
+					array_push($series_data , array($data['district'],$data["commodity_name"],$data["facility_name"],$data["facility_code"], (int)$data['total']));
 				else:
 					
 					array_push($series_data , array($data["name"],(int) $data['total']));
@@ -3153,10 +3154,23 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 
 		endforeach;
 		
-		//echo "<pre>";print_r();echo "</pre>";
+		//echo "<pre>";print_r($category_data);echo "</pre>";
 		//echo "<pre>"; print_r(array_unique($category_data));echo "</pre>";exit;
+		/*foreach ($commodity_array as $data) :
+		if ((isset($district_id) && isset($facility_code)) || ((isset($district_id)) && (!isset($facility_code)))):
+				$category_data = array_merge($category_data, array($data["commodity_name"]));
+				$series_data  = array_merge($series_data , array($data["commodity_name"]=> $data['total']));
+		endif;	
+			//echo $district_id.$facility_code;exit;
+			//echo "<pre>";print_r($category_data);echo "</pre>";exit;
+		endforeach;
+		
+		//echo "<pre>"; print_r($commodity_array);echo "</pre>";
+		//echo "<pre>"; print_r($series_data);echo "</pre>";
+		//echo "<pre>";print_r($category_data);echo "</pre>";exit;*/
+		
 		if($report_type=="table_data"):
-			if($commodity_id>0):
+			if($division_id>0):
 				$category_data = array(array("Sub-county","Facility Name","Mfl","TOTAL ".$option_new));
 			else:
 				array_push($category_data, array("Stock level $commodity_name $title $month_ $year","stocks worth in $option_new"));
