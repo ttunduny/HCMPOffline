@@ -561,9 +561,9 @@ class sms extends MY_Controller {
 						
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						$subject = "Potential Stock Outs: " . $facility_name;
-						$email_address ="collinsojenge2014@gmail.com";
-						
-						//$email_address = $this -> get_facility_email($facility_code);
+
+						$email_address = $this -> get_facility_email($facility_code);
+
 
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
@@ -599,9 +599,8 @@ class sms extends MY_Controller {
 					$subject = "Potential Stock Outs: " . $district_name . " Sub County";
 					$message = $district_name . "'s Weekly Potential Stock Outs Report. ";
 					$message .= "Find attached an excel sheet with the breakdown of the Potential Stock Outs for the district";
-					$email_address ="collinsojenge2014@gmail.com";
-						
-					//$email_address = $this -> get_ddp_email($district_id);
+					
+					$email_address = $this -> get_ddp_email($district_id);
 
 					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 

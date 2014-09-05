@@ -174,7 +174,7 @@ $(document).ready(function() {
 	// add the item to the order list			
 	$('#main-content').on("click", ".add_item", function (){
 	 var check_if_the_user_has_selected_a_commodity=$('#desc').val();
-
+//alert(new_count)
 	 if(check_if_the_user_has_selected_a_commodity==0){
 	 	alert("Please select a commodity first");
 	 	return;
@@ -212,7 +212,8 @@ $(document).ready(function() {
 		$('#communication_dialog').modal('hide');	
 	});
 	//compute the order totals here
-	$(".quantity").on('keyup', function (){
+	$(document).on('keyup','.quantity', function (){
+		//alert()
 	var selector_object=$(this);
 	var user_input=$(this).val();
 	var total_units=$(this).closest("tr").find(".total_commodity_units").val();
@@ -240,8 +241,8 @@ $(document).ready(function() {
 	// set the order total here
 	calculate_totals();	
 	});// process all the order into a summary table for the user to confirm before placing the order bed_capacity workload
-	$(".test").button().click( function (){
-    var table_data='<div class="row" style="padding-left:2em"><div class="col-md-6"><h4>Order Summary</h4></div></div>'+
+	$('.test').on('click','', function (){
+	var table_data='<div class="row" style="padding-left:2em"><div class="col-md-6"><h4>Order Summary</h4></div></div>'+
     '<div class="row" style="padding-left:2em"><div class="col-md-6">Order Form No</div><div class="col-md-6">'+($("#order_no").val())+'</div></div>'+
     '<div class="row" style="padding-left:2em"><div class="col-md-6">Order Frequency</div><div class="col-md-6">'+($("#order_period option:selected").text())+'</div></div>'+
     '<div class="row" style="padding-left:2em"><div class="col-md-6">In-Patient Bed Days</div><div class="col-md-6">'+($("#bed_capacity").val())+'</div></div>'+
@@ -256,9 +257,13 @@ $(document).ready(function() {
 					"<th>Order Quantity</th>"+
 					"<th>Unit Cost Ksh</th>"+
 					"<th>Total Ksh</th></tr></thead><tbody>";	 	    			
-         $("input[name^=cost]").each(function(i) { 
+        $("input[name^=cost]").each(function(i) { 
+         	//$(document).each('','input[name^=cost]', function (i){
+         var C_name=$(this).closest("tr").find(".commodity_name").val()
+         //alert(C_name);
+         //return;
         table_data +="<tr>" +
-							"<td>" +$(this).closest("tr").find(".commodity_name").val()+ "</td>" +
+							"<td>" +C_name+ "</td>" +
 							"<td>" +$(this).closest("tr").find(".commodity_code").val()+ "</td>" +
 							"<td>" +$(this).closest("tr").find(".quantity").val()+ "</td>" +	
 							"<td>" +number_format($(this).closest("tr").find(".unit_cost").val(), 2, '.', ',')+ "</td>" +	

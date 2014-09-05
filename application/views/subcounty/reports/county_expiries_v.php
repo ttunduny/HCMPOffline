@@ -64,7 +64,7 @@ box-shadow: 1px 1px 1px 1px #DDD3ED;
 </div>
 <script>
 $(window).load(function() {
-		
+
 $("#potential_e").on('click', function(e){
 		//e.preventDefault();
 		$('#duration_filter').val(3)
