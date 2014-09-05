@@ -2628,8 +2628,7 @@ public function get_county_cost_of_expiries_dashboard($year = null, $district_id
 			$series_data = array_merge($series_data, array($val));
 			$series_data2 = array_merge($series_data2, array($val2));
 	 	endforeach;
-		//echo "<pre>";print_r($series_data2);echo "</pre>";exit;
-	      if($report_type=="csv_data"):
+		if($report_type=="csv_data"):
 			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "stock expired in $commodity_name $title $month_ $year", 'file_name' => "Stock_expired_$commodity_name_$title_$month_$year");
 			$row_data = array();
 			$column_data = $column_data_;
