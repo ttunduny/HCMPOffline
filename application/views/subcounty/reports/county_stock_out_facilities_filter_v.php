@@ -1,4 +1,4 @@
-<h1 class="page-header" style="margin: 0;font-size: 1.6em;">Donations/ Redistribution</h1>
+<h1 class="page-header" style="margin: 0;font-size: 1.6em;">Stock Outs</h1>
 <div class="alert alert-info">
   <b>Below are the facilities that have stock outs in the County</b>:Select filter Options
 </div>
