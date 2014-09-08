@@ -173,7 +173,7 @@ $(document).ready(function() {
 				$('input:hidden[name=total_commodity_units_]').val(code_array[5]);});
 	// add the item to the order list			
 	$(document.body).on("click", ".add_item", function (){
-	 var check_if_the_user_has_selected_a_commodity=$('.desc').val();
+	 var check_if_the_user_has_selected_a_commodity=$('#desc').val();
 //alert(new_count)
 	 if(check_if_the_user_has_selected_a_commodity==0){
 	 	alert("Please select a commodity first");
