@@ -416,7 +416,7 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
         $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_'));
         $graph_data=array_merge($graph_data,array("graph_title"=>"Expiries in $title $year"));
         $graph_data=array_merge($graph_data,array("graph_type"=>$graph_type));
-        $graph_data=array_merge($graph_data,array("graph_yaxis_title"=>"Stock Expired in KSH"));
+        $graph_data=array_merge($graph_data,array("graph_yaxis_title"=>"KSH"));
         $graph_data=array_merge($graph_data,array("graph_categories"=>$category_data ));
         $graph_data=array_merge($graph_data,array("series_data"=>array()));
 		
