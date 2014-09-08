@@ -2570,8 +2570,8 @@ $month = $data['expiry_month'];
      		
 		return $this -> load -> view("subcounty/ajax/county_expiry_filter_v", $data);	
 	 }
-//For filtering for the expries dashboard
-public function get_county_cost_of_expiries_dashboard($year = null, $district_id = null, $option = null, $facility_code = null,$report_type=null) 
+	//For filtering for the expries dashboard
+	public function get_county_cost_of_expiries_dashboard($year = null, $district_id = null, $option = null, $facility_code = null,$report_type=null) 
 	 {
 	 	
 	 	//get_county_cost_of_expiries_new/0/null/88/0/17401
@@ -2600,7 +2600,7 @@ public function get_county_cost_of_expiries_dashboard($year = null, $district_id
         //check if the district is set
 		$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
 		$district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " subcounty" : null;
-		$option_new = isset($option) ? $option : "ksh";
+		$option_new = isset($option) ? $option : "units";
 		$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
 		$facility_name = $facility_code_[0]['facility_name'];
 		$title=isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
@@ -2628,8 +2628,7 @@ public function get_county_cost_of_expiries_dashboard($year = null, $district_id
 			$series_data = array_merge($series_data, array($val));
 			$series_data2 = array_merge($series_data2, array($val2));
 	 	endforeach;
-		//echo "<pre>";print_r($series_data2);echo "</pre>";exit;
-	      if($report_type=="csv_data"):
+		if($report_type=="csv_data"):
 			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "stock expired in $commodity_name $title $month_ $year", 'file_name' => "Stock_expired_$commodity_name_$title_$month_$year");
 			$row_data = array();
 			$column_data = $column_data_;
@@ -2638,10 +2637,36 @@ public function get_county_cost_of_expiries_dashboard($year = null, $district_id
 			$excel_data['row_data'] = $row_data;
 			
 			$this -> hcmp_functions -> create_excel($excel_data);
-		else:   
+		elseif($report_type=="table"):   
+			$category_data = array(array("Sub-county","Facility Name","Commodity Name","Total $option_new"));
+			$graph_data=array_merge($graph_data,array("table_id"=>'graph_default'));
+		    $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
+		    $graph_data=array_merge($graph_data,array("table_body"=>$series_data));
+			
+			
+			
+		/*
+		 * 
+		 * 
 		    
+			$category_data = array(array("Sub-county","Facility Name","Commodity Name","Month of Stock"));
+
+	       	$graph_data=array_merge($graph_data,array("table_id"=>'graph_default'));
+		    $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
+		    $graph_data=array_merge($graph_data,array("table_body"=>$series_data));
+			$data=array();	
+			$data['table'] = $this->hcmp_functions->create_data_table($graph_data);		
+			$data['table_id'] ="graph_default";
+			
+			return  $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * */
+		else:
 		    $graph_type='column';
-	    
 		    $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_'));
 		    $graph_data=array_merge($graph_data,array("graph_title"=>"Expiries in $title $month_ $year"));
 		    $graph_data=array_merge($graph_data,array("graph_type"=>$graph_type));
