@@ -980,7 +980,7 @@ from
         left join
     hcmp_rtk.drug_commodity_map ON drug_commodity_map.old_id = facility_stock.kemsa_code
         where facility_stock.facility_code = $facility_code
-        and year(facility_stock.expiry_date) != 1970 ");
+         ");
 			return $stocks ;
 	}
 	
