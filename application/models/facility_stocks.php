@@ -612,11 +612,9 @@ public static function get_county_cost_of_potential_expiries_new($facility_code=
 	 (isset($district_id) && !isset($facility_code) ?  " GROUP BY f.facility_code having total>0": 
 	 " GROUP BY d.id having total>0") ;
 	 $group_by =($data_for=='all') ?"GROUP BY month(expiry_date) asc":$group_by_a_month;
-     	 
-		 
-	 //exit;
+
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-     ->fetchAll("SELECT $select_option  date_format(expiry_date,'%M') AS month_potential, $computation  
+     ->fetchAll("SELECT c.county, $select_option  date_format(expiry_date,'%M') AS month_potential, $computation  
      FROM facility_stocks fs, facilities f, commodities d, counties c, districts di
      WHERE fs.facility_code = f.facility_code
      AND fs.`expiry_date` >= NOW( )
@@ -626,18 +624,7 @@ public static function get_county_cost_of_potential_expiries_new($facility_code=
      $and_data
      $group_by
      ");  
-	 
-	 /*echo "SELECT $select_option  date_format(expiry_date,'%M') AS month_potential, $computation  
-     FROM facility_stocks fs, facilities f, commodities d, counties c, districts di
-     WHERE fs.facility_code = f.facility_code
-     AND fs.`expiry_date` >= NOW( )
-     AND f.district =di.id
-     AND di.county=c.id
-     AND d.id = fs.commodity_id
-     $and_data
-     $group_by"; 
-     exit;*/
-	 		
+	
  	return  $inserttransaction ;
 }
 public static function get_facility_cost_of_exipries_new($facility_code=null,$district_id=null,$county_id,$year=null,$month=null,$option=null,$data_for=null)
