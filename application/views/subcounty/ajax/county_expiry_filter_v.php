@@ -36,8 +36,12 @@
 <!--<option value="ksh">KSH</option>-->
 </select>
 <div class="col-md-1">
-<button class="btn btn-sm btn-small btn-success county-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> </div> 
+<button class="btn btn-sm btn-small btn-success county-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button>
+</div> 
 <!--<div class="col-md-1">
+<button class="btn btn-sm btn-success county-table-data"><span class="glyphicon glyphicon-th-list"></span>Table Data</button> 
+</div>
+<div class="col-md-1">
 <button class="btn btn-sm btn-success county-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
 </div>-->
 </form>
@@ -134,12 +138,18 @@ endforeach;
 	    $(".county-filter").on('click',function(e) {
 		e.preventDefault();	
 		//$year = null, $month = null, $district_id = null, $option = null, $facility_code = null,$report_type=null)
-        var url_ = 'reports/get_county_cost_of_expiries_dashboard/'+
-			        $("#county_year_filter").val()+"/"+$("#county_district_filter").val()+"/"+$("#county_plot_value_filter").val()+"/"+$("#facility_filter").val();  
+        var url_ = 'reports/get_county_cost_of_expiries_dashboard/'+$("#county_year_filter").val()+"/"+$("#county_district_filter").val()+"/"+$("#county_plot_value_filter").val()+"/"+$("#facility_filter").val()+"/graph";  
 		
 		ajax_request_replace_div_content(url_,'.graph_content');		
           });
+		//For displaying the table data
+		$(".county-table-data").on('click',function(e) {
+		e.preventDefault();	
+		//$year = null, $month = null, $district_id = null, $option = null, $facility_code = null,$report_type=null)
+        var url_ = 'reports/get_county_cost_of_expiries_dashboard/'+$("#county_year_filter").val()+"/"+$("#county_district_filter").val()+"/"+$("#county_plot_value_filter").val()+"/"+$("#facility_filter").val()+"/table";  
 		
+		ajax_request_replace_div_content(url_,'.graph_content');		
+          });
         $(".county-download").on('click',function(e) {
 		e.preventDefault();			  
         var url_ = 'reports/get_county_cost_of_expiries_new/'+
