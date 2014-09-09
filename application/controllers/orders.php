@@ -485,9 +485,11 @@ echo '<pre>';print_r($temp); echo '</pre>';
 			$this -> hcmp_functions -> create_pdf($pdf_data);// create pdf
 			$this -> hcmp_functions -> clone_excel_order_template($order_id,'save_file',$file_name);//create excel
 			
-			$attach_file1='./pdf/'.$file_name.'.pdf';
-			$attach_file2="./print_docs/excel/excel_files/".$file_name.'.xlsx';
-			//echo $rejected;
+			$attach_file='./pdf/'.$file_name.'.pdf';
+			//$attach_file="./print_docs/excel/excel_files/".$file_name.'.xlsx';
+			//echo $attach_file;
+			
+			//exit;
 			
 			if ($rejected == 1) {
 				$myobj -> status = 1;
@@ -527,11 +529,10 @@ echo '<pre>';print_r($temp); echo '</pre>';
           $message="<br>Please find the $status Order for  ".$facility_name.'
 		  <br>'.$info.$pdf_body ;
 
-		$response= $this->hcmp_functions->send_order_approval_email($message,$subject,
-		$attach_file1."(more)".$attach_file2,$facility_code,$status);
+		$response= $this->hcmp_functions->send_order_approval_email($message,$subject,$attach_file,$facility_code,$status);
 		if($response){
-			delete_files($attach_file1);
-            delete_files($attach_file2);
+			delete_files($attach_file);
+           // delete_files($attach_file2);
 			}
 			else{
 
