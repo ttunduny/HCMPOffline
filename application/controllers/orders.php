@@ -1,4 +1,4 @@
-<?php
+$this -> input -> post('commodity_id')<?php
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 /**
@@ -371,6 +371,7 @@ echo '<pre>';print_r($temp); echo '</pre>';
 			}
 
 			public function update_facility_new_order() {
+				
 		//security check
 		if ($this -> input -> post('commodity_id')) :
 			$this -> load -> database();
