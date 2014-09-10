@@ -569,7 +569,17 @@ public static function get_county_cost_of_exipries_new($facility_code=null,$dist
      $and_data
      $group_by
      ");
-		
+	/* echo "SELECT $select_option  date_format(expiry_date,'%M') AS month, $computation  
+     FROM facility_stocks fs, facilities f, commodities d, counties c, districts di
+     WHERE fs.facility_code = f.facility_code
+     AND fs.`expiry_date` <= NOW( )
+     AND f.district =di.id
+     AND di.county=c.id
+     AND d.id = fs.commodity_id
+     $and_data
+     $group_by";
+	 exit;*/
+	 
  	return  $inserttransaction ;
 }
 //for the potential expiries
@@ -616,7 +626,16 @@ public static function get_county_cost_of_potential_expiries_new($facility_code=
      $and_data
      $group_by
      ");   
-		
+	/*	echo "SELECT $select_option  date_format(expiry_date,'%M') AS month_potential, $computation  
+     FROM facility_stocks fs, facilities f, commodities d, counties c, districts di
+     WHERE fs.facility_code = f.facility_code
+     AND fs.`expiry_date` >= NOW( )
+     AND f.district =di.id
+     AND di.county=c.id
+     AND d.id = fs.commodity_id
+     $and_data
+     $group_by";
+     exit;*/
  	return  $inserttransaction ;
 }
 public static function get_facility_cost_of_exipries_new($facility_code=null,$district_id=null,$county_id,$year=null,$month=null,$option=null,$data_for=null)
@@ -784,7 +803,7 @@ public static function get_county_comparison_data($facility_code=null,$district_
 	  exit;*/
      return $inserttransaction ;
 }
-  public static function get_county_consumption_level_new($facility_code, $district_id,$county_id,$category_id,$commodity_id, $option,$from,$to,$graph_type=null){
+  public static function get_county_consumption_level_new($facility_code, $district_id,$county_id,$category_id,$commodity_id, $option,$from,$to,$graph_type=null,$tracer = null){
   	 $selection_for_a_month =((!isset($facility_code) || $facility_code=="ALL") && ($district_id)>0) || $category_id>0 ? " f.facility_name as name," :
   	 (($commodity_id=="ALL") && isset($facility_code) ? " d.commodity_name as name,": 
 	 ((isset($county_id) && $district_id=="ALL")? " di.district as name," : 
@@ -796,8 +815,10 @@ public static function get_county_comparison_data($facility_code=null,$district_
       $date_diff = floor($seconds_diff/3600/24);
       $selection_for_a_month = $date_diff<=30? "DATE_FORMAT(fs.date_issued,'%d %b %y') as name,": "DATE_FORMAT(fs.date_issued,'%b %y') as name ," ;	
 	 }
+	 
      $to=date('Y-m-d',$to);
 	 $from=date('Y-m-d',$from);
+	 
 	 switch ($option) :
          case 'ksh':
            $computation ="ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
@@ -820,6 +841,7 @@ public static function get_county_comparison_data($facility_code=null,$district_
 	 $and_data .=(isset($category_id)&& ($category_id>0)) ?"AND d.commodity_sub_category_id = '$category_id'" : null;	
      $and_data=isset($from) && isset($to) ?"AND fs.date_issued between '$from' and '$to'" : null;
      $and_data .=(isset($commodity_id)&& ($commodity_id>0)) ?"AND d.id = '$commodity_id'" : null;
+	 $and_data .=(isset($tracer)&& ($tracer>0)) ?" AND d.tracer_item = 1 " : null;
 	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND di.id = '$district_id'" : null;
 	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;
      $and_data .=($county_id>0) ?" AND di.county='$county_id'" : null;
@@ -846,8 +868,16 @@ public static function get_county_comparison_data($facility_code=null,$district_
     $and_data
     $group_by_a_month
      ");		
-	
-	
+/*	echo "SELECT  $selection_for_a_month $computation
+    FROM facility_issues fs, facilities f, commodities d, districts di
+    WHERE fs.facility_code = f.facility_code
+    AND f.district = di.id
+    AND fs.qty_issued >0
+    AND d.id = fs.commodity_id
+    $and_data
+    $group_by_a_month";
+	exit;
+	*/
      return $inserttransaction ;
   }     
     	public static function get_county_expiries($county_id,$year,$district_id=null,$facility_code=null){
