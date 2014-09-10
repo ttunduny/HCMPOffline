@@ -3062,7 +3062,8 @@ $graph_type = 'bar';
 	     	$facility_order_count[$facility_order_count_['status']]=$facility_order_count_['total'];
 	     }
 	    //get potential expiries infor here
-	    $potential_expiries = count(Facility_stocks::get_potential_expiry_summary($county_id,6,$district_id,$facility_code));
+	    //$potential_expiries = count(Facility_stocks::get_potential_expiry_summary($county_id,6,$district_id,$facility_code));
+		$potential_expiries = count(Facility_stocks::getpotentialexpcount($county_id,$district_id));
 	    //get actual Expiries infor here
 	    $actual_expiries = count(Facility_stocks::get_county_expiries($county_id,date('Y'),$district_id,$facility_code));
 		//get items they have been donated for
