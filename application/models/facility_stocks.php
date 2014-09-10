@@ -333,7 +333,7 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 	}
  		public static function potential_expiries($facility_code){
 		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date 
-		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code' and current_balance>0");
+		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code' and current_balance>0 AND status =(1 or 2)");
 		
 		$stocks = $query -> execute();
 		return $stocks;
