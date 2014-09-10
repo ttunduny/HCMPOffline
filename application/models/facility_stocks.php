@@ -1124,5 +1124,22 @@ from
 			return $stocks ;
 		
 	}
+		
+		public static function getpotentialexpcount($county_id,$district_id){
+			$and_data =" AND facilities.district=$district_id" ;
+			if ($district_id=='') {
+				$and_data="AND districts.county=$county_id";
+			}
+		
+				$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+			->fetchAll("SELECT * FROM `facility_stocks`
+INNER JOIN facilities
+ON facility_stocks.facility_code=facilities.facility_code
+INNER JOIN districts ON districts.id=facilities.district
+WHERE  expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND status =(1 or 2) and year(expiry_date)=year(NOW())
+$and_data ");
+			return $stocks ;
+		
+	}
 
 }
