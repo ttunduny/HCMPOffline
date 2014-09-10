@@ -3062,10 +3062,10 @@ $graph_type = 'bar';
 	     	$facility_order_count[$facility_order_count_['status']]=$facility_order_count_['total'];
 	     }
 	    //get potential expiries infor here
-	    //$potential_expiries = count(Facility_stocks::get_potential_expiry_summary($county_id,6,$district_id,$facility_code));
+	   // $potential_expiries = count(Facility_stocks::get_potential_expiry_summary($county_id,6,$district_id,$facility_code));
 		$potential_expiries = count(Facility_stocks::getpotentialexpcount($county_id,$district_id));
 	    //get actual Expiries infor here
-	    $actual_expiries = count(Facility_stocks::get_county_expiries($county_id,date('Y'),$district_id,$facility_code));
+	    $actual_expiries = count(Facility_stocks::getexpcount($county_id,$district_id));
 		//get items they have been donated for
 		$facility_donations = count(redistribution_data::get_redistribution_data($facility_code,$district_id,$county_id,date('Y')));
 	    $identifier = $this -> session -> userdata('user_indicator');
@@ -3672,7 +3672,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
          	
          }
 	     public function actual_expiries_reports($county_id,$year){
-		 $expiries_array=Facility_stocks::get_county_expiries($county_id,$year);
+		 $expiries_array=Facility_stocks::getexplist($county_id,$year);
 		 $graph_data=$series_data=array();
 		 $total_expiry=0;
 		 foreach($expiries_array as $facility_expiry_data):
