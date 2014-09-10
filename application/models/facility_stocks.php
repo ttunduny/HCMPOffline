@@ -333,7 +333,7 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 	}
  		public static function potential_expiries($facility_code){
 		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date 
-		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code' and current_balance>0 AND status =(1 or 2)");
+		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code' AND current_balance>0 AND status IN (1,2)");
 		
 		$stocks = $query -> execute();
 		return $stocks;
@@ -1136,7 +1136,7 @@ from
 INNER JOIN facilities
 ON facility_stocks.facility_code=facilities.facility_code
 INNER JOIN districts ON districts.id=facilities.district
-WHERE  expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND status =(1 or 2) and year(expiry_date)=year(NOW())
+WHERE  expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND current_balance>0 AND status IN (1,2)
 $and_data ");
 			return $stocks ;
 		
