@@ -94,6 +94,47 @@ public static function get_distinct_stocks_for_this_facility($facility_code,$che
 return $stocks ;
 }
 
+	public static function get_county_stock_amc($county_id){
+  $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+	->fetchAll("			
+SELECT 
+    c.id AS commodity_id,
+    c.commodity_name,
+    c.commodity_code,
+    c.unit_size,
+    fs.expiry_date,
+    ifnull(SUM(ROUND(fs.qty_issued/d.total_commodity_units)),0) AS packs_consumption,
+    c.total_commodity_units,
+    c_s.source_name,
+    c_s.id AS source_id,
+    CASE temp.selected_option
+        WHEN 'Pack_Size' THEN ROUND(temp.consumption_level, 1)
+        WHEN
+            'Unit_Size'
+        THEN
+            ROUND(temp.total_units / temp.consumption_level,
+                    1)
+        ELSE 0
+    END AS amc
+FROM
+	districts d,
+	counties co,
+    commodity_source c_s,
+    drug_store_totals ds,
+    facility_stocks fs,
+    commodities c
+        LEFT JOIN
+    facility_monthly_stock temp ON temp.commodity_id = c.id
+WHERE
+    ds.district_id = '$district_id'
+    AND fs.expiry_date >= NOW()
+    AND fs.commodity_id= ds.commodity_id
+        AND c.id = ds.commodity_id
+GROUP BY c.id
+		");
+return $stocks ;      
+    }
+
 
     public static function get_district_stock_amc($district_id){
   $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
@@ -136,6 +177,7 @@ GROUP BY c.id
 		");
 return $stocks ;      
     }
+    
 
     public static function get_facility_stock_amc($facility_code){
   $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
@@ -859,7 +901,86 @@ public static function get_county_comparison_data($facility_code=null,$district_
 	
 	
      return $inserttransaction ;
-  }     
+  }  
+		public static function get_county_consumptionamc_level_new($facility_code, $district_id,$county_id,$category_id,$commodity_id, $option,$from,$to,$graph_type=null){
+  	 $selection_for_a_month =((!isset($facility_code) || $facility_code=="ALL") && ($district_id)>0) || $category_id>0 ? " f.facility_name as name," :
+  	 (($commodity_id=="ALL") && isset($facility_code) ? " d.commodity_name as name,": 
+	 ((isset($county_id) && $district_id=="ALL")? " di.district as name," : 
+	($graph_type == 'table_data' && $commodity_id>0) ?" di.district , f.facility_name, f.facility_code, " : 1))  ;
+
+	 if($selection_for_a_month==1)
+	 {
+      $seconds_diff = $to - $from;	 
+      $date_diff = floor($seconds_diff/3600/24);
+      $selection_for_a_month = $date_diff<=30? "DATE_FORMAT(fs.date_issued,'%d %b %y') as name,": "DATE_FORMAT(fs.date_issued,'%b %y') as name ," ;	
+	 }
+     $to=date('Y-m-d',$to);
+	 $from=date('Y-m-d',$from);
+	 switch ($option) :
+         /*case 'ksh':
+           $computation ="ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+             break;
+         case 'units':
+           $computation ="ifnull(CEIL(SUM(fs.qty_issued)),0) AS total,d.commodity_name as commodity" ;
+             break;*/
+             case 'packs':
+           $computation ="ifnull(SUM(ROUND(fs.qty_issued/d.total_commodity_units)),0) AS total,d.commodity_name as commodity" ;
+             break;
+			 /*case 'mos':
+	           	$r = facility_stocks_temp::get_months_of_stock($district_id, $county_id, $facility_code);
+				return $r;*/
+             	exit;
+             break;
+         default:
+      $computation ="ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+          break;
+     endswitch;		
+	 $and_data .=(isset($category_id)&& ($category_id>0)) ?"AND d.commodity_sub_category_id = '$category_id'" : null;	
+     $and_data=isset($from) && isset($to) ?"AND fs.date_issued between '$from' and '$to'" : null;
+     $and_data .=(isset($commodity_id)&& ($commodity_id>0)) ?"AND d.id = '$commodity_id'" : null;
+	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND di.id = '$district_id'" : null;
+	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;
+     $and_data .=($county_id>0) ?" AND di.county='$county_id'" : null;
+	 
+     $group_by_a_month=(isset($facility_code) && isset($district_id)) || isset($category_id)? " GROUP BY fs.commodity_id having total>0" :(  
+	 ($district_id>0 && !isset($facility_code)) ?  " GROUP BY f.facility_code having total>0": " GROUP BY d.id having total>0") ;
+	 
+	 $group_by_a_month=(($facility_code=="ALL") || !isset($facility_code)) && $district_id>0? " GROUP BY f.facility_code having total>0" : 
+	 ($commodity_id=="ALL") && isset($facility_code) ? " GROUP BY fs.commodity_id having total>0": 
+	 (isset($county_id) && $district_id=="ALL")? " GROUP BY d.id having total>0" :  (($graph_type=='table_data')&& ($commodity_id>0) ?" GROUP BY d.id, f.facility_code having total>0 order by di.district asc, f.facility_name asc" :
+	 1);
+	 
+	 if($group_by_a_month==1){
+     $group_by_a_month=$date_diff<=30? "GROUP BY DATE_FORMAT(fs.date_issued,'%d %b %y')": " GROUP BY DATE_FORMAT(fs.date_issued,'%b %y')" ;	
+	 }else{}
+    
+	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+    ->fetchAll("SELECT  $selection_for_a_month $computation,
+    CASE temp.selected_option
+        WHEN 'Pack_Size' THEN ROUND(temp.consumption_level, 1)
+        WHEN
+            'Unit_Size'
+        THEN
+            ROUND(temp.total_units / temp.consumption_level,
+                    1)
+        ELSE 0
+    END AS amc
+    FROM facility_issues fs, facilities f, districts di, commodities d
+    LEFT JOIN
+    facility_monthly_stock temp ON temp.commodity_id = d.id
+    WHERE fs.facility_code = f.facility_code
+    AND f.district = di.id
+    AND d.tracer_item = '1'
+    AND fs.qty_issued >0
+    AND d.id = fs.commodity_id
+    $and_data
+    $group_by_a_month
+     ");		
+	
+	
+     return $inserttransaction ;
+  }
+	   
     	public static function get_county_expiries($county_id,$year,$district_id=null,$facility_code=null){
 	 $and_data =(isset($district_id)&& ($district_id>0)) ?"AND d1.id = '$district_id'" : null;
 	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;
@@ -1047,6 +1168,45 @@ public static function get_filtered_commodity_consumption_level($facilities_filt
 		return $inserttransaction ;
 		
  }
+ public static function get_commodity_consumption_amc($district_id){
+  $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+	->fetchAll("			
+SELECT 
+	DATE_FORMAT(fs.date_issued,'%d %b %y') as date,
+    c.id AS commodity_id,
+	fs.facility_code,
+    c.commodity_name,
+    c.commodity_code,
+	ifnull(SUM(ROUND(fs.qty_issued/c.total_commodity_units)),0) AS pack_consumption,
+
+    CASE temp.selected_option
+        WHEN 'Pack_Size' THEN ROUND(temp.consumption_level, 1)
+        WHEN
+            'Unit_Size'
+        THEN
+            ROUND(temp.total_units / temp.consumption_level,
+                    1)
+        ELSE 0
+    END AS amc
+FROM
+	counties co,
+	districts di,
+	drug_store_totals ds,
+    facility_issues fs,
+    commodities c
+        LEFT JOIN
+    facility_monthly_stock temp ON temp.commodity_id = c.id
+WHERE
+    di.id = '$district_id' 
+    AND fs.date_issued BETWEEN '$from' AND '$to'
+    AND fs.commodity_id= ds.commodity_id
+    AND c.tracer_item = '1'
+    AND c.id = ds.commodity_id
+GROUP BY c.id
+		");
+return $stocks ;      
+    }
+ 
  
  
 	public static function get_expiries($facility_code, $year = NULL) 

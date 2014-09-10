@@ -2968,7 +2968,7 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 
    public function stock_level_dashboard()
    {
-   	//seth
+   
    		$tracer =(isset($tracer))? $tracer:null ;
       	$commodity_id = ($commodity_id=="NULL") ? null :$commodity_id;
 	 	$district_id = ($district_id=="NULL") ? null :$district_id;
@@ -3406,23 +3406,27 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		
 	}
 
-        public function consumption_data_dashboard() {
-        $from= strtotime(date('d-m-y'));	
-		$to= strtotime(date('d-m-y'));
-		// $category_id=($category_id=="NULL") ? null :$category_id;		
-		$county_id = $this -> session -> userdata('county_id');
-		$district_id = $this -> session -> userdata('district_id');
-		$facility_code = $this -> session -> userdata('facility_id');
-		
+        public function consumption_data_dashboard($commodity_id = null, $district_id = null, $facility_code=null, $option = null,$from=null,$to=null, $graph_type=null) {
+        //reset the values here
+     	$commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
+		$district_id =(isset($district_id)&&($district_id))? $district_id:$this -> session -> userdata('district_id') ;
+		$county_id =(isset($county_id)&&($county_id))? $county_id:$this -> session -> userdata('$county_id') ;
+	 	//$district_id = ($district_id=="NULL") ? null :$district_id;
+	 	$facility_code=($facility_code=="NULL") ? null :$facility_code;
+		$from =($from=="NULL") ? strtotime(date('01-m-y')) :strtotime(urldecode($from));	
+		$to =($to=="NULL") ? strtotime(date('d-m-y')) : strtotime(urldecode($to));
+		//$category_id=($category_id=="NULL") ? null :$category_id;		
+		//$county_id = $this -> session -> userdata('county_id');
 		$county_name = counties::get_county_name($county_id);
-		
-		$category_data = $series_data = $graph_data= $series_data_=array();
+		//echo $from;exit;
+		//echo "niko ndani";exit;
+		//$category_data = $series_data = $graph_data= $series_data_=array();
 		//check if the district is set
 		$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
 		$district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " subcounty" : null;
-		$option_new = isset($option) ? $option : "ksh";
-		// $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
-		// $facility_name=$facility_code_[0]['facility_name'];
+		$option = "packs";
+		$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
+		$facility_name=$facility_code_[0]['facility_name'];
 		$commodity_name=(isset($commodity_id))? Commodities::get_details($commodity_id)->toArray() : null;
 		$category_name_=@$commodity_name[0]['commodity_name'];
 		$commodity_name=isset($category_name_)? " for ".$category_name_ : null;
@@ -3430,16 +3434,25 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 	    $district_id>0 && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
 		$time= "between ".date('j M y', $from)." and ".date('j M y', $to);
 		
-		$consumption_data = Facility_stocks::get_county_consumption_level_new($facility_code,$district_id, $county_id,$category_id, $commodity_id, $option,$from, $to,$report_type);
-
+		//$consumption_data = Facility_stocks::get_county_consumption_level_new($facility_code,$district_id, $county_id,$category_id, $commodity_id, $option,$from, $to,$report_type);
+		$consumption_data = Facility_stocks::get_county_consumptionamc_level_new($facility_code, $district_id,$county_id,$category_id,$commodity_id, $option,$from,$to,$graph_type);
+		//echo "<pre>";print_r($consumption_data);echo "</pre>";exit;
 		$default_consumption_graph_ = array();
-		$graph_type='column';			
+		$graph_type='bar';			
         $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_id"=>'graph_content_'));
 	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_title"=>"Consumption level $commodity_name $title $time"));
 	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_type"=>$graph_type));
-	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_yaxis_title"=>"Commodity Consumption level in $option_new"));
-	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_categories"=>$category_data ));
-	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("series_data"=>array('total'=>$series_data)));
+	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_yaxis_title"=>"Commodity Consumption level values in $option"));
+	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_categories"=>array()));
+		$default_consumption_graph_=array_merge($default_consumption_graph_,array("series_data"=>array("Consumption"=>array(),"AMC"=>array())));
+		$default_consumption_graph_['stacking']='normal';
+		
+		foreach($consumption_data as $consumption_data):
+		$default_consumption_graph_['graph_categories']=array_merge($default_consumption_graph_['graph_categories'],array($consumption_data['commodity']));	
+		$default_consumption_graph_['series_data']['Consumption']=array_merge($default_consumption_graph_['series_data']['Consumption'],array((float) $consumption_data['total']));
+        $default_consumption_graph_['series_data']['AMC']=array_merge($default_consumption_graph_['series_data']['AMC'],array((float) $consumption_data['amc']));	
+		endforeach;
+		//echo "<pre>";print_r($consumption_data);echo "</pre>";exit;
 		$data = array();
 
 		$def_cons=$this->hcmp_functions->create_high_chart_graph($default_consumption_graph_);
@@ -3456,15 +3469,14 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 	    public function consumption_stats_graph($commodity_id = null,$category_id = null, $district_id = null, $facility_code=null, $option = null,$from=null,$to=null,$report_type=null) {
 	    //reset the values here
      	$commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
-	 	$district_id=($district_id=="NULL") ? null :$district_id;
+		$district_id =(isset($district_id)&&($district_id))? $district_id:$this -> session -> userdata('district_id') ;
+	 	//$district_id = ($district_id=="NULL") ? null :$district_id;
 	 	$facility_code=($facility_code=="NULL") ? null :$facility_code;
 		$option=($option=="NULL" || $option=="null") ? null :$option;
-		$from=($from=="NULL") ? strtotime(date('d-m-y')) :strtotime(urldecode($from));	
+		$from=($from=="NULL") ? strtotime(date('01-m-y')) :strtotime(urldecode($from));	
 		$to=($to=="NULL") ? strtotime(date('d-m-y')) : strtotime(urldecode($to));
 		$category_id=($category_id=="NULL") ? null :$category_id;		
 		$county_id = $this -> session -> userdata('county_id');
-		$district_id = $this -> session -> userdata('district_id');
-		
 		$county_name = counties::get_county_name($county_id);
 		
 		$category_data = $series_data = $graph_data= $series_data_=array();
@@ -3738,14 +3750,14 @@ public function get_division_commodities_data($district_id = null, $facility_cod
          $status=$facility_expiry_data['status']==0 ? "<span class='label label-danger'>Pending</span>" : ( $facility_expiry_data['status']==1? "<span class='label label-success'>Received</span>" : null );
 	    array_push($series_data, array($facility_expiry_data['source_facility_name']." :".$facility_expiry_data['source_facility_code'],
 	    $facility_expiry_data['receiver_facility_name']." :".$facility_expiry_data['receiver_facility_code'],
-		$facility_expiry_data['commodity_name'],$facility_expiry_data['commodity_code'],$facility_expiry_data['unit_size'],$facility_expiry_data['batch_no'],
+		$facility_expiry_data['commodity_name'],$facility_expiry_data['source_district'],$facility_expiry_data['receiver_district'],$facility_expiry_data['unit_size'],$facility_expiry_data['batch_no'],
 		date('d M, Y', strtotime($facility_expiry_data['expiry_date'])),$facility_expiry_data['manufacturer'],$total_sent,$sent_units,$total_received,$received_units,
 		date('d M, Y', strtotime($facility_expiry_data['date_sent'])),$date_received,$status));
 	    endforeach;
 		$total_expiry=number_format($total_expiry, 2, '.', ',');
 	   // array_push($series_data, array("","","Total for the next $year months",$total_expiry,''));
 	   
-		$category_data=array(array("From",'To',"Commodity Name","Commodity Code",
+		$category_data=array(array("From",'To',"Commodity Name","District From","District To",
 		"Unit Size",'Batch No','Expiry Date','Manufacturer','Quantity Sent(units)','Quantity Sent(packs)',
 		'Quantity Received (units)','Quantity Received (packs)','Date sent','Date Received','status'));
 	

@@ -44,12 +44,12 @@ endforeach;
 <input type="text" name="tracer_from"  id="tracer_from" 
 placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" />
 <input type="text" name="tracer_to"  id="tracer_to" placeholder="TO" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" /> 
-<select id="tracer_plot_value_filter" class="form-control col-md-2">
+<!-- <select id="tracer_plot_value_filter" class="form-control col-md-2">
 <option selected="selected" value="NULL">Select Plot value</option>
 <option value="packs">Packs</option>
 <option value="units">Units</option>
 <option value="ksh">KSH</option>
-</select>
+</select> -->
 <div class="col-md-1">
 <button class="btn btn-sm btn-success tracer-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div>
@@ -254,9 +254,8 @@ var drop_down='';
         
         if(from==''){from="NULL";}
         if(to==''){to="NULL";}
-
-        var url_ = "reports/consumption_stats_graph/"+
-       $("#tracer_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#tracer_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to); 
+        var url_ = "reports/consumption_data_dashboard/"+
+        $("#tracer_commodity_filter").val()+"/"+$("#tracer_district_filter").val()+"/NULL/packs/"+encodeURI(from)+ "/"+encodeURI(to)+"/NULL"; 
         ajax_request_replace_div_content(url_,'.graph_content');    
           });   
               
