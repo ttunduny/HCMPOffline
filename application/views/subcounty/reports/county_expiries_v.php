@@ -13,7 +13,6 @@
 	-webkit-box-shadow: 1px 1px 1px 1px #DDD3ED;
 box-shadow: 1px 1px 1px 1px #DDD3ED;
 	margin:auto;
-
 	}
 </style>
 <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Expiries</h1>
@@ -82,6 +81,7 @@ $("#potential_e").on('click', function(e){
 		 dialog_box('<h5>select the year first<h5>','<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');	
 		}
 		else{
+
 		var url_='<?php echo "reports/actual_expiries_reports/".$this->session->userdata('county_id') ?>'+'/'+year;
 		ajax_request_replace_div_content(url_,'#div_expiried');	
 		}

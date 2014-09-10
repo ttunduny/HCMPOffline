@@ -466,7 +466,7 @@ FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDAT
 		    f_s.current_balance,
 		    c.commodity_code from  facility_stocks f_s 
 				LEFT JOIN  commodities c ON c.id=f_s.commodity_id where facility_code=$facility_code 
-				 and f_s.current_balance>0 and expiry_date <= NOW() $and");
+				 and f_s.current_balance>0 and expiry_date <= NOW()  and year(f_s.expiry_date)= 2014 $and");
 				
 		        return $stocks ;
 	}
@@ -884,9 +884,10 @@ public static function get_county_comparison_data($facility_code=null,$district_
 	 $and_data =(isset($district_id)&& ($district_id>0)) ?"AND d1.id = '$district_id'" : null;
 	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;
      $and_data .=($county_id>0) ?" AND d1.county =$county_id" : null;
+
 		$query=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		select  d1.id as district_id, d1.district, f.facility_code, f.facility_name, sum(temp.total) as total
-from districts d1, facilities f left join
+from districts d1, facilities f join
      (
 select  ROUND( (
 SUM( f_s.current_balance ) / d.total_commodity_units ) * d.unit_cost, 1
@@ -901,8 +902,6 @@ GROUP BY f_s.commodity_id,f_s.facility_code having total >1
 where  f.district = d1.id
 $and_data
 group by f.facility_code");	
-
-
 		return $query;
 	}
 	
