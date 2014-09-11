@@ -1084,7 +1084,7 @@ class Reports extends MY_Controller
 		$date_2 = new DateTime($last_day_of_the_month);
 
 
-		$facility_data = Facilities::get_Facilities_using_HCMP($county_id,$district,$facility_code);
+		$facility_data = Facilities::get_Facilities_using_HCMP($county_id,$district);
 		
 		// echo "<pre>";print_r($facility_data);echo "</pre>";exit;
 		$series_data = array();
