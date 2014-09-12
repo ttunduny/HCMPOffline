@@ -4,7 +4,6 @@ include_once 'ago_time.php';
 
 $reporting_percentage = $cumulative_result/$total_facilities*100;
 $reporting_percentage = number_format($reporting_percentage, $decimals = 0);
-$current_month = date('mY', time());     
 ?>
 <style type="text/css">
 #inner_wrapper{font-size: 80%;}
@@ -15,11 +14,6 @@ $current_month = date('mY', time());
 #stock_table{width: 100%;}
 table{
     font-size: 12px;
-}
-#switch_back{    
-    font-size: 11px;
-    font-weight: bold;
-    color: green;   
 }
 </style>
 <script type="text/javascript">
@@ -33,27 +27,12 @@ $(document).ready(function(){
 //              alert (path);
             window.location.href = path;
         });
-    var active_month = '<?php echo $active_month ?>';
-    var current_month = '<?php echo $current_month ?>';   
-    if(active_month!=current_month){
-        $("#switch_back").show();
-        $('#switch').show();
-    }else{        
-        $('#switch_back').hide();
-        $('#switch_back').hide();
-    }
-     $('#switch_back').click(function() {
-            var value = current_month;
-            var path_full = 'rtk_management/switch_month/'+value+'/rtk_manager/';
-            var path = "<?php echo base_url(); ?>" + path_full;
-            window.location.href = path;
-        });
 
 
    });
 </script>
 <div class="tabbable">
-    <div>Select Month <button id="switch_back" class="form-control" style="max-width: 220px;">Switch to Current Month</button>    </div>
+    <div>Select Month
     <?php
         $month = $this->session->userdata('Month');
         if ($month==''){
@@ -79,10 +58,9 @@ $(document).ready(function(){
          ?>
         <option value="<?php echo $month_value ?>"><?php echo $month_text ?></option>;
     <?php } ?>
-    </select>    
+    </select>
         
     </div>
-    <br/>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab1" data-toggle="tab">Activity</a></li>
         <li><a href="#StockStatus" data-toggle="tab">Stock Status</a></li>
@@ -295,7 +273,6 @@ $(document).ready(function(){
                     data: <?php echo $jsonx; ?>
                 }]
             });
-   
 });
 </script>
 

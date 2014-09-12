@@ -99,7 +99,7 @@ class national extends MY_Controller
     
 	    if(isset($county_id)):
 		    $county_name = counties::get_county_name($county_id);   
-		    $name = $county_name[0]['county'] ;
+		    $name = $county_name['county'] ;
 		    $title = "$name County" ;
 	    elseif(isset($district_id)):
 		    $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
@@ -174,7 +174,7 @@ endif;
     
 	    if(isset($county_id)):
 	    $county_name = counties::get_county_name($county_id);   
-	    $name=$county_name[0]['county'] ;
+	    $name=$county_name['county'] ;
 	    $title="$name County" ;
 	    elseif(isset($district_id)):
 	    $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
@@ -294,9 +294,9 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 ";
         
     }
-    public function expiry($year=null,$county_id=null, $district_id=null,$facility_code=null,$graph_type=null)
-    {
-	    $year=($year=="NULL") ? date('Y') :$year;
+	public function expiry($year=null,$county_id=null, $district_id=null,$facility_code=null,$graph_type=null)
+	{
+		$year=($year=="NULL") ? date('Y') :$year;
 	    //check if the district is set
 	    $district_id=($district_id=="NULL") ? null :$district_id;
 	   // $option=($optionr=="NULL") ? null :$option;
@@ -306,14 +306,14 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
     	$month_=isset($month) ?$months[(int) $month-1] : null ;
     
         $category_data = array();
-        $series_data =$series_data_ = array();      
-        $temp_array =$temp_array_ = array();
-        $graph_data=array();
+        $series_data = $series_data2 = $series_data_ = $series_data_2 = array();      
+        $temp_array = $temp_array2 = $temp_array_ = array();
+        $graph_data = array();
         $title='';
         
    		if(isset($county_id)):
 		    $county_name = counties::get_county_name($county_id);   
-		    $name = $county_name[0]['county'] ;
+		    $name = $county_name['county'] ;
 		    $title="$name County" ;
 	    elseif(isset($district_id)):
 		    $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
@@ -324,64 +324,105 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 		    $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code): null;
 		    $title = $facility_code_['facility_name'];
 	    else:
-	    	$title = "National";
+	    	$title = "";
 	    endif;
   
-     $months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-     $category_data = array_merge($category_data, $months);
-     $and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
-     $and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
-     $and_data .=($county_id>0) ?" AND d1.county='$county_id'" : null;
-     $and_data =isset( $and_data) ?  $and_data:null;
-     
-    $group_by =($district_id>0 && isset($county_id) && !isset($facility_code)) ?" ,d1.id" : null;
-    $group_by .=($facility_code>0 && isset($district_id)) ?"  ,f.facility_code" : null;
-    $group_by .=($county_id>0 && !isset($district_id)) ?" ,c.id" : null;
-    $group_by = isset( $group_by) ?  $group_by: " ,c.id";
-      if( $graph_type!="excel"):
-        $commodity_array = Doctrine_Manager::getInstance()
-        ->getCurrentConnection()
-        ->fetchAll("select DATE_FORMAT( temp.expiry_date,  '%b' ) AS cal_month,
-    			sum(temp.total) as total
+     	$months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+     	$category_data = array_merge($category_data, $months);
+     	$and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
+     	$and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
+     	$and_data .=($county_id>0) ?" AND d1.county='$county_id'" : null;
+     	$and_data =isset( $and_data) ?  $and_data:null;
+    	
+    	$group_by =($district_id>0 && isset($county_id) && !isset($facility_code)) ?" ,d1.id" : null;
+	    $group_by .=($facility_code>0 && isset($district_id)) ?"  ,f.facility_code" : null;
+	    $group_by .=($county_id>0 && !isset($district_id)) ?" ,c.id" : null;
+	    $group_by = isset( $group_by) ?  $group_by: " ,c.id";
+      	if( $graph_type!="excel"):
+        	$commodity_array = Doctrine_Manager::getInstance()->getCurrentConnection()
+        	->fetchAll("select DATE_FORMAT( temp.expiry_date,  '%b' ) AS cal_month,
+	    			sum(temp.total) as total
+				from
+				    districts d1,
+				    facilities f
+				        left join
+				    (select ROUND(SUM(f_s.current_balance / d.total_commodity_units) * d.unit_cost, 1) AS total,
+				            f_s.facility_code,f_s.expiry_date
+				    from
+				        facility_stocks f_s, commodities d
+				    where
+				        f_s.expiry_date < NOW()
+				            and d.id = f_s.commodity_id
+				            and year(f_s.expiry_date) = $year
+				            AND  (f_s.status =1 or f_s.status =2 )
+				    GROUP BY d.id , f_s.facility_code having total > 1) 
+			    temp ON temp.facility_code = f.facility_code
+					where
+					    f.district = d1.id
+					       $and_data
+					        and temp.total > 0
+					group by month(temp.expiry_date)");   
+		$commodity_array2 = Doctrine_Manager::getInstance()->getCurrentConnection()
+	        ->fetchAll("
+			select 
+			    DATE_FORMAT( temp.expiry_date,  '%b' ) AS cal_month,
+			    sum(temp.total) as total
 			from
 			    districts d1,
 			    facilities f
 			        left join
-			    (select ROUND(SUM(f_s.current_balance / d.total_commodity_units) * d.unit_cost, 1) AS total,
+			    (select 
+			        ROUND(SUM(f_s.current_balance / d.total_commodity_units) * d.unit_cost, 1) AS total,
 			            f_s.facility_code,f_s.expiry_date
 			    from
 			        facility_stocks f_s, commodities d
 			    where
-			        f_s.expiry_date < NOW()
+			        f_s.expiry_date >= NOW()
 			            and d.id = f_s.commodity_id
-			            and year(f_s.expiry_date) = $year
-			            AND  (f_s.status =1 or f_s.status =2 )
-			    GROUP BY d.id , f_s.facility_code having total > 1) 
-		    temp ON temp.facility_code = f.facility_code
-				where
-				    f.district = d1.id
-				       $and_data
-				        and temp.total > 0
-				group by month(temp.expiry_date)");   
-		
+			            AND f_s.status = (1 or 2)
+						AND year(f_s.expiry_date) = $year
+			    GROUP BY d.id , f_s.facility_code
+			    having total > 1) temp ON temp.facility_code = f.facility_code
+			where
+			    f.district = d1.id
+			       $and_data
+			        and temp.total > 0
+			group by month(temp.expiry_date)
+		        ");
            
         foreach ($commodity_array as $data) :
-        $temp_array = array_merge($temp_array, array($data["cal_month"] => $data['total']));
+        	$temp_array = array_merge($temp_array, array($data["cal_month"] => $data['total']));
         endforeach;
+        foreach ($commodity_array2 as $data2) :
+        	$temp_array2 = array_merge($temp_array2, array($data2["cal_month"] => $data2['total']));
+	        //$series_data2 = array_merge($series_data2, array($data2["cal_month"] => (int)$data2['total']));
+	        //$category_data = array_merge($category_data, array($data2["cal_month"]));
+        endforeach;
+      //  echo "<pre>";print_r($temp_array2);echo "</pre>";exit;
+        
         foreach ($months as $key => $data) :
-        $val = (array_key_exists($data, $temp_array)) ? (int)$temp_array[$data] : (int)0;
-        $series_data = array_merge($series_data, array($val));
-        array_push($series_data_, array($data,$val));
+        	//for expiries
+	        $val = (array_key_exists($data, $temp_array)) ? (int)$temp_array[$data] : (int)0;
+	        $series_data = array_merge($series_data, array($val));
+	        array_push($series_data_, array($data,$val));
+	        
+	        //for potential expiries
+	        $val2 = (array_key_exists($data, $temp_array2)) ? (int)$temp_array2[$data] : (int)0;
+	        $series_data2 = array_merge($series_data2, array($val2));
+	        array_push($series_data_2, array($data,$val2));
         endforeach;
-        $graph_type='spline';
+        $graph_type='column';
         
         $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_'));
-        $graph_data=array_merge($graph_data,array("graph_title"=>"Stock Expired in $title $year"));
+        $graph_data=array_merge($graph_data,array("graph_title"=>"Expiries in $title $year"));
         $graph_data=array_merge($graph_data,array("graph_type"=>$graph_type));
-        $graph_data=array_merge($graph_data,array("graph_yaxis_title"=>"Stock Expired in KSH"));
+        $graph_data=array_merge($graph_data,array("graph_yaxis_title"=>"KSH"));
         $graph_data=array_merge($graph_data,array("graph_categories"=>$category_data ));
-        $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
-
+        $graph_data=array_merge($graph_data,array("series_data"=>array()));
+		
+		//$default_expiries=array_merge($default_expiries,array("series_data"=>array()));
+		$graph_data['series_data']=array_merge($graph_data['series_data'],array("Potential Expiries"=>$series_data2,"Actual Expiries"=>$series_data));
+  	 	//echo "<pre>";print_r($graph_data);echo "</pre>";exit;
         $data = array();
         $data['graph_id']='dem_graph_';
         $data['high_graph']= $this->hcmp_functions->create_high_chart_graph($graph_data);
@@ -452,38 +493,9 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 endif;
      
     }
-    public function potential($county_id=null, $district_id=null,$facility_code=null,$graph_type=null,$interval=null)
+    /*public function potential($county_id=null, $district_id=null,$facility_code=null,$graph_type=null,$interval=null)
     {
-    	//check if the district is set
-		$district_id=($district_id=="NULL") ? null :$district_id;
- 		$interval=($interval=="NULL" || !isset($interval)) ? 6 :$interval;
-   		// $option=($optionr=="NULL") ? null :$option;
-   		$facility_code=($facility_code=="NULL") ? null :$facility_code;
-    	$county_id=($county_id=="NULL") ? null :$county_id;
-          
-    	$month_=isset($month) ?$months[(int) $month-1] : null ;
-        $category_data = array();
-        $series_data =$series_data_ = array();      
-        $temp_array =$temp_array_ = array();
-        $graph_data=array();
-   
-        $title='';
-        
-	    if(isset($county_id)):
-		    $county_name = counties::get_county_name($county_id);   
-		    $name = $county_name[0]['county'] ;
-		    $title = "$name County" ;
-	    elseif(isset($district_id)):
-		    $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
-		    $district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " Subcounty" : null;
-		    $title = isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :
-		    			(isset($district_id) && !isset($facility_code) ?  "$district_name_": "$name County") ;
-	    elseif(isset($facility_code)):
-		    $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
-		    $title=$facility_code_['facility_name'];
-	    else:
-	    	$title="Nationally";
-	    endif;
+    	
 
      $and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
      $and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
@@ -602,7 +614,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
         $this->hcmp_functions->create_excel($excel_data);
 endif;
      
-    }
+    }*/
     public function stock_level_mos($county_id=null, $district_id=null,$facility_code=null,$commodity_id=null,$graph_type=null)
     {
 	    $district_id=($district_id=="NULL") ? null :$district_id;
@@ -626,7 +638,7 @@ endif;
         
   		if(isset($county_id)):
 		    $county_name = counties::get_county_name($county_id);   
-		    $name=$county_name[0]['county'] ;
+		    $name=$county_name['county'] ;
 		    $title="$name County" ;
 	    elseif(isset($district_id)):
 		    $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
@@ -695,7 +707,7 @@ endif;
        //
         else:
         $excel_data = array('doc_creator' => "HCMP", 'doc_title' => "Stock Level in Months of Stock $title",
-         'file_name' => 'MOS');
+         'file_name' => $title.' MOS');
         $row_data = array(); 
         $column_data = array("County", "Sub-County", "Facility Name","Facility Code","Item Name","MOS");
         $excel_data['column_data'] = $column_data;
@@ -745,6 +757,7 @@ endif;
         
     }
     public function consumption($county_id=null, $district_id=null,$facility_code=null,$commodity_id=null,$graph_type=null,$from=null,$to=null){
+    
     $title='';	
     $district_id=($district_id=="NULL") ? null :$district_id;
     $graph_type=($graph_type=="NULL") ? null :$graph_type;
@@ -752,6 +765,7 @@ endif;
     $county_id=($county_id=="NULL") ? null :$county_id;
     $commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
     
+
     $from=($from=="NULL" || !isset($from)) ? date('Y-m-01') : date('Y-m-d',strtotime(urldecode($from)));  
     $to=($to=="NULL"  || !isset($to)) ? date('Y-m-d') : date('Y-m-d',strtotime(urldecode($to)));
    
@@ -769,9 +783,11 @@ endif;
     $time= "Between ".date('j M y', strtotime($from))." and ".date('j M y',strtotime( $to));
     
     if(isset($county_id)):
+
 	    $county_name = counties::get_county_name($county_id);   
-	    $name=$county_name[0]['county'] ;
+	    $name=$county_name['county'] ;
 	    $title="$name County" ;
+	    //print_r($name);exit;
     elseif(isset($district_id)):
 	    $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
 	    $district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " Subcounty" : null;
@@ -813,7 +829,6 @@ endif;
         endforeach;
  
         $graph_type='bar';
-        
         $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_consuption'));
         $graph_data=array_merge($graph_data,array("graph_title"=>"$title Consumption (Packs) $time"));
         $graph_data=array_merge($graph_data,array("graph_type"=>$graph_type));
@@ -827,7 +842,7 @@ endif;
        return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
        else:
         $excel_data = array('doc_creator' => "HCMP", 'doc_title' => "$title Consumption (Packs) $time",
-         'file_name' => 'Consumption');
+         'file_name' => $title.' Consumption');
         $row_data = array(); 
         $column_data = array("County", "Sub-County", "Facility Name","Facility Code","Item Name","Consumption (Packs)");
         $excel_data['column_data'] = $column_data;
@@ -855,13 +870,13 @@ order by c.county asc , d1.district asc
         ");
         
         foreach ($facility_stock_data as $facility_stock_data_item) :
-        array_push($row_data, array($facility_stock_data_item["county"],
-        $facility_stock_data_item["subcounty"],
-        $facility_stock_data_item["facility_name"],
-        $facility_stock_data_item["facility_code"],
-        $facility_stock_data_item["drug_name"],
-        $facility_stock_data_item["total"]
-        ));
+	        array_push($row_data, array($facility_stock_data_item["county"],
+	        $facility_stock_data_item["subcounty"],
+	        $facility_stock_data_item["facility_name"],
+	        $facility_stock_data_item["facility_code"],
+	        $facility_stock_data_item["drug_name"],
+	        $facility_stock_data_item["total"]
+	        ));
         endforeach;
         $excel_data['row_data'] = $row_data;
 
@@ -909,7 +924,7 @@ group by month(o.`order_date`)
     if($graph_type!="excel"):
     if(isset($county_id)):
     $county_name = counties::get_county_name($county_id);   
-    $name=$county_name[0]['county'] ;
+    $name=$county_name['county'] ;
     $title="$name county" ;
     elseif(isset($district_id)):
     $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
@@ -1170,10 +1185,10 @@ order by user.id asc
 
 	 public function reports(){
 	 	
-		$data['county'] = Counties::getAll();
+		//$data['county'] = Counties::getAll();
 		//Added function to display oonly the counties that are currently using HCMP
-		//$counties = Counties::get_counties_all_using_HCMP();
-		//$data['county'] = $counties;
+		$counties = Counties::get_counties_all_using_HCMP();
+		$data['county'] = $counties;
 		
 		$data['commodities'] = Commodities::get_all();
 		$data['sub_county'] = Districts::getAll();
