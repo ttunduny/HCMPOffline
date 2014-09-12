@@ -42,7 +42,7 @@
     // };             
 
     //Set the first element uneditable i.e. Screening Determine
-    $('#tests_done_0').attr("readonly",'true');
+    //$('#tests_done_0').attr("readonly",'true');
 
     //Set the Datepickers
     $("#begin_date").datepicker({
@@ -89,12 +89,23 @@
                 $('#'+top_type).css("border-color","red");                
             }else{      
                 $('#'+top_type).css("border-color","none");
-                compute_tests_done();
+                //compute_tests_done();
             }
         }
 
     }
+function validate_explanation(input,row){        
+        var input_value  = $('#'+input+row).val();  
+        var explanation = $('#explanation').val();
+        if((input_value>0)&&(explanation=='')){
+            $('#explanation').css('border-color','red');
+            hide_save();
+        }else{
+            $('#explanation').css('border-color','none');
+            show_save();
+        }
 
+    }
 /* --- Start of calculation for the no of tests done for Screening Determine  -- */
 function compute_tests_done(){  
     var vct_no = parseInt($('#vct').val());
@@ -263,6 +274,16 @@ function compute_tests_done(){
             show_save();
         }
     }  
+    $('#explanation').change(function() {                        
+        var explanation = $('#explanation').val();
+        if(explanation==''){
+            $('#explanation').css('border-color','red');
+            hide_save();
+        }else{
+            $('#explanation').css('border-color','none');
+            show_save();
+        }
+    })
 
     function hide_save() {
         $('#validate').show();
@@ -277,9 +298,7 @@ function compute_tests_done(){
     }
 
 
-$('#save1')
-.button()
-.click(function() {               
+$('#save1').button().click(function() {               
     $('#message').html('The Report is Being Updated. Please Wait...');                                         
     $('#message').css('font-size','13px');                                         
     $('#message').css('color','green'); 

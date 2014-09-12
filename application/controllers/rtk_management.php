@@ -5562,22 +5562,24 @@ WHERE
         // /$
     }
     public function trigger_emails() {
-        $sql = "select email from user where usertype_id='11' and status =1";
+        $sql = "select email from user where usertype_id='7' and status =1";
         $res = $this->db->query($sql)->result_array();
         $to = array();        
         foreach ($res as $key => $value) {
             $one = $value['email'];
             array_push($to,$one);
         }          
-        $receipient = implode($to, ',');        
-        $subject = 'Login Page Changes';
-        $message = "Dear All,<br/><br/> Please Note that the Login Page has been Changed to A National Data Page. However, on the top right hand corner of the page, is a link to Login.<br/> Please use that link to login to the system.<br/><br/><br/>Regards, <br/>RTK Development Team";
+        $receipient = implode($to, ',');
+        $subject = 'RTK Data';
+        $message = "Dear All,<br/><br/> Please Ensure that all the commodities have a begining balance, and a quantity Received (if any), and where the begining balance is zero, please entered a value.
+        <br/> This will enable us to be able to have accurate data in the system. Also ensure that the reports are filled as per the FCDRR form, with all the fields accurately captured.<br/>
+        Please use the time allocated for editing to ensure that the reports submitted have the correct data.<br/><br/>Regards, <br/>RTK Development Team";
         $attach_file = null;
         $bcc_email = 'ttunduny@gmail.com,tngugi@clintonhealthaccess.org,annchemu@gmail.com';      
         //$bcc_email = 'ttunduny@gmail.com';      
         include 'rtk_mailer.php';
         $newmail = new rtk_mailer();        
-        //$response = $newmail->send_email($receipient, $message, $subject, $attach_file, $bcc_email);        
+        $response = $newmail->send_email($receipient, $message, $subject, $attach_file, $bcc_email);        
         echo "Email Sent";
     }
 

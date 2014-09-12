@@ -43,7 +43,7 @@
     };             
 
     //Set the first element uneditable i.e. Screening Determine
-    //$('#tests_done_0').attr("readonly",'true');
+   // $('#tests_done_0').attr("readonly",'true');
 
     //Set the Datepickers
     $("#begin_date").datepicker({
@@ -95,6 +95,8 @@
         }
 
     }
+
+    
 
 /* --- Start of calculation for the no of tests done for Screening Determine  -- */
 function compute_tests_done(){  
@@ -157,12 +159,14 @@ function compute_tests_done(){
         number = row_id.attr("commodity_id");
         num = parseInt(number);
         validate_inputs('pos_adj_',num);
+        validate_explanation('pos_adj_',num);
     })
     $('.neg_adj').change(function() {
         row_id = $(this).closest("tr");
         number = row_id.attr("commodity_id");
         num = parseInt(number);
         validate_inputs('neg_adj_',num);
+       validate_explanation('neg_adj_',num);
     })  
     $('.phys_count').change(function() {
         row_id = $(this).closest("tr");
@@ -175,6 +179,7 @@ function compute_tests_done(){
         number = row_id.attr("commodity_id");
         num = parseInt(number);
         validate_inputs('losses_',num);
+        validate_explanation('losses_',num);
     }) 
     
     $('.bbal').change(function() {
@@ -191,7 +196,16 @@ function compute_tests_done(){
     //     validate_inputs('b_balance_',num);
     // })   
 
-
+    $('#explanation').change(function() {                        
+        var explanation = $('#explanation').val();
+        if(explanation==''){
+            $('#explanation').css('border-color','red');
+            hide_save();
+        }else{
+            $('#explanation').css('border-color','none');
+            show_save();
+        }
+    })
 
     /*  Check if a value is a number and not less than zero */
     function validate_inputs(input,row){        
@@ -246,6 +260,18 @@ function compute_tests_done(){
             }
 
     }
+     function validate_explanation(input,row){        
+        var input_value  = $('#'+input+row).val();  
+        var explanation = $('#explanation').val();
+        if((input_value>0)&&(explanation=='')){
+            $('#explanation').css('border-color','red');
+            hide_save();
+        }else{
+            $('#explanation').css('border-color','none');
+            show_save();
+        }
+
+    }
 
     /*  End of Input Validations */
     /* Compute Closing Balance */
@@ -283,6 +309,7 @@ function compute_tests_done(){
         }
     }  
 
+    
     function hide_save() {
         $('#validate').show();
         $('#validate').html('NOTE: Please Correct all Input Fields with red border to Activate the Save Data Button');                                         
@@ -296,9 +323,7 @@ function compute_tests_done(){
     }
 
 
-$('#save1')
-.button()
-.click(function() {               
+$('#save1').button().click(function() {               
     $('#message').html('The Report is Being Saved. Please Wait');                                         
     $('#message').css('font-size','13px');                                         
     $('#message').css('color','green'); 
