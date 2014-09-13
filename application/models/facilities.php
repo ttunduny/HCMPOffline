@@ -5,6 +5,7 @@ class Facilities extends Doctrine_Record {
 		$this -> hasColumn('targetted', 'int');
 		$this -> hasColumn('facility_name', 'varchar',30);
 		$this -> hasColumn('district', 'varchar',30);
+		$this -> hasColumn('partner', 'int',11);
 		$this -> hasColumn('owner', 'varchar',30);
 		$this -> hasColumn('level', 'varchar',30);
 		$this->hasColumn('drawing_rights','text');
