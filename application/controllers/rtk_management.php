@@ -389,6 +389,56 @@ class Rtk_Management extends Home_controller {
         $data['content_view'] = "rtk/rtk/rca/home";
         $this->load->view("rtk/template", $data);
     }
+    public function partner_home() {
+        $lastday = date('Y-m-d', strtotime("last day of previous month"));
+        $countyid = $this->session->userdata('county_id');
+        $districts = districts::getDistrict($countyid);
+        $county_name = counties::get_county_name($countyid);
+        $County = $county_name[0]['county'];
+
+        $reports = array();
+        $tdata = ' ';
+        foreach ($districts as $value) {
+            $q = $this->db->query('SELECT lab_commodity_orders.id, lab_commodity_orders.facility_code, lab_commodity_orders.compiled_by, lab_commodity_orders.order_date, lab_commodity_orders.district_id, districts.id as distid, districts.district, facilities.facility_name, facilities.facility_code FROM districts, lab_commodity_orders, facilities WHERE lab_commodity_orders.district_id = districts.id AND facilities.facility_code = lab_commodity_orders.facility_code AND districts.id = ' . $value['id'] . '');
+            $res = $q->result_array();
+            foreach ($res as $values) {
+                date_default_timezone_set('EUROPE/Moscow');
+                $order_date = date('F', strtotime($values['order_date']));
+                $tdata .= '<tr>
+                <td>' . $order_date . '</td>
+                <td>' . $values['facility_code'] . '</td>
+                <td>' . $values['facility_name'] . '</td>
+                <td>' . $values['district'] . '</td>
+                <td>' . $values['order_date'] . '</td>
+                <td>' . $values['compiled_by'] . '</td>
+                <td><a href="' . base_url() . 'rtk_management/lab_order_details/' . $values['id'] . '">View</a></td>
+                <tr>';
+            }
+            if (count($res) > 0) {
+                array_push($reports, $res);
+            }
+        }
+        $month = $this->session->userdata('Month');
+        if ($month == '') {
+            $month = date('mY', strtotime('-1 month'));
+        }
+
+        $year = substr($month, -4);
+        $month = substr_replace($month, "", -4);
+
+
+        $monthyear = $year . '-' . $month . '-1';
+        $englishdate = date('F, Y', strtotime($monthyear));
+        $data['graphdata'] = $this->county_reporting_percentages($countyid, $year, $month);
+        $data['county_summary'] = $this->_requested_vs_allocated($year, $month, $countyid);
+        $data['tdata'] = $tdata;
+        $data['county'] = $County;
+        $data['title'] = 'RTK County Admin';
+        $data['banner_text'] = 'RTK County Admin';
+        $data['content_view'] = "rtk/rtk/partner/home";
+        $this->load->view("rtk/template", $data);
+    }
+
 
     public function rca_pending_facilities() {
         $countyid = $this->session->userdata('county_id');        
