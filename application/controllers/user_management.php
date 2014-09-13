@@ -117,6 +117,7 @@ public function submit() {
 		$inames=$n['lname'];		
 		$disto=$n['district'];
 		$faci=$n['facility'];
+		$partner=$n['partner'];
 		$phone=$n['telephone'];
 	    $user_id=$n['id'];
 		$user_email=$n['email'];
@@ -132,6 +133,10 @@ public function submit() {
 		$myobj = Doctrine::getTable('districts')->find($disto);
         $dist=$myobj->district;	
 		}
+		if($partner>0){
+		$myobj = Doctrine::getTable('partners')->find($partner);
+        $part=$myobj->partner;	
+		}
 		if($county_id>0){
 		$myobj = Doctrine::getTable('counties')->find($county_id);
         $county_name=$myobj->county;	
@@ -144,6 +149,7 @@ public function submit() {
 		$county=   $county_name." County Facilitator";
 		$allocation="Allocation committee";
 		$dpp="District Lab Technologist";
+		$partner_name="RTK Partner";
 		
        if ($myvalue ==1) {
        		$session_data = array('county_id'=>$county_id,'phone_no'=>$phone,
@@ -154,8 +160,7 @@ public function submit() {
 			$session_data = array('county_id'=>$county_id,'phone_no'=>$phone,
 			'user_email'=>$user_email,'full_name' =>$moh_user ,'user_id'=>$user_id,
 			'user_indicator'=>"moh_user",'names'=>$namer,'inames'=>$inames,
-			'identity'=>$id_d,'news'=>$faci,'district1'=>$disto,
-			'county_name'=>$county_name);
+			'identity'=>$id_d,' '=>$faci,'district1'=>$disto,'county_name'=>$county_name);
 		}else if($myvalue==5){
 			$session_data = array('county_id'=>$county_id,'phone_no'=>$phone,
 			'user_email'=>$user_email,'full_name' =>$facility_name ,'user_id'=>$user_id,
@@ -223,7 +228,13 @@ public function submit() {
 		'identity'=>$id_d,'news'=>$county,'district1'=>$disto,'drawing_rights'=>0,
 		'county_name'=>$county_name);			
 		
-		}				
+		}else if($myvalue==14){
+			$session_data = array('county_id'=>$county_id,'partner'=>$part,'phone_no'=>$phone,
+			'user_email'=>$user_email,'full_name' =>$partner_name ,'user_id'=>$user_id,
+			'user_indicator'=>"rtk_partner_admin",'names'=>$namer,'inames'=>$inames,
+			'identity'=>$id_d,'news'=>$faci,'district1'=>$disto,'county_name'=>$county_name);
+		}
+						
 		$this -> session -> set_userdata($session_data);
 		$this -> session -> set_userdata(array("user_type_id"=>$myvalue));
 		Log::update_log_out_action($this -> session -> userdata('user_id'));
