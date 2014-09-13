@@ -26,6 +26,6 @@
         <li><a href="<?php echo base_url().'rtk_management/partner_home'?>">Summary</a></li> 
         <li><a href="<?php echo base_url().'rtk_management/partner_facilities' ?>">Facilities</a></li>       
         <li><a href="<?php echo base_url().'rtk_management/partner_stock_status'?>">Stock Status</a></li>
-        <li><a href="<?php echo base_url().'rtk_management/parnter_commodity_usage'?>">Commodity_usage</a></li>
+        <li><a href="<?php echo base_url().'rtk_management/partner_commodity_usage'?>">Commodity Usage</a></li>
     </ul>
 </div>
