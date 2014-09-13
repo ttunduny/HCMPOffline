@@ -2462,8 +2462,8 @@ class Rtk_Management extends Home_controller {
         //       echo($reports_html);die;
 //      $email_address = "cecilia.wanjala@kemsa.co.ke,jbatuka@usaid.gov";
 //        $email_address = "lab@kemsa.co.ke,shamim.kuppuswamy@kemsa.co.ke,onjathi@clintonhealthaccess.org,jbatuka@usaid.gov,williamnguru@gmail.com,ttunduny@gmail.com";
-      // $email_address = "lab@kemsa.co.ke,williamnguru@gmail.com,ttunduny@gmail.com";
-        $email_address = "ttunduny@gmail.com";
+      $email_address = "lab@kemsa.co.ke,annchemu@gmail.com,ttunduny@gmail.com";
+        // $email_address = "ttunduny@gmail.com";
         $this->sendmail($reports_html, $reportname, $email_address);
     }
 
@@ -2960,10 +2960,9 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         $this->load->view('rtk/template', $data);        
         
     }
-    public function get_all_zone_a_facilities(){
+    public function get_allocation_pending_facilities(){
         $sql = "select facilities.*,districts.district,counties.county from facilities,counties,districts 
-        where facilities.zone = 'Zone A' 
-        and facilities.rtk_enabled=1
+        where facilities.rtk_enabled=1
         and districts.id = facilities.district
         and counties.id=districts.county";
         $res = $this->db->query($sql);
@@ -2978,8 +2977,8 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
             $amcs[$fcode] = $amc_details;
         }
 
-        $data['title'] = 'Zone A List';
-        $data['banner_text'] = 'Facilities in Zone A';
+        $data['title'] = 'RTK Pending Facilities';
+        $data['banner_text'] = 'Pending Facilities';
         $data['content_view'] = 'rtk/allocation_committee/zone_a';        
         $data['facilities'] = $facilities;
         $data['amcs'] = $amcs;
@@ -3019,8 +3018,8 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
     // echo "<pre>";
     //     print_r($amcs);
     //     die;
-        $data['title'] = 'Unreported Facilities in Zone A';
-        $data['banner_text'] = 'Unreported Facilities in Zone A';
+        $data['title'] = 'RTK Unreported Facilities';
+        $data['banner_text'] = 'RTK Unreported Facilities';
         $data['content_view'] = 'rtk/allocation_committee/allocation_non_reported';        
         $data['facilities'] = $facilities;
         $data['amcs'] = $amcs;
@@ -3584,12 +3583,12 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
         //            $month_ago=date('Y-'.$last_month.'-d');
         $month_ago = date('Y-m-d', strtotime("last day of previous month"));
         $sql = 'SELECT  
-    facilities.facility_code,facilities.facility_name,lab_commodity_orders.id,lab_commodity_orders.order_date,lab_commodity_orders.district_id,lab_commodity_orders.compiled_by,lab_commodity_orders.facility_code
-    FROM lab_commodity_orders, facilities
-    WHERE lab_commodity_orders.facility_code = facilities.facility_code 
-    AND lab_commodity_orders.order_date between ' . $month_ago . ' AND NOW()
-    AND facilities.district =' . $district . '
-    ORDER BY  lab_commodity_orders.id DESC ';
+            facilities.facility_code,facilities.facility_name,lab_commodity_orders.id,lab_commodity_orders.order_date,lab_commodity_orders.district_id,lab_commodity_orders.compiled_by,lab_commodity_orders.facility_code
+            FROM lab_commodity_orders, facilities
+            WHERE lab_commodity_orders.facility_code = facilities.facility_code 
+            AND lab_commodity_orders.order_date between ' . $month_ago . ' AND NOW()
+            AND facilities.district =' . $district . '
+            ORDER BY  lab_commodity_orders.id DESC ';
            /*$query = $this->db->query("SELECT  
             facilities.facility_code,facilities.facility_name,lab_commodity_orders.id,lab_commodity_orders.order_date,lab_commodity_orders.district_id,lab_commodity_orders.compiled_by,lab_commodity_orders.facility_code
             FROM lab_commodity_orders, facilities
@@ -4082,6 +4081,7 @@ WHERE
         GROUP BY facilities.facility_code, lab_commodity_details.commodity_id";
         $res = $this->db->query($sql);
         $returnable = $res->result_array();
+       
         return $returnable;
         #$nonexistent = "AND lab_commodity_orders.order_date BETWEEN '2014-04-01' AND '2014-04-30'";
     }
