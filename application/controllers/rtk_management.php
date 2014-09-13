@@ -20,44 +20,6 @@ class Rtk_Management extends Home_controller {
         echo "|";
     }
 
-    public function insert_partners(){
-        $rec=0;
-        $handle = fopen ('sitespartners.csv', 'r'); //this is the csv file wth the mfl codes and partner ids ( ensure this csv is in same folder as the upload script )
-        $count=0;
-            while (($data = fgetcsv($handle, 1000, ',', '"')) !== FALSE)
-            {
-                $rec++;
-                if($rec==1)
-                {
-                continue;
-                }
-                else
-                {
-                    //echo $data[0] .'<br/>' ; 
-                    
-                $this->db->query("update facilities set partner='$data[2]'  where facility_code='$data[0]'");}}
-                                           //rename facility, mfl code to actual attribute names on the hcmp database a
-        //             if ($import)
-        //             {
-        //                 $count=$count+1;
-        //             }      
-        //             else
-        //             {
-
-        //             }               
-
-        //     } //end else rec
-        // }// end while
-        
-        // if ($import)
-        // {
-        // echo $count . " Facility Records updated";
-        // }
-        // else
-        // {
-        // echo "Failed Updating, Try again ";
-        // }
-    }
     public function national_rtk_allocation() {
         $data['title'] = "National RTK Allocations";
         $data['banner_text'] = "National RTK Allocations";
@@ -467,13 +429,13 @@ class Rtk_Management extends Home_controller {
 
         $monthyear = $year . '-' . $month . '-1';
         $englishdate = date('F, Y', strtotime($monthyear));
-        $data['graphdata'] = $this->county_reporting_percentages($countyid, $year, $month);
-        $data['county_summary'] = $this->_requested_vs_allocated($year, $month, $countyid);
+        $data['graphdata'] = $this->partner_reporting_percentages(0, $year, $month);
+        //$data['county_summary'] = $this->_requested_vs_allocated($year, $month, $countyid);
         $data['tdata'] = $tdata;
         $data['county'] = $County;
-        $data['title'] = 'RTK County Admin';
-        $data['banner_text'] = 'RTK County Admin';
-        $data['content_view'] = "rtk/rtk/partner/home";
+        $data['title'] = 'RTK Partner';
+        $data['banner_text'] = 'RTK Partner';
+        $data['content_view'] = "rtk/rtk/partner/partner_dashboard";
         $this->load->view("rtk/template", $data);
     }
 
@@ -1260,6 +1222,7 @@ class Rtk_Management extends Home_controller {
             array_push($nonreported, $percentage_non_reported);
         }
 
+
         $districts = json_encode($districts);
         $reported = json_encode($reported);
         $nonreported = json_encode($nonreported);
@@ -1270,7 +1233,69 @@ class Rtk_Management extends Home_controller {
         //        $this->load->view('rtk/rtk/rca/county_reporting_view', $data);
         return $data;
     }
-    public function get_county_percentages(){
+
+function partner_reporting_percentages($partner, $year, $month) {
+    //$partner_id = 7;
+        $q = "SELECT 
+                count(lab_commodity_orders.id) as total,
+                year(lab_commodity_orders.order_date),
+                month(lab_commodity_orders.order_date) as current_month,
+                facilities.partner,
+                facilities.facility_code
+            FROM
+                lab_commodity_orders,
+                facilities
+            WHERE
+                facilities.facility_code = lab_commodity_orders.facility_code
+                    AND facilities.partner = '$partner'
+            group by month(lab_commodity_orders.order_date)";
+        $query = $this->db->query($q);
+
+        $sql = $this->db->select('count(id) as county_facility')->get_where('facilities', array('partner' =>5))->result_array();
+        foreach ($sql as $key => $value) {
+           $facilities = intval($value['county_facility']);
+        }
+       
+
+        $month = array();
+        $reported = array();
+        $nonreported = array();
+        $reported_value = array();
+        $nonreported_value = array();
+        foreach ($query->result_array() as $val) {
+            array_push($month, $val['current_month']);
+            //$percentage_reported = $this->district_reporting_percentages($val['district_id'], $year, $month);
+            $reports = intval($val['total']);
+            $percentage_reported = round((($reports/$facilities)*100),0);
+            if ($percentage_reported > 100) {
+                $percentage_reported = 100;
+            }
+            $unreported = $facilities - $reports;
+            array_push($reported, $percentage_reported);
+            array_push($nonreported_value, $unreported);
+            array_push($reported_value, $reports);
+
+            $percentage_non_reported = 100 - $percentage_reported;
+            array_push($nonreported, $percentage_non_reported);
+        }
+        echo "<pre>";
+        print_r($month);die();
+        
+
+        $month_array = json_encode($month);
+        $reported = json_encode($reported);
+        $reported_value = json_encode($reported_value);
+        $nonreported_value = json_encode($nonreported_value);
+        $nonreported = json_encode($nonreported);
+
+        $data['month'] = $month_array;
+        $data['reported'] = $reported;
+        $data['nonreported'] = $nonreported;
+        $data['reported_value'] = $reported_value;
+        $data['nonreported_value'] = $nonreported_value;
+        //        $this->load->view('rtk/rtk/rca/county_reporting_view', $data);
+        return $data;
+    }    public function get_county_percentages(){
         $month = date("m");
         $year = date("Y");
         $sql = "select id from counties";
