@@ -10,6 +10,10 @@ $month= substr_replace($month,"", -4);
 $monthyear = $year . '-' . $month . '-1';        
 $englishdate1 = date('F, Y', strtotime('next month'));
 $englishdate = date('F, Y', strtotime($monthyear));
+$my_month = json_decode($graphdata['month']);
+$count = count($my_month);
+$from_date = $my_month[0];
+$to_date = $my_month[$count-1]; 
 $option = '';
 $id = $this->session->userdata('user_id');
 $q = 'SELECT counties.id AS countyid, counties.county
@@ -44,7 +48,7 @@ foreach ($commodities->result_array() as $key => $value) {
 
         $('#switch_commodity').change(function() {
             var value = $('#switch_commodity').val();
-            
+
             var path = "<?php echo base_url() . 'rtk_management/switch_commodity/0/partner_commodity_usage/'; ?>" + value + "/";
 //              alert (path);
             window.location.href = path;
@@ -137,7 +141,7 @@ foreach ($commodities->result_array() as $key => $value) {
                         type: 'line'
                     },
                     title: {
-                        text: '<?php echo $commodity_name . ' Yearly Commodity Usage:  ' . $englishdate; ?>'
+                        text: '<?php echo ' Yearly Commodity Usage:  ' . $commodity_name.' from '. $from_date.' to '. $to_date; ?>'
                     }, subtitle: {
                         text: 'Live data reports on RTK'
                     },

@@ -1290,8 +1290,7 @@ function partner_reporting_percentages($partner, $year, $month) {
     $partner_id = 7;
         $q = 'SELECT 
                 count(lab_commodity_orders.id) as total,
-                year(lab_commodity_orders.order_date),
-                month(lab_commodity_orders.order_date) as current_month,
+                extract(YEAR_MONTH FROM lab_commodity_orders.order_date) as current_month,
                 facilities.partner,
                 facilities.facility_code
             FROM
@@ -1300,7 +1299,7 @@ function partner_reporting_percentages($partner, $year, $month) {
             WHERE
                 facilities.facility_code = lab_commodity_orders.facility_code
                     AND facilities.partner = 7
-            group by month(lab_commodity_orders.order_date)';
+            group by extract(YEAR_MONTH FROM lab_commodity_orders.order_date)';
         $query = $this->db->query($q);
 
         $sql = $this->db->select('count(id) as county_facility')->get_where('facilities', array('partner' =>7))->result_array();
@@ -1315,7 +1314,12 @@ function partner_reporting_percentages($partner, $year, $month) {
         $reported_value = array();
         $nonreported_value = array();
         foreach ($query->result_array() as $val) {
-            array_push($month, $val['current_month']);
+            $raw_month =  $val['current_month'];
+            $year = substr($raw_month, 0,4);
+            
+            $month_val = substr($raw_month, 4,2);
+            $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
+            array_push($month, $month_text) ;
             //$percentage_reported = $this->district_reporting_percentages($val['district_id'], $year, $month);
             $reports = intval($val['total']);
             $percentage_reported = round((($reports/$facilities)*100),0);
@@ -1399,7 +1403,12 @@ group by extract(YEAR_MONTH from lab_commodity_details.created_at)";
 
         foreach ($query as $val) {
             //echo intval($val['current_month']);die();
-            array_push($month, intval($val['current_month']));
+            $raw_month =  $val['current_month'];
+            $year = substr($raw_month, 0,4);
+            
+            $month_val = substr($raw_month, 4,2);
+            $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
+            array_push($month, $month_text) ;
             array_push($beginning_bal, intval($val['beginning_bal']));
             array_push($qty_received, intval($val['q_received']));
             array_push($total_tests, intval($val['no_of_tests_done']));

@@ -12,14 +12,10 @@ $englishdate1 = date('F, Y', strtotime('next month'));
 $englishdate = date('F, Y', strtotime($monthyear));
 $option = '';
 $id = $this->session->userdata('user_id');
-$q = 'SELECT counties.id AS countyid, counties.county
-            FROM rca_county, counties
-            WHERE rca_county.county = counties.id
-            AND rca_county.rca =' . $id;
-$res = $this->db->query($q);
-foreach ($res->result_array() as $key => $value) {
-    $option .= '<option value = "' . $value['countyid'] . '">' . $value['county'] . '</option>';
-}
+$my_month = json_decode($graphdata['month']);
+$count = count($my_month);
+$from_date = $my_month[0];
+$to_date = $my_month[$count-1];
 ?>
 
 <script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/datatable/jquery.dataTables.js"></script>
@@ -94,6 +90,7 @@ foreach ($res->result_array() as $key => $value) {
        
 
         <div id="container" style="min-width: 310px; height: auto; margin: 0 auto"></div>
+        <br/>
         <hr/>
         <div id="container_1" style="min-width: 310px; height: auto; margin: 0 auto"></div>
 
@@ -124,7 +121,7 @@ foreach ($res->result_array() as $key => $value) {
                         type: 'line'
                     },
                     title: {
-                        text: '<?php echo $county . ' Yearly Reporting Trend from  ' . $englishdate.' to '. $englishdate; ?>'
+                        text: '<?php echo $county . ' Yearly Reporting Trend from  ' . $from_date.' to '. $to_date; ?>'
                     }, subtitle: {
                         text: 'Live data reports on RTK'
                     },
@@ -161,7 +158,7 @@ foreach ($res->result_array() as $key => $value) {
                         type: 'column'
                     },
                     title: {
-                        text: '<?php echo $county . ' Yearly Reporting Trend from  ' . $englishdate.' to '. $englishdate; ?>'
+                         text: '<?php echo $county . ' Yearly Reporting Trend from  ' . $from_date.' to '. $to_date; ?>'
                     }, subtitle: {
                         text: 'Live data reports on RTK'
                     },
