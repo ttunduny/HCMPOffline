@@ -429,7 +429,7 @@ class Rtk_Management extends Home_controller {
 
         $monthyear = $year . '-' . $month . '-1';
         $englishdate = date('F, Y', strtotime($monthyear));
-        $data['graphdata'] = $this->partner_reporting_percentages(0, $year, $month);
+        $data['graphdata'] = $this->partner_reporting_percentages($countyid, $year, $month);
         //$data['county_summary'] = $this->_requested_vs_allocated($year, $month, $countyid);
         $data['tdata'] = $tdata;
         $data['county'] = $County;
@@ -1235,8 +1235,8 @@ class Rtk_Management extends Home_controller {
     }
 
 function partner_reporting_percentages($partner, $year, $month) {
-    //$partner_id = 7;
-        $q = "SELECT 
+    $partner_id = 7;
+        $q = 'SELECT 
                 count(lab_commodity_orders.id) as total,
                 year(lab_commodity_orders.order_date),
                 month(lab_commodity_orders.order_date) as current_month,
@@ -1247,11 +1247,11 @@ function partner_reporting_percentages($partner, $year, $month) {
                 facilities
             WHERE
                 facilities.facility_code = lab_commodity_orders.facility_code
-                    AND facilities.partner = '$partner'
-            group by month(lab_commodity_orders.order_date)";
+                    AND facilities.partner = 7
+            group by month(lab_commodity_orders.order_date)';
         $query = $this->db->query($q);
 
-        $sql = $this->db->select('count(id) as county_facility')->get_where('facilities', array('partner' =>5))->result_array();
+        $sql = $this->db->select('count(id) as county_facility')->get_where('facilities', array('partner' =>7))->result_array();
         foreach ($sql as $key => $value) {
            $facilities = intval($value['county_facility']);
         }
@@ -1278,8 +1278,7 @@ function partner_reporting_percentages($partner, $year, $month) {
             $percentage_non_reported = 100 - $percentage_reported;
             array_push($nonreported, $percentage_non_reported);
         }
-        echo "<pre>";
-        print_r($month);die();
+        
         
 
         $month_array = json_encode($month);
