@@ -1150,13 +1150,13 @@ $and_data ");
 			}
 			
 				$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
-			->fetchAll("SELECT facilities.facility_code,facilities.facility_name,districts.district,SUM(facility_stocks.current_balance) as total 
+			->fetchAll("SELECT facilities.facility_code,facilities.facility_name,districts.district 
 FROM `facility_stocks` 
 INNER JOIN commodities ON facility_stocks.commodity_id=commodities.id 
 INNER JOIN facilities ON facility_stocks.facility_code=facilities.facility_code 
 INNER JOIN districts ON districts.id=facilities.district WHERE expiry_date < NOW( )
  AND current_balance>0 AND facility_stocks.status IN (1,2)and year(expiry_date)=$year $and_data
- group by facilities.facility_code ");
+  ");
 			return $stocks ;
 		
 	}
