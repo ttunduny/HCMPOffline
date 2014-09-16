@@ -3418,7 +3418,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		//$category_id=($category_id=="NULL") ? null :$category_id;		
 		//$county_id = $this -> session -> userdata('county_id');
 		$county_name = counties::get_county_name($county_id);
-		//echo $from;exit;
+		echo $facility_code;
 		//echo "niko ndani";exit;
 		//$category_data = $series_data = $graph_data= $series_data_=array();
 		//check if the district is set
@@ -3450,11 +3450,13 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		foreach($consumption_data as $consumption_data):
 		$default_consumption_graph_['graph_categories']=array_merge($default_consumption_graph_['graph_categories'],array($consumption_data['commodity']));	
 		$default_consumption_graph_['series_data']['Consumption']=array_merge($default_consumption_graph_['series_data']['Consumption'],array((float) $consumption_data['total']));
-        $default_consumption_graph_['series_data']['AMC']=array_merge($default_consumption_graph_['series_data']['AMC'],array((float) $consumption_data['amc']));	
+        $default_consumption_graph_['series_data']['AMC']=array_merge($default_consumption_graph_['series_data']['AMC'],array((float) $consumption_data['amc']));
+		
 		endforeach;
+		//$default_consumption_graph_['graph_categories']=array_unique($default_consumption_graph_['graph_categories']);	
 		//echo "<pre>";print_r($consumption_data);echo "</pre>";exit;
 		$data = array();
-
+		//echo "<pre>";print_r($default_consumption_graph_['graph_categories']);echo "</pre>";exit;
 		$def_cons=$this->hcmp_functions->create_high_chart_graph($default_consumption_graph_);
 		$data['default_consumption_graph'] = $def_cons;
 		 $county_id = $this -> session -> userdata('county_id');
