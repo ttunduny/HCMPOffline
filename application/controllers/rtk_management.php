@@ -694,7 +694,7 @@ class Rtk_Management extends Home_controller {
     sum(lab_commodity_details.no_of_tests_done) as test_done,
     sum(lab_commodity_details.losses) as losses,
     sum(lab_commodity_details.closing_stock) as closing_stock,
-    sum(lab_commodity_details.q_expiring) as qty_expiring,
+    sum(lab_commodity_details.q_used) as qty_used,
     sum(lab_commodity_details.days_out_of_stock) as days_out_of_stock,
     facilities.partner,
     lab_commodities.commodity_name

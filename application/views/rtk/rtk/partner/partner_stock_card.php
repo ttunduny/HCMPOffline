@@ -146,7 +146,7 @@ foreach ($commodities->result_array() as $key => $value) {
         			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['commodity_name']; ?></td>
         			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['beg_bal']; ?></td>
         			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['qty_received']; ?></td>
-        			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['']; ?></td>
+        			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['qty_used']; ?></td>
         			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['test_done']; ?></td>
         			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['losses']; ?></td>
         			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['closing_stock']; ?></td>
