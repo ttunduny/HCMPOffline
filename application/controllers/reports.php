@@ -1086,9 +1086,9 @@ class Reports extends MY_Controller
 		$date_2 = new DateTime($last_day_of_the_month);
 
 
-		$facility_data = Facilities::get_Facilities_using_HCMP($county_id,$district,$facility_code);
+		$facility_data = Facilities::get_Facilities_using_HCMP($county_id,$district);
 		
-		// echo "<pre>";print_r($facility_data);echo "</pre>";exit;
+		//echo "<pre>";print_r($facility_data);echo "</pre>";exit;
 		$series_data = array();
 		$category_data = array();
 		$series_data_monthly = array();
@@ -1189,10 +1189,10 @@ class Reports extends MY_Controller
 		$graph_log_data = array_merge($graph_log_data,array("graph_id"=>'log_data_graph'));
 		$graph_log_data = array_merge($graph_log_data,array("graph_title"=>'User Activity for  '.$m.' for '. $graph_title));
 		$graph_log_data = array_merge($graph_log_data,array("graph_type"=>'column'));
-		$graph_log_data = array_merge($graph_log_data,array("graph_yaxis_title"=>'User Activities'));
+		$graph_log_data = array_merge($graph_log_data,array("graph_yaxis_title"=>'Frequency'));
 		$graph_log_data = array_merge($graph_log_data,array("graph_categories"=>array('Decommissions','Redistributions','Stock Updates',
 		'Orders','Issues','Log Ins')));
-		$graph_log_data = array_merge($graph_log_data,array("series_data"=>array('total %'=>array())));
+		$graph_log_data = array_merge($graph_log_data,array("series_data"=>array('Total %'=>array())));
 		$log_data = Log::get_log_data($facility_code,$district_id,$county_id, $year, $month);
 		$log_data_login_only = Log::get_login_only($facility_code,$district_id,$county_id, $year, $month);
 		foreach($log_data as $log_data_)
@@ -1206,7 +1206,7 @@ class Reports extends MY_Controller
 			$stock = ($log_data_['total_stock_added']/$sum)*100;;
 			$user = ($log_data_login_only[0]['total']/$sum)*100;;
 			$temp=array((int)$decommissions,(int)$redistributions,(int)$stock,(int)$orders,(int)$issues,(int)$user);
-			$graph_log_data['series_data']['total %'] = array_merge($graph_log_data['series_data']['total %'],$temp);		
+			$graph_log_data['series_data']['Total %'] = array_merge($graph_log_data['series_data']['Total %'],$temp);		
 		}
 
 		
@@ -1215,13 +1215,14 @@ class Reports extends MY_Controller
 		$data['graph_data_monthly'] = $graph_monthly;
 		$data['graph_data_daily'] =	$graph_daily;
 		$data['graph_log'] = $graph_log;
-
+		
 		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
 		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
 		
 		// echo "<pre>";print_r($data);echo "</pre>";exit;
 		if($this->input->is_ajax_request()):
+			
 			return $this -> load -> view('subcounty/ajax/facility_roll_out_at_a_glance_v', $data);
 		else:
 			$data['title'] = "User Logs";
@@ -2507,7 +2508,7 @@ $month = $data['expiry_month'];
 		$county_id = $this -> session -> userdata('county_id');
 		$district_id = $this -> session -> userdata('district_id');
 		$months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-	 	$option_new = 'Units';
+	 	$option_new = 'units';
 	 	$category_data = array();
 		$graph_data = array();
 		//$graph_type='';
@@ -2557,7 +2558,7 @@ $month = $data['expiry_month'];
 		$graph_type='column';
 	    $default_expiries=array_merge($default_expiries,array("graph_title"=>"Expiries in $title for $year"));
 	    $default_expiries=array_merge($default_expiries,array("graph_type"=>$graph_type));
-	    $default_expiries=array_merge($default_expiries,array("graph_yaxis_title"=>"stock expired in $option_new"));
+	    $default_expiries=array_merge($default_expiries,array("graph_yaxis_title"=>"$option_new"));
 	    $default_expiries=array_merge($default_expiries,array("graph_categories"=>$category_data ));
 		$default_expiries=array_merge($default_expiries,array("series_data"=>array()));
 		
@@ -2589,7 +2590,7 @@ $month = $data['expiry_month'];
 		$county_name = counties::get_county_name($county_id);
 		
 		$category_data = array();
-		$series_data =$series_data_=$series_data_2 = array();		
+		$series_data =$series_data_=$series_data_2 = $series_data2=array();		
 		$temp_array =$temp_array2=$temp_array_ = array();
 		$graph_data=array();
 		$graph_type='';
@@ -2609,11 +2610,13 @@ $month = $data['expiry_month'];
        
 	   
 	    //get the expiry for the entire year either for a facility sub-county or county     
-     	$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code,$district_id,$county_id, $year, null,$option ,"all");   
+     	$commodity_array = Facility_stocks::get_sub_county_cost_of_exipries($facility_code,$district_id,$county_id, $year, null,$option ,"all");   
 		
 		//for the potential expiries
-		$commodity_array2 = Facility_stocks::get_county_cost_of_potential_expiries_new($facility_code,$district_id,$county_id, $year, null,$option ,"all");   
+		//$commodity_array2 = Facility_stocks::get_county_cost_of_potential_expiries_new($facility_code,$district_id,$county_id, $year, null,$option ,"all");   
 		
+		$commodity_array2 = Facility_stocks::get_county_cost_of_potential_expiries_new($facility_code,$district_id,$county_id, $year, null,$option ,"all");   
+		//echo "<pre>";print_r($commodity_array2);echo "</pre>";exit;
 		foreach ($commodity_array as $data) :
 			$temp_array = array_merge($temp_array, array($data["cal_month"] => (int)$data['total']));
 			$series_data_ = array_merge($series_data_, array(array($data["cal_month"], (int)$data['total'])));
@@ -2630,7 +2633,7 @@ $month = $data['expiry_month'];
 			$series_data = array_merge($series_data, array($val));
 			$series_data2 = array_merge($series_data2, array($val2));
 	 	endforeach;
-		//echo "<pre>";print_r($series_data_2);echo "</pre>";exit;
+		//echo "<pre>";print_r($series_data2);echo "</pre>";exit;
 		if($report_type=="csv_data"):
 			
 			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "stock expired in $commodity_name $title $month_ $year", 'file_name' => "Stock_expired_$commodity_name_$title_$month_$year");
@@ -3457,13 +3460,13 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("series_data"=>array('total'=>$series_data)));
 		$data = array();
 
-			$def_cons=$this->hcmp_functions->create_high_chart_graph($default_consumption_graph_);
-			$data['default_consumption_graph'] = $def_cons;
-		 $county_id = $this -> session -> userdata('county_id');
-	     $data['district_data'] = districts::getDistrict($county_id);
-	     $data['c_data'] = Commodities::get_all_2();
-         $data['tracer_items'] = Commodities::get_tracer_items();
-		 $data['categories']=commodity_sub_category::get_all_pharm();
+		$def_cons=$this->hcmp_functions->create_high_chart_graph($default_consumption_graph_);
+		$data['default_consumption_graph'] = $def_cons;
+	 	$county_id = $this -> session -> userdata('county_id');
+     	$data['district_data'] = districts::getDistrict($county_id);
+     	$data['c_data'] = Commodities::get_all_2();
+     	$data['tracer_items'] = Commodities::get_tracer_items();
+	 	$data['categories']=commodity_sub_category::get_all_pharm();
 		return $this -> load -> view("subcounty/ajax/county_consumption_data_filter_v", $data);
 	}
 

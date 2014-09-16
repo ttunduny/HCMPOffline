@@ -1,4 +1,3 @@
-
 <div class="alert alert-info">
   <b>Below are the expiries in the County </b> :Select filter Options
 </div>
@@ -31,12 +30,12 @@
 <div class="col-md-1">
 <button class="btn btn-sm btn-small btn-success county-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button>
 </div> 
-<div class="col-md-1">
+<!--<div class="col-md-1">
 <button class="btn btn-sm btn-success county-table-data"><span class="glyphicon glyphicon-th-list"></span>Table Data</button> 
 </div>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success county-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
-</div>
+</div>-->
 </form>
 </div>
 <div class="graph_content" id="dem_graph_">	
