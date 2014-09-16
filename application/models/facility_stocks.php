@@ -891,7 +891,7 @@ public static function get_county_comparison_data($facility_code=null,$district_
              	exit;
              break;
          default:
-      $computation ="ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+      $computation ="ifnull(CEIL(SUM(fs.qty_issued)),0) AS total,d.commodity_name as commodity";
           break;
      endswitch;		
 	 $and_data .=(isset($category_id)&& ($category_id>0)) ?"AND d.commodity_sub_category_id = '$category_id'" : null;	
@@ -924,7 +924,7 @@ public static function get_county_comparison_data($facility_code=null,$district_
     $and_data
     $group_by_a_month
      ");		
-/*	echo "SELECT  $selection_for_a_month $computation
+	/*echo "SELECT  $selection_for_a_month $computation
     FROM facility_issues fs, facilities f, commodities d, districts di
     WHERE fs.facility_code = f.facility_code
     AND f.district = di.id
