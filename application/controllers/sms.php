@@ -290,7 +290,7 @@ class sms extends MY_Controller {
 
 	//gets the emails of the respective DPPs in charge
 	public function get_ddp_email($district_id) {
-		$data = Users::get_dpp_details($district_id);
+		$data = Users::get_dpp_emails($district_id);
 		$user_email = "";
 		foreach ($data as $info) {
 			
@@ -309,21 +309,30 @@ class sms extends MY_Controller {
 		}
 		return $user_email;
 	}
-
+//Getting the bcc emails 
 	public function get_bcc_notifications() {
 		$bcc_emails = "collinsojenge@gmail.com,kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,
 						jhungu@clintonhealthacces.org,gmacharia@clintonhealthacces.org,tngugi@clintonhealthaccess.org,
 						bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org,eongute@clintonhealthaccess.org,
 						rkihoto@clintonhealthaccess.org,teddyodera@gmail.com,ericmurugami@yahoo.co.uk,
-						raykiprono@gmail.com,margie.dora@gmail.com,amostum5@gmail.com,muirurisk@gmail.com,valwacu@gmail.com,odiwuorybrian@gmail.com";
+						raykiprono@gmail.com,margie.dora@gmail.com,amostum5@gmail.com,muirurisk@gmail.com,
+						valwacu@gmail.com,odiwuorybrian@gmail.com,mwakiojoy@gmail.com,emgitar@yahoo.com";
 		
 		return $bcc_emails;
 	}
+	//Getting the CC email addresses
+	public function get_cc_emails() {
+			
+		$cc = "mukumbig@yahoo.com,anganga.pmo@gmail.com,sochola06@yahoo.com";
+		
+		return $cc;
+	}
+	
 
 	//
 	//gets the emails of users in the facility
 	public function get_facility_email($facility_code) {
-		$data = Users::get_user_info($facility_code);
+		$data = Users::get_user_emails($facility_code);
 		$user_email = "";
 		foreach ($data as $info) {
 			
@@ -389,7 +398,7 @@ class sms extends MY_Controller {
 					$excel_data = array();
 					$excel_data = array('doc_creator' => $facility_name, 'doc_title' => 'facility potential expiries weekly report ', 'file_name' => 'facility weekly report');
 					$row_data = array();
-					$column_data = array("County", "Subcounty", "Facility Code", "Facility Name", "Commodity Name", "Manufacturer", "Expiry Date", "Unit Cost", "Unit Size", "Units", "Packs", "Total KSH");
+					$column_data = array("County", "Subcounty", "Facility Code", "Facility Name", "Commodity Name", "Manufacturer", "Expiry Date", "Unit Cost(KSH)", "Unit Size", "Units", "Packs", "Total KSH");
 					$excel_data['column_data'] = $column_data;
 
 					foreach ($facility_potential_expiries as $facility_potential_expiries) :
@@ -405,13 +414,24 @@ class sms extends MY_Controller {
 						$excel_data['file_name'] = $facility_name . "_Potential_Expiries_Report";
 
 						$subject = "Potential Expiries: " . $facility_name . " (Next 3 Months)";
-						$message = $facility_name . "'s Weekly Potential Expiries Report.";
-						$message .= " Find attached an excel sheet with the breakdown for the Potential Expiries for " . $facility_name;
+						
+						$message = "Dear ".$facility_name." facility team,
+								Find attached an excel sheet with the ".$facility_name." Facility breakdown for the Potential Expiries.
+								Kindly sensitize the need to re-distribute these short expiry commodities.
+								You may log onto health-cmp.or.ke for follow up.
+								
+								----
+								
+								HCMP
+								
+								This email was automatically generated. Please do not respond to this email address or it will be ignored.";
+				
+						
 						$this -> hcmp_functions -> create_excel($excel_data);
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-						//$email_address = $this->get_facility_email($facility_code);
-						$email_address = "collinsojenge2014@gmail.com";
-
+						
+						$email_address = $this->get_facility_email($facility_code);
+						//$email_address = "collinsojenge2014@gmail.com";
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
 					}
@@ -424,14 +444,14 @@ class sms extends MY_Controller {
 				$excel_data = array();
 				$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'district potential expiries weekly report ', 'file_name' => 'district weekly report');
 				$row_data = array();
-				$column_data = array("County", "Subcounty", "Facility Code", "Facility Name", "Commodity Name", "Manufacturer", "Expiry Date", "Unit Cost", "Unit Size", "Units", "Packs", "Total KSH");
+				$column_data = array("County", "Subcounty", "Facility Code", "Facility Name", "Commodity Name", "Manufacturer", "Expiry Date", "Unit Cost(KSH)", "Unit Size", "Units", "Packs", "Total KSH");
 				$excel_data['column_data'] = $column_data;
 
 				foreach ($facility_total as $facility_total_1) :
 					foreach ($facility_total_1 as $facility_total_2) :
 						foreach ($facility_total_2 as $facility_total1) :
 							array_push($row_data, array($facility_total1["county"], $facility_total1["subcounty"], $facility_total1["facility_code"], $facility_total1["facility_name"], $facility_total1["commodity_name"], $facility_total1["manufacture"], $facility_total1["expiry_date"], $facility_total1["unit_cost"], $facility_total1["unit_size"], $facility_total1["units"], $facility_total1["packs"], $facility_total1["total_ksh"]));
-							//$facility_potential_expiries_total += $facility_potential_expiries["total_ksh"];
+							
 						endforeach;
 					endforeach;
 				endforeach;
@@ -446,11 +466,20 @@ class sms extends MY_Controller {
 					$this -> hcmp_functions -> create_excel($excel_data);
 					$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 					$subject = "Potential Expiries: " . $district_name . " Sub County (Next 3 Months)";
-					$message = $district_name . "'s Weekly Potential Expiries Report. ";
-					$message .= " Find attached an excel sheet with the breakdown for the Potential Expiries for " . $district_name . " Sub County";
-					//$email_address = "collinsojenge2014@gmail.com";
+					
+					$message = "Dear ".$district_name." Sub County team,
+								Find attached an excel sheet with the ".$district_name." Sub County breakdown for the Potential Expiries.
+								Kindly sensitize the need to re-distribute these short expiry commodities.
+								You may log onto health-cmp.or.ke for follow up.
+								
+								----
+								
+								HCMP
+								
+								This email was automatically generated. Please do not respond to this email address or it will be ignored.";
+			
 					$email_address = $this -> get_ddp_email($district_id);
-
+					//$email_address = "collinsojenge@2014@gmail.com";
 					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 				}
 
@@ -485,13 +514,24 @@ class sms extends MY_Controller {
 				$this -> hcmp_functions -> create_excel($excel_data);
 				$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 				$subject = "Potential Expiries: " . $county_name . " County (Next 3 Months)";
-				$message = $county_name . "'s Weekly Potential Expiries Report.";
-				$message .= " Find attached an excel sheet with the breakdown for the Potential Expiries for " . $county_name . " County";
-				//$email_address = "collinsojenge@gmail.com,smutheu@clintonfoundation.org,kelvinmwas@gmail.com,smutheu@gmail.com";
+				
+				$message = "Dear ".$county_name." County team,
+								Find attached an excel sheet with the ".$county_name." County breakdown for the Potential Expiries.
+								Kindly sensitize the need to re-distribute these short expiry commodities.
+								You may log onto health-cmp.or.ke for follow up.
+								
+								----
+								
+								HCMP
+								
+								This email was automatically generated. Please do not respond to this email address or it will be ignored.";
+				
 				$email_address = $this -> get_county_email($county_id);
+				//$email_address = "collinsojenge@2014@gmail.com";
+				//$bcc = "collinsojenge@gmail.com";
+				//$cc_email = "collinsojenge@gmail.com";
 				$bcc = $this -> get_bcc_notifications();
-
-				//$cc_email = "";
+				$cc_email = $this -> get_cc_emails();
 
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc_email);
 			}
