@@ -979,7 +979,9 @@ public static function get_county_comparison_data($facility_code=null,$district_
 	exit;
 	*/
      return $inserttransaction ;
-  }     
+
+  }   
+      
   public static function get_amc_new($county_id = null, $district_id = null, $facility_code = null)
   {
   	//For the conditions of the query and the group by statements
