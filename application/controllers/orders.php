@@ -204,10 +204,10 @@ foreach ($temp as $key => $value) {
 	}
 }
 		//$c = array_combine($array_code, $array_commodity);
-echo '<pre>';print_r($temp); echo '</pre>';
+//echo '<pre>';print_r($temp); echo '</pre>';
               
 	//var_dump();
-	exit;
+	//exit;
         //unset($objPHPExcel);
        $data['order_details'] = $data['facility_order'] = $temp;  
         }else{
