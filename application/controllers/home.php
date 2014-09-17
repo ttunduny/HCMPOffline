@@ -115,6 +115,7 @@ class Home extends MY_Controller
         $graph_data['series_data']['AMC']=array_merge($graph_data['series_data']['AMC'],array((float) $facility_stock_['amc']));	
 
 	endforeach;
+	//echo "<pre>";print_r($facility_stock_);echo "</pre>";exit;
 	//create the graph here
 	$faciliy_stock_data=$this->hcmp_functions->create_high_chart_graph($graph_data);
 	$loading_icon=base_url('assets/img/no-record-found.png'); 
