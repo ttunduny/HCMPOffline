@@ -2,20 +2,32 @@
  	.input-small{
  		width: 55px !important;
  	}
+ 	.row div p{
+	padding:10px;
+}
  </style>
+ <div class="container-fluid">
  <div style="width: 100%; margin: auto;">
-<span  class='label label-info' style="display: inline">Enter Order Quantity and Comment,
-Order Quantity (Quarterly) = ((Average Monthly Consumption * <div id="month" style="display: inline"> 3</div>) - Closing Stock) + AMC</span><br>
+
+<div class="row">
+		<div class="col-md-8"><p class="bg-info">
+			<span  class='' style="display: inline">
+				Enter Order Quantity and Comment,Order Quantity (Quarterly) = ((Average Monthly Consumption * <span id="month" style="display: inline"> 3</span>) - Closing Stock) + AMC</span>
+		</p></div>
+		
+	</div>
+
+
 <?php  $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order',$att); //?>
-<div class="row" style="padding-left: 1%;">
+<div class="row" style="padding-left: 1%;margin-bottom: 5px;">
 	<div class="col-md-2">
 	<b>*Select Ordering Frequency</b> <select class="form-control" name="order_period" id="order_period">
  	<option value="3" selected="selected">Quarterly</option>	
  	<option value="1">Monthly</option>
  	</select> 	
 	</div>
-	<div class="col-md-2">
-     <b>*Order Form Number:</b> <input type="text" class="form-control input_text" name="order_no" id="order_no" id="order_no" required="required"/>
+	<div class="col-md-1">
+     <b>*Order No:</b> <input type="text" class="form-control input_text" name="order_no" id="order_no" id="order_no" required="required"/>
 	</div>
 <div class="col-md-2">
 	 <b>*In-patient Bed Days:</b><input type="text" class="form-control  input_text" name="bed_capacity" id="bed_capacity" required="required"/>
@@ -28,7 +40,7 @@ Order Quantity (Quarterly) = ((Average Monthly Consumption * <div id="month" sty
 <input type="text" class="form-control" name="total_order_value" id="total_order_value" readonly="readonly" value="0"/>	
 <input type="hidden" id="actual_drawing_rights" name="drawing_rights" value="<?php echo $drawing_rights; ?>" />				
 </div>
-<div class="col-md-2">
+<div class="col-md-3">
 <b>Drawing Rights Available Balance(KSH) :</b>
 <input type="text" class="form-control" name="total_order_balance_value" 
 id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_rights; ?>"/>	
@@ -116,6 +128,7 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 <button type="button" class="btn btn-success test"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 </div>
 </form>  
+</div>
 </div>
 <script>
 $(document).ready(function() {
