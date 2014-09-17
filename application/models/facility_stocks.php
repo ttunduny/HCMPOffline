@@ -339,8 +339,10 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 		return $stocks;
 	}	
 		public static function potential_expiries_email($district_id=null,$facility_code=null){
+			
 		$and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
 	 	$and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
+	 	$year = date("Y");
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		select  c.county, d1.district as subcounty ,temp.commodity_name,
 			 f.facility_code, f.facility_name,temp.manufacture, sum(temp.total) as total_ksh,
@@ -356,7 +358,7 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 			 from facility_stocks f_s, commodities d
 			where f_s.expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and  DATE_ADD(CURDATE(), INTERVAL 3 MONTH)
 			and d.id=f_s.commodity_id
-			and year(f_s.expiry_date) !=1970
+			and year(f_s.expiry_date) = $year
 			AND f_s.status =(1 or 2)
 			GROUP BY d.id,f_s.facility_code having total >1
 			
@@ -936,6 +938,43 @@ public static function get_county_comparison_data($facility_code=null,$district_
 	*/
      return $inserttransaction ;
   }     
+  public static function get_amc_new($county_id = null, $district_id = null, $facility_code = null)
+  {
+  	//For the conditions of the query and the group by statements
+  	$and_data = (isset($county_id)&& ($county_id>0))?" AND cts.id = d.county AND cts.id = $county_id GROUP BY c.id, cts.id " 
+	:(isset($district_id)&& ($district_id>0))?" AND d.id = f.district AND d.id = $district_id GROUP BY c.id, d.id " 
+	: $and_data = (isset($facility_code)&& ($facility_code>0))?" AND f.facility_code = $facility_code GROUP BY c.id, f.facility_code " : null;
+		
+	//The query to get the amc
+	$query=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		select 
+		    c.commodity_name,
+		    fms.total_units,
+		    CASE fms.selected_option
+		        WHEN 'Pack_Size' THEN ROUND(fms.consumption_level, 1)
+		        WHEN
+		            'Unit_Size'
+		        THEN
+		            ROUND(fms.total_units / fms.consumption_level,
+		                    1)
+		        ELSE 0
+		    END AS amc
+		from
+		    facility_monthly_stock fms,
+		    commodities c,
+		    facilities f,
+		    districts d,
+		    counties cts
+		where
+		    c.id = fms.commodity_id
+	        AND c.tracer_item = 1
+	        AND f.facility_code = fms.facility_code 
+	        $and_data");
+			
+		        
+	return $query;
+  	
+  }
     	public static function get_county_expiries($county_id,$year,$district_id=null,$facility_code=null){
 	 $and_data =(isset($district_id)&& ($district_id>0)) ?"AND d1.id = '$district_id'" : null;
 	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;

@@ -3432,7 +3432,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		
 		$county_name = counties::get_county_name($county_id);
 		
-		$category_data = $series_data = $graph_data= $series_data_=array();
+		$category_data = $series_data = $graph_data = $series_data_= $amc = array();
 		//check if the district is set
 		$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
 		$district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " subcounty" : null;
@@ -3448,7 +3448,31 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		$tracer = 1;
 		
 		$consumption_data = Facility_stocks::get_county_consumption_level_new($facility_code,$district_id, $county_id,$category_id, $commodity_id, $option,$from, $to,$report_type,$tracer);
-
+		//gets the amc 
+		$amc_data = Facility_stocks::get_amc_new($county_id,$district_id,$facility_code);
+		/*echo "<pre>";print_r($consumption_data);echo "</pre>";exit;
+		foreach ($amc_data as $amc_data):
+			//$series_data  = array_merge($series_data , array((int)$data['total']));
+			$amc = array_merge($amc,array((float)$amc_data['amc']));
+		
+		endforeach;*/
+		
+		foreach ($consumption_data as $data):
+		    if($report_type=="table_data"):
+				if($commodity_id>0):
+					array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"],$data['commodity'], (int)$data['total']));
+				else:
+					array_push($series_data , array($data["name"],$data['commodity'],(int)$data['total']));
+				endif;						
+			else:
+				$series_data  = array_merge($series_data , array((int)$data['total']));
+				//$amc = array_merge($amc,arra)
+				$series_data_ = array_merge($series_data_ , array(array($data["name"],(int)$data['total'])));
+				$category_data = array_merge($category_data, array($data["name"]));
+			endif;
+		//
+		endforeach;
+		
 		$default_consumption_graph_ = array();
 		$graph_type='bar';	
 		$default_consumption_graph_['stacking']='normal';
@@ -3457,7 +3481,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_type"=>$graph_type));
 	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_yaxis_title"=>"$option_new"));
 	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_categories"=>$category_data ));
-	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("series_data"=>array('total'=>$series_data)));
+	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("series_data"=>array('Consumption'=>$series_data,"AMC"=>$amc)));
 		$data = array();
 
 		$def_cons=$this->hcmp_functions->create_high_chart_graph($default_consumption_graph_);
