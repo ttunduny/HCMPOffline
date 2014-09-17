@@ -2590,7 +2590,7 @@ $month = $data['expiry_month'];
 		$county_name = counties::get_county_name($county_id);
 		
 		$category_data = array();
-		$series_data =$series_data_=$series_data_2 = $series_data2=array();		
+		$series_data =$series_data_=$series_data_2=$series_data_3 = $series_data2=array();		
 		$temp_array =$temp_array2=$temp_array_ = array();
 		$graph_data=array();
 		$graph_type='';
@@ -2619,12 +2619,15 @@ $month = $data['expiry_month'];
 		//echo "<pre>";print_r($commodity_array2);echo "</pre>";exit;
 		foreach ($commodity_array as $data) :
 			$temp_array = array_merge($temp_array, array($data["cal_month"] => (int)$data['total']));
-			$series_data_ = array_merge($series_data_, array(array($data["cal_month"], (int)$data['total'])));
+			$series_data_ = array_merge($series_data_, array(array($data["district"], $data["facility_name"], $data["commodity_name"],$data["month"], (int)$data['total'])));
 			$expiries_excel = array_merge($expiries_excel,array($data["cal_month"] => (int)$data['total']));
 		endforeach;
 		foreach ($commodity_array2 as $data2) :
 			$temp_array2 = array_merge($temp_array2, array($data2["cal_month"] => (int)$data2['total_potential']));
 			$series_data_2 = array_merge($series_data_2, array(array($data2["cal_month"], (int)$data2['total_potential'])));
+			$series_data_3 = array_merge($series_data_3, array(array($data2["district"], $data2["facility_name"], $data2["commodity_name"], $data2["month_potential"], (int)$data2['total_potential'])));
+			//$series_data_ = array_push($series_data_, array($data2["district"], $data2["facility_name"], $data2["commodity_name"], $data2["month_potential"], (int)$data2['total_potential']));
+			//$series_data_ = array_merge($series_data_, $series_data_3); 
 			$potential_excel = array_merge($potential_excel,array($data2["cal_month"] => (int)$data2['total_potential']));
 		endforeach;
 		foreach ($months as $key => $data) :
@@ -2633,26 +2636,36 @@ $month = $data['expiry_month'];
 			$series_data = array_merge($series_data, array($val));
 			$series_data2 = array_merge($series_data2, array($val2));
 	 	endforeach;
+	 	//echo "<pre>";print_r($series_data_);echo "</pre>";exit;	
 		//echo "<pre>";print_r($series_data2);echo "</pre>";exit;
 		if($report_type=="csv_data"):
 			
-			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => "stock expired in $commodity_name $title $month_ $year", 'file_name' => "Stock_expired_$commodity_name_$title_$month_$year");
+			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 'doc_title' => 
+			"stock expired in $title in $year", 'file_name' => "Stock_expired$title in $year");
 			$row_data = array();
-			
-			$column_data = array("Month","Total Cost(KSH)");
+			$column_data = array("Sub-county","Facility Name","Commodity Name"," Month expired(Actual expiries)","Actual expiries in $option_new");
 			$excel_data['column_data'] = $column_data;
-			$row_data = array_merge($row_data,$series_data_,$series_data_2);
+			$row_data = array_merge($row_data,$series_data_);
+			//echo $commodity_name;exit;
+			//echo $title;exit;
+			//echo "Stock_expired$title in $year";exit;
 			//echo "<pre>";print_r($row_data);echo "</pre>";exit;
 			$excel_data['row_data'] = $row_data;
 			
 			$this -> hcmp_functions -> create_excel($excel_data);
 		elseif($report_type=="table"):   
 			
-			$category_data = array(array("Sub-county","Facility Name","Commodity Name","Total $option_new"));
+			$category_data = array(array("Sub-county","Facility Name","Commodity Name"," Month expired(Actual expiries)","Actual expiries in $option_new"));
 			$graph_data=array_merge($graph_data,array("table_id"=>'graph_default'));
 		    $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
-		    $graph_data=array_merge($graph_data,array("table_body"=>$series_data));
-				
+		    $graph_data=array_merge($graph_data,array("table_body"=>$series_data_));
+			$data = array();
+			$data['table'] = $this->hcmp_functions->create_data_table($graph_data);		
+			$data['table_id'] ="graph_default";
+			//var_dump($series_data_3);exit;
+			//echo "<pre>";print_r($data['table']);echo "</pre>";exit;
+			return  $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
+			
 		/*
 			$category_data = array(array("Sub-county","Facility Name","Commodity Name","Month of Stock"));
 
@@ -2677,7 +2690,7 @@ $month = $data['expiry_month'];
 			$data = array();
 			
 			$graph_data['series_data']=array_merge($graph_data['series_data'],array("Potential Expiries"=>$series_data2,"Actual Expiries"=>$series_data));
-	 
+	 		//echo "<pre>";print_r($graph_data);echo "</pre>";exit;
 			
 		$data['high_graph'] = $this->hcmp_functions->create_high_chart_graph($graph_data);
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
