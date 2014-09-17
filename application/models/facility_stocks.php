@@ -617,7 +617,7 @@ public static function get_sub_county_cost_of_exipries($facility_code=null,$dist
 		 
 	 //exit;
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-     ->fetchAll("SELECT $select_option  date_format(expiry_date,'%M') AS month, $computation  
+     ->fetchAll("SELECT d.commodity_name, f.facility_name, di.district, $select_option  date_format(expiry_date,'%M') AS month, $computation  
      FROM facility_stocks fs, facilities f, commodities d, counties c, districts di
      WHERE fs.facility_code = f.facility_code
      AND fs.`expiry_date` <= NOW( )
