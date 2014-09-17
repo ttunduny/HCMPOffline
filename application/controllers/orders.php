@@ -1,4 +1,4 @@
-$this -> input -> post('commodity_id')<?php
+<?php
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 /**
@@ -371,7 +371,6 @@ foreach ($temp as $key => $value) {
 			}
 
 			public function update_facility_new_order() {
-				
 		//security check
 		if ($this -> input -> post('commodity_id')) :
 			$this -> load -> database();
