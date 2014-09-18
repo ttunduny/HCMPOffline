@@ -72,9 +72,10 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 	</tr>
 </thead>
 <tbody>
-								<?php $count=0; $thr=true; 
-								$j=count($facility_order);
-								for($i=0;$i<$j;$i++){?>
+								<?php
+								 $count=0; $thr=true; 
+							$j=count($facility_order);
+								for($i=0;$i<$j;$i++){ ?>
 						<tr>
 							<td><?php echo $facility_order[$i]['sub_category_name'];?></td>
 							<?php 
@@ -99,22 +100,22 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 							<td><?php echo $facility_order[$i]['commodity_code'];?></td>
 							<td><?php echo $facility_order[$i]['unit_size']?> </td>
 							<td><?php echo $facility_order[$i]['unit_cost']; ?> </td>
-							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="open['.$i.']"'; ?>  value="<?php echo $facility_order[$i]['opening_balance'];?>" /></td>
-							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="receipts['.$i.']"'; ?>  value="<?php echo $facility_order[$i]['total_receipts'];?>" /></td>
-							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="issues['.$i.']"'; ?>  value="<?php echo $facility_order[$i]['total_issues'];?>" /></td>
-				<td><input  class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="adjustmentnve['.$i.']"'; ?> value="<?php echo $facility_order[$i]['adjustmentnve']?>" /></td>
-				<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="adjustmentpve['.$i.']"'; ?> value="<?php echo $facility_order[$i]['adjustmentpve']?>" /></td>
-							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="losses['.$i.']"'; ?> value="<?php echo $facility_order[$i]['losses'] ?>" /></td>
-							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="days['.$i.']"'; ?> value="<?php echo $facility_order[$i]['days_out_of_stock'];?>" /></td>
-							<td><input class="form-control input-small closing" readonly="readonly" type="text"<?php echo 'name="closing['.$i.']"'; ?>
+							<td><input class="form-control input-small" readonly="readonly" type="text" name="open[<?php echo $i ;?>]" value="<?php echo $facility_order[$i]['opening_balance'];?>" /></td>
+							<td><input class="form-control input-small" readonly="readonly" type="text" name="receipts[<?php echo $i ;?>]" value="<?php echo $facility_order[$i]['total_receipts'];?>" /></td>
+							<td><input class="form-control input-small" readonly="readonly" type="text" name="issues[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['total_issues'];?>" /></td>
+				<td><input  class="form-control input-small" readonly="readonly" type="text" name="adjustmentnve[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['adjustmentnve']?>" /></td>
+				<td><input class="form-control input-small" readonly="readonly" type="text" name="adjustmentpve[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['adjustmentpve']?>" /></td>
+							<td><input class="form-control input-small" readonly="readonly" type="text" name="losses[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['losses'] ?>" /></td>
+							<td><input class="form-control input-small" readonly="readonly" type="text"  name="days[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['days_out_of_stock'];?>" /></td>
+							<td><input class="form-control input-small closing" readonly="readonly" type="text" name="closing[<?php echo $i ;?>]"
 								 value="<?php echo ($facility_order[$i]['closing_stock']<0)? 0:$facility_order[$i]['closing_stock'] ;?>" /></td>
-							<td><input class="form-control input-small amc" readonly="readonly" type="text" <?php echo 'name="amc['.$i.']"'; ?> value="<?php echo $facility_order[$i]['historical'];?>" /></td>
-							<td><input class="form-control input-small suggested" readonly="readonly" type="text" <?php echo 'name="suggested['.$i.']"';?> value="0"/></td>
-							<td><input class="form-control input-small quantity" type="text" <?php echo 'name="quantity['.$i.']"';?> value="<?php $qty=$facility_order[$i]['quantity_ordered'];
+							<td><input class="form-control input-small amc" readonly="readonly" type="text" name="amc[<?php echo $i ;?>]" value="<?php echo $facility_order[$i]['historical'];?>" /></td>
+							<td><input class="form-control input-small suggested" readonly="readonly" type="text" name="suggested[<?php echo $i ;?>]"  value="0"/></td>
+							<td><input class="form-control input-small quantity" type="text" name="quantity[<?php echo $i ;?>]" value="<?php $qty=$facility_order[$i]['quantity_ordered'];
 							if($qty>0){echo $qty;} else echo 0;?>"/></td>
-							<td><input class="form-control input-small actual_quantity" readonly="readonly" type="text" <?php echo 'name="actual_quantity['.$i.']"';?> value="0"/></td>
+							<td><input class="form-control input-small actual_quantity" readonly="readonly" type="text" name="actual_quantity[<?php echo $i ;?>]" value="0"/></td>
 							<td><?php echo '<input type="text" class="form-control input-small cost" name="cost['.$i.']" value="0" readonly="yes"   />';?></td>
-							<td><input class="form-control input-small" type="text" <?php echo 'name="comment['.$i.']"' ?>  value="N/A" /></td>
+							<td><input class="form-control input-small" type="text" name="comment[<?php echo $i ;?>]" value="N/A" /></td>
 			       			</tr>						
 						<?php } $i=($i==0)? 0: $i=$i-1;
 						 echo form_close()."<script>var count=".$i."</script>"	?>
