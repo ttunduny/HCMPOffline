@@ -576,7 +576,7 @@ class sms extends MY_Controller {
 					$facility_name = Facilities::get_facility_name2($facility_code);
 					$facility_name = $facility_name['facility_name'];
 					
-					$facility_potential_expiries = Facility_stocks::get_stocked_out_commodities_for_report($facility_code, $district_id, null);
+					$facility_potential_expiries = Facility_stocks::get_stock_outs_for_email($facility_code);
 					
 					//get potential expiries in that particular facility
 					//$facility_potential_expiries = Facility_stocks::potential_expiries_email($district_id, $facility_code);
@@ -587,11 +587,11 @@ class sms extends MY_Controller {
 					$excel_data = array();
 					$excel_data = array('doc_creator' => $facility_name, 'doc_title' => 'facility stokouts weekly report ', 'file_name' => 'facility weekly report');
 					$row_data = array();
-					$column_data = array("Commodity Code", "Commodity Name","Unit Size", "Quantity Available (Packs)","Quantity Available (MOS)","Supplier", "Manufacturer", "Subcounty", "County");
+					$column_data = array("Commodity Code", "Commodity Name","Unit Size", "Quantity Available (Units)","Supplier","Subcounty");
 					$excel_data['column_data'] = $column_data;
 
 					foreach ($facility_potential_expiries as $facility_potential_expiries) :
-						array_push($row_data, array($facility_potential_expiries["commodity_code"], $facility_potential_expiries["commodity_name"],$facility_potential_expiries["unit_size"],$facility_potential_expiries["current_balance_packs"],$facility_potential_expiries["amc"],$facility_potential_expiries["source_name"],$facility_potential_expiries["manufacture"],$facility_potential_expiries["district"], $facility_potential_expiries["county"]));
+						array_push($row_data, array($facility_potential_expiries["commodity_code"], $facility_potential_expiries["commodity_name"],$facility_potential_expiries["unit_size"],$facility_potential_expiries["current_balance"],$facility_potential_expiries["source_name"],$facility_potential_expiries["district"]));
 
 					endforeach;
 					if (empty($row_data)) {
@@ -600,14 +600,27 @@ class sms extends MY_Controller {
 						$excel_data['row_data'] = $row_data;
 						$excel_data['report_type'] = "download_file";
 						$excel_data['file_name'] = $facility_name . "_Potential_Stock_Outs_Report";
-						$message = "Find attached an excel sheet with the breakdown of Potential Stock Outs in the facility.";
+						//$message = "Find attached an excel sheet with the breakdown of Potential Stock Outs in the facility.";
+						$message = "Dear ".$facility_name." facility team,
+								Find attached an excel sheet with the ".$facility_name." Facility breakdown for the Potential Stock Outs.
+								You may log onto health-cmp.or.ke for follow up.
+								
+								----
+								
+								HCMP
+								
+								This email was automatically generated. Please do not respond to this email address or it will be ignored.";
+				
+						
+						
 						$this -> hcmp_functions -> create_excel($excel_data);
 						
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						$subject = "Potential Stock Outs: " . $facility_name;
 
 						$email_address = $this -> get_facility_email($facility_code);
-
+						//$email_address ="collinsojenge2014@gmail.com";
+				
 
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
@@ -621,13 +634,15 @@ class sms extends MY_Controller {
 				$excel_data = array();
 				$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'district potential stock outs weekly report ', 'file_name' => 'district weekly report');
 				$row_data = array();
-				$column_data = array("Facility Code", "Facility Name", "Commodity Code", "Commodity Name","Unit Size", "Quantity Available (Packs)","Quantity Available (MOS)","Supplier", "Manufacturer", "Subcounty", "County");
+				$column_data = array("Commodity Code", "Commodity Name","Unit Size", "Quantity Available (Units)","Supplier","Subcounty");
 				$excel_data['column_data'] = $column_data;
 
 				foreach ($facility_total as $facility_total_1) :
 					foreach ($facility_total_1 as $facility_total_2) :
 						foreach ($facility_total_2 as $facility_total1) :
-							array_push($row_data, array($facility_total1["facility_code"], $facility_total1["facility_name"], $facility_total1["commodity_code"], $facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["current_balance_packs"],$facility_total1["amc"],$facility_total1["source_name"],$facility_total1["manufacture"],$facility_total1["district"], $facility_total1["county"]));
+							array_push($row_data, array($facility_total1["commodity_code"], $facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["current_balance"],$facility_total1["source_name"],$facility_total1["district"]));
+							
+							//array_push($row_data, array($facility_total1["facility_code"], $facility_total1["facility_name"], $facility_total1["commodity_code"], $facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["current_balance_packs"],$facility_total1["amc"],$facility_total1["source_name"],$facility_total1["manufacture"],$facility_total1["district"], $facility_total1["county"]));
 							
 						endforeach;
 					endforeach;
@@ -637,15 +652,25 @@ class sms extends MY_Controller {
 				} else {
 					$excel_data['row_data'] = $row_data;
 					$excel_data['report_type'] = "download_file";
-					$excel_data['file_name'] = $district_name . "_Weekly_District_Potential_Stock_Outs_Report";
+					$excel_data['file_name'] = $district_name . "_Weekly_Sub_County_Potential_Stock_Outs_Report";
 					$this -> hcmp_functions -> create_excel($excel_data);
 					$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 					$subject = "Potential Stock Outs: " . $district_name . " Sub County";
-					$message = $district_name . "'s Weekly Potential Stock Outs Report. ";
-					$message .= "Find attached an excel sheet with the breakdown of the Potential Stock Outs for the district";
-					
+					//$message = $district_name . "'s Weekly Potential Stock Outs Report. ";
+					//$message .= "Find attached an excel sheet with the breakdown of the Potential Stock Outs for the district";
+					$message = "Dear ".$district_name." Sub County team,
+								Find attached an excel sheet with the ".$district_name." Sub County breakdown for the Potential Stock Outs.
+								You may log onto health-cmp.or.ke for follow up.
+								
+								----
+								
+								HCMP
+								
+								This email was automatically generated. Please do not respond to this email address or it will be ignored.";
+				
 					$email_address = $this -> get_ddp_email($district_id);
-
+					//$email_address ="collinsojenge2014@gmail.com";
+				
 					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
 				}
@@ -656,7 +681,7 @@ class sms extends MY_Controller {
 			$excel_data = array();
 			$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'district potential stock outs weekly report ', 'file_name' => 'district weekly report');
 			$row_data = array();
-			$column_data = array("Facility Code", "Facility Name", "Commodity Code", "Commodity Name","Unit Size", "Quantity Available (Packs)","Quantity Available (MOS)","Supplier", "Manufacturer", "Subcounty", "County");
+			$column_data = array("Commodity Code", "Commodity Name","Unit Size", "Quantity Available (Units)","Supplier","Subcounty");
 			$excel_data['column_data'] = $column_data;
 
 			foreach ($district_total as $facility_total_1) :
@@ -664,7 +689,7 @@ class sms extends MY_Controller {
 					foreach ($facility_total_2 as $facility_total_3) :
 						foreach ($facility_total_3 as $facility_total_4) :
 							foreach ($facility_total_4 as $facility_total1) :
-								array_push($row_data, array($facility_total1["facility_code"], $facility_total1["facility_name"], $facility_total1["commodity_code"], $facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["current_balance_packs"],$facility_total1["amc"],$facility_total1["source_name"],$facility_total1["manufacture"],$facility_total1["district"], $facility_total1["county"]));
+								array_push($row_data, array($facility_total1["commodity_code"], $facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["current_balance"],$facility_total1["source_name"],$facility_total1["district"]));
 							
 							endforeach;
 						endforeach;
@@ -679,14 +704,24 @@ class sms extends MY_Controller {
 				$excel_data['file_name'] = $county_name . "_Weekly_County_Potential_Stock_Outs_Report";
 				$this -> hcmp_functions -> create_excel($excel_data);
 				$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-				$subject = "Stock Outs: " . $county_name . " County";
-				$message = $county_name . "'s Weekly Potential Stock Outs Report. ";
-				$message .= "Find attached an excel sheet with the breakdown of the Potential Stock Outs for the county";
-				$email_address ="collinsojenge2014@gmail.com";
-				$bcc = "collinsojenge@gmail.com";
+				$subject = "Potential Stock Outs: " . $county_name . " County";
+				//$message = $county_name . "'s Weekly Potential Stock Outs Report. ";
+				//$message .= "Find attached an excel sheet with the breakdown of the Potential Stock Outs for the county";
+				$message = "Dear ".$county_name." County team,
+								Find attached an excel sheet with the ".$county_name." County breakdown for the Potential Stock Outs.
+								You may log onto health-cmp.or.ke for follow up.
+								
+								----
+								
+								HCMP
+								
+								This email was automatically generated. Please do not respond to this email address or it will be ignored.";
+				
+				//$email_address ="collinsojenge2014@gmail.com";
+				//$bcc = "collinsojenge@gmail.com";
 						
-				//$email_address = $this -> get_county_email($county_id);
-				//$bcc = $this -> get_bcc_notifications();
+				$email_address = $this -> get_county_email($county_id);
+				$bcc = $this -> get_bcc_notifications();
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc_email);
 			}
 

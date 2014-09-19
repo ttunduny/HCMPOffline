@@ -246,7 +246,39 @@ return $stocks ;
 	}
 
 
-
+public static function get_stock_outs_for_email($facility_code)
+{
+	$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT 
+					    d.district,
+					    f_s.`facility_code`,
+					    f.facility_name,
+					    c.`id` AS commodity_id,
+					    c.unit_size,
+					    cs.source_name,
+					    f_s.manufacture,
+					    c.`commodity_code`,
+					    c.`commodity_name`,
+					    max(date_modified) AS last_day,
+					    sum(current_balance) as current_balance
+					FROM
+					    facilities f,
+					    commodities c,
+					    districts d,
+					    facility_stocks f_s,
+					    commodity_source cs
+					WHERE
+					    f.facility_code = f_s.facility_code
+					        AND cs.id = c.commodity_source_id
+					        and f.facility_code = $facility_code
+					        AND f_s.commodity_id = c.id
+					        AND f.district = d.id
+					        AND f_s.status = 1
+					GROUP BY c.id
+					having current_balance <= 10
+					order by c.commodity_name asc");
+			return $stocks;
+}
 
 	  public static function get_items_that_have_stock_out_in_facility($facility_code=null,$district_id=null,$county_id=null){
 $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
