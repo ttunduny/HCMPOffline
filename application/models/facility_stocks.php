@@ -955,11 +955,11 @@ public static function get_county_comparison_data($facility_code=null,$district_
 	 1);
 	 
 	 if($group_by_a_month==1){
-     $group_by_a_month=$date_diff<=30? "GROUP BY DATE_FORMAT(fs.date_issued,'%d %b %y')": " GROUP BY DATE_FORMAT(fs.date_issued,'%b %y')" ;	
+     $group_by_a_month=$date_diff<=30? "GROUP BY  d.id": " GROUP BY d.id" ;	
 	 }else{}
     
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-    ->fetchAll("SELECT  $selection_for_a_month $computation
+    ->fetchAll("SELECT  d.commodity_name, di.district, f.facility_name, $selection_for_a_month $computation
     FROM facility_issues fs, facilities f, commodities d, districts di
     WHERE fs.facility_code = f.facility_code
     AND f.district = di.id

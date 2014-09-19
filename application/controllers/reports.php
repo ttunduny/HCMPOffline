@@ -3459,7 +3459,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		$to =($to=="NULL") ? strtotime(date('d-m-y')) : strtotime(urldecode($to));
 		//$category_id=($category_id=="NULL") ? null :$category_id;		
 		//$county_id = $this -> session -> userdata('county_id');
-
+		//echo "running";exit;
 		$county_name = counties::get_county_name($county_id);
 
 		$category_data = $series_data = $graph_data = $series_data_= $amc = array();
@@ -3480,8 +3480,9 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 
 		$consumption_data = Facility_stocks::get_county_consumption_level_new($facility_code,$district_id, $county_id,$category_id, $commodity_id, $option,$from, $to,$report_type,$tracer);
 		//gets the amc 
-		$amc_data = Facility_stocks::get_amc_new($county_id,$district_id,$facility_code);
-		/*echo "<pre>";print_r($consumption_data);echo "</pre>";exit;
+		/*$amc_data = Facility_stocks::get_amc_new($county_id,$district_id,$facility_code);
+		
+		//echo "<pre>";print_r($consumption_data);echo "</pre>";exit;
 		foreach ($amc_data as $amc_data):
 			//$series_data  = array_merge($series_data , array((int)$data['total']));
 			$amc = array_merge($amc,array((float)$amc_data['amc']));
@@ -3499,11 +3500,13 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 				$series_data  = array_merge($series_data , array((int)$data['total']));
 				//$amc = array_merge($amc,arra)
 				$series_data_ = array_merge($series_data_ , array(array($data["name"],(int)$data['total'])));
-				$category_data = array_merge($category_data, array($data["name"]));
+				$category_data = array_merge($category_data, array($data["commodity_name"]));
 			endif;
 		//
 		endforeach;
-
+		//echo "<pre>";print_r($category_data);echo "</pre>";
+		//echo "<pre>";print_r($series_data);echo "</pre>";
+		//echo "<pre>";print_r($amc);echo "</pre>";exit;
 		$default_consumption_graph_ = array();
 		$graph_type='bar';			
         $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_id"=>'graph_content_'));
@@ -3511,7 +3514,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_type"=>$graph_type));
 	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_yaxis_title"=>"$option_new"));
 	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("graph_categories"=>$category_data ));
-	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("series_data"=>array('Consumption'=>$series_data,"AMC"=>$amc)));
+	    $default_consumption_graph_=array_merge($default_consumption_graph_,array("series_data"=>array('Consumption'=>$series_data)));
 		$data = array();
 
 
@@ -3566,22 +3569,24 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 				endif;						
 			else:
 				$series_data  = array_merge($series_data , array((int)$data['total']));
-				$series_data_ = array_merge($series_data_ , array(array($data["name"],(int)$data['total'])));
+				$series_data_ = array_merge($series_data_ , array(array($data["district"], $data["facility_name"], $data['commodity_name'],(int)$data['total'])));
 				$category_data = array_merge($category_data, array($data["name"]));
 			endif;
 		//
 		endforeach;
 		
-		if($report_type=="csv_data"):
+		if($report_type=="csv_data")://seth
 			$excel_data = array('doc_creator' =>$this -> session -> userdata('full_name'), 
 								'doc_title' => "Consumption level $commodity_name $title $time", 
 								'file_name' => "consumption_level_$commodity_name_$title_$time");
-			$row_data = array(array("Consumption level in $commodity_name $title $time","Consumption level in $option_new"));
-			$column_data = array("");
+			$row_data = array();
+			$column_data = array("District", "Facility", "Commodity", "Consumption Level in $option_new");
 			$excel_data['column_data'] = $column_data;
 			$row_data = array_merge($row_data,$series_data_);
+			//echo "<pre>";print_r($row_data);echo "</pre>";exit;
 			$excel_data['row_data'] = $row_data;;
 			$this -> hcmp_functions -> create_excel($excel_data);
+			echo $commodity_name.$title.$time;exit;
 		
 		elseif($report_type=="table_data"):
 			if($commodity_id>0):
