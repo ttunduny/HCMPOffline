@@ -18,6 +18,7 @@
     <div id="myTabContent" class="tab-content">
 	<!--for the tracer items tab-->
       <div  id="tracer" class="tab-pane fade active in">
+
       	<br />
       	<div class="filter">
       		<form class="form-inline" role="form">
@@ -268,7 +269,7 @@ var drop_down='';
         if(from==''){from="NULL";   }
         if(to==''){to="NULL";}
 
-  var url_ = "reports/consumption_stats_graph/"+
+  		var url_ = "reports/consumption_stats_graph/"+
        $("#tracer_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#tracer_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/csv_data"; 
          window.open(url+url_ ,'_blank');   
           }); 
