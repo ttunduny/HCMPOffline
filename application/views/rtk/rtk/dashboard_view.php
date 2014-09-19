@@ -118,8 +118,8 @@ $(document).ready(function(){
                 </div>
                     </div>
                     
-                    <!--li class="span4" style="margin-left:10px;float:left;">
-                    <!--ul class="unstyled">
+                    li class="span4" style="margin-left:10px;float:left;">
+                    <ul class="unstyled">
                         <?php
                         foreach ($user_logs as $logs) {
                             $action_clause = '';
@@ -148,7 +148,7 @@ $(document).ready(function(){
                             </li>
                             <?php } ?>
                         </ul>
-                    </li-->
+                    </li
                      
                       
                 </li>
