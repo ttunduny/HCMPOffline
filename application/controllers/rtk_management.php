@@ -5940,7 +5940,10 @@ WHERE
         $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
         $lastdate = $year . '-' . $month . '-' . $num_days;
         $sql = "SELECT 
-            counties.county,
+            counties.county,			
+            districts.district,
+            facilities.facility_name,
+            counties.id,
             counties.id,
             lab_commodities.commodity_name,
             sum(lab_commodity_details.beginning_bal) as sum_opening,
