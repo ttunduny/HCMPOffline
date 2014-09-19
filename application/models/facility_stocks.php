@@ -333,7 +333,7 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 	}
  		public static function potential_expiries($facility_code){
 		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date 
-		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code' and current_balance>0");
+		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code' AND current_balance>0 AND status IN (1,2)");
 		
 		$stocks = $query -> execute();
 		return $stocks;
@@ -450,6 +450,7 @@ FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDAT
 	}	
 
 	public static function All_expiries($facility_code,$checker=null){
+		$year=date(Y);
 		$and=isset($checker)? " and (f_s.status =1 or f_s.status =2)" : " and f_s.status =1";
 		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		select    
@@ -466,7 +467,7 @@ FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDAT
 		    f_s.current_balance,
 		    c.commodity_code from  facility_stocks f_s 
 				LEFT JOIN  commodities c ON c.id=f_s.commodity_id where facility_code=$facility_code 
-				 and f_s.current_balance>0 and expiry_date <= NOW() $and");
+				 and f_s.current_balance>0 and expiry_date <= NOW() $and AND year(expiry_date)=$year");
 				
 		        return $stocks ;
 	}
@@ -496,7 +497,7 @@ FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDAT
 		where
 		    f_s.facility_code = $facility_code
 		        and f_s.current_balance > 0
-		        and expiry_date <= NOW()
+		        and expiry_date < NOW( )
 		        $and");
 		        return $stocks ;
 	}
@@ -1121,6 +1122,55 @@ from
 			   hcmp_rtk.drug_commodity_map ON drug_commodity_map.old_id = facility_issues.kemsa_code
 			        where facility_issues.facility_code = $facility_code
 			and facility_issues.receipts=0");
+			return $stocks ;
+		
+	}
+		
+		public static function getpotentialexpcount($county_id,$district_id){
+			$and_data =" AND facilities.district=$district_id" ;
+			if ($district_id=='') {
+				$and_data="AND districts.county=$county_id";
+			}
+		
+				$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+			->fetchAll("SELECT * FROM `facility_stocks`
+INNER JOIN facilities
+ON facility_stocks.facility_code=facilities.facility_code
+INNER JOIN districts ON districts.id=facilities.district
+WHERE  expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND current_balance>0 AND status IN (1,2)
+$and_data ");
+			return $stocks ;
+		
+	}
+		public static function getexpcount($county_id,$district_id){
+			$year=date(Y);
+			$and_data =" AND facilities.district=$district_id" ;
+			if ($district_id=='') {
+				$and_data="AND districts.county=$county_id";
+			}
+			
+				$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+			->fetchAll("SELECT facilities.facility_code,facilities.facility_name,districts.district 
+FROM `facility_stocks` 
+INNER JOIN commodities ON facility_stocks.commodity_id=commodities.id 
+INNER JOIN facilities ON facility_stocks.facility_code=facilities.facility_code 
+INNER JOIN districts ON districts.id=facilities.district WHERE expiry_date < NOW( )
+ AND current_balance>0 AND facility_stocks.status IN (1,2)and year(expiry_date)=$year $and_data
+  ");
+			return $stocks ;
+		
+	}
+	public static function getexplist($county_id,$year){
+				$and_data="AND districts.county=$county_id";
+		
+				$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
+			->fetchAll("SELECT facilities.facility_code,facilities.facility_name,districts.district,SUM((facility_stocks.current_balance/commodities.total_commodity_units)*commodities.unit_cost) as total 
+FROM `facility_stocks` 
+INNER JOIN commodities ON facility_stocks.commodity_id=commodities.id 
+INNER JOIN facilities ON facility_stocks.facility_code=facilities.facility_code 
+INNER JOIN districts ON districts.id=facilities.district WHERE expiry_date < NOW( )
+ AND current_balance>0 AND facility_stocks.status IN (1,2)and year(expiry_date)=$year $and_data
+ group by facilities.facility_code ");
 			return $stocks ;
 		
 	}
