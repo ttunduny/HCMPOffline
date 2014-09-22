@@ -58,16 +58,16 @@ table{
   
     <thead>
     <tr>        
-      <th align ="center">County</th>
-      <th align ="center">Sub-County</th>
-      <th align ="center">MFL</th>
-      <th align ="center">Facility Name</th>  
-      <th align ="center">Zone</th>      
-      <th align ="center" colspan="2">Screening - Determine</th> 
-      <th align ="center" colspan="2">Confirmatory - Unigold</th>   
-      <th align ="center" colspan="2">First Response</th>   
-      <th align ="center" colspan="2">Colloidal</th>    
-      <th align ="center" colspan="2">TieBreaker - Unigold</th>      
+      <th>County</th>
+      <th>Sub-County</th>
+      <th>MFL</th>
+      <th>Facility Name</th>  
+      <th>Zone</th>      
+      <th colspan="2">Screening - Determine</th>    
+      <th colspan="2">Confirmatory - Unigold</th>      
+      <th colspan="2">First Response</th>      
+      <th colspan="2">Colloidal</th>      
+      <th colspan="2">TieBreaker - Unigold</th>      
     </tr>    
     
       
@@ -109,15 +109,7 @@ table{
 </div>
 <script>
 $(document).ready(function() {
- $("table").tablecloth({theme: "paper",         
-          bordered: true,
-          condensed: true,
-          striped: true,
-          sortable: true,
-          clean: true,
-          cleanElements: "th td",
-          customClass: "my-table"
-        });
+ 
   var table = $('#pending_facilities').dataTable({
     "sDom": "T lfrtip",
     "sScrollY": "377px",
@@ -164,11 +156,6 @@ $(document).ready(function() {
 
     e.preventDefault();
   });
-  $('#switch_month').change(function() {
-            var value = $('#switch_month').val();
-            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/allocation_committee/'; ?>" + value + "<?php '/show_allocation_pending/'?>";
-            window.location.href = path;
-        });
 
 });
 </script>

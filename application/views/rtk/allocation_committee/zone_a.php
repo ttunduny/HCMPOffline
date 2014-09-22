@@ -42,37 +42,28 @@ table{
 
 
 </style>
-<div style="width:100%;font-size: 12px;height:20px;padding: 10px 10px 10px 10px;margin-bottom:10px;">
-  <ul class="navtbl top-navigation nav" style="margin-top:0px;float:left;">        
-    <li class=""><a href="#">Zone A</a></li>
-    <li class=""><a href="#">Zone B</a></li>
-    <li class=""><a href="#">Zone C</a></li>
-    <li class=""><a href="#">Zone D</a></li>
-  </ul>
-</div>
+
 
 <div class="main-container" style="width: 100%;float: right;">
 
-  <table id="pending_facilities" class="data-table" align="center"> 
+  <table id="pending_facilities" class="data-table"> 
     <thead>
     <tr>        
-      <th align="center">County</th>
+      <th>County</th>
       <th>Sub-County</th>
       <th>MFL</th>
-      <th>Facility Name</th>    
-      <th>Zone</th>      
-      <th align="center" colspan="2">Screening - Determine</th>    
-      <th align="center" colspan="2">Confirmatory - Unigold</th>      
-      <th align="center" colspan="2">First Response</th>      
-      <th align="center" colspan="2">Colloidal</th>      
-      <th align="center" colspan="2">TieBreaker - Unigold</th>      
+      <th>Facility Name</th>      
+      <th colspan="2">Screening - Determine</th>    
+      <th colspan="2">Confirmatory - Unigold</th>      
+      <th colspan="2">First Response</th>      
+      <th colspan="2">Colloidal</th>      
+      <th colspan="2">TieBreaker - Unigold</th>      
     </tr>    
     <tr>
           
       <th></th>
       <th></th>
       <th></th>
-      <th></th> 
       <th></th>      
       <th>AMC</th>
       <th>Quantity to Allocate</th>
@@ -99,8 +90,7 @@ table{
           <td><?php echo $value['county'];?></td>
           <td><?php echo $value['district'];?></td>              
           <td><?php echo $value['facility_code'];?></td>
-          <td><?php echo $value['facility_name'];?></td> 
-          <td><?php echo $value['zone'];?></td>     
+          <td><?php echo $value['facility_name'];?></td>     
           <td><?php echo $amcs[$facil][0]['amc'];?></td>     
           <td><?php echo ceil((($amcs[$facil][0]['amc'])*4)/100);?></td>     
           <td><?php echo $amcs[$facil][1]['amc'];?></td>     
@@ -124,16 +114,6 @@ table{
 </div>
 <script>
 $(document).ready(function() {
-  
- $("table").tablecloth({theme: "paper",         
-          bordered: true,
-          condensed: true,
-          striped: true,
-          sortable: true,
-          clean: true,
-          cleanElements: "th td",
-          customClass: "my-table"
-        });
  
   var table = $('#pending_facilities').dataTable({
     "sDom": "T lfrtip",
@@ -171,16 +151,7 @@ $(document).ready(function() {
       select.append('<option value="' + d + '">' + d + '</option>')
     });
   });
-  $('.navtbl li a').click(function(e) {
-    var $this = $(this);
-    var thistext = $(this).text();
-    $('.navtbl li').removeClass('active');
-    $this.parent().addClass('active');
-    $(".dataTables_filter label input").focus();
-    $('.dataTables_filter label input').val(thistext).trigger($.Event("keyup", {keyCode: 13}));
-
-    e.preventDefault();
-  });
+  
 
 });
 </script>

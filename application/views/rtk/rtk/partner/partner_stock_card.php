@@ -36,6 +36,15 @@ foreach ($commodities->result_array() as $key => $value) {
   float: left;
   margin-left: 20px;
 }
+table{
+    font-size: 12px;
+}
+table thead{
+    font-size: 13px;
+}
+table tr{
+    font-size: 12px;
+}
 </style>
 <script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/datatable/jquery.dataTables.js"></script>
 
@@ -72,13 +81,40 @@ foreach ($commodities->result_array() as $key => $value) {
 </script>
 <br />
 <?php include('side_menu.php');?>
-<select id="switch_commodity" class="form-control" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;">
-        <option>-- Select Commodity</option>
-        <?php echo $option_comm; ?>
-    </select>
-
 
 <div class="dash_main" style="width: 80%;float: right; overflow: scroll; height: auto">
+  <?php include('top_nav.php');?>
+  <div id="switch_tab" data-tab="1" class="tab_switch">
+  <div style="float:right"><label style="float:left" >Select Month: &nbsp;</label><button id="switch_back" class="" style="max-width: 220px;">Switch to Current Month</button>    
+    <?php
+        $month = $this->session->userdata('Month');
+        if ($month==''){
+         $month = date('mY',time());
+        }
+        $year= substr($month, -4);
+        $month= substr_replace($month,"", -4);
+        $monthyear = $year . '-' . $month . '-1';        
+        $englishdate = date('F, Y', strtotime('+1 month'));
+        $englishdate = date('F, Y', strtotime($monthyear));
+    ?>
+     <select id="switch_month" class="" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;float:right;">
+       <option>-- <?php echo $englishdate;?> --</option>
+        <?php 
+
+
+            for ($i=1; $i <=12 ; $i++) { 
+            $month = date('m', strtotime("-$i month")); 
+            $year = date('Y', strtotime("-$i month")); 
+            $month_value = $month.$year;
+            $month_text =  date('F', strtotime("-$i month")); 
+            $month_text = "-- ".$month_text." ".$year." --";
+         ?>
+        <option value="<?php echo $month_value ?>"><?php echo $month_text ?></option>;
+    <?php } ?>
+    </select> 
+    </div> 
+    </div>
+    <br/><br/><br/>
 
     <?php
 //echo "<pre>";var_dump($reports);echo "</pre>";
@@ -115,44 +151,44 @@ foreach ($commodities->result_array() as $key => $value) {
                 ?>
        
         <div style="width:100%;font-size: 12px;height:20px;padding: 10px 10px 10px 10px;margin-bottom:10px;">
-          <table><tr><ul class="navtbl top-navigation nav" style="margin-top:0px;float:left;">        
+          <!--table><tr><ul class="navtbl top-navigation nav" style="margin-top:0px;float:left;">        
             <td style="padding:4px;"><a href="<?php echo base_url().'rtk_management/partner_stock_status'; ?>">Losses  </a></td>
             <td style="padding:4px;"><a href="<?php echo base_url().'rtk_management/partner_stock_status_expiries'; ?>">Expiries  </a></td>
             <td style="padding:4px;"><a href="<?php echo base_url().'rtk_management/partner_stock_level'; ?>">Stock Levels  </a></td>
             <td style="padding:4px;"><a href="<?php echo base_url().'rtk_management/partner_stock_card'; ?>">Stock Card</a></td>
 
           </ul>
-          </tr></table>
+          </tr></table-->
         </div>
         <div class="table" style="font-size: 100%;padding-top:20px;" align="center">
         	<table>
         		<thead>
-        			<td align="center" style="padding:8px;font-size:15px" ><b>Kit</b></td>
-        			<td align="center" style="padding:8px;font-size:15px" ><b>Beginning Balance</b></td>
-        			<td align="center" style="padding:8px;font-size:15px" ><b>Quantity Received</b></td>
-        			<td align="center" style="padding:8px;font-size:15px" ><b>Used Total</b></td>
-        			<td align="center" style="padding:8px;font-size:15px" ><b>Total Tests done</b></td>
-        			<td align="center" style="padding:8px;font-size:15px" ><b>Losses</b></td>
-        			<td align="center" style="padding:8px;font-size:15px" ><b>Closing Balance</b></td>
-        			<td align="center" style="padding:8px;font-size:15px" ><b>Requested amount</b></td>
-        			<td align="center" style="padding:8px;font-size:15px" ><b>Expiring(6 months)</b></td>
-        			<td align="center" style="padding:8px;font-size:15px" ><b>Days out of stock</b></td>
+        			<td align="center" style="padding:8px;font-size:13px" ><b>Kit</b></td>
+        			<td align="center" style="padding:8px;font-size:13px" ><b>Beginning Balance</b></td>
+        			<td align="center" style="padding:8px;font-size:13px" ><b>Quantity Received</b></td>
+        			<td align="center" style="padding:8px;font-size:13px" ><b>Used Total</b></td>
+        			<td align="center" style="padding:8px;font-size:13px" ><b>Total Tests done</b></td>
+        			<td align="center" style="padding:8px;font-size:13px" ><b>Losses</b></td>
+        			<td align="center" style="padding:8px;font-size:13px" ><b>Closing Balance</b></td>
+        			<td align="center" style="padding:8px;font-size:13px" ><b>Requested amount</b></td>
+        			<td align="center" style="padding:8px;font-size:13px" ><b>Expiring(6 months)</b></td>
+        			<td align="center" style="padding:8px;font-size:13px" ><b>Days out of stock</b></td>
         		</thead>
         		<tbody>
         		<?php foreach ($result as $key => $val) {
         			if ($i ==0) {
 					 echo "<tr>";
         		 }?>
-        			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['commodity_name']; ?></td>
-        			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['beg_bal']; ?></td>
-        			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['qty_received']; ?></td>
-        			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['qty_used']; ?></td>
-        			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['test_done']; ?></td>
-        			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['losses']; ?></td>
-        			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['closing_stock']; ?></td>
-        			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['qty_requested']; ?></td>
-        			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['qty_expiring']; ?></td>
-        			<td align="center" style="padding:8px;font-size:15px;"><?php echo $val['days_out_of_stock']; ?></td> 
+        			<td align="center" style="padding:8px;font-size:13px;"><?php echo $val['commodity_name']; ?></td>
+        			<td align="center" style="padding:8px;font-size:13px;"><?php echo $val['beg_bal']; ?></td>
+        			<td align="center" style="padding:8px;font-size:13px;"><?php echo $val['qty_received']; ?></td>
+        			<td align="center" style="padding:8px;font-size:13px;"><?php echo $val['qty_used']; ?></td>
+        			<td align="center" style="padding:8px;font-size:13px;"><?php echo $val['test_done']; ?></td>
+        			<td align="center" style="padding:8px;font-size:13px;"><?php echo $val['losses']; ?></td>
+        			<td align="center" style="padding:8px;font-size:13px;"><?php echo $val['closing_stock']; ?></td>
+        			<td align="center" style="padding:8px;font-size:13px;"><?php echo $val['qty_requested']; ?></td>
+        			<td align="center" style="padding:8px;font-size:13px;"><?php echo $val['qty_expiring']; ?></td>
+        			<td align="center" style="padding:8px;font-size:13px;"><?php echo $val['days_out_of_stock']; ?></td> 
 				<?php $i++; ?>
 
 			</tr>
@@ -182,4 +218,33 @@ foreach ($commodities->result_array() as $key => $value) {
             });
         });
 </script>
- 
+<script type="text/javascript">
+$('#losses').removeClass('active_tab');
+$('#expiries').removeClass('active_tab');
+$('#stock_level').removeClass('active_tab');
+$('#stock_card').addClass('active_tab');
+ $('#switch_month').change(function() {
+            var value = $('#switch_month').val();
+            var path_full = 'rtk_management/switch_month/'+value+'/partner_stock_card/';
+            var path = "<?php echo base_url(); ?>" + path_full;
+//              alert (path);
+            window.location.href = path;
+        });
+    var active_month = '<?php echo $active_month ?>';
+    var current_month = '<?php echo $current_month ?>';   
+    if(active_month!=current_month){
+        $("#switch_back").show();
+        $('#switch').show();
+    }else{        
+        $('#switch_back').hide();
+        $('#switch_back').hide();
+    }
+     $('#switch_back').click(function() {
+            var value = current_month;
+            var path_full = 'rtk_management/switch_month/'+value+'/partner_stock_card/';
+            var path = "<?php echo base_url(); ?>" + path_full;
+            window.location.href = path;
+        });
+
+
+</script>

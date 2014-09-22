@@ -73,7 +73,8 @@ foreach ($commodities->result_array() as $key => $value) {
 
 
 <div class="dash_main" style="width: 80%;float: right; overflow: scroll; height: auto">
-
+<?php include('top_nav.php');?><br/>
+<hr/>
     <?php
 //echo "<pre>";var_dump($reports);echo "</pre>";
     ?>
@@ -109,14 +110,14 @@ foreach ($commodities->result_array() as $key => $value) {
                 ?>
        
         <div style="width:100%;font-size: 12px;height:20px;padding: 10px 10px 10px 10px;margin-bottom:10px;">
-          <table><tr><ul class="navtbl top-navigation nav" style="margin-top:0px;float:left;">        
+          <!--table><tr><ul class="navtbl top-navigation nav" style="margin-top:0px;float:left;">        
             <td style="padding:4px;"><a href="<?php echo base_url().'rtk_management/partner_stock_status'; ?>">Losses  </a></td>
             <td style="padding:4px;"><a href="<?php echo base_url().'rtk_management/partner_stock_status_expiries'; ?>">Expiries  </a></td>
             <td style="padding:4px;"><a href="<?php echo base_url().'rtk_management/partner_stock_level'; ?>">Stock Levels  </a></td>
             <td style="padding:4px;"><a href="<?php echo base_url().'rtk_management/partner_stock_card'; ?>">Stock Card</a></td>
 
           </ul>
-          </tr></table>
+          </tr></table-->
         </div>
         <div id="container" style="min-width: 310px;padding-top:20px; height: auto; margin: 0 auto"></div>
 
@@ -147,7 +148,7 @@ foreach ($commodities->result_array() as $key => $value) {
                         type: 'column'
                     },
                     title: {
-                        text: '<?php echo ' Yearly Commodity Usage:  ' . $commodity_name.' from '. $from_date.' to '. $to_date; ?>'
+                        text: '<?php echo ' Yearly Commodity Expiries from '. $from_date.' to '. $to_date; ?>'
                     }, subtitle: {
                         text: 'Live data reports on RTK'
                     },
@@ -193,3 +194,9 @@ foreach ($commodities->result_array() as $key => $value) {
                 });
             });
         </script>
+<script type="text/javascript">
+$('#losses').removeClass('active_tab');
+$('#expiries').addClass('active_tab');
+$('#stock_level').removeClass('active_tab');
+$('#stock_card').removeClass('active_tab');
+</script>
