@@ -164,7 +164,7 @@ foreach ($commodities->result_array() as $key => $value) {
                         }
                     },
                     series: [{
-                            name: 'Beginning Balance',
+                            name: 'Beginning Balance(Click on each indicator to filter)',
                             data: <?php echo $graphdata['beginning_bal']; ?>
                         },
                         {
