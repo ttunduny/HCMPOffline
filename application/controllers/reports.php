@@ -3429,7 +3429,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
         //reset the values here
      	$commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
 		$district_id =(isset($district_id)&&($district_id))? $district_id:$this -> session -> userdata('district_id') ;
-		$county_id =(isset($county_id)&&($county_id))? $county_id:$this -> session -> userdata('$county_id') ;
+		$county_id =(isset($county_id)&&($county_id))? $county_id:$this -> session -> userdata('county_id') ;
 	 	//$district_id = ($district_id=="NULL") ? null :$district_id;
 	 	$facility_code=($facility_code=="NULL") ? null :$facility_code;
 		
@@ -3437,6 +3437,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		$to =(($to=="NULL")) ? strtotime(date('Y-m-d')) : strtotime(urldecode($to));
 		
 		$county_name = counties::get_county_name($county_id);
+		
 
 		$category_data = $series_data = $graph_data = $series_data_= $amc = array();
 
