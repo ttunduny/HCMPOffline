@@ -3426,18 +3426,17 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 	}
 
 
-        public function consumption_data_dashboard($commodity_id = null, $district_id = null, $facility_code=null, $option = null,$from=null,$to=null, $graph_type=null) {
+        public function consumption_data_dashboard($commodity_id = null, $district_id = null, $facility_code=null, $option = null,$from = null,$to = null, $graph_type=null,$tracer = null) {
         //reset the values here
      	$commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
 		$district_id =(isset($district_id)&&($district_id))? $district_id:$this -> session -> userdata('district_id') ;
 		$county_id =(isset($county_id)&&($county_id))? $county_id:$this -> session -> userdata('$county_id') ;
 	 	//$district_id = ($district_id=="NULL") ? null :$district_id;
 	 	$facility_code=($facility_code=="NULL") ? null :$facility_code;
-		$from =($from=="NULL") ? strtotime(date('01-m-y')) :strtotime(urldecode($from));	
-		$to =($to=="NULL") ? strtotime(date('d-m-y')) : strtotime(urldecode($to));
-		//$category_id=($category_id=="NULL") ? null :$category_id;		
-		//$county_id = $this -> session -> userdata('county_id');
-		//echo "running";exit;
+		
+		$from =(($from=="NULL")) ? strtotime(date('Y-m-01')) :strtotime(urldecode($from));	
+		$to =(($to=="NULL")) ? strtotime(date('Y-m-d')) : strtotime(urldecode($to));
+		
 		$county_name = counties::get_county_name($county_id);
 
 		$category_data = $series_data = $graph_data = $series_data_= $amc = array();
@@ -3454,18 +3453,10 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		$title=isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
 	    $district_id>0 && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
 		$time= "between ".date('j M y', $from)." and ".date('j M y', $to);
-		$tracer = 1;
+		
 
 		$consumption_data = Facility_stocks::get_county_consumption_level_new($facility_code,$district_id, $county_id,$category_id, $commodity_id, $option,$from, $to,$report_type,$tracer);
-		//gets the amc 
-		/*$amc_data = Facility_stocks::get_amc_new($county_id,$district_id,$facility_code);
 		
-		//echo "<pre>";print_r($consumption_data);echo "</pre>";exit;
-		foreach ($amc_data as $amc_data):
-			//$series_data  = array_merge($series_data , array((int)$data['total']));
-			$amc = array_merge($amc,array((float)$amc_data['amc']));
-		
-		endforeach;*/
 		
 		foreach ($consumption_data as $data):
 		    if($report_type=="table_data"):
@@ -3473,14 +3464,17 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 					array_push($series_data , array($data['district'],$data["facility_name"],$data["facility_code"],$data['commodity'], (int)$data['total']));
 				else:
 					array_push($series_data , array($data["name"],$data['commodity'],(int)$data['total']));
-				endif;						
+				endif;	
+			elseif($tracer==1):	
+				$series_data  = array_merge($series_data , array((int)$data['total']));
+				$series_data_ = array_merge($series_data_ , array(array($data["commodity"],(int)$data['total'])));
+				$category_data = array_merge($category_data, array($data["commodity"]));			
 			else:
 				$series_data  = array_merge($series_data , array((int)$data['total']));
-				//$amc = array_merge($amc,arra)
 				$series_data_ = array_merge($series_data_ , array(array($data["name"],(int)$data['total'])));
-				$category_data = array_merge($category_data, array($data["commodity_name"]));
+				$category_data = array_merge($category_data, array($data["name"]));
 			endif;
-		//
+		
 		endforeach;
 
 		$default_consumption_graph_ = array();
@@ -3494,7 +3488,6 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		$data = array();
 
 		$data = array();
-		//echo "<pre>";print_r($default_consumption_graph_['graph_categories']);echo "</pre>";exit;
 		$def_cons=$this->hcmp_functions->create_high_chart_graph($default_consumption_graph_);
 		$data['default_consumption_graph'] = $def_cons;
 	 	$county_id = $this -> session -> userdata('county_id');
