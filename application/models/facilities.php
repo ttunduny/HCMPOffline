@@ -5,6 +5,7 @@ class Facilities extends Doctrine_Record {
 		$this -> hasColumn('targetted', 'int');
 		$this -> hasColumn('facility_name', 'varchar',30);
 		$this -> hasColumn('district', 'varchar',30);
+		$this -> hasColumn('partner', 'int',11);
 		$this -> hasColumn('owner', 'varchar',30);
 		$this -> hasColumn('level', 'varchar',30);
 		$this->hasColumn('drawing_rights','text');
@@ -52,6 +53,10 @@ class Facilities extends Doctrine_Record {
 	{
 		$and_data =(isset($county_id)&& ($county_id>0)) ?" AND d.county = $county_id" : null;
 	    $and_data .=(isset($district_id)&& ($district_id>0)) ?" AND f.district = $district_id" : null;
+<<<<<<< HEAD
+=======
+	   // $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = $facility_code" : null;
+>>>>>>> 0ab401de0bbd822159d309924dabe2b24f22714a
 	    $and_data .= " AND using_hcmp = 1 ";
 		
 	   	$query = Doctrine_Query::create() ->select("*") ->from("facilities f, districts d")->where("f.district = d.id $and_data")->OrderBy("facility_name asc");
