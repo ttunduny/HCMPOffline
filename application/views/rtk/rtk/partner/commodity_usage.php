@@ -151,7 +151,7 @@ foreach ($commodities->result_array() as $key => $value) {
                     yAxis: {
                         min: 0,
                         title: {
-                            text: 'Commodity Percentage (%)'
+                            text: 'Tests (%)'
                         }
                     },
                     legend: {
