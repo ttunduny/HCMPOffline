@@ -853,7 +853,7 @@ public static function get_county_comparison_data($facility_code=null,$district_
     $and_data
     $group_by_a_month
      ");		
-	echo "SELECT  $selection_for_a_month $computation
+	/*echo "SELECT  $selection_for_a_month $computation
     FROM facility_issues fs, facilities f, commodities d, districts di
     WHERE fs.facility_code = f.facility_code
     AND f.district = di.id
@@ -861,7 +861,7 @@ public static function get_county_comparison_data($facility_code=null,$district_
     $and 
     AND d.id = fs.commodity_id
     $and_data
-    $group_by_a_month";exit;
+    $group_by_a_month";exit;*/
 	
      return $inserttransaction ;
   }     

@@ -3705,14 +3705,8 @@ public function get_division_commodities_data($district_id = null, $facility_cod
          	
          }
 	     public function actual_expiries_reports($county_id,$year){
-<<<<<<< HEAD
-	     //seth
-	     $district_id = $this -> session -> userdata('district_id');
-	     $dist_id = isset($district_id)? $district_id: null;
-		 $expiries_array=Facility_stocks::get_county_expiries($county_id,$year,$dist_id);
-=======
+
 		 $expiries_array=Facility_stocks::getexplist($county_id,$year);
->>>>>>> 0ab401de0bbd822159d309924dabe2b24f22714a
 		 $graph_data=$series_data=array();
 		 $total_expiry=0;
 		 foreach($expiries_array as $facility_expiry_data):

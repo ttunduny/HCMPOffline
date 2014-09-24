@@ -117,10 +117,7 @@ return $inserttransaction;
               
   return $getdata;
 	}
-<<<<<<< HEAD
 
-=======
->>>>>>> 0ab401de0bbd822159d309924dabe2b24f22714a
 	public static function get_id($kemsa){
 		
 	$getdata = Doctrine_Manager::getInstance()->getCurrentConnection()
