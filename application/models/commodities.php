@@ -118,5 +118,13 @@ return $inserttransaction;
   return $getdata;
 	}
 
+	public static function get_id($kemsa){
+		
+	$getdata = Doctrine_Manager::getInstance()->getCurrentConnection()
+    ->fetchAll("SELECT id FROM commodities WHERE commodity_code='$kemsa' ;"); 
+              
+  return $getdata;
+	}
+
 }
 ?>

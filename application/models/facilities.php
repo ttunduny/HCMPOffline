@@ -53,7 +53,7 @@ class Facilities extends Doctrine_Record {
 	{
 		$and_data =(isset($county_id)&& ($county_id>0)) ?" AND d.county = $county_id" : null;
 	    $and_data .=(isset($district_id)&& ($district_id>0)) ?" AND f.district = $district_id" : null;
-	   // $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = $facility_code" : null;
+
 	    $and_data .= " AND using_hcmp = 1 ";
 		
 	   	$query = Doctrine_Query::create() ->select("*") ->from("facilities f, districts d")->where("f.district = d.id $and_data")->OrderBy("facility_name asc");

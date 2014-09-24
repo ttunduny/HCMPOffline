@@ -12,6 +12,8 @@ class Stock extends MY_Controller {
 		$this->load->helper(array('form','url'));
 		$this->load->library(array('hcmp_functions','form_validation'));
 		$this -> load -> database();
+		ini_set("max_execution_time", "1000000");
+		ini_set("memory_limit", '2048M');
 	}
 	public function index(){
 		
