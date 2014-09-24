@@ -73,6 +73,7 @@ class Home extends MY_Controller
 			case 'scmlt':
 			case 'rtk_county_admin':
 			case 'allocation_committee':
+			case 'rtk_partner_admin':
 			case 'rtk_manager':
 			case 'rtk_partner_admin':
 			redirect('home_controller');

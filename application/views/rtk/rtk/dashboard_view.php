@@ -118,8 +118,8 @@ $(document).ready(function(){
                 </div>
                     </div>
                     
-                    <!--li class="span4" style="margin-left:10px;float:left;">
-                    <!--ul class="unstyled">
+                    li class="span4" style="margin-left:10px;float:left;">
+                    <ul class="unstyled">
                         <?php
                         foreach ($user_logs as $logs) {
                             $action_clause = '';
@@ -148,7 +148,7 @@ $(document).ready(function(){
                             </li>
                             <?php } ?>
                         </ul>
-                    </li-->
+                    </li
                      
                       
                 </li>
@@ -163,8 +163,6 @@ $(document).ready(function(){
                 <table id="stock_table">
                     <thead>
                         <th>County</th>
-                        <th>Subcounty</th>
-                        <th>Facility Name</th>
                         <th>Commodity</th>
                         <th>Beginning Balance</th>
                         <th>Received Qty</th>
@@ -183,8 +181,6 @@ $(document).ready(function(){
                             foreach ($stock_status[$i] as $key => $value) { ?>
                             <tr>
                                 <td><?php echo $value['county']; ?></td>
-                                <td><?php echo $value['district']; ?></td>
-                                <td><?php echo $value['facility_name']; ?></td>
                                 <td><?php echo $value['commodity_name']; ?></td>
                                 <td><?php echo $value['sum_opening']; ?></td>
                                 <td><?php echo $value['sum_received']; ?></td>
