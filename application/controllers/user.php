@@ -757,8 +757,7 @@ endif;
 									email_recieve ='$email_recieve_edit',
 									sms_recieve ='$sms_recieve_edit'
                                   	WHERE `id`= '$user_id'";
-echo json_encode($q);
-                                  	exit;
+
 		
 			$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
 			$update_user->execute("UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
