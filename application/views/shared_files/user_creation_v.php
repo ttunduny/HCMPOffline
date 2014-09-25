@@ -539,7 +539,7 @@
 </div><!-- end Modal edit user -->
 <script>
       $(document).ready(function () {
-      	$("#create_new,.edit_user").attr("disabled", 'disabled');
+      //	$("#create_new,.edit_user").attr("disabled", 'disabled');
       	
       	//activates the edit button on click
       	$(".editable").on('click',function() {
