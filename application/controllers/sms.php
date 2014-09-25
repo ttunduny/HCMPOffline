@@ -316,7 +316,8 @@ class sms extends MY_Controller {
 						bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org,eongute@clintonhealthaccess.org,
 						rkihoto@clintonhealthaccess.org,teddyodera@gmail.com,ericmurugami@yahoo.co.uk,
 						raykiprono@gmail.com,margie.dora@gmail.com,amostum5@gmail.com,muirurisk@gmail.com,
-						valwacu@gmail.com,odiwuorybrian@gmail.com,mwakiojoy@gmail.com,emgitar@yahoo.com";
+						valwacu@gmail.com,odiwuorybrian@gmail.com,mwakiojoy@gmail.com,emgitar@yahoo.com,ronohb@gmail.com,
+						kevgithuka@gmail.com,kiganyastephenthua@gmail.com,";
 		
 		return $bcc_emails;
 	}

@@ -151,7 +151,7 @@ foreach ($commodities->result_array() as $key => $value) {
                     yAxis: {
                         min: 0,
                         title: {
-                            text: 'Commodity Percentage (%)'
+                            text: 'Tests (%)'
                         }
                     },
                     legend: {
@@ -164,7 +164,7 @@ foreach ($commodities->result_array() as $key => $value) {
                         }
                     },
                     series: [{
-                            name: 'Beginning Balance',
+                            name: 'Beginning Balance(Click on each indicator to filter)',
                             data: <?php echo $graphdata['beginning_bal']; ?>
                         },
                         {
