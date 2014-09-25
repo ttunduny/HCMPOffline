@@ -1669,8 +1669,12 @@ public function rtk_manager_stocks($month=null) {
                 $allocation = '<span class="label label-success">Allocated for  ' . $lastmonth . '</span>';
             } else {
                 $allocation = '<span class="label label-important">Pending Allocation for  ' . $lastmonth . '</span>';
-                $allocated = ($amc_4month / $unit_of_issue);
-                $allocated = ceil($allocated);
+                $allocate = ($amc_4month / $unit_of_issue);
+				if ($allocate <= 0){
+					$allocated = 1;
+				}else{
+                $allocated = ceil($allocate);
+				}
             }
             $table_body .= "
             <tr id=''>
