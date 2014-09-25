@@ -3426,7 +3426,8 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 
 
         public function consumption_data_dashboard($commodity_id = null, $district_id = null, $facility_code=null, $option = null,$from = null,$to = null, $graph_type=null,$tracer = null) {
-        //reset the values here
+       
+	    //reset the values here
      	$commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
 		$district_id =(isset($district_id)&&($district_id))? $district_id:$this -> session -> userdata('district_id') ;
 		$county_id =(isset($county_id)&&($county_id))? $county_id:$this -> session -> userdata('county_id') ;
