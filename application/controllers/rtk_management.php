@@ -4084,23 +4084,31 @@ function update_district_percentages_month($month=null){
 
 public function kemsa_district_reports($district) {
     $pdf_htm = '';
-    $month = date('mY', strtotime('-1 month', time()));
+    $month = date('mY', strtotime('-2 month', time()));
     $year = substr($month, -4);
-    $month = date('m', strtotime('-1 month', time()));
+    $month = date('m', strtotime('-2 month', time()));
     $date = date('F-Y', mktime(0, 0, 0, $month, 1, $year));
     $q = 'SELECT * FROM  `districts` WHERE  `id` =' . $district;
     $res = $this->db->query($q);
     $resval = $res->result_array();
-    $reportname = $resval['0']['district'] . ' district FCDRR-RTK Reports for ' . $date;
-    $reports_html = "<h2>" . $reportname . "</h2><hr> ";        
-
-    $reports_html .= $this->district_reports($year, $month, $district);
-        //       echo($reports_html);die;
+    $reportname = $resval['0']['district'] . ' district FCDRR-RTK Reports for ' . $date;    
+    $report_result = $this->district_reports($year, $month, $district);
+    if($report_result!=''){
+        $reports_html = "<h2>" . $reportname . "</h2><hr> ";        
+        $reports_html .= $report_result;
+        //echo "$reports_html";die();
+         $email_address = "lab@kemsa.co.ke,shamim.kuppuswamy@kemsa.co.ke,onjathi@clintonhealthaccess.org,jbatuka@usaid.gov,williamnguru@gmail.com,ttunduny@gmail.com,patrick.mwangi@kemsa.co.ke";
+		 //$email_address = "ttunduny@gmail.com";
+         $this->sendmail($reports_html, $reportname, $email_address);
+    }//else{
+        //echo "No data to Send";
+    //}    
+   
 //      $email_address = "cecilia.wanjala@kemsa.co.ke,jbatuka@usaid.gov";
-//        $email_address = "lab@kemsa.co.ke,shamim.kuppuswamy@kemsa.co.ke,onjathi@clintonhealthaccess.org,jbatuka@usaid.gov,williamnguru@gmail.com,ttunduny@gmail.com";
-      // $email_address = "lab@kemsa.co.ke,williamnguru@gmail.com,ttunduny@gmail.com";
-    $email_address = "ttunduny@gmail.com";
-    $this->sendmail($reports_html, $reportname, $email_address);
+   //$email_address = "lab@kemsa.co.ke,shamim.kuppuswamy@kemsa.co.ke,onjathi@clintonhealthaccess.org,jbatuka@usaid.gov,williamnguru@gmail.com,ttunduny@gmail.com,patrick.mwangi@kemsa.co.ke";
+    // $email_address = "lab@kemsa.co.ke,williamnguru@gmail.com,ttunduny@gmail.com";
+    // $email_address = "ttunduny@gmail.com";
+    //$this->sendmail($reports_html, $reportname, $email_address);
 }
 
 public function district_reports($year, $month, $district) {
@@ -4124,13 +4132,17 @@ public function district_reports($year, $month, $district) {
     AND districts.id = $district
     AND lab_commodity_orders.order_date
     BETWEEN '$firstdate'
-    AND NOW()";
-//        echo $q;die;
+    AND '$lastdate'";    
     $res = $this->db->query($q);
     foreach ($res->result_array() as $key => $value) {
         $id = $value['id'];
-        $pdf_htm .= $this->generate_lastpdf($id);
-        $pdf_htm .= '<br /><br /><br /><hr/><br /><br />';
+        if($id!=''){
+            $pdf_htm .= $this->generate_lastpdf($id);
+            $pdf_htm .= '<br /><br /><br /><hr/><br /><br />';
+        }else{
+
+        }
+        
     }
     return $pdf_htm;
 }
