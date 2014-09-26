@@ -297,96 +297,136 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
     public function expiry($year=null,$county_id=null, $district_id=null,$facility_code=null,$graph_type=null)
     {
 	    $year=($year=="NULL") ? date('Y') :$year;
-	    //check if the district is set
-	    $district_id=($district_id=="NULL") ? null :$district_id;
-	   // $option=($optionr=="NULL") ? null :$option;
-	    $facility_code=($facility_code=="NULL") ? null :$facility_code;
-	    $county_id=($county_id=="NULL") ? null :$county_id;
-	    $months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');        
-    	$month_=isset($month) ?$months[(int) $month-1] : null ;
+        //check if the district is set
+        $district_id=($district_id=="NULL") ? null :$district_id;
+       // $option=($optionr=="NULL") ? null :$option;
+        $facility_code=($facility_code=="NULL") ? null :$facility_code;
+        $county_id=($county_id=="NULL") ? null :$county_id;
+        $months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');        
+        $month_=isset($month) ?$months[(int) $month-1] : null ;
     
         $category_data = array();
-        $series_data =$series_data_ = array();      
-        $temp_array =$temp_array_ = array();
-        $graph_data=array();
+        $series_data = $series_data2 = $series_data_ = $series_data_2 = array();      
+        $temp_array = $temp_array2 = $temp_array_ = array();
+        $graph_data = array();
         $title='';
         
-   		if(isset($county_id)):
-		    $county_name = counties::get_county_name($county_id);   
-		    $name = $county_name['county'] ;
-		    $title="$name County" ;
-		    //print_r($county_name['county']);exit;
-	    elseif(isset($district_id)):
-		    $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
-		    $district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " Subcounty" : null;
-		    $title = isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :
-		    			(isset($district_id) && !isset($facility_code) ?  "$district_name_": "$name County") ;
-	    elseif(isset($facility_code)):
-		    $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code): null;
-		    $title = $facility_code_['facility_name'];
-	    else:
-	    	$title = "National";
-	    endif;
+        if(isset($county_id)):
+            $county_name = counties::get_county_name($county_id);   
+            $name = $county_name['county'] ;
+            $title="$name County" ;
+        elseif(isset($district_id)):
+            $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
+            $district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " Subcounty" : null;
+            $title = isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :
+                        (isset($district_id) && !isset($facility_code) ?  "$district_name_": "$name County") ;
+        elseif(isset($facility_code)):
+            $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code): null;
+            $title = $facility_code_['facility_name'];
+        else:
+            $title = "";
+        endif;
   
-     $months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-     $category_data = array_merge($category_data, $months);
-     $and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
-     $and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
-     $and_data .=($county_id>0) ?" AND d1.county='$county_id'" : null;
-     $and_data =isset( $and_data) ?  $and_data:null;
-     
-    $group_by =($district_id>0 && isset($county_id) && !isset($facility_code)) ?" ,d1.id" : null;
-    $group_by .=($facility_code>0 && isset($district_id)) ?"  ,f.facility_code" : null;
-    $group_by .=($county_id>0 && !isset($district_id)) ?" ,c.id" : null;
-    $group_by = isset( $group_by) ?  $group_by: " ,c.id";
-      if( $graph_type!="excel"):
-        $commodity_array = Doctrine_Manager::getInstance()
-        ->getCurrentConnection()
-        ->fetchAll("select DATE_FORMAT( temp.expiry_date,  '%b' ) AS cal_month,
-    			sum(temp.total) as total
-			from
-			    districts d1,
-			    facilities f
-			        left join
-			    (select ROUND(SUM(f_s.current_balance / d.total_commodity_units) * d.unit_cost, 1) AS total,
-			            f_s.facility_code,f_s.expiry_date
-			    from
-			        facility_stocks f_s, commodities d
-			    where
-			        f_s.expiry_date < NOW()
-			            and d.id = f_s.commodity_id
-			            and year(f_s.expiry_date) = $year
-			            AND  (f_s.status =1 or f_s.status =2 )
-			    GROUP BY d.id , f_s.facility_code having total > 1) 
-		    temp ON temp.facility_code = f.facility_code
-				where
-				    f.district = d1.id
-				       $and_data
-				        and temp.total > 0
-				group by month(temp.expiry_date)");   
-		
+        $months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+        $category_data = array_merge($category_data, $months);
+        $and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
+        $and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
+        $and_data .=($county_id>0) ?" AND d1.county='$county_id'" : null;
+        $and_data =isset( $and_data) ?  $and_data:null;
+        
+        $group_by =($district_id>0 && isset($county_id) && !isset($facility_code)) ?" ,d1.id" : null;
+        $group_by .=($facility_code>0 && isset($district_id)) ?"  ,f.facility_code" : null;
+        $group_by .=($county_id>0 && !isset($district_id)) ?" ,c.id" : null;
+        $group_by = isset( $group_by) ?  $group_by: " ,c.id";
+        if( $graph_type!="excel"):
+            $commodity_array = Doctrine_Manager::getInstance()->getCurrentConnection()
+            ->fetchAll("select DATE_FORMAT( temp.expiry_date,  '%b' ) AS cal_month,
+                    sum(temp.total) as total
+                from
+                    districts d1,
+                    facilities f
+                        left join
+                    (select ROUND(SUM(f_s.current_balance / d.total_commodity_units) * d.unit_cost, 1) AS total,
+                            f_s.facility_code,f_s.expiry_date
+                    from
+                        facility_stocks f_s, commodities d
+                    where
+                        f_s.expiry_date < NOW()
+                            and d.id = f_s.commodity_id
+                            and year(f_s.expiry_date) = $year
+                            AND  (f_s.status =1 or f_s.status =2 )
+                    GROUP BY d.id , f_s.facility_code having total > 1) 
+                temp ON temp.facility_code = f.facility_code
+                    where
+                        f.district = d1.id
+                           $and_data
+                            and temp.total > 0
+                    group by month(temp.expiry_date)");   
+        $commodity_array2 = Doctrine_Manager::getInstance()->getCurrentConnection()
+            ->fetchAll("
+            select 
+                DATE_FORMAT( temp.expiry_date,  '%b' ) AS cal_month,
+                sum(temp.total) as total
+            from
+                districts d1,
+                facilities f
+                    left join
+                (select 
+                    ROUND(SUM(f_s.current_balance / d.total_commodity_units) * d.unit_cost, 1) AS total,
+                        f_s.facility_code,f_s.expiry_date
+                from
+                    facility_stocks f_s, commodities d
+                where
+                    f_s.expiry_date >= NOW()
+                        and d.id = f_s.commodity_id
+                        AND f_s.status = (1 or 2)
+                        AND year(f_s.expiry_date) = $year
+                GROUP BY d.id , f_s.facility_code
+                having total > 1) temp ON temp.facility_code = f.facility_code
+            where
+                f.district = d1.id
+                   $and_data
+                    and temp.total > 0
+            group by month(temp.expiry_date)
+                ");
            
         foreach ($commodity_array as $data) :
-        $temp_array = array_merge($temp_array, array($data["cal_month"] => $data['total']));
+            $temp_array = array_merge($temp_array, array($data["cal_month"] => $data['total']));
         endforeach;
+        foreach ($commodity_array2 as $data2) :
+            $temp_array2 = array_merge($temp_array2, array($data2["cal_month"] => $data2['total']));
+            //$series_data2 = array_merge($series_data2, array($data2["cal_month"] => (int)$data2['total']));
+            //$category_data = array_merge($category_data, array($data2["cal_month"]));
+        endforeach;
+      //  echo "<pre>";print_r($temp_array2);echo "</pre>";exit;
+        
         foreach ($months as $key => $data) :
-        $val = (array_key_exists($data, $temp_array)) ? (int)$temp_array[$data] : (int)0;
-        $series_data = array_merge($series_data, array($val));
-        array_push($series_data_, array($data,$val));
+            //for expiries
+            $val = (array_key_exists($data, $temp_array)) ? (int)$temp_array[$data] : (int)0;
+            $series_data = array_merge($series_data, array($val));
+            array_push($series_data_, array($data,$val));
+            
+            //for potential expiries
+            $val2 = (array_key_exists($data, $temp_array2)) ? (int)$temp_array2[$data] : (int)0;
+            $series_data2 = array_merge($series_data2, array($val2));
+            array_push($series_data_2, array($data,$val2));
         endforeach;
-        $graph_type='spline';
+        $graph_type='column';
         
         $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_'));
-        $graph_data=array_merge($graph_data,array("graph_title"=>"Stock Expired in $title $year"));
+        $graph_data=array_merge($graph_data,array("graph_title"=>"Expiries in $title $year"));
         $graph_data=array_merge($graph_data,array("graph_type"=>$graph_type));
-        $graph_data=array_merge($graph_data,array("graph_yaxis_title"=>"Stock Expired in KSH"));
+        $graph_data=array_merge($graph_data,array("graph_yaxis_title"=>"KSH"));
         $graph_data=array_merge($graph_data,array("graph_categories"=>$category_data ));
-        $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
-
+        $graph_data=array_merge($graph_data,array("series_data"=>array()));
+        
+        //$default_expiries=array_merge($default_expiries,array("series_data"=>array()));
+        $graph_data['series_data']=array_merge($graph_data['series_data'],array("Potential Expiries"=>$series_data2,"Actual Expiries"=>$series_data));
+        //echo "<pre>";print_r($graph_data);echo "</pre>";exit;
         $data = array();
         $data['graph_id']='dem_graph_';
         $data['high_graph']= $this->hcmp_functions->create_high_chart_graph($graph_data);
-        
+       
        // print_r($data['high_graph']);
 		//exit;
         return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
@@ -877,32 +917,47 @@ endif;
     public function order($year=null,$county_id=null, $district_id=null,$facility_code=null,$graph_type=null)
     {
 	    $district_id=($district_id=="NULL") ? null :$district_id;
-	    $graph_type=($graph_type=="NULL") ? null :$graph_type;
-	    $facility_code=($facility_code=="NULL") ? null :$facility_code;
-	    $county_id=($county_id=="NULL") ? null :$county_id;
-	    $year=($year=="NULL") ? date('Y') :$year;
-	    
-	    $and_data =($district_id>0) ?" AND d.id = '$district_id'" : null;
-	    $and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
-	    $and_data .=($county_id>0) ?" AND c.id='$county_id'" : null;
-	    $and_data .=($year>0) ?" and year(o.`order_date`) =$year" : null;
-	    $and_data =isset($year) ?  $and_data:null;
+        $graph_type=($graph_type=="NULL") ? null :$graph_type;
+        $facility_code=($facility_code=="NULL") ? null :$facility_code;
+        $county_id=($county_id=="NULL") ? null :$county_id;
+        $year=($year=="NULL") ? date('Y') :$year;
+        
+        $and_data =($district_id>0) ?" AND d.id = '$district_id'" : null;
+        $and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
+        $and_data .=($county_id>0) ?" AND c.id='$county_id'" : null;
+        $and_data .=($year>0) ?" and year(o.`order_date`) =$year" : null;
+        $and_data =isset($year) ?  $and_data:null;
 
     //echo  ; exit;
-            $commodity_array = Doctrine_Manager::getInstance()
+        $commodity_array = Doctrine_Manager::getInstance()
         ->getCurrentConnection()
         ->fetchAll("SELECT 
-    sum(o.`order_total`) as total,DATE_FORMAT( o.`order_date`,  '%b' ) AS cal_month
-FROM
-    facilities f, districts d, counties c,`facility_orders` o
-WHERE
-    o.facility_code=f.facility_code
-    and f.district=d.id and d.county=c.id
-    $and_data
-group by month(o.`order_date`)
+        sum(o.`order_total`) as total,DATE_FORMAT( o.`order_date`,  '%b' ) AS cal_month
+        FROM
+            facilities f, districts d, counties c,`facility_orders` o
+        WHERE
+            o.facility_code=f.facility_code
+            and f.district=d.id and d.county=c.id
+            $and_data
+        group by month(o.`order_date`)
         "); 
-	//var_dump($commodity_array);
-	//exit;
+
+        $commodity_array_2 = Doctrine_Manager::getInstance()
+        ->getCurrentConnection()
+        ->fetchAll("SELECT 
+            sum(o.`order_total`) as total,DATE_FORMAT( o.`order_date`,  '%b' ) AS cal_month
+            FROM
+                facilities f, districts d, counties c,`facility_orders` o
+            WHERE
+                o.facility_code=f.facility_code
+                and f.district=d.id and d.county=c.id and o.status = 4
+                $and_data
+            group by month(o.`order_date`)
+        "); 
+
+        // var_dump($commodity_array_2);
+        // exit;
+
         $category_data = array();
         $series_data =$series_data_ = array();      
         $temp_array =$temp_array_ = array();
@@ -932,6 +987,16 @@ group by month(o.`order_date`)
         $category_data = array_merge($category_data, array($data["cal_month"]));
         endforeach;
 
+        $series_data2 = $series_data_2 = $category_data_2= array();
+        foreach ($commodity_array_2 as $data_2) :
+        $series_data_2 = array_merge($series_data_2, array($data_2["cal_month"] => (int)$data_2['total']));
+        $category_data_2 = array_merge($category_data_2, array($data_2["cal_month"]));
+        endforeach;
+
+        //$graph_details = array('' => , );;
+        // array_merge($series_data,$series_data_2);
+        // echo "<pre>";print_r($series_data_2);echo "</pre>";exit;
+
         $graph_type='spline';
         
         $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_order'));
@@ -939,10 +1004,13 @@ group by month(o.`order_date`)
         $graph_data=array_merge($graph_data,array("graph_type"=>$graph_type));
         $graph_data=array_merge($graph_data,array("graph_yaxis_title"=>"Cost in KSH"));
         $graph_data=array_merge($graph_data,array("graph_categories"=>$category_data ));
-        $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
+        $graph_data=array_merge($graph_data,array("series_data"=>array('Cost of Orders Made'=>$series_data,'Cost of Orders delivered'=>$series_data_2)));
         $data = array();
        
+       //seth
        $data['high_graph']= $this->hcmp_functions->create_high_chart_graph($graph_data);
+       // echo $data['high_graph'];exit;
+
        $data['graph_id']='dem_graph_order';
         return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
        else:
