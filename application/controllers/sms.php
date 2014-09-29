@@ -593,11 +593,11 @@ class sms extends MY_Controller {
 					$excel_data = array();
 					$excel_data = array('doc_creator' => $facility_name, 'doc_title' => 'facility stokouts weekly report ', 'file_name' => 'facility weekly report');
 					$row_data = array();
-					$column_data = array("Commodity Code", "Commodity Name","Unit Size", "Quantity Available (Units)","Supplier","Subcounty");
+					$column_data = array("Facility Name","Commodity Code", "Commodity Name","Unit Size", "Quantity Available (Units)","Supplier","Subcounty");
 					$excel_data['column_data'] = $column_data;
 
 					foreach ($facility_potential_expiries as $facility_potential_expiries) :
-						array_push($row_data, array($facility_potential_expiries["commodity_code"], $facility_potential_expiries["commodity_name"],$facility_potential_expiries["unit_size"],$facility_potential_expiries["current_balance"],$facility_potential_expiries["source_name"],$facility_potential_expiries["district"]));
+						array_push($row_data, array($facility_potential_expiries["facility_name"],$facility_potential_expiries["commodity_code"], $facility_potential_expiries["commodity_name"],$facility_potential_expiries["unit_size"],$facility_potential_expiries["current_balance"],$facility_potential_expiries["source_name"],$facility_potential_expiries["district"]));
 
 					endforeach;
 					if (empty($row_data)) {
@@ -621,7 +621,7 @@ class sms extends MY_Controller {
 						
 						
 						$this ->create_excel_stockouts($excel_data);
-						
+						//exit;
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						$subject = "Potential Stock Outs: " . $facility_name;
 
@@ -641,13 +641,13 @@ class sms extends MY_Controller {
 				$excel_data = array();
 				$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'district potential stock outs weekly report ', 'file_name' => 'district weekly report');
 				$row_data = array();
-				$column_data = array("Commodity Code", "Commodity Name","Unit Size", "Quantity Available (Units)","Supplier","Subcounty");
+				$column_data = array("Facility Name","Commodity Code", "Commodity Name","Unit Size", "Quantity Available (Units)","Supplier","Subcounty");
 				$excel_data['column_data'] = $column_data;
 
 				foreach ($facility_total as $facility_total_1) :
 					foreach ($facility_total_1 as $facility_total_2) :
 						foreach ($facility_total_2 as $facility_total1) :
-							array_push($row_data, array($facility_total1["commodity_code"], $facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["current_balance"],$facility_total1["source_name"],$facility_total1["district"]));
+							array_push($row_data, array($facility_total1["facility_name"],$facility_total1["commodity_code"], $facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["current_balance"],$facility_total1["source_name"],$facility_total1["district"]));
 							
 							//array_push($row_data, array($facility_total1["facility_code"], $facility_total1["facility_name"], $facility_total1["commodity_code"], $facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["current_balance_packs"],$facility_total1["amc"],$facility_total1["source_name"],$facility_total1["manufacture"],$facility_total1["district"], $facility_total1["county"]));
 							
@@ -689,7 +689,7 @@ class sms extends MY_Controller {
 			$excel_data = array();
 			$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'district potential stock outs weekly report ', 'file_name' => 'district weekly report');
 			$row_data = array();
-			$column_data = array("Commodity Code", "Commodity Name","Unit Size", "Quantity Available (Units)","Supplier","Subcounty");
+			$column_data = array("Facility Name","Commodity Code", "Commodity Name","Unit Size", "Quantity Available (Units)","Supplier","Subcounty");
 			$excel_data['column_data'] = $column_data;
 
 			foreach ($district_total as $facility_total_1) :
@@ -697,7 +697,7 @@ class sms extends MY_Controller {
 					foreach ($facility_total_2 as $facility_total_3) :
 						foreach ($facility_total_3 as $facility_total_4) :
 							foreach ($facility_total_4 as $facility_total1) :
-								array_push($row_data, array($facility_total1["commodity_code"], $facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["current_balance"],$facility_total1["source_name"],$facility_total1["district"]));
+								array_push($row_data, array($facility_total1["facility_name"],$facility_total1["commodity_code"], $facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["current_balance"],$facility_total1["source_name"],$facility_total1["district"]));
 							
 							endforeach;
 						endforeach;
@@ -730,6 +730,7 @@ class sms extends MY_Controller {
 				$email_address = $this -> get_county_email($county_id);
 				$bcc = $this -> get_bcc_notifications();
 				$cc_email = $this->get_cc_emails();
+				//$cc_email = "collinsojenge@gmail.com";
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc_email);
 			}
 
@@ -738,71 +739,83 @@ class sms extends MY_Controller {
 	}
 
 
-	public function create_excel_stockouts($excel_data = NUll) {
 
-		//check if the excel data has been set if not exit the excel generation
+public function create_excel_stockouts($excel_data=NUll) 
+{
 	$styleArray = array('font' => array('bold' => true),'alignment'=>array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER));
+	
+ 	//check if the excel data has been set if not exit the excel generation    
+     
+	if(count($excel_data)>0):
 		
-		if (count($excel_data) > 0) :
+		$objPHPExcel = new PHPExcel();
+		$objPHPExcel -> getProperties() -> setCreator("HCMP");
+		$objPHPExcel -> getProperties() -> setLastModifiedBy($excel_data['doc_creator']);
+		$objPHPExcel -> getProperties() -> setTitle($excel_data['doc_title']);
+		$objPHPExcel -> getProperties() -> setSubject($excel_data['doc_title']);
+		$objPHPExcel -> getProperties() -> setDescription("");
 
-			$objPHPExcel = new PHPExcel();
-			$objPHPExcel -> getProperties() -> setCreator("HCMP");
-			$objPHPExcel -> getProperties() -> setLastModifiedBy($excel_data['doc_creator']);
-			$objPHPExcel -> getProperties() -> setTitle($excel_data['doc_title']);
-			$objPHPExcel -> getProperties() -> setSubject($excel_data['doc_title']);
-			$objPHPExcel -> getProperties() -> setDescription("");
-
-			$objPHPExcel -> setActiveSheetIndex(0);
-			$objPHPExcel->getActiveSheet()->mergeCells('A1:F1');
-			$objPHPExcel->getActiveSheet()->setCellValue('A1', $excel_data['excel_title']);
-			$objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray($styleArray);
-
-			$rowExec = 2;
-
-			//Looping through the cells
+		$objPHPExcel -> setActiveSheetIndex(0);
+		
+		$objPHPExcel->getActiveSheet()->mergeCells('A1:F1');
+		$objPHPExcel->getActiveSheet()->setCellValue('A1', $excel_data['excel_title']);
+		$objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray($styleArray);
+ 
+		$rowExec = 2;
+		$column = 0;
+		//Looping through the cells
+		
+		foreach ($excel_data['column_data'] as $column_data) 
+		{
+			$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $column_data);
+			$objPHPExcel -> getActiveSheet() -> getColumnDimension(PHPExcel_Cell::stringFromColumnIndex($column)) -> setAutoSize(true);
+			//$objPHPExcel->getActiveSheet()->getStyle($column, $rowExec)->getFont()->setBold(true);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($column, $rowExec)->getFont()->setBold(true);
+			$column++;
+		}		
+		
+		$rowExec = 3;
+				
+		foreach ($excel_data['row_data'] as $row_data) 
+		{
 			$column = 0;
-
-			foreach ($excel_data['column_data'] as $column_data) {
-				$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $column_data);
-				$objPHPExcel -> getActiveSheet() -> getColumnDimension(PHPExcel_Cell::stringFromColumnIndex($column)) -> setAutoSize(true);
-				//$objPHPExcel->getActiveSheet()->getStyle($column, $rowExec)->getFont()->setBold(true);
-				$objPHPExcel -> getActiveSheet() -> getStyleByColumnAndRow($column, $rowExec) -> getFont() -> setBold(true);
-				$column++;
+	        foreach($row_data as $cell)
+	        {
+	        	//Looping through the cells per facility
+				$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $cell);
+				$column++;	
 			}
-			$rowExec = 3;
+        	
+        	$rowExec++;
+		}
 
-			foreach ($excel_data['row_data'] as $row_data) {
-				$column = 0;
-				foreach ($row_data as $cell) {
-					//Looping through the cells per facility
-					$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $cell);
+		$objPHPExcel -> getActiveSheet() -> setTitle('Simple');
+		//echo date('H:i:s') . " Write to Excel2007 format\n";
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 
-					$column++;
-				}
-				$rowExec++;
-			}
-
-			$objPHPExcel -> getActiveSheet() -> setTitle('Simple');
-
-			// Save Excel 2007 file
-			//echo date('H:i:s') . " Write to Excel2007 format\n";
-			$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
-
-			// We'll be outputting an excel file
+    	// We'll be outputting an excel file
+		if(isset($excel_data['report_type']))
+		{
+			$objWriter->save("./print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
+			//exit;
+	   	} else{
+	   		// We'll be outputting an excel file
 			header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-			header("Cache-Control: no-store, no-cache, must-revalidate");
-			header("Cache-Control: post-check=0, pre-check=0", false);
-			header("Pragma: no-cache");
+	        header("Cache-Control: no-store, no-cache, must-revalidate");
+	        header("Cache-Control: post-check=0, pre-check=0", false);
+	        header("Pragma: no-cache");
 			// It will be called file.xls
-			header("Content-Disposition: attachment; filename=" . $excel_data['file_name'] . ".xlsx");
-
+			header("Content-Disposition: attachment; filename=".$excel_data['file_name'].'.xls');
 			// Write file to the browser
-			$objWriter -> save('php://output');
-			$objPHPExcel -> disconnectWorksheets();
-			unset($objPHPExcel);
-		// Echo done
-		endif;
-	}
+	        $objWriter -> save('php://output');
+	       $objPHPExcel -> disconnectWorksheets();
+	       unset($objPHPExcel);
+	   }
+		
+	endif;
+}
+ 
+
 public function create_excel_potential_expiries($excel_data = NUll) {
 
 		//check if the excel data has been set if not exit the excel generation
