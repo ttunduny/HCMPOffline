@@ -888,32 +888,47 @@ endif;
     public function order($year=null,$county_id=null, $district_id=null,$facility_code=null,$graph_type=null)
     {
 	    $district_id=($district_id=="NULL") ? null :$district_id;
-	    $graph_type=($graph_type=="NULL") ? null :$graph_type;
-	    $facility_code=($facility_code=="NULL") ? null :$facility_code;
-	    $county_id=($county_id=="NULL") ? null :$county_id;
-	    $year=($year=="NULL") ? date('Y') :$year;
-	    
-	    $and_data =($district_id>0) ?" AND d.id = '$district_id'" : null;
-	    $and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
-	    $and_data .=($county_id>0) ?" AND c.id='$county_id'" : null;
-	    $and_data .=($year>0) ?" and year(o.`order_date`) =$year" : null;
-	    $and_data =isset($year) ?  $and_data:null;
+        $graph_type=($graph_type=="NULL") ? null :$graph_type;
+        $facility_code=($facility_code=="NULL") ? null :$facility_code;
+        $county_id=($county_id=="NULL") ? null :$county_id;
+        $year=($year=="NULL") ? date('Y') :$year;
+        
+        $and_data =($district_id>0) ?" AND d.id = '$district_id'" : null;
+        $and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
+        $and_data .=($county_id>0) ?" AND c.id='$county_id'" : null;
+        $and_data .=($year>0) ?" and year(o.`order_date`) =$year" : null;
+        $and_data =isset($year) ?  $and_data:null;
 
     //echo  ; exit;
-            $commodity_array = Doctrine_Manager::getInstance()
+        $commodity_array = Doctrine_Manager::getInstance()
         ->getCurrentConnection()
         ->fetchAll("SELECT 
-    sum(o.`order_total`) as total,DATE_FORMAT( o.`order_date`,  '%b' ) AS cal_month
-FROM
-    facilities f, districts d, counties c,`facility_orders` o
-WHERE
-    o.facility_code=f.facility_code
-    and f.district=d.id and d.county=c.id
-    $and_data
-group by month(o.`order_date`)
+        sum(o.`order_total`) as total,DATE_FORMAT( o.`order_date`,  '%b' ) AS cal_month
+        FROM
+            facilities f, districts d, counties c,`facility_orders` o
+        WHERE
+            o.facility_code=f.facility_code
+            and f.district=d.id and d.county=c.id
+            $and_data
+        group by month(o.`order_date`)
         "); 
-	//var_dump($commodity_array);
-	//exit;
+
+        $commodity_array_2 = Doctrine_Manager::getInstance()
+        ->getCurrentConnection()
+        ->fetchAll("SELECT 
+            sum(o.`order_total`) as total,DATE_FORMAT( o.`order_date`,  '%b' ) AS cal_month
+            FROM
+                facilities f, districts d, counties c,`facility_orders` o
+            WHERE
+                o.facility_code=f.facility_code
+                and f.district=d.id and d.county=c.id and o.status = 4
+                $and_data
+            group by month(o.`order_date`)
+        "); 
+
+        // var_dump($commodity_array_2);
+        // exit;
+
         $category_data = array();
         $series_data =$series_data_ = array();      
         $temp_array =$temp_array_ = array();
@@ -943,6 +958,16 @@ group by month(o.`order_date`)
         $category_data = array_merge($category_data, array($data["cal_month"]));
         endforeach;
 
+        $series_data2 = $series_data_2 = $category_data_2= array();
+        foreach ($commodity_array_2 as $data_2) :
+        $series_data_2 = array_merge($series_data_2, array($data_2["cal_month"] => (int)$data_2['total']));
+        $category_data_2 = array_merge($category_data_2, array($data_2["cal_month"]));
+        endforeach;
+
+        //$graph_details = array('' => , );;
+        // array_merge($series_data,$series_data_2);
+        // echo "<pre>";print_r($series_data_2);echo "</pre>";exit;
+
         $graph_type='spline';
         
         $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_order'));
@@ -950,10 +975,13 @@ group by month(o.`order_date`)
         $graph_data=array_merge($graph_data,array("graph_type"=>$graph_type));
         $graph_data=array_merge($graph_data,array("graph_yaxis_title"=>"Cost in KSH"));
         $graph_data=array_merge($graph_data,array("graph_categories"=>$category_data ));
-        $graph_data=array_merge($graph_data,array("series_data"=>array('total'=>$series_data)));
+        $graph_data=array_merge($graph_data,array("series_data"=>array('Cost of Orders Made'=>$series_data,'Cost of Orders delivered'=>$series_data_2)));
         $data = array();
        
+       //seth
        $data['high_graph']= $this->hcmp_functions->create_high_chart_graph($graph_data);
+       // echo $data['high_graph'];exit;
+
        $data['graph_id']='dem_graph_order';
         return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
        else:
