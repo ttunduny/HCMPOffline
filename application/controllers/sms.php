@@ -429,7 +429,7 @@ class sms extends MY_Controller {
 								This email was automatically generated. Please do not respond to this email address or it will be ignored.";
 				
 						
-						$this -> create_excel_potential_expiries($excel_data);
+						$this ->hcmp_functions-> create_excel($excel_data);
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						
 						$email_address = $this->get_facility_email($facility_code);
@@ -467,7 +467,7 @@ class sms extends MY_Controller {
 					$excel_data['file_name'] = $district_name . "_Weekly_District_Potential_Expiries_Report";
 					$excel_data['excel_title'] = "Potential Expiries Report for ".$district_name." Sub County as at ".date("jS F Y");
 					
-					$this -> create_excel_potential_expiries($excel_data);
+					$this -> hcmp_functions->create_excel($excel_data);
 					$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 					$subject = "Potential Expiries: " . $district_name . " Sub County (Next 3 Months)";
 					
@@ -517,20 +517,20 @@ class sms extends MY_Controller {
 				$excel_data['file_name'] = $county_name . "_Weekly_County_Potential_Expiries_Report";
 				$excel_data['excel_title'] = "Potential Expiries Report for ".$county_name." County as at ".date("jS F Y");
 					
-				$this -> create_excel_potential_expiries($excel_data);
+				$this -> hcmp_functions->create_excel($excel_data);
 				$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 				$subject = "Potential Expiries: " . $county_name . " County (Next 3 Months)";
 				
 				$message = "Dear ".$county_name." County team,
-								Find attached an excel sheet with the ".$county_name." County breakdown for the Potential Expiries.
-								Kindly sensitize the need to re-distribute these short expiry commodities.
-								You may log onto health-cmp.or.ke for follow up.
-								
-								----
-								
-								HCMP
-								
-								This email was automatically generated. Please do not respond to this email address or it will be ignored.";
+							Find attached an excel sheet with the ".$county_name." County breakdown for the Potential Expiries.
+							Kindly sensitize the need to re-distribute these short expiry commodities.
+							You may log onto health-cmp.or.ke for follow up.
+							
+							----
+							
+							HCMP
+							
+							This email was automatically generated. Please do not respond to this email address or it will be ignored.";
 				
 				$email_address = $this -> get_county_email($county_id);
 				//$email_address = "collinsojenge@2014@gmail.com";

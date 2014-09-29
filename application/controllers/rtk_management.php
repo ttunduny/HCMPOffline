@@ -1670,11 +1670,11 @@ public function rtk_manager_stocks($month=null) {
             } else {
                 $allocation = '<span class="label label-important">Pending Allocation for  ' . $lastmonth . '</span>';
                 $allocate = ($amc_4month / $unit_of_issue);
-				if ($allocate <= 0){
-					$allocated = 1;
-				}else{
+                if ($allocate <= 0){
+                    $allocated = 1;
+                }else{
                 $allocated = ceil($allocate);
-				}
+                }
             }
             $table_body .= "
             <tr id=''>
@@ -4084,10 +4084,13 @@ function update_district_percentages_month($month=null){
 
 public function kemsa_district_reports($district) {
     $pdf_htm = '';
-    $month = date('mY', strtotime('-2 month', time()));
+    $month = date('mY', strtotime('-0 month',time()));    
     $year = substr($month, -4);
-    $month = date('m', strtotime('-2 month', time()));
-    $date = date('F-Y', mktime(0, 0, 0, $month, 1, $year));
+    $month = date('m', strtotime('-0 month', time()));
+    $month_title = date('mY', strtotime('-1 month', time()));
+    $year_title = substr($month_title, -4);
+    $month_title = date('m', strtotime('-1 month', time()));    
+    $date = date('F-Y', mktime(0, 0, 0, $month_title, 1, $year_title));   
     $q = 'SELECT * FROM  `districts` WHERE  `id` =' . $district;
     $res = $this->db->query($q);
     $resval = $res->result_array();
@@ -4095,10 +4098,9 @@ public function kemsa_district_reports($district) {
     $report_result = $this->district_reports($year, $month, $district);
     if($report_result!=''){
         $reports_html = "<h2>" . $reportname . "</h2><hr> ";        
-        $reports_html .= $report_result;
-        //echo "$reports_html";die();
-         $email_address = "lab@kemsa.co.ke,shamim.kuppuswamy@kemsa.co.ke,onjathi@clintonhealthaccess.org,jbatuka@usaid.gov,williamnguru@gmail.com,ttunduny@gmail.com,patrick.mwangi@kemsa.co.ke";
-		 //$email_address = "ttunduny@gmail.com";
+        $reports_html .= $report_result;            
+         $email_address = "lab@kemsa.co.ke,ttunduny@gmail.com";
+         //$email_address = "ttunduny@gmail.com";
          $this->sendmail($reports_html, $reportname, $email_address);
     }//else{
         //echo "No data to Send";
@@ -4171,8 +4173,8 @@ function generate_lastpdf($id) {
     $beg_date = date('dS F Y', strtotime($lab_order[0]['beg_date']));
 
     $orderdate = $lab_order[0]['order_date'];
-    $month = date('F', strtotime($orderdate));
-    $html_title = "<div ALIGN=CENTER><img src='" . base_url() . "Images/coat_of_arms.png' height='70' width='70'style='vertical-align: top;' > </img></div>
+    $month = date('F', strtotime("-1 month $orderdate"));    
+    $html_title = "<div ALIGN=CENTER><img src='" . base_url() . "assets/img/coat_of_arms.png' height='70' width='70'style='vertical-align: top;' > </img></div>
     <div style='text-align:center; font-size: 14px;display: block;font-weight: bold;'>RTK FCDRR Report for " . $lab_order[0]['facility_name'] . "  $month  2014</div>
     <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>
      Ministry of Health</div>
