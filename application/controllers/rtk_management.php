@@ -566,18 +566,21 @@ public function get_lab_report($order_no, $report_type) {
                     }
                     $month = $this->session->userdata('Month');
                     if ($month == '') {
-                        $month = date('mY', strtotime('-1 month'));
+                        $month = date('mY', strtotime('-0 month'));
                     }
+
                     $sql ="select rtk_district_percentage.percentage,districts.district from rtk_district_percentage,districts,counties
                     where rtk_district_percentage.district_id = districts.id and districts.county = counties.id and counties.id = '$countyid' 
                     and rtk_district_percentage.month = '$month'";
+             
                     $year = substr($month, -4);
                     $month = substr_replace($month, "", -4);
                     $reporting_rates = $this->db->query($sql)->result_array();
+                    
                     $districts = array();
                     $reported = array();
                     $nonreported = array();
-                    $query = $this->db->query($q);
+                    //$query = $this->db->query($q);
                     foreach ($reporting_rates as $key => $value) {
                         array_push($districts, $value['district']);  
                         $percentage_reported = intval($value['percentage']);
@@ -1101,40 +1104,63 @@ public function rtk_manager_stocks($month=null) {
             $subject = mysql_real_escape_string($_POST['subject']);
             $raw_message = mysql_real_escape_string($_POST['message']);             
             $attach_file = null;
-            //$bcc_email = 'ttunduny@gmail.com,tngugi@clintonhealthaccess.org,annchemu@gmail.com';
-            //$bcc_email = '';
+            $bcc_email = 'ttunduny@gmail.com,tngugi@clintonhealthaccess.org,annchemu@gmail.com';
+            $message = str_replace(array('\\n', "\r", "\n"), "<br />", $raw_message);
+            $bcc_email = 'ttunduny@gmail.com,tngugi@clintonhealthaccess.org,annchemu@gmail.com';       
+            include 'rtk_mailer.php';
+            $newmail = new rtk_mailer();
+        // $response = $newmail->send_email($to, $message, $subject, null, $bcc_email);
+        
             $receipient = array();
-            $month = date('mY');       
+            $month = date('mY'); 
+            $a = 0;$b = 100;      
             if($receipient_id==1){
             //all users
-                $sql = "SELECT email FROM user WHERE usertype_id in (0,7,8,11,13) and status=1 ORDER BY id DESC";
-                $res = $this->db->query($sql)->result_array();                  
-                //$to =array();
-                $to ="";
-                foreach ($res as $key => $value) {
-                    $one = $value['email'];
-                    $to.= $one.',';
-                }       
+                for ($i=$a; $i < $b; $i++) { 
+                    $sql = "SELECT email FROM user WHERE usertype_id in (0,7,8,11,13) and status=1 ORDER BY id DESC LIMIT $a,$b";
+                    $res = $this->db->query($sql)->result_array();                  
+                    //$to =array();
+                    $to ="";
+                    foreach ($res as $key => $value) {
+                        $one = $value['email'];
+                        $to.= $one.',';
+                    }
+                    $response = $newmail->send_email($to, $message, $subject, null, $bcc_email);    
+                    $a = $b;
+                    $b+=100;   
+                }
+               
                   
             }elseif($receipient_id==2){
             //All SCMLTs
-                $sql = "SELECT email FROM user WHERE usertype_id = 7 and status = 1 ORDER BY id DESC";
-                $res = $this->db->query($sql)->result_array();                                  
+            for ($i=$a; $i < $b; $i++) { 
+                $sql = "SELECT email FROM user WHERE usertype_id = 7 and status = 1 ORDER BY id DESC LIMIT $a,$b";
+                $res = $this->db->query($sql)->result_array();                                 
                 $to ="";
                 foreach ($res as $key => $value) {
                     $one = $value['email'];
                     $to.= $one.',';
-                }             
+                }
+                $response = $newmail->send_email($to, $message, $subject, null, $bcc_email);    
+                $a = $b;
+                $b+=100;   
+            }           
 
             }elseif($receipient_id==3){
             //All CLCs
-                $sql = "SELECT email FROM user WHERE usertype_id =13 and status =1 ORDER BY id DESC";
-                $res = $this->db->query($sql)->result_array();                  
-                $to =array();
-                foreach ($res as  $value) {
+            for ($i=$a; $i < $b; $i++) { 
+                $sql = "SELECT email FROM user WHERE usertype_id =13 and status =1 ORDER BY id DESC LIMIT $a,$b";
+                $res = $this->db->query($sql)->result_array();                                 
+                $to ="";
+                foreach ($res as $key => $value) {
                     $one = $value['email'];
-                    array_push($to,$one);
-                }          
+                    $to.= $one.',';
+                }
+                $response = $newmail->send_email($to, $message, $subject, null, $bcc_email);    
+                $a = $b;
+                $b+=100;   
+            }           
+  
 
             }elseif($receipient_id==4){
             //Sub C with more than 75% reporting
@@ -4430,6 +4456,30 @@ function facility_amc_compute($a, $b) {
             echo $insert3;
             echo '<br/></pre>';
         }
+    }
+    public function rtk_allocation_data() {
+        if ($_POST['data'] == '') {
+            echo 'No data was found';           
+        }
+        $data = $_POST['data'];
+        $data = str_replace('=', '&', $data);
+        $data = explode('&', $data);
+
+        $now = time();
+        $count = count($data);
+        $i = 0;
+        $j = 0;
+        $data = array_chunk($data, 4);
+
+        foreach ($data as $value) {
+            $id = $value[1];
+            $val = $value[3];
+            $query = 'UPDATE  `lab_commodity_details` SET  `allocated` =  ' . $val . ',`allocated_date` =  ' . $now . ' WHERE  `lab_commodity_details`.`id` =' . $id . '';
+            $this->db->query($query);
+        }
+        // $object_id = $id;
+        //$this->logData('16',$object_id);
+        echo("allocations saved");
     }
 
 }
