@@ -50,7 +50,7 @@ $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'root';
-$db['default']['password'] = '#cmP@2014';
+$db['default']['password'] = '';
 $db['default']['database'] = 'hcmp_rtk';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
