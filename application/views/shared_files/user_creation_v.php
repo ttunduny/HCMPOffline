@@ -122,7 +122,7 @@
 </div>
 <!-- Modal add user -->
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="myform">
-	<div class="modal-dialog">
+	<div class="modal-dialog editable" >
 		<div class="modal-content">
 			<div class="modal-header" style="padding-bottom:2px;background: #27ae60;color: white">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -544,6 +544,7 @@
       	//activates the edit button on click
       	$(".editable").on('click',function() {
 			$(".edit_user").attr("disabled", false);
+			$("#create_new").attr("disabled", false);
 		});
       	
       	$('#myModal').on('hidden.bs.modal', function () {
@@ -800,6 +801,8 @@ $("#create_new").click(function() {
            
           },
           success: function(msg) {
+          	
+          	//$('.modal-body').html(msg);return;
          
         setTimeout(function () {
           	$('.modal-body').html("<div class='bg-warning' style='height:30px'>"+
