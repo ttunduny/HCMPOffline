@@ -97,6 +97,7 @@ type="text" style="width:100px !important;" name="clone_datepicker_normal_limit_
 
 						<td><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Row</button></td>
 			</tr>
+			<script>var count=0</script>
 		           </tbody>
 		           </table>
 </div>

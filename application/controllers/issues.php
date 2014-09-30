@@ -128,6 +128,7 @@ class issues extends MY_Controller {
 				array_push($data_array_issues_table, $mydata);
 				array_push($data_array_redistribution_table, $mydata_2);
 				// reduce the stock levels
+				var_dump($mydata);exit;
 				$a = Doctrine_Manager::getInstance() -> getCurrentConnection();
 				$a -> execute("UPDATE `facility_stocks` SET `current_balance` = `current_balance`-$total_items_issues where id='$facility_stock_id[$i]'");
 				//update the transaction table here
