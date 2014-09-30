@@ -146,15 +146,19 @@ public static function get_stock_outs_for_email($facility_code)
 					    f.facility_name,
 					    c.`id` AS commodity_id,
 					    c.unit_size,
+					    cts.county,
 					    cs.source_name,
 					    f_s.manufacture,
 					    c.`commodity_code`,
 					    c.`commodity_name`,
 					    max(date_modified) AS last_day,
-					    sum(current_balance) as current_balance
+					    c.unit_cost,
+						sum(current_balance) as current_balance,
+					    (sum(current_balance) / c.total_commodity_units) as current_balance_packs
 					FROM
 					    facilities f,
 					    commodities c,
+					    counties cts,
 					    districts d,
 					    facility_stocks f_s,
 					    commodity_source cs
@@ -164,6 +168,7 @@ public static function get_stock_outs_for_email($facility_code)
 					        and f.facility_code = $facility_code
 					        AND f_s.commodity_id = c.id
 					        AND f.district = d.id
+					        and d.county = cts.id
 					        AND f_s.status = 1
 					GROUP BY c.id
 					having current_balance <= 10
@@ -378,17 +383,18 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		select  c.county, d1.district as subcounty ,temp.commodity_name,
 			 f.facility_code, f.facility_name,temp.manufacture, sum(temp.total) as total_ksh,
-			temp.unit_cost,temp.expiry_date,temp.unit_size,temp.units,
+			temp.unit_cost,temp.expiry_date,temp.unit_size,temp.units,temp.source_name,date(temp.date_added) as date_added,
 			temp.packs
 			from districts d1, counties c, facilities f left join
 			     (
 			select  ROUND( SUM(
 			f_s.current_balance  / d.total_commodity_units ) * d.unit_cost, 1) AS total, ROUND( SUM( f_s.current_balance  / d.total_commodity_units ), 1) as packs,SUM( f_s.current_balance) as units,
-			f_s.facility_code,d.id,d.commodity_name, f_s.manufacture,
+			f_s.facility_code,d.id,d.commodity_name, f_s.manufacture,cs.source_name,f_s.date_added,
 			f_s.expiry_date,d.unit_size,d.unit_cost
 			
-			 from facility_stocks f_s, commodities d
+			 from facility_stocks f_s, commodities d, commodity_source cs
 			where f_s.expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and  DATE_ADD(CURDATE(), INTERVAL 3 MONTH)
+			AND cs.id = d.commodity_source_id
 			and d.id=f_s.commodity_id
 			and year(f_s.expiry_date) !=1970
 			AND f_s.status =(1 or 2)
@@ -505,13 +511,19 @@ FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDAT
 				
 		        return $stocks ;
 	}
-	public static function All_expiries_email($facility_code,$checker=null){
-		$and=isset($checker)? " and (f_s.status =1 or f_s.status =2)" : " and f_s.status =1";
+	public static function All_expiries_email($facility_code,$checker=null)
+	{
+		$year=date(Y);
+		//$and=isset($checker)? " and (f_s.status =1 or f_s.status =2)" : " and f_s.status =1";
 		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		select 
+			d1.district as subcounty,
+			cts.county,
 		    f_s.facility_code,
 		    f_s.commodity_id,
 		    f_s.batch_no,
+		    ROUND(SUM(f_s.current_balance / c.total_commodity_units),1) as packs,
+		    ROUND(SUM(f_s.current_balance / c.total_commodity_units) * c.unit_cost,1) AS total,
 		    f_s.manufacture,
 		    f_s.status,
 		    f_s.expiry_date,
@@ -519,21 +531,30 @@ FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDAT
 		    c.unit_size,
 		    c.total_commodity_units,
 		    c.unit_cost,
-		    f_s.current_balance,
 		    f.facility_name,
-		    c.commodity_code
+		    f_s.current_balance as units,
+		    date(f_s.date_added) as date_added,
+		    c.commodity_code,
+		    cs.source_name
 		from
-		    facilities f
-		        inner join
-		    facility_stocks f_s ON f_s.facility_code = f.facility_code
+		    districts d1,
+		    counties cts,
+		    facilities f,
+		    commodity_source cs,
+		    facility_stocks f_s
 		        LEFT JOIN
 		    commodities c ON c.id = f_s.commodity_id
 		where
 		    f_s.facility_code = $facility_code
+		        AND cs.id = c.commodity_source_id
+		        AND f.facility_code = f_s.facility_code
+		AND f.district = d1.id 
+		AND d1.county = cts.id
 		        and f_s.current_balance > 0
-		        and expiry_date < NOW( )
-		        $and");
-		        return $stocks ;
+		        and expiry_date <= NOW()
+		        and (f_s.status = 1 or f_s.status = 2)
+		        AND year(expiry_date) = $year");
+    return $stocks ;
 	}
 
 	public static function expiries_report($facility_code){
