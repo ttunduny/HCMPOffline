@@ -4482,5 +4482,32 @@ function facility_amc_compute($a, $b) {
         echo("allocations saved");
     }
 
+    public function get_all_zone_a_facilities(){
+                $sql = "select facilities.*,districts.district,counties.county from facilities,counties,districts 
+                where facilities.zone = 'Zone A' 
+                and facilities.rtk_enabled=1
+                and districts.id = facilities.district
+                and counties.id=districts.county";
+                $res = $this->db->query($sql);
+                $facilities = $res->result_array(); 
+                $amcs = array();
+                foreach ($facilities as $key => $value) {
+                    $fcode = $value['facility_code'];
+                    $q = "select lab_commodities.*, facility_amc.* from lab_commodities, facility_amc 
+                    where lab_commodities.id = facility_amc.commodity_id and facility_amc.facility_code=$fcode";
+                    $res1 = $this->db->query($q);
+                    $amc_details = $res1->result_array();
+                    $amcs[$fcode] = $amc_details;
+                }
+
+                $data['title'] = 'Zone A List';
+                $data['banner_text'] = 'Facilities in Zone A';
+                $data['content_view'] = 'rtk/allocation_committee/zone_a';        
+                $data['facilities'] = $facilities;
+                $data['amcs'] = $amcs;
+                $this->load->view('rtk/template', $data);        
+
+            }
+
 }
 ?>
