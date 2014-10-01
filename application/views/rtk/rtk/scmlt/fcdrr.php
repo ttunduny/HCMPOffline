@@ -43,7 +43,7 @@
     };             
 
     //Set the first element uneditable i.e. Screening Determine
-    $('#tests_done_0').attr("readonly",'true');
+   // $('#tests_done_0').attr("readonly",'true');
 
     //Set the Datepickers
     $("#begin_date").datepicker({
@@ -90,7 +90,7 @@
                 $('#'+top_type).css("border-color","red");                
             }else{      
                 $('#'+top_type).css("border-color","none");
-                compute_tests_done();
+                //compute_tests_done();
             }
         }
 
