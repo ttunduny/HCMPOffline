@@ -1692,9 +1692,9 @@ public function rtk_manager_stocks($month=null) {
             $lastmonth = date('F', strtotime("last day of previous month"));
             $allocation = '';
             if ($allocated > 0) {
-                $allocation = '<span class="label label-success">Allocated for  ' . $lastmonth . '</span>';
+                $allocation = "<span class=\"label label-success\">Allocated for  $lastmonth </span>";
             } else {
-                $allocation = '<span class="label label-important">Pending Allocation for  ' . $lastmonth . '</span>';
+                $allocation = "<span class=\"label label-important\">Pending Allocation for  $lastmonth</span>";
                 $allocate = ($amc_4month / $unit_of_issue);
                 if ($allocate <= 0){
                     $allocated = 1;
@@ -1716,7 +1716,7 @@ public function rtk_manager_stocks($month=null) {
             <td>$amc</td>
             <td><input type='text' class='user2' name='allocated_$order_detail_id' value='$allocated'/></td>
             <td>$q_received</td>
-            <td>$allocation</td>
+            <td>".$allocation."</td>
             </tr>";
         }
 //            echo"<table>$table_body</table";die;
@@ -3264,16 +3264,16 @@ public function rtk_summary_county($county, $year, $month) {
         $end_date = date("Y-m-", strtotime("-1 Month "));
         $end_date .='31';
         //echo "Three months ago = $three_months_ago and End Date =$end_date ";die();
-        $q = "SELECT avg(lab_commodity_details.q_used) as avg_used
-        FROM  lab_commodity_details,lab_commodity_orders
-        WHERE lab_commodity_orders.id =  lab_commodity_details.order_id
-        AND lab_commodity_details.facility_code =  $mfl_code
+        $q = "SELECT avg(lab_commodity_details1.q_used) as avg_used
+        FROM  lab_commodity_details1,lab_commodity_orders
+        WHERE lab_commodity_orders.id =  lab_commodity_details1.order_id
+        AND lab_commodity_details1.facility_code =  $mfl_code
         AND lab_commodity_orders.order_date BETWEEN '$three_months_ago' AND '$end_date'";
         
         if (isset($commodity)) {
-            $q.=" AND lab_commodity_details.commodity_id = $commodity";
+            $q.=" AND lab_commodity_details1.commodity_id = $commodity";
         } else {
-            $q.=" AND lab_commodity_details.commodity_id = 1";
+            $q.=" AND lab_commodity_details1.commodity_id = 1";
         }
 
         $res = $this->db->query($q);
@@ -4518,10 +4518,11 @@ function facility_amc_compute($a,$b) {
                 $sql = "select distinct facility_code from facilities where rtk_enabled=1 and exists
                  (select distinct facility_code from lab_commodity_details) order by facility_code";
                  $facilities = $this->db->query($sql)->result_array();  
-                 $count = 0;              
+                 $count = 0; 
+                 $large_array[$code] = array();
                  foreach ($facilities as $key => $value) {
                     $code = $value['facility_code'];
-                     $q = "select order_id,facility_code,q_used,commodity_id,unit_of_issue,created_at from lab_commodity_details 
+                     $q = "select distinct order_id,facility_code,q_used,commodity_id,unit_of_issue,created_at from lab_commodity_details 
                      where facility_code='$code' and created_at between '$firstdate' and '$lastdate'";
                      $res = $this->db->query($q)->result_array();     
                         
