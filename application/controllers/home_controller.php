@@ -79,7 +79,10 @@ class Home_Controller extends MY_Controller {
             redirect('rtk_management/county_home');
         } else if ($access_level == "rtk_partner_admin") {
             redirect('rtk_management/partner_home');
-        } else if ($access_level == "allocation_committee") {
+        }else if ($access_level == "rtk_partner_super") {
+            redirect('rtk_management/partner_home');
+		}
+		else if ($access_level == "allocation_committee") {
             redirect('rtk_management/allocation_home');
             $counties = Counties::getAll();
             $table_data = "";
