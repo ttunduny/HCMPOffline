@@ -805,10 +805,9 @@ class sms extends MY_Controller {
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						$subject = "Stock Outs Report: " . $facility_name;
 						
-						//$email_address = $this -> get_facility_email($facility_code);
-						//$email_address ="collinsojenge@gmail.com";
-						//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
-						//exit;
+						$email_address = $this -> get_facility_email($facility_code);
+						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+						
 					}
 
 					//End foreach for facility
@@ -853,10 +852,8 @@ class sms extends MY_Controller {
 								
 								<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 				
-					//$email_address = $this -> get_ddp_email($district_id);
-					//$email_address ="collinsojenge2014@gmail.com";
-				
-					//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+					$email_address = $this -> get_ddp_email($district_id);
+					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
 				}
 
@@ -905,12 +902,11 @@ class sms extends MY_Controller {
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 				
 						
-				//$email_address = $this -> get_county_email($county_id);
-				$email_address = "collinsojenge2014@gmail.com";
+				$email_address = $this -> get_county_email($county_id);
 				
-				//$bcc = $this -> get_bcc_notifications();
-				//$cc_email = $this->get_cc_emails();
-				$cc_email = "collinsojenge@gmail.com";
+				$bcc = $this -> get_bcc_notifications();
+				$cc_email = $this->get_cc_emails();
+			
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc_email);
 			}
 
