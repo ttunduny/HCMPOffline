@@ -239,7 +239,7 @@ public function add_user() {
     $facility = 0;
     $region = $_POST['region'];   
 	$level = $_POST['level']; 
-    if(($level==15){
+    if($level==15){
     	if($region ==0){
     		$region = 1;
     	}
