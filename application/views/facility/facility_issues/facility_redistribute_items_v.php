@@ -74,29 +74,30 @@ endforeach;
 	</select>
 						</td>
 						<td>
-						<input type="hidden" id="0" name="commodity_id[0]" value="" class="commodity_id"/>
-						<input type="hidden" id="0" name="total_units[0]" value="" class="total_units"/>
-						<input type="hidden" name="commodity_balance[0]" value="0" class="commodity_balance"/>
-						<input type="hidden" name="facility_stock_id[0]" value="0" class="facility_stock_id"/>
-						<input type="hidden" name="manufacture[0]" value="0" class="manufacture"/>	
+						<input type="hidden" id="0" name="commodity_id[]" value="" class="commodity_id"/>
+						<input type="hidden" id="0" name="total_units[]" value="" class="total_units"/>
+						<input type="hidden" name="commodity_balance[]" value="0" class="commodity_balance"/>
+						<input type="hidden" name="facility_stock_id[]" value="0" class="facility_stock_id"/>
+						<input type="hidden" name="manufacture[]" value="0" class="manufacture"/>	
 						<input type="text" class="form-control input-small supplier_name" readonly="readonly" name="supplier_name[]"/></td>
 			            <td><input  type="text" class="form-control input-small unit_size" readonly="readonly"  /></td>
-						<td><select class="form-control batch_no big" style="width:80px !important;" name="batch_no[0]"></select></td>
-						<td><input type='text' class='form-control input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
+						<td><select class="form-control batch_no big" style="width:80px !important;" name="batch_no[]"></select></td>
+						<td><input type='text' class='form-control input-small expiry_date' value="" name='expiry_date[]' readonly="readonly"  /></td>
 												<td>
 <input class='form-control input-small clone_datepicker_normal_limit_today' 
-type="text" style="width:100px !important;" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
-						<td><input class='form-control input-small available_stock' type="text" name="available_stock[0]" readonly="readonly" /></td>
+type="text" style="width:100px !important;" name="clone_datepicker_normal_limit_today[]"  value="" required="required" /></td>
+						<td><input class='form-control input-small available_stock' type="text" name="available_stock[]" readonly="readonly" /></td>
 
 						<td><select class="form-control commodity_unit_of_issue big" style="width:80px !important;" name="commodity_unit_of_issue[]">
 			<option value="Pack_Size">Pack Size</option>
 			<option value="Unit_Size">Unit Size</option>
 			</select></td>
-						<td><input class='form-control  quantity_issued' style="width:80px !important;" type="text" value="0"  name="quantity_issued[0]"  required="required"/></td>
+						<td><input class='form-control  quantity_issued' style="width:80px !important;" type="text" value="0"  name="quantity_issued[]"  required="required"/></td>
 						<td><input class='form-control  input-small balance' type="text" value="" readonly="readonly" /></td>
 
 						<td><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Row</button></td>
 			</tr>
+			<script>var count=0</script>
 		           </tbody>
 		           </table>
 </div>

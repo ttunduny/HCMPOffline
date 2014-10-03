@@ -649,7 +649,7 @@ endif;
 		    $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code): null;
 		    $title=$facility_code_['facility_name'];
 	    else:
-	    	$title="Nationally";
+	    	$title="Nationaly";
 	    endif;
    // echo .$commodity_id ; exit;
     if( $graph_type!="excel"):
@@ -797,7 +797,7 @@ endif;
 	    $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
 	    $title=$facility_code_['facility_name'];
     else:
-    	$title="Nationally";
+    	$title="Nationaly";
     endif;
     if($graph_type!="excel"):
     // echo    .$to; exit;
@@ -950,7 +950,7 @@ endif;
     $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
     $title=$facility_code_['facility_name'];
     else:
-    $title="Nationally";
+    $title="Nationaly";
     endif;
         
         foreach ($commodity_array as $data) :
@@ -968,7 +968,7 @@ endif;
         // array_merge($series_data,$series_data_2);
         // echo "<pre>";print_r($series_data_2);echo "</pre>";exit;
 
-        $graph_type='spline';
+        $graph_type='column';
         
         $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_order'));
         $graph_data=array_merge($graph_data,array("graph_title"=>"$year $title Order Cost"));

@@ -681,13 +681,13 @@ class User extends MY_Controller {
 				$savethis -> lname = $lname;
 				$savethis -> email = $email_address;
 				$savethis -> username = $username;
-				$savethis -> password = "";
+				$savethis -> password = "123456";
 				$savethis -> activation = $save_activation_code ;
 				$savethis -> usertype_id = $user_type;
 				$savethis -> telephone = $telephone;
 				$savethis -> district = $district_code;
 				$savethis -> facility = $facility_id;
-				$savethis -> status = 0;
+				$savethis -> status = 1;
 				$savethis -> county_id = $county;
 				$savethis -> save();
 endif;
