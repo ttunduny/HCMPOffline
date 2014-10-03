@@ -1014,7 +1014,7 @@ public function rtk_manager_activity() {
     $data['title'] = "RTK Manager";
     $this->load->view('rtk/template', $data);
 } 
-public function rtk_manager_users() {
+public function rtk_manager_users() { 
     $data['title'] = 'RTK Manager';
     $data['banner_text'] = 'RTK Manager';
     $data['content_view'] = "rtk/rtk/admin/admin_users";
@@ -3502,26 +3502,10 @@ public function show_dmlt_districts($dmlt, $mode = NULL) {
 }
 
 public function add_user() {    
-    $fname = $_POST['firstname'];
-    $lname = $_POST['lastname'];
-    $email = $_POST['email'];
-    $level = $_POST['level'];      
-    $county = $_POST['county'];
-    $district = $_POST['district'];
-    if(isset($_POST['facility'])){
-        $facility = $_POST['facility'];
-    }else{
-        $facility = 0;
-    }    
-    $region = $_POST['region'];
-    $password = 123456;
-    $salt = '#*seCrEt!@-*%';
-    $value=( md5($salt . $password));
-
-    $sql = "INSERT INTO `user`(`fname`, `lname`, `email`, `username`, `password`, `activation`, `usertype_id`, `telephone`, `district`, `partner`, `facility`, `created_at`, `updated_at`, `status`, `county_id`, `email_recieve`, `sms_recieve`)
-    VALUES ('$fname','$lname','$email','$email','$value',null,'$level','$telephone','$district','$region','$facility',null,null,1,'$county',1,1)";
-    $this->db->query($sql);
-    echo "Added Successfully";
+    
+    $this->load->model('user');
+    $this->user->add_user();
+    redirect('rtk_management/rtk_manager_users');
 }
 public function dmlt_district_action() {
     $action = mysql_real_escape_string($_POST['action']);
@@ -4530,6 +4514,58 @@ function facility_amc_compute($a,$b) {
                 $this->load->view('rtk/template', $data);        
 
             }
+ public function get_all_unreported_facilities(){
+        
+                $month = date('mY', time()); 
+                $year = substr($month, -4);
+                $month = substr($month, 0,2);                 
+                $month4 = date('mY', strtotime('-4 month'));                
+                $year4 = substr($month4, -4);
+                $month4 = substr($month4, 0,2);                 
+                           
+                $firstdate = $year4 . '-' . $month4 . '-01';         
+                $lastdate = $year . '-' . $month . '-31';         
+
+                
+                $sql = "select facilities.* from facilities where facilities.rtk_enabled=1";
+                 $facilities = $this->db->query($sql)->result_array();
+                
+                $q = "SELECT 
+                    facilities.facility_code,
+                    ifnull(count(lab_commodity_orders.id),0) as total,
+                    extract(YEAR_MONTH FROM lab_commodity_orders.order_date) as current_month
+                FROM
+                    lab_commodity_orders
+                    left join
+                    facilities
+                    on 
+                    facilities.facility_code = lab_commodity_orders.facility_code 
+                WHERE                     
+                    lab_commodity_orders.order_date between '$firstdate' and '$lastdate'                     
+                group by lab_commodity_orders.facility_code,extract(YEAR_MONTH FROM lab_commodity_orders.order_date)";
+                
+                $res1 = $this->db->query($q)->result_array();
+                echo "<pre>";
+                print_r($res1);
+                die();
+                $amcs = array();
+                foreach ($facilities as $key => $value) {
+                    $fcode = $value['facility_code'];
+                    $q = "select lab_commodities.*, facility_amc.* from lab_commodities, facility_amc 
+                    where lab_commodities.id = facility_amc.commodity_id and facility_amc.facility_code=$fcode";
+                    $res1 = $this->db->query($q);
+                    $amc_details = $res1->result_array();
+                    $amcs[$fcode] = $amc_details;
+                }
+
+                $data['title'] = 'Zone A List';
+                $data['banner_text'] = 'Facilities in Zone A';
+                $data['content_view'] = 'rtk/allocation_committee/zone_a';        
+                $data['facilities'] = $facilities;
+                $data['amcs'] = $amcs;
+                $this->load->view('rtk/template', $data);        
+
+            }
             public function update_labs($year,$month){                
                 ini_set(-1);
                 $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
@@ -4606,6 +4642,7 @@ function facility_amc_compute($a,$b) {
                  }
                 
             }
+
 
 public function clean_data($month=null){
     if(isset($month)){           
