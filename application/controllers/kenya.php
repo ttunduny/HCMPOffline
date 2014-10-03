@@ -243,7 +243,7 @@ $using_hcmp = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetch
 		$data['private'] = json_encode((int)$private[0]['total']);
 		$data['public'] = json_encode((int)$public[0]['total']);
 		$data['fbo'] = json_encode((int)$fbo[0]['total']);
-		$data['colors'] = "['#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']";
+		$data['colors'] = "['#228b22', '#4b0082', '#008b8b', '#a52a2a', '#6AF9C4']";
 		$data['other'] = json_encode((int)$other);
 		$this -> load -> view("national/ajax/pie_template",$data);
 		
@@ -366,7 +366,7 @@ $using_hcmp = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetch
         //var_dump($arrayseries);exit;
  		//var_dump($series_data);exit;
  		
-        $data['graph_type'] = 'bar';
+        $data['graph_type'] = 'column';
         $data['graph_title'] = "$title Stock Level in Months of Stock (MOS)";
         $data['graph_yaxis_title'] = "MOS";
         $data['graph_id'] = $div;
@@ -375,7 +375,7 @@ $using_hcmp = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetch
         $data['category_data'] = json_encode($category_data);
         $data['series_data'] =  json_encode($arrayseries);
 				
-		$this -> load -> view("national/ajax/bar_template",$data);
+		$this -> load -> view("national/ajax/threashhold_v",$data);
 				
 			}
 
