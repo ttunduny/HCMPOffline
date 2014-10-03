@@ -2019,7 +2019,7 @@ public function rtk_manager_stocks($month=null) {
 
     }
     function partner_reporting_percentages($partner, $year, $month) {    
-        $q = 'SELECT 
+        $q = "SELECT 
                 count(lab_commodity_orders.id) as total,
                 extract(YEAR_MONTH FROM lab_commodity_orders.order_date) as current_month,
                 facilities.partner,
@@ -2029,21 +2029,21 @@ public function rtk_manager_stocks($month=null) {
                 facilities
             WHERE
                 facilities.facility_code = lab_commodity_orders.facility_code
-                    AND facilities.partner = 7
-            group by extract(YEAR_MONTH FROM lab_commodity_orders.order_date)';
+                    AND facilities.partner = '$partner'
+            group by extract(YEAR_MONTH FROM lab_commodity_orders.order_date)";
         $query = $this->db->query($q);
 
         $sql = $this->db->select('count(id) as county_facility')->get_where('facilities', array('partner' =>$partner))->result_array();
         foreach ($sql as $key => $value) {
            $facilities = intval($value['county_facility']);
         }
-       
 
         $month = array();
         $reported = array();
         $nonreported = array();
         $reported_value = array();
         $nonreported_value = array();
+      
         foreach ($query->result_array() as $val) {
             $raw_month =  $val['current_month'];
             $year = substr($raw_month, 0,4);
@@ -2757,7 +2757,7 @@ public function partner_county_profile($district) {
        $data['district_balances_previous'] = $this->partner_county_totals($year_previous, $previous_month, $district);
        $data['district_balances_previous_1'] = $this->partner_county_totals($year_previous_1, $previous_month_1, $district);
        $data['district_balances_previous_2'] = $this->partner_county_totals($year_previous_2, $previous_month_2, $district);
-
+  
 
        $data['district_summary'] = $district_summary;
 
@@ -3796,7 +3796,7 @@ $res = $this->db->query($common_q)->result_array();
 
 return $res;
 }
-function partner_county_totals($year, $month, $county = NULL) {
+function partner_county_totals($year, $month, $partner = NULL) {
 
     $firstdate = $year . '-' . $month . '-01';
     $firstday = date("Y-m-d", strtotime("$firstdate +1 Month "));
@@ -3826,18 +3826,14 @@ function partner_county_totals($year, $month, $county = NULL) {
     AND lab_commodity_orders.id = lab_commodity_details.order_id 
     AND facilities.facility_code = lab_commodity_details.facility_code AND facilities.district = districts.id 
     AND districts.county = counties.id 
+    and facilities.partner = '$partner'
     AND lab_commodity_orders.order_date BETWEEN  '$firstday' AND  '$lastdate'
     AND lab_commodities.id in (select lab_commodities.id from lab_commodities,lab_commodity_categories 
         where lab_commodities.category = lab_commodity_categories.id and lab_commodity_categories.active = '1')";
 
-if (isset($county)) {
-    $common_q.= ' AND districts.county = counties.id and counties.id=' . $county;
-}
-
 $common_q.= ' group by lab_commodities.id';
 
 $res = $this->db->query($common_q)->result_array(); 
-
 return $res;
 }
 
