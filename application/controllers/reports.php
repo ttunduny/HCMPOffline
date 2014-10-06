@@ -3960,7 +3960,8 @@ public function get_division_commodities_data($district_id = null, $facility_cod
        public function set_tragget_facility($facility_id,$status,$type){
        	//security check	  
        if($this->input->is_ajax_request()):
-	   $set=($type=='targetted') ? "`targetted` =$status" : "`using_hcmp` =$status";
+	   $date_ = date("Y-m-d");
+	   $set=($type=='targetted') ? "`targetted` =$status" : "`using_hcmp` =$status, date_of_activation = '$date_'";
        $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
 	   $inserttransaction->execute("UPDATE `Facilities` SET $set
                                           WHERE `id`=$facility_id"); 
