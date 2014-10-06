@@ -76,6 +76,7 @@ class Home extends MY_Controller
 			case 'rtk_partner_admin':
 			case 'rtk_manager':
 			case 'rtk_partner_admin':
+			case 'rtk_partner_super':
 			redirect('home_controller');
 			break;
 			case 'super_admin':

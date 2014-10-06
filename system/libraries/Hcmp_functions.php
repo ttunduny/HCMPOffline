@@ -337,10 +337,10 @@ if(count($excel_data)>0):
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 
    	    	// We'll be outputting an excel file
-		if(isset($excel_data['report_type'])){
+	if(isset($excel_data['report_type'])){
 
 	   $objWriter->save("./print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
-   } else{
+   	} else{
    	
     	// We'll be outputting an excel file
 		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");

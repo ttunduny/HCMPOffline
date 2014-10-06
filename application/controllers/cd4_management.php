@@ -74,7 +74,7 @@ class cd4_Management extends MY_Controller {
         }
 
         date_default_timezone_set('EUROPE/Moscow');
-        $url = 'http://nascop.org/cd4/reportingfacsummary.php?yr=' . $year . '&month=' . $month;
+        $url = 'http://nascop.org/cd4/reportingfacsummary.php?year=' . $year . '&month=' . $month;
         $string_manual = file_get_contents($url);
         $string = json_decode($string_manual);
         $string = objectToArray($string);
@@ -1183,7 +1183,7 @@ AND district =' . $district . '');
             );
             $this->db->where('month', $month);
             $this->db->where('year', $year);
-            $this->db->update('api_gens', $data);
+            $this->db->update('api_gen', $data);
 
             echo "Counties Done synchronizing. Now synchronizing Facilities...<br />";
 

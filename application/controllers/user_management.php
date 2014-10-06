@@ -234,6 +234,12 @@ public function submit() {
 			'user_indicator'=>"rtk_partner_admin",'names'=>$namer,'inames'=>$inames,
 			'identity'=>$id_d,'news'=>$faci,'district1'=>$disto,'county_name'=>$county_name);
 		}
+		else if($myvalue==15){
+			$session_data = array('county_id'=>$county_id,'partner'=>$part,'phone_no'=>$phone,
+			'user_email'=>$user_email,'full_name' =>$partner_name ,'user_id'=>$user_id,
+			'user_indicator'=>"rtk_partner_super",'names'=>$namer,'inames'=>$inames,
+			'identity'=>$id_d,'news'=>$faci,'district1'=>$disto,'county_name'=>$county_name);
+		}
 						
 		$this -> session -> set_userdata($session_data);
 		$this -> session -> set_userdata(array("user_type_id"=>$myvalue));

@@ -227,6 +227,31 @@ AND u.county_id ='$county_id'
 
 return array('total_no_of_users'=>$q[0]['total_no_of_users'],'total_no_of_users_7_days'=>$q_1[0]['total_no_of_users'],"active_users"=>$q_2[0]['users_logged_in']);
 }
+public function add_user() {        
+    $password = 123456;
+    $salt = '#*seCrEt!@-*%';
+    $time = date("Y-m-d H:i:s"); 
+    $fname = $_POST['fname'];
+    $lname = $_POST['lname'];
+    $email = $_POST['email'];        
+    $county = $_POST['county'];
+    $district = $_POST['district'];
+    $facility = 0;
+    $region = $_POST['region'];   
+	$level = $_POST['level']; 
+    if($level==15){
+    	if($region ==0){
+    		$region = 1;
+    	}
+    } 
+    $value=(md5($salt . $password));
+
+    $sql = "INSERT INTO `user`(`fname`, `lname`, `email`, `username`, `password`, `activation`, `usertype_id`, `telephone`, `district`, `partner`, `facility`, `created_at`, `updated_at`, `status`, `county_id`, `email_recieve`, `sms_recieve`)
+    VALUES ('$fname','$lname','$email','$email','$value','00000','$level','$telephone','$district','$region','$facility','$time','$time',1,'$county',1,1)";    
+
+    $q_2 = Doctrine_Manager::getInstance()->getCurrentConnection()->execute($sql);
+    //$this->db->query($sql);    
+}
 
 
 
