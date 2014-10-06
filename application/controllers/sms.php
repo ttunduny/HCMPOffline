@@ -543,14 +543,14 @@ class sms extends MY_Controller {
 		$counties = Facilities::get_counties_all_using_HCMP();
 
 		foreach ($counties as $counties) {
-			//holds the dat for the entire county
+			//holds the data for the entire county
 			//once it is done executing for one county it is reset to zero
 			$county_total = array();
 			//pick the county nae and county ID accordingly
 			$county_id = $counties['county'];
 			$county_name = $counties['county_name'];
 
-			//Get all the ddistricts in that  particular county
+			//Get all the districts in that  particular county
 			$districts = Facilities::get_all_using_HCMP($county_id);
 			//holds the data for all the districts in a particular county
 			$district_total = array();
