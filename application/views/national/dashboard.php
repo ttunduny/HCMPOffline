@@ -118,7 +118,7 @@ h4{
   
   </head>
   
-  <body screen_capture_injected="true" style="background-color: whitesmoke;">
+  <body screen_capture_injected="true" style="background-color: white;">
   	
   	<div class="container-fluid navbar-default navbar-fixed-top" role="navigation" style="background-color:white">
         <div class="container-fluid">
@@ -432,12 +432,12 @@ h4{
         json_obj={"url":"<?php echo site_url("orders/getDistrict");?>",}
         var baseUrl=json_obj.url;
         dropdown(baseUrl,"county="+county_data[0],".subcounty");
-        ajax_fill_data('Kenya/actual_expiries/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#actual_ex");
+        ajax_fill_data('national/expiry/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#actual_ex");
         ajax_fill_data('Kenya/potential_expiries/'+county_data[0]+'/NULL/NULL/NULL/NULL',"#potential_ex"); 
-        ajax_fill_data('Kenya/mos_graph/'+county_data[0]+'/NULL/NULL/NULL/ALL',"#mos");
+        ajax_fill_data('Kenya/mos_graph/'+county_data[0]+'/NULL/NULL/NULL/NULL/mos',"#mos");
         ajax_fill_data('Kenya/consumption/'+county_data[0]+'/NULL/NULL/NULL',"#consumption");
        // ajax_request_replace_div_content('national/get_facility_infor/'+county_data[0]+'/NULL/NULL/NULL',"#facilities");
-        ajax_fill_data('Kenya/orders/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#orders");
+        ajax_fill_data('national/order/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#orders");
        // ajax_request_replace_div_content('national/get_lead_infor/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#lead_infor");
     } 
     

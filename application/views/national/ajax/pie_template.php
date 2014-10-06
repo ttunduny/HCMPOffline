@@ -26,6 +26,9 @@
                     showInLegend: true
                 }
             },
+            credits: {
+            enabled: false
+        },
             series: [{
                 type: 'pie',
                 name: 'In Numbers',

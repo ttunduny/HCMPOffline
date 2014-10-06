@@ -38,6 +38,8 @@
                 shadow: false,
                 borderWidth: 0
             }
+        },credits: {
+            enabled: false
         },
         series: [{
             name: 'Required M.O.S',
