@@ -762,10 +762,10 @@ class sms extends MY_Controller {
 					$facility_potential_expiries_total = 0;
 					//$facility_potential_expiries = array();
 					$facility_code = $facilities_ -> facility_code;
-					$facility_name = Facilities::get_facility_name2(11840);
+					$facility_name = Facilities::get_facility_name2($facility_code);
 					$facility_name = $facility_name['facility_name'];
 					
-					$facility_potential_expiries = Facility_stocks::get_stock_outs_for_email(11840);
+					$facility_potential_expiries = Facility_stocks::get_stock_outs_for_email($facility_code);
 					
 					//get potential expiries in that particular facility
 					//push the result into another array that will be used by the distrct
