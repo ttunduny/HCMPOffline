@@ -38,6 +38,7 @@
         //save the data in the db 
         if(type=='using_hcmp'){
     	thisTr.find("td:nth-child(5)").html("<span class='label label-success'>Active</span>");
+    	
     	}              	  
    	 	ajax_simple_post_with_console_response(url+id+"/"+1+"/"+type, data);	
     	} else{	
