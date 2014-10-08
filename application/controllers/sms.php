@@ -526,14 +526,20 @@ class sms extends MY_Controller {
 					
 				$email_address = $this -> get_county_email($county_id);
 				$bcc = $this -> get_bcc_notifications();
-				$cc_email = $this -> get_cc_emails();
-
+				if ($county_id == 1):
+					$cc_email = $this -> get_bcc_notifications();
+				else:
+					$cc_email = "";
+				endif;
+		
+				
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc_email);
 			}
 
 		}
 
 	}
+
 
 	public function weekly_potential_expiries_report() {
 		//Set the current year
