@@ -567,15 +567,17 @@ endif;
             subtitle: {text: 'Source: HCMP', x: -20 },
             xAxis: { categories: $graph_categories },
             tooltip: { crosshairs: [true,true] },
-                scrollbar: {
+               scrollbar: {
                enabled: true
                },
                plotOptions: {
                  series: {
-                    stacking: '$stacking',
+                 	 pointWidth: 18,
+                 	 stacking: '$stacking',
                     dataLabels: {
-                        enabled: true,
-                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                        enabled: false,
+                        rotation: -45,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black'
                     }
                 }
             },

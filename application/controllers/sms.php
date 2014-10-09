@@ -321,16 +321,7 @@ class sms extends MY_Controller {
 		
 		return $bcc_emails;
 	}
-	//Getting the CC email addresses
-	public function get_cc_emails() {
-			
-		$cc = "mukumbig@yahoo.com,anganga.pmo@gmail.com,sochola06@yahoo.com";
-		
-		return $cc;
-	}
-	
 
-	//
 	//gets the emails of users in the facility
 	public function get_facility_email($facility_code) {
 		$data = Users::get_user_emails($facility_code);
