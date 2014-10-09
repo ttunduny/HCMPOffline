@@ -3965,6 +3965,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
        $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
 	   $inserttransaction->execute("UPDATE `Facilities` SET $set
                                           WHERE `id`=$facility_id"); 
+										  
 	   echo "success";
        endif;
        }

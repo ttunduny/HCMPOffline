@@ -536,7 +536,7 @@ public function get_lab_report($order_no, $report_type) {
 
 
     ///*** CLC Functions ***///
-            public function county_home() {
+             public function county_home() {
                 $lastday = date('Y-m-d', strtotime("last day of previous month"));
                 $countyid = $this->session->userdata('county_id');
                 $districts = districts::getDistrict($countyid);
@@ -566,25 +566,31 @@ public function get_lab_report($order_no, $report_type) {
                     }
                     $month = $this->session->userdata('Month');
                     if ($month == '') {
-                        $month = date('mY', strtotime('-0 month'));
+                        $month = date('mY', strtotime('-1 month'));
                     }
 
+                    
+                    $month_db = date("mY", strtotime("$month +0 month"));
+                   // echo "$month_db";die();
                     $sql ="select rtk_district_percentage.percentage,districts.district from rtk_district_percentage,districts,counties
                     where rtk_district_percentage.district_id = districts.id and districts.county = counties.id and counties.id = '$countyid' 
-                    and rtk_district_percentage.month = '$month'";
-             
+                    and rtk_district_percentage.month = '$month_db'";
                     $year = substr($month, -4);
                     $month = substr_replace($month, "", -4);
                     $reporting_rates = $this->db->query($sql)->result_array();
-                    
                     $districts = array();
                     $reported = array();
                     $nonreported = array();
-                    //$query = $this->db->query($q);
+                    $query = $this->db->query($q);
                     foreach ($reporting_rates as $key => $value) {
                         array_push($districts, $value['district']);  
                         $percentage_reported = intval($value['percentage']);
-                        array_push($reported, $percentage_reported);
+                        if($percentage_reported >100){
+                            $percentage_reported=100;
+                        }else{
+                            $percentage_reported = intval($value['percentage']);
+                        }
+						array_push($reported, $percentage_reported);
                         $percentage_non_reported = 100 - $percentage_reported;
                         array_push($nonreported, $percentage_non_reported);
                     }
@@ -3391,12 +3397,15 @@ if (isset($county)) {
     $common_q.= ' AND counties.id =' . $county;
 }
 
-$common_q.= ' group by lab_commodities.id';
+ $common_q.= ' group by lab_commodities.id';
 
 $res = $this->db->query($common_q);        
 
-        // $result = $res->result_array();
-        // array_push($returnable, $result[0]);
+        $result = $res->result_array();
+        // echo "<pre>";
+        // print_r($result);
+        // die();
+        //array_push($returnable, $result);
 
 
         // $q = $common_q . " AND lab_commodities.id = 1";
@@ -3407,12 +3416,7 @@ $res = $this->db->query($common_q);
         // $q2 = $common_q . " AND lab_commodities.id = 2";
         // $res2 = $this->db->query($q2);
         // $result2 = $res2->result_array();
-        // array_push($returnable, $result2[0]);
-
-        // $q3 = $common_q . " AND lab_commodities.id = 3";
-        // $res3 = $this->db->query($q3);
-        // $result3 = $res3->result_array();
-        // array_push($returnable, $result3[0]);
+        // array_push($returnable, $result2[0]);        
 
         // $q4 = $common_q . " AND lab_commodities.id = 4";
         // $res4 = $this->db->query($q4);
@@ -3428,8 +3432,9 @@ $res = $this->db->query($common_q);
         // $res6 = $this->db->query($q6);
         // $result6 = $res6->result_array();
         // array_push($returnable, $result6[0]);
-$returnable = $res->result_array();
-return $returnable;
+// $returnable = $res->result_array();
+// echo"<pre>";print_r($returnable);die;
+return $result;
 }
 
 function county_reporting_percentages($county, $year, $month) {
