@@ -50,7 +50,47 @@ class facility_issues extends Doctrine_Record {
      and f_i.facility_code=$facility_code"); 
 
 
-            return $transaction[0];    
+    return $transaction[0];    
+   }
+   //The function gets the consumption for the email consumption report
+   public static function get_consumption_report_facility($facility_code)
+   {
+   	$date_ = date("m Y");
+   	  $consumption = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+   	  SELECT 
+		    cms.commodity_name,
+		    cms.total_commodity_units as unit_size,
+		    cms.unit_cost,
+		    cs.source_name,
+		    f.facility_name,
+		    f.facility_code,
+		    di.district,
+		    c.county,
+		    MONTHNAME(fs.date_issued) as month,
+		    fs.qty_issued AS total_units,
+		    (fs.qty_issued * cms.unit_cost) as total_cost,
+		    CEIL(fs.qty_issued / cms.total_commodity_units) AS total_packs
+		FROM
+		    facility_issues fs,
+		    commodities cms,
+		    facilities f,
+		    districts di,
+		    commodity_source cs,
+		    counties c
+		WHERE
+		    fs.facility_code = f.facility_code
+		        AND f.facility_code = $facility_code
+		        AND fs.qty_issued > 0
+		        AND f.district = di.id
+		        AND di.county = c.id
+		        AND cs.id = cms.commodity_source_id
+		        AND fs.status = '1'
+		        AND DATE_FORMAT(fs.date_issued, '%m %Y') = '$date_'
+		        AND cms.id = fs.commodity_id
+		GROUP BY cms.commodity_name asc"); 
+
+    return $consumption; 
+	   
    }
 	public static function get_bin_card($facility_code,$commodity_id,$from,$to){
 
