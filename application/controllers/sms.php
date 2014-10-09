@@ -544,20 +544,9 @@ class sms extends MY_Controller {
 					
 				$email_address = "hcmp.kenya@gmail.com";
 				$bcc = $this -> get_bcc_notifications();
-<<<<<<< HEAD
-				if ($county_id == 1):
-					$cc_email = $this -> get_bcc_notifications();
-				else:
-					$cc_email = "";
-				endif;
-		
-				
-				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc_email);
-=======
 				$cc = $this -> get_county_email($county_id);
 				
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc);
->>>>>>> baa574256891fe5381b8429a6e3c4038a6bedd61
 			}
 
 		}
