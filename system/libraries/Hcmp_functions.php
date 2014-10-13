@@ -387,7 +387,7 @@ for ($row = 17; $row <= $highestRow; $row++){
     $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);							  
    if(isset($rowData[0][2]) && $rowData[0][2]!=''){
    	foreach($facility_stock_data_item as $facility_stock_data_item_){
-   	if(in_array($rowData[0][2], $facility_stock_data_item_)){
+   	if(in_array($rowData[0][2], $facility_stock_data_item_) && in_array($rowData[0][6], $facility_stock_data_item_)){
    	$key = array_search($rowData[0][2], $facility_stock_data_item_);
 	$excel2->getActiveSheet()->setCellValue("H$row", $facility_stock_data_item_['quantity_ordered_pack']);	
    	}	
