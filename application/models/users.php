@@ -240,6 +240,11 @@ public static function get_dpp_emails($distirct){
 		$level = $query -> execute();
 		return $level;
 }
+public static function get_dpp_emails_county_level($county_id){
+	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("county_id = $county_id and usertype_id='3' and email_recieve = 1");
+		$level = $query -> execute();
+		return $level;
+}
 public static function get_county_emails($county_id){
 	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("county_id = $county_id and usertype_id='10' and email_recieve = 1 ");
 		$level = $query -> execute();

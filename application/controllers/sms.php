@@ -299,7 +299,16 @@ class sms extends MY_Controller {
 		}
 		return $user_email;
 	}
+	public function get_ddp_email_county($county_id) {
+		$data = Users::get_dpp_emails_county_level($county_id);
+		$user_email = "";
+		foreach ($data as $info) {
+			
+			$user_email .= $info -> email . ',';
 
+		}
+		return $user_email;
+	}
 	public function get_county_email($county_id) {
 		$data = Users::get_county_emails($county_id);
 		$user_email = "";
@@ -312,7 +321,7 @@ class sms extends MY_Controller {
 //Getting the bcc emails 
 	public function get_bcc_notifications() {
 		$bcc_emails = "collinsojenge@gmail.com,kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,
-						jhungu@clintonhealthacces.org,gmacharia@clintonhealthacces.org,tngugi@clintonhealthaccess.org,
+						jhungu@clintonhealthaccess.org,gmacharia@clintonhealthacces.org,tngugi@clintonhealthaccess.org,
 						bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org,eongute@clintonhealthaccess.org,
 						rkihoto@clintonhealthaccess.org,teddyodera@gmail.com,ericmurugami@yahoo.co.uk,
 						raykiprono@gmail.com,margie.dora@gmail.com,amostum5@gmail.com,muirurisk@gmail.com,
@@ -533,7 +542,7 @@ class sms extends MY_Controller {
 							<p>HCMP</p>
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 					
-				$email_address = "hcmp.kenya@gmail.com";
+				$email_address = $this -> get_ddp_email_county($county_id);
 				$bcc = $this -> get_bcc_notifications();
 				$cc = $this -> get_county_email($county_id);
 				
@@ -618,13 +627,13 @@ class sms extends MY_Controller {
 								<p>HCMP</p>
 								
 								<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-				
+					
 						$report_type = "potential_expiries";
 						$this ->create_excel($excel_data,$report_type);
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						
-						//$email_address = $this->get_facility_email($facility_code);
-						//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+						$email_address = $this->get_facility_email($facility_code);
+						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
 					}
 
@@ -675,8 +684,8 @@ class sms extends MY_Controller {
 								
 								<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 				
-					//$email_address = $this -> get_ddp_email($district_id);
-					//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+					$email_address = $this -> get_ddp_email($district_id);
+					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 				}
 
 			}
@@ -727,9 +736,10 @@ class sms extends MY_Controller {
 							
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 				
-				$email_address = "hcmp.kenya@gmail.com,collinsojenge@gmail.com";
-				//$bcc = $this -> get_bcc_notifications();
-				//$cc = $this -> get_county_email($county_id);
+				//$email_address = "hcmp.kenya@gmail.com,collinsojenge@gmail.com";
+				$email_address = $this -> get_ddp_email_county($county_id);
+				$bcc = $this -> get_bcc_notifications();
+				$cc = $this -> get_county_email($county_id);
 				
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 			}
@@ -911,7 +921,7 @@ class sms extends MY_Controller {
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 				
 						
-				$email_address = "hcmp.kenya@gmail.com";
+				$email_address = $this -> get_ddp_email_county($county_id);
 				$bcc = $this -> get_bcc_notifications();
 				$cc = $this -> get_county_email($county_id);
 				
@@ -1107,9 +1117,7 @@ class sms extends MY_Controller {
 							
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 				
-				//$email_address = $this -> get_county_email($county_id);
-				//$email_address = "smutheu@clintonhealthaccess.org,kelvinmwas@gmail.com,collinsojenge@gmail.com";
-				$email_address = "hcmp.kenya@gmail.com";
+				$email_address = $this -> get_ddp_email_county($county_id);
 				$bcc = $this -> get_bcc_notifications();
 				$cc = $this -> get_county_email($county_id);
 				
