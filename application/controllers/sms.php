@@ -555,7 +555,7 @@ class sms extends MY_Controller {
 			//holds the data for the entire county
 			//once it is done executing for one county it is reset to zero
 			$county_total = array();
-			//pick the county nae and county ID accordingly
+			//pick the county name and county ID accordingly
 			$county_id = $counties['county'];
 			$county_name = $counties['county_name'];
 
@@ -623,8 +623,8 @@ class sms extends MY_Controller {
 						$this ->create_excel($excel_data,$report_type);
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						
-						$email_address = $this->get_facility_email($facility_code);
-						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+						//$email_address = $this->get_facility_email($facility_code);
+						//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
 					}
 
@@ -675,8 +675,8 @@ class sms extends MY_Controller {
 								
 								<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 				
-					$email_address = $this -> get_ddp_email($district_id);
-					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+					//$email_address = $this -> get_ddp_email($district_id);
+					//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 				}
 
 			}
@@ -727,11 +727,11 @@ class sms extends MY_Controller {
 							
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 				
-				$email_address = "hcmp.kenya@gmail.com";
-				$bcc = $this -> get_bcc_notifications();
-				$cc = $this -> get_county_email($county_id);
+				$email_address = "hcmp.kenya@gmail.com,collinsojenge@gmail.com";
+				//$bcc = $this -> get_bcc_notifications();
+				//$cc = $this -> get_county_email($county_id);
 				
-				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc);
+				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 			}
 
 		}
