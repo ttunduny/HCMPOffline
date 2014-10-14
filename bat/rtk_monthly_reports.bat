@@ -289,4 +289,8 @@ php.exe -f c:\xampp\htdocs\HCMP\index.php rtk_management kemsa_district_reports 
 php.exe -f c:\xampp\htdocs\HCMP\index.php rtk_management kemsa_district_reports 289
 php.exe -f c:\xampp\htdocs\HCMP\index.php rtk_management kemsa_district_reports 290
 php.exe -f c:\xampp\htdocs\HCMP\index.php rtk_management kemsa_district_reports 291
+php.exe -f c:\xampp\htdocs\HCMP\index.php rtk_management kemsa_district_reports 292
+php.exe -f c:\xampp\htdocs\HCMP\index.php rtk_management kemsa_district_reports 293
+php.exe -f c:\xampp\htdocs\HCMP\index.php rtk_management kemsa_district_reports 294
+php.exe -f c:\xampp\htdocs\HCMP\index.php rtk_management kemsa_district_reports 295
 
