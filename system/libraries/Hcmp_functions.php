@@ -4,7 +4,7 @@
  */
 class Hcmp_functions extends MY_Controller {
 
-	var $test_mode=TRUE;
+	var $test_mode=FALSE;
 
 
 		function __construct() {
