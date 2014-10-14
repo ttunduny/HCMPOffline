@@ -178,7 +178,7 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 	  else:		  
 
 		   $email_address=($this->test_mode)?'kelvinmwas@gmail.com,collinsojenge@gmail.com,
-		   ': 'kelvinmwas@gmail.com,
+		   ': 'smutheu@clintonhealthaccess.org ,
 				kelvinmwas@gmail.com,
 				kelvinmwas@gmail.com,'; 
 

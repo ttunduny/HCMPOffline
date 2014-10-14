@@ -29,15 +29,15 @@ class Kenya extends MY_Controller
             array_push($county_name,array($county['id']=>$countyName));
             $datas[] = array('id' => $countyMap, 
             'value' => $countyName, 
-            'color' => 'FFCC99', 
+            'color' => '528f42', 
             'tooltext' => $countyName , "baseFontColor" => "000000", 
             "link" => "Javascript:run('" .$county['id']. "^" .$countyName. "')");
         }
-        $map = array("baseFontColor" => "000000", "canvasBorderColor" => "ffffff", 
-        "hoverColor" => "aaaaaa", "fillcolor" => "F7F7F7", "numbersuffix" => "M", 
+        $map = array( "showlabels"=>'0' , "baseFontColor" => "000000", "canvasBorderColor" => "ffffff", 
+        "hoverColor" => "feab3a", "fillcolor" => "F8F8FF", "numbersuffix" => "M", 
         "includevalueinlabels" => "1", "labelsepchar" => ":", "baseFontSize" => "9",
-        "borderColor" => "333333 ","showBevel" => "0", 'showShadow' => "0");
-        $styles = array("showBorder" => 0);
+        "borderColor" => "333333 ","showBevel" => "0", 'showShadow' => "0",'showTooltip'=>"1");
+        $styles = array("showBorder" => 0 , 'animation'=>"_xScale");
         $finalMap = array('map' => $map, 'data' => $datas, 'styles' => $styles);
 		$data['title'] = "National Dashboard";
         $data['maps'] = json_encode($finalMap);
@@ -243,7 +243,7 @@ $using_hcmp = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetch
 		$data['private'] = json_encode((int)$private[0]['total']);
 		$data['public'] = json_encode((int)$public[0]['total']);
 		$data['fbo'] = json_encode((int)$fbo[0]['total']);
-		$data['colors'] = "['#228b22', '#4b0082', '#008b8b', '#a52a2a', '#6AF9C4']";
+		$data['colors'] = "['#feab3a', '#4b0082', '#008b8b', '#a52a2a', '#6AF9C4']";
 		$data['other'] = json_encode((int)$other);
 		$this -> load -> view("national/ajax/pie_template",$data);
 		

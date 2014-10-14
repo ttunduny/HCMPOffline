@@ -281,10 +281,7 @@ h4{
 			
 		</div>
 		<div class="col-md-6" style="border: 0px solid #036;">
-			<div class="tile" id="" style="height: 70px;border: 0px solid #036;">
-				<h4>Order Lead time</h4>	
-				<button type="button" data-toggle="modal" data-target="#orderModal" class="btn btn-success btn-sm" style="margin:5 0 5 12; ">Other Options</button>
-				</div>
+			
 			<div class="tile" id="" style="height: 100px;border: 0px solid #036;">
 				<h4>Order Lead time</h4>
 					<div class="panel-heading">
@@ -478,7 +475,7 @@ h4{
     </script>
   <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
-  <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
+ <!--  <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
     <!-- Bootstrap core JavaScript===================== --> 
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
