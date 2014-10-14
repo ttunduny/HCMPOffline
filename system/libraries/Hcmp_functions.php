@@ -148,8 +148,13 @@ public function send_stock_decommission_email($message,$subject,$attach_file){
 	   $email_address .=$this->get_ddp_email($data[0]['district']);
         
        $email_address .= $this->get_county_email($data[0]['district']);
+	   $bcc_email ='kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org,
+		bwariari@clintonhealthaccess.org,
+		amwaura@clintonhealthaccess.org,
+		eongute@clintonhealthaccess.org,
+		rkihoto@clintonhealthaccess.org';
         
-	   $this->send_email(substr($email_address,0,-1),$message,$subject,$attach_file);
+	   $this->send_email(substr($email_address,0,-1),$message,$subject,$attach_file,$bcc_email);
 	   
 	 
 	}
@@ -158,17 +163,21 @@ public function send_order_submission_email($message,$subject,$attach_file){
 	   $facility_code=$this -> session -> userdata('facility_id');
 	   $data=Users::getUsers($facility_code)->toArray();
 	   $email_address=$this->get_facility_email($facility_code);
-	    
-	   $email_address .=$this->get_ddp_email($data[0]['district']);	   
-	   $cc_email=($this->test_mode)?'kelvinmwas@gmail.com,collinsojenge@gmail.com,': 
+	   $bcc_email ='kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com';
+	   $cc_email=$this->get_ddp_email($data[0]['district']);	   
 	   $this->get_county_email($data[0]['district']) ;
 	   
-	  return $this->send_email(substr($email_address,0,-1),$message, $subject,$attach_file,null,substr( $cc_email,0,-1));
+	  return $this->send_email(substr($email_address,0,-1),$message, $subject,$attach_file,$bcc_email,substr( $cc_email,0,-1));
 	
 }
 public function send_order_approval_email($message,$subject,$attach_file,$facility_code,$reject_order=null){
 	  
  $cc_email="";
+ $bcc_email ='kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org,
+		bwariari@clintonhealthaccess.org,
+		amwaura@clintonhealthaccess.org,
+		eongute@clintonhealthaccess.org,
+		rkihoto@clintonhealthaccess.org';
  $data=facilities::get_facility_name_($facility_code)->toArray();
  $data=$data[0];
 
@@ -177,14 +186,15 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 	  $cc_email .=$this->get_ddp_email($data['district']);	  
 	  else:		  
 
-		   $email_address=($this->test_mode)?'kelvinmwas@gmail.com,collinsojenge@gmail.com,
-		   ': 'smutheu@clintonhealthaccess.org ,
-				kelvinmwas@gmail.com,
-				kelvinmwas@gmail.com,'; 
-
-       
+		   $email_address='shamim.kuppuswamy@kemsa.co.ke,
+				jmunyu@kemsa.co.ke,
+				imugada@kemsa.co.ke,
+				laban.okune@kemsa.co.ke,
+				samuel.wataku@kemsa.co.ke,'; 
+			
 	  $cc_email .=$this->get_ddp_email($data['district']);
-	   $cc_email .=$this->get_facility_email($facility_code);
+	  $cc_email .=$this->get_facility_email($facility_code);
+	  
 
 
 	   $cc_email .=$this->get_county_email($data['district']) ;
@@ -192,20 +202,21 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 
   endif;
  
-		return $this->send_email(substr($email_address,0,-1),$message, $subject,$attach_file,null,substr($cc_email,0,-1));
+		return $this->send_email(substr($email_address,0,-1),$message, $subject,$attach_file,$bcc_email,substr($cc_email,0,-1));
 	
 }
 public function send_order_delivery_email($message,$subject,$attach_file=null){
 
        $cc_email='';
       // echo 'test'; exit;
-	   $facility_code=$this -> session -> userdata('facility_id');;	   
+	   $bcc_email ='kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org';
+	   $facility_code=$this -> session -> userdata('facility_id');  
 	   $data=Users::getUsers($facility_code)->toArray();	   
 	   $cc_email .=$this->get_facility_email($facility_code);
 	   $cc_email .=$this->get_county_email($data[0]['district']) ;
 		
 		
-	return $this->send_email(substr($this->get_ddp_email($data[0]['district']),0,-1),$message,$subject,null,null,substr($cc_email,0,-1));
+	return $this->send_email(substr($this->get_ddp_email($data[0]['district']),0,-1),$message,$subject,null,$bcc_email,substr($cc_email,0,-1));
 	
 }
 public function send_sms($phones,$message) {
@@ -228,7 +239,10 @@ public function send_sms($phones,$message) {
 /*****************************************Email function for HCMP, all the deafult email addresses and email content have been set ***************/
 
 public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL)
-{	
+{
+	
+	
+	//echo $email_address.'</br>'.$cc_email.'</br>'.$bcc_email;exit;	
 	$messages=$message;
 	$config['protocol']    = 'smtp';
     $config['smtp_host']    = 'ssl://smtp.gmail.com';
