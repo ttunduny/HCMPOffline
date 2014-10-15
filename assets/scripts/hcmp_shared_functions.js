@@ -120,7 +120,7 @@ function calculate_actual_stock(actual_units,pack_unit_option,user_input,target_
     if(target_total_units_field=='return'){
     return total_commodity_available_stock;
     }else{
-     input_object.closest("tr").find(target_total_units_field).val(total_commodity_available_stock/user_input);	
+     input_object.closest("tr").find(target_total_units_field).val(total_commodity_available_stock);	
     }
     
  
