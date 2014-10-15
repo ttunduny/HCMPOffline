@@ -926,7 +926,7 @@ $html_body.=
              /// update the facility issues and set the commodity to expired                             
             $inserttransaction=Doctrine_Manager::getInstance()->getCurrentConnection()
             ->execute("UPDATE `facility_stocks` SET status =2 WHERE `id`= '$facility_stock_id'");
-            if($cost>0):                           								    
+            if($current_balance_pack>0):                           								    
 		    $html_body .='<tr><td>'.$source.'</td>
 							<td>'.$commodity_name.'</td>
 							<td>'.$commodity_code.'</td>
