@@ -177,7 +177,7 @@ for ($row = 1; $row <= $highestRow; $row++){
         'commodity_code'=>$array_code[$key],
         'commodity_id'=>$data['commodity_id'],
         'quantity_ordered'=>($array_order_qty[$key]=='')? 0:(int)$array_order_qty[$key],
-        'total_commodity_units'=>$array_price[$key]*(int)$array_order_qty[$key],
+        'total_commodity_units'=>0,
         'opening_balance'=>0,
         'total_receipts'=>0,
         'total_issues'=>0,
@@ -221,7 +221,7 @@ foreach ($temp as $key => $value) {
 			$main_array[]=$keys;
 			foreach ($get_id as $key2) {
 				$array_id[]=$key2['id'];
-				$array_codes[]=$key2['commodity_code'];
+				$array_total_units[]=$key2['total_commodity_units'];
 				
 				//echo '<pre>';print_r($keys); echo '</pre>';
 			}
@@ -240,6 +240,7 @@ foreach ($temp as $key => $value) {
 		
 		for ($i=0; $i < $id_count;$i++) {
 			$main_array[$i]['commodity_id']=$array_id[$i];
+			$main_array[$i]['total_commodity_units']=$array_total_units[$i];
 			//echo '<pre>';print_r($main_array[$i]); echo '</pre>';
 			
 			
