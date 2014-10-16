@@ -105,8 +105,7 @@
 				 $level= $detail['level'];
 				 $type= $detail['type'];
 				 $owner = $detail['owner'];
-				 $facility_activation_date = $detail['date'];
-				 ;?>
+				 $facility_activation_date = $detail['date'] ;?>
 				 <tr><td><?php echo $facility_district ;?></td>
 				 <td><?php echo $facility_code ;?></td>
 				 <td><?php echo $facility_name ;?></td>
@@ -127,14 +126,17 @@
 
 <script>
 $(document).ready(function() {
-	$(".ajax_call1").click( function (){
+	//$(".ajax_call1").click( function (){
 		
-		$('#myModal').modal({
- 		 show: true
-			})
+		//$('#myModal').modal({
+ 		// show: true
+			//})
+			
+	//	var url_ = "reports/list_facilities/";
+	//	window.open(url+url_ ,'_blank'); 
 		
    
-    });
+    //});
 	$(".ajax_call2").click(function(){
 		var url = "<?php echo base_url().'reports/get_district_drill_down_detail'?>";
 		// this is the data from the function
