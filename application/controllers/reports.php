@@ -1344,10 +1344,10 @@ class Reports extends MY_Controller
 			$checker++;
 
 		endforeach;
-		
+		$list_url=base_url().'reports/list_facilities';
 		$table_data .= "<td><a href='#' id='total' class='ajax_call1 link' option='total' date='total'>$all_facilities</a></td></tr></tbody>";
 		$table_data_summary .= "<td><a href='#' id='total' class='ajax_call2 link' date='total'>$all_facilities</a></td></tr></tbody>";
-		$table_datas_summary .= "<td><a href='#' id='total' class='ajax_call1 link' date='total'>$all_facilities</a></td>";
+		$table_datas_summary .= "<td><a href='$list_url' id='total' class='ajax_call1 link' date='total'>$all_facilities</a></td>";
 		$district_names .= "<th>TOTAL</th></tr></thead>";
 		
 		$final_coverage_total = 0;
@@ -3968,6 +3968,15 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 										  
 	   echo "success";
        endif;
+       }
+
+public function list_facilities(){
+	
+		$county_id = $this -> session -> userdata('county_id');
+		$data['content_view'] = "subcounty/reports/facility_list_v";
+		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
+		$this -> load -> view("shared_files/template/template", $data);
+       
        }
 	 
   

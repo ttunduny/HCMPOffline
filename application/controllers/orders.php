@@ -246,8 +246,8 @@ foreach ($temp as $key => $value) {
 			
 				}//exit;
 		
-		//echo '<pre>';print_r($main_array); echo '</pre>';
-		//exit;
+		echo '<pre>';print_r($main_array); echo '</pre>';
+		exit;
 		
         //unset($objPHPExcel);
        $data['order_details'] = $data['facility_order'] = $main_array;  
