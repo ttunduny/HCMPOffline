@@ -142,7 +142,7 @@ for ($row = 1; $row <= $highestRow; $row++){
         $rowData = $objPHPExcel->getActiveSheet()->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);
      	//var_dump($rowData); 
 		//count($rowData);
-		$array_index[]=$rowData[0][1];
+		$array_index[]=$rowData[0][1]-1;
 		$array_code[]=$rowData[0][2];
 		$array_commodity[]=$rowData[0][3];
 		$array_category[]=$rowData[0][4];
@@ -165,9 +165,9 @@ for ($row = 1; $row <= $highestRow; $row++){
 		
             }
 		
-		
+		//echo '<pre>';print_r($array_index); echo '</pre>';exit;
 		foreach ($array_index as $id => $key) {
-				  
+				//echo '<pre>';print_r($key); echo '</pre>';//exit;  
         	
         		//foreach($items as $key=> $data){
         array_push($temp,array('sub_category_name'=>$array_category[$key],
@@ -198,7 +198,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 			
               
 }
-		
+	//exit;	
 foreach ($temp as $key => $value) {
 	//echo '<pre>';print_r($value['commodity_code']); echo '</pre>';
 	if ($value['commodity_code']==""||$value['quantity_ordered']=="") {

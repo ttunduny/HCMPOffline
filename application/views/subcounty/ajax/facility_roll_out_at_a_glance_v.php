@@ -1,3 +1,31 @@
+<style>
+	#myModal .modal-dialog {
+		width: 70%;
+	}
+</style>
+<script type="text/javascript" charset="utf-8">
+			/* Define two custom functions (asc and desc) for string sorting */
+			jQuery.fn.dataTableExt.oSort['string-case-asc']  = function(x,y) {
+				return ((x < y) ? -1 : ((x > y) ?  1 : 0));
+			};
+			
+			jQuery.fn.dataTableExt.oSort['string-case-desc'] = function(x,y) {
+				return ((x < y) ?  1 : ((x > y) ? -1 : 0));
+			};
+			
+			$(document).ready(function() {
+				/* Build the DataTable with third column using our custom sort functions */
+				$('#datalist').dataTable( {
+			 "bSort": false,
+					"bJQueryUI": true,
+                   "bPaginate": true,
+                  "sDom": '<"H"Tfr>t<"F"ip>',
+					"oTableTools": {
+			"sSwfPath": "<?php echo base_url(); ?>DataTables-1.9.3/extras/TableTools-2.0.0/media/swf/copy_cvs_xls_pdf.swf"
+		}
+				} );
+			} );
+		</script>
 <div id="dialog"></div>
 	<div class="alert alert-info" >
   <b>Below is the project status in the county</b>
@@ -47,15 +75,30 @@
 	</script>
 	</div>
 	
-
-<script>
-$(document).ready(function() {
-	$(".ajax_call1").click( function (){
-		$('.modal-dialog').addClass("modal-lg");
-		var body_content='<table class="row-fluid table table-hover table-bordered table-update" width="100%">'+
-		'<thead><tr><th>District Name</th><th>MFL No</th><th>Facility Name</th><th>Level</th><th>Type</th><th>Owner</th><th>Date Activated</th></tr></thead>'+
-		'<tbody>'+			   	    
-		'<?php	foreach($get_facility_data as $detail):
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Facilities Rolled out to</h4>
+      </div>
+      <div class="modal-body">
+      	
+        <table  class="table table-hover table-bordered table-update" id="datalist"  >
+				<thead style="background-color: white">
+				<tr>
+				<th>District Name</th>
+				<th>MFL No</th>
+				<th>Facility Name</th>
+				<th>Level</th>
+				<th>Type</th>
+				<th>Owner</th>
+				<th>Date Activated</th>
+				</tr>
+				</thead>
+		<tbody>			   	    
+		<?php	foreach($get_facility_data as $detail):
 			     $facility_district = $detail['district'];
 				 $facility_code = $detail['facility_code'];							
 				 $facility_name = $detail['facility_name'];
@@ -63,19 +106,33 @@ $(document).ready(function() {
 				 $type= $detail['type'];
 				 $owner = $detail['owner'];
 				 $facility_activation_date = $detail['date'];
-				 ;?>'+'<tr><td>'+'<?php echo $facility_district ;?>'+'</td>'
-				 +'<td>'+'<?php echo $facility_code ;?>'+'</td>'
-				 +'<td>'+'<?php echo $facility_name ;?>'+'</td>'
-				 +'<td>'+'<?php echo $level ;?>'+'</td>'
-				 +'<td>'+'<?php echo $type ;?>'+'</td>'
-				 +'<td>'+'<?php echo $owner;?>'+'</td>'
-				 +'<td>'+'<?php echo $facility_activation_date ;?>'+'</td>'
-				 +'</td></tr>'+'<?php endforeach;?>'
-				 +'</tbody></table>';
-        //hcmp custom message dialog
-    dialog_box(body_content,'<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');
-    $('#communication_dialog').on('hidden.bs.modal', function (e) {  $('.modal-dialog').removeClass("modal-lg");
-    $('.modal-body').html(''); refreshDatePickers();	})    
+				 ;?>
+				 <tr><td><?php echo $facility_district ;?></td>
+				 <td><?php echo $facility_code ;?></td>
+				 <td><?php echo $facility_name ;?></td>
+				 <td><?php echo $level ;?></td>
+				 <td><?php echo $type ;?></td>
+				 <td><?php echo $owner;?></td>
+				 <td><?php echo $facility_activation_date ;?></td>
+				 </td></tr><?php endforeach;?>
+				 </tbody></table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+	$(".ajax_call1").click( function (){
+		
+		$('#myModal').modal({
+ 		 show: true
+			})
+		
    
     });
 	$(".ajax_call2").click(function(){
