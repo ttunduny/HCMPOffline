@@ -971,7 +971,12 @@ public function rtk_manager_home() {
         $q = "select percentage from rtk_county_percentage where month='$this_month_full' and county_id=$id";
         $result = $this->db->query($q)->result_array();
         foreach ($result as $key => $value) {            
-            $percentage = intval($value['percentage']);                               
+            $percentage = intval($value['percentage']);  
+				if( $percentage >100){
+					$percentage = 100;
+				}else{
+				$percentage = intval($value['percentage']);
+				}
         }        
         array_push($thismonth_arr1, $percentage);
     }     
@@ -4588,6 +4593,79 @@ function _national_reports_sum($year, $month) {
 //         echo "<pre>";print_r($returnable);die;
         return $returnable;
       }
+	  public function rtk_manager_admin_settings() {
+
+        $sql = "select rtk_settings.*, user.fname,user.lname from rtk_settings, user where rtk_settings.user_id = user.id ";
+        $res = $this->db->query($sql);
+        $deadline_data = $res->result_array();
+
+        $sql1 = "select * from rtk_alerts_reference ";
+        $res1 = $this->db->query($sql1);
+        $alerts_to_data = $res1->result_array();
+
+
+        $sql3 = "select rtk_alerts.*,rtk_alerts_reference.id as ref_id,rtk_alerts_reference.description as description from rtk_alerts,rtk_alerts_reference where rtk_alerts.reference=rtk_alerts_reference.id order by id ASC,status ASC";
+        $res3 = $this->db->query($sql3);
+        $alerts_data = $res3->result_array();
+
+        $sql4 = "select lab_commodities.*,lab_commodity_categories.category_name, lab_commodity_categories.id as cat_id from lab_commodities,lab_commodity_categories where lab_commodities.category=lab_commodity_categories.id and lab_commodity_categories.active = '1'";
+        $res4 = $this->db->query($sql4);
+        $commodities_data = $res4->result_array();
+
+        $sql5 = "select * from lab_commodity_categories";
+        $res5 = $this->db->query($sql5);
+        $commodity_categories = $res5->result_array();
+
+
+        $data['deadline_data'] = $deadline_data;
+        $data['alerts_to_data'] = $alerts_to_data;
+        $data['alerts_data'] = $alerts_data;
+        $data['commodities_data'] = $commodities_data;
+        $data['commodity_categories'] = $commodity_categories;
+
+        $data['title'] = 'RTK Manager Settings';
+        $data['banner_text'] = 'RTK Manager Settings';
+        //$data['content_view'] = "rtk/admin/admin_home_view";
+        $data['content_view'] = "rtk/rtk/admin/settings";
+        $users = $this->_get_rtk_users();
+        $data['users'] = $users;
+        $this->load->view('rtk/template', $data);
+    }
+
+    public function rtk_manager_admin_messages() {
+        
+        /*$users = array('email' =>'All SCMLTs' , 
+                        'email' =>'All CLCs' ,
+                        'email' =>'Sub-Counties with Less than 25% Reported' ,
+                        'email' =>'Sub-Counties with Less than 50% Reported' ,
+                        'email' =>'Sub-Counties with Less than 75% Reported' ,
+                        'email' =>'Sub-Counties with Less than 90% Reported' );             
+        echo "<pre>";
+        print_r($users);die();
+
+
+
+        $data['emails'] = json_encode($emails);
+        $data['emails'] = str_replace('"', "'", $data['emails']);
+        // echo "<pre>";
+        //print_r( $data['emails']);*/
+
+
+
+        /* $sql1 = "select fname from user";
+          $res1 = $this->db->query($sql1);
+          $fname = $res1->result_array();
+          $data['fname'] = json_encode($fname);
+          $data['fname'] = str_replace('"', "'", $data['fname']); */
+        //$data['details'] = $details;
+        $data['title'] = 'RTK Manager Messages';
+        $data['banner_text'] = 'RTK Manager';
+        //$data['content_view'] = "rtk/rtk/admin/admin_home_view";
+        $data['content_view'] = "rtk/rtk/admin/messages";
+        //$users = $this->_get_rtk_users();
+       // $data['users'] = $users;
+        $this->load->view('rtk/template', $data);
+    }
         public function create_Deadline() {
         $zones = json_decode($_POST['add_zones']);
         $user_id = $this->session->userdata('user_id');
@@ -4613,10 +4691,7 @@ function _national_reports_sum($year, $month) {
         $deadline = $_POST['deadline'];
         $five_day_alert = $_POST['five_day_alert'];
         $report_day_alert = $_POST['report_day_alert'];
-        $overdue_alert = $_POST['overdue_alert'];
-        echo "<pre>";
-        print_r($zones);
-        die;
+        $overdue_alert = $_POST['overdue_alert'];        
 
         $sql = "update rtk_settings 
         set deadline='$deadline',5_day_alert = '$five_day_alert',report_day_alert='$report_day_alert',overdue_alert='$overdue_alert',user_id='$user_id' where id='$edit_id'";
