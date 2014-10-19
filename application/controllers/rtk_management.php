@@ -4176,10 +4176,11 @@ public function allocation($zone = NULL, $county = NULL, $district = NULL, $faci
         foreach ($facilities as $key => $value) {
             $facility_count = $value['facilities'];
         }
-        $percentage = $this->rtk_summary_county($id,$year,$month);        
-        $reported = $percentage['reported']; 
+        $reports = $this->rtk_summary_county($id,$year,$month);        
+        $reported = $reports['reported']; 
+        $percentage = ($reported/$facility_count)*100;
         //$reported = 0;
-        $q = "insert into rtk_county_percentage (county_id, facilities,reported,month) values ($id,$facility_count,$reported,'$monthyear')";
+        $q = "insert into rtk_county_percentage (county_id, facilities,reported,percentage,month) values ($id,$facility_count,$reported,$percentage,'$monthyear')";
         $this->db->query($q);
     }
 }
@@ -4265,10 +4266,12 @@ function update_district_percentages_month($month=null){
         foreach ($facilities as $key => $value) {
             $facility_count = $value['facilities'];
         }            
-        $percentage = $this->rtk_summary_district($id, $year, $month);
+        $reports = $this->rtk_summary_district($id, $year, $month);
         //$reported = 0;
-        $reported = $percentage['reported']; 
-        $q = "insert into rtk_district_percentage (district_id, facilities,reported,month) values ($id,$facility_count,$reported,'$monthyear')";
+        $reported = $reports['reported']; 
+        $percentage = ($reported/ $facility_count)*100;
+        echo "District $id, Facilities: $facility_count, Reported: $reported, Percentage : $percentage<br/>";
+        $q = "insert into rtk_district_percentage (district_id, facilities,reported,percentage,month) values ($id,$facility_count,$reported,$percentage,'$monthyear')";
         $this->db->query($q);
 
     }             
@@ -5007,6 +5010,16 @@ public function get_all_zone_a_facilities(){
         $data['result'] = $result;
         $this->load->view('rtk/template', $data); 
     }
+
+    public function delete_alert() {       
+            $id = $_POST['id'];
+            $sql = "DELETE FROM `rtk_alerts` WHERE id='$id'";
+            $this->db->query($sql);
+            $object_id = $edit_id;
+            $this->logData('12', $object_id);
+            echo "Alert Deleted Succesfully";
+        }
+
 
 
 

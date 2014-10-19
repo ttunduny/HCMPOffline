@@ -148,7 +148,7 @@
      </ul>
    </div-->
    <div id="content">  
-   <h5 id="ddl"><b>DEADLINES | <span id="iddl" class="glyphicon toggleSpan"></b></h5>    
+    <h5 id="ddl"><b>DEADLINES | <span id="iddl" class="glyphicon toggleSpan"></b></h5>    
     <div id="all_deads">
     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#Add_Deadline">Add Deadline</button>      
     <hr/>
@@ -188,12 +188,11 @@
           </tbody>    
         </table>
       </div> 
-      </div>   
+      </div>
 
       <hr/>
-
       <h5 id="alts"><b>ALERTS | <span class="glyphicon toggleSpan1"></b></h5>
-       <div id="all_alerts">
+      <div id="all_alerts">
       <button type="button" class="btn btn-default" data-toggle="modal" data-target="#Add_Alert">Add Alert</button>      
       <hr/>
       <div id="alerts">         
@@ -230,9 +229,8 @@
         </table>
       </div>
       </div>
-    
+
       <hr/>
-      
       <h5 id="cmms"><b>COMMODITIES</b> | <span class="glyphicon toggleSpan2"></h5>
       <div id="all_comms">
       <button type="button" class="btn btn-default" data-toggle="modal" data-target="#Add_Commodity">Add Commodity</button>      
@@ -264,9 +262,9 @@
               $i++;
             }?>
           </tbody>  
-        </table> 
+        </table>  
         </div>
-   
+        </div>  
 
 
         <!--Start of the Modals -->
@@ -617,14 +615,6 @@
                 <button id="edit_deadline_btn" class="btn edit_deadline_btn btn-default">Save Changes</button>
               </div>
             </div> 
-         
-
-
-
-
-
-
-
 
           </div>
           <script type="text/javascript"> 
@@ -654,7 +644,7 @@
             id: id,                        
           }).done(function(data) {
             alert("Data Loaded: " + data);            
-            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_settings'; ?>";
           });
         });
 
@@ -699,7 +689,7 @@
       }).done(function(data) {
         alert("Data Loaded: " + data);
         $('Edit_Deadline'.id).modal('hide');
-        window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+        window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_settings'; ?>";
       });
 
     });
@@ -723,7 +713,7 @@
       }).done(function(data) {
         alert("Data Loaded: " + data);
         $('Add_Deadline').modal('hide');
-        window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+        window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_settings'; ?>";
       });
 
     });
@@ -776,7 +766,7 @@
           }).done(function(data) {
             alert("Data Loaded: " + data);
             $('Edit_Alert'.c_id).modal('hide');
-            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_settings'; ?>";
           });
         }); 
         $('#add_alert_btn').click(function() {         
@@ -793,7 +783,7 @@
           }).done(function(data) {
             alert("Data Loaded: " + data);
             $('Add_Alert').modal('hide');
-            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_settings'; ?>";
           });
         }); 
 
@@ -809,7 +799,7 @@
           }).done(function(data) {
             alert("Data Loaded: " + data);
             $('Add_Commodity').modal('hide');
-            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_settings'; ?>";
           });
         }); 
 
@@ -827,7 +817,7 @@
           }).done(function(data) {
             alert("Data Loaded: " + data);
             $('Edit_Commodity'.c_id).modal('hide');
-            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_settings'; ?>";
           });
         }); 
 
