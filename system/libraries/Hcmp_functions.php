@@ -148,11 +148,7 @@ public function send_stock_decommission_email($message,$subject,$attach_file){
 	   $email_address .=$this->get_ddp_email($data[0]['district']);
         
        $email_address .= $this->get_county_email($data[0]['district']);
-	   $bcc_email ='kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org,
-		bwariari@clintonhealthaccess.org,
-		amwaura@clintonhealthaccess.org,
-		eongute@clintonhealthaccess.org,
-		rkihoto@clintonhealthaccess.org';
+	   $bcc_email ='kelvinmwas@gmail.com';
         
 	   $this->send_email(substr($email_address,0,-1),$message,$subject,$attach_file,$bcc_email);
 	   
@@ -163,7 +159,7 @@ public function send_order_submission_email($message,$subject,$attach_file){
 	   $facility_code=$this -> session -> userdata('facility_id');
 	   $data=Users::getUsers($facility_code)->toArray();
 	   $email_address=$this->get_facility_email($facility_code);
-	   $bcc_email ='kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com';
+	   $bcc_email ='kelvinmwas@gmail.com';
 	   $cc_email=$this->get_ddp_email($data[0]['district']);	   
 	   $this->get_county_email($data[0]['district']) ;
 	   
@@ -173,11 +169,7 @@ public function send_order_submission_email($message,$subject,$attach_file){
 public function send_order_approval_email($message,$subject,$attach_file,$facility_code,$reject_order=null){
 	  
  $cc_email="";
- $bcc_email ='kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org,
-		bwariari@clintonhealthaccess.org,
-		amwaura@clintonhealthaccess.org,
-		eongute@clintonhealthaccess.org,
-		rkihoto@clintonhealthaccess.org';
+ $bcc_email ='kelvinmwas@gmail.com';
  $data=facilities::get_facility_name_($facility_code)->toArray();
  $data=$data[0];
 
@@ -186,11 +178,7 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 	  $cc_email .=$this->get_ddp_email($data['district']);	  
 	  else:		  
 
-		   $email_address='shamim.kuppuswamy@kemsa.co.ke,
-				jmunyu@kemsa.co.ke,
-				imugada@kemsa.co.ke,
-				laban.okune@kemsa.co.ke,
-				samuel.wataku@kemsa.co.ke,'; 
+		   $email_address=''; 
 			
 	  $cc_email .=$this->get_ddp_email($data['district']);
 	  $cc_email .=$this->get_facility_email($facility_code);
@@ -206,7 +194,7 @@ public function send_order_delivery_email($message,$subject,$attach_file=null){
 
        $cc_email='';
       // echo 'test'; exit;
-	   $bcc_email ='kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org';
+	   $bcc_email ='kelvinmwas@gmail.com';
 	   $facility_code=$this -> session -> userdata('facility_id');  
 	   $data=Users::getUsers($facility_code)->toArray();	   
 	   $cc_email .=$this->get_facility_email($facility_code);
