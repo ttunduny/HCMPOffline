@@ -581,7 +581,7 @@ class sms extends MY_Controller {
 				$facilities = Facilities::getFacilities_for_email($district_id);
 				//holds all the data for all facilities in a particular district
 				$facility_total = array();
-
+				
 				foreach ($facilities as $facilities_) :
 					//holds the total value of expiries for that particular facility in that district
 					$facility_potential_expiries_total = 0;
@@ -591,8 +591,8 @@ class sms extends MY_Controller {
 					$facility_name = $facility_name['facility_name'];
 
 					//get potential expiries in that particular facility
-					$facility_potential_expiries = Facility_stocks::potential_expiries_email($district_id, $facility_code);
-
+					$facility_potential_expiries = Facility_stocks::potential_expiries_email($facility_code);
+					//echo "<pre>";print_r($facility_potential_expiries);exit;
 					//push the result into another array that will be used by the distrct
 					(array_key_exists($facility_name, $facility_total)) ? $facility_total[$facility_name] = array_merge($facility_total[$facility_name], array($facility_potential_expiries)) : $facility_total = array_merge($facility_total, array($facility_name => array($facility_potential_expiries)));
 					//Start buliding the excel file
@@ -736,12 +736,12 @@ class sms extends MY_Controller {
 							
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 				
-				//$email_address = "hcmp.kenya@gmail.com,collinsojenge@gmail.com";
+				
 				$email_address = $this -> get_ddp_email_county($county_id);
 				$bcc = $this -> get_bcc_notifications();
 				$cc = $this -> get_county_email($county_id);
 				
-				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc);
 			}
 
 		}
@@ -781,11 +781,11 @@ class sms extends MY_Controller {
 					$facility_potential_expiries_total = 0;
 					//$facility_potential_expiries = array();
 					$facility_code = $facilities_ -> facility_code;
-					$facility_name = Facilities::get_facility_name2($facility_code);
+					$facility_name = Facilities::get_facility_name2(11580);
 					$facility_name = $facility_name['facility_name'];
 					
-					$facility_potential_expiries = Facility_stocks::get_stock_outs_for_email($facility_code);
-					
+					$facility_potential_expiries = Facility_stocks::get_stock_outs_for_email(11580);
+					//echo "<pre>";var_dump($facility_potential_expiries);exit;
 					//get potential expiries in that particular facility
 					//push the result into another array that will be used by the distrct
 					(array_key_exists($facility_name, $facility_total)) ? $facility_total[$facility_name] = array_merge($facility_total[$facility_name], array($facility_potential_expiries)) : $facility_total = array_merge($facility_total, array($facility_name => array($facility_potential_expiries)));
@@ -1349,7 +1349,7 @@ public function create_excel($excel_data=NUll,$report_type = NULL, $total_figure
 		$objPHPExcel -> getProperties() -> setDescription("");
 
 		$objPHPExcel -> setActiveSheetIndex(0);
-		
+		//$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(250);
 		if($report_type=="expiries"):
 			$objPHPExcel->getActiveSheet()->mergeCells('A1:N1');
 			$objPHPExcel->getActiveSheet()->setCellValue('A1', $excel_data['excel_title']);
@@ -1368,9 +1368,11 @@ public function create_excel($excel_data=NUll,$report_type = NULL, $total_figure
 			$objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray($styleArray);
 			
 		elseif($report_type=="stockouts"):
+			
 			$objPHPExcel->getActiveSheet()->mergeCells('A1:J1');
 			$objPHPExcel->getActiveSheet()->setCellValue('A1', $excel_data['excel_title']);
 			$objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray($styleArray);
+			
 			
 		elseif($report_type=="order_costs"):
 			$objPHPExcel->getActiveSheet()->mergeCells('A1:J1');

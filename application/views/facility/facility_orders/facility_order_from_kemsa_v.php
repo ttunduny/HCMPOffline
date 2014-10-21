@@ -21,10 +21,8 @@
 <?php  $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order',$att); //?>
 <div class="row" style="padding-left: 1%;margin-bottom: 5px;">
 	<div class="col-md-2">
-	<b>*Select Ordering Frequency</b> <select class="form-control" name="order_period" id="order_period">
- 	<option value="3" selected="selected">Quarterly</option>	
- 	<option value="1">Monthly</option>
- 	</select> 	
+		
+	<b>*Order Frequency</b><input  type="text" class="form-control input-large commodity_code" readonly="readonly" value="Quarterly" /> 
 	</div>
 	<div class="col-md-1">
      <b>*Order No:</b> <input type="text" class="form-control input_text" name="order_no" id="order_no" id="order_no" required="required"/>
@@ -40,12 +38,12 @@
 <input type="text" class="form-control" name="total_order_value" id="total_order_value" readonly="readonly" value="0"/>	
 <input type="hidden" id="actual_drawing_rights" name="drawing_rights" value="<?php echo $drawing_rights; ?>" />				
 </div>
-<div class="col-md-3">
+<!--<div class="col-md-3">
 <b>Drawing Rights Available Balance(KSH) :</b>
 <input type="text" class="form-control" name="total_order_balance_value" 
 id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_rights; ?>"/>	
 <input name="facility_code" type="hidden" value="<?php echo isset($facility_code)? $facility_code :$this -> session -> userdata('facility_id'); ?>" />					
-</div>
+</div>-->
 </div>
 <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 <thead>
