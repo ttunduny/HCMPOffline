@@ -98,7 +98,71 @@ for ($row = 1; $row <= $highestRow; $row++){
 		
 		echo $list;
 	}
-
+	//Facility Transaction Data when MEDS option is selected
+	public function facility_order_meds() {
+		$facility_code = $this -> session -> userdata('facility_id');
+		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
+		
+		$items = Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
+		$meds_categories = meds_categories::get_all();
+		//$meds_commodities = meds_commodities::get_all();
+		//echo "<pre>";print_r($meds_categories);exit;
+		
+		$data['categories'] = $meds_categories;
+        $data['order_details'] = $data['facility_order'] = $items;   
+        $data['facility_commodity_list'] = Commodities::get_commodities_not_in_facility($facility_code);
+		$data['title'] = "Facility New Order MEDS";
+		$data['content_view'] = "facility/facility_orders/facility_order_meds";
+		$data['banner_text'] = "Facility New Order MEDS";
+		$this -> load -> view("shared_files/template/template", $data);
+		
+		//var_dump($temp);exit;
+        /*$facility_code = $this -> session -> userdata('facility_id');
+		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
+        $data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";
+        $data['title'] = "Facility New Order";
+        $data['banner_text'] = "Facility New Order";
+        $data['drawing_rights'] = $facility_data[0]['drawing_rights'];
+        
+		$this -> load -> view('shared_files/template/template', $data);*/
+		//$data['facility_stock_data'] = facility_transaction_table::get_all($facility_code);
+        //$data['last_issued_data']=facility_issues::get_last_time_facility_issued($facility_code);
+		
+	}
+	//AJAX Request for getting the sub categories of a particular category
+	public function get_sub_categories() {
+		$category = $_POST['category'];
+		$sub_categories = meds_sub_category::get_all_in_category($category);
+		//echo "<pre>";print_r($sub_categories);exit;
+		//$facilities = Facilities::getFacilities($district);
+		$list = "";
+		foreach ($sub_categories as $sub_categories) {
+			$list .= $sub_categories -> id;
+			$list .= "*";
+			$list .= $sub_categories -> sub_category_name;
+			$list .= "_";
+		}
+		echo $list;
+	}
+	//AJAX Request for getting the commoditeis in a particular sub category
+	public function get_commodities_meds() {
+		$sub_category = $_POST['sub_category'];
+		$commodities = meds_commodities::get_all_in_category($sub_category);
+		//$commodities = meds_sub_category::get_all_in_category($category);
+		//echo "<pre>";print_r($sub_categories);exit;
+		//$facilities = Facilities::getFacilities($district);
+		$list = "";
+		foreach ($commodities as $commodities) {
+			$list .= $commodities -> commodity_code;
+			$list .= "^";
+			$list .= $commodities -> unit_pack;
+			$list .= "^";
+			$list .= $commodities -> commodity_name;
+			$list .= "_";
+			
+		}
+		echo $list;
+	}
 	public function facility_order() 
 	{
 		//$this -> load -> library('PHPExcel');
@@ -106,16 +170,18 @@ for ($row = 1; $row <= $highestRow; $row++){
 		$facility_code = $this -> session -> userdata('facility_id');
 
         $items=Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
-        if(isset($_FILES['file']) && $_FILES['file']['size'] > 0){
-        $ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
+        if(isset($_FILES['file']) && $_FILES['file']['size'] > 0)
+        {
+        	$ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
             //echo $ext; 
-        if($ext=='xls'){
-        $excel2 = PHPExcel_IOFactory::createReader('Excel5');    
-        }else if($ext=='xlsx'){
-        $excel2 = PHPExcel_IOFactory::createReader('Excel2007');    
-        }else{
-        die('Invalid file format given'.$_FILES['file']);   
-        }
+	        if($ext=='xls')
+	        {
+	        	$excel2 = PHPExcel_IOFactory::createReader('Excel5');    
+	        }else if($ext=='xlsx'){
+	        	$excel2 = PHPExcel_IOFactory::createReader('Excel2007');    
+	        }else{
+	        	die('Invalid file format given'.$_FILES['file']);   
+	        }
 		
 		$excel2=$objPHPExcel= $excel2->load($_FILES["file"]["tmp_name"]); // Empty Sheet
     

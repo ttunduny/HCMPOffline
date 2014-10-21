@@ -37,7 +37,7 @@ endforeach;
 <button class="btn btn-sm btn-success county-filter"  id="county-filter" ><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div> 
 <div class="col-md-1">
-<button class="btn btn-sm btn-primary county-filter-table"  id="county-filter-table" ><span class="glyphicon glyphicon-th-list"></span>Data Table</button> 
+<!--<button class="btn btn-sm btn-primary county-filter-table"  id="county-filter-table" ><span class="glyphicon glyphicon-th-list"></span>Data Table</button>--> 
 </div>
 </form>
 </div>
