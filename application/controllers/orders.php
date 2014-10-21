@@ -103,7 +103,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 		$facility_code = $this -> session -> userdata('facility_id');
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
 		
-		// $items = Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
+		$items = Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
 		// echo "THIS WORKS";exit;
 		$meds_categories = meds_categories::get_all();
 		//$meds_commodities = meds_commodities::get_all();
@@ -153,14 +153,18 @@ for ($row = 1; $row <= $highestRow; $row++){
 		//echo "<pre>";print_r($sub_categories);exit;
 		//$facilities = Facilities::getFacilities($district);
 		$list = "";
+		// echo "<pre>";print_r($commodities);echo "</pre>";exit;
 		foreach ($commodities as $commodities) {
 			$list .= $commodities -> commodity_code;
 			$list .= "^";
 			$list .= $commodities -> unit_pack;
 			$list .= "^";
+			$list .= $commodities -> order_note;
+			$list .= "^";
+			$list .= $commodities -> unit_price;
+			$list .= "^";
 			$list .= $commodities -> commodity_name;
 			$list .= "_";
-			
 		}
 		echo $list;
 	}
