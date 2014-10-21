@@ -4295,10 +4295,10 @@ public function kemsa_district_reports($district) {
     $q = 'SELECT * FROM  `districts` WHERE  `id` =' . $district;
     $res = $this->db->query($q);
     $resval = $res->result_array();
-    $reportname = '<center>'.$resval['0']['district'] . ' Sub-County FCDRR-RTK Reports for ' . $date.'</center>';    
+    $reportname = $resval['0']['district'] . ' Sub-County FCDRR-RTK Reports for ' . $date;    
     $report_result = $this->district_reports($year, $month, $district);
     $message = "Dear KEMSA, </br> Please find the RTK reports for ".$date." attached below.</br>Regards, </br> RTK System ";
-        
+    
     if($report_result!=''){
         $reports_html = "<h2>" . $reportname . "</h2><hr> ";        
         $reports_html .= $report_result;            
@@ -4306,15 +4306,15 @@ public function kemsa_district_reports($district) {
         $email_address = "lab@kemsa.co.ke,ttunduny@gmail.com";
         //$email_address = "ttunduny@gmail.com";
         $this->sendmail($reports_html,$message, $reportname, $email_address);
-    }//else{
+    // }//else{
         //echo "No data to Send";
-    //}    
+    }    
    
 //      $email_address = "cecilia.wanjala@kemsa.co.ke,jbatuka@usaid.gov";
    //$email_address = "lab@kemsa.co.ke,shamim.kuppuswamy@kemsa.co.ke,onjathi@clintonhealthaccess.org,jbatuka@usaid.gov,williamnguru@gmail.com,ttunduny@gmail.com,patrick.mwangi@kemsa.co.ke";
-    // $email_address = "lab@kemsa.co.ke,williamnguru@gmail.com,ttunduny@gmail.com";
-    // $email_address = "ttunduny@gmail.com";
-    //$this->sendmail($reports_html, $reportname, $email_address);
+    // // $email_address = "lab@kemsa.co.ke,williamnguru@gmail.com,ttunduny@gmail.com";
+    //  $email_address = "ttunduny@gmail.com";
+    // $this->sendmail($test,$test,$reportname, $email_address);
 }
 public function district_reports($year, $month, $district) {
     $pdf_htm = '';   
@@ -4524,26 +4524,26 @@ function generate_lastpdf($id) {
                     return $html_data;
                 }
 
-public function sendmail($output,$message, $reportname, $email_address) {
+public function sendmail($output, $message,$reportname, $email_address) {
     $this->load->helper('file');
     include 'rtk_mailer.php';
     $newmail = new rtk_mailer();
     $this->load->library('mpdf');
     $mpdf = new mPDF('', 'A4-L', 0, '', 15, 15, 16, 16, 9, 5, 'L');
     $mpdf->WriteHTML($output);
-    $emailAttachment = $mpdf->Output($reportname . '.pdf', 'S');
+    $emailAttachment = $mpdf->Output('./pdf/'.$reportname . '.pdf', 'S');
     $attach_file = './pdf/' . $reportname . '.pdf';
-    if (!write_file('./pdf/' . $reportname . '.pdf', $mpdf->Output('report_name.pdf', 'S'))) {
+    if (!write_file('./pdf/' . $reportname . '.pdf', $mpdf->Output('report_name.pdf', 'S'))) {        
         $this->session->set_flashdata('system_error_message', 'An error occured');
-    } else {
+    } else {        
         $subject = '' . $reportname;
-
         $attach_file = './pdf/' . $reportname . '.pdf';
         $bcc_email = 'tngugi@clintonhealthaccess.org';
+        //$bcc_email = 'annchemu@gmail.com';
         //$message = $output;
         $response = $newmail->send_email($email_address, $message, $subject, $attach_file, $bcc_email);
             // $response= $newmail->send_email(substr($email_address,0,-1),$message,$subject,$attach_file,$bcc_email);
-        if ($response) {
+        if ($response) {            
             delete_files('./pdf/' . $reportname . '.pdf');
         }
     }
