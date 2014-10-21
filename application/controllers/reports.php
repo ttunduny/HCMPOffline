@@ -354,6 +354,16 @@ class Reports extends MY_Controller
 		$data['banner_text'] = "Facility Stock Summary";
 		$this -> load -> view("shared_files/template/template", $data);
 	}
+	//Facility Transaction Data when MEDS option is selected
+	public function facility_transaction_data_meds() {
+		$facility_code = $this -> session -> userdata('facility_id');
+		$data['facility_stock_data'] = facility_transaction_table::get_all($facility_code);
+        $data['last_issued_data']=facility_issues::get_last_time_facility_issued($facility_code);
+		$data['title'] = "Facility Stock Summary";
+		$data['content_view'] = "facility/facility_reports/facility_transaction_data_v_meds";
+		$data['banner_text'] = "Facility Stock Summary";
+		$this -> load -> view("shared_files/template/template", $data);
+	}
 
 	///////GET THE ITEMS A FACILITY HAS STOCKED OUT ON
 	public function facility_stocked_out_items() {
@@ -3960,10 +3970,12 @@ public function get_division_commodities_data($district_id = null, $facility_cod
        public function set_tragget_facility($facility_id,$status,$type){
        	//security check	  
        if($this->input->is_ajax_request()):
-	   $set=($type=='targetted') ? "`targetted` =$status" : "`using_hcmp` =$status";
+	   $date_ = date("Y-m-d");
+	   $set=($type=='targetted') ? "`targetted` =$status" : "`using_hcmp` =$status, date_of_activation = '$date_'";
        $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
 	   $inserttransaction->execute("UPDATE `Facilities` SET $set
                                           WHERE `id`=$facility_id"); 
+										  
 	   echo "success";
        endif;
        }

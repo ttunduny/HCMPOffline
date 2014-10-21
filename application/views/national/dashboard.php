@@ -118,7 +118,7 @@ h4{
   
   </head>
   
-  <body screen_capture_injected="true" style="background-color: whitesmoke;">
+  <body screen_capture_injected="true" style="background-color: white;">
   	
   	<div class="container-fluid navbar-default navbar-fixed-top" role="navigation" style="background-color:white">
         <div class="container-fluid">
@@ -159,7 +159,7 @@ h4{
 
 <div class="row-fluid">
 	
-	<div class="col-md-4 " style="padding-right: 0">
+	<div class="col-md-3 " style="padding-right: 0">
 		<div class="row-fluid" style="" id="notify" >
 		<div class="col-md-6">
 					<div class="color_g stat_item">
@@ -182,7 +182,7 @@ h4{
 	
 	<div class="row-fluid" style="" id="" >
 		<div class="col-md-12 " style="">
-			<div class="tile" id="map" style="max-height: 500px;">
+			<div class="tile" id="map" style="max-height: 400px;">
 						
 					</div>
 			<div style="width:130px;margin-left:30%;padding:2%">
@@ -207,10 +207,10 @@ h4{
 	
 	</div>
 	
-	<div class="col-md-8 " style="padding-left: 0;style="padding-right: 0"">
+	<div class="col-md-9 " style="padding-left: 0;style="padding-right: 0"">
 		
 		<div class="row-fluid">
-			<div class="col-md-6" style="border: 0px solid #036;">
+			<div class="col-md-5" style="border: 0px solid #036;">
 				
 				<div class="tile" id="" style="height: 30px;border: 0px solid #036;">
 					<h4>Facilities In Numbers</h4>
@@ -222,13 +222,13 @@ h4{
 				
 			</div>
 			
-			<div class="col-md-6" style="border: 0px solid #036;">
-				<div class="tile" id="filter" style="height: 70px">
+			<div class="col-md-7" style="border: 0px solid #036;">
+				<div class="tile" id="filter" style="height: 70px;">
 					<h4>Stock Levels (M.O.S)</h4>
 					<button id="mosgraph" type="button" data-toggle="modal" data-target="#stockmosModal" class="btn btn-success btn-sm" style="margin:5 0 5 12; ">
 						Filter Options</button>
 				</div>
-				<div class="tile" id="mos" style="height: 420px">
+				<div class="tile" id="mos" style="height: 400px">
 					
 				</div>
 			</div>
@@ -255,7 +255,7 @@ h4{
 		</div>
 		<div class="col-md-6" style="border: 0px solid #036;">
 			<div class="tile" id="" style="height: 70px;border: 0px solid #036;">
-					<h4>Actual Expities</h4>
+					<h4>Expities</h4>
 					<button type="button" data-toggle="modal" data-target="#actualeModal" class="btn btn-success btn-sm" style="margin:5 0 5 12; ">Filter Options</button>
 
 				</div>
@@ -272,30 +272,19 @@ h4{
 		
 		<div class="col-md-6" style="border: 0px solid #036;">
 			<div class="tile" id="" style="height: 70px;border: 0px solid #036;">
-				<h4>Potential Expiries</h4>	
-				<button type="button" data-toggle="modal" data-target="#actualeModal" class="btn btn-success btn-sm" style="margin:5 0 5 12; ">Filter Options</button>
-				</div>
-			<div class="tile" id="potential_ex" style="height: 450px">
-				
-			</div>
-			
-		</div>
-		<div class="col-md-6" style="border: 0px solid #036;">
-			<div class="tile" id="" style="height: 70px;border: 0px solid #036;">
 				<h4>Cost Of Orders</h4>	
-				<button type="button" data-toggle="modal" data-target="#orderModal" class="btn btn-success btn-sm" style="margin:5 0 5 12; ">Other Options</button>
+				<button type="button" data-toggle="modal" data-target="#actualeModal" class="btn btn-success btn-sm" style="margin:5 0 5 12; ">Filter Options</button>
 				</div>
 			<div class="tile" id="orders" style="height: 450px">
 				
 			</div>
 			
 		</div>
-	</div>
-	
-	<div class="row-fluid"style="margin-top: 12px;">
-		
-		
 		<div class="col-md-6" style="border: 0px solid #036;">
+			<div class="tile" id="" style="height: 70px;border: 0px solid #036;">
+				<h4>Order Lead time</h4>	
+				<button type="button" data-toggle="modal" data-target="#orderModal" class="btn btn-success btn-sm" style="margin:5 0 5 12; ">Other Options</button>
+				</div>
 			<div class="tile" id="" style="height: 100px;border: 0px solid #036;">
 				<h4>Order Lead time</h4>
 					<div class="panel-heading">
@@ -312,10 +301,13 @@ h4{
 			<div class="tile" id="leadtime" style="height: 250px">
 				
 			</div>
+				
+			</div>
 			
 		</div>
-		
 	</div>
+	
+	
 </div>
    	
   <!-- Modal -->
@@ -388,9 +380,9 @@ h4{
    ajax_fill_data('Kenya/mos_graph/NULL/NULL/NULL/NULL/NULL/mos',"#mos");
    ajax_fill_data('Kenya/roll_out',"#roll_out");
    ajax_fill_data('Kenya/consumption',"#consumption");
-   ajax_fill_data('Kenya/actual_expiries/NULL/NULL/NULL/NULL/NULL',"#actual_ex");
+   ajax_fill_data('national/expiry/NULL/NULL/NULL/NULL/NULL',"#actual_ex");
    ajax_fill_data('Kenya/potential_expiries',"#potential_ex");
-   ajax_fill_data('Kenya/orders',"#orders");
+   ajax_fill_data('national/order/NULL/NULL/NULL/NULL/NULL',"#orders");
    ajax_fill_data('Kenya/write_dashboard_html',"#hcw_trained");
    ajax_fill_data('Kenya/facility_over_view/',"#facilities_rolled_out");
    ajax_fill_data('Kenya/get_lead_infor/NULL/NULL/NULL/NULL/NULL',"#leadtime");
@@ -440,12 +432,12 @@ h4{
         json_obj={"url":"<?php echo site_url("orders/getDistrict");?>",}
         var baseUrl=json_obj.url;
         dropdown(baseUrl,"county="+county_data[0],".subcounty");
-        ajax_fill_data('Kenya/actual_expiries/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#actual_ex");
+        ajax_fill_data('national/expiry/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#actual_ex");
         ajax_fill_data('Kenya/potential_expiries/'+county_data[0]+'/NULL/NULL/NULL/NULL',"#potential_ex"); 
-        ajax_fill_data('Kenya/mos_graph/'+county_data[0]+'/NULL/NULL/NULL/ALL',"#mos");
+        ajax_fill_data('Kenya/mos_graph/'+county_data[0]+'/NULL/NULL/NULL/NULL/mos',"#mos");
         ajax_fill_data('Kenya/consumption/'+county_data[0]+'/NULL/NULL/NULL',"#consumption");
        // ajax_request_replace_div_content('national/get_facility_infor/'+county_data[0]+'/NULL/NULL/NULL',"#facilities");
-        ajax_fill_data('Kenya/orders/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#orders");
+        ajax_fill_data('national/order/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#orders");
        // ajax_request_replace_div_content('national/get_lead_infor/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#lead_infor");
     } 
     

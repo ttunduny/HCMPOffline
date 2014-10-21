@@ -1,7 +1,7 @@
 <?php
 $month = $this->session->userdata('Month');
 if ($month==''){
-   $month = date('mY',time());
+   $month = date('mY', strtotime('-1 month'));
 }
 $year= substr($month, -4);
 $month= substr_replace($month,"", -4);
@@ -18,7 +18,8 @@ $res = $this->db->query($q);
 foreach ($res->result_array() as $key => $value) {
     $option .= '<option value = "' . $value['countyid'] . '">' . $value['county'] . '</option>';
 }
-$current_month = date('mY', time());     
+$current_month = date('mY', strtotime('-1 month'));    
+
 ?>
 <style type="text/css">
     #switch_back{    
@@ -79,7 +80,21 @@ $current_month = date('mY', time());
                     </thead>
                     <tbody>
                         <?php
-                        
+                        $count = count($county_summary);
+                        if($count==0){?>
+                        <tr>
+                            <td><?php echo "N/A" ?></td>
+                            <td><?php echo number_format($county_summary[$i]['sum_opening'], $decimals = 0); ?></td>
+                            <td><?php echo number_format($county_summary[$i]['sum_received'], $decimals = 0); ?></td>
+                            <td><?php echo number_format($county_summary[$i]['sum_used'], $decimals = 0); ?></td>
+                            <td><?php echo number_format($county_summary[$i]['sum_tests'], $decimals = 0); ?></td>
+                            <td><?php echo number_format($county_summary[$i]['sum_positive'], $decimals = 0); ?></td>
+                            <td><?php echo number_format($county_summary[$i]['sum_negative'], $decimals = 0); ?></td>
+                            <td><?php echo number_format($county_summary[$i]['sum_losses'], $decimals = 0); ?></td>
+                            <td><?php echo number_format($county_summary[$i]['sum_closing_bal'], $decimals = 0); ?></td>
+                        </tr>                                               
+
+                        <?php }else{
                         for ($i=0; $i <count($county_summary) ; $i++) {?>
                         <tr>
                             <td><?php echo $county_summary[$i]['commodity_name']; ?></td>
@@ -93,7 +108,7 @@ $current_month = date('mY', time());
                             <td><?php echo number_format($county_summary[$i]['sum_closing_bal'], $decimals = 0); ?></td>
                         </tr>                                               
 
-                        <?php }
+                        <?php }}
                         ?>                   
                 </tbody>
             </table>
@@ -113,10 +128,9 @@ $current_month = date('mY', time());
         if(active_month==current_month){
             $('#switch_back').hide();            
             $('#switch').hide();            
-        }else{        
-
+        }else{    
             $("#switch_back").show();  
-            $('#switch').hide();                      
+            $('#switch').show();                      
         }
         $('#switch_back').click(function() {
             var value = current_month;

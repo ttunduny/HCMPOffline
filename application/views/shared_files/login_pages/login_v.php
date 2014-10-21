@@ -133,7 +133,7 @@ unset($popup);
     <h2><span style="margin-right: 0.5em;" class="glyphicon glyphicon-lock"></span>Login</h2> 
     <?php 
     
-   echo form_open('User/login_submit'); ?>
+   echo form_open('user/login_submit'); ?>
 <div id="login" >
 
     

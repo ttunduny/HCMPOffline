@@ -78,24 +78,19 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 								for($i=0;$i<$j;$i++){ ?>
 						<tr>
 							<td><?php echo $facility_order[$i]['sub_category_name'];?></td>
+	
 							<?php 
 							      $price=$facility_order[$i]['unit_cost'];
 								  $price=str_replace(",", '',$price);
-							      echo 
-					form_input(array('name' => 'commodity_code['.$i.']', 'type'=>'hidden',
-					 'id' =>'test','value'=>$facility_order[$i]['commodity_code'],'class'=>'commodity_code')).
-					 form_input(array('name' => 'total_commodity_units['.$i.']', 'type'=>'hidden',
-					 'id' =>'test','value'=>$facility_order[$i]['total_commodity_units'],'class'=>'total_commodity_units')).
-					 form_input(array('name' => 'commodity_id['.$i.']', 'type'=>'hidden',
-					 'id' =>'test','value'=>$facility_order[$i]['commodity_id'],'class'=>'commodity_id')).
-					 form_input(array('name' => 'commodity_name['.$i.']', 'type'=>'hidden',
-					 'id' =>'test','value'=>$facility_order[$i]['commodity_name'],'class'=>'commodity_name')).
-					 form_input(array('name' => 'price['.$i.']', 'type'=>'hidden',
-					 'id' =>'test','value'=>$price,'class'=>'commodity_name')).
-					form_input(array('name' => 'unit_size['.$i.']', 'type'=>'hidden',
-					 'id' =>'test','value'=>$facility_order[$i]['unit_size'],'class'=>'unit_size')).
-					 form_input(array('name' => 'unit_cost['.$i.']', 'type'=>'hidden',
-					 'id' =>'test','value'=>$facility_order[$i]['unit_cost'],'class'=>'unit_cost'));?>
+									 
+					?>
+					<input class="commodity_code" type="hidden" name="commodity_code[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['commodity_code'];?>" />
+	<input class="total_commodity_units" type="hidden" name="total_commodity_units[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['total_commodity_units'];?>" />
+	<input class="commodity_id" type="hidden" name="commodity_id[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['commodity_id'];?>" />
+	<input class="commodity_name" type="hidden" name="commodity_name[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['commodity_name'];?>" />
+	<input class="price" type="hidden" name="price[<?php echo $i; ?>] " value="<?php echo $price;?>" />
+	<input class="unit_size" type="hidden" name="unit_size[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['unit_size'];?>" />
+	<input class="unit_cost" type="hidden" name="unit_cost[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['unit_cost'];?>" />
 							<td><?php echo $facility_order[$i]['commodity_name']?></td>
 							<td><?php echo $facility_order[$i]['commodity_code'];?></td>
 							<td><?php echo $facility_order[$i]['unit_size']?> </td>

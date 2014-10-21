@@ -75,6 +75,8 @@ class Home extends MY_Controller
 			case 'allocation_committee':
 			case 'rtk_partner_admin':
 			case 'rtk_manager':
+			case 'rtk_partner_admin':
+			case 'rtk_partner_super':
 			redirect('home_controller');
 			break;
 			case 'super_admin':
@@ -87,7 +89,8 @@ class Home extends MY_Controller
 			case 'county':
 			$view = 'shared_files/template/template';
 			$data['content_view'] = "subcounty/subcounty_home_v";
-			break;	
+			break;
+
         endswitch;
 
 		$data['title'] = "System Home";

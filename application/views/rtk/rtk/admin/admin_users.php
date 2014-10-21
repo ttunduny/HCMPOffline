@@ -21,6 +21,13 @@ $res_arr1 = $this->db->query($q1);
 foreach ($res_arr1->result_array() as $value) {
     $districts_option_html .='<option county="' . $value['county'] . '" value="' . $value['id'] . '">' . $value['district'] . '</option>';
 }
+
+$region_option_html = "";
+$q2 = "select * from partners where flag='1' order by name asc";
+$res_arr2 = $this->db->query($q2)->result_array();
+foreach ($res_arr2 as $value) {
+    $region_option_html .='<option partner="' . $value['name'] . '" value="' . $value['ID'] . '">' . $value['name'] . '</option>';
+}
 ?>
     $(document).ready(function() {
 
@@ -28,9 +35,9 @@ foreach ($res_arr1->result_array() as $value) {
             "bJQueryUI": false,
             "bPaginate": false
         });
-        $('#add_user').click(function() {
-            $('#user_add_form').submit();
-        });
+        // $('#add_user').click(function() {
+        //     //$('#user_add_form').submit();
+        // });
         $('#add_rca_county').click(function() {
             $(this).parent().submit();
         });
@@ -42,7 +49,30 @@ foreach ($res_arr1->result_array() as $value) {
           clean: true,
           cleanElements: "th td",
           customClass: "data-table"
-        });  
+        }); 
+        // $('#add_user').click(function(e) {         
+        //       e.preventDefault();                       
+        //       var fname = $("#firstname").val();
+        //       var lname = $("#lastname").val();
+        //       var email = $("#email").val();
+        //       var region = $("#region").val();
+        //       var level = $("#level").val();
+        //       var county = $("#county").val();
+        //       var district = $("#district").val();             
+         
+        //       $.post("<?php echo base_url() . 'rtk_management/add_user'; ?>", {
+        //           fname: fname,
+        //           lname: lname,
+        //           email: email,
+        //           region:region,
+        //           level:level,
+        //           county :county,
+        //           district: district,                  
+        //           }).done(function(data) {
+        //               alert("Data Loaded: " + data);                      
+        //               window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_users'; ?>";
+        //           });
+        //        });  
 
     });
 </script>
@@ -86,40 +116,48 @@ foreach ($res_arr1->result_array() as $value) {
                 <h4 class="modal-title" id="myModalLabel">Add User</h4>
               </div>
               <div class="modal-body">
-                <form id="user_add_form" method="POST" action="<?php echo base_url(); ?>rtk_management/adduser" title="Add User">
+                <form id="user_add_form"  title="Add User" action="<?php echo base_url() . 'rtk_management/add_user';?>" method="post">
 
                     <label for="FirstName">First Name</label><br />
-                    <input class="form-control" type="text" name="FirstName" rel="1" required/><br />
+                    <input class="form-control" type="text" name="fname" id="fname" rel="1" required/><br />
 
                     <label for="Lastname">Last Name</label><br />
-                    <input class="form-control" type="text" name="Lastname" rel="2" required/><br />
+                    <input class="form-control" type="text" name="lname" id="lname" rel="2" required/><br />
 
                     <label for="email">Email</label><br />
-                    <input class="form-control" type="text" name="email" rel="3" required/><br />
-                    <select class="form-control" name="level" rel="0">
+                    <input class="form-control" type="text" name="email" rel="3" id="email" required/><br />
+                    <select class="form-control" name="level" id="level" rel="0">
                         <option value="0">-- Select User Level --</option>
                         <option value="13">County Admin</option>
                         <option value="7">SCMLT</option>
+                        <option value="14">Partner</option>
+                        <option value="15">Partner Admin</option>
                     </select>
                     <br />
-                    <select class="form-control" name="county" rel="5">
+                    <select class="form-control" name="county" id="county" rel="5">
                         <option value="0">-- Select County --</option>
                         <?php echo $counties_option_html; ?>
 
                     </select>
                     <br />
-                    <select class="form-control" name="district" rel="4">
+                    <select class="form-control" name="district" id="district" rel="4">
                         <option value="0">-- Select Sub-County --</option>
                         <?php echo $districts_option_html; ?>
                     </select>
-                </form>
+                    <br />
+                    <select class="form-control" name="region" id="region" rel="4">
+                        <option value="0">-- Select Partner Region --</option>
+                        <?php echo $region_option_html; ?>
+                    </select>
 
+             
             </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>        
-                <button type="button" id="add_user" class="btn btn-primary">Save</button>
+                <button type="submit" id="add_user" class="btn btn-primary">Save</button>
               </div>
             </div>
+               </form>
           </div>
         </div>
 

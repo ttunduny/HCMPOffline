@@ -681,13 +681,13 @@ class User extends MY_Controller {
 				$savethis -> lname = $lname;
 				$savethis -> email = $email_address;
 				$savethis -> username = $username;
-				$savethis -> password = "";
+				$savethis -> password = "123456";
 				$savethis -> activation = $save_activation_code ;
 				$savethis -> usertype_id = $user_type;
 				$savethis -> telephone = $telephone;
 				$savethis -> district = $district_code;
 				$savethis -> facility = $facility_id;
-				$savethis -> status = 0;
+				$savethis -> status = 1;
 				$savethis -> county_id = $county;
 				$savethis -> save();
 endif;
@@ -757,8 +757,7 @@ endif;
 									email_recieve ='$email_recieve_edit',
 									sms_recieve ='$sms_recieve_edit'
                                   	WHERE `id`= '$user_id'";
-echo json_encode($q);
-                                  	exit;
+
 		
 			$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
 			$update_user->execute("UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
@@ -897,7 +896,8 @@ echo json_encode($q);
 			
 
 		}
-			
+		
+				
 
 			
 		}

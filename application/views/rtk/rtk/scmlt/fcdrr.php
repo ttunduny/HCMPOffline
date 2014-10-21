@@ -43,7 +43,7 @@
     };             
 
     //Set the first element uneditable i.e. Screening Determine
-    $('#tests_done_0').attr("readonly",'true');
+   // $('#tests_done_0').attr("readonly",'true');
 
     //Set the Datepickers
     $("#begin_date").datepicker({
@@ -90,7 +90,7 @@
                 $('#'+top_type).css("border-color","red");                
             }else{      
                 $('#'+top_type).css("border-color","none");
-                compute_tests_done();
+                //compute_tests_done();
             }
         }
 
@@ -157,12 +157,14 @@ function compute_tests_done(){
         number = row_id.attr("commodity_id");
         num = parseInt(number);
         validate_inputs('pos_adj_',num);
+        $('#explanation').css("border-color","green"); 
     })
     $('.neg_adj').change(function() {
         row_id = $(this).closest("tr");
         number = row_id.attr("commodity_id");
         num = parseInt(number);
         validate_inputs('neg_adj_',num);
+        $('#explanation').css("border-color","green"); 
     })  
     $('.phys_count').change(function() {
         row_id = $(this).closest("tr");
@@ -175,6 +177,7 @@ function compute_tests_done(){
         number = row_id.attr("commodity_id");
         num = parseInt(number);
         validate_inputs('losses_',num);
+        $('#explanation').css("border-color","green"); 
     }) 
     
     $('.bbal').change(function() {
@@ -202,6 +205,10 @@ function compute_tests_done(){
          }else{ 
                 $('#'+input+row).css("border",'');                
                 if(input_value<0){                
+                    $('#'+input+row).css("border-color","red");                
+                    hide_save();
+                }else if(input_value>100000){
+                    alert('Sorry, your values are above the expected limit. Please check them again');                
                     $('#'+input+row).css("border-color","red");                
                     hide_save();
                 }else{      
@@ -258,7 +265,7 @@ function compute_tests_done(){
         var pos_adj = parseInt($('#pos_adj_' + row).val());
         var neg_adj = parseInt($('#neg_adj_' + row).val());
         var closing = b_bal + qty_rcvd - q_used + pos_adj - neg_adj -loses;       
-        if((q_used+neg_adj)>(b_bal+qty_rcvd+pos_adj)){
+        if(((q_used+neg_adj)>(b_bal+qty_rcvd+pos_adj))||(closing<0)){
             alert('You cannot use more kits than what you have in Stock. Please check your computations again');
             $('#b_balance_' + row).css('border-color','red'); 
             $('#q_received_' + row).css('border-color','red'); 
