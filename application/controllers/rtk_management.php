@@ -4303,8 +4303,8 @@ public function kemsa_district_reports($district) {
         $reports_html = "<h2>" . $reportname . "</h2><hr> ";        
         $reports_html .= $report_result;            
        // echo "$reports_html";die();
-        $email_address = "lab@kemsa.co.ke,ttunduny@gmail.com";
-        //$email_address = "ttunduny@gmail.com";
+       $email_address = "lab@kemsa.co.ke,ttunduny@gmail.com";
+       // $email_address = "ttunduny@gmail.com";
         $this->sendmail($reports_html,$message, $reportname, $email_address);
     // }//else{
         //echo "No data to Send";
