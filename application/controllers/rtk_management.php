@@ -4180,6 +4180,8 @@ public function allocation($zone = NULL, $county = NULL, $district = NULL, $faci
         $reported = $reports['reported']; 
         $percentage = ($reported/$facility_count)*100;
         //$reported = 0;
+        $r = "delete from rtk_county_percentage where month='$monthyear'";
+        $this->db->query($r);
         $q = "insert into rtk_county_percentage (county_id, facilities,reported,percentage,month) values ($id,$facility_count,$reported,$percentage,'$monthyear')";
         $this->db->query($q);
     }
@@ -4270,7 +4272,8 @@ function update_district_percentages_month($month=null){
         //$reported = 0;
         $reported = $reports['reported']; 
         $percentage = ($reported/ $facility_count)*100;
-        echo "District $id, Facilities: $facility_count, Reported: $reported, Percentage : $percentage<br/>";
+        $r = "delete from rtk_district_percentage where month='$monthyear'";
+        $this->db->query($r);
         $q = "insert into rtk_district_percentage (district_id, facilities,reported,percentage,month) values ($id,$facility_count,$reported,$percentage,'$monthyear')";
         $this->db->query($q);
 
@@ -4298,9 +4301,9 @@ public function kemsa_district_reports($district) {
     if($report_result!=''){
         $reports_html = "<h2>" . $reportname . "</h2><hr> ";        
         $reports_html .= $report_result;            
-        
-         //$email_address = "lab@kemsa.co.ke,ttunduny@gmail.com";
-        $email_address = "ttunduny@gmail.com";
+       // echo "$reports_html";die();
+        $email_address = "lab@kemsa.co.ke,ttunduny@gmail.com";
+        //$email_address = "ttunduny@gmail.com";
         $this->sendmail($reports_html,$message, $reportname, $email_address);
     }//else{
         //echo "No data to Send";
