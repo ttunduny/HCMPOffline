@@ -552,8 +552,7 @@ class sms extends MY_Controller {
 		}
 
 	}
-
-	public function weekly_potential_expiries_report() {
+public function weekly_potential_expiries_report() {
 		//Set the current year
 		$year = date("Y");
 		$picurl = base_url() . 'assets/img/coat_of_arms-resized1.png';
@@ -581,7 +580,7 @@ class sms extends MY_Controller {
 				$facilities = Facilities::getFacilities_for_email($district_id);
 				//holds all the data for all facilities in a particular district
 				$facility_total = array();
-
+				
 				foreach ($facilities as $facilities_) :
 					//holds the total value of expiries for that particular facility in that district
 					$facility_potential_expiries_total = 0;
@@ -591,8 +590,8 @@ class sms extends MY_Controller {
 					$facility_name = $facility_name['facility_name'];
 
 					//get potential expiries in that particular facility
-					$facility_potential_expiries = Facility_stocks::potential_expiries_email($district_id, $facility_code);
-
+					$facility_potential_expiries = Facility_stocks::potential_expiries_email($facility_code);
+					//echo "<pre>";print_r($facility_potential_expiries);exit;
 					//push the result into another array that will be used by the distrct
 					(array_key_exists($facility_name, $facility_total)) ? $facility_total[$facility_name] = array_merge($facility_total[$facility_name], array($facility_potential_expiries)) : $facility_total = array_merge($facility_total, array($facility_name => array($facility_potential_expiries)));
 					//Start buliding the excel file
@@ -736,17 +735,18 @@ class sms extends MY_Controller {
 							
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 				
-				//$email_address = "hcmp.kenya@gmail.com,collinsojenge@gmail.com";
+				
 				$email_address = $this -> get_ddp_email_county($county_id);
 				$bcc = $this -> get_bcc_notifications();
 				$cc = $this -> get_county_email($county_id);
 				
-				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc);
 			}
 
 		}
 
 	}
+
 
 	public function weekly_stockouts_report() {
 		//Set the current year
