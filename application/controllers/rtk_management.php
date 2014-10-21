@@ -5024,6 +5024,83 @@ public function get_all_zone_a_facilities(){
             echo "Alert Deleted Succesfully";
         }
 
+     public function update_labs($year,$month,$zone){                
+                ini_set(-1);
+                $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                $firstdate = $year.'-'.$month.'-01';
+                $lastdate = $year.'-'.$month.'-'.$num_days;  
+
+                $sql = "select distinct facility_code from facilities where rtk_enabled=1 and zone='Zone $zone' and exists
+                 (select distinct facility_code from lab_commodity_details where created_at between '$firstdate' and '$lastdate') order by facility_code asc";
+                 $facilities = $this->db->query($sql)->result_array();                    
+                 $count = 0; 
+                 $large_array[$code] = array();
+                 foreach ($facilities as $key => $value) {
+                    $code = $value['facility_code'];
+                     $q = "select order_id,facility_code,q_used,commodity_id,unit_of_issue,created_at from lab_commodity_details 
+                     where facility_code='$code' and created_at between '$firstdate' and '$lastdate'";                     
+                     $res = $this->db->query($q)->result_array();   
+                     if(count($res)<1){
+                       // break 1;
+                     }else{                         
+                         foreach ($res as $keys => $values) {                        
+                            $order_id = $values['order_id'];
+                            $facility_code = $values['facility_code'];
+                            $unit = $values['unit_of_issue'];
+                            $q_used = $values['q_used'];
+                            $commodity_id = $values['commodity_id'];
+                            $created_at = $values['created_at'];
+                            $small_array[$commodity_id] = array('order_id'=>$order_id,
+                                'unit'=>$unit,
+                                'q_used'=>$q_used,
+                                'created_at'=>$created_at,
+                                'commodity_id'=>$commodity_id,
+                                'facility_code'=>$facility_code);
+                            
+                            if($values['commodity_id']==1){
+                                $screening_det_q_used = $values['q_used'];                            
+                            }
+                            if ($values['commodity_id']==4){
+                                $screening_khb_q_used =$values['q_used'];                            
+                            }
+                            
+                        }
+
+                        if($screening_det_q_used==$screening_khb_q_used){
+                            $new_val = $screening_khb_q_used;                        
+                        }else{
+                            $new_val = $screening_khb_q_used + (2* $screening_det_q_used);                        
+                        }
+
+                        $large_array[$code][$count] = $small_array;                    
+                        foreach ($large_array[$code] as $count=>$value) {
+                            foreach ($value as $key => $values) {                            
+                                $order_id = $values['order_id'];
+                                $facility_code = $values['facility_code'];
+                                $unit = $values['unit_of_issue'];
+                                $q_used = $values['q_used'];
+                                $commodity_id = $values['commodity_id'];
+                                $created_at = $values['created_at'];
+                                if($commodity_id==4){
+                                   $sql1 = "INSERT INTO `lab_commodity_details1`(`order_id`, `facility_code`, `commodity_id`, `unit_of_issue`, `q_used`, `created_at`) 
+                                     VALUES ('$order_id','$facility_code','$commodity_id','$unit','$new_val','$created_at')";
+                                     $this->db->query($sql1); 
+                                }else{
+                                    $sql1 = "INSERT INTO `lab_commodity_details1`(`order_id`, `facility_code`, `commodity_id`, `unit_of_issue`, `q_used`, `created_at`) 
+                                     VALUES ('$order_id','$facility_code','$commodity_id','$unit','$q_used','$created_at')";
+                                     $this->db->query($sql1);                                
+                                }
+                            }
+                            
+                        }
+                    }
+
+                    $count++;                                                                         
+                    
+                 }
+                
+            }
+
 
 
 
