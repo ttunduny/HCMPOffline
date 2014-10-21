@@ -25,7 +25,7 @@
 			<div class="col-md-2">
 			</div>
 			<div class="col-md-2">
-				<a href="<?php echo base_url(); ?>/reports/mapping" class="btn btn-success active" role="button">Back</a>
+				<a href="<?php echo base_url(); ?>reports/mapping" class="btn btn-success active" role="button">Back</a>
 			</div>
 		</div>
  <div class="container" style="margin-top: 1%">
