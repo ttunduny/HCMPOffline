@@ -396,13 +396,12 @@ foreach ($temp as $key => $value) {
 			}
 
 			public function facility_meds_order(){
-			// echo "<pre>";pri nt_r($this->input->post());echo "</pre>";exit;
 			// echo "<pre>";print_r($this->input->post('commodity_code'));echo "</pre>";exit;
 			//security check
 			if ($this -> input -> post('commodity_code')) :
 			$commodity_type = $this -> input -> post('commodity_type');
 			$mfl = $this -> input -> post('mfl');
-			$commodity_code = $this -> input -> post('commodity_code');
+			// $commodity_code = $this -> input -> post('commodity_code');
 			$quantity = $this -> input -> post('quantity');
 			$order_cost = $this -> input -> post('cost');
 			$this -> load -> database();
@@ -415,11 +414,12 @@ foreach ($temp as $key => $value) {
 			$order_details = array(
 					"commodity_type" => $commodity_type[$i], 
 					'mfl' => $mfl[$i], 
-					'commodity_id' => $commodity_code[$i], 
+					'commodity_id' => $commodity_id[$i], 
 					'quantity' => $quantity[$i], 
 					'order_cost' => $order_cost[$i], 
 					'order_date' => $order_date
 					);
+			// echo "<pre>";print_r($order_details);echo "</pre>";exit;
 			//create the array to push to the db
 			array_push($data_array, $order_details);
 			
