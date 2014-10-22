@@ -29,7 +29,7 @@
 	<hr />
 	<div class="container">
 <div class="table-responsive" style="min-height:300px; overflow-y: auto;">
- <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/internal_issue',$att); ?>
+ <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_meds_order',$att); ?>
 <table  class="table table-hover table-bordered table-update" id="facility_issues_table" >
 <thead style="background-color: white">
 	<th>Commodity Type</th>
@@ -66,7 +66,7 @@
 <tbody>
 	<tr>
 		<td>
-			<select type="hidden" name="commodity_type" class="form-control input-small commodity_type" >
+			<select type="hidden" name="commodity_type[]" class="form-control input-small commodity_type" >
 			<option value="0" >Select Type</option>
 			<?php 
 			
@@ -81,24 +81,13 @@
 			</select>
 		</td>
 		<td>
-			<select name="mfl[0]" class="form-control input-small sub_category" style="width:110px !important;">
+			<select name="mfl[]" class="form-control input-small sub_category" style="width:110px !important;">
            		<option value="0">Select Category</option>
 		   	</select>
 		</td>
 		<td>
-			<select name="mfl[0]" class="form-control input-small commodity" style="width:110px !important;">
+			<select name="commodity_code[]" class="form-control input-small commodity" style="width:110px !important;">
            		<option value="0">Select Commodity</option>
-           				<?php 
-						foreach ($commodities as $commodities) :						
-									$commodity_name=$commodities['commodity_name'];
-									$commodity_id=$commodities['commodity_id'];
-									$unit=$commodities['unit_size'];
-									$source_name=$commodities['source_name'];
-									$total_commodity_units=$commodities['total_commodity_units'];
-									$commodity_balance=$commodities['commodity_balance'];		
-								echo "<option special_data='$commodity_id^$unit^$source_name^$total_commodity_units^$commodity_balance' value='$commodity_id'>$commodity_name</option>";		
-						endforeach;
-								?>
 		   	</select>
 			
 		</td>
@@ -162,7 +151,7 @@ endforeach;
 		<td><input  type="text" class="form-control input-small order_note" readonly="readonly" /></td>
 		
 		<td><input  type="text" class="form-control input-small unit_cost" readonly="readonly"  /></td>										
-		<td><input class="form-control input-small quantity" type="text" name="quantity[]"/></td>
+		<td><input class="form-control input-small quantity" id="quantity" type="text" name="quantity[]"/></td>
 		<td><input type="text" class="form-control input-small cost" name="cost[]" readonly="yes"   /></td>	
 		<td style="width:50px !important;" id="step8" ><button type="button" class="add btn btn-success btn-xs"><span class="glyphicon glyphicon-plus-sign"></span>Add Row</button>
 		</td><td><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Delete Row</button></td>
@@ -173,14 +162,14 @@ endforeach;
 </tbody>
 </table>
 
+<?php echo form_close(); ?>
+</div>
+</div>
 <hr />
 <div class="container-fluid">
 <div style="float: right;">
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
 <button type="button" class="btn btn-success test"><span class="glyphicon glyphicon-open"></span>Save</button></div>
-</div>
-<?php echo form_close(); ?>
-</div>
 </div>
 <script>
 $(document).ready(function() {
@@ -276,7 +265,7 @@ $(document).ready(function() {
 				locator.closest("tr").find(".sub_category").html(dropdown);
 			});				
 		});
-		//adding a button seth
+		//adding a row
 		$(".add").click(function() {
         var selector_object = $('#facility_issues_table tr:last');
         // alert("works");return;
@@ -362,7 +351,7 @@ $(document).ready(function() {
     +'<button type="button" class="btn btn-primary" id="save_dem_order" data-dismiss="modal">Save</button>');
 	});
 
-			$('#main-content').on('click','#save_dem_order',function() {
+	$('#main-content').on('click','#save_dem_order',function() {
      var order_total=$('#total_order_value').val();
      var workload=$('#workload').val();
      var bed_capacity=$('#bed_capacity').val();
@@ -372,14 +361,15 @@ $(document).ready(function() {
      if (bed_capacity=='') {alert_message+="<li>Indicate In-patient Bed Days</li>";}
      if(isNaN(alert_message)){
      //This event is fired immediately when the hide instance method has been called.
-    $('#workload').delay(500).queue(function (nxt){
+    $('#quantity').delay(500).queue(function (nxt){
     // Load up a new modal...
      dialog_box('Fix these items before saving your Order <ol>'+alert_message+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;',
      '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
     	nxt();
     });
-     }else{
-    $('#workload').delay(500).queue(function (nxt){
+     }else{//seth
+    $('#quantity').delay(500).queue(function (nxt){
+				// alert("I work");return;
     // Load up a new modal...
     var img='<img src="<?php echo base_url('assets/img/wait.gif') ?>"/>';
      dialog_box(img+'<h5 style="display: inline-block; font-weight:500;font-size: 18px;padding-left: 2%;"> Please wait as the order is being processed</h5>',

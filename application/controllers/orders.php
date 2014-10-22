@@ -395,6 +395,97 @@ foreach ($temp as $key => $value) {
 		$this -> load -> view('shared_files/template/template' , $data);
 			}
 
+			public function facility_meds_order(){
+			// echo "<pre>";pri nt_r($this->input->post());echo "</pre>";exit;
+			// echo "<pre>";print_r($this->input->post('commodity_code'));echo "</pre>";exit;
+			//security check
+			if ($this -> input -> post('commodity_code')) :
+			$commodity_type = $this -> input -> post('commodity_type');
+			$mfl = $this -> input -> post('mfl');
+			$commodity_code = $this -> input -> post('commodity_code');
+			$quantity = $this -> input -> post('quantity');
+			$order_cost = $this -> input -> post('cost');
+			$this -> load -> database();
+			$data_array = array();
+			$commodity_id = $this -> input -> post('commodity_code');
+			$order_date = date('y-m-d');
+			$number_of_id = count($commodity_id);
+
+			for ($i = 0; $i < $number_of_id; $i++) {
+			$order_details = array(
+					"commodity_type" => $commodity_type[$i], 
+					'mfl' => $mfl[$i], 
+					'commodity_id' => $commodity_code[$i], 
+					'quantity' => $quantity[$i], 
+					'order_cost' => $order_cost[$i], 
+					'order_date' => $order_date
+					);
+			//create the array to push to the db
+			array_push($data_array, $order_details);
+			
+			}// insert the data here
+			// echo "<pre>";print_r($data_array);echo"</pre>"; exit;
+			$this -> db -> insert_batch('facility_orders_meds', $data_array);
+
+			if ($this -> session -> userdata('user_indicator') == 'district') :
+				$district_id = $this -> session -> userdata('district_id');
+			$order_listing = 'subcounty';
+			elseif ($this -> session -> userdata('user_indicator') == 'county') :
+			$order_listing = 'county';
+			else :
+				$facility_code = $this -> session -> userdata('facility_id');
+			/*
+			$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($facility_code);
+			$facility_name = $myobj -> facility_name;
+			// get the order form details here
+			//create the pdf here
+			$pdf_body = $this -> create_order_pdf_template($new_order_no);
+			$file_name = $facility_name . '_facility_order_no_' . $new_order_no . "_date_created_" . date('d-m-y');
+			$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
+			$this -> hcmp_functions -> create_pdf($pdf_data);// create pdf
+			$this -> hcmp_functions -> clone_excel_order_template($new_order_no,'save_file',$file_name);//create excel
+			$order_listing = 'facility';
+			$message_1='
+			<br>
+			Please find the Order Made by '.$facility_name.' below for approval.
+			<br>
+			You may log in to the HCMP system to approve it.<a href="http://health-cmp.or.ke/" target="_blank">Click here</a>
+			<br>
+			<br>
+			<br>
+			';
+			$subject='Pending Approval Order Report For '.$facility_name;
+
+			$attach_file1='./pdf/'.$file_name.'.pdf';
+			$attach_file2="./print_docs/excel/excel_files/".$file_name.'.xls';
+
+			$message=$message_1.$pdf_body;
+
+			$response= $this->hcmp_functions->send_order_submission_email($message,$subject,$attach_file1."(more)".$attach_file2,null);
+            
+			if($response){
+			delete_files($attach_file1);
+            unlink($attach_file2);
+			}
+			else{
+
+			}
+
+			*/
+			endif;
+			// $user = $this -> session -> userdata('user_id');
+			// $user_action = "order";
+
+		 // 	Log::log_user_action($user, $user_action);
+
+			// $this -> hcmp_functions -> send_order_sms();
+
+			$this -> session -> set_flashdata('system_success_message', "Facility Meds Order has Been Saved");
+			redirect("home");
+			// redirect("reports/order_listing/$order_listing");
+			endif;
+			}//facility meds order terminado
+
 			public function facility_new_order() {
 			//security check
 			if ($this -> input -> post('commodity_id')) :
