@@ -157,218 +157,36 @@ h4{
     
    <div class="container-fluid">
 
-<div class="row-fluid">
-	
-	<div class="col-md-3 " style="padding-right: 0">
-		<div class="row-fluid" style="" id="notify" >
-		<div class="col-md-6">
-					<div class="color_g stat_item">
-						<span class="glyphicon glyphicon-user"></span>
-                  	HCW Trained <br/> <span id="hcw_trained"></span>
-                            
-                   </div>
-		</div>
-	<div class="col-md-6">
-					<div class="color_e stat_item">
-						<span class="glyphicon "></span>
-                 	Facilities Rolled Out <br/><span id="facilities_rolled_out"></span> 
-                            
-                   </div>
-	</div>
-	
-	
-	</div>
-	
-	
-	<div class="row-fluid" style="" id="" >
-		<div class="col-md-12 " style="">
-			<div class="tile" id="map" style="max-height: 400px;">
-						
-					</div>
-			<div style="width:130px;margin-left:30%;padding:2%">
-            <div style="display:inline-block;width:10px;height:10px;background:#FFCC99">
-                
-            </div>
-            <div style="width:80px;display:inline-block;margin-left:5px;font-size:120%">
-            	Using HCMP
-            	</div>
-            </div>
-					<script>
-					var map= new FusionMaps ("assets/FusionMaps/FCMap_KenyaCounty.swf","KenyaMap","100%","100%","0","0");
-					map.setJSONData(<?php echo $maps; ?>);
-					
-    				map.render("map");
-    				
-                    </script>
-						
-		</div>
-	
-	</div>
-	
-	</div>
-	
-	<div class="col-md-9 " style="padding-left: 0;style="padding-right: 0"">
-		
-		<div class="row-fluid">
-			<div class="col-md-5" style="border: 0px solid #036;">
-				
-				<div class="tile" id="" style="height: 30px;border: 0px solid #036;">
-					<h4>Facilities In Numbers</h4>
-				</div>
-				
-				<div class="tile" id="facility_breakdown" style="height: 370px;border: 0px solid #036;">
-					
-				</div>
-				
-			</div>
-			
-			<div class="col-md-7" style="border: 0px solid #036;">
-				<div class="tile" id="filter" style="height: 70px;">
-					<h4>Stock Levels (M.O.S)</h4>
-					<button id="mosgraph" type="button" data-toggle="modal" data-target="#stockmosModal" class="btn btn-success btn-sm" style="margin:5 0 5 12; ">
-						Filter Options</button>
-				</div>
-				<div class="tile" id="mos" style="height: 400px">
-					
-				</div>
-			</div>
-		</div>
-		
-		
-	</div>
-	
-	
-	
-</div>
+<section>
+        <div class="tabs tabs-style-underline">
+          <nav>
+            <ul>
+              <li><a href="#section-underline-1" class="icon icon-home"><span>Home</span></a></li>
+              <li><a href="#section-underline-2" class="icon icon-gift"><span>Deals</span></a></li>
+              <li><a href="#section-underline-3" class="icon icon-upload"><span>Upload</span></a></li>
+              <li><a href="#section-underline-4" class="icon icon-coffee"><span>Work</span></a></li>
+              <li><a href="#section-underline-5" class="icon icon-config"><span>Settings</span></a></li>
+            </ul>
+          </nav>
+          <div class="content-wrap">
+            <section id="section-underline-1"><p>1</p></section>
+            <section id="section-underline-2"><p>2</p></section>
+            <section id="section-underline-3"><p>3</p></section>
+            <section id="section-underline-4"><p>4</p></section>
+            <section id="section-underline-5"><p>5</p></section>
+          </div><!-- /content -->
+        </div><!-- /tabs -->
+      </section>
 
-<div class="row-fluid">
-		
-		<div class="col-md-6" style="border: 0px solid #036;">
-			<div class="tile" id="" style="height: 70px;border: 0px solid #036;">
-				<h4>Consumption</h4>	
-				<button type="button" data-toggle="modal" data-target="#consumptionModal" class="btn btn-success btn-sm" style="margin:5 0 5 12; ">Other Options</button>
-				</div>
-			<div class="tile" id="consumption" style="height: 450px">
-				
-			</div>
-			
-		</div>
-		<div class="col-md-6" style="border: 0px solid #036;">
-			<div class="tile" id="" style="height: 70px;border: 0px solid #036;">
-					<h4>Expiries</h4>
-					<button type="button" data-toggle="modal" data-target="#actualeModal" class="btn btn-success btn-sm" style="margin:5 0 5 12; ">Filter Options</button>
 
-				</div>
-			<div class="tile" id="actual_ex" style="height: 450px">
-				
-			</div>
-			
-		</div>
-		
-	</div>
 	
-	<div class="row-fluid"style="margin-top: 12px;">
-		
-		
-		<div class="col-md-6" style="border: 0px solid #036;">
-			<div class="tile" id="" style="height: 70px;border: 0px solid #036;">
-				<h4>Cost Of Orders</h4>	
-				<button type="button" data-toggle="modal" data-target="#actualeModal" class="btn btn-success btn-sm" style="margin:5 0 5 12; ">Filter Options</button>
-				</div>
-			<div class="tile" id="orders" style="height: 450px">
-				
-			</div>
-			
-		</div>
-		<div class="col-md-6" style="border: 0px solid #036;">
-			
-			<div class="tile" id="" style="height: 100px;border: 0px solid #036;">
-				<h4>Order Lead time</h4>
-					<div class="panel-heading">
-       <h3 class="panel-title">Fill Rate</h3>
-       </div>
-       <div id="fill_rate">
-            <div class="progress">
-    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 80%;">
-        80%
-    </div>
-      </div>
-       </div>
-				</div>
-			<div class="tile" id="leadtime" style="height: 250px">
-				
-			</div>
-				
-			</div>
-			
-		</div>
+
 	</div>
 	
 	
-</div>
    	
-  <!-- Modal -->
-<div class="modal fade" id="stockmosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Stock Levels (M.O.S)</h4>
-      </div>
-      <div class="modal-body">
-       <div class="">
-       	
-       </div>
-       <div id="mosmodalgraph">
-       	
-       </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- end Modal stockmosModal -->
+ 
 
-  <!-- Modal -->
-<div class="modal fade" id="consumptionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- end Modal consumptionModal -->
-
- <!-- Modal -->
-<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- end Modal orderModal -->
-   
    
    
    <script>
