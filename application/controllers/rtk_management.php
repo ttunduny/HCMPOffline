@@ -1081,7 +1081,7 @@ public function rtk_manager_activity($all=null) {
     if(isset($all)){
         $data['user_logs'] = $this->rtk_logs();
     }else{
-        $limit = 'LIMIT 0,500';
+        $limit = 'LIMIT 0,150';
         $data['user_logs'] = $this->rtk_logs(null, NULL, NULL, $timestamp, $timestamp1,$limit);
     }
     $data['englishdate'] = $englishdate;
@@ -3791,8 +3791,8 @@ function rtk_logs($user = NULL, $UserType = NULL, $Action = NULL, $SinceDate = N
     FROM rtk_logs,rtk_logs_reference,user
     WHERE rtk_logs.reference = rtk_logs_reference.id
     AND rtk_logs.user_id = user.id
-    $conditions
-    ORDER BY `rtk_logs`.`id` DESC '$limit'";
+    $conditions   
+    ORDER BY `rtk_logs`.`id` DESC  $limit";
     $res = $this->db->query($sql);
     return ($res->result_array());
 }
