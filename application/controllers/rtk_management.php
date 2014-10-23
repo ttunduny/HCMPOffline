@@ -2326,6 +2326,7 @@ group by extract(YEAR_MONTH from lab_commodity_details.created_at)";
         $monthyear = $year . '-' . $month . '-1';
         $englishdate = date('F, Y', strtotime($monthyear));
         $data['graphdata'] = $this->partner_stock_level_percentages($partner); 
+        
         $data['tdata'] = $tdata;        
         $data['title'] = 'RTK Partner';
         $data['banner_text'] = 'RTK Partner Stock Status: Stock Level';
@@ -2579,49 +2580,49 @@ function partner_stock_level_percentages($partner, $month) {
 
             }
 
-               foreach ($query2 as $val) {            
-            $raw_month =  $val['current_month'];
-            $year = substr($raw_month, 0,4);
+            foreach ($query2 as $val) {            
+            // $raw_month =  $val['current_month'];
+            // $year = substr($raw_month, 0,4);
             
-            $month_val = substr($raw_month, 4,2);
-            $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
-            array_push($month, $month_text) ;
+            // $month_val = substr($raw_month, 4,2);
+            // $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
+            // array_push($month, $month_text) ;
             array_push($confirm_uni, intval($val['closing_stock']));
 
             }
 
                foreach ($query3 as $val) {            
-            $raw_month =  $val['current_month'];
-            $year = substr($raw_month, 0,4);
+            // $raw_month =  $val['current_month'];
+            // $year = substr($raw_month, 0,4);
             
-            $month_val = substr($raw_month, 4,2);
-            $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
-            array_push($month, $month_text) ;
+            // $month_val = substr($raw_month, 4,2);
+            // $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
+            // array_push($month, $month_text) ;
             array_push($screening_khb, intval($val['closing_stock']));
 
             }
                foreach ($query4 as $val) {            
-            $raw_month =  $val['current_month'];
-            $year = substr($raw_month, 0,4);
+            // $raw_month =  $val['current_month'];
+            // $year = substr($raw_month, 0,4);
             
-            $month_val = substr($raw_month, 4,2);
-            $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
-            array_push($month, $month_text) ;
+            // $month_val = substr($raw_month, 4,2);
+            // $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
+            // array_push($month, $month_text) ;
             array_push($confrim_first, intval($val['closing_stock']));
 
             }
 
    foreach ($query5 as $val) {            
-            $raw_month =  $val['current_month'];
-            $year = substr($raw_month, 0,4);
+            // $raw_month =  $val['current_month'];
+            // $year = substr($raw_month, 0,4);
             
-            $month_val = substr($raw_month, 4,2);
-            $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
-            array_push($month, $month_text) ;
+            // $month_val = substr($raw_month, 4,2);
+            // $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
+            // array_push($month, $month_text) ;
             array_push($tie_breaker, intval($val['closing_stock']));
 
             } 
-
+      
         $month_data = json_encode($month);
         $screening_det_data = json_encode($screening_det);
         $confirm_uni_data = json_encode($confirm_uni);
