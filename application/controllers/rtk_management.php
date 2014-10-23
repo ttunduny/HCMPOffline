@@ -1091,7 +1091,7 @@ public function rtk_manager_activity($all=null) {
     $data['user_logs'] = $this->rtk_logs(null, NULL, NULL, $timestamp, $timestamp1);
 
     $data['active_month'] = $month.$year;
-    $data['content_view'] = "rtk/rtk/admin/admin_logs";
+    $data['content_view'] = "rtka/rtk/admin/admin_logs";
     $data['banner_text'] = "RTK Manager";
     $data['title'] = "RTK Manager";
     $this->load->view('rtk/template', $data);
@@ -1186,13 +1186,20 @@ public function rtk_manager_stocks($month=null) {
             $subject = mysql_real_escape_string($_POST['subject']);
             $raw_message = mysql_real_escape_string($_POST['message']);             
             $attach_file = null;
+            $bcc_email = null;
             //$bcc_email = 'ttunduny@gmail.com,tngugi@clintonhealthaccess.org,annchemu@gmail.com';
-            //$bcc_email = '';
+            $message = str_replace(array('\\n', "\r", "\n"), "<br />", $raw_message); 
+
+            include 'rtk_mailer.php';
+            $newmail = new rtk_mailer();
+
+            $newmail->send_email('ttunduny@gmail.com', $message, $subject, $attach_file, $bcc_email);
+
             $receipient = array();
             $month = date('mY');       
             if($receipient_id==1){
             //all users
-                $sql = "SELECT email FROM user WHERE usertype_id in (0,7,8,11,13) and status=1 ORDER BY id DESC";
+                $sql = "SELECT email FROM user WHERE usertype_id in (0,7,8,11,13,14,15) and status=1 ORDER BY id DESC";
                 $res = $this->db->query($sql)->result_array();                  
                 //$to =array();
                 $to ="";
@@ -1425,7 +1432,7 @@ public function rtk_manager_stocks($month=null) {
         //Convert to get individual emails in a format suitable for sending
         //echo nl2br($desc);
        // $message = nl2br($raw_message);
-       $message = str_replace(array('\\n', "\r", "\n"), "<br />", $raw_message);
+       
        //  //$message = str_replace('\\n', '', $raw_message); 
        //  echo "$message";die();          
        //  //$receipient = 'ttunduny@gmail.com';        
@@ -1947,7 +1954,9 @@ public function rtk_manager_stocks($month=null) {
     public function partner_home() {
         $lastday = date('Y-m-d', strtotime("last day of previous month"));
         $countyid = $this->session->userdata('county_id');
-        $partner_id = $this->session->userdata('partner_id');  		
+        $partner_id = $this->session->userdata('partner_id');  
+        $partner_details = Partners::get_one_partner($partner_id);        
+        $partner_name = $partner_details['name'];        
         $districts = districts::getDistrict($countyid);
         $county_name = counties::get_county_name($countyid);
         $County = $county_name[0]['county'];
@@ -1990,7 +1999,7 @@ public function rtk_manager_stocks($month=null) {
         $data['tdata'] = $tdata;
         $data['county'] = $County;
         $data['title'] = 'RTK Partner';
-        $data['banner_text'] = 'RTK Partner';
+        $data['banner_text'] = "RTK Partner : $partner_name";
         $data['content_view'] = "rtk/rtk/partner/partner_dashboard";
         $this->load->view("rtk/template", $data);
     }
@@ -2972,7 +2981,7 @@ public function partner_county_profile($district) {
 
 
         //Switch Districts
-            public function switch_district($new_dist = null, $switched_as, $month = NULL, $redirect_url = NULL, $newcounty = null, $switched_from = null) {    
+            public function switch_district($new_dist = null, $switched_as, $month = NULL, $redirect_url = NULL, $newcounty = null, $switched_from = null,$partner=null) {    
                 if ($new_dist == 0) {
                     $new_dist = null;
                 }
@@ -2989,6 +2998,9 @@ public function partner_county_profile($district) {
                     $redirect_url = 'home_controller';
                 }           
 
+                if (isset($partner)) {
+                    $partner_id = $partner;                   
+                }
                 if (!isset($newcounty)) {
                     $newcounty = $this->session->userdata('county_id');
                 }
@@ -3011,12 +3023,13 @@ public function partner_county_profile($district) {
                  "district_id" => $new_dist,
                  "drawing_rights" => $this->session->userdata('drawing_rights'),
                  "switched_as" => $switched_as,
+                 "partner_id" => $partner_id,
                  "Month" => $month,
                  'switched_from' => $switched_from);
 
 
-$this->session->set_userdata($session_data);
-redirect($redirect_url);
+        $this->session->set_userdata($session_data);
+        redirect($redirect_url);
 }
 public function switch_commodity($month = NULL, $redirect_url = NULL,$commodity) {
         
