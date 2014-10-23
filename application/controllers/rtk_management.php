@@ -1066,20 +1066,29 @@ public function rtk_manager($month=null) {
     $this->load->view('rtk/template', $data);
 } 
 
-public function rtk_manager_activity() {
+public function rtk_manager_activity($all=null) {
     $month = $this->session->userdata('Month');
     if ($month == '') {
         $month = date('mY', time());
     }
+
     $year = substr($month, -4);
     $month = substr_replace($month, "", -4);
-    $monthyear = $year . '-' . $month . '-1';
+    $monthyear = $year . '-' . $month . '-01';
+    $monthyear1 = $year . '-' . $month . '-31';
 
+    $timestamp = strtotime($monthyear);
+    if(isset($all)){
+        $data['user_logs'] = $this->rtk_logs();
+    }else{
+        $limit = 'LIMIT 0,500';
+        $data['user_logs'] = $this->rtk_logs(null, NULL, NULL, $timestamp, $timestamp1,$limit);
+    }
     $data['englishdate'] = $englishdate;
     $County = $this->session->userdata('county_name');
     $data['county'] = $County;
     $Countyid = $this->session->userdata('county_id');
-    $data['user_logs'] = $this->rtk_logs();
+    $data['user_logs'] = $this->rtk_logs(null, NULL, NULL, $timestamp, $timestamp1);
 
     $data['active_month'] = $month.$year;
     $data['content_view'] = "rtk/rtk/admin/admin_logs";
@@ -3434,8 +3443,8 @@ public function rtk_summary_county($county, $year, $month) {
         return $result;
     }
 
-function facility_amc_compute() {
-        $sql = "select facilities.facility_code from facilities where facilities.rtk_enabled = '1'";
+function facility_amc_compute($a,$b) {
+        $sql = "select facilities.facility_code from facilities where facilities.rtk_enabled = '1' LIMIT $a,$b";
         $res = $this->db->query($sql);
         $facility = $res->result_array();
         foreach ($facility as $value) {
@@ -3771,7 +3780,7 @@ function reporting_rates($County = NULL,$year = NULL, $month = NULL) {
     return ($res->result_array());
 }
 
-function rtk_logs($user = NULL, $UserType = NULL, $Action = NULL, $SinceDate = NULL, $FromDate = NULL) {
+function rtk_logs($user = NULL, $UserType = NULL, $Action = NULL, $SinceDate = NULL, $FromDate = NULL,$limit=null) {
     $conditions = '';
     $conditions = (isset($user)) ? $conditions . " AND user.id = $user" : $conditions . ' ';
     $conditions = (isset($Action)) ? $conditions . " AND rtk_logs_reference.action = $Action" : $conditions . ' ';
@@ -3783,7 +3792,7 @@ function rtk_logs($user = NULL, $UserType = NULL, $Action = NULL, $SinceDate = N
     WHERE rtk_logs.reference = rtk_logs_reference.id
     AND rtk_logs.user_id = user.id
     $conditions
-    ORDER BY `rtk_logs`.`id` DESC";
+    ORDER BY `rtk_logs`.`id` DESC '$limit'";
     $res = $this->db->query($sql);
     return ($res->result_array());
 }

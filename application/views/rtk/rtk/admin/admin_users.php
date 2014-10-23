@@ -188,7 +188,7 @@ foreach ($res_arr2 as $value) {
                         <td><?php echo $value['email']; ?></td>
                         <td><?php echo $value['level']; ?></td>
                         <td><?php
-                            if ($value['user_indicator'] == 'rtkcountyadmin') {
+                            if ($value['user_indicator'] == 'rtk_county_admin') {
                                 echo 'Not Applicable';
                             } else {
                                 echo $value['district'];
