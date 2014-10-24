@@ -200,7 +200,7 @@ foreach ($res_arr2 as $value) {
                         <td><?php echo $value['email']; ?></td>
                         <td><?php echo $value['level']; ?></td>
                         <td><?php
-                            if ($value['user_indicator'] == 'rtk_county_admin') {
+                            if ($value['user_indicator'] != 'scmlt') {
                                 echo 'Not Applicable';
                             } else {
                                 echo $value['district'];
