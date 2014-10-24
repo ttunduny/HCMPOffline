@@ -809,7 +809,7 @@ public function weekly_potential_expiries_report() {
 						$excel_data['excel_title'] = "Stock Outs Report for ".$facility_name." as at ".date("jS F Y");
 						
 						$message = "<p>Dear ".$facility_name.",</p>
-								<p>Find attached an excel sheet with the ".$facility_name." breakdown of commodity Stock Outs.
+								<p>Find attached an excel sheet with the ".$facility_name." breakdown of commodities with Low Stock Levels.
 								You may log onto health-cmp.or.ke for follow up.</p>
 								
 								<p>----</p>
