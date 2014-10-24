@@ -758,7 +758,8 @@ public function weekly_potential_expiries_report() {
 		//Set the current year
 		$year = date("Y");
 		//get the facilities in the district
-		$counties = Facilities::get_Taita();
+		//$counties = Facilities::get_Taita();
+		$counties = Facilities::get_counties_all_using_HCMP();
 		
 		foreach ($counties as $counties) {
 			//holds the dat for the entire county
