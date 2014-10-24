@@ -434,11 +434,12 @@ foreach ($temp as $key => $value) {
 			$order_listing = 'county';
 			else :
 				$facility_code = $this -> session -> userdata('facility_id');
-			/*
+			
 			$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($facility_code);
 			$facility_name = $myobj -> facility_name;
 			// get the order form details here
 			//create the pdf here
+			echo "Its ait this far";exit;
 			$pdf_body = $this -> create_order_pdf_template($new_order_no);
 			$file_name = $facility_name . '_facility_order_no_' . $new_order_no . "_date_created_" . date('d-m-y');
 			$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
@@ -471,7 +472,7 @@ foreach ($temp as $key => $value) {
 
 			}
 
-			*/
+			
 			endif;
 			// $user = $this -> session -> userdata('user_id');
 			// $user_action = "order";
