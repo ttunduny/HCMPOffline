@@ -5124,7 +5124,12 @@ public function get_all_zone_a_facilities(){
                 
             }
 
-
+public function add_user() {    
+    
+    $this->load->model('user');
+    $this->user->add_user();
+    redirect('rtk_management/rtk_manager_users');
+}
 
 
 }
