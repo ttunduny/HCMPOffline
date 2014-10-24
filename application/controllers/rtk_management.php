@@ -1081,7 +1081,7 @@ public function rtk_manager_activity($all=null) {
     if(isset($all)){
         $data['user_logs'] = $this->rtk_logs();
     }else{
-        $limit = 'LIMIT 0,150';
+        $limit = 'LIMIT 0,100';
         $data['user_logs'] = $this->rtk_logs(null, NULL, NULL, $timestamp, $timestamp1,$limit);
     }
     $data['englishdate'] = $englishdate;
@@ -1091,7 +1091,7 @@ public function rtk_manager_activity($all=null) {
     $data['user_logs'] = $this->rtk_logs(null, NULL, NULL, $timestamp, $timestamp1);
 
     $data['active_month'] = $month.$year;
-    $data['content_view'] = "rtka/rtk/admin/admin_logs";
+    $data['content_view'] = "rtk/rtk/admin/admin_logs";
     $data['banner_text'] = "RTK Manager";
     $data['title'] = "RTK Manager";
     $this->load->view('rtk/template', $data);
@@ -3806,7 +3806,7 @@ function rtk_logs($user = NULL, $UserType = NULL, $Action = NULL, $SinceDate = N
     WHERE rtk_logs.reference = rtk_logs_reference.id
     AND rtk_logs.user_id = user.id
     $conditions   
-    ORDER BY `rtk_logs`.`id` DESC  $limit";
+    ORDER BY `rtk_logs`.`id` DESC  $limit";    
     $res = $this->db->query($sql);
     return ($res->result_array());
 }
@@ -3952,7 +3952,7 @@ $res = $this->db->query($common_q)->result_array();
 
 return $res;
 }
-function partner_county_totals($year, $month, $county = NULL) {
+function partner_county_totals($year, $month, $partner = NULL) {
 
     $firstdate = $year . '-' . $month . '-01';
     $firstday = date("Y-m-d", strtotime("$firstdate +1 Month "));
@@ -3982,6 +3982,7 @@ function partner_county_totals($year, $month, $county = NULL) {
     AND lab_commodity_orders.id = lab_commodity_details.order_id 
     AND facilities.facility_code = lab_commodity_details.facility_code AND facilities.district = districts.id 
     AND districts.county = counties.id 
+    and facilities.partner = '$partner'
     AND lab_commodity_orders.order_date BETWEEN  '$firstday' AND  '$lastdate'
     AND lab_commodities.id in (select lab_commodities.id from lab_commodities,lab_commodity_categories 
         where lab_commodities.category = lab_commodity_categories.id and lab_commodity_categories.active = '1')";
@@ -5124,9 +5125,96 @@ public function get_all_zone_a_facilities(){
                 
             }
 
+public function add_user() {    
+    
+    $this->load->model('user');
+    $this->user->add_user();
+    redirect('rtk_management/rtk_manager_users');
+}
+public function clean_data($month=null){
+    if(isset($month)){           
+        $year = substr($month, -4);
+        $month = substr($month, 0,2);            
+        $monthyear = $year . '-' . $month . '-1';         
+        $monthyear1 = $year . '-' . $month . '-31';         
 
+    }
+    $q = "select distinct facility_code from facilities where rtk_enabled=1 and exists
+                 (select distinct facility_code from lab_commodity_details) order by facility_code";
+    $res = $this->db->query($q)->result_array();
+   
+    foreach ($res as $key => $value) {
+        $code = $value['facility_code'];
+         $sql = "select  distinct lab_commodity_details1.facility_code
+        from
+        lab_commodity_details1        
+        where
+        lab_commodity_details1.facility_code = '$code'";
+        $res1 = $this->db->query($sql)->result_array();
+        foreach ($res as $key => $value) {
+            $fcode = $value['facility_code'];
+            $r = "update lab_commodity_details1 set created_at='0000-00-00' 
+            where lab_commodity_details1.facility_code = $code and lab_commodity_details1.created_at 
+            between '$monthyear' and '$monthyear1'";
+            $this->db->query($r);
+        }
+    }
+    
 
+}   
 
+   
+public function get_duplicates($month=null){
+        if(isset($month)){           
+            $year = substr($month, -4);
+            $month = substr($month, 0,2);            
+            $first_date = $year . '-' . $month . '-1';         
+            $last_date = $year . '-' . $month . '-31';         
+
+        } 
+        $sql = "SELECT lab_commodity_details1.facility_code,order_id, COUNT(lab_commodity_details1.facility_code ) as total
+        FROM lab_commodity_details1
+        WHERE lab_commodity_details1.created_at
+        BETWEEN '$first_date'
+        AND '$last_date'
+        GROUP BY lab_commodity_details1.facility_code having total>6
+        ORDER BY facility_code,order_id,COUNT( lab_commodity_details1.facility_code ) DESC";              
+        //echo "$sql";die();
+        $result = $this->db->query($sql)->result_array();
+        
+        $facils = array();
+        $orders = array();
+        foreach ($result as $key => $value) {
+            $mfl = $value['facility_code'];
+            $order = $value['order_id'];
+            array_push($facils, $mfl);
+            array_push($orders, $order);
+        }
+       
+        
+        for($i=0;$i<count($facils);$i++){    
+            $code= $facils[$i];
+            $order_id= $orders[$i];
+            
+            $sql1 = "select id from lab_commodity_details1 where facility_code=$code and order_id=$order_id and created_at  BETWEEN '$first_date'
+            AND '$last_date' order by id asc";
+            $dups = $this->db->query($sql1)->result_array();
+            $new_dups = array();                       
+            foreach ($dups as $key=>$value) {
+                $id = $value['id'];
+                array_push($new_dups,$id);                
+            }
+            for ($a=6; $a <count($new_dups) ; $a++) { 
+                $id = $new_dups[$a];
+                $sql2 ="DELETE FROM `lab_commodity_details1` WHERE id='$id'";                
+                $this->db->query($sql2);
+            }                  
+            
+            
+        }      
+
+    }     
+    
 }
 
 ?>

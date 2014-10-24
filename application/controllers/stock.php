@@ -819,17 +819,18 @@ $step_2_size=count($get_pushed_items);
 		$state->status=4;
 		$state->save();//get the color coded table
         $order_details=$this -> hcmp_functions -> create_order_delivery_color_coded_table($hcmp_order_id);
-		$message_1="<br>The Order Made for $order_details[facility_name] on  $order_details[date_ordered] has been received at the facility on. $order_details[date_received]
+		$message_1="<br>The Order Made for $order_details[facility_name] on  $order_details[date_ordered] has been received at the facility on. $order_details[date_received].
 		<br>
-		Total ordered value(ksh) =$order_details[order_total]
+		Total ordered value(ksh) =$order_details[order_total].
 		<br>
-		Total recieved order value(ksh)=$order_details[actual_order_total]
+		Total received order value(ksh)=$order_details[actual_order_total].
 		<br>
-		Order Lead Time (from placement – receipt) = $order_details[lead_time]  days
+		Order Lead Time (from placement – receipt) = $order_details[lead_time]  days.
 		<br>
 		<br>
 		<br>".$order_details['table'];				
 		$subject='Order Report For '.$order_details['facility_name'];
+        echo $message_1;exit;
 		$this->hcmp_functions ->send_order_delivery_email($message_1,$subject,null);
 		$this->session->set_flashdata('system_success_message', 'Stock details have been Updated');
 endif;
