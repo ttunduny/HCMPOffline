@@ -187,5 +187,11 @@ $(document).ready(function(){
    
 });
 </script>
-
+<script>
+    $('#settings_tab').removeClass('active_tab');
+    $('#messaging_tab').removeClass('active_tab');
+    $('#trend_tab').addClass('active_tab');
+    $('#users_tab').removeClass('active_tab');
+    $('#activity_tab').removeClass('active_tab');
+</script>
 

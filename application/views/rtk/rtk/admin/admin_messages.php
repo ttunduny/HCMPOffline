@@ -304,11 +304,13 @@ var substringMatcher = function(strs) {
 tinymce.init({
     selector: "textarea"
  });
-$('#messaging_tab').addClass('active_tab');
-$('#trend_tab').removeClass('active_tab');
-$('#users_tab').removeClass('active_tab');
-$('#settings_tab').removeClass('active_tab');
+</script>
+<script>
+    $('#settings_tab').removeClass('active_tab');
+    $('#messaging_tab').addClass('active_tab');
+    $('#trend_tab').removeClass('active_tab');
+    $('#users_tab').removeClass('active_tab');
+    $('#activity_tab').removeClass('active_tab');
 </script>
 
-</html>
 

@@ -117,7 +117,7 @@
       <ul class="nav nav-tabs">
        <li class="active"><a href="<?php echo base_url().'rtk_management/rtk_manager_admin'; ?>">Users</a></li>
        <li class="active"><a href="<?php echo base_url().'rtk_management/rtk_manager_admin_messages'; ?>">Messages</a></li>
-       <li class="active"><a href="<?php echo base_url().'rtk_management/rtk_manager_admin_settings'; ?>">Settings</a></li>
+       <li class="active"><a href="<?php echo base_url().'rtk_management/rtk_manager_settings'; ?>">Settings</a></li>
        <li class="active"><a href="<?php echo base_url().'rtk_management/rtk_manager_logs'; ?>">Activity Logs</a></li>
      </ul>
    </div-->
@@ -619,7 +619,7 @@
             id: id,                        
           }).done(function(data) {
             alert("Data Loaded: " + data);            
-            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_settings'; ?>";
           });
         });
 
@@ -664,7 +664,7 @@
       }).done(function(data) {
         alert("Data Loaded: " + data);
         $('Edit_Deadline'.id).modal('hide');
-        window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+        window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_settings'; ?>";
       });
 
     });
@@ -688,7 +688,7 @@
       }).done(function(data) {
         alert("Data Loaded: " + data);
         $('Add_Deadline').modal('hide');
-        window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+        window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_settings'; ?>";
       });
 
     });
@@ -711,7 +711,7 @@
           }).done(function(data) {
             alert("Data Loaded: " + data);
             $('Edit_Alert'.c_id).modal('hide');
-            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_settings'; ?>";
           });
   }); */
 
@@ -741,7 +741,7 @@
           }).done(function(data) {
             alert("Data Loaded: " + data);
             $('Edit_Alert'.c_id).modal('hide');
-            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_settings'; ?>";
           });
         }); 
         $('#add_alert_btn').click(function() {         
@@ -758,7 +758,7 @@
           }).done(function(data) {
             alert("Data Loaded: " + data);
             $('Add_Alert').modal('hide');
-            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_settings'; ?>";
           });
         }); 
 
@@ -774,7 +774,7 @@
           }).done(function(data) {
             alert("Data Loaded: " + data);
             $('Add_Commodity').modal('hide');
-            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_settings'; ?>";
           });
         }); 
 
@@ -792,7 +792,7 @@
           }).done(function(data) {
             alert("Data Loaded: " + data);
             $('Edit_Commodity'.c_id).modal('hide');
-            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+            window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_settings'; ?>";
           });
         }); 
 

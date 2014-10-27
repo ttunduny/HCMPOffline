@@ -377,42 +377,62 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 		$stocks = $query -> execute();
 		return $stocks;
 	}	
-		public static function potential_expiries_email($district_id=null,$facility_code=null){
-		$and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
-	 	$and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
+	public static function potential_expiries_email($facility_code=null)
+		{
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-		select  c.county, d1.district as subcounty ,temp.commodity_name,
-			 f.facility_code, f.facility_name,temp.manufacture, sum(temp.total) as total_ksh,
-			temp.unit_cost,temp.expiry_date,temp.unit_size,temp.units,temp.source_name,date(temp.date_added) as date_added,
-			temp.packs
-			from districts d1, counties c, facilities f left join
-			     (
-			select  ROUND( SUM(
-			f_s.current_balance  / d.total_commodity_units ) * d.unit_cost, 1) AS total, ROUND( SUM( f_s.current_balance  / d.total_commodity_units ), 1) as packs,SUM( f_s.current_balance) as units,
-			f_s.facility_code,d.id,d.commodity_name, f_s.manufacture,cs.source_name,f_s.date_added,
-			f_s.expiry_date,d.unit_size,d.unit_cost
-			
-			 from facility_stocks f_s, commodities d, commodity_source cs
-			where f_s.expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and  DATE_ADD(CURDATE(), INTERVAL 3 MONTH)
-			AND cs.id = d.commodity_source_id
-			and d.id=f_s.commodity_id
-			and year(f_s.expiry_date) !=1970
-			AND f_s.status =(1 or 2)
-			GROUP BY d.id,f_s.facility_code having total >1
-			
-			     ) temp
-			     on temp.facility_code = f.facility_code
-			where  f.district = d1.id
-			and c.id=d1.county
-			and temp.total>0
-			$and_data
-			group by temp.id,f.facility_code
-			order by temp.commodity_name asc,temp.total asc, temp.expiry_date desc");
-
+		select 
+		    c.county,
+		    d1.district as subcounty,
+		    temp.commodity_name,
+		    f.facility_code,
+		    f.facility_name,
+		    temp.manufacture,
+		    sum(temp.total) as total_ksh,
+		    temp.unit_cost,
+		    temp.expiry_date,
+		    temp.unit_size,
+		    temp.units,
+		    temp.source_name,
+		    date(temp.date_added) as date_added,
+		    temp.packs
+		from
+		    districts d1,
+		    counties c,
+		    facilities f
+		        left join
+		    (select 
+		        ROUND(SUM(f_s.current_balance / d.total_commodity_units) * d.unit_cost, 1) AS total,
+		            ROUND(SUM(f_s.current_balance / d.total_commodity_units), 1) as packs,
+		            SUM(f_s.current_balance) as units,
+		            f_s.facility_code,
+		            d.id,
+		            d.commodity_name,
+		            f_s.manufacture,
+		            cs.source_name,
+		            f_s.date_added,
+		            f_s.expiry_date,
+		            d.unit_size,
+		            d.unit_cost
+		    from
+		        facility_stocks f_s, commodities d, commodity_source cs
+		    where
+		        f_s.expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and DATE_ADD(CURDATE(), INTERVAL 3 MONTH)
+		            AND cs.id = d.commodity_source_id
+		            and d.id = f_s.commodity_id
+		            and year(f_s.expiry_date) != 1970
+		            AND f_s.status = (1 or 2)
+		    GROUP BY d.id , f_s.facility_code
+		    having total > 1) temp ON temp.facility_code = f.facility_code
+		where
+		    f.district = d1.id and c.id = d1.county
+		        AND temp.total > 0
+		        AND f.facility_code = '$facility_code'
+		group by temp.id , f.facility_code
+		order by temp.commodity_name asc , temp.total asc , temp.expiry_date desc");
 		
-
 		return $query;
 	}
+	
 		//Used for the SMS notificatin
 		//Gets the total number of potential expiries in the facility
 		public static function get_potential_expiries_sms()
