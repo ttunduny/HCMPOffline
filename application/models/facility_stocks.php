@@ -377,7 +377,7 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 		$stocks = $query -> execute();
 		return $stocks;
 	}	
-		public static function potential_expiries_email($facility_code=null)
+	public static function potential_expiries_email($facility_code=null)
 		{
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		select 
@@ -432,6 +432,7 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 		
 		return $query;
 	}
+	
 		//Used for the SMS notificatin
 		//Gets the total number of potential expiries in the facility
 		public static function get_potential_expiries_sms()

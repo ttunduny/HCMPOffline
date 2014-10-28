@@ -127,9 +127,9 @@
         <div style="height:auto; margin-bottom: 2px" class="distribute message ">
         	<a href="<?php echo base_url('issues/index/external'); ?>"><h5>Redistribute Commodities to Other Facilities</h5></a>	 
         </div>
-        <div style="height:auto; margin-bottom: 2px" class="distribute message ">
+    <!--    <div style="height:auto; margin-bottom: 2px" class="distribute message ">
           <a href="<?php echo base_url('issues/index/district_store'); ?>"><h5>Redistribute Commodities to District Store</h5></a>   
-        </div>
+     </div>-->
         
  		<div style="height:auto; margin-bottom: 2px" class="distribute message ">
         	<a href="<?php echo base_url('issues/confirm_external_issue')?>"><h5>Receive Commodities From Other Sources</h5></a>

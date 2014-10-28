@@ -4,7 +4,7 @@
  */
 class Hcmp_functions extends MY_Controller {
 
-	var $test_mode=TRUE;
+	var $test_mode=FALSE;
 
 
 		function __construct() {
@@ -194,10 +194,7 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 			
 	  $cc_email .=$this->get_ddp_email($data['district']);
 	  $cc_email .=$this->get_facility_email($facility_code);
-	  
-
-
-	   $cc_email .=$this->get_county_email($data['district']) ;
+	  $cc_email .=$this->get_county_email($data['district']) ;
 
 
   endif;
@@ -829,4 +826,3 @@ HTML_DATA;
 return array('table'=>$message,'date_ordered'=>$order_date,'date_received'=>$deliver_date,'order_total'=>$order_total,'actual_order_total'=>$actual_order_total,'lead_time'=>$date_diff,'facility_name'=>$facility_name);
  }
 }
-

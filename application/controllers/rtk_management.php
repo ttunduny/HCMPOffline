@@ -71,7 +71,7 @@ class Rtk_Management extends Home_controller {
         $lab_count = lab_commodity_orders::get_recent_lab_orders($facility_detail['facility_code']);
         if ($lab_count > 0) {
             $reported = $reported + 1;              
-            $table_body .="<span class='label label-success'>Submitted  for    $lastmonth </span><a href=" . site_url('rtk_management/scmlt_orders') . " class='link'> View</a></td>";
+            $table_body .="<span class='label label-success'>Submitted  for    $lastmonth </span><a href=" . site_url('rtk_management/rtk_orders') . " class='link'> View</a></td>";
         } else {
             $nonreported = $nonreported + 1;
             $table_body .=$report_link;
@@ -407,7 +407,52 @@ public function update_lab_commodity_orders() {
     }
 
     redirect('rtk_management/scmlt_orders');
+}public function rtk_orders($msg = NULL) {
+    $district = $this->session->userdata('district_id');        
+    $district_name = Districts::get_district_name($district)->toArray();        
+    $d_name = $district_name[0]['district'];
+    $countyid = $this->session->userdata('county_id');
+
+    $data['countyid'] = $countyid;
+
+    $data['title'] = "Orders";
+    $data['content_view'] = "rtk/rtk/dpp/rtk_orders_listing_v";
+    $data['banner_text'] = $d_name . "Orders";
+        //        $data['fcdrr_order_list'] = Lab_Commodity_Orders::get_district_orders($district);
+    ini_set('memory_limit', '-1');
+
+    date_default_timezone_set('EUROPE/moscow');
+    $last_month = date('m');
+        //            $month_ago=date('Y-'.$last_month.'-d');
+    $month_ago = date('Y-m-d', strtotime("last day of previous month"));
+    $sql = 'SELECT  
+    facilities.facility_code,facilities.facility_name,lab_commodity_orders.id,lab_commodity_orders.order_date,lab_commodity_orders.district_id,lab_commodity_orders.compiled_by,lab_commodity_orders.facility_code
+    FROM lab_commodity_orders, facilities
+    WHERE lab_commodity_orders.facility_code = facilities.facility_code 
+    AND lab_commodity_orders.order_date between ' . $month_ago . ' AND NOW()
+    AND facilities.district =' . $district . '
+    ORDER BY  lab_commodity_orders.id DESC ';
+           /*$query = $this->db->query("SELECT  
+            facilities.facility_code,facilities.facility_name,lab_commodity_orders.id,lab_commodity_orders.order_date,lab_commodity_orders.district_id,lab_commodity_orders.compiled_by,lab_commodity_orders.facility_code
+            FROM lab_commodity_orders, facilities
+            WHERE lab_commodity_orders.facility_code = facilities.facility_code 
+            AND lab_commodity_orders.order_date between '$month_ago ' AND NOW()
+            AND lab_commodity_orders.district_id =' . $district . '
+            ORDER BY  lab_commodity_orders.id DESC");*/
+$query = $this->db->query($sql);
+
+$data['lab_order_list'] = $query->result_array();
+$data['all_orders'] = Lab_Commodity_Orders::get_district_orders($district);
+$myobj = Doctrine::getTable('districts')->find($district);
+        //$data['district_incharge']=array($id=>$myobj->district);
+$data['myClass'] = $this;
+$data['d_name'] = $d_name;
+$data['msg'] = $msg;
+
+$this->load->view("rtk/template", $data);
 }
+
+
 
     //VIew FCDRR Report
 public function lab_order_details($order_id, $msg = NULL) {
@@ -536,7 +581,7 @@ public function get_lab_report($order_no, $report_type) {
 
 
     ///*** CLC Functions ***///
-             public function county_home() {
+            public function county_home() {
                 $lastday = date('Y-m-d', strtotime("last day of previous month"));
                 $countyid = $this->session->userdata('county_id');
                 $districts = districts::getDistrict($countyid);
@@ -590,7 +635,8 @@ public function get_lab_report($order_no, $report_type) {
                         }else{
                             $percentage_reported = intval($value['percentage']);
                         }
-						array_push($reported, $percentage_reported);
+
+                        array_push($reported, $percentage_reported);
                         $percentage_non_reported = 100 - $percentage_reported;
                         array_push($nonreported, $percentage_non_reported);
                     }
@@ -717,6 +763,22 @@ public function get_lab_report($order_no, $report_type) {
                     $this->logData('20', $object_id);
             //$this->_update_facility_count('add',$county,$district);        
                     redirect('rtk_management/county_admin/facilities');
+                }
+                public function update_facility_county() {
+                    $facilityname = $_POST['facilityname'];
+                    $district = $_POST['district'];
+                    $mfl = $_POST['facility_code'];
+                    $time = date('Y-m-d', time());
+                    $facilityname = addslashes($facilityname);
+
+                    $sql = "UPDATE `facilities` SET `facility_name` = '$facilityname',  `district` = '$district' WHERE `facility_code`='$mfl' ";
+                    $this->db->query($sql);
+                    $q = $this->db->query("select id from `facilities`WHERE `facility_code`='$mfl' ");
+                    $facil = $q->result_array();
+                    $object_id = $facil[0]['id'];
+                    $this->logData('21', $object_id);
+
+                    redirect('rtk_management/facility_profile/' . $mfl);
                 }
                 public function county_trend($month=null) { 
                     if(isset($month)){           
@@ -909,7 +971,12 @@ public function rtk_manager_home() {
         $q = "select percentage from rtk_county_percentage where month='$this_month_full' and county_id=$id";
         $result = $this->db->query($q)->result_array();
         foreach ($result as $key => $value) {            
-            $percentage = intval($value['percentage']);                               
+            $percentage = intval($value['percentage']);  
+				if( $percentage >100){
+					$percentage = 100;
+				}else{
+				$percentage = intval($value['percentage']);
+				}
         }        
         array_push($thismonth_arr1, $percentage);
     }     
@@ -999,20 +1066,29 @@ public function rtk_manager($month=null) {
     $this->load->view('rtk/template', $data);
 } 
 
-public function rtk_manager_activity() {
+public function rtk_manager_activity($all=null) {
     $month = $this->session->userdata('Month');
     if ($month == '') {
         $month = date('mY', time());
     }
+
     $year = substr($month, -4);
     $month = substr_replace($month, "", -4);
-    $monthyear = $year . '-' . $month . '-1';
+    $monthyear = $year . '-' . $month . '-01';
+    $monthyear1 = $year . '-' . $month . '-31';
 
+    $timestamp = strtotime($monthyear);
+    if(isset($all)){
+        $data['user_logs'] = $this->rtk_logs();
+    }else{
+        $limit = 'LIMIT 0,100';
+        $data['user_logs'] = $this->rtk_logs(null, NULL, NULL, $timestamp, $timestamp1,$limit);
+    }
     $data['englishdate'] = $englishdate;
     $County = $this->session->userdata('county_name');
     $data['county'] = $County;
     $Countyid = $this->session->userdata('county_id');
-    $data['user_logs'] = $this->rtk_logs();
+    $data['user_logs'] = $this->rtk_logs(null, NULL, NULL, $timestamp, $timestamp1);
 
     $data['active_month'] = $month.$year;
     $data['content_view'] = "rtk/rtk/admin/admin_logs";
@@ -1020,7 +1096,7 @@ public function rtk_manager_activity() {
     $data['title'] = "RTK Manager";
     $this->load->view('rtk/template', $data);
 } 
-public function rtk_manager_users() { 
+public function rtk_manager_users() {
     $data['title'] = 'RTK Manager';
     $data['banner_text'] = 'RTK Manager';
     $data['content_view'] = "rtk/rtk/admin/admin_users";
@@ -1110,63 +1186,47 @@ public function rtk_manager_stocks($month=null) {
             $subject = mysql_real_escape_string($_POST['subject']);
             $raw_message = mysql_real_escape_string($_POST['message']);             
             $attach_file = null;
-            $bcc_email = 'ttunduny@gmail.com,tngugi@clintonhealthaccess.org,annchemu@gmail.com';
-            $message = str_replace(array('\\n', "\r", "\n"), "<br />", $raw_message);
-            $bcc_email = 'ttunduny@gmail.com,tngugi@clintonhealthaccess.org,annchemu@gmail.com';       
+            $bcc_email = null;
+            //$bcc_email = 'ttunduny@gmail.com,tngugi@clintonhealthaccess.org,annchemu@gmail.com';
+            $message = str_replace(array('\\n', "\r", "\n"), "<br />", $raw_message); 
+
             include 'rtk_mailer.php';
             $newmail = new rtk_mailer();
-        // $response = $newmail->send_email($to, $message, $subject, null, $bcc_email);
-        
+
+            $newmail->send_email('ttunduny@gmail.com', $message, $subject, $attach_file, $bcc_email);
+
             $receipient = array();
-            $month = date('mY'); 
-            $a = 0;$b = 100;      
+            $month = date('mY');       
             if($receipient_id==1){
             //all users
-                for ($i=$a; $i < $b; $i++) { 
-                    $sql = "SELECT email FROM user WHERE usertype_id in (0,7,8,11,13) and status=1 ORDER BY id DESC LIMIT $a,$b";
-                    $res = $this->db->query($sql)->result_array();                  
-                    //$to =array();
-                    $to ="";
-                    foreach ($res as $key => $value) {
-                        $one = $value['email'];
-                        $to.= $one.',';
-                    }
-                    $response = $newmail->send_email($to, $message, $subject, null, $bcc_email);    
-                    $a = $b;
-                    $b+=100;   
-                }
-               
+                $sql = "SELECT email FROM user WHERE usertype_id in (0,7,8,11,13,14,15) and status=1 ORDER BY id DESC";
+                $res = $this->db->query($sql)->result_array();                  
+                //$to =array();
+                $to ="";
+                foreach ($res as $key => $value) {
+                    $one = $value['email'];
+                    $to.= $one.',';
+                }       
                   
             }elseif($receipient_id==2){
             //All SCMLTs
-            for ($i=$a; $i < $b; $i++) { 
-                $sql = "SELECT email FROM user WHERE usertype_id = 7 and status = 1 ORDER BY id DESC LIMIT $a,$b";
-                $res = $this->db->query($sql)->result_array();                                 
+                $sql = "SELECT email FROM user WHERE usertype_id = 7 and status = 1 ORDER BY id DESC";
+                $res = $this->db->query($sql)->result_array();                                  
                 $to ="";
                 foreach ($res as $key => $value) {
                     $one = $value['email'];
                     $to.= $one.',';
-                }
-                $response = $newmail->send_email($to, $message, $subject, null, $bcc_email);    
-                $a = $b;
-                $b+=100;   
-            }           
+                }             
 
             }elseif($receipient_id==3){
             //All CLCs
-            for ($i=$a; $i < $b; $i++) { 
-                $sql = "SELECT email FROM user WHERE usertype_id =13 and status =1 ORDER BY id DESC LIMIT $a,$b";
-                $res = $this->db->query($sql)->result_array();                                 
-                $to ="";
-                foreach ($res as $key => $value) {
+                $sql = "SELECT email FROM user WHERE usertype_id =13 and status =1 ORDER BY id DESC";
+                $res = $this->db->query($sql)->result_array();                  
+                $to =array();
+                foreach ($res as  $value) {
                     $one = $value['email'];
-                    $to.= $one.',';
-                }
-                $response = $newmail->send_email($to, $message, $subject, null, $bcc_email);    
-                $a = $b;
-                $b+=100;   
-            }           
-  
+                    array_push($to,$one);
+                }          
 
             }elseif($receipient_id==4){
             //Sub C with more than 75% reporting
@@ -1372,7 +1432,7 @@ public function rtk_manager_stocks($month=null) {
         //Convert to get individual emails in a format suitable for sending
         //echo nl2br($desc);
        // $message = nl2br($raw_message);
-       $message = str_replace(array('\\n', "\r", "\n"), "<br />", $raw_message);
+       
        //  //$message = str_replace('\\n', '', $raw_message); 
        //  echo "$message";die();          
        //  //$receipient = 'ttunduny@gmail.com';        
@@ -1697,17 +1757,10 @@ public function rtk_manager_stocks($month=null) {
             $lastday = date('D dS M Y', strtotime("last day of previous month"));
             $lastmonth = date('F', strtotime("last day of previous month"));
             $allocation = '';
-            if ($allocated > 0) {
-                $allocation = "<span class=\"label label-success\">Allocated for  $lastmonth </span>";
-            } else {
-                $allocation = "<span class=\"label label-important\">Pending Allocation for  $lastmonth</span>";
-                $allocate = ($amc_4month / $unit_of_issue);
-                if ($allocate <= 0){
-                    $allocated = 1;
-                }else{
-                $allocated = ceil($allocate);
-                }
-            }
+            
+            
+                 // print_r($allocate); die();
+
             $table_body .= "
             <tr id=''>
             <input type='hidden' name='$order_detail_id' value='$order_detail_id' />
@@ -1722,9 +1775,10 @@ public function rtk_manager_stocks($month=null) {
             <td>$amc</td>
             <td><input type='text' class='user2' name='allocated_$order_detail_id' value='$allocated'/></td>
             <td>$q_received</td>
-            <td>".$allocation."</td>
+            <td>$allocation</td>
             </tr>";
         }
+
 //            echo"<table>$table_body</table";die;
         //  $data['content_view'] = 'allocation_committee/ajax_view/rtk_county_allocation_v';
         $data['county_id'] = $county_id;
@@ -1734,6 +1788,31 @@ public function rtk_manager_stocks($month=null) {
         $data['banner_text'] = "Allocate " . $county_name['county'];
         $data['content_view'] = "rtk/allocation_committee/ajax_view/rtk_county_allocation_datatableonly_v";
         $this->load->view("rtk/template", $data);
+    }
+
+    public function rtk_allocation_data() {
+        if ($_POST['data'] == '') {
+            echo 'No data was found';           
+        }
+        $data = $_POST['data'];
+        $data = str_replace('=', '&', $data);
+        $data = explode('&', $data);
+
+        $now = time();
+        $count = count($data);
+        $i = 0;
+        $j = 0;
+        $data = array_chunk($data, 4);
+
+        foreach ($data as $value) {
+            $id = $value[1];
+            $val = $value[3];
+            $query = 'UPDATE  `lab_commodity_details` SET  `allocated` =  ' . $val . ',`allocated_date` =  ' . $now . ' WHERE  `lab_commodity_details`.`id` =' . $id . '';
+            $this->db->query($query);
+        }
+        // $object_id = $id;
+        //$this->logData('16',$object_id);
+        echo("allocations saved");
     }
 
     function county_allocation($county_id) {
@@ -1875,15 +1954,13 @@ public function rtk_manager_stocks($month=null) {
     public function partner_home() {
         $lastday = date('Y-m-d', strtotime("last day of previous month"));
         $countyid = $this->session->userdata('county_id');
-        $partner_id = $this->session->userdata('partner_id');        
+        $partner_id = $this->session->userdata('partner_id');  
+        $partner_details = Partners::get_one_partner($partner_id);        
+        $partner_name = $partner_details['name'];        
         $districts = districts::getDistrict($countyid);
         $county_name = counties::get_county_name($countyid);
         $County = $county_name[0]['county'];
-        $sql2 = "select name from partners where ID='$partner_id' and flag='1'";        
-        $res_partner = $this->db->query($sql2)->result_array(); 
-        foreach ($res_partner as $key => $value) {
-            $partner_name = $value['name'];
-        }
+
         $reports = array();
         $tdata = ' ';
         foreach ($districts as $value) {
@@ -1922,7 +1999,7 @@ public function rtk_manager_stocks($month=null) {
         $data['tdata'] = $tdata;
         $data['county'] = $County;
         $data['title'] = 'RTK Partner';
-        $data['banner_text'] = 'RTK Partner '.$partner_name;
+        $data['banner_text'] = "RTK Partner : $partner_name";
         $data['content_view'] = "rtk/rtk/partner/partner_dashboard";
         $this->load->view("rtk/template", $data);
     }
@@ -1931,13 +2008,8 @@ public function rtk_manager_stocks($month=null) {
         $partner_id = $this->session->userdata('partner_id');                        
         $sql = "select distinct counties.id, counties.county from  counties, facilities, districts where
             facilities.district = districts.id and facilities.partner = '$partner_id'  and districts.county = counties.id
-             and facilities.rtk_enabled = '1'";        
+             and facilities.rtk_enabled = '1'";
         $res_counties = $this->db->query($sql)->result_array();        
-        $sql2 = "select name from partners where ID='$partner_id' and flag='1'";        
-        $res_partner = $this->db->query($sql2)->result_array(); 
-        foreach ($res_partner as $key => $value) {
-            $partner_name = $value['name'];
-        }
         $table_data_district = array();
         $table_data_facilities = array();
         //$res_district = $this->_districts_in_county($county);
@@ -1966,13 +2038,13 @@ public function rtk_manager_stocks($month=null) {
         $data['counties_list'] = $res_counties;
         $data['facilities_count'] = $table_data_facilities; 
         $data['districts_count'] = $table_data_district;        
-        $data['title'] = 'RTK Partner';
-        $data['banner_text'] = "RTK County Admin: Counties in $partner_name";
+        $data['title'] = 'RTK County Admin';
+        $data['banner_text'] = "RTK County Admin: Counties in Aphia Rift Region";
         $data['content_view'] = "rtk/rtk/partner/districts_v";
         $this->load->view("rtk/template", $data);        
     }
     public function partner_commodity_usage() {
-        $partner = $this->session->userdata('partner_id');          
+		$partner = $this->session->userdata('partner_id');          
         $commodity = $this->session->userdata('commodity_id');          
         if($commodity!=''){
             $commodity_id = $commodity;
@@ -2013,7 +2085,7 @@ public function rtk_manager_stocks($month=null) {
         $monthyear = $year . '-' . $month . '-1';
         $englishdate = date('F, Y', strtotime($monthyear));
         $data['graphdata'] = $this->partner_commodity_percentages($partner, $commodity_id, $month);
-        //echo "<pre>"; print_r($data['graphdata']);die;
+         // echo "<pre>"; print_r($data['graphdata']);die;
         //$data['county_summary'] = $this->_requested_vs_allocated($year, $month, $countyid);
         $data['tdata'] = $tdata;
         $data['county'] = $County;
@@ -2025,7 +2097,7 @@ public function rtk_manager_stocks($month=null) {
 
     }
     function partner_reporting_percentages($partner, $year, $month) {    
-        $q = "SELECT 
+        $q = 'SELECT 
                 count(lab_commodity_orders.id) as total,
                 extract(YEAR_MONTH FROM lab_commodity_orders.order_date) as current_month,
                 facilities.partner,
@@ -2035,21 +2107,21 @@ public function rtk_manager_stocks($month=null) {
                 facilities
             WHERE
                 facilities.facility_code = lab_commodity_orders.facility_code
-                    AND facilities.partner = '$partner'
-            group by extract(YEAR_MONTH FROM lab_commodity_orders.order_date)";
+                    AND facilities.partner = 7
+            group by extract(YEAR_MONTH FROM lab_commodity_orders.order_date)';
         $query = $this->db->query($q);
 
         $sql = $this->db->select('count(id) as county_facility')->get_where('facilities', array('partner' =>$partner))->result_array();
         foreach ($sql as $key => $value) {
            $facilities = intval($value['county_facility']);
         }
+       
 
         $month = array();
         $reported = array();
         $nonreported = array();
         $reported_value = array();
         $nonreported_value = array();
-      
         foreach ($query->result_array() as $val) {
             $raw_month =  $val['current_month'];
             $year = substr($raw_month, 0,4);
@@ -2253,7 +2325,8 @@ group by extract(YEAR_MONTH from lab_commodity_details.created_at)";
 
         $monthyear = $year . '-' . $month . '-1';
         $englishdate = date('F, Y', strtotime($monthyear));
-        $data['graphdata'] = $this->partner_stock_level_percentages($partner);        
+        $data['graphdata'] = $this->partner_stock_level_percentages($partner); 
+        
         $data['tdata'] = $tdata;        
         $data['title'] = 'RTK Partner';
         $data['banner_text'] = 'RTK Partner Stock Status: Stock Level';
@@ -2445,6 +2518,126 @@ function partner_stock_percentages($partner, $month) {
         $data['tie_breaker'] = $tie_breaker_data;        
         //        $this->load->view('rtk/rtk/rca/county_reporting_view', $data);
         return $data;
+    } 
+function partner_stock_level_percentages($partner, $month) {    
+        //$q = 'select extract(YEAR_MONTH from lab_commodity_details.created_at)as current_month, lab_commodity_details.commodity_id, lab_commodity_details.q_requested, lab_commodity_details.beginning_bal,lab_commodity_details.q_received,lab_commodity_details.no_of_tests_done,lab_commodity_details.losses,lab_commodity_details.closing_stock,lab_commodity_details.q_received, facilities.partner from facilities, lab_commodity_details where facilities.partner = 7 group by extract(YEAR_MONTH from lab_commodity_details.created_at) ';
+        $q = "select extract(YEAR_MONTH from lab_commodity_details.created_at) as current_month,
+                lab_commodities.commodity_name,
+                lab_commodity_details.commodity_id,
+                lab_commodity_details.closing_stock,
+                facilities.partner
+            from
+                facilities,
+                lab_commodity_details,
+                lab_commodities
+            where
+                facilities.partner = '$partner'
+                    and lab_commodity_details.facility_code = facilities.facility_code
+                    and lab_commodity_details.commodity_id = lab_commodities.id";
+         $q_screen_det   = $q." and commodity_id = 1 
+            group by extract(YEAR_MONTH from lab_commodity_details.created_at)";
+        $query = $this->db->query($q_screen_det)->result_array();
+
+        $q_confirm_uni   = $q." and commodity_id = 2 
+            group by extract(YEAR_MONTH from lab_commodity_details.created_at)";
+        $query2 = $this->db->query($q_confirm_uni)->result_array();
+
+        $q_screening_khb   = $q." and commodity_id = 4 
+            group by extract(YEAR_MONTH from lab_commodity_details.created_at)";
+        $query3 = $this->db->query($q_screening_khb)->result_array();
+        
+        $q_confrim_first   = $q." and commodity_id = 5 
+            group by extract(YEAR_MONTH from lab_commodity_details.created_at)";
+        $query4 = $this->db->query($q_confrim_first)->result_array();
+        
+        $q_confrim_first   = $q." and commodity_id = 6 
+            group by extract(YEAR_MONTH from lab_commodity_details.created_at)";
+        $query5 = $this->db->query($q_confrim_first)->result_array();
+        // echo("<pre>"); print_r($query2);die;
+       
+        $month = array();
+        $screening_det = array();
+        $confirm_uni = array();;
+        $screening_khb = array();
+        $confrim_first = array();
+        $tie_breaker = array();        
+        $month_array = array();
+        $screening_det_array = array();
+        $confirm_uni_array = array();
+        $screening_khb_array = array();
+        $confrim_first_array = array();
+        $tie_breaker_array = array();        
+
+
+        foreach ($query as $val) {            
+            $raw_month =  $val['current_month'];
+            $year = substr($raw_month, 0,4);
+            
+            $month_val = substr($raw_month, 4,2);
+            $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
+            array_push($month, $month_text) ;
+            array_push($screening_det, intval($val['closing_stock']));
+
+            }
+
+            foreach ($query2 as $val) {            
+            // $raw_month =  $val['current_month'];
+            // $year = substr($raw_month, 0,4);
+            
+            // $month_val = substr($raw_month, 4,2);
+            // $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
+            // array_push($month, $month_text) ;
+            array_push($confirm_uni, intval($val['closing_stock']));
+
+            }
+
+               foreach ($query3 as $val) {            
+            // $raw_month =  $val['current_month'];
+            // $year = substr($raw_month, 0,4);
+            
+            // $month_val = substr($raw_month, 4,2);
+            // $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
+            // array_push($month, $month_text) ;
+            array_push($screening_khb, intval($val['closing_stock']));
+
+            }
+               foreach ($query4 as $val) {            
+            // $raw_month =  $val['current_month'];
+            // $year = substr($raw_month, 0,4);
+            
+            // $month_val = substr($raw_month, 4,2);
+            // $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
+            // array_push($month, $month_text) ;
+            array_push($confrim_first, intval($val['closing_stock']));
+
+            }
+
+   foreach ($query5 as $val) {            
+            // $raw_month =  $val['current_month'];
+            // $year = substr($raw_month, 0,4);
+            
+            // $month_val = substr($raw_month, 4,2);
+            // $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
+            // array_push($month, $month_text) ;
+            array_push($tie_breaker, intval($val['closing_stock']));
+
+            } 
+      
+        $month_data = json_encode($month);
+        $screening_det_data = json_encode($screening_det);
+        $confirm_uni_data = json_encode($confirm_uni);
+        $screening_khb_data = json_encode($screening_khb);
+        $confrim_first_data = json_encode($confrim_first);
+        $tie_breaker_data = json_encode($tie_breaker);        
+
+        $data['month'] = $month_data;
+        $data['screening_det'] = $screening_det_data;
+        $data['confirm_uni'] = $confirm_uni_data;
+        $data['screening_khb'] = $screening_khb_data;
+        $data['confrim_first'] = $confrim_first_data;
+        $data['tie_breaker'] = $tie_breaker_data;        
+        //        $this->load->view('rtk/rtk/rca/county_reporting_view', $data);
+        return $data;
     }    
     function partner_stock_expiring_percentages($partner) {    
         //$q = 'select extract(YEAR_MONTH from lab_commodity_details.created_at)as current_month, lab_commodity_details.commodity_id, lab_commodity_details.q_requested, lab_commodity_details.beginning_bal,lab_commodity_details.q_received,lab_commodity_details.no_of_tests_done,lab_commodity_details.losses,lab_commodity_details.closing_stock,lab_commodity_details.q_received, facilities.partner from facilities, lab_commodity_details where facilities.partner = 7 group by extract(YEAR_MONTH from lab_commodity_details.created_at) ';
@@ -2575,12 +2768,19 @@ function partner_stock_percentages($partner, $month) {
         //        $this->load->view('rtk/rtk/rca/county_reporting_view', $data);
         return $data;
     }    
- function partner_stock_level_percentages($partner, $month) {    
-        //$q = 'select extract(YEAR_MONTH from lab_commodity_details.created_at)as current_month, lab_commodity_details.commodity_id, lab_commodity_details.q_requested, lab_commodity_details.beginning_bal,lab_commodity_details.q_received,lab_commodity_details.no_of_tests_done,lab_commodity_details.losses,lab_commodity_details.closing_stock,lab_commodity_details.q_received, facilities.partner from facilities, lab_commodity_details where facilities.partner = 7 group by extract(YEAR_MONTH from lab_commodity_details.created_at) ';
-        $q = "select extract(YEAR_MONTH from lab_commodity_details.created_at) as current_month,
-                lab_commodities.commodity_name,
+ function partner_stock_level_percentages_old($partner) {   
+    
+        
+        $q = "select 
+                extract(YEAR_MONTH from lab_commodity_details.created_at) as current_month,
                 lab_commodity_details.commodity_id,
+                lab_commodity_details.q_requested,
+                lab_commodity_details.beginning_bal,
+                lab_commodity_details.q_received,
+                lab_commodity_details.no_of_tests_done,
+                lab_commodity_details.losses,
                 lab_commodity_details.closing_stock,
+                lab_commodity_details.q_received,
                 facilities.partner
             from
                 facilities,
@@ -2589,112 +2789,76 @@ function partner_stock_percentages($partner, $month) {
             where
                 facilities.partner = '$partner'
                     and lab_commodity_details.facility_code = facilities.facility_code
-                    and lab_commodity_details.commodity_id = lab_commodities.id";
-         $q_screen_det   = $q." and commodity_id = 1 
+                    and lab_commodity_details.commodity_id = lab_commodities.id
+                    AND lab_commodities.id in (
+                        select lab_commodities.id from lab_commodities, lab_commodity_categories where 
+                        lab_commodities.category = lab_commodity_categories.id and lab_commodity_categories.active='1'
+                        )
             group by extract(YEAR_MONTH from lab_commodity_details.created_at)";
-        $query = $this->db->query($q_screen_det)->result_array();
-
-        $q_confirm_uni   = $q." and commodity_id = 2 
-            group by extract(YEAR_MONTH from lab_commodity_details.created_at)";
-        $query2 = $this->db->query($q_confirm_uni)->result_array();
-
-        $q_screening_khb   = $q." and commodity_id = 4 
-            group by extract(YEAR_MONTH from lab_commodity_details.created_at)";
-        $query3 = $this->db->query($q_screening_khb)->result_array();
-        
-        $q_confrim_first   = $q." and commodity_id = 5 
-            group by extract(YEAR_MONTH from lab_commodity_details.created_at)";
-        $query4 = $this->db->query($q_confrim_first)->result_array();
-        
-        $q_confrim_first   = $q." and commodity_id = 6 
-            group by extract(YEAR_MONTH from lab_commodity_details.created_at)";
-        $query5 = $this->db->query($q_confrim_first)->result_array();
-        // echo("<pre>"); print_r($query2);die;
+        $query = $this->db->query($q)->result_array();        
        
+
         $month = array();
-        $screening_det = array();
-        $confirm_uni = array();;
-        $screening_khb = array();
-        $confrim_first = array();
-        $tie_breaker = array();        
+        $beginning_bal = array();
+        $qty_received = array();;
+        $total_tests = array();
+        $losses = array();
+        $ending_bal = array();
+        $qty_requested = array();
         $month_array = array();
-        $screening_det_array = array();
-        $confirm_uni_array = array();
-        $screening_khb_array = array();
-        $confrim_first_array = array();
-        $tie_breaker_array = array();        
+        $beginning_bal_array = array();
+        $qty_received_array = array();
+        $total_tests_array = array();
+        $losses_array = array();
+        $ending_bal_array = array();
+        $qty_requested_array = array();
 
 
-        foreach ($query as $val) {            
+        foreach ($query as $val) {
+            //echo intval($val['current_month']);die();
             $raw_month =  $val['current_month'];
-            $year = substr($raw_month, 0,4);
-            
+            $year = substr($raw_month, 0,4);            
             $month_val = substr($raw_month, 4,2);
             $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
             array_push($month, $month_text) ;
-            array_push($screening_det, intval($val['closing_stock']));
-
-            }
-
-               foreach ($query2 as $val) {            
-            $raw_month =  $val['current_month'];
-            $year = substr($raw_month, 0,4);
+            array_push($beginning_bal, intval($val['beginning_bal']));
+            array_push($qty_received, intval($val['q_received']));
+            array_push($total_tests, intval($val['no_of_tests_done']));
+            array_push($losses, intval($val['losses']));
+            array_push($ending_bal, intval($val['closing_stock']));
+            array_push($qty_requested, intval($val['q_requested']));
+            //$percentage_reported = $this->district_reporting_percentages($val['district_id'], $year, $month);
             
-            $month_val = substr($raw_month, 4,2);
-            $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
-            array_push($month, $month_text) ;
-            array_push($confirm_uni, intval($val['closing_stock']));
+           
 
-            }
-
-               foreach ($query3 as $val) {            
-            $raw_month =  $val['current_month'];
-            $year = substr($raw_month, 0,4);
-            
-            $month_val = substr($raw_month, 4,2);
-            $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
-            array_push($month, $month_text) ;
-            array_push($screening_khb, intval($val['closing_stock']));
-
-            }
-               foreach ($query4 as $val) {            
-            $raw_month =  $val['current_month'];
-            $year = substr($raw_month, 0,4);
-            
-            $month_val = substr($raw_month, 4,2);
-            $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
-            array_push($month, $month_text) ;
-            array_push($confrim_first, intval($val['closing_stock']));
-
-            }
-
-   foreach ($query5 as $val) {            
-            $raw_month =  $val['current_month'];
-            $year = substr($raw_month, 0,4);
-            
-            $month_val = substr($raw_month, 4,2);
-            $month_text = date('M',mktime(0,0,0,$month_val,10)).' '.$year;
-            array_push($month, $month_text) ;
-            array_push($tie_breaker, intval($val['closing_stock']));
-
-            } 
+            // array_push($month_array, $month);
+            // array_push($beginning_bal_array, $beginning_bal);
+            // array_push($qty_received_array, $qty_received);
+            // array_push($total_tests_array, $total_tests);
+            // array_push($losses_array, $losses);
+            // array_push($ending_bal_array, $ending_bal);
+            // array_push($qty_requested_array, $qty_requested);
+        }
+       
 
         $month_data = json_encode($month);
-        $screening_det_data = json_encode($screening_det);
-        $confirm_uni_data = json_encode($confirm_uni);
-        $screening_khb_data = json_encode($screening_khb);
-        $confrim_first_data = json_encode($confrim_first);
-        $tie_breaker_data = json_encode($tie_breaker);        
+        $beginning_bal_data = json_encode($beginning_bal);
+        $qty_received_data = json_encode($qty_received);
+        $total_tests_data = json_encode($total_tests);
+        $losses_data = json_encode($losses);
+        $ending_bal_data = json_encode($ending_bal);
+        $qty_requested_data = json_encode($qty_requested);
 
         $data['month'] = $month_data;
-        $data['screening_det'] = $screening_det_data;
-        $data['confirm_uni'] = $confirm_uni_data;
-        $data['screening_khb'] = $screening_khb_data;
-        $data['confrim_first'] = $confrim_first_data;
-        $data['tie_breaker'] = $tie_breaker_data;        
+        $data['beginning_bal'] = $beginning_bal_data;
+        $data['qty_received'] = $qty_received_data;
+        $data['total_tests'] = $total_tests_data;
+        $data['losses'] = $losses_data;
+        $data['ending_bal'] = $ending_bal_data;
+        $data['qty_requested'] = $qty_requested_data;
         //        $this->load->view('rtk/rtk/rca/county_reporting_view', $data);
         return $data;
-    } 
+    }   
 
 public function partner_county_profile($district) {
         $data = array();
@@ -2763,7 +2927,7 @@ public function partner_county_profile($district) {
        $data['district_balances_previous'] = $this->partner_county_totals($year_previous, $previous_month, $district);
        $data['district_balances_previous_1'] = $this->partner_county_totals($year_previous_1, $previous_month_1, $district);
        $data['district_balances_previous_2'] = $this->partner_county_totals($year_previous_2, $previous_month_2, $district);
-  
+
 
        $data['district_summary'] = $district_summary;
 
@@ -3051,52 +3215,6 @@ public function rtk_summary_county($county, $year, $month) {
         redirect($url);
     }
 
-    public function rtk_orders($msg = NULL) {
-    $district = $this->session->userdata('district_id');        
-    $district_name = Districts::get_district_name($district)->toArray();        
-    $d_name = $district_name[0]['district'];
-    $countyid = $this->session->userdata('county_id');
-
-    $data['countyid'] = $countyid;
-
-    $data['title'] = "Orders";
-    $data['content_view'] = "rtk/rtk/dpp/rtk_orders_listing_v";
-    $data['banner_text'] = $d_name . "Orders";
-        //        $data['fcdrr_order_list'] = Lab_Commodity_Orders::get_district_orders($district);
-    ini_set('memory_limit', '-1');
-
-    date_default_timezone_set('EUROPE/moscow');
-    $last_month = date('m');
-        //            $month_ago=date('Y-'.$last_month.'-d');
-    $month_ago = date('Y-m-d', strtotime("last day of previous month"));
-    $sql = 'SELECT  
-    facilities.facility_code,facilities.facility_name,lab_commodity_orders.id,lab_commodity_orders.order_date,lab_commodity_orders.district_id,lab_commodity_orders.compiled_by,lab_commodity_orders.facility_code
-    FROM lab_commodity_orders, facilities
-    WHERE lab_commodity_orders.facility_code = facilities.facility_code 
-    AND lab_commodity_orders.order_date between ' . $month_ago . ' AND NOW()
-    AND facilities.district =' . $district . '
-    ORDER BY  lab_commodity_orders.id DESC ';
-           /*$query = $this->db->query("SELECT  
-            facilities.facility_code,facilities.facility_name,lab_commodity_orders.id,lab_commodity_orders.order_date,lab_commodity_orders.district_id,lab_commodity_orders.compiled_by,lab_commodity_orders.facility_code
-            FROM lab_commodity_orders, facilities
-            WHERE lab_commodity_orders.facility_code = facilities.facility_code 
-            AND lab_commodity_orders.order_date between '$month_ago ' AND NOW()
-            AND lab_commodity_orders.district_id =' . $district . '
-            ORDER BY  lab_commodity_orders.id DESC");*/
-$query = $this->db->query($sql);
-
-$data['lab_order_list'] = $query->result_array();
-$data['all_orders'] = Lab_Commodity_Orders::get_district_orders($district);
-$myobj = Doctrine::getTable('districts')->find($district);
-        //$data['district_incharge']=array($id=>$myobj->district);
-$data['myClass'] = $this;
-$data['d_name'] = $d_name;
-$data['msg'] = $msg;
-
-$this->load->view("rtk/template", $data);
-}
-
-
 
     public function rtk_summary_district($district, $year, $month) {
         $distname = districts::get_district_name($district);
@@ -3189,7 +3307,7 @@ $this->load->view("rtk/template", $data);
         return $returnable;
     }
 
-   public function partner_summary($county, $year, $month,$partner_id) {                
+    public function partner_summary($county, $year, $month,$partner_id) {                
         $returnable = array();
         $nonreported;
         $reported_percentage;
@@ -3282,6 +3400,7 @@ $this->load->view("rtk/template", $data);
         $returnable = array('Month' => $text_month, 'Year' => $year,'total_facilities' => $total_reporting_facilities, 'reported' => $total_reported_facilities, 'reported_percentage' => $reported_percentage, 'nonreported' => $nonreported, 'nonreported_percentage' => $non_reported_percentage, 'late_reports' => $late_reporting, 'late_reports_percentage' => $late_percentage);
         return $returnable;
     }
+
     //Logging Function
     public function logData($reference, $object) {
         $timestamp = time();
@@ -3291,7 +3410,7 @@ $this->load->view("rtk/template", $data);
     }
 
     //Update the Average Monthly Consumption
-    private function update_amc($mfl) {
+   private function update_amc($mfl) {
         $last_update = time();
         $amc = 0;
         for ($commodity_id = 1; $commodity_id <= 6; $commodity_id++) {
@@ -3303,6 +3422,7 @@ $this->load->view("rtk/template", $data);
                 $sql = "update facility_amc set amc = '$amc', last_update = '$last_update' where facility_code = '$mfl' and commodity_id='$commodity_id'";
                 $res = $this->db->query($sql); 
             }else{
+
                 $sql = "INSERT INTO `facility_amc`(`facility_code`, `commodity_id`, `amc`, `last_update`) 
                 VALUES ('$mfl','$commodity_id','$amc','$last_update')";
                 $res = $this->db->query($sql);
@@ -3311,7 +3431,6 @@ $this->load->view("rtk/template", $data);
         }
     }
 
-
     //Facility Amc
     public function _facility_amc($mfl_code, $commodity = null) {
         $three_months_ago = date("Y-m-", strtotime("-4 Month "));
@@ -3319,7 +3438,7 @@ $this->load->view("rtk/template", $data);
         $end_date = date("Y-m-", strtotime("-1 Month "));
         $end_date .='31';
         //echo "Three months ago = $three_months_ago and End Date =$end_date ";die();
-        $q = "SELECT distinct avg(lab_commodity_details1.q_used) as avg_used
+        $q = "SELECT avg(lab_commodity_details1.q_used) as avg_used
         FROM  lab_commodity_details1,lab_commodity_orders
         WHERE lab_commodity_orders.id =  lab_commodity_details1.order_id
         AND lab_commodity_details1.facility_code =  $mfl_code
@@ -3338,7 +3457,15 @@ $this->load->view("rtk/template", $data);
         return $result;
     }
 
-
+function facility_amc_compute($a,$b) {
+        $sql = "select facilities.facility_code from facilities where facilities.rtk_enabled = '1' LIMIT $a,$b";
+        $res = $this->db->query($sql);
+        $facility = $res->result_array();
+        foreach ($facility as $value) {
+            $fcode = $value['facility_code'];
+            $this->update_amc($fcode);
+        }
+    }
     //Update the Number of Reports Online
     function _update_reports_count($state,$county,$district){ 
         $month = date('mY',time());             
@@ -3552,12 +3679,6 @@ public function show_dmlt_districts($dmlt, $mode = NULL) {
     }
 }
 
-public function add_user() {    
-    
-    $this->load->model('user');
-    $this->user->add_user();
-    redirect('rtk_management/rtk_manager_users');
-}
 public function dmlt_district_action() {
     $action = mysql_real_escape_string($_POST['action']);
     $dmlt = mysql_real_escape_string($_POST['dmlt_id']);
@@ -3673,7 +3794,7 @@ function reporting_rates($County = NULL,$year = NULL, $month = NULL) {
     return ($res->result_array());
 }
 
-function rtk_logs($user = NULL, $UserType = NULL, $Action = NULL, $SinceDate = NULL, $FromDate = NULL) {
+function rtk_logs($user = NULL, $UserType = NULL, $Action = NULL, $SinceDate = NULL, $FromDate = NULL,$limit=null) {
     $conditions = '';
     $conditions = (isset($user)) ? $conditions . " AND user.id = $user" : $conditions . ' ';
     $conditions = (isset($Action)) ? $conditions . " AND rtk_logs_reference.action = $Action" : $conditions . ' ';
@@ -3684,8 +3805,8 @@ function rtk_logs($user = NULL, $UserType = NULL, $Action = NULL, $SinceDate = N
     FROM rtk_logs,rtk_logs_reference,user
     WHERE rtk_logs.reference = rtk_logs_reference.id
     AND rtk_logs.user_id = user.id
-    $conditions
-    ORDER BY `rtk_logs`.`id` DESC";
+    $conditions   
+    ORDER BY `rtk_logs`.`id` DESC  $limit";    
     $res = $this->db->query($sql);
     return ($res->result_array());
 }
@@ -3866,9 +3987,14 @@ function partner_county_totals($year, $month, $partner = NULL) {
     AND lab_commodities.id in (select lab_commodities.id from lab_commodities,lab_commodity_categories 
         where lab_commodities.category = lab_commodity_categories.id and lab_commodity_categories.active = '1')";
 
+if (isset($county)) {
+    $common_q.= ' AND districts.county = counties.id and counties.id=' . $county;
+}
+
 $common_q.= ' group by lab_commodities.id';
 
 $res = $this->db->query($common_q)->result_array(); 
+
 return $res;
 }
 
@@ -4056,8 +4182,10 @@ public function allocation($zone = NULL, $county = NULL, $district = NULL, $faci
         $monthyear = $month.$year;                    
 
     }
-    
+    $r = "delete from rtk_county_percentage where month='$monthyear'";
+    $this->db->query($r);
     $sql = "select id from counties";
+
     $result = $this->db->query($sql)->result_array();
      foreach ($result as $key => $value) {
         $id = $value['id'];               
@@ -4074,10 +4202,11 @@ public function allocation($zone = NULL, $county = NULL, $district = NULL, $faci
         foreach ($facilities as $key => $value) {
             $facility_count = $value['facilities'];
         }
-        $percentage = $this->rtk_summary_county($id,$year,$month);        
-        $reported = $percentage['reported']; 
-        //$reported = 0;
-        $q = "insert into rtk_county_percentage (county_id, facilities,reported,month) values ($id,$facility_count,$reported,'$monthyear')";
+        $reports = $this->rtk_summary_county($id,$year,$month);        
+        $reported = $reports['reported']; 
+        $percentage = ($reported/$facility_count)*100;
+        
+        $q = "insert into rtk_county_percentage (county_id, facilities,reported,percentage,month) values ($id,$facility_count,$reported,$percentage,'$monthyear')";
         $this->db->query($q);
     }
 }
@@ -4143,7 +4272,6 @@ function get_district_percentages_month($month=null){
 
     
 }
-
 function update_district_percentages_month($month=null){
     if(isset($month)){           
         $year = substr($month, -4);
@@ -4151,6 +4279,8 @@ function update_district_percentages_month($month=null){
         $monthyear = $month.$year;                    
 
     }
+    $r = "delete from rtk_district_percentage where month='$monthyear'";
+    $this->db->query($r);
     $sql = "select id from districts";
     $result = $this->db->query($sql)->result_array();
     foreach ($result as $key => $value) {
@@ -4164,10 +4294,12 @@ function update_district_percentages_month($month=null){
         foreach ($facilities as $key => $value) {
             $facility_count = $value['facilities'];
         }            
-        $percentage = $this->rtk_summary_district($id, $year, $month);
+        $reports = $this->rtk_summary_district($id, $year, $month);
         //$reported = 0;
-        $reported = $percentage['reported']; 
-        $q = "insert into rtk_district_percentage (district_id, facilities,reported,month) values ($id,$facility_count,$reported,'$monthyear')";
+        $reported = $reports['reported']; 
+        $percentage = ($reported/ $facility_count)*100;
+        
+        $q = "insert into rtk_district_percentage (district_id, facilities,reported,percentage,month) values ($id,$facility_count,$reported,$percentage,'$monthyear')";
         $this->db->query($q);
 
     }             
@@ -4187,27 +4319,29 @@ public function kemsa_district_reports($district) {
     $q = 'SELECT * FROM  `districts` WHERE  `id` =' . $district;
     $res = $this->db->query($q);
     $resval = $res->result_array();
-    $reportname = $resval['0']['district'] . ' district FCDRR-RTK Reports for ' . $date;    
+    $reportname = $resval['0']['district'] . ' Sub-County FCDRR-RTK Reports for ' . $date;    
     $report_result = $this->district_reports($year, $month, $district);
+    $message = "Dear KEMSA, </br> Please find the RTK reports for ".$date." attached below.</br>Regards, </br> RTK System ";
+    
     if($report_result!=''){
         $reports_html = "<h2>" . $reportname . "</h2><hr> ";        
         $reports_html .= $report_result;            
-         $email_address = "lab@kemsa.co.ke,ttunduny@gmail.com";
-         //$email_address = "ttunduny@gmail.com";
-         $this->sendmail($reports_html, $reportname, $email_address);
-    }//else{
+       // echo "$reports_html";die();
+       $email_address = "lab@kemsa.co.ke,ttunduny@gmail.com";
+       // $email_address = "ttunduny@gmail.com";
+        $this->sendmail($reports_html,$message, $reportname, $email_address);
+    // }//else{
         //echo "No data to Send";
-    //}    
+    }    
    
 //      $email_address = "cecilia.wanjala@kemsa.co.ke,jbatuka@usaid.gov";
    //$email_address = "lab@kemsa.co.ke,shamim.kuppuswamy@kemsa.co.ke,onjathi@clintonhealthaccess.org,jbatuka@usaid.gov,williamnguru@gmail.com,ttunduny@gmail.com,patrick.mwangi@kemsa.co.ke";
-    // $email_address = "lab@kemsa.co.ke,williamnguru@gmail.com,ttunduny@gmail.com";
-    // $email_address = "ttunduny@gmail.com";
-    //$this->sendmail($reports_html, $reportname, $email_address);
+    // // $email_address = "lab@kemsa.co.ke,williamnguru@gmail.com,ttunduny@gmail.com";
+    //  $email_address = "ttunduny@gmail.com";
+    // $this->sendmail($test,$test,$reportname, $email_address);
 }
-
 public function district_reports($year, $month, $district) {
-    $pdf_htm = '';
+    $pdf_htm = '';   
     $first_day_current_month = $year . '-' . $month . '-1';
     $firstdate = $year . '-' . $month . '-01';
     $month = date("m", strtotime("$firstdate"));
@@ -4227,17 +4361,13 @@ public function district_reports($year, $month, $district) {
     AND districts.id = $district
     AND lab_commodity_orders.order_date
     BETWEEN '$firstdate'
-    AND '$lastdate'";    
+    AND NOW()";
+//        echo $q;die;
     $res = $this->db->query($q);
     foreach ($res->result_array() as $key => $value) {
         $id = $value['id'];
-        if($id!=''){
-            $pdf_htm .= $this->generate_lastpdf($id);
-            $pdf_htm .= '<br /><br /><br /><hr/><br /><br />';
-        }else{
-
-        }
-        
+        $pdf_htm .= $this->generate_lastpdf($id);
+        $pdf_htm .= '<br /><br /><br /><hr/><br /><br />';
     }
     return $pdf_htm;
 }
@@ -4266,7 +4396,7 @@ function generate_lastpdf($id) {
     $beg_date = date('dS F Y', strtotime($lab_order[0]['beg_date']));
 
     $orderdate = $lab_order[0]['order_date'];
-    $month = date('F', strtotime("-1 month $orderdate"));    
+    $month = date('F', strtotime("$orderdate -1 Month"));
     $html_title = "<div ALIGN=CENTER><img src='" . base_url() . "assets/img/coat_of_arms.png' height='70' width='70'style='vertical-align: top;' > </img></div>
     <div style='text-align:center; font-size: 14px;display: block;font-weight: bold;'>RTK FCDRR Report for " . $lab_order[0]['facility_name'] . "  $month  2014</div>
     <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>
@@ -4408,7 +4538,8 @@ function generate_lastpdf($id) {
                         <tr style="background: #ECE8FD;">                   
                             <td style="text-align:left">Compiled by: </td><td>' . $lab_order[0]['compiled_by'] . '</td>
                         </tr> 
-                    </table>';
+                    </table>
+                    <pagebreak/>';
                     $report_name = "Lab Commodities Order " . $order_no . " Details";
                     $title = "Lab Commodities Order " . $order_no . " Details";
                     $html_data = $html_title . $table_head . $table_body . $table_foot;
@@ -4417,26 +4548,26 @@ function generate_lastpdf($id) {
                     return $html_data;
                 }
 
-public function sendmail($output, $reportname, $email_address) {
+public function sendmail($output, $message,$reportname, $email_address) {
     $this->load->helper('file');
     include 'rtk_mailer.php';
     $newmail = new rtk_mailer();
     $this->load->library('mpdf');
     $mpdf = new mPDF('', 'A4-L', 0, '', 15, 15, 16, 16, 9, 5, 'L');
     $mpdf->WriteHTML($output);
-    $emailAttachment = $mpdf->Output($reportname . '.pdf', 'S');
+    $emailAttachment = $mpdf->Output('./pdf/'.$reportname . '.pdf', 'S');
     $attach_file = './pdf/' . $reportname . '.pdf';
-    if (!write_file('./pdf/' . $reportname . '.pdf', $mpdf->Output('report_name.pdf', 'S'))) {
+    if (!write_file('./pdf/' . $reportname . '.pdf', $mpdf->Output('report_name.pdf', 'S'))) {        
         $this->session->set_flashdata('system_error_message', 'An error occured');
-    } else {
+    } else {        
         $subject = '' . $reportname;
-
         $attach_file = './pdf/' . $reportname . '.pdf';
         $bcc_email = 'tngugi@clintonhealthaccess.org';
-        $message = $output;
+        //$bcc_email = 'annchemu@gmail.com';
+        //$message = $output;
         $response = $newmail->send_email($email_address, $message, $subject, $attach_file, $bcc_email);
             // $response= $newmail->send_email(substr($email_address,0,-1),$message,$subject,$attach_file,$bcc_email);
-        if ($response) {
+        if ($response) {            
             delete_files('./pdf/' . $reportname . '.pdf');
         }
     }
@@ -4504,126 +4635,426 @@ function _national_reports_sum($year, $month) {
 //         echo "<pre>";print_r($returnable);die;
         return $returnable;
       }
-function facility_amc_compute($a,$b) {
-        ini_set('MAX_EXECUTION_TIME', -1);
-        $sql = "select distinct facilities.facility_code from facilities where facilities.rtk_enabled = '1' and facilities.zone='Zone C' limit $a,$b ";
-        $res = $this->db->query($sql);        
-        $facility = $res->result_array();
-        foreach ($facility as $value) {
-            $fcode = $value['facility_code'];
-            $this->update_amc($fcode);
-        }
+	  public function rtk_manager_admin_settings() {
+
+        $sql = "select rtk_settings.*, user.fname,user.lname from rtk_settings, user where rtk_settings.user_id = user.id ";
+        $res = $this->db->query($sql);
+        $deadline_data = $res->result_array();
+
+        $sql1 = "select * from rtk_alerts_reference ";
+        $res1 = $this->db->query($sql1);
+        $alerts_to_data = $res1->result_array();
+
+
+        $sql3 = "select rtk_alerts.*,rtk_alerts_reference.id as ref_id,rtk_alerts_reference.description as description from rtk_alerts,rtk_alerts_reference where rtk_alerts.reference=rtk_alerts_reference.id order by id ASC,status ASC";
+        $res3 = $this->db->query($sql3);
+        $alerts_data = $res3->result_array();
+
+        $sql4 = "select lab_commodities.*,lab_commodity_categories.category_name, lab_commodity_categories.id as cat_id from lab_commodities,lab_commodity_categories where lab_commodities.category=lab_commodity_categories.id and lab_commodity_categories.active = '1'";
+        $res4 = $this->db->query($sql4);
+        $commodities_data = $res4->result_array();
+
+        $sql5 = "select * from lab_commodity_categories";
+        $res5 = $this->db->query($sql5);
+        $commodity_categories = $res5->result_array();
+
+
+        $data['deadline_data'] = $deadline_data;
+        $data['alerts_to_data'] = $alerts_to_data;
+        $data['alerts_data'] = $alerts_data;
+        $data['commodities_data'] = $commodities_data;
+        $data['commodity_categories'] = $commodity_categories;
+
+        $data['title'] = 'RTK Manager Settings';
+        $data['banner_text'] = 'RTK Manager Settings';
+        //$data['content_view'] = "rtk/admin/admin_home_view";
+        $data['content_view'] = "rtk/rtk/admin/settings";
+        $users = $this->_get_rtk_users();
+        $data['users'] = $users;
+        $this->load->view('rtk/template', $data);
     }
-    public function rtk_allocation_data() {
-        if ($_POST['data'] == '') {
-            echo 'No data was found';           
-        }
-        $data = $_POST['data'];
-        $data = str_replace('=', '&', $data);
-        $data = explode('&', $data);
 
-        $now = time();
-        $count = count($data);
-        $i = 0;
-        $j = 0;
-        $data = array_chunk($data, 4);
+    public function rtk_manager_admin_messages() {
+        
+        /*$users = array('email' =>'All SCMLTs' , 
+                        'email' =>'All CLCs' ,
+                        'email' =>'Sub-Counties with Less than 25% Reported' ,
+                        'email' =>'Sub-Counties with Less than 50% Reported' ,
+                        'email' =>'Sub-Counties with Less than 75% Reported' ,
+                        'email' =>'Sub-Counties with Less than 90% Reported' );             
+        echo "<pre>";
+        print_r($users);die();
 
-        foreach ($data as $value) {
-            $id = $value[1];
-            $val = $value[3];
-            $query = 'UPDATE  `lab_commodity_details` SET  `allocated` =  ' . $val . ',`allocated_date` =  ' . $now . ' WHERE  `lab_commodity_details`.`id` =' . $id . '';
-            $this->db->query($query);
+
+
+        $data['emails'] = json_encode($emails);
+        $data['emails'] = str_replace('"', "'", $data['emails']);
+        // echo "<pre>";
+        //print_r( $data['emails']);*/
+
+
+
+        /* $sql1 = "select fname from user";
+          $res1 = $this->db->query($sql1);
+          $fname = $res1->result_array();
+          $data['fname'] = json_encode($fname);
+          $data['fname'] = str_replace('"', "'", $data['fname']); */
+        //$data['details'] = $details;
+        $data['title'] = 'RTK Manager Messages';
+        $data['banner_text'] = 'RTK Manager';
+        //$data['content_view'] = "rtk/rtk/admin/admin_home_view";
+        $data['content_view'] = "rtk/rtk/admin/messages";
+        //$users = $this->_get_rtk_users();
+       // $data['users'] = $users;
+        $this->load->view('rtk/template', $data);
+    }
+        public function create_Deadline() {
+        $zones = json_decode($_POST['add_zones']);
+        $user_id = $this->session->userdata('user_id');
+        $deadline = $_POST['deadline'];
+        $five_day_alert = $_POST['five_day_alert'];
+        $report_day_alert = $_POST['report_day_alert'];
+        $overdue_alert = $_POST['overdue_alert'];
+        foreach ($zones as $value) {
+            $sql = "INSERT INTO `rtk_settings`(`id`, `deadline`, `status`, `5_day_alert`, `report_day_alert`, `overdue_alert`, `zone`, `user_id`) 
+           VALUES (NULL,'$deadline','0','$five_day_alert','$report_day_alert','$overdue_alert','$value','$user_id')";
+            $this->db->query($sql);
+            $object_id = $this->db->insert_id();
+            $this->logData('7', $object_id);
         }
-        // $object_id = $id;
-        //$this->logData('16',$object_id);
-        echo("allocations saved");
+        echo "Deadline Added succesfully";
     }
 
-    public function get_all_zone_a_facilities(){
-                $sql = "select facilities.*,districts.district,counties.county from facilities,counties,districts 
-                where facilities.zone = 'Zone A' 
+    public function update_Deadline() {
+
+        $zones = json_decode($_POST['edit_zones']);
+        $edit_id = $_POST['id'];
+        $user_id = $this->session->userdata('user_id');
+        $deadline = $_POST['deadline'];
+        $five_day_alert = $_POST['five_day_alert'];
+        $report_day_alert = $_POST['report_day_alert'];
+        $overdue_alert = $_POST['overdue_alert'];        
+
+        $sql = "update rtk_settings 
+        set deadline='$deadline',5_day_alert = '$five_day_alert',report_day_alert='$report_day_alert',overdue_alert='$overdue_alert',user_id='$user_id' where id='$edit_id'";
+        $this->db->query($sql);
+        $object_id = $edit_id;
+        $this->logData('8', $object_id);
+        echo "Deadline Updated succesfully";
+    }
+
+    public function create_Alert() {
+        $message = $_POST['message'];
+        $type = $_POST['type'];
+        $status = $_POST['status'];
+        $reference = $_POST['reference'];
+        $sql1 = "INSERT INTO `rtk_alerts`(`id`,`message`, `type`, `status`,`reference`) VALUES (NULL,'$message','$type','$status','$reference')";
+
+        $this->db->query($sql1);
+        $object_id = $this->db->insert_id();
+        $this->logData('10', $object_id);
+        echo "Alert Created Succesfully";
+    }
+
+    public function update_Alert() {
+        $message = $_POST['message'];
+        $type = $_POST['type'];
+        $status = $_POST['status'];
+        $alert_to = $_POST['alert_to'];
+        $id = $_POST['c_id'];
+        $sql = "UPDATE `rtk_alerts` SET `message`='$message',`type`='$type',`status`='$status',`reference`='$alert_to' WHERE `id`='$id'";
+        $this->db->query($sql);
+        $object_id = $id;
+        $this->logData('11', $object_id);
+        echo "Alert Updated Succesfully";
+    }
+
+    public function create_Commodity() {
+        $name = $_POST['name'];
+        $unit = $_POST['unit'];
+        $category = $_POST['category'];
+        $sql = "INSERT INTO `lab_commodities`(`id`, `commodity_name`, `category`, `unit_of_issue`) VALUES (NULL,'$name','$category','$unit')";
+        $this->db->query($sql);
+        $object_id = $this->db->insert_id();
+        $this->logData('4', $object_id);
+        echo "Commodity Created Succesfully";
+    }
+
+    public function update_Commodity() {
+        $name = $_POST['name'];
+        $unit = $_POST['unit'];
+        $category = $_POST['category'];
+        $c_id = $_POST['c_id'];
+        $sql = "UPDATE `lab_commodities` SET `commodity_name`='$name',`category`='$category',`unit_of_issue`='$unit' WHERE id='$c_id'";
+        $this->db->query($sql);
+        $object_id = $c_id;
+        $this->logData('5', $object_id);
+
+        echo "Commodity Updated Succesfully";
+    }
+
+public function get_all_zone_a_facilities(){
+                $sql = "select distinct facilities.*,districts.district,counties.county, user.lname, user.fname, user.telephone from facilities,counties,districts, user 
+                where facilities.zone = 'Zone B' 
                 and facilities.rtk_enabled=1
                 and districts.id = facilities.district
                 and counties.id=districts.county";
                 $res = $this->db->query($sql);
-                $facilities = $res->result_array(); 
+                $facilities = $res->result_array();
                 $amcs = array();
                 foreach ($facilities as $key => $value) {
                     $fcode = $value['facility_code'];
-                    $q = "select lab_commodities.*, facility_amc.* from lab_commodities, facility_amc 
+                    $q = "select distinct lab_commodities.*, facility_amc.* from lab_commodities, facility_amc 
                     where lab_commodities.id = facility_amc.commodity_id and facility_amc.facility_code=$fcode";
                     $res1 = $this->db->query($q);
                     $amc_details = $res1->result_array();
                     $amcs[$fcode] = $amc_details;
+                // echo "<pre>"; echo($q); die;
+
                 }
 
-                $data['title'] = 'Zone A List';
-                $data['banner_text'] = 'Facilities in Zone A';
+                $data['title'] = 'Zone B List';
+                $data['banner_text'] = 'Facilities in Zone B';
                 $data['content_view'] = 'rtk/allocation_committee/zone_a';        
                 $data['facilities'] = $facilities;
                 $data['amcs'] = $amcs;
                 $this->load->view('rtk/template', $data);        
 
             }
- public function get_all_unreported_facilities(){
-        
-                $month = date('mY', time()); 
-                $year = substr($month, -4);
-                $month = substr($month, 0,2);                 
-                $month4 = date('mY', strtotime('-4 month'));                
-                $year4 = substr($month4, -4);
-                $month4 = substr($month4, 0,2);                 
-                           
-                $firstdate = $year4 . '-' . $month4 . '-01';         
-                $lastdate = $year . '-' . $month . '-31';         
+            public function non_reported_facilities(){
+                $month =  date("mY", time());
 
-                
-                $sql = "select facilities.* from facilities where facilities.rtk_enabled=1";
-                 $facilities = $this->db->query($sql)->result_array();
-                
-                $q = "SELECT 
-                    facilities.facility_code,
-                    ifnull(count(lab_commodity_orders.id),0) as total,
-                    extract(YEAR_MONTH FROM lab_commodity_orders.order_date) as current_month
-                FROM
-                    lab_commodity_orders
-                    left join
-                    facilities
-                    on 
-                    facilities.facility_code = lab_commodity_orders.facility_code 
-                WHERE                     
-                    lab_commodity_orders.order_date between '$firstdate' and '$lastdate'                     
-                group by lab_commodity_orders.facility_code,extract(YEAR_MONTH FROM lab_commodity_orders.order_date)";
-                
-                $res1 = $this->db->query($q)->result_array();
+                $one_months_ago = date("Y-m-", strtotime("-1 Month "));
+                $two_months_ago = date("Y-m-", strtotime("-2 Month "));
+                $three_months_ago = date("Y-m-", strtotime("-3 Month "));
+                $four_months_ago = date("Y-m-", strtotime("-4 Month "));
+
+                $four_months_ago .='1';
+                $end_date = date("Y-m-", strtotime("-1 Month "));
+                $end_date .='31';
+
+                // $firstday = '2014-06-01';
+                // $lastday = '2014-09-30';        
+                // ini_set('memory_limit', '750M');
+                $sql = "select distinct
+                            facilities.facility_code,
+                            lab_commodity_orders.order_date,
+                            facilities.facility_name,
+                            facilities.zone,
+                            districts.district,
+                            counties.county
+                        from
+                            facilities,
+                            counties,
+                            districts,
+                            lab_commodity_orders
+                        where
+                        lab_commodity_orders.order_date between '2014-06-01' and '2014-09-30'
+                        and 
+                            facilities.rtk_enabled = 1
+                                and districts.id = facilities.district
+                                and counties.id = districts.county
+                                and facilities.facility_code not in (select distinct
+                                    facilities.facility_code
+                                from
+                                    facilities,
+                                    lab_commodity_orders
+                                where
+                                    lab_commodity_orders.order_date between '2014-06-01' and '2014-09-30'
+                                        and facilities.facility_code = lab_commodity_orders.facility_code
+                                )
+                        group by facilities.facility_code,extract(YEAR_MONTH from lab_commodity_orders.order_date) limit 0,5";
+                                                 // echo $sql; die;
+                $res = $this->db->query($sql);
                 echo "<pre>";
-                print_r($res1);
-                die();
-                $amcs = array();
+                print_r($res->result_array());die();
+                $facilities = $res->result_array(); 
+
                 foreach ($facilities as $key => $value) {
                     $fcode = $value['facility_code'];
-                    $q = "select lab_commodities.*, facility_amc.* from lab_commodities, facility_amc 
-                    where lab_commodities.id = facility_amc.commodity_id and facility_amc.facility_code=$fcode";
-                    $res1 = $this->db->query($q);
-                    $amc_details = $res1->result_array();
-                    $amcs[$fcode] = $amc_details;
+                    $q = "select distinct
+                            facilities.facility_code,
+                            lab_commodity_orders.order_date,
+                            facilities.facility_name,
+                            facilities.zone,
+                            districts.district,
+                            counties.county
+                        from
+                            facilities,
+                            counties,
+                            districts,
+                            lab_commodity_orders
+                        where
+                        lab_commodity_orders.order_date between '2014-06-01' and '2014-09-30'
+                        and 
+                            facilities.rtk_enabled = 1
+                            and 
+                            facilities.facility_code = '$fcode'
+                                and districts.id = facilities.district
+                                and counties.id = districts.county
+                                and facilities.facility_code not in (select distinct
+                                    facilities.facility_code
+                                from
+                                    facilities,
+                                    lab_commodity_orders
+                                where
+                                    lab_commodity_orders.order_date between '2014-06-01' and '2014-09-30'
+                                        and facilities.facility_code = lab_commodity_orders.facility_code
+                                )
+                        group by facilities.facility_code,extract(YEAR_MONTH from lab_commodity_orders.order_date) limit 0,5";
+                    $res1 = $this->db->query($q)->result_array();  
+                    $orders = array();
+                    foreach ($res1 as $keys => $values) {
+                        $order_date = $values['order_date'];
+                        array_push($orders, $order_date);
+                    }
+
+                    $dates[$fcode] = array(
+                        'county'=> $value['county'],
+                        'subcounty'=> $value['district'],
+                        'zone'=> $value['zone'],
+                        'fcode'=> $value['facility_code'],
+                        'name'=> $value['facility_name'],
+                        'dates'=> $orders
+                        );
+                    // echo "<pre>";
+                    // print_r($dates);
+                    // die;
+                }
+                    
+                $data['title'] = 'Unreported Facilities ';
+                $data['banner_text'] = 'Facilities not Reported between June and September';
+                $data['content_view'] = 'rtk/allocation_committee/allocation_non_reported';        
+                $data['facilities'] = $facilities;
+                $data['orderdate'] = $dates;
+                $this->load->view('rtk/template', $data);   
                 }
 
-                $data['title'] = 'Zone A List';
-                $data['banner_text'] = 'Facilities in Zone A';
-                $data['content_view'] = 'rtk/allocation_committee/zone_a';        
-                $data['facilities'] = $facilities;
-                $data['amcs'] = $amcs;
-                $this->load->view('rtk/template', $data);        
+    public function new_non_reported_facilities($a=null){    
+    if(isset($a)){
+        $zone = $a;
+    }else{
+        $zone = 'A';
+    }
+        
+
+    $m4 = date('Y-m',strtotime('-1 month'));      
+    $m3 = date('Y-m',strtotime('-2 month'));
+    $m2= date('Y-m',strtotime('-3 month'));
+    $m1 = date('Y-m',strtotime('-4 month'));
+
+    $month_text4 = date('F',strtotime('-1 month'));  
+    $month_text3 = date('F',strtotime('-2 month'));  
+    $month_text2 = date('F',strtotime('-3 month'));  
+    $month_text1 = date('F',strtotime('-4 month'));
+
+    $first = $m1.'-01';
+    $last = $m4.'-31';
+
+    $months = array($m1,$m2,$m3,$m4);
+    $month_texts = array($month_text1,$month_text2,$month_text3,$month_text4);
+    $count = count($months);
+
+    // $sql = "select facilities.facility_code,facilities.facility_name,districts.district,counties.county
+    //         from  facilities,districts,counties  where rtk_enabled = 1 and zone = 'Zone C' and facilities.district = districts.id               and districts.county = counties.id
+    //         order by facility_code ASC    LIMIT 0 , 100";       
+    $sql = "select distinct  facilities.facility_code,facilities.facility_name,districts.district,counties.county,facilities.zone,
+         COUNT(facilities.facility_code) as total  from
+            facilities,
+            districts,
+            counties,
+            lab_commodity_orders
+        where
+            rtk_enabled = 1 and zone = 'Zone $zone'
+                and facilities.district = districts.id
+                and districts.county = counties.id
+                and facilities.facility_code = lab_commodity_orders.facility_code
+                and lab_commodity_orders.order_date between '2014-06-01' and '2014-09-31'
+        group by facilities.facility_code
+        having total < 4
+        order by facility_code ASC";
+    //echo "$sql";die();
+    
+    $facilities = $this->db->query($sql)->result_array();
+    
+
+        for ($i=0; $i <$count ; $i++) { 
+
+            $month = $months[$i];
+            $final_array[$month] = array();
+            $firstdate = $months[$i].'-01';
+            $lastdate = $months[$i].'-31';
+            
+            foreach ($facilities as $key => $value) {
+                $fcode = $value['facility_code'];
+                $reportings[$fcode] = array();
+                $q = "SELECT distinct COUNT(facilities.facility_code) as total,
+                SUM(CASE when facilities.facility_code <> '' THEN 1 ELSE 0 END) FROM
+                  facilities LEFT JOIN  lab_commodity_orders ON facilities.facility_code= lab_commodity_orders.facility_code
+                  WHERE facilities.facility_code = '$fcode'
+                        and lab_commodity_orders.order_date between '$firstdate' and '$lastdate'";     
+               
+                $reported = $this->db->query($q)->result_array(); 
+                  
+                foreach ($reported as $keys => $values) {
+                    $check = $values['total'];
+                    $state = '';
+                    if($check==0){
+                        $state = 'N';
+                    }else{
+                        $state = 'Y';
+                    }
+                   
+                                             
+                    array_push($reportings[$fcode], $state);
+                }               
+
 
             }
-            public function update_labs($year,$month){                
+            array_push($final_array[$month], $reportings);
+            array_push($final_array[$month]['total'], $total);
+
+        }
+        
+        
+        $data['facilities'] = $facilities;
+        $data['months'] = $months;
+        $data['month_texts'] = $month_texts;
+        $data['final_array'] = $final_array;   
+        $data['title'] = 'RTK Allocations';    
+        $data['banner_text'] = 'Non Reported Facilities';
+        $data['content_view'] = "rtk/allocation_committee/allocation_non_reported";
+        $this->load->view('rtk/template', $data);        
+    
+}
+    function all_facilities(){
+        $sql ="select distinct facilities.facility_code,counties.county, districts.district, facilities.facility_name from facilities, counties, districts
+                where facilities.district = districts.id and districts.county = counties.id and facilities.rtk_enabled=1 order by counties.county";
+        $result = $this->db->query($sql)->result_array();
+       
+        $data['title'] = 'Unreported Facilities ';
+        $data['banner_text'] = 'Facilities not Reported between June and September';
+        $data['content_view'] = 'rtk/allocation_committee/zone_b';        
+        $data['result'] = $result;
+        $this->load->view('rtk/template', $data); 
+    }
+
+    public function delete_alert() {       
+            $id = $_POST['id'];
+            $sql = "DELETE FROM `rtk_alerts` WHERE id='$id'";
+            $this->db->query($sql);
+            $object_id = $edit_id;
+            $this->logData('12', $object_id);
+            echo "Alert Deleted Succesfully";
+        }
+
+     public function update_labs($year,$month,$zone){                
                 ini_set(-1);
                 $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
                 $firstdate = $year.'-'.$month.'-01';
                 $lastdate = $year.'-'.$month.'-'.$num_days;  
 
-                $sql = "select distinct facility_code from facilities where rtk_enabled=1 and zone='Zone C' and exists
+                $sql = "select distinct facility_code from facilities where rtk_enabled=1 and zone='Zone $zone' and exists
                  (select distinct facility_code from lab_commodity_details where created_at between '$firstdate' and '$lastdate') order by facility_code asc";
                  $facilities = $this->db->query($sql)->result_array();                    
                  $count = 0; 
@@ -4694,7 +5125,12 @@ function facility_amc_compute($a,$b) {
                 
             }
 
-
+public function add_user() {    
+    
+    $this->load->model('user');
+    $this->user->add_user();
+    redirect('rtk_management/rtk_manager_users');
+}
 public function clean_data($month=null){
     if(isset($month)){           
         $year = substr($month, -4);
@@ -4726,6 +5162,8 @@ public function clean_data($month=null){
     
 
 }   
+
+   
 public function get_duplicates($month=null){
         if(isset($month)){           
             $year = substr($month, -4);
@@ -4776,54 +5214,7 @@ public function get_duplicates($month=null){
         }      
 
     }     
-    public function update_facility_county() {
-    $facilityname = $_POST['facilityname'];
-    $district = $_POST['district'];
-    $mfl = $_POST['facility_code'];
-    $time = date('Y-m-d', time());
-    $facilityname = addslashes($facilityname);
-
-    $sql = "UPDATE `facilities` SET `facility_name` = '$facilityname',  `district` = '$district' WHERE `facility_code`='$mfl' ";
-    $this->db->query($sql);
-    $q = $this->db->query("select id from `facilities`WHERE `facility_code`='$mfl' ");
-    $facil = $q->result_array();
-    $object_id = $facil[0]['id'];
-    $this->logData('21', $object_id);
-
-    redirect('rtk_management/facility_profile/' . $mfl);
+    
 }
 
-    public function new_non_reported_facilities(){
-
-    $sql = "select facility_code from facilities where rtk_enabled=1 and zone='Zone C' order by facility_code asc";
-    $facilities = $this->db->query($sql)->result_array();       
-
-    $reportings = array();
-    foreach ($facilities as $key => $value) {
-        $fcode = $value['facility_code'];
-        $q = "SELECT facilities.facility_code,facilities.facility_name,extract(YEAR_MONTH 
-                from lab_commodity_orders.order_date) as order_date
-                FROM lab_commodity_orders,facilities 
-                WHERE facilities.rtk_enabled =1
-                and facilities.facility_code = lab_commodity_orders.facility_code 
-                and facilities.facility_code = '$fcode'
-                and lab_commodity_orders.order_date between '2014-06-01' and '2014-06-30' 
-                group by facilities.facility_code, extract(YEAR_MONTH from lab_commodity_orders.order_date) ORDER BY `facilities`.`facility_code`";
-        $reported = $this->db->query($q)->result_array();       
-        foreach ($reported as $keys => $values) {
-            $check = $values['total'];
-            if($check==null){
-                $check = 0;
-            }
-            array_push($reportings[$fcode], $check);
-        }
-        
-
-    }
-    echo "<pre>";
-    print_r($reportings);die();
-        
-
-    }
-}
 ?>

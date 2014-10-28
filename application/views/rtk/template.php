@@ -115,7 +115,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script>
         var url = '<?php echo base_url(); ?>';
-        $('#change_password_table').tablecloth({theme: "paper",         
+        /*$('#change_password_table').tablecloth({theme: "paper",         
               bordered: true,
               condensed: true,
               striped: true,
@@ -123,7 +123,7 @@
               clean: true,
               cleanElements: "th td",
               customClass: "my-table"
-            });
+            });*/
         $('#change_password_btn').click(function() {         
           var old_pass = $('#old_pass').val();
           var new_pass = $('#new_pass').val();

@@ -169,28 +169,24 @@ foreach ($commodities->result_array() as $key => $value) {
                         }
                     },
                     series: [{
-                            name: 'Beginning Balance',
-                            data: <?php echo $graphdata['beginning_bal']; ?>
+                            name: 'Screening Determine',
+                            data: <?php echo $graphdata['screening_det']; ?>
                         },
                         {
-                            name: 'Quantity Received',
-                            data: <?php echo $graphdata['qty_received']; ?>
+                            name: 'Confirmatory Unigold',
+                            data: <?php echo $graphdata['confirm_uni']; ?>
                         },
                         {
-                            name: 'Total Tests',
-                            data: <?php echo $graphdata['total_tests']; ?>
+                            name: 'Screening KHB',
+                            data: <?php echo $graphdata['screening_khb']; ?>
                         },
                         {
-                            name: 'Losses',
-                            data: <?php echo $graphdata['losses']; ?>
+                            name: 'Confirmatory First Response ',
+                            data: <?php echo $graphdata['confrim_first']; ?>
                         },
                         {
-                            name: 'Ending Balance',
-                            data: <?php echo $graphdata['ending_bal']; ?>
-                        },
-                        {
-                            name: 'Quantity Requested',
-                            data: <?php echo $graphdata['qty_requested']; ?>
+                            name: 'Tie Breaker',
+                            data: <?php echo $graphdata['tie_breaker']; ?>
                         }]
 
                 });

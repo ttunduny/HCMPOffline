@@ -136,7 +136,7 @@ $(document).ready(function() {
 	var total_units=$(this).closest("tr").find(".total_commodity_units").val();
 	var pack_unit_option=$(this).closest("tr").find(".commodity_unit_of_issue").val();
 	var donated_items=$(this).closest("tr").find(".commodity_total_units").val();
-	var total_units=calculate_actual_stock (total_units,pack_unit_option,user_input,"return",selector_object,null);
+	//var total_units=calculate_actual_stock (total_units,pack_unit_option,user_input,"return",selector_object,null);
 	// check the user input value here
 	var alert_message='';
 			if (selector_object.val() <0) { alert_message+="<li>Value must be above 0</li>";}

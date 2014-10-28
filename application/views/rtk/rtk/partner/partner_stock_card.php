@@ -37,13 +37,13 @@ foreach ($commodities->result_array() as $key => $value) {
   margin-left: 20px;
 }
 table{
-    font-size: 12px;
+    font-size: 11px;
 }
 table thead{
-    font-size: 13px;
+    font-size: 12px;
 }
 table tr{
-    font-size: 12px;
+    font-size: 11px;
 }
 </style>
 <script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/datatable/jquery.dataTables.js"></script>

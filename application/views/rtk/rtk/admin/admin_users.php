@@ -33,7 +33,7 @@ foreach ($res_arr2 as $value) {
 
         $('#users').dataTable({
             "bJQueryUI": false,
-            "bPaginate": false
+            "bPaginate": true
         });
         // $('#add_user').click(function() {
         //     //$('#user_add_form').submit();
@@ -87,7 +87,7 @@ foreach ($res_arr2 as $value) {
         background: #FFFFEC;
         padding: 12px;
     }
-    .dataTables_filter{
+    .dataTables_filter,.dataTables_length{
         float: right;
     }
     #users_length{
@@ -95,18 +95,30 @@ foreach ($res_arr2 as $value) {
     }
     #users{
         width: 100%; 
+        float: left;
+        margin-left: -10px;
     }
     #users_paginate{
         float: right;
     }
+    #Add_DMLT{
+        float: left;  
+        margin-left: 2%;      
+    }
+    #lA{
+        margin-top: 20px;
+    }
+    div.dataTables_paginate ul.pagination {
+        margin: 2px;
+        margin-top: 30px;
+}
 </style>
 
 <div class="tab-content">
-    <div class="tab-pane active" id="lA">
-    <br/>       
-    <br/>
+    <div class="tab-pane active" id="lA" style="margin-top:50px;">
+    
        
-        <button data-target="#Add_DMLT" class="btn btn-default" data-toggle="modal">Add user</button>
+        <button data-target="#Add_DMLT" class="btn btn-default" data-toggle="modal" style="margin-left:10px;">Add user</button>
 
         <div class="modal fade" id="Add_DMLT" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <div class="modal-dialog">
@@ -188,7 +200,7 @@ foreach ($res_arr2 as $value) {
                         <td><?php echo $value['email']; ?></td>
                         <td><?php echo $value['level']; ?></td>
                         <td><?php
-                            if ($value['user_indicator'] == 'rtkcountyadmin') {
+                            if ($value['user_indicator'] != 'scmlt') {
                                 echo 'Not Applicable';
                             } else {
                                 echo $value['district'];

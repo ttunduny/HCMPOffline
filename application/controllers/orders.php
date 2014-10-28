@@ -213,7 +213,7 @@ for ($row = 1; $row <= $highestRow; $row++){
         $rowData = $objPHPExcel->getActiveSheet()->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);
      	//var_dump($rowData); 
 		//count($rowData);
-		$array_index[]=$rowData[0][1];
+		$array_index[]=$rowData[0][1]-1;
 		$array_code[]=$rowData[0][2];
 		$array_commodity[]=$rowData[0][3];
 		$array_category[]=$rowData[0][4];
@@ -236,8 +236,9 @@ for ($row = 1; $row <= $highestRow; $row++){
 		
             }
 		
+		//echo '<pre>';print_r($array_index); echo '</pre>';exit;
 		foreach ($array_index as $id => $key) {
-				  
+				//echo '<pre>';print_r($key); echo '</pre>';//exit;  
         	
         		//foreach($items as $key=> $data){
         array_push($temp,array('sub_category_name'=>$array_category[$key],
@@ -247,7 +248,7 @@ for ($row = 1; $row <= $highestRow; $row++){
         'commodity_code'=>$array_code[$key],
         'commodity_id'=>$data['commodity_id'],
         'quantity_ordered'=>($array_order_qty[$key]=='')? 0:(int)$array_order_qty[$key],
-        'total_commodity_units'=>$array_price[$key]*(int)$array_order_qty[$key],
+        'total_commodity_units'=>0,
         'opening_balance'=>0,
         'total_receipts'=>0,
         'total_issues'=>0,
@@ -262,80 +263,65 @@ for ($row = 1; $row <= $highestRow; $row++){
         'adjustmentnve'=>0,
         'historical'=>0));
          //unset($items[$key]);
-        // }
+        /// }
 				
 			
 			
               
 }
+	//exit;	
 foreach ($temp as $key => $value) {
 	//echo '<pre>';print_r($value['commodity_code']); echo '</pre>';
 	if ($value['commodity_code']==""||$value['quantity_ordered']=="") {
 		unset($temp[$key]);
 	}
+	
+	
 }
 		//$c = array_combine($array_code, $array_commodity);
 		$array_id=array();
-		foreach ($temp as $key ) {
+		$array_codes=array();
+		$main_array=array();
+		foreach ($temp as $keys ) {
 			
-			$kemsa=$key['commodity_code'];
-			
-			$get_id=Commodities::get_id($kemsa);
-			
+			$kemsa=$keys['commodity_code'];
+			$unit_cost=$keys['unit_cost'];
+			//$unit_size=preg_replace("(')", "",$size);
+			$get_id=Commodities::get_id($kemsa,$unit_cost);
+			//echo '<pre>';print_r($get_id); echo '</pre>';
+			$main_array[]=$keys;
 			foreach ($get_id as $key2) {
 				$array_id[]=$key2['id'];
-				//echo '<pre>';print_r($key2['id']); echo '</pre>';
+				$array_total_units[]=$key2['total_commodity_units'];
+				
+				//echo '<pre>';print_r($keys); echo '</pre>';
 			}
 			
 			//echo '<pre>';print_r($get_id[]); echo '</pre>';
 		}
-		//$result = array_combine($array_id, $temp);
-		//echo '<pre>';print_r($array_id); echo '</pre>';
-		//echo '<pre>';print_r($temp); echo '</pre>';exit;
-		
-		
+		//exit;
+		//echo '<pre>';print_r($main_array); echo '</pre>';exit;
+		//$new=array_combine($array_id, $array_codes);
+		//echo '<pre>';print_r($new); echo '</pre>';exit;
 			
-			//echo $key['sub_category_name'];
 			
 		
 		$array_combined=array();
-		$id_count=count($temp);
+		$id_count=count($array_id);
 		
-		foreach ($temp as $key => $value) {
+		for ($i=0; $i < $id_count;$i++) {
+			$main_array[$i]['commodity_id']=$array_id[$i];
+			$main_array[$i]['total_commodity_units']=$array_total_units[$i];
+			//echo '<pre>';print_r($main_array[$i]); echo '</pre>';
 			
-				//echo $keys['sub_category_name'];
-				array_push($array_combined,array(
-			'sub_category_name'=>$value['sub_category_name'],
-        'commodity_name'=>$value['commodity_name'],
-        'unit_size'=>$value['unit_size'],
-        'unit_cost'=>$value['unit_cost'],
-        'commodity_code'=>$value['commodity_code'],
-        'commodity_id'=>$key,
-        'quantity_ordered'=>$value['quantity_ordered'],
-        'total_commodity_units'=>$value['total_commodity_units'],
-        'opening_balance'=>0,
-        'total_receipts'=>0,
-        'total_issues'=>0,
-        'comment'=>'',
-        'closing_stock_'=>0,
-        'closing_stock'=>0,
-        'days_out_of_stock'=>0,
-        'date_added'=>'',
-        'losses'=>0,
-        'status'=>0,
-        'adjustmentpve'=>0,
-        'adjustmentnve'=>0,
-        'historical'=>0));
-		}
-		//echo '<pre>';print_r($array_combined); echo '</pre>';
-		//echo '<pre>';print_r($array_id); echo '</pre>';
-		//exit;
+			
+				}//exit;
 		
-              
-	//var_dump();
-	//exit;
+		echo '<pre>';print_r($main_array); echo '</pre>';
+		exit;
+		
         //unset($objPHPExcel);
-       $data['order_details'] = $data['facility_order'] = $array_combined;  
+       $data['order_details'] = $data['facility_order'] = $main_array;  
         }else{
         $data['order_details'] = $data['facility_order'] = $items;   
         }
@@ -587,6 +573,10 @@ foreach ($temp as $key => $value) {
 			endif;
 
 			}
+public function upd() {
+	$this -> hcmp_functions -> send_sms();
+	
+}
 
 			public function update_facility_new_order() {
 		//security check

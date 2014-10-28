@@ -19,7 +19,7 @@ $englishdate = date('F, Y', strtotime($monthyear));
             "aaSorting": [[3, "desc"]]
         });
     });
-    var county = <?php echo $this->session->userdata('county_id'); ?>;     
+    var county = <?php echo $this->session  ->userdata('county_id'); ?>;     
                
     $(function () { 
         $("#grapharea").load("./rtk_management/county_reporting_percentages/" + county/ + <?php echo $year.'/'.$month;?>);
@@ -40,7 +40,7 @@ $englishdate = date('F, Y', strtotime($monthyear));
 </script>
 <br />
 <?php include('rca_sidabar.php');?>
-<div class="dash_main" style="width: 80%;float: right; overflow: scroll; height: 500px">
+<div class="dash_main" style="width: 80%;float: right; overflow: scroll; height: 550px">
         <?php
         if ($sk!==null && $sk !== 'none'){
          include 'admin/'.$sk.'.php';

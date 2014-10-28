@@ -347,4 +347,3 @@ public static function get_county_details($county_id){
 	}
 	
 	}
-
