@@ -24,11 +24,11 @@
     <script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
     <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
-      <script src="<?php echo base_url('assets/scripts/cbpFWTabs.js')?>" type="text/javascript"></script>
     
      
     <title>HCMP | National</title>
     <STYLE TYPE="text/css">
+
      a:hover{
     text-decoration: none;
 }
@@ -76,8 +76,8 @@ h4{
   }
   .tile h4{
     padding: 5px;
-    background-color:#528f42;
-    color: white;
+    background-color:#F5F5F5;
+    color: black;
   }
   .btn{
     border-radius: 0;
@@ -88,69 +88,45 @@ h4{
   }
   .stat_item{
 
-    height:100px;
+    height:110px;
+    margin-top:0.5%;
   }
   .figure_up{
-    font-size: 32px;
+    font-size: 30px;
     float:left;
-    margin:0 3px 0 10px;
+    margin:0 3px 0 34px;
 
       }
       .figure_count{
-    font-size: 28px;
+    font-size: 22px;
     margin:0 3px 0 60px;
 
       }
   .figure_low{
-    font-size: 14px;
-    margin:12px 3px 0 0;
+    font-size: 12px;
+    margin:12px 0 0 0;
 
       }
 
  .stat_item .row {
     
-    margin-left:0 ; 
+    
      }
 .view_more{
+  height:26px;
+  background-color:white;
+  color:black;
+
 
 }
+.arrow{
+  margin-left:60px;
+}
+
+
     </STYLE>
 <script>
-   paceOptions = {
-  ajax: false, // disabled
-  document: true, // 
-  eventLag: true,
-  restartOnPushState: false,
-  elements:{
-  	selectors:['body']
-  } // 
   
-};
-
- 
-    function load(time){
-      var x = new XMLHttpRequest()
-      x.open('GET', document.URL , true);
-      x.send();
-    };
-    setTimeout(function(){
-      Pace.ignore(function(){
-        load(3100);
-      });
-    },4500);
-
-    Pace.on('hide', function(){
-   //   console.log('done');
-    });
-
-    var url="<?php echo base_url(); ?>";
-    </script>
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </script>
   
   </head>
@@ -159,38 +135,46 @@ h4{
   	
   	
     
-   <div class="container-fluid  navbar-fixed-top">
+   <div class="container-fluid navbar-default navbar-fixed-top" role="navigation" style="background-color:white">
+        <div class="container-fluid">
+            <div class="navbar-header" id="st-trigger-effects">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand " href="<?php echo base_url().'national';?>" >HCMP</a>
 
-<div class="collapse navbar-collapse navbar-left">
-  <div class="navbar-header" >
+        </div>
+        <div class="navbar-header" >
   
             <a href="<?php echo base_url().'national';?>">   
             <img style="display:inline-block;"  src="<?php echo base_url();?>assets/img/coat_of_arms_dash.png" class="img-responsive " alt="Responsive image" id="logo" ></a>
             
         </div>
+        
+        <div class="collapse navbar-collapse navbar-right">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a href="<?php echo base_url().'national';?>">Home</a></li>
+            <li class=""><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>
+            <li class=""><a href="<?php echo base_url().'national/search';?>">Search</a></li>
+            <li class="" style="background: #144d6e; color: white;"><a style="background: #144d6e; color: white;" href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-user"></span>Log in</a></li>
+                        
+                    </li>
+          </ul>
+          
+                                        
+        </div><!--/.nav-collapse -->
 
-</div>
+      </div>
+    </div>
 
-<div class="collapse navbar-collapse navbar-right">
-
-   <div class="tabs tabs-style-underline" style="width:600px;">
-          <nav >
-            
-            <ul>
-
-              <li><a href="" class=""><span>Home</span></a></li>
-              <li><a href="<?php echo base_url().'national/reports';?>" class=""><span>Reports</span></a></li>
-              <li><a href="" class=""><span>Search</span></a></li>
-              <li><a href="" class=""><span>Log In</span></a></li>
-            </ul>
-          </nav>
-      
-        </div><!-- /tabs -->
-</div>
-
-<div class="container-fluid" style="margin-top:4.8%;">
+<div class="container-fluid" style="">
   <div class="row-fluid">
-    <div class="col-md-3">
+
+    <!-- begin div map-->
+    <div class="col-lg-3 col-md-12">
       
       <div class="tile" id="map" style="max-height: 400px;">
             
@@ -213,13 +197,13 @@ h4{
             
     
 
-    </div>
+    </div><!-- end div map-->
 
-    <div class="col-md-8">
-      
+<!-- begin div notification tray-->
+    <div class=" tile col-lg-6 col-md-12" style="border: 0px solid #C0C0C0;height:550px;">
       <div class="row">
         
-    <div class="col-md-3">
+    <div class="col-lg-4 col-md-6">
 
       <div class="color_b stat_item">
        <div class="row">
@@ -238,9 +222,9 @@ h4{
 
          Facilities Rolled Out
         </div>
-        <div class="panel-footer" style="background-color:white;color:black;">
-           View More...
-        <span class=" view_more glyphicon glyphicon-circle-arrow-right"></span>
+        <div class="view_more" style="">
+           View Details
+        <span class="arrow  glyphicon glyphicon-circle-arrow-right"></span>
 
         </div>
        
@@ -253,7 +237,7 @@ h4{
 
     </div>
 
-    <div class="col-md-3">
+    <div class="col-lg-4 col-md-6">
 
       <div class="color_e stat_item">
             <div class="row">
@@ -272,15 +256,18 @@ h4{
 
          Trained HCW
         </div>
-        View More...
-        <span class=" view_more glyphicon glyphicon-circle-arrow-right"></span>
+         <div class="view_more" style="">
+           View Details
+        <span class="arrow  glyphicon glyphicon-circle-arrow-right"></span>
+
+        </div>
        
           </div>
                             
                    </div>
       
     </div>
-    <div class="col-md-3">
+    <div class="col-lg-4 col-md-12">
 
       <div class="color_a stat_item">
            <div class="row">
@@ -299,8 +286,11 @@ h4{
 
          Facilities Have Stock-outs
         </div>
-         View More...
-        <span class=" view_more glyphicon glyphicon-circle-arrow-right"></span>
+         <div class="view_more" style="">
+           View Details
+        <span class="arrow glyphicon glyphicon-circle-arrow-right"></span>
+
+        </div>
        
           </div>   
         </div>
@@ -309,11 +299,61 @@ h4{
 
       </div>
 
-    </div>
+      <div class="row">
+        <div class="col-lg-12" style="margin-top:3%;">
+          <h4>M.O.S VS A.M.C</h4>
+          <div id="mos"></div>
+        </div>
+      </div>
+      
 
+    </div><!-- end div notification tray-->
+
+    <!-- begin div graph 1-->
+<div class="tile col-lg-3 col-md-12" style="border: 0px solid #C0C0C0;height:550px;">
+ <h4>Facilities In Numbers</h4>
+          
+       
+
+</div><!-- end div graph 1-->
 
     
   </div><!--end first row-->
+
+<div class="row-fluid" style="margin-top:0.5%;">
+
+ 
+<div class="tile col-lg-6 col-md-12" style="border: 0px solid #C0C0C0;height:400px;">
+  <h4>Consumption</h4>
+ <div id="consumption"></div>
+
+</div>
+<div class="tile col-lg-6 col-md-12" style="border: 0px solid #C0C0C0;height:400px;">
+  <h4>Expiries</h4>
+ <div id="actual_ex"></div>
+
+</div>
+
+</div><!--end second row-->
+
+
+<div class="row-fluid" style="margin-top:3%;">
+
+  <div class="tile col-lg-5 col-md-6" style="border: 0px solid #C0C0C0;height:400px;">
+    <h4>Orders</h4>
+ <div id="orders"></div>
+
+</div>
+<div class=" col-lg-3 col-md-6" style="border: 1px solid #C0C0C0;height:400px;">
+ 
+
+</div>
+<div class=" col-lg-4 col-md-12" style="border: 1px solid #C0C0C0;height:400px;">
+ 
+
+</div>
+
+</div><!--end third row-->
 
   <div></div>
 </div>
@@ -326,14 +366,101 @@ h4{
 	
 	
   <script>
-      (function() {
-
-        [].slice.call( document.querySelectorAll( '.tabs' ) ).forEach( function( el ) {
-          new CBPFWTabs( el );
+    var url="<?php echo base_url(); ?>";
+   ajax_fill_data('Kenya/facility_breakdown_pie',"#facility_breakdown");
+   ajax_fill_data('Kenya/mos_graph/NULL/NULL/NULL/NULL/NULL/mos',"#mos");
+   ajax_fill_data('Kenya/roll_out',"#roll_out");
+   ajax_fill_data('Kenya/consumption',"#consumption");
+   ajax_fill_data('national/expiry/NULL/NULL/NULL/NULL/NULL',"#actual_ex");
+   ajax_fill_data('Kenya/potential_expiries',"#potential_ex");
+   ajax_fill_data('national/order/NULL/NULL/NULL/NULL/NULL',"#orders");
+   ajax_fill_data('Kenya/write_dashboard_html',"#hcw_trained");
+   ajax_fill_data('Kenya/facility_over_view/',"#facilities_rolled_out");
+   ajax_fill_data('Kenya/get_lead_infor/NULL/NULL/NULL/NULL/NULL',"#leadtime");
+   
+       $("#mosgraph").click(function() {
+      ajax_fill_modal('Kenya/mos_graph/NULL/NULL/NULL/NULL/NULL/mosmodalgraph',"#mosmodalgraph");
+      });
+      
+      function ajax_fill_modal(function_url,div){
+        var function_url =url+function_url;
+        var loading_icon=url+"assets/img/Preloader_1.gif";
+        $.ajax({
+        type: "POST",
+        url: function_url,
+        beforeSend: function() {
+        $(div).html("<img style='margin:20% 40% 0 40%;' src="+loading_icon+">");
+        },
+        success: function(msg) {
+        $(div).html(msg);
+        }
         });
-
-      })();
-    </script>
+        }  
+   
+   function ajax_fill_data(function_url,div){
+        var function_url =url+function_url;
+        var loading_icon=url+"assets/img/Preloader_1.gif";
+        $.ajax({
+        type: "POST",
+        url: function_url,
+        beforeSend: function() {
+        $(div).html("<img style='margin:40% 50% 0 50%;' src="+loading_icon+">");
+        },
+        success: function(msg) {
+        $(div).html(msg);
+        }
+        });
+        }  
+        
+        function run(data){
+        var county_data=data.split('^');
+        $('.county-name').html(county_data[1]+"&nbsp;County &nbsp;");
+        ajax_fill_data('Kenya/facility_breakdown_pie/'+county_data[0],"#facility_breakdown");
+        ajax_fill_data('Kenya/facility_over_view/'+county_data[0],"#facilities_rolled_out");
+        ajax_fill_data('Kenya/write_dashboard_html/'+county_data[0],"#hcw_trained");
+        $('.county').val(county_data[0]);
+        $('#county_id').val(county_data[0]);
+        json_obj={"url":"<?php echo site_url("orders/getDistrict");?>",}
+        var baseUrl=json_obj.url;
+        dropdown(baseUrl,"county="+county_data[0],".subcounty");
+        ajax_fill_data('national/expiry/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#actual_ex");
+        ajax_fill_data('Kenya/potential_expiries/'+county_data[0]+'/NULL/NULL/NULL/NULL',"#potential_ex"); 
+        ajax_fill_data('Kenya/mos_graph/'+county_data[0]+'/NULL/NULL/NULL/NULL/mos',"#mos");
+        ajax_fill_data('Kenya/consumption/'+county_data[0]+'/NULL/NULL/NULL',"#consumption");
+       // ajax_request_replace_div_content('national/get_facility_infor/'+county_data[0]+'/NULL/NULL/NULL',"#facilities");
+        ajax_fill_data('national/order/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#orders");
+       // ajax_request_replace_div_content('national/get_lead_infor/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#lead_infor");
+    } 
+    
+        function dropdown(baseUrl,post,identifier){
+            /*
+             * ajax is used here to retrieve values from the server side and set them in dropdown list.
+             * the 'baseUrl' is the target ajax url, 'post' contains the a POST varible with data and
+             * 'identifier' is the id of the dropdown list to be populated by values from the server side
+             */
+            $.ajax({
+              type: "POST",
+              url: baseUrl,
+              data: post,
+              success: function(msg){
+                    var values=msg.split("_")
+                    var dropdown="<option value='NULL'>All</option>";
+                    for (var i=0; i < values.length-1; i++) {
+                        var id_value=values[i].split("*")
+                        dropdown+="<option value="+id_value[0]+">";
+                        dropdown+=id_value[1];
+                        dropdown+="</option>";
+                    };
+                    $(identifier).html(dropdown);
+              },
+              error: function(XMLHttpRequest, textStatus, errorThrown) {
+                   if(textStatus == 'timeout') {}
+               }
+            }).done(function( msg ) {
+            });
+        }
+         
+</script>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -341,7 +468,6 @@ h4{
     var url='<?php echo base_url(); ?>';
     </script>
   <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
-  <script src="<?php echo base_url('assets/scripts/cbpFWTabs.js')?>" type="text/javascript"></script>
  <!--  <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
     <!-- Bootstrap core JavaScript===================== --> 
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>

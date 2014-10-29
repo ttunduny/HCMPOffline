@@ -43,7 +43,7 @@ class Kenya extends MY_Controller
         $data['maps'] = json_encode($finalMap);
         $data['counties']=$county_name;
 		
-        $this -> load -> view("national/country_v",$data);
+        $this -> load -> view("national/dashboard",$data);
     } 
 
 
