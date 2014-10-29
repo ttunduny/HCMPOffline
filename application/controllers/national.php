@@ -297,12 +297,23 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 	public function expiry($year=null,$county_id=null, $district_id=null,$facility_code=null,$graph_type=null)
 	{
 		$year=($year=="NULL") ? date('Y') :$year;
+		/*//Get the current month
+		
+		$datetime1 = new DateTime('Y-10');
+		$datetime2 = new DateTime('Y-12');
+		$interval = $datetime2->diff($datetime1);
+		echo $interval->format('%R%a days');exit;
+		$current_month = date("Y-m");
+		$end = date('Y-12');
+		
+		$interval = $current_month->diff($end);
+		echo $interval;exit;*/
 	    //check if the district is set
 	    $district_id=($district_id=="NULL") ? null :$district_id;
 	   // $option=($optionr=="NULL") ? null :$option;
 	    $facility_code=($facility_code=="NULL") ? null :$facility_code;
-	    $county_id=($county_id=="NULL") ? null :$county_id;
-	    $months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');        
+	    $county_id =($county_id=="NULL") ? null :$county_id;
+	   // $months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');        
     	$month_=isset($month) ?$months[(int) $month-1] : null ;
     
         $category_data = array();
