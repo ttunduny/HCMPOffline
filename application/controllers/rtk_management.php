@@ -1521,7 +1521,6 @@ public function rtk_manager_stocks($month=null) {
     }
 
      public function add_rca_to_county() {
-
         $rca = $_POST['rca_id'];
 
         $county = $_POST['county'];       
@@ -1535,6 +1534,27 @@ public function rtk_manager_stocks($month=null) {
         $this->logData('1', $object_id);
     }
 
+    public function allocation_dashboard() {  
+
+        $sql_cd4 = "select count(distinct MFLCode) as cd4 from cd4_facility where rolloutstatus='1'";
+        $res_cd4 = $this->db->query($sql_cd4)->result_array();
+
+        $sql_rtk = "select count(distinct facility_code) as rtk from facilities where rtk_enabled='1'";
+        $res_rtk = $this->db->query($sql_rtk)->result_array();
+
+        $sql_eid = "select count(ID) as eid from eid_labs";
+        $res_eid = $this->db->query($sql_eid)->result_array();
+
+        $data['cd4'] = $res_cd4;
+        $data['rtk'] = $res_rtk;
+        $data['eid'] = $res_eid;
+        
+
+        $data['banner_text'] = 'National Allocation Dashboard';
+        $data['content_view'] = 'rtk/rtk/allocation/allocation_dashboard';
+        $data['title'] = 'National Dashboard: ';
+        $this->load->view("rtk/template", $data);
+    }
 
     ///Allocation Functions
     public function allocation_home() {
@@ -1544,9 +1564,9 @@ public function rtk_manager_stocks($month=null) {
         $data['zone_c_stats'] = $this->zone_allocation_stats('c');
         $data['zone_d_stats'] = $this->zone_allocation_stats('d');
 
-        $data['banner_text'] = 'National';
+        $data['banner_text'] = 'RTK National';
         $data['content_view'] = 'rtk/rtk/allocation/allocation_home_view';
-        $data['title'] = 'National Summary: ';
+        $data['title'] = 'National RTk Summary: ';
         $this->load->view("rtk/template", $data);
     }
     function zone_allocation_stats($zone) {
