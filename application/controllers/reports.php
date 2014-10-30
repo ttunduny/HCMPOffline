@@ -354,6 +354,7 @@ class Reports extends MY_Controller
 		$data['banner_text'] = "Facility Stock Summary";
 		$this -> load -> view("shared_files/template/template", $data);
 	}
+	
 
 	///////GET THE ITEMS A FACILITY HAS STOCKED OUT ON
 	public function facility_stocked_out_items() {
@@ -3115,6 +3116,7 @@ $graph_type = 'bar';
 
      	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null,$tracer = null) 
      	{	
+     		// echo $report_type;exit;
      	//reset the values here
 		$tracer =(isset($tracer))? $tracer:null ;
 		$report_type =(isset($report_type))? $report_type:null ;
@@ -3317,7 +3319,7 @@ $graph_type = 'bar';
 public function get_division_commodities_data($district_id = null, $facility_code=null, $division_id = null, $option = null,$report_type=null) 
      	{
      	//reset the values here
-
+     		// echo $report_type;exit;
       	$district_id = ($district_id=="NULL") ? null :$district_id;
 	 	$division_id = ($division_id=="NULL") ? null :$division_id;
 	 	$option = ($option=="NULL") ? null :$option;

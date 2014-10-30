@@ -98,7 +98,76 @@ for ($row = 1; $row <= $highestRow; $row++){
 		
 		echo $list;
 	}
-
+	//Facility Transaction Data when MEDS option is selected
+	public function facility_order_meds() {
+		$facility_code = $this -> session -> userdata('facility_id');
+		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
+		
+		$items = Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
+		// echo "THIS WORKS";exit;
+		$meds_categories = meds_categories::get_all();
+		//$meds_commodities = meds_commodities::get_all();
+		//echo "<pre>";print_r($meds_categories);exit;
+		
+		$data['categories'] = $meds_categories;
+        $data['order_details'] = $data['facility_order'] = $items;   
+        $data['facility_commodity_list'] = Commodities::get_commodities_not_in_facility($facility_code);
+		$data['title'] = "Facility New Order MEDS";
+		$data['content_view'] = "facility/facility_orders/facility_order_meds";
+		$data['banner_text'] = "Facility New Order MEDS";
+		$this -> load -> view("shared_files/template/template", $data);
+		
+		//var_dump($temp);exit;
+        /*$facility_code = $this -> session -> userdata('facility_id');
+		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
+        $data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";
+        $data['title'] = "Facility New Order";
+        $data['banner_text'] = "Facility New Order";
+        $data['drawing_rights'] = $facility_data[0]['drawing_rights'];
+        
+		$this -> load -> view('shared_files/template/template', $data);*/
+		//$data['facility_stock_data'] = facility_transaction_table::get_all($facility_code);
+        //$data['last_issued_data']=facility_issues::get_last_time_facility_issued($facility_code);
+		
+	}
+	//AJAX Request for getting the sub categories of a particular category
+	public function get_sub_categories() {
+		$category = $_POST['category'];
+		$sub_categories = meds_sub_category::get_all_in_category($category);
+		//echo "<pre>";print_r($sub_categories);exit;
+		//$facilities = Facilities::getFacilities($district);
+		$list = "";
+		foreach ($sub_categories as $sub_categories) {
+			$list .= $sub_categories -> id;
+			$list .= "*";
+			$list .= $sub_categories -> sub_category_name;
+			$list .= "_";
+		}
+		echo $list;
+	}
+	//AJAX Request for getting the commoditeis in a particular sub category
+	public function get_commodities_meds() {
+		$sub_category = $_POST['sub_category'];
+		$commodities = meds_commodities::get_all_in_category($sub_category);
+		//$commodities = meds_sub_category::get_all_in_category($category);
+		//echo "<pre>";print_r($sub_categories);exit;
+		//$facilities = Facilities::getFacilities($district);
+		$list = "";
+		// echo "<pre>";print_r($commodities);echo "</pre>";exit;
+		foreach ($commodities as $commodities) {
+			$list .= $commodities -> commodity_code;
+			$list .= "^";
+			$list .= $commodities -> unit_pack;
+			$list .= "^";
+			$list .= $commodities -> order_note;
+			$list .= "^";
+			$list .= $commodities -> unit_price;
+			$list .= "^";
+			$list .= $commodities -> commodity_name;
+			$list .= "_";
+		}
+		echo $list;
+	}
 	public function facility_order() 
 	{
 		//$this -> load -> library('PHPExcel');
@@ -106,16 +175,18 @@ for ($row = 1; $row <= $highestRow; $row++){
 		$facility_code = $this -> session -> userdata('facility_id');
 
         $items=Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
-        if(isset($_FILES['file']) && $_FILES['file']['size'] > 0){
-        $ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
+        if(isset($_FILES['file']) && $_FILES['file']['size'] > 0)
+        {
+        	$ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
             //echo $ext; 
-        if($ext=='xls'){
-        $excel2 = PHPExcel_IOFactory::createReader('Excel5');    
-        }else if($ext=='xlsx'){
-        $excel2 = PHPExcel_IOFactory::createReader('Excel2007');    
-        }else{
-        die('Invalid file format given'.$_FILES['file']);   
-        }
+	        if($ext=='xls')
+	        {
+	        	$excel2 = PHPExcel_IOFactory::createReader('Excel5');    
+	        }else if($ext=='xlsx'){
+	        	$excel2 = PHPExcel_IOFactory::createReader('Excel2007');    
+	        }else{
+	        	die('Invalid file format given'.$_FILES['file']);   
+	        }
 		
 		$excel2=$objPHPExcel= $excel2->load($_FILES["file"]["tmp_name"]); // Empty Sheet
     
@@ -309,6 +380,98 @@ foreach ($temp as $key => $value) {
 		$data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
 		$this -> load -> view('shared_files/template/template' , $data);
 			}
+
+			public function facility_meds_order(){
+			// echo "<pre>";print_r($this->input->post('commodity_code'));echo "</pre>";exit;
+			//security check
+			if ($this -> input -> post('commodity_code')) :
+			$commodity_type = $this -> input -> post('commodity_type');
+			$mfl = $this -> input -> post('mfl');
+			// $commodity_code = $this -> input -> post('commodity_code');
+			$quantity = $this -> input -> post('quantity');
+			$order_cost = $this -> input -> post('cost');
+			$this -> load -> database();
+			$data_array = array();
+			$commodity_id = $this -> input -> post('commodity_code');
+			$order_date = date('y-m-d');
+			$number_of_id = count($commodity_id);
+
+			for ($i = 0; $i < $number_of_id; $i++) {
+			$order_details = array(
+					"commodity_type" => $commodity_type[$i], 
+					'mfl' => $mfl[$i], 
+					'commodity_id' => $commodity_id[$i], 
+					'quantity' => $quantity[$i], 
+					'order_cost' => $order_cost[$i], 
+					'order_date' => $order_date
+					);
+			// echo "<pre>";print_r($order_details);echo "</pre>";exit;
+			//create the array to push to the db
+			array_push($data_array, $order_details);
+			
+			}// insert the data here
+			// echo "<pre>";print_r($data_array);echo"</pre>"; exit;
+			$this -> db -> insert_batch('facility_orders_meds', $data_array);
+
+			if ($this -> session -> userdata('user_indicator') == 'district') :
+				$district_id = $this -> session -> userdata('district_id');
+			$order_listing = 'subcounty';
+			elseif ($this -> session -> userdata('user_indicator') == 'county') :
+			$order_listing = 'county';
+			else :
+				$facility_code = $this -> session -> userdata('facility_id');
+			
+			$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($facility_code);
+			$facility_name = $myobj -> facility_name;
+			// get the order form details here
+			//create the pdf here
+			echo "Its ait this far";exit;
+			$pdf_body = $this -> create_order_pdf_template($new_order_no);
+			$file_name = $facility_name . '_facility_order_no_' . $new_order_no . "_date_created_" . date('d-m-y');
+			$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
+			$this -> hcmp_functions -> create_pdf($pdf_data);// create pdf
+			$this -> hcmp_functions -> clone_excel_order_template($new_order_no,'save_file',$file_name);//create excel
+			$order_listing = 'facility';
+			$message_1='
+			<br>
+			Please find the Order Made by '.$facility_name.' below for approval.
+			<br>
+			You may log in to the HCMP system to approve it.<a href="http://health-cmp.or.ke/" target="_blank">Click here</a>
+			<br>
+			<br>
+			<br>
+			';
+			$subject='Pending Approval Order Report For '.$facility_name;
+
+			$attach_file1='./pdf/'.$file_name.'.pdf';
+			$attach_file2="./print_docs/excel/excel_files/".$file_name.'.xls';
+
+			$message=$message_1.$pdf_body;
+
+			$response= $this->hcmp_functions->send_order_submission_email($message,$subject,$attach_file1."(more)".$attach_file2,null);
+            
+			if($response){
+			delete_files($attach_file1);
+            unlink($attach_file2);
+			}
+			else{
+
+			}
+
+			
+			endif;
+			// $user = $this -> session -> userdata('user_id');
+			// $user_action = "order";
+
+		 // 	Log::log_user_action($user, $user_action);
+
+			// $this -> hcmp_functions -> send_order_sms();
+
+			$this -> session -> set_flashdata('system_success_message', "Facility Meds Order has Been Saved");
+			redirect("home");
+			// redirect("reports/order_listing/$order_listing");
+			endif;
+			}//facility meds order terminado
 
 			public function facility_new_order() {
 			//security check
