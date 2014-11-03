@@ -78,7 +78,7 @@ foreach ($res_arr2 as $value) {
 </script>
 <style type="text/css">
     table{
-        font-size: 13px;
+        font-size: 11px;
     }
 
     .dataTables_wrapper{
@@ -177,44 +177,45 @@ foreach ($res_arr2 as $value) {
 
         <table class="" id="users">
             <thead style="text-align:left; font-size:13px; font-style:bold;">
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>User Level</th>
+            <th>Facility Code</th>
+            <th>Facility Name</th>
             <th>Sub-County</th>
             <th>County</th>
+            <th>Partner</th>
+            <th>Owner</th>
+            <th>RTK Status</th>
+            <th>RTK Action Status</th>
             <th>Action</th>
-            <th>Delete</th>
             </thead>
             <tbody style="border-top: solid 1px #828274;">
-                <?php
-                foreach ($users as $value) {
-                    if ($value['user_indicator'] == 'scmlt') {
-                        $value['level'] = 'Sub-County Admin';
-                    }
-                    ?>  
+            <?php 
 
-                    <tr>
-                        <td><?php echo '<a href="user_profile/'.$value['user_id'].'">'.$value['fname'].'</a>'; ?></td>
-                        <td><?php echo '<a href="user_profile/'.$value['user_id'].'">'.$value['lname'].'</a>'; ?></td>
-                        <td><?php echo $value['email']; ?></td>
-                        <td><?php echo $value['level']; ?></td>
-                        <td><?php
-                            if ($value['user_indicator'] != 'scmlt') {
-                                echo 'Not Applicable';
-                            } else {
-                                echo $value['district'];
-                            }
-                            ?></td>
-                        <td><?php echo $value['county']; ?> </td>
-                        <td><?php echo '<a href="user_profile/'.$value['user_id'].'">Manage</a>'; ?></td>
-                        <td><a style="color:red;" title="Delete user" href="<?php echo base_url() . 'rtk_management/delete_user_gen/' . $value['user_id'] . '/rtk_manager'; ?>">[x]</a></td>
-                    </tr>
-                <script type="text/javascript">
-                    $(function() {
-                            });
-                </script>
-            <?php } ?></tbody>
+                foreach ($facilities as $key => $value) {
+                    $rtk_state = $value['rtk_enabled'];
+                    if($rtk_state==0){
+                        $rtk_action = 'Not Enabled';
+                        $rtk_action_link = '<a href="'.base_url().'/rtk_management/enable_rtk">Enable</a>';
+                    }else{
+                        $rtk_action = 'Enabled';
+                        $rtk_action_link = '<a href="'.base_url().'/rtk_management/disable_rtk">Disable</a>';
+                    }
+                    ?>
+                <tr>
+                    <td><?php echo $value['facility_code'];?></td>
+                    <td><?php echo $value['facility_name'];?></td>
+                    <td><?php echo $value['facil_district'];?></td>
+                    <td><?php echo $value['county'];?></td>
+                    <td><?php echo $value['partner'];?></td>
+                    <td><?php echo $value['owner'];?></td>
+                    <td><?php echo $rtk_action;?></td>
+                    <td><?php echo $rtk_action_link;?></td>
+                    <td><?php echo $value['Action'];?></td>                    
+                </tr>
+            <?php }
+            ?>
+                
+                
+           </tbody>
         </table>
 
     </div>
@@ -223,6 +224,8 @@ foreach ($res_arr2 as $value) {
 $('#settings_tab').removeClass('active_tab');
         $('#messaging_tab').removeClass('active_tab');
         $('#trend_tab').removeClass('active_tab');
-        $('#users_tab').addClass('active_tab');
-    </script>
+        $('#users_tab').removeClass('active_tab');
+        $('#facilities_tab').addClass('active_tab');
+ </script>
+
 

@@ -1104,6 +1104,16 @@ public function rtk_manager_users() {
     $data['users'] = $users;
     $this->load->view('rtk/template', $data);
 }
+public function rtk_manager_facilities(){
+    $data['title'] = 'RTK Manager';
+    $data['banner_text'] = 'RTK Manager Facilities';
+    $data['content_view'] = "rtk/rtk/admin/admin_facilities";
+    $facilities = $this->_get_rtk_facilities(); 
+    // echo "<pre>";       
+    // print_r($facilities);die();
+    $data['facilities'] = $facilities;
+    $this->load->view('rtk/template', $data);
+}
 
 public function rtk_manager_settings() {
 
@@ -3488,7 +3498,19 @@ function facility_amc_compute($a,$b) {
     }
     //Update the Number of Reports Online
     function _update_reports_count($state,$county,$district){ 
-        $month = date('mY',time());             
+        $month = date('mY',time());  
+        $q = "select * from  rtk_county_percentage where month='$month' and county_id = '$county'";
+        $q1 = "select * from rtk_district_percentage where month='$month' and district_id = '$district'";
+        $res_county = $this->db->query($q)->result_array();        
+        $res_district = $this->db->query($q1)->result_array();
+        if(count($res_county)==0){
+            $this->get_district_percentages_month($month);
+        }
+        if(count($res_district)==0) {
+            $this->get_county_percentages_month($month);
+        }
+
+
         if($state=="add"){
             $sql = "update rtk_county_percentage set reported = (reported + 1) where month='$month' and county_id = '$county'";
             $sql1 = "update rtk_district_percentage set reported = (reported + 1) where month='$month' and district_id = '$district'";
@@ -3748,7 +3770,18 @@ public function deactivate_facility($facility_code) {
 }
 
 function _update_facility_count($state,$county,$district){
-    $month = date('mY',time());             
+    $month = date('mY',time());
+    $q = "select * from  rtk_county_percentage where month='$month' and county_id = '$county'";
+    $q1 = "select * from rtk_district_percentage where month='$month' and district_id = '$district'";
+    $res_county = $this->db->query($q)->result_array();        
+    $res_district = $this->db->query($q1)->result_array();
+    if(count($res_county)==0){
+        $this->get_district_percentages_month($month);
+    }
+    if(count($res_district)==0) {
+        $this->get_county_percentages_month($month);
+    }
+             
     if($state=="add"){
         $sql = "update rtk_county_percentage set facilities = (facilities + 1) where month='$month' and county_id = '$county'";
         $sql1 = "update rtk_district_percentage set facilities = (facilities + 1) where month='$month' and district_id = '$district'";
@@ -4140,6 +4173,13 @@ function _get_rtk_users() {
     $arr2 = $res2->result_array();
     $returnable = array_merge($arr, $arr2);       
     return $returnable;
+}
+
+function _get_rtk_facilities(){
+    $sql = "select facilities . *,districts.district as facil_district, counties.county from   facilities, districts, counties where
+        facilities.district = districts.id    and districts.county = counties.id order by facility_code";
+    $res = $this->db->query($sql)->result_array();
+    return $res;
 }
 
 public function allocation($zone = NULL, $county = NULL, $district = NULL, $facility = NULL, $sincedate = NULL, $enddate = NULL) {
