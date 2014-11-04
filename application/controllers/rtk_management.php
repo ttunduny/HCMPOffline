@@ -5103,7 +5103,7 @@ public function get_all_zone_a_facilities(){
             array_push($final_array[$month], $reportings);
             array_push($final_array[$month]['total'], $total);
 
-        }
+        }     
         
         
         $data['facilities'] = $facilities;
@@ -5214,11 +5214,15 @@ public function get_all_zone_a_facilities(){
                 
             }
 
-public function add_user() {    
-    
+public function add_user() {        
     $this->load->model('user');
     $this->user->add_user();
     redirect('rtk_management/rtk_manager_users');
+}
+public function change_password() {        
+    $this->load->model('user');
+    $this->user->edit_user_password();
+    echo "Password Succesfully Changed";
 }
 public function clean_data($month=null){
     if(isset($month)){           

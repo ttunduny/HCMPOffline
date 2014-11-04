@@ -114,7 +114,22 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script>
-        var url = '<?php echo base_url(); ?>';
+    $(document).ready(function() {
+        $('#message').hide();
+        $('#change_password_btn').click(function() {   
+            var old_pass = $('#old_pass').val();
+            var new_pass = $('#new_pass').val();
+            var confirm_pass = $('#confirm_pass').val();
+            var user_id = $('#user_id').val();  
+            if(new_pass!=confirm_pass){
+                $('#message').show();
+                $('#message').val('The New Passwords do Not Match. Please Retry');                
+            }else{      
+                $('#Change_Password').modal('hide');
+            }
+        });
+    });
+        //var url = '<?php echo base_url(); ?>';
         /*$('#change_password_table').tablecloth({theme: "paper",         
               bordered: true,
               condensed: true,
@@ -128,18 +143,22 @@
           var old_pass = $('#old_pass').val();
           var new_pass = $('#new_pass').val();
           var confirm_pass = $('#confirm_pass').val();
-          var user_id = $('#user_id').val();          
+          var user_id = $('#user_id').val();  
+          // if(new_pass!=confirm_pass){
 
-          $.post("<?php echo base_url() . 'user/change_password'; ?>", {
-            old_pass: old_pass,
-            new_pass: new_pass,            
-            confirm_pass: confirm_pass,
-            user_id :user_id,            
-          }).done(function(data) {
-            alert(data);
-            $('Change_Password').modal('hide');
-            //window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
-          });
+          // }else{
+           // $.post("<?php echo base_url() . 'rtk_management/change_password'; ?>", {                
+              //   new_pass: new_pass,                            
+              //   user_id :user_id,            
+              // }).done(function(data) {
+              //   alert(data);
+                $('#Change_Password').modal('hide');//}
+                //window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_settings'; ?>";
+             // });
+
+         // }
+
+          
         }); 
     </script>
     <script src="<?php echo base_url() . 'assets/datatable/jquery.dataTables.min.js' ?>" type="text/javascript"></script>	
@@ -166,7 +185,7 @@
               </div>
               <div class="modal-body">
                 <p></p>
-                <form id="change_password">       
+                <form id="new_change_password">       
                     <table id="change_password_table">
                       <tr>    
                         <td>Old Password</td>
@@ -179,6 +198,11 @@
                       <tr>
                         <td>Confirm Password</td>
                         <td><input class="form-control" id="confirm_pass" type="text" name="confirm_pass" style="width:96%"/></td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                            <input class="form-control" id="message" type="text" name="message" style="width:96%" />
+                        </td>                        
                       </tr>                                     
                         
                      <input class="form-control" id="user_id" type="hidden" name="user_id" style="width:96%" value="<?php echo $this->session->userdata('user_id'); ?>"/>
