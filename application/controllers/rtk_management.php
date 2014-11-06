@@ -655,7 +655,7 @@ public function get_lab_report($order_no, $report_type) {
 
                     
             //$data['graphdata'] = $this->county_reporting_percentages($countyid, $year, $month);        
-                    $data['county_summary'] = $this->_requested_vs_allocated($year, $month, $countyid); 
+                    //$data['county_summary'] = $this->_requested_vs_allocated($year, $month, $countyid); 
                     
                     //$data['tdata'] = $tdata;
                     $data['county'] = $County;
@@ -665,6 +665,28 @@ public function get_lab_report($order_no, $report_type) {
                     $data['content_view'] = "rtk/rtk/clc/home";
                     $this->load->view("rtk/template", $data);
                 }
+public function county_stock() {
+    $lastday = date('Y-m-d', strtotime("last day of previous month"));
+    $countyid = $this->session->userdata('county_id');
+    $districts = districts::getDistrict($countyid);
+    $county_name = counties::get_county_name($countyid);
+    $County = $county_name[0]['county'];
+
+    $month = $this->session->userdata('Month');
+    if ($month == '') {
+        $month = date('mY', strtotime('-1 month'));
+    }
+
+    $month_db = date("mY", strtotime("$month +0 month"));        
+    $data['county_summary'] = $this->_requested_vs_allocated($year, $month, $countyid); 
+    
+    $data['county'] = $County;
+    $data['active_month'] = $month.$year;
+    $data['title'] = 'RTK County Admin';
+    $data['banner_text'] = 'RTK County Stocks';
+    $data['content_view'] = "rtk/rtk/clc/stock_card";
+    $this->load->view("rtk/template", $data);
+}
 public function county_profile($county) {
         $data = array();
         $lastday = date('Y-m-d', strtotime("last day of previous month"));
@@ -3697,50 +3719,50 @@ function facility_amc_compute($a,$b) {
         AND facilities.facility_code = lab_commodity_details.facility_code 
         AND facilities.district = districts.id 
         AND districts.county = counties.id 
-        AND lab_commodity_orders.order_date BETWEEN  '$firstday' AND  '$lastdate'
-        AND lab_commodities.id in (select lab_commodities.id from lab_commodities,lab_commodity_categories 
-            where lab_commodities.category = lab_commodity_categories.id and lab_commodity_categories.active = '1')";
+        AND lab_commodity_orders.order_date BETWEEN  '$firstday' AND  '$lastdate'";
+        //AND lab_commodities.id in (select lab_commodities.id from lab_commodities,lab_commodity_categories 
+          //  where lab_commodities.category = lab_commodity_categories.id and lab_commodity_categories.active = '1')";
 if (isset($county)) {
     $common_q.= ' AND counties.id =' . $county;
 }
 
  $common_q.= ' group by lab_commodities.id';
 
-$res = $this->db->query($common_q);        
+// $res = $this->db->query($common_q);        
 
-        $result = $res->result_array();
+//         $result = $res->result_array();
         // echo "<pre>";
         // print_r($result);
         // die();
-        //array_push($returnable, $result);
+        // array_push($returnable, $result);
 
 
-        // $q = $common_q . " AND lab_commodities.id = 1";
-        // $res = $this->db->query($q);
-        // $result = $res->result_array();
-        // array_push($returnable, $result[0]);
+        $q = $common_q . " AND lab_commodities.id = 1";
+        $res = $this->db->query($q);
+        $result = $res->result_array();
+        array_push($returnable, $result[0]);
 
-        // $q2 = $common_q . " AND lab_commodities.id = 2";
-        // $res2 = $this->db->query($q2);
-        // $result2 = $res2->result_array();
-        // array_push($returnable, $result2[0]);        
+        $q2 = $common_q . " AND lab_commodities.id = 2";
+        $res2 = $this->db->query($q2);
+        $result2 = $res2->result_array();
+        array_push($returnable, $result2[0]);        
 
-        // $q4 = $common_q . " AND lab_commodities.id = 4";
-        // $res4 = $this->db->query($q4);
-        // $result4 = $res4->result_array();
-        // array_push($returnable, $result4[0]);
+        $q4 = $common_q . " AND lab_commodities.id = 4";
+        $res4 = $this->db->query($q4);
+        $result4 = $res4->result_array();
+        array_push($returnable, $result4[0]);
 
-        // $q5 = $common_q . " AND lab_commodities.id = 5";
-        // $res5 = $this->db->query($q5);
-        // $result5 = $res5->result_array();
-        // array_push($returnable, $result5[0]);
+        $q5 = $common_q . " AND lab_commodities.id = 5";
+        $res5 = $this->db->query($q5);
+        $result5 = $res5->result_array();
+        array_push($returnable, $result5[0]);
 
-        // $q6 = $common_q . " AND lab_commodities.id = 6";
-        // $res6 = $this->db->query($q6);
-        // $result6 = $res6->result_array();
-        // array_push($returnable, $result6[0]);
-// $returnable = $res->result_array();
-// echo"<pre>";print_r($returnable);die;
+        $q6 = $common_q . " AND lab_commodities.id = 6";
+        $res6 = $this->db->query($q6);
+        $result6 = $res6->result_array();
+        array_push($returnable, $result6[0]);
+$returnable = $res->result_array();
+echo"<pre>";print_r($returnable);die;
 return $result;
 }
 

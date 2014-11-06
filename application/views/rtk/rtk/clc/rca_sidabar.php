@@ -26,6 +26,7 @@
             <span class="glyphicon "> Summary</span>
            </a></li>        
         <li><a href="<?php echo base_url().'rtk_management/rca_districts'?>">Sub-Counties</a></li>
+        <li><a href="<?php echo base_url().'rtk_management/county_stock'?>">Stock Card</a></li>
         <li><a href="<?php echo base_url().'rtk_management/rca_pending_facilities'?>">Non-Reported Facilities</a></li>
         <li><a href="<?php echo base_url().'rtk_management/rca_facilities_reports' ?>">Reports</a></li>
         <li><a href="<?php echo base_url().'rtk_management/county_admin/users' ?>">Users</a></li>
