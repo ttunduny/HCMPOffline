@@ -1,6 +1,41 @@
-<div id="tabs">
-	<a id="users_tab" href="<?php echo base_url().'rtk_management/rtk_manager_users'; ?>" data-tab="2" <?php echo base_url().'rtk_management/rtk_manager_facilities/A'; ?>Users</a>
+<!--div id="tabs">	
+	<ul>
+		<li>
+			<a id="trend_tab" href="<?php echo base_url().'rtk_management/rtk_manager'; ?>" data-tab="1" class="tab">National Trend</a>
+		</li>
+		<li>
+			<a id="users_tab" href="<?php echo base_url().'rtk_management/rtk_manager_users'; ?>" data-tab="1" class="tab">Users</a>	
+		</li>
+		<li>
+			<a id="facilities_tab" href="<?php echo base_url().'rtk_management/rtk_manager_facilities/A';?>" data-tab="1" class="tab">Facilities</a>	
+			<ul>
+				<li><a href="<?php echo base_url().'rtk_management/rtk_manager_facilities/A'; ?>">Zone A</a></li>
+				<li><a href="<?php echo base_url().'rtk_management/rtk_manager_facilities/B'; ?>">Zone B</a></li>
+				<li><a href="<?php echo base_url().'rtk_management/rtk_manager_facilities/C'; ?>">Zone C</a></li>
+				<li><a href="<?php echo base_url().'rtk_management/rtk_manager_facilities/D'; ?>">Zone D</a></li>
+			</ul>
+		</li>
+		<li>
+			<a id="messaging_tab" href="<?php echo base_url().'rtk_management/rtk_manager_messages'; ?>" data-tab="1" class="tab">Messaging</a>
+		</li>
+		<li>
+			<a id="settings_tab" href="<?php echo base_url().'rtk_management/rtk_manager_settings'; ?>" data-tab="2" class="tab">Settings</a>
+		</li>
+		<li>
+			<a id="activity_tab" href="<?php echo base_url().'rtk_management/rtk_manager_activity'; ?>" data-tab="2" class="tab">Activity</a>
+		</li>
+	</ul>
+
+	
+	
+		
+	
+</div-->
+
+
+<div id="tabs">	
 	<a id="trend_tab" href="<?php echo base_url().'rtk_management/rtk_manager'; ?>" data-tab="1" class="tab">National Trend</a>
+	<a id="users_tab" href="<?php echo base_url().'rtk_management/rtk_manager_users'; ?>" data-tab="1" class="tab">Users</a>	
 	<a id="facilities_tab" href="<?php echo base_url().'rtk_management/rtk_manager_facilities/A';?>" data-tab="1" class="tab">Facilities</a>	
 		
 		<!--ul id="drops">

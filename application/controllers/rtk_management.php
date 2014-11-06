@@ -1060,11 +1060,13 @@ public function rtk_manager($month=null) {
         array_push($yArr, $order_date);
         array_push($xArr, $count);
     }  
-    
+
     $data['cumulative_result'] = $cumulative_result;
     $data['jsony'] = json_encode($yArr);
     $data['jsonx'] = str_replace('"', "", json_encode($xArr));
     $data['jsonx1'] = str_replace('"', "", json_encode($xArr1));
+    // echo "<pre>";
+    // print_r($data['jsony']);die();
     $data['englishdate'] = $englishdate;
     $County = $this->session->userdata('county_name');
     $data['county'] = $County;
@@ -1126,7 +1128,7 @@ public function rtk_manager_facilities($zone = null){
     $data['title'] = 'RTK Manager';
     $data['banner_text'] = 'RTK Manager : Facilities in Zone '.$zone;
     $data['content_view'] = "rtk/rtk/admin/admin_facilities";
-    //$facilities = $this->_get_rtk_facilities();
+    // /$facilities = $this->_get_rtk_facilities();
     $q = "select * from partners where flag='1' order by ID asc";
     $res = $this->db->query($q)->result_array();  
     $partners_array = array();  
@@ -1139,6 +1141,41 @@ public function rtk_manager_facilities($zone = null){
    
     $data['facilities'] = $facilities;
     $data['partners_array'] = $partners_array;
+    $this->load->view('rtk/template', $data);
+}
+
+public function rtk_manager_facilities_data($zone = null){
+    // if(isset($zone)){
+    //      $facilities = $this->_get_rtk_facilities_data($zone);
+    //      $data['banner_text'] = 'RTK Manager : Facilities Data for Zone '.$zone;
+    // }else{         
+    //      $facilities = $this->_get_rtk_facilities_data();
+    //      $data['banner_text'] = 'RTK Manager : All Facilities Data';
+    // }
+    $sql = "SELECT facilities.facility_code,facilities.facility_name,districts.district,counties.county
+            from districts,counties,facilities where facilities.district = districts.id 
+            AND districts.county = counties.id and facilities.rtk_enabled = '1' ORDER BY counties.county,facilities.facility_code";
+
+    $facilities = $this->db->query($sql)->result_array();
+    $screening = array();
+    $screening_det = array();
+    $screening_khb = array();
+    $confirmatory = array();
+    $confirmatory_det = array();
+    $confirmatory_fr = array();
+    $tiebreaker = array();
+    foreach ($facilities as $key => $value) {
+        $fcode = $value['facility_code'];
+        $q = "select sum(facility_amc.amc), facility_amc.commodity_id from  facility_amc 
+              where  facility_amc.facility_code = '$fcode' and month = '112014' group by facility_amc.commodity_id";
+        $results = $this->db->query($q)->result_array();
+        foreach ($results as $key => $value) {
+            # code...
+        }
+    }
+    $data['title'] = 'RTK Manager Facilities Data';    
+    $data['content_view'] = "rtk/rtk/admin/admin_facilities_data";        
+    $data['facilities'] = $facilities;    
     $this->load->view('rtk/template', $data);
 }
 
@@ -1522,6 +1559,7 @@ public function rtk_manager_stocks($month=null) {
         $data['all_counties'] = $this->all_counties();
         $data['all_subcounties'] = $this->all_districts();
 
+
         $data['user_logs'] = $this->rtk_logs($user_id);
         $data['user_id'] = $user_id;
         $data['full_name'] = $full_name;
@@ -1603,9 +1641,83 @@ public function rtk_manager_stocks($month=null) {
 
         $data['banner_text'] = 'RTK National';
         $data['content_view'] = 'rtk/rtk/allocation/allocation_home_view';
-        $data['title'] = 'National RTk Summary: ';
+        $data['title'] = 'National RTK Allocations: ';
         $this->load->view("rtk/template", $data);
     }
+    public function allocation_trend() {        
+        
+        $months_texts = array();
+        $percentages = array();
+
+        for ($i=12; $i >=1; $i--) { 
+            $month =  date("mY", strtotime( date( 'Y-m-01' )." -$i months"));            
+            $month_text =  date("M Y", strtotime( date( 'Y-m-01' )." -$i months")); 
+            array_push($months_texts,$month_text);
+            $sql = "select sum(reported) as reported, sum(facilities) as total, month from rtk_county_percentage 
+                where month ='$month'";
+            $res_trend = $this->db->query($sql)->result_array();            
+            foreach ($res_trend as $key => $value) {
+                $reported = $value['reported'];
+                $total = $value['total'];
+                $percentage = round(($reported/$total)*100);
+                if($percentage>100){
+                    $percentage = 100;
+                }
+                array_push($percentages, $percentage);
+                $trend_details[$month] = array('reported'=>$reported,'total'=>$total,'percentage'=>$percentage);
+            }
+        }   
+        $trend_details = json_encode($trend_details);        
+        $months_texts = str_replace('"',"'",json_encode($months_texts));        
+        $percentages = str_replace('"',"'",json_encode($percentages));                
+        $data['first_month'] = date("M Y", strtotime( date( 'Y-m-01' )." -12 months")); 
+        $data['last_month'] = date("M Y", strtotime( date( 'Y-m-01' )." -1 months")); 
+        $data['percentages'] = $percentages;
+        $data['months_texts'] = $months_texts;
+        $data['trend_details'] = $trend_details;
+        $data['banner_text'] = 'RTK National Allocation Trend';
+        $data['content_view'] = 'rtk/rtk/allocation/allocation_trend';
+        $data['title'] = 'National RTK Trend: ';
+        $this->load->view("rtk/template", $data);
+    }
+public function allocation_stock_card() {      
+    if (!isset($month)) {
+        $month = date('mY', strtotime('-1 month'));
+    }
+    $year = substr($month, -4);
+    $month = substr_replace($month, "", -4);              
+    $firstdate = $year . '-' . $month . '-01';
+    $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+    $lastdate = $year . '-' . $month .'-'. $num_days;        
+    $sql_amcs = "select lab_commodities.id,lab_commodities.commodity_name,sum(facility_amc.amc) as amc 
+    from  lab_commodities,facility_amc where  lab_commodities.id = facility_amc.commodity_id and lab_commodities.category = '1'
+    group by lab_commodities.id order by lab_commodities.id asc";
+
+    $sql_endbals = "select lab_commodities.id,lab_commodities.commodity_name, sum(lab_commodity_details.closing_stock) as end_bal
+    from   lab_commodities, lab_commodity_details 
+    where lab_commodities.category = '1' and lab_commodity_details.commodity_id = lab_commodities.id
+    and lab_commodity_details.created_at between '$firstdate' and '$lastdate'
+    group by lab_commodities.id order by lab_commodities.id asc";
+
+    $facil_amcs = $this->db->query($sql_amcs)->result_array();
+    $facil_endbals = $this->db->query($sql_endbals)->result_array();
+    $count = count($facil_amcs);
+    $stock_details = array();
+    for ($i=0; $i < $count; $i++) { 
+        $comm_id = $facil_amcs[$i]['id'];
+        $comm_name = $facil_amcs[$i]['commodity_name'];
+        $amc = $facil_amcs[$i]['amc'];
+        $endbal = $facil_endbals[$i]['end_bal'];
+        $ratio = 1;
+        $stock_details[$i] = array('id'=>$comm_id,'commodity_name'=>$comm_name,'amc'=>$amc,'endbal'=>$endbal,'ratio'=>$ratio);
+    }      
+    
+    $data['stock_details'] = $stock_details;
+    $data['banner_text'] = 'RTK National Allocation Stock Card';
+    $data['content_view'] = 'rtk/rtk/allocation/allocation_stock_card';
+    $data['title'] = 'National RTK Stock Card: ';
+    $this->load->view("rtk/template", $data);
+}
     function zone_allocation_stats($zone) {
 
         $last_allocation_sql = "SELECT lab_commodity_details.allocated_date 
@@ -4264,7 +4376,7 @@ public function allocation($zone = NULL, $county = NULL, $district = NULL, $faci
         $this->get_county_percentages_month($month);
         $this->get_district_percentages_month($month);
     }
-      function update_county_percentages_month($month=null){
+function update_county_percentages_month($month=null){
     if(isset($month)){           
         $year = substr($month, -4);
         $month = substr($month, 0,2);            
@@ -5031,17 +5143,19 @@ public function get_all_zone_a_facilities(){
     $m3 = date('Y-m',strtotime('-2 month'));
     $m2= date('Y-m',strtotime('-3 month'));
     $m1 = date('Y-m',strtotime('-4 month'));
+    $m0 = date('Y-m',strtotime('-5 month'));
 
     $month_text4 = date('F',strtotime('-1 month'));  
     $month_text3 = date('F',strtotime('-2 month'));  
     $month_text2 = date('F',strtotime('-3 month'));  
     $month_text1 = date('F',strtotime('-4 month'));
+    $month_text0 = date('F',strtotime('-5 month'));
 
-    $first = $m1.'-01';
+    $first = $m0.'-01';
     $last = $m4.'-31';
 
-    $months = array($m1,$m2,$m3,$m4);
-    $month_texts = array($month_text1,$month_text2,$month_text3,$month_text4);
+    $months = array($m0,$m1,$m2,$m3,$m4);
+    $month_texts = array($month_text0,$month_text1,$month_text2,$month_text3,$month_text4);
     $count = count($months);
 
     // $sql = "select facilities.facility_code,facilities.facility_name,districts.district,counties.county
@@ -5058,7 +5172,7 @@ public function get_all_zone_a_facilities(){
                 and facilities.district = districts.id
                 and districts.county = counties.id
                 and facilities.facility_code = lab_commodity_orders.facility_code
-                and lab_commodity_orders.order_date between '2014-06-01' and '2014-09-31'
+                and lab_commodity_orders.order_date between '$first' and '$last'
         group by facilities.facility_code
         having total < 4
         order by facility_code ASC";
@@ -5110,7 +5224,7 @@ public function get_all_zone_a_facilities(){
         $data['months'] = $months;
         $data['month_texts'] = $month_texts;
         $data['final_array'] = $final_array;   
-        $data['title'] = 'RTK Allocations';    
+        $data['title'] = 'RTK Allocations: Non Reported Facilities';    
         $data['banner_text'] = 'Non Reported Facilities';
         $data['content_view'] = "rtk/allocation_committee/allocation_non_reported";
         $this->load->view('rtk/template', $data);        
@@ -5141,7 +5255,7 @@ public function get_all_zone_a_facilities(){
                 ini_set(-1);
                 $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
                 $firstdate = $year.'-'.$month.'-01';
-                $lastdate = $year.'-'.$month.'-'.$num_days;  
+                $lastdate = $year.'-'.$month.'-'.$num_days;                
 
                 $sql = "select distinct facility_code from facilities where rtk_enabled=1 and zone='Zone $zone' and exists
                  (select distinct facility_code from lab_commodity_details where created_at between '$firstdate' and '$lastdate') order by facility_code asc";

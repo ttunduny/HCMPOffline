@@ -43,8 +43,8 @@ table{
 
 </style>
 <div style="width:100%;font-size: 12px;height:20px;padding: 10px 10px 10px 10px;margin-bottom:10px;">
-  <ul class="nav top-navigation nav" style="margin-top:0px;float:left;">   
-    <li class=""><a href="<?php echo base_url() .'rtk_management/new_non_reported_facilities/A';?>">Zone A</a></li>
+  <ul class="nav top-navigation" style="margin-top:0px;float:left;">   
+    <li class="" style="margin-left:10px;"><a href="<?php echo base_url() .'rtk_management/new_non_reported_facilities/A';?>">Zone A</a></li>
     <li class=""><a href="<?php echo base_url() .'rtk_management/new_non_reported_facilities/B';?>">Zone B</a></li>
     <li class=""><a href="<?php echo base_url() .'rtk_management/new_non_reported_facilities/C';?>">Zone C</a></li>
     <li class=""><a href="<?php echo base_url() .'rtk_management/new_non_reported_facilities/D';?>">Zone D</a></li>
@@ -66,6 +66,7 @@ table{
       <th><?php echo $month_texts[1];?></th>    
       <th><?php echo $month_texts[2];?></th>    
       <th><?php echo $month_texts[3];?></th>    
+      <th><?php echo $month_texts[4];?></th>    
     </tr> 
       
     </thead>
@@ -79,6 +80,7 @@ table{
         $m2 =$months[1];
         $m3 =$months[2];
         $m4 =$months[3];
+        $m5 =$months[4];
         ?> 
         <tr> 
           <td><?php echo $value['county'];?></td>
@@ -90,6 +92,7 @@ table{
           <td><?php echo $final_array[$m2][0][$facil][0];?></td>
           <td><?php echo $final_array[$m3][0][$facil][0];?></td>
           <td><?php echo $final_array[$m4][0][$facil][0];?></td>
+          <td><?php echo $final_array[$m5][0][$facil][0];?></td>
         </tr>
         <?php }
       }else{ ?>
@@ -159,7 +162,15 @@ $(document).ready(function() {
 
     e.preventDefault();
   });
-  $('#pending_facilities').tablecloth();
+  $("#pending_facilities").tablecloth({theme: "paper",         
+      bordered: true,
+      condensed: true,
+      striped: false,
+      sortable: true,
+      clean: true,
+      cleanElements: "th td",
+      customClass: "data-table"
+    });    
 
 });
 </script>

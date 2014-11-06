@@ -133,7 +133,7 @@
                         //$partner =  $rtk_partner;// = $value['partner'];                    
                     }
                     ?>
-                <tr>
+                <tr id="<?php $value['facility_code'];?>" class="rows">
                     <td><?php echo $value['facility_code'];?></td>
                     <td><?php echo $value['facility_name'];?></td>
                     <td><?php echo $value['facil_district'];?></td>
@@ -142,7 +142,7 @@
                     <td><?php echo $value['owner'];?></td>
                     <td><?php echo $rtk_action;?></td>
                     <td><?php echo $rtk_action_link;?></td>
-                    <td>EDIT</td>                    
+                    <td><button data-target="#Edit_Facility" class="edit_facility_row_btn" data-toggle="modal" id="<?php echo $value['facility_code'];?>" value="<?php echo $value['facility_code'];?>">Edit</button></td>
                     <td>DELETE</td>                    
                 </tr>
             <?php }
@@ -154,21 +154,21 @@
 
     </div>
 </div>
- <!--Add Commodity -->
-           <div class="modal fade" id="Add_Facil" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ <!--Edit Deadline -->
+        <div class="modal fade" id="Edit_Facility" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">Edit Deadline</h4>
+                <h4 class="modal-title" id="myModalLabel">Edit Facility</h4>
               </div>
               <div class="modal-body">
                 <p></p>
-                <form id="edit_deadline_form">       
-                  <table id="edit_deadline_table">
+                <form id="edit_facility_form">       
+                  <table id="edit_facility_table">
                     <tr>    
-                      <td>Reporting Deadline (Date of Every Month)</td>
-                      <td><input id="edit_deadline" style="width:96%" type="text" name="edit_deadline" value=""/></td>
+                      <td>MFL</td>
+                      <td><input id="edit_mfl" style="width:96%" type="text" name="edit_deadline" value=""/></td>
                     </tr>   
                     <tr>
                       <td>5 Day Alert</td>
@@ -199,7 +199,8 @@
                 <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
                 <button id="edit_deadline_btn" class="btn edit_deadline_btn btn-default">Save Changes</button>
               </div>
-            </div> 
+            </div>      
+          </div>
          
 <script>
 $('#settings_tab').removeClass('active_tab');
