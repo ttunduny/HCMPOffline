@@ -105,6 +105,7 @@
 <script type="text/javascript" language="javascript" src="<?php echo base_url();?>assets/datatable/jquery.dataTables.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+
   $('#stock_card_table').dataTable({
     "sDom": "T lfrtip", 
      "bJQueryUI": false,
