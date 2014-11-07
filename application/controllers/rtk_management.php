@@ -610,13 +610,17 @@ public function get_lab_report($order_no, $report_type) {
                 //     //     }
                 //     }
                     $month = $this->session->userdata('Month');
+                    
                     if ($month == '') {
                         $month = date('mY', strtotime('-1 month'));
+                      
                     }
-
-                    
-                    $month_db = date("mY", strtotime("$month +0 month"));
-                   
+                    $m =substr($month, 0,2);
+                    $y = substr($month, 2);
+                    $new_month = $y.'-'.$m.'-01';
+                    $d = new DateTime("$new_month");    
+                    $d->modify( 'last day of next month' );
+                    $month_db =  $d->format( 'mY' );     
                     $sql ="select rtk_district_percentage.percentage,districts.district from rtk_district_percentage,districts,counties
                     where rtk_district_percentage.district_id = districts.id and districts.county = counties.id and counties.id = '$countyid' 
                     and rtk_district_percentage.month = '$month_db'";
