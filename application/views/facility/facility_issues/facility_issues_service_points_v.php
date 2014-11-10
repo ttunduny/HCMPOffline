@@ -192,7 +192,9 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 	//reset the text field and the message dialog box 
     selector_object.val(""); var notification='<ol>'+alert_message+form_data[0]+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
     //hcmp custom message dialog
-    dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
+    
+    hcmp_message_box(title='HCMP error message',notification,message_type='error')
+   // dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
     //This event is fired immediately when the hide instance method has been called.
     $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();	})
     selector_object.closest("tr").find(".balance").val(selector_object.closest("tr").find(".commodity_balance").val());
@@ -205,7 +207,8 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
         if(isNaN(form_data[0])){
         var notification='<ol>'+form_data[0]+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
            //hcmp custom message dialog
-        dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
+           hcmp_message_box(title='HCMP error message',notification,message_type='error')
+       // dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
         return;   }// set the balance here
 			//set the quantities to readonly  $("#dropdown").prop("disabled", true);
 			selector_object.closest("tr").find(".quantity_issued").attr('readonly','readonly');
