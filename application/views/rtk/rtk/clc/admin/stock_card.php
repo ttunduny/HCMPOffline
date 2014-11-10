@@ -63,7 +63,7 @@ $current_month = date('mY', strtotime('-1 month'));
 
             }
             ?>
-            <!--div>
+            <div>
                 <table class="table" style="font-size:13px;">
                     <thead>
                         <tr>
@@ -112,12 +112,9 @@ $current_month = date('mY', strtotime('-1 month'));
                         ?>                   
                 </tbody>
             </table>
-        </div-->
+        </div>
 
-        <div id="container" style="min-width: 310px; height: auto; margin: 0 auto"></div>
-
-    </div>
-
+        
 </div>
 <script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/datatable/jquery.dataTables.js"></script>
 <script>
@@ -184,43 +181,3 @@ window.location.href = path;
     }
 
 </script>
-<script type="text/javascript">
-
-            $(function() {
-                $('#container').highcharts({
-                    chart: {
-                        type: 'bar'
-                    },
-                    title: {
-                        text: '<?php echo $county . ' County Reporting Rates ' . $englishdate; ?>'
-                    }, subtitle: {
-                        text: 'Live data reports on RTK'
-                    },
-                    xAxis: {
-                        categories: <?php echo $graphdata['districts']; ?>
-                    },
-                    yAxis: {
-                        min: 0,
-                        title: {
-                            text: 'Percentage Complete (%)'
-                        }
-                    },
-                    legend: {
-                        backgroundColor: '#FFFFFF',
-                        reversed: true
-                    },
-                    plotOptions: {
-                        series: {
-                            stacking: 'normal'
-                        }
-                    },
-                    series: [{
-                            name: 'Not reported',
-                            data: <?php echo $graphdata['nonreported']; ?>
-                        }, {
-                            name: 'Reported',
-                            data: <?php echo $graphdata['reported']; ?>
-                        }]
-                });
-            });
-        </script>

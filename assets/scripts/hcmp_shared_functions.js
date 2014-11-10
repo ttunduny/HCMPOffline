@@ -229,11 +229,27 @@ function confirm_if_the_user_wants_to_save_the_form(form_id){
       
       });
 }
-
+//Prevent dublication on refresh or back button
 function active_panel(div_object){
 
      	 $('.panel').removeClass('active-panel');
      	 $(div_object).parent().parent().parent().addClass('active-panel');
      }
+function changeHashOnLoad() {
+     window.location.href += "#";
+     setTimeout("changeHashAgain()", "50"); 
+}
+
+function changeHashAgain() {
+  window.location.href += "1";
+}
+
+var storedHash = window.location.hash;
+window.setInterval(function () {
+    if (window.location.hash != storedHash) {
+         window.location.hash = storedHash;
+    }
+}, 50);
+
 
 
