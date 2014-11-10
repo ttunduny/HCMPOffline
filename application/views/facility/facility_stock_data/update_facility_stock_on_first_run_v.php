@@ -82,7 +82,7 @@
                 <tr table_row="1">
                     <td>
                     <input type="hidden" class="commodity_id" value=""  name="commodity_id[]"/>
-                    <select  name="desc[]" class="form-control desc" style="">
+                    <select  name="desc[]" class="form-control desc" style="" id="desc">
                         <option special_data="0" value="0">Select One</option>
                          <?php
                 foreach ($commodities as $commodities) {
@@ -299,7 +299,7 @@
             if(isNaN(alert_message)){
             var notification='<ol>'+alert_message+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;<span class="label label-danger">Before adding a new row</span>';
             //hcmp custom dialog box
-            dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
+            hcmp_message_box(title='HCMP error message',notification,message_type='error');
             //This event is fired immediately when the hide instance method has been called.
             $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.closest("tr").find('.desc').focus();  });
             return;
@@ -327,7 +327,7 @@
             selector_object.val("");
             var notification='<ol>'+alert_message+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;<span class="label label-danger"></span>';
             //hcmp custom dialog box
-            dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
+             hcmp_message_box(title='HCMP error message',notification,message_type='error');
             //This event is fired immediately when the hide instance method has been called.
             $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.closest("tr").find('.desc').focus();  });
             selector_object.closest("tr").find('.commodity_total_units').val();
@@ -339,7 +339,8 @@
             //reset the text field and the message dialog box
             selector_object.val("");
             //hcmp custom message dialog
-            dialog_box("Decimals are not allowed",'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
+             hcmp_message_box(title='HCMP error message',notification='Decimals are not allowed',message_type='error');
+            //dialog_box("Decimals are not allowed",'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
             //This event is fired immediately when the hide instance method has been called.
             $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();  })
             return;}  }
@@ -347,7 +348,8 @@
             //reset the text field and the message dialog box
             selector_object.val("");
             //hcmp custom message dialog
-            dialog_box("Enter only numbers",'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
+            hcmp_message_box(title='HCMP error message',notification='Enter only numbers',message_type='error');
+           // dialog_box("Enter only numbers",'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
             //This event is fired immediately when the hide instance method has been called.
             $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();  })
             return; }
@@ -361,10 +363,21 @@
             $('.remove').on('click',function(){
             var selector_object=$(this);
             //hcmp custom message dialog
-            dialog_box("Are you sure you want to delete this record?",'<button type="button" class="btn btn-danger remove_record" >OK</button>'+
-            '<button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>');
-            $('.remove_record').on('click',function(){
-            //url for deleting the row
+            //
+            swal({   title: "Are you sure?",   
+                text: "Are you sure you want to delete this record? You will not be able to recover this data!!!",  
+                 type: "warning",   showCancelButton: true,  
+                  confirmButtonColor: "#5cb85c",  
+                   confirmButtonText: "Yes, continue!",   
+                   cancelButtonText: "No, cancel please",  
+                    closeOnConfirm: false,  
+                     closeOnCancel: false }, 
+                     
+                     function(isConfirm){   if (isConfirm) {   
+                          
+                         swal("Deleted!", "Record Deleted.", "success"); 
+                         
+                              //url for deleting the row
             var url = "<?php echo base_url('stock/delete_temp_autosave')?>";
             //get the data to delete the row
             var temp_data=send_data_to_the_temp_table(selector_object);
@@ -381,14 +394,55 @@
             clone_the_last_row_of_the_table();
             selector_object.parent().parent().remove();  }
             else{ selector_object.parent().parent().remove();  }
-            $('#communication_dialog').modal('hide');
-            })
+           // $('#communication_dialog').modal('hide');      
+
+                         
+                           } else {
+                            
+                            swal({   title: "Cancelled!",   text: "Your transaction was stopped ",  type: "warning", showCancelButton: false , timer: 3000 });
+                               
+                              return; 
+                              } });
+           
+           // $('.remove_record').on('click',function(){
+            
+           // })
             });
             /************save the data here*******************/
            
             $('.save').button().click(function() {
              $("#myform").validate();
-            confirm_if_the_user_wants_to_save_the_form("#myform");
+            //notification = $("table#facility_stock_table").dataTable();
+           // var notification = $("table#facility_stock_table")[0].clone(true);
+            var html_data = "";
+           // var notification =  $('<div>').append( $('table#facility_stock_table').clone() ).html();
+
+           var html_data='<style>.sweet-alert{width:60%;left:40%}</style><div style="max-height:300px;overflow-y:auto"><table class="table table-hover table-bordered table-update">'+
+                    "<thead><tr>"+
+                    "<th>Description</th>"+
+                    "<th>Batch No</th>"+
+                    "<th>Quantity(Units)</th>"+
+                    "</tr></thead><tbody>";                       
+        $("input[name^=commodity_available_stock]").each(function(i) { 
+            //$(document).each('','input[name^=cost]', function (i){
+         var commodity_name=$(this).closest("tr").find("#desc :selected").text()
+         var batchn=$(this).closest("tr").find(".commodity_batch_no").val()
+         var total_units=$(this).closest("tr").find(".commodity_total_units").val()
+         //alert(C_name);
+         //return;
+        html_data +="<tr>" +
+                            "<td>" +commodity_name+ "</td>" +
+                            "<td>" +batchn+ "</td>" +
+                            "<td>" +total_units+ "</td>" +   
+                                                                              
+                        "</tr>" 
+                    });
+         html_data +="</tbody></table></div>";
+
+            confirm_with_summary(html_data,'#myform') 
+
+             
+            //
             });
 
              $('.importing').button().click(function() {
