@@ -95,6 +95,19 @@ class Facilities extends Doctrine_Record {
 			
 		return $q;
 	}
+	//In case the stock outs or expiries for Taita Taveta are not sent out
+	public static function get_Taita()
+	{
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT DISTINCT
+		    id as county, c.county as county_name
+		from
+		     counties c
+		where
+		c.id = 39");
+			
+		return $q;
+	}
 	//get the facility codes of facilities in a particular district
 	public static function get_district_facilities($district)
 	{

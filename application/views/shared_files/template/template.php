@@ -21,11 +21,13 @@ if (!$this -> session -> userdata('user_id')) {
 	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
 	<link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
+  <link rel="stylesheet" href="<?php echo base_url().'assets/bower_components/sweetalert/lib/sweet-alert.css'?>" />
     <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
 	<link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
 	<script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
 	<script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/bower_components/sweetalert/lib/sweet-alert.min.js'?>" type="text/javascript"></script>
   
   <link href="<?php echo base_url().'assets/bower_components/intro.js/introjs.css'?>" type="text/css" rel="stylesheet"/>
 	<!-- <link href="<?php echo base_url().'assets/metro-bootstrap/docs/font-awesome.css'?>" type="text/css" rel="stylesheet"/>
@@ -35,6 +37,7 @@ if (!$this -> session -> userdata('user_id')) {
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <script>
+   
    paceOptions = {
   ajax: false, // disabled
   document: true, // 
@@ -336,8 +339,8 @@ return i;
 
 <script>
 	$(document).ready(function() {
-		
-		$('#new_password').keyup(function() {
+ changeHashOnLoad();
+    	$('#new_password').keyup(function() {
 			$('#result').html(checkStrength($('#new_password').val()))
 		})
 		

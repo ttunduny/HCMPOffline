@@ -83,68 +83,69 @@ class Home_Controller extends MY_Controller {
             redirect('rtk_management/partner_home');
 		}
 		else if ($access_level == "allocation_committee") {
-            redirect('rtk_management/allocation_home');
-            $counties = Counties::getAll();
-            $table_data = "";
-            $allocation_rate = 0;
-            $total_facilities_in_county = 0;
-            $total_facilities_allocated_in_county = 1;
-            $total_facilities = 0;
-            $total_allocated = 0;
-
-            foreach ($counties as $county_detail) {
-                $countyid = $county_detail->id;
-
-                $this->load->database();
-                $facilities_in_county = $this->db->query('SELECT * 
-    FROM facilities, districts, counties
-    WHERE facilities.district = districts.id
-    AND districts.county = counties.id
-    AND counties.id =' . $countyid . '
-    AND facilities.rtk_enabled =1');
-                $facilities_num = $facilities_in_county->num_rows();
-                $q = 'SELECT DISTINCT lab_commodity_orders.id, lab_commodity_orders.facility_code
-FROM lab_commodity_details, counties, facilities, districts, lab_commodity_orders
-WHERE lab_commodity_details.facility_code = facilities.facility_code
-AND counties.id = districts.county
-AND counties.id =' . $countyid . '
-AND facilities.district = districts.id
-AND lab_commodity_details.order_id = lab_commodity_orders.id
-AND lab_commodity_details.allocated >0';
-
-                $allocated_facilities = $this->db->query($q);
-
-                $allocated_facilities_num = $allocated_facilities->num_rows();
-
-                // $county_map_id=$county_detail->kenya_map_id;
-                $countyname = trim($county_detail->county);
-                $county_detail = rtk_stock_status::get_allocation_rate_county($countyid);
-//                var_dump($county_detail);
-                //               die;
-//     $total_facilities_in_county=$county_detail['total_facilities_in_county'];
-                $total_facilities_in_county = $total_facilities_in_county + $facilities_num;
-
-                $total_facilities_allocated_in_county = $county_detail['total_facilities_allocated_in_county'];
-
-                $total_facilities = $total_facilities + $facilities_num;
-                $total_allocated = $total_allocated + $allocated_facilities_num;
-
-                $table_data .="<tr><td><a href=" . site_url() . "rtk_management/allocation_county_detail_zoom/$countyid> $countyname</a> </td><td>$allocated_facilities_num / $facilities_num</td></tr>";
-            }
-            $table_data .="<tr><td>TOTAL </td><td>  $total_allocated |  $total_facilities_in_county  </td><tr>";
-
-
-
-
-            $data['table_data'] = $table_data;
-            $data['pop_up'] = $pop_up;
-            $data['counties'] = $counties = Counties::getAll();
-            $data['content_view'] = "allocation_committee/home_v";
+            redirect('rtk_management/allocation_dashboard');
         }
+//             $counties = Counties::getAll();
+//             $table_data = "";
+//             $allocation_rate = 0;
+//             $total_facilities_in_county = 0;
+//             $total_facilities_allocated_in_county = 1;
+//             $total_facilities = 0;
+//             $total_allocated = 0;
 
-        $data['banner_text'] = "Home";
-        $data['link'] = "home";
-        $this->load->view("rtk/template", $data);
+//             foreach ($counties as $county_detail) {
+//                 $countyid = $county_detail->id;
+
+//                 $this->load->database();
+//                 $facilities_in_county = $this->db->query('SELECT * 
+//     FROM facilities, districts, counties
+//     WHERE facilities.district = districts.id
+//     AND districts.county = counties.id
+//     AND counties.id =' . $countyid . '
+//     AND facilities.rtk_enabled =1');
+//                 $facilities_num = $facilities_in_county->num_rows();
+//                 $q = 'SELECT DISTINCT lab_commodity_orders.id, lab_commodity_orders.facility_code
+// FROM lab_commodity_details, counties, facilities, districts, lab_commodity_orders
+// WHERE lab_commodity_details.facility_code = facilities.facility_code
+// AND counties.id = districts.county
+// AND counties.id =' . $countyid . '
+// AND facilities.district = districts.id
+// AND lab_commodity_details.order_id = lab_commodity_orders.id
+// AND lab_commodity_details.allocated >0';
+
+//                 $allocated_facilities = $this->db->query($q);
+
+//                 $allocated_facilities_num = $allocated_facilities->num_rows();
+
+//                 // $county_map_id=$county_detail->kenya_map_id;
+//                 $countyname = trim($county_detail->county);
+//                 $county_detail = rtk_stock_status::get_allocation_rate_county($countyid);
+// //                var_dump($county_detail);
+//                 //               die;
+// //     $total_facilities_in_county=$county_detail['total_facilities_in_county'];
+//                 $total_facilities_in_county = $total_facilities_in_county + $facilities_num;
+
+//                 $total_facilities_allocated_in_county = $county_detail['total_facilities_allocated_in_county'];
+
+//                 $total_facilities = $total_facilities + $facilities_num;
+//                 $total_allocated = $total_allocated + $allocated_facilities_num;
+
+//                 $table_data .="<tr><td><a href=" . site_url() . "rtk_management/allocation_county_detail_zoom/$countyid> $countyname</a> </td><td>$allocated_facilities_num / $facilities_num</td></tr>";
+//             }
+//             $table_data .="<tr><td>TOTAL </td><td>  $total_allocated |  $total_facilities_in_county  </td><tr>";
+
+
+
+
+//             $data['table_data'] = $table_data;
+//             $data['pop_up'] = $pop_up;
+//             $data['counties'] = $counties = Counties::getAll();
+//             $data['content_view'] = "allocation_committee/home_v";
+//         }
+
+//         $data['banner_text'] = "Home";
+//         $data['link'] = "home";
+//         $this->load->view("rtk/template", $data);
     }
 
 }

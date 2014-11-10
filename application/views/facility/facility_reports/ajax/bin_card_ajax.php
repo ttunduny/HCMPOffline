@@ -4,6 +4,36 @@
 border: 1px solid #FFF !important;
 }
 </style>
+<script>
+    $(document).ready(function() {
+	//datatables settings 
+	$('#example').dataTable( {
+	   "sDom": "T lfrtip",
+	     "sScrollY": "377px",
+	     "sScrollX": "100%",
+                    "sPaginationType": "bootstrap",
+                    "oLanguage": {
+                        "sLengthMenu": "_MENU_ Records per page",
+                        "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
+                    },
+			      "oTableTools": {
+                 "aButtons": [
+				"copy",
+				"print",
+				{
+					"sExtends":    "collection",
+					"sButtonText": 'Save',
+					"aButtons":    [ "csv", "xls", "pdf" ]
+				}
+			],
+
+			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+		}
+	} );
+	$('#example_filter label input').addClass('form-control');
+	$('#example_length label select').addClass('form-control');
+});
+</script>
 <?php 
 // echo "<pre>";print_r($facility_code);echo "</pre>";exit;
  ?>
@@ -11,25 +41,25 @@ border: 1px solid #FFF !important;
 <?php
    $link = base_url('reports/get_facility_bin_card_pdf/'.'/'.$facility_code.'/'.$commodity_id.'/'.$from.'/'.$to); 
    ?>
-        <div class="button">
+      <!--  <div class="button">
                 <a href= <?php echo $link; ?> target="_blank">
                 <button type="button" class="btn btn-default">
                 Download PDF<span class="glyphicon glyphicon-download"></span>
                 </button>
                 </a>
-         </div>
+      </div>-->
  <div style="min-height: 400px; background:#edc1d8">
   <img style="align-content: center;margin-left: 46%; border:0 none;" src="<?php echo base_url();?>assets/img/coat_of_arms-resized1.png" class="img-responsive " alt="Responsive image">
         <div id="" style="text-align: center; ">
           <span style="font-size: 0.95em;font-weight: bold; ">Ministry of Health</span><br />
-          <span style="font-size: 0.9em;">Health Commodities Management Platform (HCMP)</span> 
+          <span style="font-size: 0.9em;">Health Commodities Management Platform (HCMP)</span> </br>
+          <span style="font-size: 0.9em;">Bin Card For <strong><?php echo $commodity_name ;?></strong></span>
         </div>
-    <table  class="table table-bordered table-update" id="" style="text-transform:capitalize">
-  <thead style="">
+    <table  class="row-fluid table table-bordered table-update"  id="example" style="text-transform:capitalize">
+  <thead>
   <tr>
     <th>Date of Issue</th>
-    <th>Reference No/S11 No</th>
-    <th>Commodity Unit Size</th>
+    <th>S11 No-Reference No-</th>
     <th>Batch No -Issued</th>
     <th>Expiry Date</th>
     <th>Opening Bal.</th>
@@ -80,26 +110,29 @@ border: 1px solid #FFF !important;
                  }   
 
                   if ($bin['s11_No']=='initial stock update') {
+                  	$s_point=$bin['service_point_name'];
+					$s_point='Store';
                 $color="red";
                 $formated_date_exp="N/A";
-                 }elseif ($bin['s11_No']=='stock addition') {
+                 }elseif ($bin['s11_No']=='(+ve Adj) Stock Addition') {
                    $color="red";
+				   $s_point='Store';
                  }
                  else{
                   $color="black";
+				  $s_point=$bin['service_point_name'];
                  }
                ?>
         
-            <tr style="color:<?php echo $color;?> " >
+           
                 
 
                 
-            <tr>             
+            <tr style="color:<?php echo $color;?> ">             
               <td><?php echo $formated_date;?> </td>
              
               <td ><?php echo $bin['s11_No']; ;?> </td>
              
-              <td><?php echo $bin['unit_size'];?> </td>
               <td><?php echo $bin['batch_no'];?> </td>
               <td style="white-space:nowrap;"l><?php echo $formated_date_exp;?> </td>
               <td><?php echo $bin['balance_as_of'];?> </td>
@@ -122,7 +155,7 @@ border: 1px solid #FFF !important;
               } ?>
               <td><?php echo   $qty_issued_text;?> </td>
               <td><?php echo  $closing_bal;?> </td>
-              <td><?php echo $bin['service_point_name']; ?> </td>
+              <td><?php echo $s_point; ?> </td>
               <td><?php echo $bin['fname'].' '.$bin['lname'];?> </td>
             </tr>
           <?php
