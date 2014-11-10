@@ -6,19 +6,18 @@
 <div class="container-fluid" >
 
       <div class="row">
-            <div class="col-md-7" id=""><p class="bg-info" id="note">
-                 <b> Please  note this is a one off activity Stock level as of <?php $today = ( date('d M Y'));
+            <!--<div class="col-md-4" id=""><p class="bg-info" id="note">
+                 Please  note this activity is as off of <?php $today = ( date('d M Y'));
     //get today's date in full
 ?><input type="hidden" name="datepicker" readonly="readonly" value="<?php echo $today; ?>"/>
-            <?php echo $today; ?>
+           <b> <?php //echo $today; ?>.
             </b>
-            </p></div>
-
-            <div class="col-md-5" id=""><b>
+            </p></div>-->
+<input type="hidden" name="datepicker" readonly="readonly" value="<?php echo $today; ?>"/>
+            <div class="col-md-4" id="">
 <p class="bg-info" id="note">
-
-            To add facility stock data, first do physical stock count
-</b>
+ <strong>Step <span class="badge ">2 of 2</span> :</strong> 
+           Please conduct a physical stock count,then fill in your stock data.
 </p>
             </div>
             <?php if(isset($import)): ?>
@@ -26,14 +25,32 @@
                     <div style="height:auto; margin-bottom: 2px" class="warning message col-md-5" id="">        
         <h5> 1) Set up facility stock</h5> 
             <p>
-         This process can take up to 1 minute, to avoid getting duplicates please be patient do not click Finish Importing button twice 
+         This process can take up to 1 minute,please wait. 
             </p>
 
         </div>
    
             <?php endif; ?>
 
-            
+          <div class="col-md-5">
+              <p class="bg-warning" id="note" style="">
+                <span class="badge ">NB</span>
+                If a commodity is not in the list below, click <strong><a href="<?php echo base_url('stock/set_up_facility_stock')?>">here</a></strong> to select it. If it is not on the list entirely, please contact 
+                your county pharmacist.
+                </p>
+          </div> 
+
+          <div class="col-md-3">
+              <div style="padding-top:2%;">
+                  <a href="http://localhost/HCMP-1/reports/create_excel_facility_stock_template"><button type="button" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>download excel template
+        </button> </a>
+        <button type="button" class="btn btn-success update-via-excel">
+            <span class="glyphicon glyphicon-open"></span>upload
+        </button>
+              </div>
+              
+          </div> 
       </div>
     
             
@@ -57,7 +74,7 @@
                     <th> Expiry Date</th>
                     <th> Issue Type</th>
                     <th> Stock Level</th>
-                    <th> Total Unit Count</th>
+                    <th> Total (Units)</th>
                     <th> Options</th>
                 </tr>
             </thead>
@@ -65,8 +82,8 @@
                 <tr table_row="1">
                     <td>
                     <input type="hidden" class="commodity_id" value=""  name="commodity_id[]"/>
-                    <select  name="desc[]" class="form-control desc">
-                        <option special_data="0" value="0">-Select One--</option>
+                    <select  name="desc[]" class="form-control desc" style="">
+                        <option special_data="0" value="0">Select One</option>
                          <?php
                 foreach ($commodities as $commodities) {
                     $id = $commodities['commodity_id'] ;
@@ -89,7 +106,7 @@
                     <input style="width:70px !important;" type="text" class="form-control input-small unit_size"   name="commodity_unit_size[]" readonly="readonly"/>
                     </td>
                     <td>
-                    <input class='form-control input-small commodity_batch_no' required="required" data-val="true" name='commodity_batch_no[]' type='text'/>
+                    <input  style="width:80px !important;" class='form-control input-small commodity_batch_no' required="required" data-val="true" name='commodity_batch_no[]' type='text'/>
                     </td>
                     <td>
                     <select style="width:95px !important;" class="form-control input-small source_of_item" name="source_of_item[]">
@@ -106,24 +123,28 @@
                     name='commodity_manufacture[]' type='text' value=""  data-val="true"/>
                     </td>
                     <td>
-                    <input  class='form-control input-small clone_datepicker' required="required"  data-val="true" name='clone_datepicker[]' type='text' />
+                    <input  style="width:90px !important;" class='form-control input-small clone_datepicker' required="required"  data-val="true" name='clone_datepicker[]' type='text' />
                     </td>
                     <td>
-                    <select style="width:105px !important;"name="commodity_unit_of_issue[]" class="form-control commodity_unit_of_issue input-small">
-                        <option value="Pack_Size">Pack Size</option>
-                        <option value="Unit_Size">Unit Size</option>
+                    <select style="width:80px !important;"name="commodity_unit_of_issue[]" class="form-control commodity_unit_of_issue input-small">
+                        <option value="Pack_Size">Packs</option>
+                        <option value="Unit_Size">Units</option>
                     </select></td>
                     <td>
-                    <input id='commodity_available_stock' name='commodity_available_stock[]'
+                    <input style="width:60px !important;" id='commodity_available_stock' name='commodity_available_stock[]'
                     type='text' class="form-control input-small input-small commodity_available_stock" required="true" data-val="true"/>
                     </td>
                     <td>
-                    <input type='text' class='form-control input-small commodity_total_units' readonly="readonly" name='commodity_total_units[]' value=''/>
+                    <input type='text' style="width:60px !important;" class='form-control input-small commodity_total_units' readonly="readonly" name='commodity_total_units[]' value=''/>
                     </td>
-                    <td>
+                    <td style="width:120px !important;">
                     <button type="button" class="remove btn btn-danger btn-xs">
-                        <span class="glyphicon glyphicon-minus"></span>Row
-                    </button></td>
+                        <span class="glyphicon glyphicon-minus"></span>row
+                    </button>
+                    <button type="button" class="add btn btn-primary btn-xs">
+                         <span class="glyphicon glyphicon-plus"></span>row
+                     </button>
+    </td>
                 </tr>
             </tbody>
         </table>
@@ -135,19 +156,16 @@
 <div class="container-fluid">
 
 	<div style="float: right">
-		      <button type="button" class="importing btn btn-sm btn-success">
+		   <!--   <button type="button" class="importing btn btn-sm btn-success">-->
     <div style="float: right">
         <?php if(!isset($import)): ?>
-        <a href="<?php echo base_url('reports/create_excel_facility_stock_template') ?>" >
-        <button type="button" class="btn btn-primary">
+        <!--<a href="<?php echo base_url('reports/create_excel_facility_stock_template') ?>" >
+       <!-- <button type="button" class="btn btn-primary">
             <span class="glyphicon glyphicon-save"></span>download excel template
         </button> </a>
         <button type="button" class="btn btn-success update-via-excel">
             <span class="glyphicon glyphicon-open"></span>upload
-        </button>
-        <button type="button" class="add btn btn-primary">
-            <span class="glyphicon glyphicon-plus"></span>Add Row
-        </button>
+        </button>-->
         <button type="button" class="save btn btn-sm btn-success">
             <span class="glyphicon glyphicon-open"></span>Save
         </button>
@@ -162,6 +180,20 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+            changeHashOnLoad();
+
+        setTimeout(function () {
+               // alert();
+         swal({  
+
+                  title: "Step 2 of 2",  
+                   text: "Please select a commodity & fills the stock level.",
+                     type: "info"
+
+                     });
+
+             }, 000);
+                    
         var $table = $('table');
         //float the headers
         $table.floatThead({
@@ -242,6 +274,7 @@
             });
             ////when the user selects the commodity name
             $(".desc").change(function(){
+
             var data =$('option:selected', this).attr('special_data');
             var data_array=data.split("^");
             //set the user data here
@@ -249,6 +282,12 @@
             $(this).closest("tr").find(".commodity_supplier").val(data_array[1]);
             $(this).closest("tr").find(".commodity_id").val(data_array[0]);
             $(this).closest("tr").find(".actual_units").val(data_array[4]);
+            });
+
+            $(".commodity_batch_no").on('keyup',function(){
+
+            confirm_batch_no();
+
             });
             ////when the user clicks add a row
             $(".add").on('click',function(){
@@ -273,6 +312,7 @@
             ajax_simple_post_with_console_response(url, temp_data[0]);  /// uncomment this
             }
             clone_the_last_row_of_the_table();
+
             });
             $('.commodity_available_stock').on('keyup',function(){
             //get the value of the input
@@ -285,7 +325,7 @@
             var alert_message=check_if_the_form_has_been_filled_correctly(selector_object);
             if(isNaN(alert_message)){
             selector_object.val("");
-            var notification='<ol>'+alert_message+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;<span class="label label-danger">Before filling in the stock levels</span>';
+            var notification='<ol>'+alert_message+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;<span class="label label-danger"></span>';
             //hcmp custom dialog box
             dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
             //This event is fired immediately when the hide instance method has been called.
@@ -389,24 +429,24 @@
             var temp_data=send_data_to_the_temp_table(selector_object);
             var alert_message='';
             if(temp_data[1]==0){
-            alert_message +="<li>Select a commodity first</li>";
+            alert_message +="<li><b>Please Select a commodity first.<b></li>";
             }
             if(temp_data[2]==""){
-            alert_message +="<li>Indicate batch No of the commodity</li>";
+            alert_message +="<li><b>Please Indicate batch No of the commodity.<b></li>";
             }
             if(temp_data[3]==""){
-            alert_message +="<li>Indicate Manufacturer of the commodity</li>";
+            alert_message +="<li><b> Please Indicate Manufacturer of the commodity.<b></li>";
             }
             if(temp_data[4]==''){
-            alert_message +="<li>Indicate the expiry date of the commodity</li>";
+            alert_message +="<li><b>Please Indicate the expiry date of the commodity.<b></li>";
             }
             if(temp_data[5]==''){
-            alert_message +="<li>Indicate the stock level of the commodity</li>";
+            alert_message +="<li><b>Please Indicate the stock level of the commodity.<b></li>";
             }
             return alert_message;
             }
             function  clone_the_last_row_of_the_table(){
-
+               
             var cloned_object = $('#facility_stock_table tr:last').clone(true);
             cloned_object.find('input[type=text]').attr("value", "");
             var table_row = cloned_object.attr("table_row");
@@ -455,6 +495,46 @@
             // refresh the datepickers
             refreshDatePickers();
             }
+
+            //make sure batch numbers entered are unique
+
+function confirm_batch_no() {
+    var arr = [];
+    i = 0;
+    $('.commodity_batch_no').each(function() {
+
+        
+        arr[i++] =$(this).closest('tr').find('.commodity_batch_no').val();
+
+                 
+        }); 
+
+      j=0;
+    $(arr).each(function() {
+
+      var compare=$('#facility_stock_table tr:last').find('.commodity_batch_no').val();
+    $(".add").attr("disabled", false);
+    // alert(compare+arr[j])
+
+     if(compare==arr[j-1]){
+      $(".add").attr("disabled", true);
+      swal({  
+
+                  title: "Error",  
+                   text: "Please make sure all batch numbers are unique",
+                     type: "error"
+
+                     });
+      return;
+
+     }
+       
+        j++;
+        }); 
+
+         
+           
+  }
             });
     </script>
 
