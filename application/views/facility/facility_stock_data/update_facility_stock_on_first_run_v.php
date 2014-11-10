@@ -42,7 +42,7 @@
 
           <div class="col-md-3">
               <div style="padding-top:2%;">
-                  <button type="button" class="btn btn-primary">
+                  <a href="http://localhost/HCMP-1/reports/create_excel_facility_stock_template"><button type="button" class="btn btn-primary">
             <span class="glyphicon glyphicon-save"></span>download excel template
         </button> </a>
         <button type="button" class="btn btn-success update-via-excel">
@@ -83,7 +83,7 @@
                     <td>
                     <input type="hidden" class="commodity_id" value=""  name="commodity_id[]"/>
                     <select  name="desc[]" class="form-control desc" style="">
-                        <option special_data="0" value="0">-Select One--</option>
+                        <option special_data="0" value="0">Select One</option>
                          <?php
                 foreach ($commodities as $commodities) {
                     $id = $commodities['commodity_id'] ;
@@ -106,7 +106,7 @@
                     <input style="width:70px !important;" type="text" class="form-control input-small unit_size"   name="commodity_unit_size[]" readonly="readonly"/>
                     </td>
                     <td>
-                    <input class='form-control input-small commodity_batch_no' required="required" data-val="true" name='commodity_batch_no[]' type='text'/>
+                    <input  style="width:80px !important;" class='form-control input-small commodity_batch_no' required="required" data-val="true" name='commodity_batch_no[]' type='text'/>
                     </td>
                     <td>
                     <select style="width:95px !important;" class="form-control input-small source_of_item" name="source_of_item[]">
@@ -123,12 +123,12 @@
                     name='commodity_manufacture[]' type='text' value=""  data-val="true"/>
                     </td>
                     <td>
-                    <input  class='form-control input-small clone_datepicker' required="required"  data-val="true" name='clone_datepicker[]' type='text' />
+                    <input  style="width:90px !important;" class='form-control input-small clone_datepicker' required="required"  data-val="true" name='clone_datepicker[]' type='text' />
                     </td>
                     <td>
-                    <select style="width:105px !important;"name="commodity_unit_of_issue[]" class="form-control commodity_unit_of_issue input-small">
-                        <option value="Pack_Size">Pack Size</option>
-                        <option value="Unit_Size">Unit Size</option>
+                    <select style="width:80px !important;"name="commodity_unit_of_issue[]" class="form-control commodity_unit_of_issue input-small">
+                        <option value="Pack_Size">Packs</option>
+                        <option value="Unit_Size">Units</option>
                     </select></td>
                     <td>
                     <input style="width:60px !important;" id='commodity_available_stock' name='commodity_available_stock[]'
@@ -159,7 +159,7 @@
 		   <!--   <button type="button" class="importing btn btn-sm btn-success">-->
     <div style="float: right">
         <?php if(!isset($import)): ?>
-        <a href="<?php echo base_url('reports/create_excel_facility_stock_template') ?>" >
+        <!--<a href="<?php echo base_url('reports/create_excel_facility_stock_template') ?>" >
        <!-- <button type="button" class="btn btn-primary">
             <span class="glyphicon glyphicon-save"></span>download excel template
         </button> </a>
@@ -188,13 +188,12 @@
 
                   title: "Step 2 of 2",  
                    text: "Please select a commodity & fills the stock level.",
-                   timer: 2000, 
-                    type: "info"
+                     type: "info"
 
                      });
 
-             }, 2000);
-            
+             }, 000);
+                    
         var $table = $('table');
         //float the headers
         $table.floatThead({
@@ -275,6 +274,7 @@
             });
             ////when the user selects the commodity name
             $(".desc").change(function(){
+
             var data =$('option:selected', this).attr('special_data');
             var data_array=data.split("^");
             //set the user data here
@@ -282,6 +282,12 @@
             $(this).closest("tr").find(".commodity_supplier").val(data_array[1]);
             $(this).closest("tr").find(".commodity_id").val(data_array[0]);
             $(this).closest("tr").find(".actual_units").val(data_array[4]);
+            });
+
+            $(".commodity_batch_no").on('keyup',function(){
+
+            confirm_batch_no();
+
             });
             ////when the user clicks add a row
             $(".add").on('click',function(){
@@ -306,6 +312,7 @@
             ajax_simple_post_with_console_response(url, temp_data[0]);  /// uncomment this
             }
             clone_the_last_row_of_the_table();
+
             });
             $('.commodity_available_stock').on('keyup',function(){
             //get the value of the input
@@ -439,7 +446,7 @@
             return alert_message;
             }
             function  clone_the_last_row_of_the_table(){
-
+               
             var cloned_object = $('#facility_stock_table tr:last').clone(true);
             cloned_object.find('input[type=text]').attr("value", "");
             var table_row = cloned_object.attr("table_row");
@@ -488,6 +495,46 @@
             // refresh the datepickers
             refreshDatePickers();
             }
+
+            //make sure batch numbers entered are unique
+
+function confirm_batch_no() {
+    var arr = [];
+    i = 0;
+    $('.commodity_batch_no').each(function() {
+
+        
+        arr[i++] =$(this).closest('tr').find('.commodity_batch_no').val();
+
+                 
+        }); 
+
+      j=0;
+    $(arr).each(function() {
+
+      var compare=$('#facility_stock_table tr:last').find('.commodity_batch_no').val();
+    $(".add").attr("disabled", false);
+    // alert(compare+arr[j])
+
+     if(compare==arr[j-1]){
+      $(".add").attr("disabled", true);
+      swal({  
+
+                  title: "Error",  
+                   text: "Please make sure all batch numbers are unique",
+                     type: "error"
+
+                     });
+      return;
+
+     }
+       
+        j++;
+        }); 
+
+         
+           
+  }
             });
     </script>
 

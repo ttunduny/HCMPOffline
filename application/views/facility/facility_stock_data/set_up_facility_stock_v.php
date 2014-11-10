@@ -146,10 +146,23 @@ $(document).ready(function() {
 	   	
 	}
 	$('.save').button().click(function() {
-		//alert();
+
+		var saved = [];
+    		i = 0;
+
+		 $('.checkbox').each(function() {
+
+      if($(this).closest('tr').find('.checkbox').prop('checked')==true){
+
+      	 saved[i++] =$(this).closest('tr').find('.checkbox').prop('checked');
+
+      }
+                 
+        }); 
 		//window.
-		swal({   title: "Are you sure?",  
-				 text: "Make sure you have selected all commodities used at the facility",  
+		var size=saved.length;
+		swal({   title: "You have selected "+size+ " commodities.",  
+				 text: "Please click cancel to select more, or complete to continue.",  
 				 type: "warning",   showCancelButton: true,   confirmButtonColor: "#4cae4c",  
 				 confirmButtonText: "Yes, complete!",   closeOnConfirm: false },
 

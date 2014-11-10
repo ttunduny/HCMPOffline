@@ -12,22 +12,17 @@ font-size: 12px !important;
 <div class="container-fluid" style="">
 
 	<div class="row">
-		<div class="col-md-5" id=""><p class="bg-info"><span class="badge ">1</span> Enter the Service point and Commodity you wish to issue and select the Commodity</p></div>
-		<div class="col-md-5" id=""><p class="bg-info"><span class="badge ">2</span> Select Batch No,input date issued,select issue type and quantity issued</p></div>
-		<div class="col-md-2" id=""><p class="bg-info"><span class="badge ">3</span> To add more issues press add row
-			<span class="glyphicon glyphicon-question-sign toolt" data-toggle="tooltip" data-placement="left" title="click for help" href="javascript:void(0);" onclick="startIntro();" style="margin-left:20%;"></span></p>
-		
-	</div>
-	</div>
-	
-	<div class="row-fluid">
-		<div class="col-md-6 ">
+		<div class="col-md-6" id=""><p class="bg-info"><span class="badge ">1</span>
+		<strong> Enter the S11 if available,select Service point,Commodity you wish to issue then 
+		 Batch No,select issue type and quantity issued and input date issued.</strong></p></div>
+		<div class="col-md-6" id="">
 			<p class="text-danger bg-warning"><span class="badge ">NB</span> Available Batch Stock <strong>(Units)</strong> is for a specific 
 	batch, Total Balance <strong>(Units)</strong> is the total for the commodity</p>
-</div>
 		
 	</div>
+	</div>
 	
+		
 	<hr />
 <div class="table-responsive" style="min-height:300px; overflow-y: auto;">
  <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/internal_issue',$att); ?>
@@ -42,10 +37,10 @@ font-size: 12px !important;
 						<th>Batch&nbsp;No</th>
 						<th>Expiry Date</th>
 						<th>Available Batch Stock</th>
-						<th>Issue Date</th>
 						<th>Issue&nbsp;Type</th>
 						<th>Issued Quantity</th>
 						<th>Total Balance</th>
+						<th>Issue Date</th>
 						<th>Action</th>			    
 					</tr>
 					</thead>
@@ -90,15 +85,14 @@ endforeach;
 						<td id="step3"><select style="width:80px !important;" class="form-control input-small batch_no big" name="batch_no[0]"></select></td>
 						<td><input style="width:90px !important;" type='text' class='form-control input-small expiry_date' value="" name='expiry_date[0]' readonly="readonly"  /></td>
 						<td><input class='form-control input-small available_stock' type="text" name="available_stock[0]" readonly="readonly" /></td>
-						<td id="step4">
-<input  class='form-control input-small clone_datepicker_normal_limit_today' 
-type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
 						<td id="step5"><select style="width:80px !important;" class="form-control commodity_unit_of_issue big" name="commodity_unit_of_issue[]">
 			<option  value="Pack_Size">Pack Size</option>
 			<option value="Unit_Size">Unit Size</option>
 			</select></td>
 						<td id="step6"><input class='form-control input-small quantity_issued' type="text" value=""  name="quantity_issued[0]"  required="required"/></td>
 						<td><input class='form-control input-small balance' type="text" value="" readonly="readonly" /></td>
+						<td id="step4"><input  class='form-control input-small clone_datepicker_normal_limit_today' 
+						type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
 						<td style="width:50px !important;" id="step8" >
 							<button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>row</button>
 							<button type="button" id="step7" class="add btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span>row</button>
@@ -144,6 +138,7 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 
 			var commodity_id=data_array[0];
 			var stock_data=extract_data(data_array[0],commodity_id,'batch_data');
+			//alert(data); 
             var dropdown="<option special_data=''>Select Batch</option>"+stock_data[0];
             var facility_stock_id=stock_data[1];
             var total_stock_bal=data_array[4];

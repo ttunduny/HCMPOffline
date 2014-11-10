@@ -43,6 +43,7 @@ class issues extends MY_Controller {
 		foreach ($data_ as $key => $data_1) {
 			$data_[$key]['commodity_name'] = preg_replace('/[^A-Za-z0-9\-]/', ' ', $data_1['commodity_name']);
 		}
+		//var_dump($data_);exit;
 		$data['facility_stock_data'] = json_encode($data_);
 
 		$this -> load -> view("shared_files/template/template", $data);
