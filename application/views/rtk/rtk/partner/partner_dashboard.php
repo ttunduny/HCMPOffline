@@ -65,7 +65,7 @@ $to_date = $my_month[$count-1];
                 <span class="lead" style="color: #ccc;">Switch back to RTK Manager</span>
                 &nbsp;
                 &nbsp;
-                <a href="<?php echo base_url() . 'rtk_management/switch_district/0/rtk_manager/0/home_controller/0/'; ?>/" class="btn btn-primary" id="switch_idenity" style="margin-top: -10px;">Go</a>
+                <a href="<?php echo base_url() . 'rtk_management/switch_district/0/rtk_manager/0/home_controller/0/'; ?>/" class="btn btn-primary" id="switch_identity" style="margin-top: -10px;">Go</a>
             </div>
 
 <?php } ?>

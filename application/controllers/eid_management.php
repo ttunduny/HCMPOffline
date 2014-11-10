@@ -10,7 +10,79 @@ class Eid_Management extends Home_controller {
     function __construct() {
         parent::__construct();
 		$this -> load -> library(array('PHPExcel/PHPExcel','mpdf/mpdf'));
+		$this -> load -> helper(array("file","download"));
     }
+	
+	function addEmails(){
+		$labs = $this ->getLabs();
+		foreach ($labs as $key => $value) {
+			$lab = $value['id'];
+			
+			 if ($lab == 1)//..NRB
+	       {
+	                      $email = 'matilu.mwau@gmail.com';
+	                      $ContactEmailaddressa = 'kithinjilucy@gmail.com';                                                           
+	                      $ContactEmailaddressb = 'stellavihenda@gmail.com';
+	       }
+	       else if ($lab == 2)//..KSM
+	       {
+	                      $email = 'cbz2@cdc.gov';
+	                      $ContactEmailaddressa = 'LKingwara@kemricdc.org';                                                      
+	                      $ContactEmailaddressb = 'AMorwabe@kemricdc.org';
+	       }
+	       else if ($lab == 3)//..ALUPE
+	       {
+	                      $email = 'matilu.mwau@gmail.com';
+	                      $ContactEmailaddressa = 'jy_ndunda@yahoo.com';                                                           
+	                      $ContactEmailaddressb = 'kasyne@gmail.com';   
+	       }
+	       else if ($lab == 4)//..KERICHO
+	       {
+	                      $email = 'argwings.miruka@usamru-k.org';           
+	                      $ContactEmailaddressa = 'Sharon.Koech@usamru-k.org';                                               
+	                      $ContactEmailaddressb = 'Anthony.Naibei@usamru-k.org';  
+	       }
+	       else if ($lab == 5)//..AMPATH
+	       {
+	                      $email = 'weinjera@yahoo.com';              
+	                      $ContactEmailaddressa = 'skimaiyo@yahoo.com';                                                           
+	                      $ContactEmailaddressb = 'mowlemp@yahoo.com';
+	       }
+	       else if ($lab == 6)//..COAST
+	       {
+	                      $email = 'mlangidd@yahoo.co.uk';
+	                      $ContactEmailaddressa = 'kenga.dickson@yahoo.com';                                                  
+	                      $ContactEmailaddressb = 'raphaeldume@yahoo.com';
+	       }
+	       else if ($lab == 7)//..nhrl
+	       {
+	                      $email = 'thomasgachuki@yahoo.com';
+	                      $ContactEmailaddressa = 'joseombayo@yahoo.com';                                                      
+	                      $ContactEmailaddressb = 'jescaratsyaya@yahoo.com';
+	       }
+
+			$data = array(
+							"email"	=>$email,
+							"lab"	=>$lab,
+							"right"	=>"main"
+							);
+			$this ->db ->insert("eid_useremails",$data);
+			$data = array(
+							"email"	=>$ContactEmailaddressa,
+							"lab"	=>$lab,
+							"right"	=>"cca"
+							);
+			$this ->db ->insert("eid_useremails",$data);
+			$data = array(
+							"email"	=>$ContactEmailaddressb,
+							"lab"	=>$lab,
+							"right"	=>"ccb"
+							);
+			$this ->db ->insert("eid_useremails",$data);
+		}
+		        
+		
+	}
 	
 	function index(){
 		$data = array();
@@ -1260,10 +1332,10 @@ class Eid_Management extends Home_controller {
         $this->mpdf->defaultheaderline = 1;  
         $this->mpdf->WriteHTML($html_data);
         $this->mpdf->SetFooter($footer);
-		$this->mpdf->Output($filename,'I');
+		$this->mpdf->Output($filename,'D');
 	}
 
-	function downloadreportbyplatform($month='',$year='',$platform='1',$check='1'){
+	function downloadreportbyplatform($month='',$year='',$platform='1',$check='1',$send_email=false){
 		$table = "";
 		$plat = "";
 		if($this->input->post("month") && $this->input->post("year") && $this->input->post("check")){
@@ -1316,7 +1388,6 @@ class Eid_Management extends Home_controller {
 					$filename = "Reports";
 					$this->mpdf = new mPDF('C', 'A3-L', 0, '', 5, 5, 5, 5, 7, 9, '');
 					$this->mpdf->WriteHTML($header);
-					
 					$this->mpdf->ignore_invalid_utf8 = true;
 				}
 				//$this->mpdf->SetHeader($labname);
@@ -1325,7 +1396,15 @@ class Eid_Management extends Home_controller {
 				$this->mpdf->WriteHTML($html_data);
 		        $this->mpdf->SetFooter($footer);
 			}
-			$this->mpdf->Output($filename,'I');
+			if($send_email==true){
+				$period = date('F Y',strtotime("-1 month"));//Period is previous month
+				$name = "Approved $plat Reports for ".$period.".pdf";
+				$this ->deleteAllFiles("./assets/css/eid/pdf/");//Delete all files in folder first
+				write_file("./assets/css/eid/pdf/$name", $this->mpdf->Output($filename,'S'));
+				return "./assets/css/eid/pdf/$name";
+			}else{
+				$this->mpdf->Output($filename,'D');
+			}
 		}else{
 			echo '<div class="alert alert-warning">
 					<span class="label label-warning">NOTE!</span>
@@ -1333,6 +1412,88 @@ class Eid_Management extends Home_controller {
 				  </div>';
 		}
 		
+	}
+	
+	function send_lab_submissions(){//Send approved lab submissions by email
+		$month = date('n',strtotime("-1 month"));
+		$year = date('Y',strtotime("-1 month"));
+		$period = date('F Y',strtotime("-1 month"));
+		$emails = "";
+		$platforms = array(
+							"1"=>"TAQMAN",
+							"2"=>"ABBOTT"
+							);
+		foreach ($platforms as $key => $value) {
+			$platform = $key;
+			$attachment = $this->downloadreportbyplatform($month,$year,$platform,"",true);
+			if($attachment!=NULL){
+				$config['protocol']    = 'smtp';
+			    $config['smtp_host']    = 'ssl://smtp.gmail.com';
+			    $config['smtp_port']    = '465';
+			    $config['smtp_timeout'] = '7';
+			    $config['smtp_user']    = 'labkitreporting@gmail.com';
+			   	$config['smtp_pass']    = 'l@bk1t123456';//healthkenya //hcmpkenya@gmail.com
+			 	$config['charset']    = 'utf-8';
+			    $config['newline']    = "\r\n";
+			    $config['mailtype'] = 'html'; // or html
+			    $config['validation'] = TRUE; // bool whether to validate email or not  
+				$this->load->library('email', $config);
+				$mail_header='<html>
+				<style>
+					
+			    </style>
+			    <body>
+			    
+			    </body>';
+			    $subject = "Approved $value Reports for ".$period;	
+				$message = "<p>Dear all,<br>
+							Please find attached the approved $value reports for $period .
+							</p>
+							<p style='font-family:sans-serif;font-weight:bold'>
+								Regards,<br>
+								SCMS Team
+							</p>";
+			    $this->email->initialize($config);
+			    $this->email->set_newline("\r\n");
+		  		$this->email->from($from,'SCMS'); // change it to yours
+		  		$this->email->to("gauthierabdala@gmail.com"); // change it to yours
+		  		//$bcc_email = "skadima@clintonhealthaccess.org";
+		  		//$cc_email="gauthierabdala@gmail.com";
+		  		//echo $bcc_email;
+		  		// exit;
+		  		isset($cc_email)? $this->email->cc($cc_email): null;
+		  		isset($bcc_email)?$this->email->bcc($bcc_email):null;
+		  		
+				$this->email->attach($attachment);
+				
+					
+		  		$this->email->subject($subject);
+		 		$this->email->message($mail_header.$message);
+				$this->email->reply_to("labkitreporting@gmail.com", "SCMS");
+		 
+				 if($this->email->send()){
+				 	$this->email->clear(TRUE);
+					unlink($attachment);
+				 }
+				 else{
+					//echo $this->email->print_debugger(); 
+					$this -> load -> view('shared_files/404');
+					exit;
+				}
+			}
+		}
+	}
+	function deleteAllFiles($directory=""){
+		if($directory!=""){
+			foreach(glob("{$directory}/*") as $file)
+		    {
+		        if(is_dir($file)) { 
+		            deleteAllFiles($file);
+		        } else {
+		            unlink($file);
+		        }
+		    }
+		}
 	}
    
 }

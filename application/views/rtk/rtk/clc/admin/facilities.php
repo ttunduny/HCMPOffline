@@ -47,6 +47,12 @@ float: left;
 .pagination{
   margin-top: 20px;
 }
+div.dataTables_paginate {
+float: right;
+margin: 0;
+margin-top: 25px;
+}
+
 table{
   font-size: 12px;
 }
