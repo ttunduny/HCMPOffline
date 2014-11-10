@@ -142,8 +142,10 @@ for ($row = 1; $row <= $highestRow; $row++){
         $rowData = $objPHPExcel->getActiveSheet()->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);
      	//var_dump($rowData); 
 		//count($rowData);
+		$code=preg_replace('/\s+/ ','',$rowData[0][2]);
+		$code=str_replace('-','',$code);
 		$array_index[]=$rowData[0][1]-1;
-		$array_code[]=$rowData[0][2];
+		$array_code[]=$code;
 		$array_commodity[]=$rowData[0][3];
 		$array_category[]=$rowData[0][4];
 		$array_price[]=$rowData[0][6];
@@ -160,23 +162,20 @@ for ($row = 1; $row <= $highestRow; $row++){
             //}   
             //}
 
-		
-		
-		
             }
 		
-		//echo '<pre>';print_r($array_index); echo '</pre>';exit;
-		foreach ($array_index as $id => $key) {
-				//echo '<pre>';print_r($key); echo '</pre>';//exit;  
+		//echo '<pre>';print_r($array_order_qty); echo '</pre>';exit;
+		foreach ($array_order_qty as $id => $key) {
+				//echo '<pre>';print_r($array_commodity[$id].'.'.$array_code[$id]); echo '</pre>';//exit;  
         	
         		//foreach($items as $key=> $data){
-        array_push($temp,array('sub_category_name'=>$array_category[$key],
-        'commodity_name'=>$array_commodity[$key],
-        'unit_size'=>$array_pack[$key],
-        'unit_cost'=>$array_price[$key],
-        'commodity_code'=>$array_code[$key],
+        array_push($temp,array('sub_category_name'=>$array_category[$id],
+        'commodity_name'=>$array_commodity[$id],
+        'unit_size'=>$array_pack[$id],
+        'unit_cost'=>($array_price[$id]=='')? 0:(int)$array_price[$id],
+        'commodity_code'=>$array_code[$id],
         'commodity_id'=>$data['commodity_id'],
-        'quantity_ordered'=>($array_order_qty[$key]=='')? 0:(int)$array_order_qty[$key],
+        'quantity_ordered'=>($array_order_qty[$id]=='')? 0:(int)$array_order_qty[$id],
         'total_commodity_units'=>0,
         'opening_balance'=>0,
         'total_receipts'=>0,
@@ -197,16 +196,15 @@ for ($row = 1; $row <= $highestRow; $row++){
 			
 			
               
-}
-	//exit;	
-foreach ($temp as $key => $value) {
+}//exit;
+    foreach ($temp as $key => $value) {
 	//echo '<pre>';print_r($value['commodity_code']); echo '</pre>';
-	if ($value['commodity_code']==""||$value['quantity_ordered']=="") {
+	if ($value['commodity_code']==""||$value['quantity_ordered']==0) {
 		unset($temp[$key]);
 	}
 	
 	
-}
+}//echo '<pre>';print_r($temp); echo '</pre>';exit;
 		//$c = array_combine($array_code, $array_commodity);
 		$array_id=array();
 		$array_codes=array();
@@ -228,7 +226,6 @@ foreach ($temp as $key => $value) {
 			
 			//echo '<pre>';print_r($get_id[]); echo '</pre>';
 		}
-		//exit;
 		//echo '<pre>';print_r($main_array); echo '</pre>';exit;
 		//$new=array_combine($array_id, $array_codes);
 		//echo '<pre>';print_r($new); echo '</pre>';exit;
@@ -246,8 +243,8 @@ foreach ($temp as $key => $value) {
 			
 				}//exit;
 		
-		echo '<pre>';print_r($main_array); echo '</pre>';
-		exit;
+		//echo '<pre>';print_r($main_array); echo '</pre>';
+		//exit;
 		
         //unset($objPHPExcel);
        $data['order_details'] = $data['facility_order'] = $main_array;  
