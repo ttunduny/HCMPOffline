@@ -91,7 +91,7 @@ endforeach;
 			</select></td>
 						<td id="step6"><input class='form-control input-small quantity_issued' type="text" value=""  name="quantity_issued[0]"  required="required"/></td>
 						<td><input class='form-control input-small balance' type="text" value="" readonly="readonly" /></td>
-						<td id="step4"><input  class='form-control input-small clone_datepicker_normal_limit_today' 
+						<td id="step4"><input style="position: relative;z-index: 10000;" class='form-control input-small clone_datepicker_normal_limit_today' 
 						type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
 						<td style="width:50px !important;" id="step8" >
 							<button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>row</button>
