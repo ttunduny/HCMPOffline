@@ -45,7 +45,7 @@ class facility_order_details extends Doctrine_Record {
 	
 	public static function get_order_details($order_id,$fill_rate=false){
 		if($fill_rate){
-		$group_by="fill_rate ASC"; 
+		$group_by="fill_rate ASC,`a`.`id` ASC"; 
 		$fill_rate_compute="ROUND( (`c`.`quantity_ordered_pack`/`c`.`quantity_recieved_pack`) *100 ) AS fill_rate,";
 		}else{
 		$group_by='a.id asc,b.commodity_name asc';

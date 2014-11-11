@@ -255,7 +255,7 @@ h4{
 		</div>
 		<div class="col-md-6" style="border: 0px solid #036;">
 			<div class="tile" id="" style="height: 70px;border: 0px solid #036;">
-					<h4>Expities</h4>
+					<h4>Expiries</h4>
 					<button type="button" data-toggle="modal" data-target="#actualeModal" class="btn btn-success btn-sm" style="margin:5 0 5 12; ">Filter Options</button>
 
 				</div>
