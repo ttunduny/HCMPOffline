@@ -118,7 +118,7 @@ class issues extends MY_Controller {
 
 			$total_units = array_values($this -> input -> post('total_units'));
 			$total_items = count($facility_stock_id);
-			//var_dump($total_units);exit;
+			//var_dump($quantity_issued);exit;
 			$data_array_issues_table = array();
 			$data_array_redistribution_table = array();
 			for ($i = 0; $i < $total_items; $i++) ://compute the actual stock
@@ -149,7 +149,7 @@ class issues extends MY_Controller {
 			Log::log_user_action($user, $user_action);
 			$this -> db -> insert_batch('facility_issues', $data_array_issues_table);
 			$this -> db -> insert_batch('redistribution_data', $data_array_redistribution_table);
-			$this -> session -> set_flashdata('system_success_message', "You have issued $total_items item(s)");
+			$this -> session -> set_flashdata('system_success_message', "You have redistributed $total_items item (s)");
 			redirect(home);
 		endif;
 		redirect(home);

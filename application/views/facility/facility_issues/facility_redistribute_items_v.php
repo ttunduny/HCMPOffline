@@ -7,18 +7,14 @@
 <div class="container" style="width: 100%; margin: auto;">
 
 	<div class="row">
-		<div class="col-md-4" id=""><p class="bg-info"><span class="badge ">1</span>Select commodity to issue</p></div>
-		<div class="col-md-5" id=""><p class="bg-info"><span class="badge ">2</span>Enter the Service Point and Quanitity you wish to issue and select the Batch No</p></div>
-		<div class="col-md-3" id=""><p class="bg-info"><span class="badge ">3</span>To add more Issues click Add Row
-		<span class="glyphicon glyphicon-question-sign toolt" data-toggle="tooltip" data-placement="left" title="click for help" href="javascript:void(0);" onclick="startIntro();" style="margin-left:20%;"></span></p>
-		
-	</div>
-	</div>
-	<div class="row">
-		<div class="col-md-6"><p class="text-danger">*Available Batch Stock is for a specific 
+		<div class="col-md-6" id=""><p class="bg-info"><span class="badge ">1</span>Select commodity to issue,Enter the Service Point and Quanitity you wish to issue and select the Batch No</p></div>
+		<div class="col-md-5" id=""><p class="text-danger"><span class="badge ">NB</span>Available Batch Stock is for a specific 
 	batch, Total Balance is the total for the commodity</p></div>
 		
+		
 	</div>
+	</div>
+	
 <div class="table-responsive" style="height:400px; overflow-y: auto;">
  <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/external_issue',$att); ?>
 <table width="100%"  class="table table-hover table-bordered table-update" id="facility_issues_table" >
@@ -95,7 +91,9 @@ type="text" style="width:100px !important;" name="clone_datepicker_normal_limit_
 						<td><input class='form-control  quantity_issued' style="width:80px !important;" type="text" value="0"  name="quantity_issued[]"  required="required"/></td>
 						<td><input class='form-control  input-small balance' type="text" value="" readonly="readonly" /></td>
 
-						<td><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Row</button></td>
+						<td><button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>Row</button>
+							<button type="button" class="add btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span>Row</button>
+						</td>
 			</tr>
 			<script>var count=0</script>
 		           </tbody>
@@ -104,7 +102,7 @@ type="text" style="width:100px !important;" name="clone_datepicker_normal_limit_
 <hr />
 <div class="container-fluid">
 <div style="float: right">
-<button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Row</button>
+
 
 <button class=" save btn btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 
@@ -229,7 +227,8 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 	//reset the text field and the message dialog box 
     selector_object.val(""); var notification='<ol>'+alert_message+form_data[0]+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
     //hcmp custom message dialog
-    dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
+    hcmp_message_box(title='HCMP Error',notification,message_type='error')
+    //dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
     //This event is fired immediately when the hide instance method has been called.
     $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();	})
     selector_object.closest("tr").find(".balance").val(selector_object.closest("tr").find(".commodity_balance").val());
@@ -242,7 +241,8 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
         if(isNaN(form_data[0])){
         var notification='<ol>'+form_data[0]+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
            //hcmp custom message dialog
-        dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
+            hcmp_message_box(title='HCMP Error',notification,message_type='error')
+        //dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
         return;   }// set the balance here
 			//set the quantities to readonly  $("#dropdown").prop("disabled", true);
 			selector_object.closest("tr").find(".quantity_issued").attr('readonly','readonly');
