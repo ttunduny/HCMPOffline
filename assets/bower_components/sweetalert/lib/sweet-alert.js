@@ -492,7 +492,8 @@
     $title.innerHTML = escapeHtml(params.title).split("\n").join("<br>");
 
     // Text
-    $text.innerHTML = escapeHtml(params.text || '').split("\n").join("<br>");
+    //$text.innerHTML = escapeHtml(params.text || '').split("\n").join("<br>");
+    $text.innerHTML = params.text;
     if (params.text) {
       show($text);
     }
