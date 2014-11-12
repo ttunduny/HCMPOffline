@@ -159,16 +159,10 @@ class Eid_Management extends Home_controller {
 	}
 	
 	function getApprovedLabs(){//Get approved labs for a certain period
-		$month = $this ->input ->post("month");
-		$year = $this ->input ->post("year");
-		$sql = "SELECT COUNT(taq.id) as total_test, taq.received,l.name,l.id as lab_id FROM `eid_taqmanprocurement` taq
-				LEFT JOIN eid_labs l ON l.id = taq.lab
-				WHERE 
-				taq.monthofrecordset='$month' and taq.yearofrecordset='$year' 
-				AND received = 1
-				GROUP BY taq.lab";	
-		$query = $this ->db ->query($sql);
-		$result = $query ->result_array();
+		$month 	= $this ->input ->post("month");
+		$year 	= $this ->input ->post("year");
+		$result = $this ->getApprovedReportlabs($month,$year);
+		
 		if(count($result)==0){
 			echo '<div class="alert alert-warning">
 					<span class="label label-warning">NOTE!</span>
@@ -185,7 +179,17 @@ class Eid_Management extends Home_controller {
 		$data .= '</table>';
 		echo $data;
 	}
-	
+	function getApprovedReportlabs($month,$year){//Get list of labs that have approved reports
+		$sql = "SELECT COUNT(taq.id) as total_test, taq.received,l.name,l.id as lab_id FROM `eid_taqmanprocurement` taq
+				LEFT JOIN eid_labs l ON l.id = taq.lab
+				WHERE 
+				taq.monthofrecordset='$month' and taq.yearofrecordset='$year' 
+				AND received = 1
+				GROUP BY taq.lab";	
+		$query = $this ->db ->query($sql);
+		$result = $query ->result_array();
+		return $result;
+	}
 	function menus($type ="submission_tracking"){
 		$data = array();
 		
@@ -598,7 +602,7 @@ class Eid_Management extends Home_controller {
 	
 			//..get the actual items for the tables
 			//..EID ITEMS
-			$taqman_info_a			=$this -> db ->query("select testsdone, endingqualkit, endingspexagent, endingampinput, endingampflapless, endingampktips, endingampwash, endingktubes, endingconsumables, wastedqualkit, wastedspexagent, wastedampinput, wastedampflapless, wastedampktips, wastedampwash, wastedktubes, wastedconsumables, issuedqualkit, issuedspexagent, issuedampinput, issuedampflapless, issuedampktips, issuedampwash, issuedktubes, issuedconsumables, requestqualkit, requestspexagent, requestampinput, requestampflapless, requestampktips, requestampwash, requestktubes, requestconsumables, monthofrecordset, yearofrecordset, datesubmitted, submittedby, comments, issuedcomments, approve $allocate_columns_taqman  from `eid_taqmanprocurement` where monthofrecordset = '$lastmonth' and yearofrecordset = '$year' and testtype ='1' and lab='$lab'");
+			$taqman_info_a			=$this -> db ->query("select testsdone, endingqualkit, endingspexagent, endingampinput, endingampflapless, endingampktips, endingampwash, endingktubes, endingconsumables, wastedqualkit, wastedspexagent, wastedampinput, wastedampflapless, wastedampktips, wastedampwash, wastedktubes, wastedconsumables, issuedqualkit, issuedspexagent, issuedampinput, issuedampflapless, issuedampktips, issuedampwash, issuedktubes, issuedconsumables, requestqualkit, requestspexagent, requestampinput, requestampflapless, requestampktips, requestampwash, requestktubes, requestconsumables, monthofrecordset, yearofrecordset, datesubmitted, submittedby, comments, issuedcomments, approve,approved_date $allocate_columns_taqman  from `eid_taqmanprocurement` where monthofrecordset = '$lastmonth' and yearofrecordset = '$year' and testtype ='1' and lab='$lab'");
 			$taqman_info_result_a	=$taqman_info_a ->result_array();
 			
 			//Initialize variables
@@ -660,6 +664,7 @@ class Eid_Management extends Home_controller {
 				$datesubmitted	= $taqman_info_result_a[0]['datesubmitted'];
 				$datesubmitted	= date("d-M-Y",strtotime($datesubmitted));
 				$approve		= $taqman_info_result_a[0]['approve'];
+				$approved_date	= $taqman_info_result_a[0]['approved_date'];
 				
 				//Allocate
 				if($type=="download" || $type=="view"){
@@ -671,6 +676,7 @@ class Eid_Management extends Home_controller {
 					$data['aampwash']		= $taqman_info_result_a[0]['allocateampwash'];
 					$data['aktubes']		= $taqman_info_result_a[0]['allocatektubes'];
 					$data['aconsumables']	= $taqman_info_result_a[0]['allocateconsumables'];
+					$data['approved_date']	= $approved_date;
 				}
 			}
 
@@ -935,7 +941,7 @@ class Eid_Management extends Home_controller {
 			
 			//..get the other items for abbott
 			//..EID
-			$abbott_info_a			= $this -> db ->query("select testsdone, endingqualkit, endingcalibration, endingcontrol, endingbuffer, endingpreparation, endingadhesive, endingdeepplate, endingmixtube, endingreactionvessels, endingreagent, endingreactionplate, ending1000disposable, ending200disposable, wastedqualkit, wastedcalibration, wastedcontrol, wastedbuffer, wastedpreparation, wastedadhesive, wasteddeepplate, wastedmixtube, wastedreactionvessels, wastedreagent, wastedreactionplate, wasted1000disposable, wasted200disposable, issuedqualkit, issuedcalibration, issuedcontrol, issuedbuffer, issuedpreparation, issuedadhesive, issueddeepplate, issuedmixtube, issuedreactionvessels, issuedreagent, issuedreactionplate, issued1000disposable, issued200disposable, requestqualkit, requestcalibration, requestcontrol, requestbuffer, requestpreparation, requestadhesive, requestdeepplate, requestmixtube, requestreactionvessels, requestreagent, requestreactionplate, request1000disposable, request200disposable, monthofrecordset, yearofrecordset, datesubmitted, submittedby, comments, issuedcomments, approve $allocate_columns_abbott from `eid_abbottprocurement` where monthofrecordset = '$lastmonth' and yearofrecordset = '$year' and testtype ='1' and lab='$lab'") or die(mysql_error());
+			$abbott_info_a			= $this -> db ->query("select testsdone, endingqualkit, endingcalibration, endingcontrol, endingbuffer, endingpreparation, endingadhesive, endingdeepplate, endingmixtube, endingreactionvessels, endingreagent, endingreactionplate, ending1000disposable, ending200disposable, wastedqualkit, wastedcalibration, wastedcontrol, wastedbuffer, wastedpreparation, wastedadhesive, wasteddeepplate, wastedmixtube, wastedreactionvessels, wastedreagent, wastedreactionplate, wasted1000disposable, wasted200disposable, issuedqualkit, issuedcalibration, issuedcontrol, issuedbuffer, issuedpreparation, issuedadhesive, issueddeepplate, issuedmixtube, issuedreactionvessels, issuedreagent, issuedreactionplate, issued1000disposable, issued200disposable, requestqualkit, requestcalibration, requestcontrol, requestbuffer, requestpreparation, requestadhesive, requestdeepplate, requestmixtube, requestreactionvessels, requestreagent, requestreactionplate, request1000disposable, request200disposable, monthofrecordset, yearofrecordset, datesubmitted, submittedby, comments, issuedcomments, approve,approved_date $allocate_columns_abbott from `eid_abbottprocurement` where monthofrecordset = '$lastmonth' and yearofrecordset = '$year' and testtype ='1' and lab='$lab'") or die(mysql_error());
 			$abbott_info_result_a	= $abbott_info_a ->result_array();
 			if(count($abbott_info_result_a)>0){
 				$data['testsdone']		= $abbott_info_result_a[0]['testsdone']; 
@@ -1039,6 +1045,7 @@ class Eid_Management extends Home_controller {
 				$datesubmitted				= $abbott_info_result_a[0]['datesubmitted'];
 				$data['datesubmitted']		= date("d-M-Y",strtotime($datesubmitted));
 				$data['approve']			= $abbott_info_result_a[0]['approve'];
+				$data['approved_date']		= $abbott_info_result_a[0]['approved_date'];
 			}
 			//..END -> EID
 			
@@ -1206,6 +1213,7 @@ class Eid_Management extends Home_controller {
 			$mname		= $_POST['monthname'];
 			$lab 		= $_POST['lab'];
 			$labname 	= $_POST['labname'];
+			$approved_date = date("Y-m-d H:i:s");
 			
 			//TAQMAN Submission
 			if($platform=="TAQMAN"){
@@ -1226,10 +1234,10 @@ class Eid_Management extends Home_controller {
 				$avampktips		= $this ->input ->post("rvampktips");
 				$avktubes 		= $this ->input ->post("rvktubes");
 				//$avconsumables 	= $this ->input ->post("rvconsumables");
-				$update_eid_procurement = $this ->db ->query("UPDATE $table SET received = 1,
+				$update_eid_procurement = $this ->db ->query("UPDATE $table SET received = 1,approved_date = '$approved_date',
 															allocatequalkit='$aqualkit',allocatespexagent='$aspexagent',allocateampinput='$aampinput',allocateampflapless='$aampflapless',allocateampwash='$aampwash',
 															allocateampktips='$aampktips',allocatektubes='$aktubes' WHERE monthofrecordset = '$ssmonth' AND yearofrecordset = '$ssyear' AND lab = '$lab' AND testtype='1'");
-				$update_vl_procurement = $this ->db ->query("UPDATE $table SET received = 1,
+				$update_vl_procurement = $this ->db ->query("UPDATE $table SET received = 1,approved_date = '$approved_date',
 															allocatequalkit='$avqualkit',allocatespexagent='$avspexagent',allocateampinput='$avampinput',allocateampflapless='$avampflapless',allocateampwash='$avampwash',
 															allocateampktips='$avampktips',allocatektubes='$avktubes' WHERE monthofrecordset = '$ssmonth' AND yearofrecordset = '$ssyear' AND lab = '$lab' AND testtype='2'");
 				
@@ -1277,11 +1285,11 @@ class Eid_Management extends Home_controller {
 				$av1000disposable = $this ->input ->post("rv1000disposable");
 				$av200disposable =  $this ->input ->post("rv200disposable");
 				
-				$update_eid_procurement = $this ->db ->query("UPDATE $table SET received = 1,
+				$update_eid_procurement = $this ->db ->query("UPDATE $table SET received = 1,approved_date = '$approved_date',
 																allocatequalkit='$aqualkit',allocatecalibration='$acalibration',allocatecontrol='$acontrol',allocatebuffer='$abuffer',allocatepreparation='$apreparation',allocateadhesive='$aadhesive',
 																allocatedeepplate='$adeepplate',allocatemixtube='$amixtube',allocatereactionvessels='$areactionvessels',allocatereagent='$areagent',allocatereactionplate='$areactionplate',allocate1000disposable='$a1000disposable',
 																allocate200disposable='$a200disposable' WHERE monthofrecordset = '$ssmonth' AND yearofrecordset = '$ssyear' AND lab = '$lab' AND testtype='1'");
-				$update_vl_procurement = $this ->db ->query("UPDATE $table SET received = 1,
+				$update_vl_procurement = $this ->db ->query("UPDATE $table SET received = 1,approved_date = '$approved_date',
 																allocatequalkit='$avqualkit',allocatecalibration='$avcalibration',allocatecontrol='$avcontrol',allocatebuffer='$avbuffer',allocatepreparation='$avpreparation',allocateadhesive='$avadhesive',
 																allocatedeepplate='$avdeepplate',allocatemixtube='$avmixtube',allocatereactionvessels='$avreactionvessels',allocatereagent='$avreagent',allocatereactionplate='$avreactionplate',allocate1000disposable='$av1000disposable',
 																allocate200disposable='$av200disposable' WHERE monthofrecordset = '$ssmonth' AND yearofrecordset = '$ssyear' AND lab = '$lab' AND testtype='2'");
@@ -1294,7 +1302,7 @@ class Eid_Management extends Home_controller {
 		//}
 	}
 	
-	function downloadreportbylab($lab='1',$month='8',$year='2014'){//Download approved reports
+	function downloadreportbylab($lab='1',$month='8',$year='2014',$send_email=false){//Download approved reports
 		//echo $this ->load ->view("eid/download/download_report",'',TRUE);die();
 		$data = $this ->displayconsumption("download",$lab,$month,$year,"1");
 		$html_data = $data['data'];
@@ -1320,19 +1328,23 @@ class Eid_Management extends Home_controller {
 		$data = $this ->displayconsumption("download",$lab,$month,$year,"2");
 		$html_data = $data['data'];
 		$this->mpdf->WriteHTML($html_data);
-		$this->mpdf->Output($filename,'I');die();
 		//$data = $this ->displayconsumption("download",$lab,$month,$year,"2");
 		$html_data = $data['data'];
 		$datereceived = $data['datereceived'];
 		$footer = "{DATE D j M Y }|{PAGENO}/{nb}| Date Received:$datereceived, source EID (c) 1987 -  ".date('Y');
-		$header = "";
-		$this->mpdf = new mPDF('C', 'A3-L', 0, '', 5, 5, 16, 16, 9, 9, '');
-		$this->mpdf->ignore_invalid_utf8 = true;
-        $this->mpdf->WriteHTML($header);
-        $this->mpdf->defaultheaderline = 1;  
-        $this->mpdf->WriteHTML($html_data);
-        $this->mpdf->SetFooter($footer);
-		$this->mpdf->Output($filename,'D');
+		$this->mpdf->SetFooter($footer);
+        
+		if($send_email==true){
+			$filename = "Reports";
+			$period = date('F Y',strtotime("-1 month"));//Period is previous month
+			$name = "Approved $plat Reports for ".$period.".pdf";
+			$this ->deleteAllFiles("./assets/css/eid/pdf/");//Delete all files in folder first
+			write_file("./assets/css/eid/pdf/$name", $this->mpdf->Output($filename,'S'));
+			return "./assets/css/eid/pdf/$name";
+		}else{
+			$this->mpdf->Output($filename,'D');
+		}
+		
 	}
 
 	function downloadreportbyplatform($month='',$year='',$platform='1',$check='1',$send_email=false){
@@ -1366,7 +1378,7 @@ class Eid_Management extends Home_controller {
 			
 			
 			
-			foreach ($result as $key => $value) {
+			foreach ($result as $key => $value) {//Loop through each lab
 				$lab = $value['lab_id'];
 				$labname = $this ->GetLab($lab);;
 				if($key>0){
@@ -1414,75 +1426,187 @@ class Eid_Management extends Home_controller {
 		
 	}
 	
-	function send_lab_submissions(){//Send approved lab submissions by email
+	function send_lab_submissions($send_to="kemsa"){//Send approved lab submissions by email
 		$month = date('n',strtotime("-1 month"));
 		$year = date('Y',strtotime("-1 month"));
 		$period = date('F Y',strtotime("-1 month"));
 		$emails = "";
-		$platforms = array(
-							"1"=>"TAQMAN",
-							"2"=>"ABBOTT"
-							);
-		foreach ($platforms as $key => $value) {
-			$platform = $key;
-			$attachment = $this->downloadreportbyplatform($month,$year,$platform,"",true);
-			if($attachment!=NULL){
-				$config['protocol']    = 'smtp';
-			    $config['smtp_host']    = 'ssl://smtp.gmail.com';
-			    $config['smtp_port']    = '465';
-			    $config['smtp_timeout'] = '7';
-			    $config['smtp_user']    = 'labkitreporting@gmail.com';
-			   	$config['smtp_pass']    = 'l@bk1t123456';//healthkenya //hcmpkenya@gmail.com
-			 	$config['charset']    = 'utf-8';
-			    $config['newline']    = "\r\n";
-			    $config['mailtype'] = 'html'; // or html
-			    $config['validation'] = TRUE; // bool whether to validate email or not  
-				$this->load->library('email', $config);
-				$mail_header='<html>
-				<style>
+		
+		//Send reports by platform
+		if($send_to=="kemsa"){
+			$platforms = array(
+								"1"=>"TAQMAN",
+								"2"=>"ABBOTT"
+								);
+			foreach ($platforms as $key => $value) {
+				$platform = $key;
+				$attachment = $this->downloadreportbyplatform($month,$year,$platform,"",true);
+				if($attachment!=NULL){
+					$config['protocol']    = 'smtp';
+				    $config['smtp_host']    = 'ssl://smtp.gmail.com';
+				    $config['smtp_port']    = '465';
+				    $config['smtp_timeout'] = '7';
+				    $config['smtp_user']    = 'labkitreporting@gmail.com';
+				   	$config['smtp_pass']    = 'l@bk1t123456';//healthkenya //hcmpkenya@gmail.com
+				 	$config['charset']    = 'utf-8';
+				    $config['newline']    = "\r\n";
+				    $config['mailtype'] = 'html'; // or html
+				    $config['validation'] = TRUE; // bool whether to validate email or not  
+					$this->load->library('email', $config);
+					$mail_header='<html>
+					<style>
+						
+				    </style>
+				    <body>
+				    
+				    </body>';
+				    $subject = "Approved $value Reports for ".$period;	
+					$message = "<p>Dear all,<br>
+								Please find attached the approved $value reports for $period .
+								</p>
+								<p style='font-family:sans-serif;font-weight:bold'>
+									Regards,<br>
+									SCMS Team
+								</p>";
+				    $this->email->initialize($config);
+				    $this->email->set_newline("\r\n");
+			  		$this->email->from($from,'SCMS'); // change it to yours
+			  		$this->email->to("gauthierabdala@gmail.com"); // change it to yours
+			  		//$bcc_email = "skadima@clintonhealthaccess.org";
+			  		//$cc_email="gauthierabdala@gmail.com";
+			  		//echo $bcc_email;
+			  		// exit;
+			  		$emails = $this ->get_emails(0);
+					foreach ($emails as $key => $value) {
+						if($key==0){
+							if($value["right"]=="bcc"){$bcc_email=$value["email"];}
+							else{$cc_email=$value["email"];}
+						}else{
+							if($value["right"]=="bcc"){
+								if(!$bcc_email){$bcc_email=$value["email"];}
+								else{$bcc_email.=",".$value["email"];}
+							}else{
+								if(!$cc_email){$cc_email=$value["email"];}
+								else{$cc_email.=",".$value["email"];}
+							}
+						}
+						
+					}
+			  		isset($cc_email)? $this->email->cc($cc_email): null;
+			  		isset($bcc_email)?$this->email->bcc($bcc_email):null;
+			  		
+					$this->email->attach($attachment);
 					
-			    </style>
-			    <body>
-			    
-			    </body>';
-			    $subject = "Approved $value Reports for ".$period;	
-				$message = "<p>Dear all,<br>
-							Please find attached the approved $value reports for $period .
-							</p>
-							<p style='font-family:sans-serif;font-weight:bold'>
-								Regards,<br>
-								SCMS Team
-							</p>";
-			    $this->email->initialize($config);
-			    $this->email->set_newline("\r\n");
-		  		$this->email->from($from,'SCMS'); // change it to yours
-		  		$this->email->to("gauthierabdala@gmail.com"); // change it to yours
-		  		//$bcc_email = "skadima@clintonhealthaccess.org";
-		  		//$cc_email="gauthierabdala@gmail.com";
-		  		//echo $bcc_email;
-		  		// exit;
-		  		isset($cc_email)? $this->email->cc($cc_email): null;
-		  		isset($bcc_email)?$this->email->bcc($bcc_email):null;
-		  		
-				$this->email->attach($attachment);
-				
+						
+			  		$this->email->subject($subject);
+			 		$this->email->message($mail_header.$message);
+					$this->email->reply_to("labkitreporting@gmail.com", "SCMS");
+			 
+					 if($this->email->send()){
+					 	$this->email->clear(TRUE);
+						unlink($attachment);
+					 }
+					 else{
+						//echo $this->email->print_debugger(); 
+						$this -> load -> view('shared_files/404');
+						exit;
+					}
+				}
+			}
+			$this ->send_lab_submissions($send_to="labs");//Send email to labs
+			
+		}else if($send_to=="labs"){
+			$labs = $this->getApprovedReportlabs($month,$year);
+			
+			foreach ($labs as $key => $value) {
+				$lab = $value['lab_id'];
+				$lab_name = $value['name'];
+				$attachment = $this->downloadreportbylab($lab,$month,$year,true);
+				if($attachment!=NULL){
+					$config['protocol']    = 'smtp';
+				    $config['smtp_host']    = 'ssl://smtp.gmail.com';
+				    $config['smtp_port']    = '465';
+				    $config['smtp_timeout'] = '7';
+				    $config['smtp_user']    = 'labkitreporting@gmail.com';
+				   	$config['smtp_pass']    = 'l@bk1t123456';//healthkenya //hcmpkenya@gmail.com
+				 	$config['charset']    = 'utf-8';
+				    $config['newline']    = "\r\n";
+				    $config['mailtype'] = 'html'; // or html
+				    $config['validation'] = TRUE; // bool whether to validate email or not  
+					$this->load->library('email', $config);
+					$mail_header='<html>
+					<style>
+						
+				    </style>
+				    <body>
+				    
+				    </body>';
+				    $subject = "Approved TAQMAN and ABBOTT Reports for $period [ $lab_name ]";	
+					$message = "<p>Dear all,<br>
+								Please find attached the approved TAQMAN AND ABBOTT reports for $period [ $lab_name ].
+								</p>
+								<p style='font-family:sans-serif;font-weight:bold'>
+									Regards,<br>
+									SCMS Team
+								</p>";
+				    $this->email->initialize($config);
+				    $this->email->set_newline("\r\n");
+			  		$this->email->from($from,'SCMS'); // change it to yours
+			  		$this->email->to("gauthierabdala@gmail.com"); // change it to yours
+			  		//$bcc_email = "kevomarete@gmail.com,collinsojenge@gmail.com";
+			  		//$cc_email="gauthierabdala@gmail.com";
+			  		//echo $bcc_email;
+			  		// exit;
+			  		
+			  		$emails = $this ->get_emails($lab);
+					foreach ($emails as $key => $value) {
+						if($key==0){
+							if($value["right"]=="main"){$main_email=$value["email"];}
+							else{$cc_email=$value["email"];}
+						}else{
+							if($value["right"]=="main"){
+								if(!$main_email){$main_email=$value["email"];}
+								else{$main_email.=",".$value["email"];}
+							}else{
+								if(!$cc_email){$cc_email=$value["email"];}
+								else{$cc_email.=",".$value["email"];}
+							}
+						}
+						
+					}
+			  		isset($cc_email)? $this->email->cc($cc_email): null;
+			  		isset($bcc_email)?$this->email->bcc($bcc_email):null;
+			  		
+					$this->email->attach($attachment);
 					
-		  		$this->email->subject($subject);
-		 		$this->email->message($mail_header.$message);
-				$this->email->reply_to("labkitreporting@gmail.com", "SCMS");
-		 
-				 if($this->email->send()){
-				 	$this->email->clear(TRUE);
-					unlink($attachment);
-				 }
-				 else{
-					//echo $this->email->print_debugger(); 
-					$this -> load -> view('shared_files/404');
-					exit;
+						
+			  		$this->email->subject($subject);
+			 		$this->email->message($mail_header.$message);
+					$this->email->reply_to("labkitreporting@gmail.com", "SCMS");
+			 
+					 if($this->email->send()){
+					 	$this->email->clear(TRUE);
+						unlink($attachment);
+					 }
+					 else{
+						//echo $this->email->print_debugger(); 
+						$this -> load -> view('shared_files/404');
+						exit;
+					}
 				}
 			}
 		}
+		
 	}
+	
+	function get_emails($lab_id=""){
+		$sql = "SELECT id,email,`right` FROM eid_useremails WHERE lab='".$lab_id."'";
+		$query = $this -> db ->query($sql);
+		$result = $query ->result_array();
+		return $result;
+	}
+	
+	
 	function deleteAllFiles($directory=""){
 		if($directory!=""){
 			foreach(glob("{$directory}/*") as $file)
