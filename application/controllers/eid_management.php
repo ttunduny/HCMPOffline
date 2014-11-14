@@ -1587,10 +1587,6 @@ class Eid_Management extends Home_controller {
 						
 					}
 					
-					//Get BCC for labs
-					$bcc_emails = $this ->get_emails(0);
-					
-					
 					$this->email->to($main_email); // change it to yours
 			  		isset($cc_email)? $this->email->cc($cc_email): null;
 			  		if(isset($bcc_email)){
