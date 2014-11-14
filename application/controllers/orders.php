@@ -108,13 +108,155 @@ for ($row = 1; $row <= $highestRow; $row++){
 		$meds_categories = meds_categories::get_all();
 		//$meds_commodities = meds_commodities::get_all();
 		//echo "<pre>";print_r($meds_categories);exit;
+	
+        if(isset($_FILES['file']) && $_FILES['file']['size'] > 0){
+        $ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
+            //echo $ext; 
+        if($ext=='xls'){
+        $excel2 = PHPExcel_IOFactory::createReader('Excel5');    
+        }else if($ext=='xlsx'){
+        $excel2 = PHPExcel_IOFactory::createReader('Excel2007');    
+        }else{
+        die('Invalid file format given'.$_FILES['file']);   
+        }
 		
+		$excel2=$objPHPExcel= $excel2->load($_FILES["file"]["tmp_name"]); // Empty Sheet
+    
+        $sheet = $objPHPExcel->getSheet(0); 
+        $highestRow = $sheet->getHighestRow(); 
+    
+        $highestColumn = $sheet->getHighestColumn();
+        $temp=array();
+        $facility_code= $sheet->getCell('H4')->getValue();
+   
+   
+        //  Loop through each row of the worksheet in turn
+        $array_commodity_code=array();
+		$array_order_note=array();
+		$array_commodity=array();
+		$array_notes=array();
+		$array_strength=array();
+		$array_pack=array();
+		$array_price=array();
+		$array_order_qty=array();
+		$array_order_val=array();
+		$array_totals=array();
+		//$array_code=array();
+        for ($row = 17; $row <= $highestRow; $row++){ 
+        //  Read a row of data into an array
+        $rowData = $objPHPExcel->getActiveSheet()->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);
+     	//var_dump($rowData); 
+		//count($rowData);
+		$code=preg_replace('/\s+/ ','',$rowData[0][2]);
+		$code=str_replace('-','',$code);
+		$array_commodity_code[]=$rowData[0][1];
+		$array_order_note[]=$code;
+		$array_commodity[]=$rowData[0][3];
+		$array_notes[]=$rowData[0][4];
+		$array_strength[]=$rowData[0][5];
+		$array_pack[]=(int)$rowData[0][6];
+		$array_price[]=$rowData[0][7];
+		$array_order_qty[]=$rowData[0][8];
+		$array_order_val[]=$rowData[0][9];	
+		$array_totals[]=$rowData[0][10];
+			
+		//if(isset($rowData[0][2]) && $rowData[0][2]!='Product Code'){
+			//echo '<pre>';print_r($rowData[0][7]); echo '</pre>';
+        //foreach($items as $key=> $data){
+        	//echo '<pre>';print_r($rowData); echo '</pre>';
+			
+       
+            //}   
+            //}
+            }
+		
+		//echo '<pre>';print_r($array_order_qty); echo '</pre>';exit;
+		foreach ($array_order_qty as $id => $key) {
+				//echo '<pre>';print_r($array_commodity[$id].'.'.$array_code[$id]); echo '</pre>';//exit;  
+        	
+        		//foreach($items as $key=> $data){
+        array_push($temp,array('commodity_code'=>$array_commodity_code[$id],
+        'order_note'=>$array_order_note[$id],
+        'commodity_name'=>$array_commodity[$id],
+        'notes'=>$array_notes[$id],
+        'strength'=>$array_strength[$id],
+        'unit_size'=>$array_pack[$id],
+        'unit_cost'=>($array_price[$id]=='')? 0:(int)$array_price[$id],
+        'quantity_ordered'=>($array_order_qty[$id]=='')? 0:(int)$array_order_qty[$id],
+        'order_value'=>($array_order_val[$id]=='')? 0:(int)$array_order_val[$id],
+        'totals'=>($array_totals[$id]=='')? 0:(int)$array_totals[$id],
+        ));
+         //unset($items[$key]);
+        /// }
+}//exit;
+//echo '<pre>';print_r($temp); echo '</pre>';exit;
+    foreach ($temp as $key => $value) {
+	//echo '<pre>';print_r($value['commodity_code']); echo '</pre>';exit;
+	if ($value['commodity_code']==""||$value['quantity_ordered']==0) {
+		unset($temp[$key]);
+	}
+	
+	
+}
+//echo '<pre>';print_r($temp); echo '</pre>';exit;
+		//$c = array_combine($array_code, $array_commodity);
+		$array_id=array();
+		$array_codes=array();
+		$main_array=array();
+		foreach ($temp as $keys ) {
+			
+			$meds=$keys['commodity_code'];
+			$unit_cost=$keys['unit_cost'];
+			//$unit_size=preg_replace("(')", "",$size);
+			$get_id=Commodities::get_meds_id($meds,$unit_cost);
+			//echo '<pre>';print_r($get_id); echo '</pre>';
+			$main_array[]=$keys;
+			foreach ($get_id as $key2) {
+				$array_id[]=$key2['id'];
+				$array_total_units[]=$key2['total_commodity_units'];
+				
+				
+			}
+			//echo '<pre>';print_r($keys); echo '</pre>';exit;
+			//echo '<pre>';print_r($get_id[]); echo '</pre>';
+		}
+		//echo '<pre>';print_r($get_id); echo '</pre>';exit;
+		//$new=array_combine($array_id, $array_codes);
+		//echo '<pre>';print_r($new); echo '</pre>';exit;
+			
+			
+		
+		$array_combined=array();
+		$id_count=count($array_id);
+		
+		/*for ($i=0; $i < $id_count;$i++) {
+			$main_array[$i]['commodity_id']=$array_id[$i];
+			$main_array[$i]['total_commodity_units']=$array_total_units[$i];
+			//echo '<pre>';print_r($main_array[$i]); echo '</pre>';
+			
+			
+				}*///exit;
+		
+		//echo '<pre>';print_r($array_id[$i]); echo '</pre>';exit;
+		//exit;
+		
+        //unset($objPHPExcel);
+       $data['main_array'] = $main_array;
+       $data['order_details'] = $data['facility_order'] = $main_array;  
+	   // echo "<pre>";print_r($main_array);echo "</pre>";exit;
+        }else{
+        $data['order_details'] = $data['facility_order'] = $items;   
+        }
+		//echo '<pre>';print_r($main_array); echo '</pre>';exit;
+		$facility_code = $this -> session -> userdata('facility_id');
+		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
 		$data['categories'] = $meds_categories;
         $data['order_details'] = $data['facility_order'] = $items;   
         $data['facility_commodity_list'] = Commodities::get_commodities_not_in_facility($facility_code);
 		$data['title'] = "Facility New Order MEDS";
 		$data['content_view'] = "facility/facility_orders/facility_order_meds";
 		$data['banner_text'] = "Facility New Order MEDS";
+		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];
 		$this -> load -> view("shared_files/template/template", $data);
 		
 		//var_dump($temp);exit;
@@ -410,7 +552,8 @@ foreach ($temp as $key => $value) {
 			array_push($data_array, $order_details);
 			
 			}// insert the data here
-			// echo "<pre>";print_r($data_array);echo"</pre>"; exit;
+			//adima
+			//echo "<pre>";print_r($data_array);echo"</pre>"; exit;
 			$this -> db -> insert_batch('facility_orders_meds', $data_array);
 
 			if ($this -> session -> userdata('user_indicator') == 'district') :

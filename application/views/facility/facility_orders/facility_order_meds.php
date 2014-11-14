@@ -10,7 +10,7 @@
 		<div class="col-md-4" id=""><p class="bg-info"><b>AMC - Average Monthly Consumption</b></p>
 			
 		</div>
-		<div class="col-md-4" id="" ><p class="bg" float = "right"><button type="button" class="remove btn btn-success btn-large"><span class="glyphicon glyphicon-save"></span>Upload order via Excel</button></p>
+		<div class="col-md-4 order-for-excel" id="" ><p class="bg" float = "right"><button type="button" class="remove btn btn-success btn-large"><span class="glyphicon glyphicon-save"></span>Upload order via Excel</button></p>
 			
 		</div>
 	</div>
@@ -30,6 +30,43 @@
 	<div class="container">
 <div class="table-responsive" style="min-height:300px; overflow-y: auto;">
  <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_meds_order',$att); ?>
+ <table width="100%" border="0" class="row-fluid table table-hover table-bordered"  id="example">
+<thead>
+	<th>Commodity/Stock Code</th>
+	<th>Order Note</th>
+	<th>Item Description<br>Commodity Name</th>k
+	<th>Notes</th>
+	<th>Strength/Size</th>
+	<th>Unit Pack</th>
+	<th>Unit Price(Ksh)</th>
+	
+	<th>Quantity Ordered</th>
+	
+	<th>Order Value</th>
+	<th>Total Cost <br>(Ksh)</th>
+</thead>
+<tbody>
+	<tr>
+		<?php 
+		foreach ($main_array as $comm): 
+		echo "<tr>
+		<td>".$comm['commodity_code']."</td>
+		<td>".$comm['order_note']."</td>
+		<td>".$comm['commodity_name']."</td>
+		<td>".$comm['notes']."</td>
+		<td>".$comm['strength']."</td>
+		<td>".$comm['unit_size']."</td>
+		<td>".$comm['unit_cost']."</td>
+		<td>".$comm['quantity_ordered']."</td>
+		<td>".$comm['order_value']."</td>
+		<td>".$comm['totals']."</td>
+		</tr>";
+			
+		endforeach;
+			?>
+	</tr>
+</tbody>
+</table>
 <table  class="table table-hover table-bordered table-update" id="facility_issues_table" >
 <thead style="background-color: white">
 	<th>Commodity Type</th>
@@ -172,6 +209,17 @@ endforeach;
 <button type="button" class="btn btn-success test"><span class="glyphicon glyphicon-open"></span>Save</button></div>
 </div>
 <script>
+$(".order-for-excel").on('click', function(e) {
+                  e.preventDefault(); 
+    var body_content='<?php  $att=array("name"=>'myform','id'=>'myform');
+    echo form_open_multipart('orders/facility_order_meds',$att)?>'+
+'<input type="file" name="file" id="file" required="required" class="form-control"><br>'+
+'<button class="upload">Upload</button>'+
+'</form>';
+   //hcmp custom message dialog
+    dialog_box(body_content,'');        
+    });
+    
 $(document).ready(function() {
  	var $table = $('table');
  	//float the headers
