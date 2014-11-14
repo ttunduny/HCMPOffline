@@ -665,6 +665,9 @@ class Eid_Management extends Home_controller {
 				$datesubmitted	= date("d-M-Y",strtotime($datesubmitted));
 				$approve		= $taqman_info_result_a[0]['approve'];
 				$approved_date	= $taqman_info_result_a[0]['approved_date'];
+				//if(date("Y",strtotime($approved_date))=="0000"){
+					
+				//}
 				
 				//Allocate
 				if($type=="download" || $type=="view"){
@@ -1466,12 +1469,12 @@ class Eid_Management extends Home_controller {
 								</p>
 								<p style='font-family:sans-serif;font-weight:bold'>
 									Regards,<br>
-									SCMS Team
+									NASCOP Team
 								</p>";
 				    $this->email->initialize($config);
 				    $this->email->set_newline("\r\n");
-			  		$this->email->from($from,'SCMS'); // change it to yours
-			  		$this->email->to("gauthierabdala@gmail.com"); // change it to yours
+			  		$this->email->from($from,'NASCOP'); // change it to yours
+			  		$this->email->to("lab@kemsa.co.ke"); // change it to yours
 			  		//$bcc_email = "skadima@clintonhealthaccess.org";
 			  		//$cc_email="gauthierabdala@gmail.com";
 			  		//echo $bcc_email;
@@ -1492,15 +1495,24 @@ class Eid_Management extends Home_controller {
 						}
 						
 					}
-			  		isset($cc_email)? $this->email->cc($cc_email): null;
-			  		isset($bcc_email)?$this->email->bcc($bcc_email):null;
+					
+			  		if(isset($cc_email)){
+			  			$this->email->cc($cc_email);
+			  		}
+			  		if(isset($bcc_email)){
+			  			$bcc_email.=",jbatuka@usaid.gov,head@nascop.or.ke,gauthierabdala@gmail.com";
+			  			
+					}else{
+						$bcc_email="jbatuka@usaid.gov,head@nascop.or.ke,gauthierabdala@gmail.com";
+					}
+					$this->email->bcc($bcc_email);
 			  		
 					$this->email->attach($attachment);
 					
 						
 			  		$this->email->subject($subject);
 			 		$this->email->message($mail_header.$message);
-					$this->email->reply_to("labkitreporting@gmail.com", "SCMS");
+					$this->email->reply_to("labkitreporting@gmail.com", "NASCOP");
 			 
 					 if($this->email->send()){
 					 	$this->email->clear(TRUE);
@@ -1547,12 +1559,12 @@ class Eid_Management extends Home_controller {
 								</p>
 								<p style='font-family:sans-serif;font-weight:bold'>
 									Regards,<br>
-									SCMS Team
+									NASCOP Team
 								</p>";
 				    $this->email->initialize($config);
 				    $this->email->set_newline("\r\n");
-			  		$this->email->from($from,'SCMS'); // change it to yours
-			  		$this->email->to("gauthierabdala@gmail.com"); // change it to yours
+			  		$this->email->from($from,'NASCOP'); // change it to yours
+			  		
 			  		//$bcc_email = "kevomarete@gmail.com,collinsojenge@gmail.com";
 			  		//$cc_email="gauthierabdala@gmail.com";
 			  		//echo $bcc_email;
@@ -1574,15 +1586,26 @@ class Eid_Management extends Home_controller {
 						}
 						
 					}
+					
+					//Get BCC for labs
+					$bcc_emails = $this ->get_emails(0);
+					
+					
+					$this->email->to($main_email); // change it to yours
 			  		isset($cc_email)? $this->email->cc($cc_email): null;
-			  		isset($bcc_email)?$this->email->bcc($bcc_email):null;
+			  		if(isset($bcc_email)){
+			  			$bcc_email.=",smutheu@clintonhealthaccess.org,tngugi@clintonhealthaccess.org,jhungu@clintonhealthaccess.org,jlusike@clintonhealthaccess.org,onjathi@clintonhealthaccess.org,skadima@clintonhealthaccess.org,gauthierabdala@gmail.com";
+			  			
+					}else{
+						$bcc_email="smutheu@clintonhealthaccess.org,tngugi@clintonhealthaccess.org,jhungu@clintonhealthaccess.org,jlusike@clintonhealthaccess.org,onjathi@clintonhealthaccess.org,skadima@clintonhealthaccess.org,gauthierabdala@gmail.com";
+					}
 			  		
 					$this->email->attach($attachment);
 					
 						
 			  		$this->email->subject($subject);
 			 		$this->email->message($mail_header.$message);
-					$this->email->reply_to("labkitreporting@gmail.com", "SCMS");
+					$this->email->reply_to("labkitreporting@gmail.com", "NASCOP");
 			 
 					 if($this->email->send()){
 					 	$this->email->clear(TRUE);
