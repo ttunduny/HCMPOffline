@@ -2068,7 +2068,15 @@ public function allocation_stock_card_county($county = null) {
             $amc_c = str_replace(',', '', $amc_c);
             $comm_c = $amcs[$fcode][3]['commodity_id'];
             //$allocation = '<span class=\"label label-important\">Pending Allocation for  ' . $lastmonth . '</span>';
-
+            if($amc_s==''){
+                $amc_s =0;
+            }
+            if($amc_c==''){
+                $amc_c =0;
+            }
+            if($amc_t==''){
+                $amc_t =0;
+            }
             $qty_of_issue_s = ceil($amc_s/$amcs[$fcode][2]['unit_of_issue']);
             $qty_of_issue_c = ceil($amc_c/$amcs[$fcode][3]['unit_of_issue']);
             $qty_of_issue_t = ceil($amc_t/$amcs[$fcode][4]['unit_of_issue']);
