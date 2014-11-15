@@ -1985,15 +1985,17 @@ public function allocation_stock_card_county($county = null) {
         $end_date = date('Y-m-d', strtotime("last day of previous Month"));
         // echo "begin $beg_date </br> end $end_date";die;
 
-        $sql = "SELECT facilities.facility_code,facilities.facility_name,districts.district
-        FROM facilities, districts, counties
+        $sql = "SELECT DISTINCT facilities.facility_code,facilities.facility_name,districts.district
+        FROM facilities, districts, counties,lab_commodity_orders
         WHERE facilities.district = districts.id
         AND facilities.rtk_enabled = 1
         AND counties.id = districts.county
-        AND counties.id = $county_id
-        ORDER BY districts.district,facilities.facility_code  ASC ";
+        AND facilities.facility_code = lab_commodity_orders.facility_code
+        AND lab_commodity_orders.order_date between '$beg_date' and '$end_date'
+        AND counties.id = '$county_id'
+        ORDER BY districts.district,facilities.facility_code  ASC ";        
         $orders = $this->db->query($sql);
-       //echo "<pre>";print_r($orders->result_array());die;
+      // echo "<pre>";print_r($orders->result_array());die;
         foreach ($orders->result_array() as $orders_arr) {
             $fcode = $orders_arr['facility_code'];           
             $q = "SELECT DISTINCT
@@ -2020,10 +2022,9 @@ public function allocation_stock_card_county($county = null) {
                         AND lab_commodity_orders.id = lab_commodity_details.order_id
                         AND lab_commodity_details.commodity_id = lab_commodities.id
                         AND lab_commodity_details.commodity_id BETWEEN 0 AND 6
-                        AND lab_commodity_orders.order_date BETWEEN '$beg_date' AND '$end_date'
-                        group by lab_commodity_orders.facility_code,lab_commodity_details.commodity_id
-                        ORDER BY facilities.facility_code  ASC,lab_commodity_details.commodity_id ASC ";
-
+                        AND lab_commodity_orders.order_date BETWEEN '$beg_date' AND '$end_date'                        
+                        ORDER BY facilities.facility_code  ASC,lab_commodity_details.commodity_id ASC,lab_commodity_details.id desc";
+                        //group by lab_commodity_orders.facility_code,lab_commodity_details.commodity_id
             $amc_details = $this->db->query($q)->result_array();
             $amcs[$fcode] = $amc_details;
             //echo "<pre>"; print_r($amcs[$fcode]);die();
@@ -4811,8 +4812,8 @@ public function kemsa_district_reports($district) {
         $reports_html = "<h2>" . $reportname . "</h2><hr> ";        
         $reports_html .= $report_result;            
        // echo "$reports_html";die();
-       $email_address = "lab@kemsa.co.ke,ttunduny@gmail.com";
-       // $email_address = "ttunduny@gmail.com";
+        $email_address = "lab@kemsa.co.ke,ttunduny@gmail.com";
+        //$email_address = "ttunduny@gmail.com";
         $this->sendmail($reports_html,$message, $reportname, $email_address);
     // }//else{
         //echo "No data to Send";

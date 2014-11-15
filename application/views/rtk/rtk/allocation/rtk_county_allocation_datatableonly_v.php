@@ -38,8 +38,8 @@
                     alert(response);                  
                     $('#allocation-response').html(response);
                     $('#allocation-response').addClass('alert alert-success');
-                    // location.reload(true);
-                                    $( "#loading" ).hide();
+                    location.reload(true);
+                    $( "#loading" ).hide();
                 }).fail(function(request,error) {
                     console.log(arguments);
                     alert ( " Can't do because: " + error );
