@@ -107,7 +107,7 @@
         <?php foreach ($districts_in_county as $value) { ?>
             <li class=""><a href="#"><?php echo $value['district']; ?></a></li>
         <?php } ?>
-       <a class="pull-right" href="../county_allocation/<?php echo $county_id;?>" style="line-height: 20px;margin: 8px 26px 0px 0px;text-decoration: none;color: #0088cc;">View <?php echo $countyname;?>  Allocations</a> 
+       <!--a class="pull-right" href="../county_allocation/<?php echo $county_id;?>" style="line-height: 20px;margin: 8px 26px 0px 0px;text-decoration: none;color: #0088cc;">View <?php echo $countyname;?>  Allocations</a--> 
 
     </ul>
 </div>
