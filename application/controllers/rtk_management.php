@@ -1995,8 +1995,7 @@ public function allocation_stock_card_county($county = null) {
         $orders = $this->db->query($sql);
        //echo "<pre>";print_r($orders->result_array());die;
         foreach ($orders->result_array() as $orders_arr) {
-            $fcode = $orders_arr['facility_code'];
-
+            $fcode = $orders_arr['facility_code'];           
             $q = "SELECT DISTINCT
                     lab_commodities.*,        
                     lab_commodity_details.order_id,
@@ -2068,15 +2067,15 @@ public function allocation_stock_card_county($county = null) {
             $amc_c = str_replace(',', '', $amc_c);
             $comm_c = $amcs[$fcode][3]['commodity_id'];
             //$allocation = '<span class=\"label label-important\">Pending Allocation for  ' . $lastmonth . '</span>';
-            if($amc_s==''){
+            if($amc_s==null){
                 $amc_s =0;
             }
-            if($amc_c==''){
+            if($amc_c==null){
                 $amc_c =0;
             }
-            if($amc_t==''){
+            if($amc_t==null){
                 $amc_t =0;
-            }
+            }            
             $qty_of_issue_s = ceil($amc_s/$amcs[$fcode][2]['unit_of_issue']);
             $qty_of_issue_c = ceil($amc_c/$amcs[$fcode][3]['unit_of_issue']);
             $qty_of_issue_t = ceil($amc_t/$amcs[$fcode][4]['unit_of_issue']);
