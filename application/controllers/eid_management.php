@@ -1497,7 +1497,7 @@ class Eid_Management extends Home_controller {
 					}
 					
 			  		if(isset($cc_email)){
-			  			$this->email->cc($cc_email);
+			  			$this->email->cc("mamoumuro@gmail.com,njebungei@yahoo.com,nbowen@nphls.or.ke,jwamicwe@yahoo.co.uk,uys0@cdc.gov,lab@kemsa.co.ke,hoy4@cdc.gov,sgathua@msh-kenya.org,Kangethewamuti@yahoo.com,angoni@nascop.or.ke,omarabdi2@yahoo.com,cmuiva@msh-kenya.org");
 			  		}
 			  		if(isset($bcc_email)){
 			  			$bcc_email.=",jbatuka@usaid.gov,head@nascop.or.ke,gauthierabdala@gmail.com";
@@ -1505,10 +1505,8 @@ class Eid_Management extends Home_controller {
 					}else{
 						$bcc_email="jbatuka@usaid.gov,head@nascop.or.ke,gauthierabdala@gmail.com";
 					}
-					$this->email->bcc($bcc_email);
-			  		
-					$this->email->attach($attachment);
-					
+					$this->email->bcc("smutheu@clintonhealthaccess.org,tngugi@clintonhealthaccess.org,jhungu@clintonhealthaccess.org,jbatuka@usaid.gov,jlusike@clintonhealthaccess.org,onjathi@clintonhealthaccess.org,skadima@clintonhealthaccess.org,jbatuka@usaid.gov,head@nascop.or.ke,gauthierabdala@gmail.com");
+			  		$this->email->attach($attachment);
 						
 			  		$this->email->subject($subject);
 			 		$this->email->message($mail_header.$message);
@@ -1525,7 +1523,7 @@ class Eid_Management extends Home_controller {
 					}
 				}
 			}
-			$this ->send_lab_submissions($send_to="labs");//Send email to labs
+			$this ->send_lab_submissions("labs");//Send email to labs
 			
 		}else if($send_to=="labs"){
 			$labs = $this->getApprovedReportlabs($month,$year);
@@ -1571,6 +1569,8 @@ class Eid_Management extends Home_controller {
 			  		// exit;
 			  		
 			  		$emails = $this ->get_emails($lab);
+					$cc_email=null;
+					$bcc_email=null;
 					foreach ($emails as $key => $value) {
 						if($key==0){
 							if($value["right"]=="main"){$main_email=$value["email"];}
@@ -1580,7 +1580,7 @@ class Eid_Management extends Home_controller {
 								if(!$main_email){$main_email=$value["email"];}
 								else{$main_email.=",".$value["email"];}
 							}else{
-								if(!$cc_email){$cc_email=$value["email"];}
+								if($cc_email==null){$cc_email=$value["email"];}
 								else{$cc_email.=",".$value["email"];}
 							}
 						}
@@ -1588,14 +1588,22 @@ class Eid_Management extends Home_controller {
 					}
 					
 					$this->email->to($main_email); // change it to yours
-			  		isset($cc_email)? $this->email->cc($cc_email): null;
-			  		if(isset($bcc_email)){
+			  		if($cc_email!=null){
+						$this->email->cc($cc_email);
+					}
+					
+			  		if($bcc_email!=null){
 			  			$bcc_email.=",smutheu@clintonhealthaccess.org,tngugi@clintonhealthaccess.org,jhungu@clintonhealthaccess.org,jlusike@clintonhealthaccess.org,onjathi@clintonhealthaccess.org,skadima@clintonhealthaccess.org,gauthierabdala@gmail.com";
 			  			
 					}else{
 						$bcc_email="smutheu@clintonhealthaccess.org,tngugi@clintonhealthaccess.org,jhungu@clintonhealthaccess.org,jlusike@clintonhealthaccess.org,onjathi@clintonhealthaccess.org,skadima@clintonhealthaccess.org,gauthierabdala@gmail.com";
 					}
-			  		
+			  		echo "<br>".$lab_name."<br>";
+					echo $main_email."<br>";
+					echo $cc_email."<br>";
+					echo $bcc_email."<br>";
+					//die();
+					$this->email->bcc($bcc_email);
 					$this->email->attach($attachment);
 					
 						
@@ -1603,7 +1611,7 @@ class Eid_Management extends Home_controller {
 			 		$this->email->message($mail_header.$message);
 					$this->email->reply_to("labkitreporting@gmail.com", "NASCOP");
 			 
-					 if($this->email->send()){
+					if($this->email->send()){
 					 	$this->email->clear(TRUE);
 						unlink($attachment);
 					 }
