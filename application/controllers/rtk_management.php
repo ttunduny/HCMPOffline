@@ -1677,7 +1677,7 @@ public function rtk_manager_stocks($month=null) {
         $months_texts = array();
         $percentages = array();
 
-        for ($i=12; $i >=1; $i--) { 
+        for ($i=11; $i >=0; $i--) { 
             $month =  date("mY", strtotime( date( 'Y-m-01' )." -$i months"));            
             $month_text =  date("M Y", strtotime( date( 'Y-m-01' )." -$i months")); 
             array_push($months_texts,$month_text);
@@ -1888,6 +1888,7 @@ public function allocation_stock_card_county($county = null) {
         }
         $data['counties_in_zone'] = $this->_zone_counties($zone);
         $data['banner_text'] = 'National';
+        $data['active_zone'] = "$zone";
         $data['content_view'] = 'rtk/rtk/allocation/allocation_zone_view';
         $data['title'] = 'National Summary: ';
         $this->load->view("rtk/template", $data);
@@ -1977,116 +1978,190 @@ public function allocation_stock_card_county($county = null) {
         $htm .= '<li>' . $district_name . '</li>';
         $htm .= '<ul class="sub-list">';
      
-        $three_months_ago = date("Y-m-", strtotime("-1 Month"));
-        $three_months_ago .='1';
+        
 
-        //$beg_date = date('Y-m-d', strtotime("first day of this Month"));
-        $beg_date = date('Y-m', strtotime("-1 Month"));
+        $beg_date = date('Y-m', strtotime("-3 Month"));
         $beg_date.='-01';
-        $end_date = date('Y-m-d', strtotime("last day of previous Month"));       
+        $end_date = date('Y-m-d', strtotime("last day of previous Month"));
+        // echo "begin $beg_date </br> end $end_date";die;
 
-
-        $sql = "SELECT facilities.facility_code,lab_commodity_details.id, lab_commodity_details.q_requested, lab_commodity_details.q_received,lab_commodity_details.commodity_id,lab_commodity_details.closing_stock,lab_commodity_details.beginning_bal,
-        facilities.facility_name,lab_commodity_details.allocated,lab_commodity_details.q_used,districts.district,facility_amc.amc,lab_commodities.commodity_name,lab_commodities.unit_of_issue
-        FROM facilities, districts, counties,lab_commodity_orders,lab_commodity_details,facility_amc,lab_commodities
+        $sql = "SELECT facilities.facility_code,facilities.facility_name,districts.district
+        FROM facilities, districts, counties
         WHERE facilities.district = districts.id
         AND facilities.rtk_enabled = 1
-        AND facilities.facility_code = facility_amc.facility_code
-        AND facility_amc.commodity_id = lab_commodity_details.commodity_id        
         AND counties.id = districts.county
         AND counties.id = $county_id
-        AND lab_commodity_orders.facility_code = facilities.facility_code
-        AND lab_commodity_orders.id = lab_commodity_details.order_id
-        AND lab_commodity_details.commodity_id = lab_commodities.id
-        AND lab_commodity_details.commodity_id BETWEEN 0 AND 6
-        AND lab_commodity_orders.order_date BETWEEN '$beg_date' AND '$end_date'
-        ORDER BY districts.district,facilities.facility_code  ASC,lab_commodity_details.commodity_id ASC ";
+        ORDER BY districts.district,facilities.facility_code  ASC ";
         $orders = $this->db->query($sql);
        //echo "<pre>";print_r($orders->result_array());die;
         foreach ($orders->result_array() as $orders_arr) {
-            $algorithm = ($orders_arr['commodity_id'] < 4) ? "Old-Algorithm" : 'New-Algorithm';
+            $fcode = $orders_arr['facility_code'];
 
-            $order_detail_id = $orders_arr['id'];
-            $q_requested = $orders_arr['q_requested'];
-            $q_received = $orders_arr['q_received'];
-            $commodity_id = $orders_arr['commodity_id'];
-            $closing_stock = $orders_arr['closing_stock'];
-            $q_used = $orders_arr['q_used'];
-            $beginning_bal = $orders_arr['beginning_bal'];
+            $q = "SELECT DISTINCT
+                    lab_commodities.*,        
+                    lab_commodity_details.order_id,
+                    lab_commodity_details.q_requested,    
+                    lab_commodity_details.commodity_id,        
+                    lab_commodity_details.allocated,
+                    lab_commodity_details.q_used,    
+                    facility_amc.amc,    
+                    lab_commodity_details.allocated_date
+                FROM
+                    lab_commodities,
+                    facility_amc,
+                    facilities,        
+                    lab_commodity_orders,
+                    lab_commodity_details
+                WHERE
+                    lab_commodities.id = facility_amc.commodity_id
+                        AND facility_amc.facility_code = '$fcode'                
+                        AND facilities.facility_code = facility_amc.facility_code
+                        AND facility_amc.commodity_id = lab_commodity_details.commodity_id        
+                        AND lab_commodity_orders.facility_code = facilities.facility_code
+                        AND lab_commodity_orders.id = lab_commodity_details.order_id
+                        AND lab_commodity_details.commodity_id = lab_commodities.id
+                        AND lab_commodity_details.commodity_id BETWEEN 0 AND 6
+                        AND lab_commodity_orders.order_date BETWEEN '$beg_date' AND '$end_date'
+                        group by lab_commodity_orders.facility_code,lab_commodity_details.commodity_id
+                        ORDER BY facilities.facility_code  ASC,lab_commodity_details.commodity_id ASC ";
+
+            $amc_details = $this->db->query($q)->result_array();
+            $amcs[$fcode] = $amc_details;
+            //echo "<pre>"; print_r($amcs[$fcode]);die();
+
             $facility_code = $orders_arr['facility_code'];
             $facility_name = $orders_arr['facility_name'];
-            $allocated = $orders_arr['allocated'];
             $district_name = $orders_arr['district'];
-            $commodity = $orders_arr['commodity_name'];
-            $unit_of_issue = $orders_arr['unit_of_issue'];
-            //$allocation = '<span class="label label-important">Pending Allocation for  ' . $lastmonth . '</span>';
 
+            $order_detail_id = $amcs[$fcode][0]['order_id'];
 
-            $commodity_id = $orders_arr['commodity_id'];
-            $amc = $orders_arr['amc'];
-            $amc_4month = $amc * 4;
-            $firstday = date('D dS M Y', strtotime("first day of previous month"));
-            $lastday = date('D dS M Y', strtotime("last day of previous month"));
-            $lastmonth = date('F', strtotime("last day of previous month"));
-            $allocation = '';
-            
-            
-                 // print_r($allocate); die();
+            $last_allocated = $amcs[$fcode][4]['allocated_date'];
+            if($last_allocated == 0){
+                $allocation_status = 'Pending Allocation';
+            }else{
+
+                $last_allocated = date('d-m-Y',$last_allocated);
+
+                $beg_date_ts = strtotime($beg_date);
+                $end_date_ts = strtotime($end_date);
+
+                if(($last_allocated>$beg_date_ts)){
+                    $allocation_status = 'Pending Allocation';
+                }else{
+                    $allocation_status = 'Allocated on '.$last_allocated;
+                }
+            }
+
+            $commodity_s = $amcs[$fcode][2]['commodity_name'];
+            $commodity_t = $amcs[$fcode][4]['commodity_name'];
+            $commodity_c = $amcs[$fcode][3]['commodity_name'];
+
+            $amc_s = $amcs[$fcode][2]['amc'];
+            $amc_s = str_replace(',', '', $amc_s);
+            $comm_s = $amcs[$fcode][2]['commodity_id'];
+
+            $amc_t = $amcs[$fcode][4]['amc'];
+            $amc_t = str_replace(',', '', $amc_t);
+            $comm_t = $amcs[$fcode][4]['commodity_id'];
+
+            $amc_c = $amcs[$fcode][3]['amc'];
+            $amc_c = str_replace(',', '', $amc_c);
+            $comm_c = $amcs[$fcode][3]['commodity_id'];
+            //$allocation = '<span class=\"label label-important\">Pending Allocation for  ' . $lastmonth . '</span>';
+
+            $qty_of_issue_s = ceil($amc_s/$amcs[$fcode][2]['unit_of_issue']);
+            $qty_of_issue_c = ceil($amc_c/$amcs[$fcode][3]['unit_of_issue']);
+            $qty_of_issue_t = ceil($amc_t/$amcs[$fcode][4]['unit_of_issue']);
+
+            if($qty_of_issue_t==0){
+                $qty_of_issue_t +=1;
+            }
+            if($qty_of_issue_c==0){
+                $qty_of_issue_c +=1;
+            }
+            if($qty_of_issue_s==0){
+                $qty_of_issue_s +=1;
+            }
 
             $table_body .= "
-            <tr id=''>
-            <input type='hidden' name='$order_detail_id' value='$order_detail_id' />
+            <tr id=''>            
+            <input type='hidden' name='order_detail_id' value='$order_detail_id' />
+            <input type='hidden' name='screening_id' value='$comm_s' />
+            <input type='hidden' name='confirm_id' value='$comm_c' />
+            <input type='hidden' name='tiebreaker_id' value='$comm_t' />
+            <td>$district_name</td>
             <td>$facility_code</td>
             <td>$facility_name</td>
-            <td>$district_name</td>
-            <td>$commodity <br/>$algorithm</td>
-            <td>$q_received</td>
-            <td>$q_used</td>
-            <td>$closing_stock</td>
-            <td>$q_requested</td>
-            <td>$amc</td>
-            <td><input type='text' class='user2' name='allocated_$order_detail_id' value='$allocated'/></td>
-            <td>$q_received</td>
-            <td>$allocation</td>
+            <td>$amc_s </td>
+            <td><input type ='text' size = '5' name ='allocate_screening_khb' value ='$qty_of_issue_s'></td>
+            <td>$amc_c</td>
+            <td><input type ='text' size = '5' name ='allocate_confirm_first' value ='$qty_of_issue_c'></td>
+            <td>$amc_t</td>
+            <td><input type ='text' size = '5' name ='allocate_tie_breaker' value ='$qty_of_issue_t'></td>
+            <td>$allocation_status</td>
+            <input type='hidden' name='fcode' value='$fcode' />
             </tr>";
         }
-
-//            echo"<table>$table_body</table";die;
-        //  $data['content_view'] = 'allocation_committee/ajax_view/rtk_county_allocation_v';
+       // die();
+          
         $data['county_id'] = $county_id;
         $data['table_body'] = $table_body;
         $data['title'] = "County View";
-//        $data['table_data'] = $this->rtk_county_sidebar();
         $data['banner_text'] = "Allocate " . $county_name['county'];
-        $data['content_view'] = "rtk/allocation_committee/ajax_view/rtk_county_allocation_datatableonly_v";
+        //$data['content_view'] = "rtk/allocation_committee/ajax_view/rtk_county_allocation_datatableonly_v";
+        $data['content_view'] = "rtk/rtk/allocation/rtk_county_allocation_datatableonly_v";
         $this->load->view("rtk/template", $data);
     }
-
+    
     public function rtk_allocation_data() {
-        if ($_POST['data'] == '') {
+        if ($_POST['form_data'] == '') {
             echo 'No data was found';           
         }
-        $data = $_POST['data'];
-        $data = str_replace('=', '&', $data);
-        $data = explode('&', $data);
-
+        
+        $data = $_POST['form_data'];       
+        // echo "<pre>";
+        // print_r($data);die();
         $now = time();
-        $count = count($data);
-        $i = 0;
-        $j = 0;
-        $data = array_chunk($data, 4);
+        
+        $data = array_chunk($data,8);
 
-        foreach ($data as $value) {
-            $id = $value[1];
-            $val = $value[3];
-            $query = 'UPDATE  `lab_commodity_details` SET  `allocated` =  ' . $val . ',`allocated_date` =  ' . $now . ' WHERE  `lab_commodity_details`.`id` =' . $id . '';
-            $this->db->query($query);
-        }
+        $beg_date = date('Y-m', strtotime("-3 Month"));
+        $beg_date.='-01';
+        $end_date = date('Y-m-d', strtotime("last day of previous Month"));
+
+        foreach ($data as $key => $value) {
+            $order_id = $value[0]['value'];
+            $facilitycode = $value[8]['value'];
+            $screening_id = $value[1]['value'];
+            $confirm_id = $value[2]['value'];
+            $tiebreaker_id = $value[3]['value'];
+           
+            $screening_allocate = $value[4]['value'];
+            $confirm_allocate = $value[5]['value'];
+            $tiebreaker_allocate = $value[6]['value'];
+
+            $query_s = "UPDATE  `lab_commodity_details` SET  `allocated` =  '$screening_allocate',`allocated_date` =  '$now' WHERE  `lab_commodity_details`.`created_at` between '$beg_date' and '$end_date' and `lab_commodity_details`.`commodity_id`='$screening_id'";
+            $query_c = "UPDATE  `lab_commodity_details` SET  `allocated` =  '$confirm_allocate',`allocated_date` =  '$now' WHERE  `lab_commodity_details`.`order_id` ='$order_id' and `lab_commodity_details`.`commodity_id`='$confirm_id'";
+            $query_t = "UPDATE  `lab_commodity_details` SET  `allocated` =  '$tiebreaker_allocate',`allocated_date` =  '$now' WHERE  `lab_commodity_details`.`order_id` ='$order_id' and `lab_commodity_details`.`commodity_id`='$tiebreaker_id'";
+            
+            // $query_s = "UPDATE  `lab_commodity_details` SET  `allocated` =  '$screening_allocate',`allocated_date` =  '$now' WHERE  `lab_commodity_details`.`created_at` between '$beg_date' and '$end_date' and`lab_commodity_details`.`facility_code`='$facilitycode' and `lab_commodity_details`.`commodity_id`='$screening_id'";
+            // $query_c = "UPDATE  `lab_commodity_details` SET  `allocated` =  '$confirm_allocate',`allocated_date` =  '$now' WHERE  `lab_commodity_details`.`created_at` between '$beg_date' and '$end_date' and`lab_commodity_details`.`facility_code`='$facilitycode' and `lab_commodity_details`.`commodity_id`='$confirm_id'";
+            // $query_t = "UPDATE  `lab_commodity_details` SET  `allocated` =  '$tiebreaker_allocate',`allocated_date` =  '$now' WHERE  `lab_commodity_details`.`created_at` between '$beg_date' and '$end_date' and`lab_commodity_details`.`facility_code`='$facilitycode' and `lab_commodity_details`.`commodity_id`='$tiebreaker_id'";
+            $this->db->query($query_s);
+            $this->db->query($query_c);
+            $this->db->query($query_t);
+            // $id = $value[1];
+            // $val = $value[3];
+            // $query = 'UPDATE  `lab_commodity_details` SET  `allocated` =  ' . $val . ',`allocated_date` =  ' . $now . ' WHERE  `lab_commodity_details`.`id` =' . $id . '';
+            // $this->db->query($query);
+         }
+        
+        
         // $object_id = $id;
         //$this->logData('16',$object_id);
         echo("allocations saved");
+        //redirect('rtk_management/allocation_zone/a');
     }
-
     function county_allocation($county_id) {
         $county = Counties::get_county_name($county_id);
         $countyname = $county['county'];
@@ -2112,29 +2187,126 @@ public function allocation_stock_card_county($county = null) {
         $three_months_ago = date("Y-m-", strtotime("-3 Month"));
         $three_months_ago .='1';
 
-        $beg_date = date('Y-m-d', strtotime("first day of previous month"));
-        $end_date = date('Y-m-d', strtotime("last day of previous month"));
-        
-        $sql = "SELECT DISTINCT facilities.facility_code,lab_commodity_details.id, lab_commodity_details.q_requested, lab_commodity_details.q_received,lab_commodity_details.commodity_id,lab_commodity_details.closing_stock,lab_commodity_details.beginning_bal,lab_commodity_details.allocated_date,
-        facilities.facility_name,lab_commodity_details.allocated,lab_commodity_details.q_used,districts.district,facility_amc.amc,lab_commodities.commodity_name,lab_commodity_orders.order_date
-        FROM facilities, districts, counties,lab_commodity_orders,lab_commodity_details,facility_amc,lab_commodities
+
+        $beg_date = date('Y-m', strtotime("-3 Month"));
+        $beg_date.='-01';
+        $end_date = date('Y-m-d', strtotime("last day of previous Month"));
+        // echo "begin $beg_date </br> end $end_date";die;
+
+        $sql = "SELECT facilities.facility_code,facilities.facility_name,districts.district
+        FROM facilities, districts, counties
         WHERE facilities.district = districts.id
         AND facilities.rtk_enabled = 1
-        AND facilities.facility_code = facility_amc.facility_code
-        AND facility_amc.commodity_id = lab_commodity_details.commodity_id      
         AND counties.id = districts.county
         AND counties.id = $county_id
-        AND lab_commodity_details.allocated > 1
-        AND lab_commodity_orders.facility_code = facilities.facility_code
-        AND lab_commodity_orders.id = lab_commodity_details.order_id
-        AND lab_commodity_details.commodity_id = lab_commodities.id
-        AND lab_commodity_details.commodity_id BETWEEN 0 AND 3
-        AND lab_commodity_orders.order_date BETWEEN '$three_months_ago' AND NOW()
-        ORDER BY  lab_commodity_orders.order_date, districts.district,facilities.facility_code ASC";
+        ORDER BY districts.district,facilities.facility_code  ASC LIMIT 0,10";
+        $orders = $this->db->query($sql);
+       //echo "<pre>";print_r($orders->result_array());die;
+        foreach ($orders->result_array() as $orders_arr) {
+            $fcode = $orders_arr['facility_code'];
 
-        $res = $this->db->query($sql);
+            $q = "SELECT DISTINCT
+                    lab_commodities.*,        
+                    lab_commodity_details.order_id,
+                    lab_commodity_details.q_requested,    
+                    lab_commodity_details.commodity_id,        
+                    lab_commodity_details.allocated,
+                    lab_commodity_details.q_used,    
+                    facility_amc.amc,    
+                    lab_commodity_details.allocated_date
+                FROM
+                    lab_commodities,
+                    facility_amc,
+                    facilities,        
+                    lab_commodity_orders,
+                    lab_commodity_details
+                WHERE
+                    lab_commodities.id = facility_amc.commodity_id
+                        AND facility_amc.facility_code = '$fcode'                
+                        AND facilities.facility_code = facility_amc.facility_code
+                        AND facility_amc.commodity_id = lab_commodity_details.commodity_id        
+                        AND lab_commodity_orders.facility_code = facilities.facility_code
+                        AND lab_commodity_orders.id = lab_commodity_details.order_id
+                        AND lab_commodity_details.commodity_id = lab_commodities.id
+                        AND lab_commodity_details.commodity_id BETWEEN 0 AND 6
+                        AND lab_commodity_orders.order_date BETWEEN '$beg_date' AND '$end_date'
+                        group by lab_commodity_orders.facility_code,lab_commodity_details.commodity_id
+                        ORDER BY facilities.facility_code  ASC,lab_commodity_details.commodity_id ASC ";
 
-        return $res->result_array();
+            $amc_details = $this->db->query($q)->result_array();
+            $amcs[$fcode] = $amc_details;
+            //echo "<pre>"; print_r($amcs[$fcode]);die();
+
+            $facility_code = $orders_arr['facility_code'];
+            $facility_name = $orders_arr['facility_name'];
+            $district_name = $orders_arr['district'];
+
+            $order_detail_id = $amcs[$fcode][0]['order_id'];
+
+            $last_allocated = $amcs[$fcode][4]['allocated_date'];
+            if($last_allocated == 0){
+                $allocation_status = 'Pending Allocation';
+            }else{
+
+                $last_allocated = date('d-m-Y',$last_allocated);
+
+                $beg_date_ts = strtotime($beg_date);
+                $end_date_ts = strtotime($end_date);
+
+                if(($last_allocated>$beg_date_ts)){
+                    $allocation_status = 'Pending Allocation';
+                }else{
+                    $allocation_status = 'Allocated on '.$last_allocated;
+                }
+            }
+
+            $commodity_s = $amcs[$fcode][2]['commodity_name'];
+            $commodity_t = $amcs[$fcode][4]['commodity_name'];
+            $commodity_c = $amcs[$fcode][3]['commodity_name'];
+
+            $amc_s = $amcs[$fcode][2]['amc'];
+            $amc_s = str_replace(',', '', $amc_s);
+            $comm_s = $amcs[$fcode][2]['commodity_id'];
+
+            $amc_t = $amcs[$fcode][4]['amc'];
+            $amc_t = str_replace(',', '', $amc_t);
+            $comm_t = $amcs[$fcode][4]['commodity_id'];
+
+            $amc_c = $amcs[$fcode][3]['amc'];
+            $amc_c = str_replace(',', '', $amc_c);
+            $comm_c = $amcs[$fcode][3]['commodity_id'];
+            //$allocation = '<span class=\"label label-important\">Pending Allocation for  ' . $lastmonth . '</span>';
+
+            $qty_of_issue_s = ceil($amc_s/$amcs[$fcode][2]['unit_of_issue']);
+            $qty_of_issue_c = ceil($amc_c/$amcs[$fcode][3]['unit_of_issue']);
+            $qty_of_issue_t = ceil($amc_t/$amcs[$fcode][4]['unit_of_issue']);
+
+            if($qty_of_issue_t==0){
+                $qty_of_issue_t +=1;
+            }
+            if($qty_of_issue_c==0){
+                $qty_of_issue_c +=1;
+            }
+            if($qty_of_issue_s==0){
+                $qty_of_issue_s +=1;
+            }
+
+            $table_body .= "
+            <tr id=''>                        
+            <td>$district_name</td>
+            <td>$facility_code</td>
+            <td>$facility_name</td>
+            <td>$amc_s </td>
+            <td>$qty_of_issue_s</td>
+            <td>$amc_c</td>
+            <td>$qty_of_issue_c</td>
+            <td>$amc_t</td>
+            <td>$qty_of_issue_t</td>
+            <td>$allocation_status</td>
+            </tr>";
+
+            echo $table_body;die;
+        }
     }
 
 
@@ -5377,8 +5549,8 @@ public function get_all_zone_a_facilities(){
                          foreach ($res as $keys => $values) {                        
                             $order_id = $values['order_id'];
                             $facility_code = $values['facility_code'];
-                            $unit = $values['unit_of_issue'];
-                            $q_used = $values['q_used'];
+                            $unit = $values['unit_of_issue'];                            
+                            $q_used = $values['q_used'];                            
                             $commodity_id = $values['commodity_id'];
                             $created_at = $values['created_at'];
                             $small_array[$commodity_id] = array('order_id'=>$order_id,
@@ -5403,23 +5575,26 @@ public function get_all_zone_a_facilities(){
                             $new_val = $screening_khb_q_used + (2* $screening_det_q_used);                        
                         }
 
-                        $large_array[$code][$count] = $small_array;                    
+                        $large_array[$code][$count] = $small_array;                        
                         foreach ($large_array[$code] as $count=>$value) {
                             foreach ($value as $key => $values) {                            
                                 $order_id = $values['order_id'];
                                 $facility_code = $values['facility_code'];
-                                $unit = $values['unit_of_issue'];
+                                $unit = $values['unit'];                                
                                 $q_used = $values['q_used'];
                                 $commodity_id = $values['commodity_id'];
                                 $created_at = $values['created_at'];
                                 if($commodity_id==4){
                                    $sql1 = "INSERT INTO `lab_commodity_details1`(`order_id`, `facility_code`, `commodity_id`, `unit_of_issue`, `q_used`, `created_at`) 
                                      VALUES ('$order_id','$facility_code','$commodity_id','$unit','$new_val','$created_at')";
+                                     // echo "$sql1";die();
                                      $this->db->query($sql1); 
                                 }else{
                                     $sql1 = "INSERT INTO `lab_commodity_details1`(`order_id`, `facility_code`, `commodity_id`, `unit_of_issue`, `q_used`, `created_at`) 
                                      VALUES ('$order_id','$facility_code','$commodity_id','$unit','$q_used','$created_at')";
-                                     $this->db->query($sql1);                                
+                                     // echo "$sql1";                              die(); 
+                                     $this->db->query($sql1); 
+
                                 }
                             }
                             

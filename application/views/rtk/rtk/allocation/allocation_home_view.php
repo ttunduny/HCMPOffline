@@ -22,7 +22,7 @@
 
 
 
-<?php include('allocation_links.php');?>
+<div id="nav" style="margin-top:10px;width:100%"><?php include('allocation_links.php');?></div>
 <div class="row" style="width:100%; margin-top:4%;margin-left:4%;float:left;">
 <!--div class="span3">
 <<ul class="nav nav-tabs nav-stacked">

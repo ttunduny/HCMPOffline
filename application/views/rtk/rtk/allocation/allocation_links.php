@@ -1,7 +1,7 @@
 <div id="tabs">	
 	<a id="trend_tab" href="<?php echo base_url().'rtk_management/allocation_trend'; ?>" data-tab="1" class="tab">Reporting Rates</a>
 	<a id="stocks_tab" href="<?php echo base_url().'rtk_management/allocation_stock_card'; ?>" data-tab="1" class="tab">National Stock Card</a>	
-	<a id="allocations_tab" href="<?php echo base_url().'rtk_management/allocation_home';?>" data-tab="1" class="tab">National Allocations</a>			
+	<a id="allocations_tab" href="<?php echo base_url().'rtk_management/allocation_zone/a';?>" data-tab="1" class="tab">National Allocations</a>			
 	<!--a id="allocations_tab" href="<?php echo base_url().'rtk_management/show_allocation_pending';?>" data-tab="1" class="tab">Pending Allocation</a-->			
 	<a id="allocations_tab" href="<?php echo base_url().'rtk_management/new_non_reported_facilities';?>" data-tab="1" class="tab">Non-Reported Facilities</a>			
 </div>
