@@ -111,7 +111,7 @@
                         <li><a class="icon icon-data" href="<?php echo base_url().'Home';?>">Home</a></li>
                         <li><a class="icon icon-study" href="<?php echo base_url().'admin/manage_commodities';?>">Commodities</a></li>
                         <li><a class="icon icon-location" href="<?php echo base_url().'admin/manage_users';?>">User Management</a></li>
-                        <li><a class="icon icon-photo" href="#">Facilities</a></li>
+                        <li><a class="icon icon-photo" href="<?php echo base_url().'admin/manage_facilities'?>">Facilities</a></li>
                         <li><a class="icon icon-wallet" href="#">Counties</a></li>
                         <li><a class="icon icon-wallet" href="#">Sub-Counties</a></li>
                     </ul>
