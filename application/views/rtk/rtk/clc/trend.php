@@ -51,7 +51,7 @@ table{
                         County Progress: <?php echo $total_percentage; ?>%
                         <div class="progress">
                             <div class="progress">
-                              <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $reporting_percentage; ?>%;">
+                              <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $total_percentage; ?>%;">
                                 <?php echo $total_percentage; ?>%
                             </div>
                         </div>

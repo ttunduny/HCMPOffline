@@ -682,10 +682,15 @@ public function county_stock() {
     if ($month == '') {
         $month = date('mY', strtotime('-1 month'));
     }
+    $year = substr($month, -4);
+    $month = substr($month, 0,2);
 
     $month_db = date("mY", strtotime("$month +0 month"));        
+   // echo "$month , $year, $countyid";die();
     $data['county_summary'] = $this->_requested_vs_allocated($year, $month, $countyid); 
-    
+    // echo "<pre>";
+    // print_r($data['county_summary']);die();
+
     $data['county'] = $County;
     $data['active_month'] = $month.$year;
     $data['title'] = 'RTK County Admin';
@@ -839,7 +844,9 @@ public function county_profile($county) {
                     $County = $county_name['county'];
                     $res = $this->db->query("select facilities as total_facilities,percentage as total_percentage from rtk_county_percentage 
                         where county_id='$countyid' and month='$active_month'");
-                    $result = $res->result_array();        
+                    $result = $res->result_array();       
+                    // echo "<pre>"; 
+                    // print_r($result);die();
                     $data['total_facilities'] = $result[0]['total_facilities'];             
                     $data['total_percentage'] = $result[0]['total_percentage'];             
 
