@@ -63,6 +63,7 @@ class Admin extends MY_Controller {
 		$le_facility = $_POST['ndata'];
 		$le_status = $_POST['status'];
 		//echo "This  ".$le_status;exit;
+		//something
 		$double_tap = Users::deactivate_facility($le_facility,$le_status);
 		//echo "Success";
 	}
