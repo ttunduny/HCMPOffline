@@ -105,8 +105,9 @@
 <script type="text/javascript" language="javascript" src="<?php echo base_url();?>assets/datatable/jquery.dataTables.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-  $('#stock_card_table').dataTable({
-    "sDom": "T lfrtip", 
+   $('#stock_card_table').dataTable({
+     "sDom": "T lfrtip",
+     "aaSorting": [],
      "bJQueryUI": false,
       "bPaginate": false,
       "oLanguage": {
@@ -122,7 +123,7 @@ $(document).ready(function() {
         "sButtonText": 'Save',
         "aButtons": ["csv", "xls", "pdf"]
       }
-      ],
+      ],  
       "sSwfPath": "<?php echo base_url();?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
     }
   });
