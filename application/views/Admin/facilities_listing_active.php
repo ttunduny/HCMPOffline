@@ -8,7 +8,6 @@
 
 	}
 </style>
-
 <div class="container">
 	
 	<?php $x = array();
