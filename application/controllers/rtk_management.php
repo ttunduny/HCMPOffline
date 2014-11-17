@@ -1685,8 +1685,9 @@ public function rtk_manager_stocks($month=null) {
         $percentages = array();
 
         for ($i=11; $i >=0; $i--) { 
-            $month =  date("mY", strtotime( date( 'Y-m-01' )." -$i months"));            
-            $month_text =  date("M Y", strtotime( date( 'Y-m-01' )." -$i months")); 
+            $month =  date("mY", strtotime( date( 'Y-m-01' )." -$i months"));
+            $j = $i+1;            
+            $month_text =  date("M Y", strtotime( date( 'Y-m-01' )." -$j months")); 
             array_push($months_texts,$month_text);
             $sql = "select sum(reported) as reported, sum(facilities) as total, month from rtk_county_percentage 
                 where month ='$month'";
@@ -1718,15 +1719,18 @@ public function rtk_manager_stocks($month=null) {
 public function allocation_stock_card() {  
        
     if (!isset($month)) {
-        $month = date('mY', strtotime('-1 month'));
+        $month = date('mY', strtotime('-0 month'));
+        $month_1 = date('mY', strtotime('-1 month'));
     }
     $year = substr($month, -4);
+    $year_1 = substr($month_1, -4);
     $month = substr_replace($month, "", -4);              
+    $month_1 = substr_replace($month_1, "", -4);              
     $firstdate = $year . '-' . $month . '-01';
+    $firstdate1 = $year_1 . '-' . $month_1 . '-01';
     $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-    $lastdate = $year . '-' . $month .'-'. $num_days;       
-
-    $month_text =  date("F Y", strtotime($lastdate)); 
+    $lastdate = $year . '-' . $month .'-'. $num_days;        
+    $month_text =  date("F Y", strtotime($firstdate1));
 
     $sql_amcs = "select lab_commodities.id,lab_commodities.commodity_name,sum(facility_amc.amc) as amc 
     from  lab_commodities,facility_amc where  lab_commodities.id = facility_amc.commodity_id and lab_commodities.category = '1'
@@ -1771,14 +1775,18 @@ public function allocation_stock_card_county($county = null) {
     $conditions_endbal = "";
     $conditions_amc = "";       
     if (!isset($month)) {
-        $month = date('mY', strtotime('-1 month'));
+        $month = date('mY', strtotime('-0 month'));
+        $month_1 = date('mY', strtotime('-1 month'));
     }
     $year = substr($month, -4);
+    $year_1 = substr($month_1, -4);
     $month = substr_replace($month, "", -4);              
+    $month_1 = substr_replace($month_1, "", -4);              
     $firstdate = $year . '-' . $month . '-01';
+    $firstdate1 = $year_1 . '-' . $month_1 . '-01';
     $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
     $lastdate = $year . '-' . $month .'-'. $num_days;        
-    $month_text =  date("F Y", strtotime($lastdate)); 
+    $month_text =  date("F Y", strtotime($firstdate1)); 
 
     $sql_amcs = "select lab_commodities.id,lab_commodities.commodity_name,sum(facility_amc.amc) as amc 
     from  lab_commodities,facility_amc,facilities,districts,counties 
