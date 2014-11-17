@@ -13,12 +13,14 @@
     <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
+    <link href="<?php echo base_url().'assets/css/offline.css'?>" type="text/css" rel="stylesheet"/>
     <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
     <link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
     <script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
     <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
+     <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
     <title>HCMP | National</title>
 <script>
    paceOptions = {
