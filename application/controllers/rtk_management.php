@@ -3982,13 +3982,15 @@ function facility_amc_compute($a,$b) {
         sum(lab_commodity_details.allocated) as sum_allocated,
         sum(lab_commodity_details.allocated) as sum_days,
         sum(lab_commodity_details.q_expiring) as sum_expiring
-        FROM lab_commodities, lab_commodity_details, lab_commodity_orders, facilities, districts, counties 
-        WHERE lab_commodity_details.commodity_id = lab_commodities.id 
-        AND lab_commodity_orders.id = lab_commodity_details.order_id 
-        AND facilities.facility_code = lab_commodity_details.facility_code 
-        AND facilities.district = districts.id 
+        FROM 
+            lab_commodities,
+            lab_commodity_details,
+            districts, 
+            counties 
+        WHERE lab_commodity_details.commodity_id = lab_commodities.id                 
+        AND lab_commodity_details.district_id = districts.id 
         AND districts.county = counties.id 
-        AND lab_commodity_orders.order_date BETWEEN  '$firstday' AND  '$lastdate'";
+        AND lab_commodity_details.created_at BETWEEN  '$firstday' AND  '$lastdate'";
         //AND lab_commodities.id in (select lab_commodities.id from lab_commodities,lab_commodity_categories 
           //  where lab_commodities.category = lab_commodity_categories.id and lab_commodity_categories.active = '1')";
 if (isset($county)) {
@@ -3997,41 +3999,43 @@ if (isset($county)) {
 
  $common_q.= ' group by lab_commodities.id';
 
-// $res = $this->db->query($common_q);        
+ //echo "$common_q";die();
 
-//         $result = $res->result_array();
+$res = $this->db->query($common_q);        
+
+        $result = $res->result_array();
         // echo "<pre>";
         // print_r($result);
         // die();
         // array_push($returnable, $result);
 
 
-        $q = $common_q . " AND lab_commodities.id = 1";
-        $res = $this->db->query($q);
-        $result = $res->result_array();
-        array_push($returnable, $result[0]);
+//         $q = $common_q . " AND lab_commodities.id = 1";
+//         $res = $this->db->query($q);
+//         $result = $res->result_array();
+//         array_push($returnable, $result[0]);
 
-        $q2 = $common_q . " AND lab_commodities.id = 2";
-        $res2 = $this->db->query($q2);
-        $result2 = $res2->result_array();
-        array_push($returnable, $result2[0]);        
+//         $q2 = $common_q . " AND lab_commodities.id = 2";
+//         $res2 = $this->db->query($q2);
+//         $result2 = $res2->result_array();
+//         array_push($returnable, $result2[0]);        
 
-        $q4 = $common_q . " AND lab_commodities.id = 4";
-        $res4 = $this->db->query($q4);
-        $result4 = $res4->result_array();
-        array_push($returnable, $result4[0]);
+//         $q4 = $common_q . " AND lab_commodities.id = 4";
+//         $res4 = $this->db->query($q4);
+//         $result4 = $res4->result_array();
+//         array_push($returnable, $result4[0]);
 
-        $q5 = $common_q . " AND lab_commodities.id = 5";
-        $res5 = $this->db->query($q5);
-        $result5 = $res5->result_array();
-        array_push($returnable, $result5[0]);
+//         $q5 = $common_q . " AND lab_commodities.id = 5";
+//         $res5 = $this->db->query($q5);
+//         $result5 = $res5->result_array();
+//         array_push($returnable, $result5[0]);
 
-        $q6 = $common_q . " AND lab_commodities.id = 6";
-        $res6 = $this->db->query($q6);
-        $result6 = $res6->result_array();
-        array_push($returnable, $result6[0]);
-$returnable = $res->result_array();
-echo"<pre>";print_r($returnable);die;
+//         $q6 = $common_q . " AND lab_commodities.id = 6";
+//         $res6 = $this->db->query($q6);
+//         $result6 = $res6->result_array();
+//         array_push($returnable, $result6[0]);
+// $returnable = $res->result_array();
+// echo"<pre>";print_r($returnable);die;
 return $result;
 }
 
