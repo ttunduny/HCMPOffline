@@ -4366,6 +4366,10 @@ public function facility_profile($mfl) {
     $facility = $this->db->query($sql)->result_array();        
     $mfl =  $facility[0]['facility_code'];       
     $data['reports'] = $this->_monthly_facility_reports($mfl);
+    // $data['reports']= str_replace('(', '-', $data['reports']);
+    // $data['reports'] = str_replace(')', '', $data['reports']);
+        // echo "<pre>";
+        // print_r($data['reports']);die();
 
     $data['facility_county'] = $data['reports'][0]['county'];
     $data['facility_district'] = $data['reports'][0]['district'];
@@ -4399,48 +4403,49 @@ private function _monthly_facility_reports($mfl, $monthyear = null) {
         AND  '$lastdate'";
     }
 
-    $sql = "select lab_commodity_orders.order_date,lab_commodity_orders.compiled_by,lab_commodity_orders.id,
+    $sql = "select distinct lab_commodity_orders.order_date,lab_commodity_orders.compiled_by,lab_commodity_orders.id,
     facilities.facility_name,districts.district,districts.id as district_id, counties.county,counties.id as county_id
     FROM lab_commodity_orders,facilities,districts,counties
     WHERE lab_commodity_orders.facility_code = facilities.facility_code
     AND facilities.district = districts.id
     AND counties.id = districts.county
-    AND facilities.facility_code =$mfl $conditions";        
+    AND facilities.facility_code =$mfl $conditions 
+    group by lab_commodity_orders.order_date ";        
 
 
     $sql .=' Order by lab_commodity_orders.order_date desc';
-
+    //echo "$sql";die();
     $res = $this->db->query($sql);
     $sum_facilities = array();
     $facility_arr = array();
 
     foreach ($res->result_array() as $key => $value) {
         $facility_arr = $value;
-        $details = $this->fcdrr_values($value['id']);
-
+        $details = $this->fcdrr_values($value['id']);       
         array_push($facility_arr, $details);
         array_push($sum_facilities, $facility_arr);
     }
+   
     return $sum_facilities;
 }
 public function fcdrr_values($order_id, $commodity = null) {
    // $month = date('mY', strtotime("Month"));
     $q = "SELECT * 
     FROM lab_commodities, lab_commodity_details, facility_amc
-    WHERE lab_commodity_details.order_id =' . $order_id . '
+    WHERE lab_commodity_details.order_id ='$order_id'
     AND facility_amc.facility_code = lab_commodity_details.facility_code
     AND facility_amc.commodity_id = lab_commodity_details.commodity_id    
-    AND lab_commodity_details.commodity_id = lab_commodities.id ";
+    AND lab_commodity_details.commodity_id = lab_commodities.id 
+    AND lab_commodities.category='1'";
 
 
     if (isset($commodity)) {
-        $q = 'SELECT * 
+        $q = "SELECT * 
         FROM lab_commodities, lab_commodity_details
-        WHERE lab_commodity_details.order_id =' . $order_id . '
+        WHERE lab_commodity_details.order_id ='$order_id'
         AND lab_commodity_details.commodity_id = lab_commodities.id
-        AND commodity_id=' . $commodity;
-    }
-
+        AND commodity_id='$commodity'";
+    }   
     $q_res = $this->db->query($q);
     $returnable = $q_res->result_array();
     return $returnable;

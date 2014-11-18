@@ -45,6 +45,10 @@
   background-color: #009933;
   color: #fff;
  }
+ #download{
+  text-decoration: underline;  
+  margin-left: 10%;
+ }
  </style>
 
 
@@ -58,6 +62,8 @@
     <?php echo $option_counties;?>
   </select>
   <button id="go_county">Go</button>
+  <a id="download" href="">Download Facilities List</a>
+  
 </div>
   <div id="stock_card">    
     <table id="stock_card_table" class="data-table">
