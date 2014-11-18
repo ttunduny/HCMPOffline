@@ -57,7 +57,7 @@ placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_nor
 <button class="btn btn-sm btn-success category-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div>	
 <div class="col-md-1">
-<button class="btn btn-sm btn-success category-data"><span class="glyphicon glyphicon-filter"></span>View Data</button> 
+<button class="btn btn-sm btn-primary category-data"><span class="glyphicon glyphicon-th-list"></span>Results as Table</button> 
 </div>
    </form>
       </div>
@@ -90,7 +90,7 @@ placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_nor
 <button class="btn btn-sm btn-success county-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div>
 <div class="col-md-1">
-<button class="btn btn-sm btn-success county-data"><span class="glyphicon glyphicon-filter"></span>View Data</button> 
+<button class="btn btn-sm btn-primary county-data"><span class="glyphicon glyphicon-filter"></span>Results as Table</button> 
 </div>
 </form>
 </div>
@@ -135,7 +135,7 @@ placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_nor
 <button class="btn btn-sm btn-success subcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div>
 <div class="col-md-1">
-<button class="btn btn-sm btn-success subcounty-data"><span class="glyphicon glyphicon-filter"></span>View Data</button> 
+<button class="btn btn-sm btn-primary subcounty-data"><span class="glyphicon glyphicon-filter"></span>Results as Table</button> 
 </div>
 </form>
 </div>
