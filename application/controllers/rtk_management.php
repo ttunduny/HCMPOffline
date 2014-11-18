@@ -5297,28 +5297,49 @@ function _national_reports_sum($year, $month) {
         echo "Commodity Updated Succesfully";
     }
 
-public function get_all_zone_a_facilities(){
-                $sql = "select distinct facilities.*,districts.district,counties.county, user.lname, user.fname, user.telephone from facilities,counties,districts, user 
-                where facilities.zone = 'Zone B' 
-                and facilities.rtk_enabled=1
-                and districts.id = facilities.district
-                and counties.id=districts.county";
-                $res = $this->db->query($sql);
-                $facilities = $res->result_array();
+public function get_all_zone_a_facilities($zone,$a,$b){
+                $sql = "SELECT DISTINCT
+                            facilities.*,
+                            districts.district,
+                            counties.county    
+                        FROM
+                            facilities,
+                            counties,
+                            districts
+                        WHERE
+                            facilities.zone = 'Zone $zone'
+                                AND facilities.rtk_enabled = 1
+                                AND districts.id = facilities.district
+                                AND counties.id = districts.county limit $a,$b";
+
+                $facilities = $this->db->query($sql)->result_array();
+                
                 $amcs = array();
                 foreach ($facilities as $key => $value) {
                     $fcode = $value['facility_code'];
-                    $q = "select distinct lab_commodities.*, facility_amc.* from lab_commodities, facility_amc 
-                    where lab_commodities.id = facility_amc.commodity_id and facility_amc.facility_code=$fcode and facility_amc.month='$month'";
+                    $q = "SELECT DISTINCT
+                                lab_commodities.*, facility_amc.*, lab_commodity_details.closing_stock
+                            FROM
+                                lab_commodities,
+                                facility_amc,
+                                lab_commodity_details
+                            WHERE
+                                lab_commodities.id = facility_amc.commodity_id
+                                    AND facility_amc.facility_code = '$fcode'
+                                    AND lab_commodity_details.commodity_id = lab_commodities.id
+                                    and lab_commodity_details.facility_code = facility_amc.facility_code
+                                    AND lab_commodity_details.commodity_id BETWEEN 0 AND 6
+                                    and lab_commodity_details.created_at between '2014-11-01' and '2014-11-31'";
+                                
                     $res1 = $this->db->query($q);
                     $amc_details = $res1->result_array();
-                    $amcs[$fcode] = $amc_details;
-                // echo "<pre>"; echo($q); die;
+                    $amcs[$fcode] = $amc_details;                
 
                 }
+                // echo "<pre>"; print_r($amcs[$fcode]);die;
 
-                $data['title'] = 'Zone B List';
-                $data['banner_text'] = 'Facilities in Zone B';
+                $data['title'] = "Zone $zone List";
+                $data['banner_text'] = "Facilities in Zone $zone";
                 $data['content_view'] = 'rtk/allocation_committee/zone_a';        
                 $data['facilities'] = $facilities;
                 $data['amcs'] = $amcs;
