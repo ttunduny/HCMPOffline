@@ -464,7 +464,7 @@ public static function get_facilities_which_went_online_($district_id = null, $d
 	where 
 		f.district = d.id 
 		and d.id = $district_id 
-		and DATE_FORMAT(  `date_of_activation` ,  '%M %Y' ) = '$date_of_activation'");
+		and DATE_FORMAT(  `date_of_activation` ,  '%M %Y' ) = '$date_of_activation' AND using_hcmp=1");
 				
 		return $q;		
 }
