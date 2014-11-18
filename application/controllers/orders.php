@@ -101,12 +101,14 @@ for ($row = 1; $row <= $highestRow; $row++){
 
 	public function facility_order() 
 	{
+		//$this -> load -> library('PHPExcel');
+		//ini_set("max_execution_time", "1000000");
 		$facility_code = $this -> session -> userdata('facility_id');
 
         $items=Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
         if(isset($_FILES['file']) && $_FILES['file']['size'] > 0){
         $ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
-            echo $ext; 
+            //echo $ext; 
         if($ext=='xls'){
         $excel2 = PHPExcel_IOFactory::createReader('Excel5');    
         }else if($ext=='xlsx'){
@@ -114,8 +116,8 @@ for ($row = 1; $row <= $highestRow; $row++){
         }else{
         die('Invalid file format given'.$_FILES['file']);   
         }
-
-        $excel2=$objPHPExcel= $excel2->load($_FILES["file"]["tmp_name"]); // Empty Sheet
+		
+		$excel2=$objPHPExcel= $excel2->load($_FILES["file"]["tmp_name"]); // Empty Sheet
     
         $sheet = $objPHPExcel->getSheet(0); 
         $highestRow = $sheet->getHighestRow(); 
@@ -123,53 +125,141 @@ for ($row = 1; $row <= $highestRow; $row++){
         $highestColumn = $sheet->getHighestColumn();
         $temp=array();
         $facility_code= $sheet->getCell('H4')->getValue();
-    
+   
+   
         //  Loop through each row of the worksheet in turn
+        $array_code=array();
+		$array_commodity=array();
+		$array_category=array();
+		$array_pack=array();
+		$array_price=array();
+		$array_order_qty=array();
+		$array_order_val=array();
+		$array_index=array();
+		//$array_code=array();
         for ($row = 17; $row <= $highestRow; $row++){ 
         //  Read a row of data into an array
-        $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);                            
-        if(isset($rowData[0][2]) && $rowData[0][2]!='Product Code'){
-        foreach($items as $key=> $data){
-        if(in_array($rowData[0][2], $data)){
-        array_push($temp,array('sub_category_name'=>$data['sub_category_name'],
-        'commodity_name'=>$data['commodity_name'],
-        'unit_size'=>$data['unit_size'],
-        'unit_cost'=>$data['unit_cost'],
-        'commodity_code'=>$data['commodity_code'],
-        'commodity_id'=>$data['commodity_id'],
-        'total_commodity_units'=>$data['total_commodity_units'],
-        'opening_balance'=>$data['opening_balance'],
-        'total_receipts'=>$data['total_receipts'],
-        'total_issues'=>$data['total_issues'],
-        'quantity_ordered'=>($rowData[0][7]=='')? 0:$rowData[0][7],
-        'comment'=>'',
-        'closing_stock_'=>$data['closing_stock_'],
-        'closing_stock'=>$data['closing_stock'],
-        'days_out_of_stock'=>$data['days_out_of_stock'],
-        'date_added'=>'',
-        'losses'=>$data['losses'],
-        'status'=>$data['status'],
-        'adjustmentpve'=>$data['adjustmentpve'],
-        'adjustmentnve'=>$data['adjustmentnve'],
-        'historical'=>$data['historical']));
-         unset($items[$key]);
-            }   
-            }   
-            }
-            }
+        $rowData = $objPHPExcel->getActiveSheet()->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);
+     	//var_dump($rowData); 
+		//count($rowData);
+		$code=preg_replace('/\s+/ ','',$rowData[0][2]);
+		$code=str_replace('-','',$code);
+		$array_index[]=$rowData[0][1]-1;
+		$array_code[]=$code;
+		$array_commodity[]=$rowData[0][3];
+		$array_category[]=$rowData[0][4];
+		$array_price[]=$rowData[0][6];
+		$array_order_qty[]=(int)$rowData[0][7];
+		$array_order_val[]=$rowData[0][8];
+		$array_pack[]=$rowData[0][5];
+			
+		//if(isset($rowData[0][2]) && $rowData[0][2]!='Product Code'){
+			//echo '<pre>';print_r($rowData[0][7]); echo '</pre>';
+        //foreach($items as $key=> $data){
+        	//echo '<pre>';print_r($rowData); echo '</pre>';
+			
+       
+            //}   
+            //}
 
-        unset($objPHPExcel); 
-       $data['order_details'] = $data['facility_order'] = $temp;  
+            }
+		
+		//echo '<pre>';print_r($array_order_qty); echo '</pre>';exit;
+		foreach ($array_order_qty as $id => $key) {
+				//echo '<pre>';print_r($array_commodity[$id].'.'.$array_code[$id]); echo '</pre>';//exit;  
+        	
+        		//foreach($items as $key=> $data){
+        array_push($temp,array('sub_category_name'=>$array_category[$id],
+        'commodity_name'=>$array_commodity[$id],
+        'unit_size'=>$array_pack[$id],
+        'unit_cost'=>($array_price[$id]=='')? 0:(int)$array_price[$id],
+        'commodity_code'=>$array_code[$id],
+        'commodity_id'=>$data['commodity_id'],
+        'quantity_ordered'=>($array_order_qty[$id]=='')? 0:(int)$array_order_qty[$id],
+        'total_commodity_units'=>0,
+        'opening_balance'=>0,
+        'total_receipts'=>0,
+        'total_issues'=>0,
+        'comment'=>'',
+        'closing_stock_'=>0,
+        'closing_stock'=>0,
+        'days_out_of_stock'=>0,
+        'date_added'=>'',
+        'losses'=>0,
+        'status'=>0,
+        'adjustmentpve'=>0,
+        'adjustmentnve'=>0,
+        'historical'=>0));
+         //unset($items[$key]);
+        /// }
+				
+			
+			
+              
+}//exit;
+    foreach ($temp as $key => $value) {
+	//echo '<pre>';print_r($value['commodity_code']); echo '</pre>';
+	if ($value['commodity_code']==""||$value['quantity_ordered']==0) {
+		unset($temp[$key]);
+	}
+	
+	
+}//echo '<pre>';print_r($temp); echo '</pre>';exit;
+		//$c = array_combine($array_code, $array_commodity);
+		$array_id=array();
+		$array_codes=array();
+		$main_array=array();
+		foreach ($temp as $keys ) {
+			
+			$kemsa=$keys['commodity_code'];
+			$unit_cost=$keys['unit_cost'];
+			//$unit_size=preg_replace("(')", "",$size);
+			$get_id=Commodities::get_id($kemsa,$unit_cost);
+			//echo '<pre>';print_r($get_id); echo '</pre>';
+			$main_array[]=$keys;
+			foreach ($get_id as $key2) {
+				$array_id[]=$key2['id'];
+				$array_total_units[]=$key2['total_commodity_units'];
+				
+				//echo '<pre>';print_r($keys); echo '</pre>';
+			}
+			
+			//echo '<pre>';print_r($get_id[]); echo '</pre>';
+		}
+		//echo '<pre>';print_r($main_array); echo '</pre>';exit;
+		//$new=array_combine($array_id, $array_codes);
+		//echo '<pre>';print_r($new); echo '</pre>';exit;
+			
+			
+		
+		$array_combined=array();
+		$id_count=count($array_id);
+		
+		for ($i=0; $i < $id_count;$i++) {
+			$main_array[$i]['commodity_id']=$array_id[$i];
+			$main_array[$i]['total_commodity_units']=$array_total_units[$i];
+			//echo '<pre>';print_r($main_array[$i]); echo '</pre>';
+			
+			
+				}//exit;
+		
+		//echo '<pre>';print_r($main_array); echo '</pre>';
+		//exit;
+		
+        //unset($objPHPExcel);
+       $data['order_details'] = $data['facility_order'] = $main_array;  
         }else{
         $data['order_details'] = $data['facility_order'] = $items;   
         }
+		
+		//var_dump($temp);exit;
         $facility_code = $this -> session -> userdata('facility_id');
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
         $data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";
         $data['title'] = "Facility New Order";
         $data['banner_text'] = "Facility New Order";
         $data['drawing_rights'] = $facility_data[0]['drawing_rights'];
-        $data['facility_commodity_list'] = Commodities::get_facility_commodities($facility_code);
+        $data['facility_commodity_list'] = Commodities::get_commodities_not_in_facility($facility_code);
 
 		$this -> load -> view('shared_files/template/template', $data);
 	}
@@ -213,7 +303,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 		$data['option_'] = ($option == 'readonly') ? 'readonly_' : 0;
 		$data['order_details'] = $order_data;
 		$data['facility_order'] = facility_order_details::get_order_details($order_id);
-		$data['facility_commodity_list'] = Commodities::get_facility_commodities($order_data[0]['facility_code']);
+		$data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
 		$this -> load -> view('shared_files/template/template' , $data);
 			}
 
@@ -255,10 +345,12 @@ for ($row = 1; $row <= $highestRow; $row++){
 			$this -> db -> insert('facility_orders', $order_details);
 			$new_order_no = $this -> db -> insert_id();
 			}
-			$temp_array = array("commodity_id" => $commodity_id[$i], 'quantity_ordered_pack' => $quantity_ordered_pack[$i], 'quantity_ordered_unit' => $quantity_ordered_pack[$i], 'quantity_recieved' => 0, 'price' => $price[$i], 'o_balance' => $o_balance[$i], 't_receipts' => $t_receipts[$i], 't_issues' => $t_issues[$i], 'adjustpve' => $adjustpve[$i], 'adjustnve' => $adjustnve[$i], 'losses' => $losses[$i], 'days' => $days[$i], 'c_stock' => $c_stock[$i], 'comment' => $comment[$i], 's_quantity' => $s_quantity[$i], 'amc' => $amc[0], 'order_number_id' => $new_order_no);
+			$temp_array = array("commodity_id" => (int)$commodity_id[$i], 'quantity_ordered_pack' => (int)$quantity_ordered_pack[$i], 'quantity_ordered_unit' => (int)$quantity_ordered_units[$i], 'quantity_recieved' => 0, 'price' => $price[$i], 'o_balance' => $o_balance[$i], 't_receipts' => $t_receipts[$i], 't_issues' => $t_issues[$i], 'adjustpve' => $adjustpve[$i], 'adjustnve' => $adjustnve[$i], 'losses' => $losses[$i], 'days' => $days[$i], 'c_stock' => $c_stock[$i], 'comment' => $comment[$i], 's_quantity' => $s_quantity[$i], 'amc' => $amc[0], 'order_number_id' => $new_order_no);
 			//create the array to push to the db
 			array_push($data_array, $temp_array);
+			
 			}// insert the data here
+			//var_dump($data_array);exit;
 			$this -> db -> insert_batch('facility_order_details', $data_array);
 			if ($this -> session -> userdata('user_indicator') == 'district') :
 			$order_listing = 'subcounty';
@@ -306,6 +398,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 			$user_action = "order";
 
 		 	Log::log_user_action($user, $user_action);
+
 			$this -> hcmp_functions -> send_order_sms();
 
 			$this -> session -> set_flashdata('system_success_message', "Facility Order No $new_order_no has Been Saved");
@@ -314,6 +407,10 @@ for ($row = 1; $row <= $highestRow; $row++){
 			endif;
 
 			}
+public function upd() {
+	$this -> hcmp_functions -> send_sms();
+	
+}
 
 			public function update_facility_new_order() {
 		//security check
@@ -329,7 +426,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 			$order_id = $this -> input -> post('order_number');
 			$facility_order_details_id = $this -> input -> post('facility_order_details_id');
 			$quantity_ordered_unit = $this -> input -> post('actual_quantity');
-			$price = $this -> input -> post('price');
+			(int)$price = $this -> input -> post('unit_cost');
 			$o_balance = $this -> input -> post('open');
 			$t_receipts = $this -> input -> post('receipts');
 			$t_issues = $this -> input -> post('issues');
@@ -340,7 +437,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 			$c_stock = $this -> input -> post('closing');
 			$comment = $this -> input -> post('comment');
 			$s_quantity = $this -> input -> post('suggested');
-			$amc = $this -> input -> post('amc');
+			(int)$amc = $this -> input -> post('amc');
 			$workload = $this -> input -> post('workload');
 			//order table details
 			$bed_capacity = $this -> input -> post('bed_capacity');
@@ -390,7 +487,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 			ON DUPLICATE KEY UPDATE
 			`commodity_id`=$commodity_id[$i],
 			`quantity_ordered_pack`=$quantity_ordered_pack[$i],
-			`quantity_ordered_unit`=$quantity_ordered_pack[$i],
+			`quantity_ordered_unit`=$quantity_ordered_unit[$i],
 			`price`=$price[$i],
 			`o_balance`=$o_balance[$i],
 			`t_receipts`=$t_receipts[$i],
@@ -402,9 +499,13 @@ for ($row = 1; $row <= $highestRow; $row++){
 			`c_stock`=$c_stock[$i],
 			`comment`='$comment[$i]',
 			`amc`=$amc[$i],
-			`order_number_id`=$order_id");
+			`order_number_id`=$order_id;");
 
 			}//insert the data here
+			
+			$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> 
+			execute("UPDATE `facility_orders` SET `order_total` = $order_total,`order_total` = $order_total,`order_no` = $order_no
+						,`workload` = $workload ,`bed_capacity` = $bed_capacity WHERE `facility_orders`.`id` = $order_id;");
 
 			$myobj = Doctrine::getTable('facility_orders') -> find($order_id);
 			$myobj -> workload = $workload;
@@ -427,7 +528,10 @@ for ($row = 1; $row <= $highestRow; $row++){
 			$this -> hcmp_functions -> clone_excel_order_template($order_id,'save_file',$file_name);//create excel
 			
 			$attach_file1='./pdf/'.$file_name.'.pdf';
-			$attach_file2="./print_docs/excel/excel_files/".$file_name.'.xlsx';
+			$attach_file2="./print_docs/excel/excel_files/".$file_name.'.xls';
+			//echo $attach_file;
+			
+			//exit;
 			
 			if ($rejected == 1) {
 				$myobj -> status = 1;
@@ -467,8 +571,7 @@ for ($row = 1; $row <= $highestRow; $row++){
           $message="<br>Please find the $status Order for  ".$facility_name.'
 		  <br>'.$info.$pdf_body ;
 
-		$response= $this->hcmp_functions->send_order_approval_email($message,$subject,
-		$attach_file1."(more)".$attach_file2,$facility_code,$status);
+		$response= $this->hcmp_functions->send_order_approval_email($message,$subject,$attach_file1."(more)".$attach_file2,$facility_code,$status);
 		if($response){
 			delete_files($attach_file1);
             delete_files($attach_file2);
@@ -518,7 +621,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 		$facility_code = $this -> session -> userdata('facility_id');
 		$data['content_view'] = "facility/facility_orders/update_order_delivery_from_kemsa_v";
 		$data['title'] = "Facility Update Order Delivery";
-		$data['facility_commodity_list'] = Commodities::get_facility_commodities($facility_code);
+		$data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
 		$data['order_details']=facility_order_details::get_order_details($order_id);
 		$data['general_order_details']=facility_orders::get_order_($order_id);
 		$data['banner_text'] = "Facility Update Order Delivery";

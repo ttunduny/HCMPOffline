@@ -1,5 +1,3 @@
-
-
 <style>
 	.input-small{
  		width: 100px !important;
@@ -53,15 +51,17 @@ placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_nor
 <option selected="selected" value="NULL">Select Plot value</option>
 <option value="packs">Packs</option>
 <option value="units">Units</option>
-<option value="ksh">KSH</option>
+<!-- <option value="ksh">KSH</option> -->
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success category-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div>	
+<div class="col-md-1">
+<button class="btn btn-sm btn-success category-data"><span class="glyphicon glyphicon-filter"></span>View Data</button> 
+</div>
    </form>
       </div>
-   
-      </div>
+</div>
  <div  id="county" class="tab-pane fade in">
       	<br>
 <div class="filter">
@@ -80,7 +80,7 @@ endforeach;
 <option selected="selected" value="NULL">Select Plot value</option>
 <option value="packs">Packs</option>
 <option value="units">Units</option>
-<option value="ksh">KSH</option>
+<!-- <option value="ksh">KSH</option> -->
 </select>
 <input type="text" name="from"  id="county_from" 
 placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" />
@@ -88,6 +88,9 @@ placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_nor
 
 <div class="col-md-1">
 <button class="btn btn-sm btn-success county-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+</div>
+<div class="col-md-1">
+<button class="btn btn-sm btn-success county-data"><span class="glyphicon glyphicon-filter"></span>View Data</button> 
 </div>
 </form>
 </div>
@@ -126,10 +129,13 @@ placeholder="FROM" class="form-control input-small col-md-1 clone_datepicker_nor
 <option selected="selected" value="NULL">Select Plot value</option>
 <option value="packs">Packs</option>
 <option value="units">Units</option>
-<option value="ksh">KSH</option>
+<!-- <option value="ksh">KSH</option> -->
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success subcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+</div>
+<div class="col-md-1">
+<button class="btn btn-sm btn-success subcounty-data"><span class="glyphicon glyphicon-filter"></span>View Data</button> 
 </div>
 </form>
 </div>
@@ -203,12 +209,38 @@ var drop_down='';
         if(to==''){to="NULL";}
 
         var url_ = "reports/consumption_stats_graph/"+
+       $("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+ "/"+'column';	;	
+		ajax_request_replace_div_content(url_,'.graph_content');	
+          });
+          	
+          
+         $(".county-data").button().click(function(e) {
+		e.preventDefault();	
+		
+		var from =$("#county_from").val();
+		var to =$("#county_to").val();
+		
+		if(from==''){from="NULL";	}
+        if(to==''){to="NULL";}
+
+        var url_ = "reports/consumption_stats_graph/"+
        $("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+ "/"+'table_data';	;	
 		ajax_request_replace_div_content(url_,'.graph_content');	
-          });	
-              
+          });    
 
         $(".subcounty-filter").button().click(function(e) {
+		e.preventDefault();	
+		var from =$("#subcounty_from").val();
+		var to =$("#subcounty_to").val();
+		
+		if(from==''){from="NULL";	}
+        if(to==''){to="NULL";}
+        var url_ = "reports/consumption_stats_graph/"+
+$("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+ "/"+'column';	;	
+		ajax_request_replace_div_content(url_,'.graph_content');	
+          });
+		
+		   $(".subcounty-data").button().click(function(e) {
 		e.preventDefault();	
 		var from =$("#subcounty_from").val();
 		var to =$("#subcounty_to").val();
@@ -219,12 +251,23 @@ var drop_down='';
 $("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+ "/"+'table_data';	;	
 		ajax_request_replace_div_content(url_,'.graph_content');	
           });
-
           
          $(".category-filter").button().click(function(e) {
 		e.preventDefault();	
-		var from =$("#county_from").val();
-		var to =$("#county_to").val();
+		var from =$("#category_from").val();
+		var to =$("#category_to").val();
+		
+		if(from==''){from="NULL";	}
+        if(to==''){to="NULL";}
+        var url_ = "reports/consumption_stats_graph/"+
+"NULL/"+$("#category_filter").val()+"/"+$("#category_district_filter").val()+"/"+ $("#category_facility_filter").val()+"/"+$("#category_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+ "/"+'column';	;	
+		ajax_request_replace_div_content(url_,'.graph_content');	
+          });
+          
+        $(".category-data").button().click(function(e) {
+		e.preventDefault();	
+		var from =$("#category_from").val();
+		var to =$("#category_to").val();
 		
 		if(from==''){from="NULL";	}
         if(to==''){to="NULL";}
@@ -232,6 +275,7 @@ $("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").
 "NULL/"+$("#category_filter").val()+"/"+$("#category_district_filter").val()+"/"+ $("#category_facility_filter").val()+"/"+$("#category_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+ "/"+'table_data';	;	
 		ajax_request_replace_div_content(url_,'.graph_content');	
           });
+
 
 		});
 </script>

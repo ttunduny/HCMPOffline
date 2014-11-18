@@ -1,11 +1,14 @@
-<div class="col-md-2" style="border-right: solid 1px #ccc;padding-right: 20px;">
+<div class="col-md-2" style="border-right: solid 1px #ccc;padding-right: 20px;margin-left:-5px">
+    <div id="switch">
+        <button id="switch_back" class="form-control">Switch to Current Month</button>
+    </div>
     <select id="switch_county" class="form-control" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;">
         <option>-- Select County --</option>
         <?php echo $option; ?>
     </select>
 
     <select id="switch_month" class="form-control" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;">
-       <option>-- <?php echo $englishdate;?> --</option>
+       <option>-- <?php echo $englishdate;?> --</option>       
         <?php 
 
             for ($i=1; $i <=12 ; $i++) { 

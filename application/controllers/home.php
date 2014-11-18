@@ -73,21 +73,24 @@ class Home extends MY_Controller
 			case 'scmlt':
 			case 'rtk_county_admin':
 			case 'allocation_committee':
+			case 'rtk_partner_admin':
 			case 'rtk_manager':
+			case 'rtk_partner_admin':
+			case 'rtk_partner_super':
 			redirect('home_controller');
 			break;
 			case 'super_admin':
 			$view = 'shared_files/template/dashboard_v';
 			$data['content_view'] = "shared_files/template/super_admin_template";
 			break;
-				
-			case 'allocation_committee':
-			$view = '';
+			// case 'allocation_committee':
+			// $view = '';
 			break;	
 			case 'county':
 			$view = 'shared_files/template/template';
 			$data['content_view'] = "subcounty/subcounty_home_v";
-			break;	
+			break;
+
         endswitch;
 
 		$data['title'] = "System Home";
@@ -116,6 +119,7 @@ class Home extends MY_Controller
         $graph_data['series_data']['AMC']=array_merge($graph_data['series_data']['AMC'],array((float) $facility_stock_['amc']));	
 
 	endforeach;
+	//echo "<pre>";print_r($facility_stock_);echo "</pre>";exit;
 	//create the graph here
 	$faciliy_stock_data=$this->hcmp_functions->create_high_chart_graph($graph_data);
 	$loading_icon=base_url('assets/img/no-record-found.png'); 

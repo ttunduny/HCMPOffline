@@ -1,3 +1,8 @@
+<?php 
+$facility_code =$this -> session -> userdata('facility_id'); 
+if (empty($facility_code)){
+	$facility_code = 'NULL';
+}?>
 <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Stock Level</h1>
 <div class="alert alert-info" style="width: 100%">
   <b>Below are the Stocking Levels in the County </b> :Select filter Options
@@ -31,6 +36,9 @@ endforeach;
 <div class="col-md-1">
 <button class="btn btn-sm btn-success county-filter"  id="county-filter" ><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div> 
+<div class="col-md-1">
+<button class="btn btn-sm btn-primary county-filter-table"  id="county-filter-table" ><span class="glyphicon glyphicon-th-list"></span>Data Table</button> 
+</div>
 </form>
 </div>
 </div>
@@ -65,8 +73,8 @@ endforeach;
 <option selected="selected" value="NULL">Select Plot value</option>
 <option value="packs">Packs</option>
 <option value="units">Units</option>
-<option value="ksh">KSH</option>
-<option value="mos">Month of Stock</option>
+<!-- <option value="ksh">KSH</option> -->
+<!-- <option value="mos">Month of Stock</option> -->
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success subcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
@@ -125,7 +133,15 @@ var drop_down='';
 		$(".county-filter").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+
-$("#county_commodity_filter").val()+"/NULL/"+"<?php echo $this -> session -> userdata('district_id');?>"+"/"+"<?php echo $this -> session -> userdata('facility_id');?>"+"/"+$("#county_plot_value_filter").val()+'/table_data';	
+$("#county_commodity_filter").val()+"/NULL/"+"<?php echo $this -> session -> userdata('district_id');?>"+"/"+"<?php echo $facility_code;?>"+"/"+$("#county_plot_value_filter").val()+'/NULL/NULL';	
+		ajax_request_replace_div_content(url_,'.graph_content');	
+
+          });
+
+		$(".county-filter-table").button().click(function(e) {
+		e.preventDefault();	
+        var url_ = "reports/get_county_stock_level_new/"+
+$("#county_commodity_filter").val()+"/NULL/"+"<?php echo $this -> session -> userdata('district_id');?>"+"/"+"<?php echo $facility_code;?>"+"/"+$("#county_plot_value_filter").val()+'/table_data/NULL';	
 		ajax_request_replace_div_content(url_,'.graph_content');	
 
           });
@@ -133,7 +149,7 @@ $("#county_commodity_filter").val()+"/NULL/"+"<?php echo $this -> session -> use
 	     $(".subcounty-filter").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+
-$("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+ "/"+'table_data';	
+$("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+ "/"+'NULLSub';	
 		ajax_request_replace_div_content(url_,'.graph_content');	
           });
           

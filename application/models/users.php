@@ -14,6 +14,9 @@ class Users extends Doctrine_Record {
 		$this -> hasColumn('facility', 'varchar', 255);
 		$this -> hasColumn('status', 'int', 11);
 		$this -> hasColumn('county_id', 'int', 11);
+		$this -> hasColumn('partner', 'int', 11);
+		$this -> hasColumn('email_recieve', 'int', 1);
+		$this -> hasColumn('sms_recieve', 'int', 1);
 
 	}
 
@@ -76,6 +79,13 @@ class Users extends Doctrine_Record {
 	public static function get_user_info($facility_code) 
 	{
 		$query = Doctrine_Query::create() -> select("DISTINCT usertype_id, telephone,district, facility") -> from("users")->where("status='1' and  facility='$facility_code'");
+		$info = $query -> execute();
+		
+		return $info;
+	}
+	public static function get_user_emails($facility_code) 
+	{
+		$query = Doctrine_Query::create() -> select("*") -> from("users")->where("status='1' and  facility='$facility_code' AND email_recieve = 1");
 		$info = $query -> execute();
 		
 		return $info;
@@ -203,7 +213,9 @@ class Users extends Doctrine_Record {
     a.id as level_id,
     f.level,
     a.level,
-    u.status
+    u.status,
+    u.email_recieve,
+    u.sms_recieve
 FROM
    user u
         LEFT JOIN
@@ -223,8 +235,18 @@ public static function get_dpp_details($distirct){
 		$level = $query -> execute();
 		return $level;
 }
+public static function get_dpp_emails($distirct){
+	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("district = $distirct and usertype_id='3' and email_recieve = 1");
+		$level = $query -> execute();
+		return $level;
+}
+public static function get_dpp_emails_county_level($county_id){
+	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("county_id = $county_id and usertype_id='3' and email_recieve = 1");
+		$level = $query -> execute();
+		return $level;
+}
 public static function get_county_emails($county_id){
-	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("county_id = $county_id and usertype_id='3' ");
+	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("county_id = $county_id and usertype_id='10' and email_recieve = 1 ");
 		$level = $query -> execute();
 		return $level;
 }
@@ -323,6 +345,7 @@ public static function get_county_details($county_id){
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
 	}
+
+
 	
 	}
-

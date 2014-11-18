@@ -15,7 +15,7 @@
         });
  */
 
-        $('.nav li a').click(function(e) {
+       /* $('.nav li a').click(function(e) {
             var $this = $(this);
             var thistext = $(this).text();
             $('.nav li').removeClass('active');
@@ -24,7 +24,7 @@
             $('.dataTables_filter label input').val(thistext).trigger($.Event("keyup", {keyCode: 13}));
 
             e.preventDefault();
-        });
+        });*/
        $("table").tablecloth({theme: "paper"});
 
 
@@ -33,7 +33,7 @@
 
 <style>
    
-    @import "http://tableclothjs.com/assets/css/tablecloth.css";
+    @import "<?php base_url ?>tablecloth/assets/css/tablecloth.css";
 
     .alerts{
         width:95%;
@@ -61,7 +61,7 @@
 </div>
  
 
-
+<?php include('../rtk/allocation/allocation_links.php');?>
 
  <div class="container" style="width: 96%; margin: auto;">
  <table width="98%" border="0" class=""  id="example">

@@ -1,7 +1,7 @@
 <div class="container" style="width: 96%; margin: auto;">
 <div class="row">
         <?php if($facility_dashboard_notifications['stocks_from_v1']>0): ?>
-        <div style="height:auto; margin-bottom: 2px" class="warning message col-md-4" id="">        
+        <div style="height:auto; margin-bottom: 2px" class="warn message col-md-4" id="">        
         <h5> 0) Import facility stock from version 1 </h5> 
             <p>
             <a class="link" href="<?php echo base_url('stock/import') ?>">
@@ -20,7 +20,7 @@
       <div class="panel-body">
       	<input type="hidden" id="stocklevel" value="<?php echo $facility_dashboard_notifications['facility_stock_count'] ?>" readonly/>
     <?php if($facility_dashboard_notifications['facility_donations_pending']>0): ?>
-      	 <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
+      	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
         <h5>Inter Facility Donation</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/pending') ?>"><span class="badge"><?php 
@@ -29,7 +29,7 @@
 			 </div>
 		  <?php endif; //donations_pending?>
 		      <?php if($facility_dashboard_notifications['facility_donations']>0): ?>
-      	 <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
+      	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
         <h5>Inter Facility Donation</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/to-me') ?>"><span class="badge"><?php 
@@ -39,21 +39,21 @@
 		  <?php endif; //donations_pending?>
    <?php if($facility_dashboard_notifications['facility_stock_count']==0): ?>
 
-      	<div style="height:auto; margin-bottom: 2px" class="warning message " id="">      	
-        <h5> 1) Set up facility stock</h5> 
+      	<div style="height:auto; margin-bottom: 2px" class="warn message " id="">      	
+        <h5> Set up facility stock</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('stock/set_up_facility_stock') ?>">Select the Commodities which are used in the facility</a> 
+			<a class="link" href="<?php echo base_url('stock/set_up_facility_stock') ?>">Please conduct a physical stock count for this activity</a> 
 			</p>
         </div>
-        <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
+        <!--<div style="height:auto; margin-bottom: 2px" class="warning message ">      	
         <h5>2) No Stock (On First Run)</h5> 
         	<p>
 	<a class="link" href="<?php echo base_url('stock/facility_stock_first_run/first_run') ?>">Please update your stock details</a> 
 			</p>
-        </div>
+        </div>-->
             <?php endif; // items_stocked_out_in_facility?>
          <?php if($facility_dashboard_notifications['actual_expiries']>0): ?>
-        <div style="height:auto; margin-bottom: 2px" class="warning message ">       	
+        <div style="height:auto; margin-bottom: 2px" class="warn message ">       	
         <h5>Expired Commodities</h5>
         	<p>
 			<a class="link" href="<?php echo base_url('reports/expiries') ?>"> <span class="badge"><?php 
@@ -62,7 +62,7 @@
         </div>
          <?php endif; // Actual Expiries?>
           <?php if($facility_dashboard_notifications['potential_expiries']>0): ?>
-      	 <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
+      	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
         <h5>Potential Expiries</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('reports') ?>"><span class="badge"><?php 
@@ -71,7 +71,7 @@
 			 </div>
 		  <?php endif; // Potential Expiries?>
          <?php if($facility_dashboard_notifications['items_stocked_out_in_facility']>0): ?>
-        <div style="height:auto; margin-bottom: 2px" class="warning message ">       	
+        <div style="height:auto; margin-bottom: 2px" class="warn message ">       	
         <h5>Stock Outs</h5>
         	<p>
 			<a class="link" href="<?php echo base_url('reports/facility_stocked_out_items') ?>"> <span class="badge">
@@ -81,7 +81,7 @@
         <?php endif; // items_stocked_out_in_facility?>
         <?php if(array_key_exists('pending', $facility_dashboard_notifications['facility_order_count']) 
         && @$facility_dashboard_notifications['facility_order_count']['pending']>0): ?>
-      	<div style="height:auto; margin-bottom: 2px" class="warning message ">      	
+      	<div style="height:auto; margin-bottom: 2px" class="warn message ">      	
         	<h5>Orders Pending Approval by District Pharmacist</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('reports/order_listing/facility') ?>"><span class="badge"><?php 
@@ -91,7 +91,7 @@
         <?php endif; //pending
          if(array_key_exists('rejected', $facility_dashboard_notifications['facility_order_count']) 
          && @$facility_dashboard_notifications['facility_order_count']['rejected']>0): ?>
-        <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
+        <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
         	<h5>Orders Rejected by District Pharmacist</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('reports/order_listing/facility') ?>"><span class="badge"><?php 
@@ -101,7 +101,7 @@
         <?php endif; //rejected
         if(array_key_exists('approved', $facility_dashboard_notifications['facility_order_count'])
 		 && @$facility_dashboard_notifications['facility_order_count']['approved']>0): ?>
-        <div style="height:auto; margin-bottom: 2px" class="warning message ">      	
+        <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
         	<h5>Pending Dispatch</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('reports/order_listing/facility') ?>"><span class="badge"><?php 
@@ -127,9 +127,9 @@
         <div style="height:auto; margin-bottom: 2px" class="distribute message ">
         	<a href="<?php echo base_url('issues/index/external'); ?>"><h5>Redistribute Commodities to Other Facilities</h5></a>	 
         </div>
-        <div style="height:auto; margin-bottom: 2px" class="distribute message ">
+    <!--    <div style="height:auto; margin-bottom: 2px" class="distribute message ">
           <a href="<?php echo base_url('issues/index/district_store'); ?>"><h5>Redistribute Commodities to District Store</h5></a>   
-        </div>
+     </div>-->
         
  		<div style="height:auto; margin-bottom: 2px" class="distribute message ">
         	<a href="<?php echo base_url('issues/confirm_external_issue')?>"><h5>Receive Commodities From Other Sources</h5></a>

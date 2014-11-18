@@ -168,8 +168,10 @@ legend{
 					<input type="radio" name="criteria" value="Consumption" class=" " checked/> Consumption
 				</div>
 				<div class="col-md-3">
-					<input type="radio" name="criteria" value="Stock"/> Stock Level(MOS)
+					<input type="radio" name="criteria" value="Orders"/> Orders
 				</div>
+				
+				
 				
 				<div class="col-md-6">
 					<div class="row-fluid">
@@ -191,14 +193,17 @@ legend{
 			
 			<div class="row" style="margin-top: 2%">
 				<div class="col-md-3">
-					<input type="radio" name="criteria" value="Orders"/> Orders
+					<input type="radio" name="criteria" value="Stock"/> Stock Level(MOS)
 				</div>
 				<div class="col-md-3">
-					<input type="radio" name="criteria" value ="Actual"/> Actual Expiries
+					<input type="radio" name="criteria" value="stock_units"/> Stock Level(units)
 				</div>
 				<div class="col-md-6">
-					
+					<input type="radio" name="criteria" value ="Actual"/> Actual Expiries
 				</div>
+				<!--<div class="col-md-6">
+					
+				</div>-->
 			</div>
 			</fieldset>
 			
@@ -286,16 +291,16 @@ legend{
 			  		
 			  		<section class="col-md-8">
 						
-						<section class="col-md-3">
+						<!--<section class="col-md-3">
 
 							<input type="radio" name="doctype" value="pdf" checked/> PDF
-						</section>
+						</section>-->
 						<section class="col-md-3">
 							<input type="radio" name="doctype"  value="excel"/> Excel
 						</section>
 						
 						<section class="col-md-3">
-							<input type="radio" name="doctype"  value="graph"/> Web Graph
+							<input type="radio" name="doctype" id="web_graph" value="graph"/> Web Graph
 						</section>
 						<!--<section class="col-md-3">
 							<input type="radio" name="doctype"  value="Table"/> Web Table
@@ -322,7 +327,7 @@ legend{
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
-      <h4 class="modal-title" id="myModalLabel">Graph Title</h4>
+      <h4 class="modal-title" id="myModalLabel"></h4>
       </div>
       <div class="modal-body" id="graph_content">
        
@@ -386,33 +391,38 @@ $('#sub_county').on('change', function(){
     	var value = $(this).val();
 	 	if(value=="Potential"){
 			$("#interval").attr("disabled", false);
-			$("#year").attr("disabled", 'disabled');
+			//$("#year").attr("disabled", 'disabled');
 		 	$("#from,#to").attr("disabled", 'disabled');
 		 	document.getElementById("commodity_s").checked = true;
 			document.getElementById("tracer_commodities").disabled = true;
 			document.getElementById("specify_commodities").disabled = true;
 		}else if(value=="Actual"){
-			$("#expfrom,#expto").attr("disabled", false);
-			$("#year,#interval").attr("disabled", 'disabled');
+			//$("#expfrom,#expto").attr("disabled", false);
+			$("#interval").attr("disabled", 'disabled');
 			$("#from,#to").attr("disabled", 'disabled');
 			$("#interval").val(0);
 			document.getElementById("commodity_s").checked = true;
 			document.getElementById("tracer_commodities").disabled = true;
 			document.getElementById("specify_commodities").disabled = true;
-		}else if(value=="Orders"){
-			$("#year,#interval").attr("disabled", 'disabled');
+		}else if(value=="stock_units"){
+			//$("#expfrom,#expto").attr("disabled", false);
+			$("#interval").attr("disabled", 'disabled');
+			$("#from,#to").attr("disabled", 'disabled');
+			$("#interval").val(0);
+			document.getElementById("commodity_s").checked = true;
+			document.getElementById("web_graph").disabled = true;
+			//document.getElementById("specify_commodities").disabled = true;
+		}
+		else if(value=="Orders"){
+			$("#interval").attr("disabled", 'disabled');
 			$("#from,#to").attr("disabled", 'disabled');
 			document.getElementById("commodity_s").checked = true;
 			document.getElementById("tracer_commodities").disabled = true;
 			document.getElementById("specify_commodities").disabled = true;
 		}else{
-			$("#interval,#expfrom,#expto").attr("disabled", 'disabled');
+			$("#interval").attr("disabled", 'disabled');
 			$("#from,#to").attr("disabled", false);
-			$("#year").attr("disabled", false);
-			$("#interval").val(0);
-			document.getElementById("commodity_s").disabled = false;
-			document.getElementById("tracer_commodities").disabled = false;
-			document.getElementById("specify_commodities").disabled = false;
+			
 		}
 });
 
@@ -459,49 +469,54 @@ $("input:radio[name=commodity_s]").click(function() {
 	        	
 	        	window.open(url+link,'_parent');
 	        
-        }else if(type=='pdf'){
-        	if(commodity_type=='Tracer'){ 
-	        	link='national/consumption/'+county_id+'/'+district+'/'+facility+'/NULL/pdf/'+encodeURI(from)+'/'+encodeURI(to);
+	        }else if(type=='pdf'){
+	        	if(commodity_type=='Tracer'){ 
+		        	link='national/consumption/'+county_id+'/'+district+'/'+facility+'/NULL/pdf/'+encodeURI(from)+'/'+encodeURI(to);
+		        }
+		        if(commodity_type=='All'){ 
+		        	var commodity_id=$('#commodity').val();
+		        	link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/pdf/'+encodeURI(from)+'/'+encodeURI(to);
+		        }
+		        if(commodity_type=='Specify'){ 
+		        	var commodity_id=$('#commodity').val();
+		        	link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/pdf/'+encodeURI(from)+ '/'+encodeURI(to);
+		        }
+		        window.open(url+link,'_parent');
+	        }else if(type=='table'){
+	        	$('#graph_Modal').modal('show');
+	        	
+	       		if(commodity_type=='Tracer'){
+					ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/NULL/table/'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content");
+	        	}
+	        	if(commodity_type=='All'){ 
+		        	var commodity_id=$('#commodity').val();
+	        		ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/table/'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content");
+		        }
+		        
+	        }else if(type=='graph'){
+	        	$('#graph_Modal').modal('show');
+	       		if(commodity_type=='Tracer'){
+	       			ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/NULL/graph/'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content");
+	        	}
+	        	if(commodity_type=='All'){ 
+		        	var commodity_id=$('#commodity').val();
+	        		ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph/'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content");
+		        
+		        }
+		        if(commodity_type=='Specify'){ 
+		        	var commodity_id=$('#commodity').val();
+		       		ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content"); 
+		        }
+		        
 	        }
-	        if(commodity_type=='All'){ 
-	        	var commodity_id=$('#commodity').val();
-	        	link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel/'+encodeURI(from)+'/'+encodeURI(to);
-	        }
-	        if(commodity_type=='Specify'){ 
-	        	var commodity_id=$('#commodity').val();
-	        	link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel/'+encodeURI(from)+ '/'+encodeURI(to);
-	        }
-	        window.open(url+link,'_parent');
-        }else if(type=='table'){
-        	$('#graph_Modal').modal('show');
-        	
-       		if(commodity_type=='Tracer'){
-				ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/NULL/table/'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content");
-        	}
-        	if(commodity_type=='All'){ 
-	        	var commodity_id=$('#commodity').val();
-        		ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/table/'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content");
-	        }
-	        
-        }else if(type=='graph'){
-        	$('#graph_Modal').modal('show');
-       		if(commodity_type=='Tracer'){
-       			ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/NULL/graph/'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content");
-        	}
-        	if(commodity_type=='All'){ 
-	        	var commodity_id=$('#commodity').val();
-        		ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph/'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content");
-	        
-	        }
-	        if(commodity_type=='Specify'){ 
-	        	var commodity_id=$('#commodity').val();
-	       		ajax_return('national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph'+encodeURI(from)+ '/'+encodeURI(to)+'',"#graph_content"); 
-	        }
-	        
-        }
-       }else if(criteria=='Stock'){
+       }
+       //if stock level MOS option is selected
+       else if(criteria=='Stock'){
        		if(type=='excel'){ 
       			if(commodity_type=='Tracer'){ 
+	        		link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/NULL/excel';
+	        	}
+	        	if(commodity_type=='comodity'){ 
 	        		link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/NULL/excel';
 	        	}
 	        	if(commodity_type=='All'){ 
@@ -509,7 +524,8 @@ $("input:radio[name=commodity_s]").click(function() {
 	                link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel';
 	        
 	        	}
-	        window.open(url+link,'_parent');
+	        	
+	        	window.open(url+link,'_parent');
 	        
 	        }else if(type=='pdf'){ 
 	        	if(commodity_type=='Tracer'){ 
@@ -538,7 +554,56 @@ $("input:radio[name=commodity_s]").click(function() {
 	        	}
 	        
         	}
-        }else if(criteria=='Potential'){
+        }//for stock as units
+        else if(criteria=='stock_units'){
+       		if(type=='excel'){ 
+      			if(commodity_type=='Tracer'){ 
+	        		link='national/stock_level_units/'+county_id+'/'+district+'/'+facility+'/NULL/excel';
+	        	}
+	        	if(commodity_type=='Specify'){ 
+	        		var commodity_id=$('#commodity').val();
+	                link='national/stock_level_units/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel';
+	        	}
+	        	if(commodity_type=='All'){ 
+	        		link='national/stock_level_units/'+county_id+'/'+district+'/'+facility+'/NULL/excel';
+	        		
+	        		//var commodity_id=$('#commodity').val();
+	                //link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel';
+	        
+	        	}
+	        window.open(url+link,'_parent');
+	        
+	        }/*
+	        else if(type=='pdf'){ 
+	        	if(commodity_type=='Tracer'){ 
+	        	link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/NULL/pdf';
+	        	}
+	        
+	        	if(commodity_type=='All'){ 
+	        		var commodity_id=$('#commodity').val();
+	        		link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/pdf';
+	        
+	        	}
+	       	 	window.open(url+link,'_parent');
+	        
+	        }
+	        */else if(type=='graph'){
+        		$('#graph_Modal').modal('show');
+       			if(commodity_type=='Tracer'){
+        			ajax_return('national/stock_level_units/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph',"#graph_content");
+        		}
+        		if(commodity_type=='All'){ 
+	        		var commodity_id=$('#commodity').val();
+	       			ajax_return('national/stock_level_units/'+county_id+'/'+district+'/'+facility+'/ALL'+'/graph',"#graph_content"); 
+	        	}
+	    		if(commodity_type=='Specify'){ 
+	        		var commodity_id=$('#commodity').val();
+	       			ajax_return('national/stock_level_units/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/graph',"#graph_content"); 
+	        	}
+	        
+        	}
+        }
+        else if(criteria=='Potential'){
        		if(type=='excel'){ 
       	    	link='national/potential/'+county_id+'/'+district+'/'+facility+'/excel/'+interval;
 	        	window.open(url+link,'_parent');
@@ -568,21 +633,22 @@ $("input:radio[name=commodity_s]").click(function() {
         }else if(criteria=='Actual'){
        		if(type=='excel'){ 
 	        	if(commodity_type=='Tracer'){ 
-	        		link='national/expiry/'+county_id+'/'+district+'/'+facility+'/NULL/excel';
+	        		link='national/expiry/NULL/'+county_id+'/'+district+'/'+facility+'/excel';
 	        	}
 	        	if(commodity_type=='All'){ 
+	        		//alert(county_id);return;
 	        		var commodity_id=$('#commodity').val();
-	        		link='national/expiry/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel';
+	        		link='national/expiry/NULL/'+county_id+'/'+district+'/'+facility+'/excel';
 	        	}
 	        window.open(url+link,'_parent');
 	        
 	        }else if(type=='pdf'){ 
 	        	if(commodity_type=='Tracer'){ 
-	        		link='national/expiry/'+county_id+'/'+district+'/'+facility+'/NULL/pdf';
+	        		link='national/expiry/NULL/'+county_id+'/'+district+'/'+facility+'/pdf';
 	        	}
 	        	if(commodity_type=='All'){ 
 	        		var commodity_id=$('#commodity').val();
-	        		link='national/expiry/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/pdf';
+	        		link='national/expiry/NULL/'+county_id+'/'+district+'/'+facility+'/pdf';
 	        	}
 	        	window.open(url+link,'_parent');
 	        }else if(type=='graph'){

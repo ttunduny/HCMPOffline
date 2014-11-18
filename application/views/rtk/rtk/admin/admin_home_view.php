@@ -132,7 +132,7 @@ foreach ($res_arr1->result_array() as $value) {
             <tbody style="border-top: solid 1px #828274;">
                 <?php
                 foreach ($users as $value) {
-                    if ($value['level'] == 'dpp') {
+                    if ($value['user_indicator'] == 'scmlt') {
                         $value['level'] = 'Sub-County Admin';
                     }
                     ?>  
@@ -143,7 +143,7 @@ foreach ($res_arr1->result_array() as $value) {
                         <td><?php echo $value['email']; ?></td>
                         <td><?php echo $value['level']; ?></td>
                         <td><?php
-                            if ($value['level'] == 'rtkcountyadmin') {
+                            if ($value['user_indicator'] == 'rtkcountyadmin') {
                                 echo 'Not Applicable';
                             } else {
                                 echo $value['district'];

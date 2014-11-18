@@ -56,6 +56,7 @@ class User extends MY_Controller {
 			$phone = $user_data['telephone'];
 			$user_email = $user_data['email'];
 			$county_id = $user_data['county_id'];
+			$partner_id = $user_data['partner'];
 			$fullname = $fname . ' ' . $lname;
             $banner_name = '';
 			$access_level = Access_level::get_access_level_name($access_typeid);
@@ -76,7 +77,7 @@ class User extends MY_Controller {
             $banner_name = $facility_name['facility_name'];
             endif;
    
-			$session_data = array('county_id' => $county_id, 'phone_no' => $phone,
+			$session_data = array('county_id' => $county_id,'partner_id' => $partner_id, 'phone_no' => $phone,
 			'user_email' => $user_email, 'user_id' => $user_id, 'user_indicator' => $user_indicator,
 			'fname' => $fname, 'lname' => $lname, 'facility_id' => $facility_id,
 			'district_id' => $district_id, 'user_type_id' => 
@@ -387,66 +388,62 @@ class User extends MY_Controller {
 	}
 
 	public function user_create() {
-
 		//get user details in session
-
 		$identifier = $this -> session -> userdata('user_indicator');
 		$user_type_id = $this -> session -> userdata('user_type_id');
 		$district = $this -> session -> userdata('district_id');
 		$county = $this -> session -> userdata('county_id');
 		$facility = $this -> session -> userdata('facility_id');
-		
-
 		//query to get user listing by type of user
 
 		switch ($identifier):
 			case 'moh':
-			$permissions='moh_permissions';
-			$template = 'shared_files/template/dashboard_template_v';
+				$permissions='moh_permissions';
+				$template = 'shared_files/template/dashboard_template_v';
 			break;
 			case 'facility_admin':
-			$permissions='facilityadmin_permissions';
-			$data['listing']= Users::get_user_list_facility($facility);		
-			$template = 'shared_files/template/template';
+				$permissions='facilityadmin_permissions';
+				$data['listing']= Users::get_user_list_facility($facility);		
+				$template = 'shared_files/template/template';
 			break;
 			case 'district':
-			$permissions='district_permissions';
-			$data['listing']= Users::get_user_list_district($district);
-			$data['facilities']=Facilities::getFacilities($district);
-			$data['counts']=Users::get_users_district($district);
-			$template = 'shared_files/template/template';
+				$permissions='district_permissions';
+				$data['listing']= Users::get_user_list_district($district);
+				$data['facilities']=Facilities::getFacilities($district);
+				$data['counts']=Users::get_users_district($district);
+				$template = 'shared_files/template/template';
 			break;
 			case 'moh_user':
-			$data['listing']= Users::get_user_list($user_type_id);	
-			$template = 'shared_files/template/dashboard_template_v';
+				$data['listing']= Users::get_user_list($user_type_id);	
+				$template = 'shared_files/template/dashboard_template_v';
 			break;
 			case 'district_tech':
-			$data['listing']= Users::get_user_list($user_type_id);	
-			$template = 'shared_files/template/template';
+				$data['listing']= Users::get_user_list($user_type_id);	
+				$template = 'shared_files/template/template';
 			break;
 			case 'rtk_manager':
-			$data['listing']= Users::get_user_list($user_type_id);	
-			$template = 'shared_files/template/template';
+				$data['listing']= Users::get_user_list($user_type_id);	
+				$template = 'shared_files/template/template';
 			break;
 			case 'super_admin':
-			$permissions='super_permissions';
-			$data['title'] = "Users";
-			$data['content_view'] = "Admin/users_v";
-			$data['listing']= Users::get_user_list_all();
-			$data['counts']=Users::get_users_count();
-			$data['counties']=Counties::getAll();	
-			$template = 'shared_files/template/dashboard_v';
+				$permissions='super_permissions';
+				$data['title'] = "Users";
+				$data['content_view'] = "Admin/users_v";
+				$data['listing']= Users::get_user_list_all();
+				$data['counts']=Users::get_users_count();
+				$data['counties']=Counties::getAll();	
+				$template = 'shared_files/template/dashboard_v';
 			break;
 			case 'allocation_committee':
-			$data['listing']= Users::get_user_list($user_type_id);	
-			$template = 'shared_files/template/template';
+				$data['listing']= Users::get_user_list($user_type_id);	
+				$template = 'shared_files/template/template';
 			break;	
 			case 'county':
-			$permissions='county_permissions';
-			$data['listing']= Users::get_user_list_county($county);	
-			$data['district_data'] = districts::getDistrict($county);
-			$data['counts']=Users::get_users_county($county);
-			$template = 'shared_files/template/template';
+				$permissions='county_permissions';
+				$data['listing']= Users::get_user_list_county($county);	
+				$data['district_data'] = districts::getDistrict($county);
+				$data['counts']=Users::get_users_county($county);
+				$template = 'shared_files/template/template';
 			
 			break;	
         endswitch;
@@ -699,6 +696,7 @@ endif;
 	}
 	
 	public function edit_user(){
+
 		$county = $this -> session -> userdata('county_id');
 		$identifier = $this -> session -> userdata('user_indicator');
 
@@ -710,9 +708,12 @@ endif;
 		$username_edit = $_POST['username_edit'];
 		$user_type_edit_district = $_POST['user_type_edit_district'];
 		$district_name_edit = $_POST['district_name_edit'];
-		
+		$email_recieve_edit = $_POST['email_recieve_edit'];
+		$sms_recieve_edit = $_POST['sms_recieve_edit'];
+
 		$user_id= $_POST['user_id'];
-		
+		//echo $email_recieve_edit;exit;
+
 		if ($status=="true") {
 			
 			$status=1;
@@ -721,6 +722,25 @@ endif;
 			
 			$status=0;
 		}
+
+		if ($email_recieve_edit=="true") {
+			
+			$email_recieve_edit=1;
+			
+		} elseif($email_recieve_edit=="false") {
+			
+			$email_recieve_edit=0;
+		}
+
+		if ($sms_recieve_edit=="true") {
+			
+			$sms_recieve_edit=1;
+			
+		} elseif($sms_recieve_edit=="false") {
+			
+			$sms_recieve_edit=0;
+		}
+
 		if ($identifier=="district") {
 			
 			$facility_id_edit = $_POST['facility_id_edit_district'];
@@ -732,9 +752,19 @@ endif;
 		
 		
 		//update user
+		 $q="UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
+									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county',
+									email_recieve ='$email_recieve_edit',
+									sms_recieve ='$sms_recieve_edit'
+                                  	WHERE `id`= '$user_id'";
+echo json_encode($q);
+                                  	exit;
+		
 			$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
 			$update_user->execute("UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
-									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county'
+									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county',
+									email_recieve ='$email_recieve_edit',
+									sms_recieve ='$sms_recieve_edit'
                                   	WHERE `id`= '$user_id'");
 		
 	}

@@ -16,7 +16,51 @@ table{
     font-size: 12px;
 }
 </style>
+<script type="text/javascript">
+  
+$(document).ready(function(){
+
+    $('#switch_month').change(function() {
+            var value = $('#switch_month').val();
+            var path_full = 'rtk_management/switch_month/'+value+'/rtk_manager/';
+            var path = "<?php echo base_url(); ?>" + path_full;
+//              alert (path);
+            window.location.href = path;
+        });
+
+
+   });
+</script>
 <div class="tabbable">
+    <div>Select Month
+    <?php
+        $month = $this->session->userdata('Month');
+        if ($month==''){
+         $month = date('mY',time());
+        }
+        $year= substr($month, -4);
+        $month= substr_replace($month,"", -4);
+        $monthyear = $year . '-' . $month . '-1';        
+        $englishdate = date('F, Y', strtotime('+1 month'));
+        $englishdate = date('F, Y', strtotime($monthyear));
+    ?>
+     <select id="switch_month" class="form-control" style="max-width: 220px;background-color: #ffffff;border: 1px solid #cccccc;">
+       <option>-- <?php echo $englishdate;?> --</option>
+        <?php 
+
+
+            for ($i=1; $i <=12 ; $i++) { 
+            $month = date('m', strtotime("-$i month")); 
+            $year = date('Y', strtotime("-$i month")); 
+            $month_value = $month.$year;
+            $month_text =  date('F', strtotime("-$i month")); 
+            $month_text = "-- ".$month_text." ".$year." --";
+         ?>
+        <option value="<?php echo $month_value ?>"><?php echo $month_text ?></option>;
+    <?php } ?>
+    </select>
+        
+    </div>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab1" data-toggle="tab">Activity</a></li>
         <li><a href="#StockStatus" data-toggle="tab">Stock Status</a></li>
@@ -74,8 +118,8 @@ table{
                 </div>
                     </div>
                     
-                    <!--li class="span4" style="margin-left:10px;float:left;">
-                    <!--ul class="unstyled">
+                    li class="span4" style="margin-left:10px;float:left;">
+                    <ul class="unstyled">
                         <?php
                         foreach ($user_logs as $logs) {
                             $action_clause = '';
@@ -104,7 +148,7 @@ table{
                             </li>
                             <?php } ?>
                         </ul>
-                    </li-->
+                    </li
                      
                       
                 </li>

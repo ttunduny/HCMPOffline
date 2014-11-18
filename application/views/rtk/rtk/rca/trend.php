@@ -2,6 +2,9 @@
 //echo"<pre>";print_r($stock_status);die;
 
 $reporting_percentage = $cumulative_result/$total_facilities*100;
+if($reporting_percentage>100){
+    $reporting_percentage = 100;
+}
 $reporting_percentage = number_format($reporting_percentage, $decimals = 0);
 ?>
 <style type="text/css">
@@ -111,5 +114,20 @@ table{
                 }]
             });
 });
+</script>
+<script type="text/javascript">
+  
+$(document).ready(function(){
+
+    $('#switch_month').change(function() {
+            var value = $('#switch_month').val();
+            var path_full = 'rtk_management/switch_month/'+value+'/county_trend/';
+            var path = "<?php echo base_url(); ?>" + path_full;
+//              alert (path);
+            window.location.href = path;
+        });
+
+
+   });
 </script>
 

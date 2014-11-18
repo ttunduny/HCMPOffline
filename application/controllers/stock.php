@@ -12,6 +12,8 @@ class Stock extends MY_Controller {
 		$this->load->helper(array('form','url'));
 		$this->load->library(array('hcmp_functions','form_validation'));
 		$this -> load -> database();
+		ini_set("max_execution_time", "1000000");
+		ini_set("memory_limit", '2048M');
 	}
 	public function index(){
 		
@@ -224,7 +226,8 @@ if($this->input->is_ajax_request()):
         $insert->execute("INSERT INTO facility_monthly_stock 
         (`facility_code`, `commodity_id`, `consumption_level`, `total_units`, `selected_option`) 
         VALUES ('$facility_code', $commodity_id,'$consumption_level', $total_units,'$selected_option')");
-        }                
+        }    
+                  
 endif;    
       echo 'success ';
 endif;
@@ -485,6 +488,9 @@ endfor;
 		    facility_stocks_temp::delete_facility_temp(null, null,$facility_code);
           //set the notifications
 		  //$this->hcmp_functions->send_stock_update_sms();
+        $updateCase = Doctrine_Manager::getInstance()->getCurrentConnection();
+        $updateCase->execute("UPDATE facility_stocks SET 
+        manufacture=CONCAT(UCASE(SUBSTRING(`manufacture`, 1, 1)),LOWER(SUBSTRING(`manufacture`, 2)))");      //
 		  $this->session->set_flashdata('system_success_message', "Stock Levels Have Been Updated");
 		  redirect('reports/facility_stock_data');			  
 endif;
@@ -817,17 +823,18 @@ $step_2_size=count($get_pushed_items);
 		$state->status=4;
 		$state->save();//get the color coded table
         $order_details=$this -> hcmp_functions -> create_order_delivery_color_coded_table($hcmp_order_id);
-		$message_1="<br>The Order Made for $order_details[facility_name] on  $order_details[date_ordered] has been received at the facility on. $order_details[date_received]
+		$message_1="<br>The Order Made for $order_details[facility_name] on  $order_details[date_ordered] has been received at the facility on. $order_details[date_received].
 		<br>
-		Total ordered value(ksh) =$order_details[order_total]
+		Total ordered value(ksh) =$order_details[order_total].
 		<br>
-		Total recieved order value(ksh)=$order_details[actual_order_total]
+		Total received order value(ksh)=$order_details[actual_order_total].
 		<br>
-		Order Lead Time (from placement – receipt) = $order_details[lead_time]  days
+		Order Lead Time (from placement – receipt) = $order_details[lead_time]  days.
 		<br>
 		<br>
 		<br>".$order_details['table'];				
 		$subject='Order Report For '.$order_details['facility_name'];
+        echo $message_1;exit;
 		$this->hcmp_functions ->send_order_delivery_email($message_1,$subject,null);
 		$this->session->set_flashdata('system_success_message', 'Stock details have been Updated');
 endif;
@@ -924,7 +931,7 @@ $html_body.=
              /// update the facility issues and set the commodity to expired                             
             $inserttransaction=Doctrine_Manager::getInstance()->getCurrentConnection()
             ->execute("UPDATE `facility_stocks` SET status =2 WHERE `id`= '$facility_stock_id'");
-            if($cost>0):                           								    
+            if($current_balance_pack>0):                           								    
 		    $html_body .='<tr><td>'.$source.'</td>
 							<td>'.$commodity_name.'</td>
 							<td>'.$commodity_code.'</td>
@@ -976,12 +983,12 @@ $facility_code=$this -> session -> userdata('facility_id');
 $stock_id=$this->input->post('id');
 $expiry_date=$this->input->post('expiry_date');
 $batch_no=$this->input->post('batch_no');
-$delete=$this->input->post('delete');
+$delete=$this->input->post('edit');
 $manufacturer=$this->input->post('manufacturer');
 $commodity_id=$this->input->post('commodity_id');
 $commodity_balance_units=$this->input->post('commodity_balance_units');
 for($key=0;$key<count($stock_id);$key++):
-	if($delete[$key]==1):
+	if($delete[$key]==2):
 		//check the total stock balance of the commodity
 		$facility_stock=facility_stocks::get_facility_commodity_total($facility_code, $commodity_id[$key]);
 		$commodity_balance=($commodity_balance_units[$key]*-1);
