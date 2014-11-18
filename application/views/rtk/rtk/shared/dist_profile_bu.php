@@ -57,34 +57,8 @@
          </ul>
     
     </div>
-
-    <div class="span5" style="margin-left: 5px;width:20%;">
-        <dl class="dl-horizontal">
-               <dt>Reporting Period</dt>
-               <dd><?php echo $district_summary['Month'] .', '.$district_summary['Year']; ?></dd>
-               <dt>Facilities</dt>
-               <dd><?php echo $district_summary['total_facilities']; ?></dd>
-               <dt>Reported (%)</dt>
-               <dd>                
-               <div class="progress progress-success progress-striped">
-                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $district_summary['reported_percentage']; ?>%;color:000;"></div>
-              </div>               
-               </dd>
-               <dt>Late Reports (%)</dt>
-               <dd>
-               <div class="progress progress-warning progress-striped">
-                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $district_summary['late_reports_percentage']; ?>%;color:000;"><?php echo $district_summary['late_reports']; ?>(<?php echo $district_summary['late_reports_percentage']; ?>%)</div>
-              </div>
-                </dd>
-               <dt>Remaining Facilities (%)</dt>
-               <dd>
-               <div class="progress progress-danger progress-striped">
-                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $district_summary['nonreported_percentage']; ?>%;color:000;"><?php echo $district_summary['nonreported']; ?>(<?php echo $district_summary['nonreported_percentage']; ?>%)</div>
-              </div>
-               </dd>
-               </dl>
-    </div>
-    <div class="span4" style="border-left: solid 1px  #ccc;font-size:9px;margin-left: 20px;padding-left: 10px;width:55%;float:left;height:400px;overflow:scroll;">
+   
+    <div class="span4" style="border-left: solid 1px  #ccc;font-size:9px;margin-left: 20px;padding-left: 10px;width:70%;float:right;height:400px;overflow:scroll;">
         <h4><?php echo $district_name; ?> Sub-County Stock Card</h4>
 
    <table class="table" width="60px">
@@ -124,14 +98,40 @@
                                     </tr>
                                 </tbody>
                             </table>
+    </div>
+     <div class="span5" style="margin-right: 15px;width:70%;float:right;">
+        <dl class="dl-horizontal">
+               <dt>Reporting Period</dt>
+               <dd><?php echo $district_summary['Month'] .', '.$district_summary['Year']; ?></dd>
+               <dt>Facilities</dt>
+               <dd><?php echo $district_summary['total_facilities']; ?></dd>
+               <dt>Reported (%)</dt>
+               <dd>                
+               <div class="progress progress-success progress-striped">
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $district_summary['reported_percentage']; ?>%;color:000;"></div>
+              </div>               
+               </dd>
+               <dt>Late Reports (%)</dt>
+               <dd>
+               <div class="progress progress-warning progress-striped">
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $district_summary['late_reports_percentage']; ?>%;color:000;"><?php echo $district_summary['late_reports']; ?>(<?php echo $district_summary['late_reports_percentage']; ?>%)</div>
+              </div>
+                </dd>
+               <dt>Remaining Facilities (%)</dt>
+               <dd>
+               <div class="progress progress-danger progress-striped">
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $district_summary['nonreported_percentage']; ?>%;color:000;"><?php echo $district_summary['nonreported']; ?>(<?php echo $district_summary['nonreported_percentage']; ?>%)</div>
+              </div>
+               </dd>
+               </dl>
     </div>    
-    <div id="chart" style="margin-left:25%;margin-top:400px;height:380px;width:70%;border:1px ridge #ccc;">
+    <div id="chart" style="margin-left:25%;margin-top:550px;height:380px;width:70%;border:1px ridge #ccc;float:right;">
       
         
     </div>
-    <div class="span8">
+    <!--div class="span8">
         ----
-    </div>
+    </div-->
 
 </div>
 <?php 
