@@ -301,6 +301,80 @@ public static function get_county_emails($county_id){
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
 	}
+
+	public static function get_facilities_list_all() {
+		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+		SELECT 
+    f.id,
+    f.facility_code,
+    f.facility_name,
+    f.district as district_id,
+    f.partner,
+    f.drawing_rights,
+    f.owner,
+    f.type,
+    f.level,
+    f.rtk_enabled,
+    f.cd4_enabled,
+    f.drawing_rights_balance,
+    f.using_hcmp,
+    f.date_of_activation,
+    f.zone,
+    f.contactperson,
+    f.cellphone,
+    f.targetted,
+    d.id,
+    d.district as district_name
+
+	FROM
+	   facilities f
+	        LEFT JOIN
+	    districts d ON d.id = f.district
+	WHERE 
+		f.district = d.id
+				");
+		return $query;
+	}
+
+	public static function get_facilities_list_all_active($status = null) {
+
+		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+		SELECT 
+    f.id,
+    f.facility_code,
+    f.facility_name,
+    f.district as district_id,
+    f.partner,
+    f.drawing_rights,
+    f.owner,
+    f.type,
+    f.level,
+    f.rtk_enabled,
+    f.cd4_enabled,
+    f.drawing_rights_balance,
+    f.using_hcmp,
+    f.date_of_activation,
+    f.zone,
+    f.contactperson,
+    f.cellphone,
+    f.targetted,
+    d.id,
+    d.district as district_name
+
+	FROM
+	   facilities f
+	        LEFT JOIN
+	    districts d ON d.id = f.district
+	WHERE 
+		f.district = d.id
+		AND 
+		f.using_hcmp = $status
+	ORDER BY
+		f.date_of_activation desc
+				");
+		return $query;
+	}
+
 	public static function check_activation($cipher) {
 
 		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("activation='$cipher'")->andWhere("status = 0");
@@ -344,6 +418,20 @@ public static function get_county_details($county_id){
 		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username LIKE '%$test_email%'");
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
+	}
+
+	public static function deactivate_facility($facility_code,$status){
+		if ($status == 0) {
+			$stmt = 'using_hcmp = 1';
+		}elseif ($status == 1) {
+			$stmt = 'using_hcmp = 0';
+		}
+
+		//echo "UPDATE facilities SET $stmt ,date_of_activation = ".date("Y-m-d")." WHERE facility_code = '$facility_code' ";exit;
+		$update = Doctrine_Manager::getInstance() -> getCurrentConnection();
+		$update -> execute("UPDATE facilities SET $stmt ,date_of_activation = CURDATE() WHERE facility_code = '$facility_code' ");
+		
+		echo $update;
 	}
 	
 	}

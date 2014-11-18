@@ -2,12 +2,17 @@
 <html lang="en">
 <head>   
   <link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
+    <link href="<?php echo base_url().'assets/css/offline.css'?>" type="text/css" rel="stylesheet"/> 
+    <link href="<?php echo base_url().'assets/css/select2.css'?>" type="text/css" rel="stylesheet"/> 
+    <link href="<?php echo base_url().'assets/css/offline-language-english.css'?>" type="text/css" rel="stylesheet"/>  
   <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
   <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
   <link href="<?php echo base_url().'assets/css/jquery-ui.css'?>" type="text/css" rel="stylesheet"/>
   <link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
   
   <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
+     <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
+     <script src="<?php echo base_url().'assets/scripts/select2.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/typehead/handlebars.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script> 
   <script src="<?php echo base_url().'assets/scripts/validator.js'?>" type="text/javascript"></script> 

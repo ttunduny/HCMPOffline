@@ -67,8 +67,13 @@ if ($access_level=="rca"){
 <title><?php echo $title; ?></title>
 
 <link rel="icon" href="<?php echo base_url().'assets/img/coat_of_arms.png'?>" type="image/x-icon" />
-<link href="<?php echo base_url().'assets/CSS/style.css'?>" type="text/css" rel="stylesheet"/> 
+<link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
+    <link href="<?php echo base_url().'assets/css/offline.css'?>" type="text/css" rel="stylesheet"/> 
+    <link href="<?php echo base_url().'assets/css/select2.css'?>" type="text/css" rel="stylesheet"/> 
+    <link href="<?php echo base_url().'assets/css/select2.css'?>" type="text/css" rel="stylesheet"/> 
+    <link href="<?php echo base_url().'assets/css/offline-language-english.css'?>" type="text/css" rel="stylesheet"/>  
 <link href="<?php echo base_url() . 'assets/boot-strap3/css/bootstrap.min.css' ?>" type="text/css" rel="stylesheet"/>
+<link href="<?php echo base_url().'assets/css/offline.css'?>" type="text/css" rel="stylesheet"/>
 <link href="<?php echo base_url() . 'assets/boot-strap3/css/bootstrap-responsive.css' ?>" type="text/css" rel="stylesheet"/>
 <link href="<?php echo base_url().'assets/CSS/jquery-ui.css'?>" type="text/css" rel="stylesheet"/>
  

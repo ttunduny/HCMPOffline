@@ -9,12 +9,17 @@
     <meta name="author" content="">
     <link rel="icon" href="<?php echo base_url().'assets/img/coat_of_arms.png'?>" type="image/x-icon" />
 	<link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
+    <link href="<?php echo base_url().'assets/css/offline.css'?>" type="text/css" rel="stylesheet"/> 
+    <link href="<?php echo base_url().'assets/css/select2.css'?>" type="text/css" rel="stylesheet"/> 
+    <link href="<?php echo base_url().'assets/css/offline-language-english.css'?>" type="text/css" rel="stylesheet"/>  
 	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/jquery-ui.css'?>" type="text/css" rel="stylesheet"/>
 	<link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
 	
 	<script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
+     <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
+     <script src="<?php echo base_url().'assets/scripts/select2.js'?>" type="text/javascript"></script>
 	<script src="<?php echo base_url().'assets/scripts/typehead/handlebars.js'?>" type="text/javascript"></script>
 	<script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script> 
 	<script src="<?php echo base_url();?>assets/highcharts/highcharts.js"></script>
