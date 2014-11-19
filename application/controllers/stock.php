@@ -933,13 +933,13 @@ $body ='';
 			'issued_by' => $this -> session -> userdata('user_id'));			
 			 $seconds_diff =strtotime(date("y-m-d"))-strtotime($expiry_date);
 			 $date_diff=floor($seconds_diff/3600/24);			
-			//Facility_Issues::update_issues_table($mydata3);
-		   //	$inserttransaction= Doctrine_Manager::getInstance()->getCurrentConnection()
-			//->execute("UPDATE `facility_transaction_table` SET losses =losses+$current_balance, closing_stock=closing_stock-$current_balance
-           //   WHERE `commodity_id`= '$commodity_id' and status='1' and facility_code=$facility_code ");	                                           
+			Facility_Issues::update_issues_table($mydata3);
+		   	$inserttransaction= Doctrine_Manager::getInstance()->getCurrentConnection()
+			->execute("UPDATE `facility_transaction_table` SET losses =losses+$current_balance, closing_stock=closing_stock-$current_balance
+              WHERE `commodity_id`= '$commodity_id' and status='1' and facility_code=$facility_code ");	                                           
              /// update the facility issues and set the commodity to expired                             
-           // $inserttransaction=Doctrine_Manager::getInstance()->getCurrentConnection()
-           // ->execute("UPDATE `facility_stocks` SET status =2 WHERE `id`= '$facility_stock_id'");
+            $inserttransaction=Doctrine_Manager::getInstance()->getCurrentConnection()
+            ->execute("UPDATE `facility_stocks` SET status =2 WHERE `id`= '$facility_stock_id'");
             if($current_balance_pack>0):                           								    
 		    $body .='<tr style="font-size:12px;padding:4px"><td>'.$source.'</td>
 							<td>'.$commodity_name.'</td>
@@ -974,7 +974,7 @@ $body ='';
 				<tr>
 					<td>
 						<h3>Hello,</h3>
-						<p class='lead'>Find attached decommisioned commodities for $facility_name ($facility_code).</p>
+						<p class='lead'>Find attached decommissioned commodities for $facility_name ($facility_code).</p>
 						<p>$body</p>
 						<!-- Callout Panel -->
 						<p class='callout'>
