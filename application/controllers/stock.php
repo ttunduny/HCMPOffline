@@ -1028,7 +1028,7 @@ $body ='';
    	delete_files('./pdf/'.$file_name.'.pdf');
    	$this->session->set_flashdata('system_success_message', 'Stocks Have Been Decommissioned');		
      }
-echo $body;exit;
+//echo $body;exit;
 $user = $this -> session -> userdata('user_id');
 $user_action = "decommission";
 Log::log_user_action($user, $user_action);
