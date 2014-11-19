@@ -37,7 +37,10 @@ endforeach;
 <button class="btn btn-sm btn-success county-filter"  id="county-filter" ><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div> 
 <div class="col-md-1">
-<button class="btn btn-sm btn-primary county-filter-table"  id="county-filter-table" ><span class="glyphicon glyphicon-th-list"></span>Data Table</button> 
+<button class="btn btn-sm btn-primary county-filter-table"  id="county-filter-table" ><span class="glyphicon glyphicon-th-list"></span>Results as Table</button> 
+</div> 
+<div class="col-md-1">
+<!--<button class="btn btn-sm btn-primary county-filter-table"  id="county-filter-table" ><span class="glyphicon glyphicon-th-list"></span>Data Table</button>--> 
 </div>
 </form>
 </div>
@@ -78,6 +81,9 @@ endforeach;
 </select>
 <div class="col-md-1">
 <button class="btn btn-sm btn-success subcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+</div>
+<div class="col-md-1">
+<button class="btn btn-sm btn-primary subcounty-filter-table"><span class="glyphicon glyphicon-th-list"></span>Results as Table</button> 
 </div>
 </form>
 </div>
@@ -152,7 +158,14 @@ $("#county_commodity_filter").val()+"/NULL/"+"<?php echo $this -> session -> use
 $("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+ "/"+'NULLSub';	
 		ajax_request_replace_div_content(url_,'.graph_content');	
           });
-          
+          $(".subcounty-filter-table").button().click(function(e) {
+		e.preventDefault();	
+        var url_ = "reports/get_county_stock_level_new/"+
+$("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+ "/"+'table_data/NULLSub';	
+		ajax_request_replace_div_content(url_,'.graph_content');	
+          });
+
+
           $(".category-filter").button().click(function(e) {
 		e.preventDefault();	
         var url_ = "reports/get_county_stock_level_new/"+
