@@ -227,15 +227,15 @@ for ($row = 1; $row <= $highestRow; $row++){
 		//if(isset($rowData[0][2]) && $rowData[0][2]!='Product Code'){
 			//echo '<pre>';print_r($rowData[0][7]); echo '</pre>';
         //foreach($items as $key=> $data){
-        	//echo '<pre>';print_r($rowData); echo '</pre>';
+        	echo '<pre>';print_r($rowData); echo '</pre>';
 			
        
             //}   
             //}
 
-            }
+            }exit;
 		
-		//echo '<pre>';print_r($array_order_qty); echo '</pre>';exit;
+		echo '<pre>';print_r($rowData); echo '</pre>';exit;
 		foreach ($array_order_qty as $id => $key) {
 				//echo '<pre>';print_r($array_commodity[$id].'.'.$array_code[$id]); echo '</pre>';//exit;  
         	
@@ -275,7 +275,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 	}
 	
 	
-}//echo '<pre>';print_r($temp); echo '</pre>';exit;
+}echo '<pre>';print_r($temp); echo '</pre>';exit;
 		//$c = array_combine($array_code, $array_commodity);
 		$array_id=array();
 		$array_codes=array();
@@ -314,8 +314,8 @@ for ($row = 1; $row <= $highestRow; $row++){
 			
 				}//exit;
 		
-		//echo '<pre>';print_r($main_array); echo '</pre>';
-		//exit;
+		echo '<pre>';print_r($main_array); echo '</pre>';
+		exit;
 		
         //unset($objPHPExcel);
        $data['order_details'] = $data['facility_order'] = $main_array;  
