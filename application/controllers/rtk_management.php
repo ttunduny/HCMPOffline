@@ -5375,7 +5375,7 @@ public function get_all_zone_a_facilities($zone){
                                 AND counties.id = districts.county ";
 
                 $facilities = $this->db->query($sql)->result_array();
-                echo count($facilities);die;
+                //echo count($facilities);die;
                 $amcs = array();
                 foreach ($facilities as $key => $value) {
                     $fcode = $value['facility_code'];
@@ -5391,7 +5391,7 @@ public function get_all_zone_a_facilities($zone){
                                     AND lab_commodity_details.commodity_id = lab_commodities.id
                                     and lab_commodity_details.facility_code = facility_amc.facility_code
                                     AND lab_commodity_details.commodity_id BETWEEN 0 AND 6
-                                    and lab_commodity_details.created_at between '2014-11-01' and '2014-11-31'";
+                                    and lab_commodity_details.created_at between '2014-11-01' and '2014-11-31' limit 0,20";
                                 
                     $res1 = $this->db->query($q);
                     $amc_details = $res1->result_array();
