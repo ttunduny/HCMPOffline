@@ -112,7 +112,6 @@ class facility_issues extends Doctrine_Record {
 		AND f.date_issued BETWEEN '$convertfrom' 
 		AND '$convertto' 
 		ORDER BY f.date_issued asc"); 
-		
 
 
 			return $transaction;	
