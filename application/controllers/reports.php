@@ -354,6 +354,7 @@ class Reports extends MY_Controller
 		$data['banner_text'] = "Facility Stock Summary";
 		$this -> load -> view("shared_files/template/template", $data);
 	}
+	
 
 	///////GET THE ITEMS A FACILITY HAS STOCKED OUT ON
 	public function facility_stocked_out_items() {
@@ -1197,6 +1198,7 @@ class Reports extends MY_Controller
 		$graph_log_data = array_merge($graph_log_data,array("series_data"=>array('Total %'=>array())));
 		$log_data = Log::get_log_data($facility_code,$district_id,$county_id, $year, $month);
 		$log_data_login_only = Log::get_login_only($facility_code,$district_id,$county_id, $year, $month);
+		//echo "<pre>";print_r($facility_data);echo "</pre>";exit;
 		foreach($log_data as $log_data_)
 		{
 
@@ -2986,7 +2988,6 @@ public function division_commodities_stock_level_graph($district_id=NULL, $count
 
    public function stock_level_dashboard()
    {
-   
    		$tracer =(isset($tracer))? $tracer:null ;
       	$commodity_id = ($commodity_id=="NULL") ? null :$commodity_id;
 	 	$district_id = ($district_id=="NULL") ? null :$district_id;
@@ -3117,6 +3118,7 @@ $graph_type = 'bar';
 
      	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null,$tracer = null) 
      	{	
+     	 //echo $tracer;exit;
      	//reset the values here
 		$tracer =(isset($tracer))? $tracer:null ;
 		$report_type =(isset($report_type))? $report_type:null ;
@@ -3136,6 +3138,7 @@ $graph_type = 'bar';
      	// echo "<br><br><br><br>".$report_type;exit;
 		
 		if(($option=="mos")&&($report_type == '1')){
+			//echo $category_id;exit;
         //echo $district_id." Cty:".$county_id." Fcty:".$facility_code." Cmd_id:".$commodity_id." Report Type:".$report_type." TRacer:".$tracer;exit;
         return $this->load_stock_level_graph($district_id,$county_id,$facility_code,$commodity_id,$report_type,$tracer);
         }
@@ -3157,7 +3160,7 @@ $graph_type = 'bar';
 		$category_id, $commodity_id, $option_new, $report_type);
 
 		$mos_array = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id,$report_type,$tracer);
-		
+		//echo "<pre>";print_r($commodity_array);echo "</pre>";exit;
         foreach ($commodity_array as $data) :
 			if($report_type=="table_data"):
 				if($commodity_id>0):
@@ -3219,6 +3222,7 @@ $graph_type = 'bar';
 	//For the Sub County Comparison on the County and Sub County Interface
 	public function get_county_comparison_graph($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null,$tracer = null) 
  	{
+ 		echo $report_type;exit;
      	$tracer =(isset($tracer))? $tracer:null ;
 		$report_type =(isset($report_type))? $report_type:null ;
       	$commodity_id = ($commodity_id=="NULL") ? null :$commodity_id;
@@ -3319,7 +3323,7 @@ $graph_type = 'bar';
 public function get_division_commodities_data($district_id = null, $facility_code=null, $division_id = null, $option = null,$report_type=null) 
      	{
      	//reset the values here
-
+     		// echo $report_type;exit;
       	$district_id = ($district_id=="NULL") ? null :$district_id;
 	 	$division_id = ($division_id=="NULL") ? null :$division_id;
 	 	$option = ($option=="NULL") ? null :$option;
@@ -3428,14 +3432,15 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 
 
         public function consumption_data_dashboard($commodity_id = null, $district_id = null, $facility_code=null, $option = null,$from = null,$to = null, $graph_type=null,$tracer = null) {
-       
+      
 	    //reset the values here
      	$commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
 		$district_id =(isset($district_id)&&($district_id))? $district_id:$this -> session -> userdata('district_id') ;
 		$county_id =(isset($county_id)&&($county_id))? $county_id:$this -> session -> userdata('county_id') ;
 	 	//$district_id = ($district_id=="NULL") ? null :$district_id;
 	 	$facility_code=($facility_code=="NULL") ? null :$facility_code;
-		
+		$report_type=($graph_type=="NULL") ? null :$graph_type;
+
 		$from =(($from=="NULL")) ? strtotime(date('Y-m-01')) :strtotime(urldecode($from));	
 		$to =(($to=="NULL")) ? strtotime(date('Y-m-d')) : strtotime(urldecode($to));
 		
@@ -3504,6 +3509,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 
 	    public function consumption_stats_graph($commodity_id = null,$category_id = null, $district_id = null, $facility_code=null, $option = null,$from=null,$to=null,$report_type=null) {
 	    //reset the values here
+	    	// echo $report_type;exit;
      	$commodity_id=($commodity_id=="NULL") ? null :$commodity_id;
 		$district_id =(isset($district_id)&&($district_id))? $district_id:$this -> session -> userdata('district_id') ;
 	 	//$district_id = ($district_id=="NULL") ? null :$district_id;
@@ -3557,7 +3563,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 			//echo "<pre>";print_r($row_data);echo "</pre>";exit;
 			$excel_data['row_data'] = $row_data;;
 			$this -> hcmp_functions -> create_excel($excel_data);
-			echo $commodity_name.$title.$time;exit;
+			//echo $commodity_name.$title.$time;exit;
 		
 		elseif($report_type=="table_data"):
 			if($commodity_id>0):

@@ -16,6 +16,8 @@
     <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/font-awesome/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
+    <link href="<?php echo base_url().'assets/css/tabs.css'?>" type="text/css" rel="stylesheet"/>
+    <link href="<?php echo base_url().'assets/css/tabstyles.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
     <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
     <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
@@ -25,38 +27,14 @@
     
      
     <title>HCMP | National</title>
-<script>
-   paceOptions = {
-  ajax: false, // disabled
-  document: true, // 
-  eventLag: true,
-  restartOnPushState: false,
-  elements:{
-  	selectors:['body']
-  } // 
-  
-};
- 
-    function load(time){
-      var x = new XMLHttpRequest()
-      x.open('GET', document.URL , true);
-      x.send();
-    };
-    setTimeout(function(){
-      Pace.ignore(function(){
-        load(3100);
-      });
-    },4500);
+    <STYLE TYPE="text/css">
 
-    Pace.on('hide', function(){
-   //   console.log('done');
-    });
+     a:hover{
+    text-decoration: none;
+}
 
-    var url="<?php echo base_url(); ?>";
-    </script>
-<style>
-	.active-panel{
-    	border-left: 6px solid #36BB24;
+.active-panel{
+      border-left: 6px solid #36BB24;
     }
     body {
 padding-top: 4.5%;
@@ -68,59 +46,96 @@ padding-top: 4.5%;
 }
 
 h4{
-	
-	padding:4px;
-	color:black;
-	background:white;
-	text-align:center;
-	margin:0;	
-	font-size:15px;
+  
+  padding:4px;
+  color:black;
+  background:white;
+  text-align:center;
+  margin:0; 
+  font-size:15px;
 }
 
 .stat_item {
-		height: 36px;
-		padding: 2px 5px;
-		color: #fff;
-		text-align: center;
-		font-size: 1em;
-		
-	}	
-	
-	#notify .col-md-2,.col-md-1{
-		padding:3px;
-	}
-	#notify {
-		margin-bottom: 5px;
-	}
-	.tile{
-		box-shadow:  0px 1px 5px 0px #d3d3d3;
-		background:white;
-	}
-	.tile h4{
-		padding: 5px;
-		background-color:#528f42;
-		color: white;
-	}
-	.btn{
-		border-radius: 0;
-	}
-	.modal-dialog {
-		
-		width: 74%;
-	}
-	</style>
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    height: 36px;
+    padding: 2px 5px;
+    color: #fff;
+    text-align: center;
+    font-size: 1em;
+    
+  } 
+  
+  #notify .col-md-2,.col-md-1{
+    padding:3px;
+  }
+  #notify {
+    margin-bottom: 5px;
+  }
+  .tile{
+    box-shadow:  0px 1px 5px 0px #d3d3d3;
+    background:white;
+  }
+  .tile h4{
+    padding: 5px;
+    background-color:#F5F5F5;
+    color: black;
+  }
+  .btn{
+    border-radius: 0;
+  }
+  .modal-dialog {
+    
+    width: 74%;
+  }
+  .stat_item{
+
+    height:110px;
+    margin-top:0.5%;
+  }
+  .figure_up{
+    font-size: 30px;
+    float:left;
+    margin:0 3px 0 34px;
+
+      }
+      .figure_count{
+    font-size: 22px;
+    margin:0 3px 0 60px;
+
+      }
+  .figure_low{
+    font-size: 12px;
+    margin:12px 0 0 0;
+
+      }
+
+ .stat_item .row {
+    
+    
+     }
+.view_more{
+  height:26px;
+  background-color:white;
+  color:black;
+
+
+}
+.arrow{
+  margin-left:60px;
+}
+
+
+    </STYLE>
+<script>
+  
   </script>
   
   </head>
   
   <body screen_capture_injected="true" style="background-color: white;">
   	
-  	<div class="container-fluid navbar-default navbar-fixed-top" role="navigation" style="background-color:white">
+  	
+    
+   <div class="container-fluid navbar-default navbar-fixed-top" role="navigation" style="background-color:white">
         <div class="container-fluid">
             <div class="navbar-header" id="st-trigger-effects">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -154,29 +169,195 @@ h4{
 
       </div>
     </div>
-    
-   <div class="container-fluid">
 
-<section>
-        <div class="tabs tabs-style-underline">
-          <nav>
-            <ul>
-              <li><a href="#section-underline-1" class="icon icon-home"><span>Home</span></a></li>
-              <li><a href="#section-underline-2" class="icon icon-gift"><span>Deals</span></a></li>
-              <li><a href="#section-underline-3" class="icon icon-upload"><span>Upload</span></a></li>
-              <li><a href="#section-underline-4" class="icon icon-coffee"><span>Work</span></a></li>
-              <li><a href="#section-underline-5" class="icon icon-config"><span>Settings</span></a></li>
-            </ul>
-          </nav>
-          <div class="content-wrap">
-            <section id="section-underline-1"><p>1</p></section>
-            <section id="section-underline-2"><p>2</p></section>
-            <section id="section-underline-3"><p>3</p></section>
-            <section id="section-underline-4"><p>4</p></section>
-            <section id="section-underline-5"><p>5</p></section>
-          </div><!-- /content -->
-        </div><!-- /tabs -->
-      </section>
+<div class="container-fluid" style="">
+  <div class="row-fluid">
+
+    <!-- begin div map-->
+    <div class="col-lg-3 col-md-12">
+      
+      <div class="tile" id="map" style="max-height: 400px;">
+            
+          </div>
+      <div style="width:130px;margin-left:30%;padding:2%">
+            <div style="display:inline-block;width:10px;height:10px;background:#FFCC99">
+                
+            </div>
+            <div style="width:80px;display:inline-block;margin-left:5px;font-size:120%">
+              Using HCMP
+              </div>
+            </div>
+          <script>
+          var map= new FusionMaps ("assets/FusionMaps/FCMap_KenyaCounty.swf","KenyaMap","100%","100%","0","0");
+          map.setJSONData(<?php echo $maps; ?>);
+          
+            map.render("map");
+            
+                    </script>
+            
+    
+
+    </div><!-- end div map-->
+
+<!-- begin div notification tray-->
+    <div class=" tile col-lg-6 col-md-12" style="border: 0px solid #C0C0C0;height:550px;">
+      <div class="row">
+        
+    <div class="col-lg-4 col-md-6">
+
+      <div class="color_b stat_item">
+       <div class="row">
+
+        <div class=" figure_up">
+
+          <span class="glyphicon glyphicon-home"></span>
+          <span class=" figure_count"> 81</span>
+         
+        </div>
+       
+          </div>
+           <div class="row">
+
+        <div class=" figure_low">
+
+         Facilities Rolled Out
+        </div>
+        <div class="view_more" style="">
+           View Details
+        <span class="arrow  glyphicon glyphicon-circle-arrow-right"></span>
+
+        </div>
+       
+       
+          </div>
+         
+            
+                            
+        </div>
+
+    </div>
+
+    <div class="col-lg-4 col-md-6">
+
+      <div class="color_e stat_item">
+            <div class="row">
+
+        <div class=" figure_up">
+
+          <span class="glyphicon glyphicon-user"></span>
+          <span class=" figure_count"> 429</span>
+         
+        </div>
+       
+          </div>
+           <div class="row">
+
+        <div class=" figure_low">
+
+         Trained HCW
+        </div>
+         <div class="view_more" style="">
+           View Details
+        <span class="arrow  glyphicon glyphicon-circle-arrow-right"></span>
+
+        </div>
+       
+          </div>
+                            
+                   </div>
+      
+    </div>
+    <div class="col-lg-4 col-md-12">
+
+      <div class="color_a stat_item">
+           <div class="row">
+
+        <div class=" figure_up">
+
+          <span class="glyphicon glyphicon-shopping-cart"></span>
+          <span class=" figure_count"> 25</span>
+         
+        </div>
+       
+          </div>
+           <div class="row">
+
+        <div class=" figure_low">
+
+         Facilities Have Stock-outs
+        </div>
+         <div class="view_more" style="">
+           View Details
+        <span class="arrow glyphicon glyphicon-circle-arrow-right"></span>
+
+        </div>
+       
+          </div>   
+        </div>
+      
+    </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12" style="margin-top:3%;">
+          <h4>M.O.S VS A.M.C</h4>
+          <div id="mos"></div>
+        </div>
+      </div>
+      
+
+    </div><!-- end div notification tray-->
+
+    <!-- begin div graph 1-->
+<div class="tile col-lg-3 col-md-12" style="border: 0px solid #C0C0C0;height:550px;">
+ <h4>Facilities In Numbers</h4>
+          
+       
+
+</div><!-- end div graph 1-->
+
+    
+  </div><!--end first row-->
+
+<div class="row-fluid" style="margin-top:0.5%;">
+
+ 
+<div class="tile col-lg-6 col-md-12" style="border: 0px solid #C0C0C0;height:400px;">
+  <h4>Consumption</h4>
+ <div id="consumption"></div>
+
+</div>
+<div class="tile col-lg-6 col-md-12" style="border: 0px solid #C0C0C0;height:400px;">
+  <h4>Expiries</h4>
+ <div id="actual_ex"></div>
+
+</div>
+
+</div><!--end second row-->
+
+
+<div class="row-fluid" style="margin-top:3%;">
+
+  <div class="tile col-lg-5 col-md-6" style="border: 0px solid #C0C0C0;height:400px;">
+    <h4>Orders</h4>
+ <div id="orders"></div>
+
+</div>
+<div class=" col-lg-3 col-md-6" style="border: 1px solid #C0C0C0;height:400px;">
+ 
+
+</div>
+<div class=" col-lg-4 col-md-12" style="border: 1px solid #C0C0C0;height:400px;">
+ 
+
+</div>
+
+</div><!--end third row-->
+
+  <div></div>
+</div>
+
 
 
 	
@@ -184,13 +365,8 @@ h4{
 	</div>
 	
 	
-   	
- 
-
-   
-   
-   <script>
-   
+  <script>
+    var url="<?php echo base_url(); ?>";
    ajax_fill_data('Kenya/facility_breakdown_pie',"#facility_breakdown");
    ajax_fill_data('Kenya/mos_graph/NULL/NULL/NULL/NULL/NULL/mos',"#mos");
    ajax_fill_data('Kenya/roll_out',"#roll_out");
@@ -202,11 +378,11 @@ h4{
    ajax_fill_data('Kenya/facility_over_view/',"#facilities_rolled_out");
    ajax_fill_data('Kenya/get_lead_infor/NULL/NULL/NULL/NULL/NULL',"#leadtime");
    
-   		 $("#mosgraph").click(function() {
-    	ajax_fill_modal('Kenya/mos_graph/NULL/NULL/NULL/NULL/NULL/mosmodalgraph',"#mosmodalgraph");
-    	});
-    	
-    	function ajax_fill_modal(function_url,div){
+       $("#mosgraph").click(function() {
+      ajax_fill_modal('Kenya/mos_graph/NULL/NULL/NULL/NULL/NULL/mosmodalgraph',"#mosmodalgraph");
+      });
+      
+      function ajax_fill_modal(function_url,div){
         var function_url =url+function_url;
         var loading_icon=url+"assets/img/Preloader_1.gif";
         $.ajax({
@@ -292,7 +468,6 @@ h4{
     var url='<?php echo base_url(); ?>';
     </script>
   <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
-  <script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
  <!--  <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
     <!-- Bootstrap core JavaScript===================== --> 
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
@@ -301,6 +476,7 @@ h4{
   <script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>  
   <!-- Placed at the end of the document so the pages load faster -->
   <script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
     <!--Datatables==========================  -->
   <script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>    
   <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrap.js'?>" type="text/javascript"></script>
@@ -311,4 +487,5 @@ h4{
   <script src="<?php echo base_url().'assets/scripts/jquery.validate.min.js'?>" type="text/javascript"></script>
   <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/loadingbar.css'?>" />
   <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/elusive-webfont.css'?>" />
-</body></html>
+</body>
+</html>
