@@ -1201,6 +1201,7 @@ class Reports extends MY_Controller
 		$graph_log_data = array_merge($graph_log_data,array("series_data"=>array('Total %'=>array())));
 		$log_data = Log::get_log_data($facility_code,$district_id,$county_id, $year, $month);
 		$log_data_login_only = Log::get_login_only($facility_code,$district_id,$county_id, $year, $month);
+		//echo "<pre>";print_r($facility_data);echo "</pre>";exit;
 		foreach($log_data as $log_data_)
 		{
 
