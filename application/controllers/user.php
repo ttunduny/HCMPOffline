@@ -681,7 +681,7 @@ class User extends MY_Controller {
 				$savethis -> lname = $lname;
 				$savethis -> email = $email_address;
 				$savethis -> username = $username;
-				$savethis -> password = "";
+				$savethis -> password = md5(123456);
 				$savethis -> activation = $save_activation_code ;
 				$savethis -> usertype_id = $user_type;
 				$savethis -> telephone = $telephone;

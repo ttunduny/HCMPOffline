@@ -121,33 +121,27 @@ $(function(){
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Determine</td>
-                                    <td><?php echo $value[0][0]['amc']; ?></td>
-                                    <td><?php echo $value[0][0]['beginning_bal']; ?></td>
-                                    <td><?php echo $value[0][0]['q_received']; ?></td>
-                                    <td><?php echo $value[0][0]['q_used']; ?></td>
-                                    <td><?php echo $value[0][0]['no_of_tests_done']; ?></td>
-                                    <td><?php echo $value[0][0]['positive_adj']; ?></td>
-                                    <td><?php echo $value[0][0]['negative_adj']; ?></td>
-                                    <td><?php echo $value[0][0]['losses']; ?></td>
-                                    <td><?php echo $value[0][0]['closing_stock']; ?></td>
-                                    <td><?php echo $value[0][0]['q_requested']; ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Unigold</td>
-
-                                    <td><?php echo $value[0][1]['amc']; ?></td>
-                                    <td><?php echo $value[0][1]['beginning_bal']; ?></td>
-                                    <td><?php echo $value[0][1]['q_received']; ?></td>
-                                    <td><?php echo $value[0][1]['q_used']; ?></td>
-                                    <td><?php echo $value[0][1]['no_of_tests_done']; ?></td>
-                                    <td><?php echo $value[0][1]['positive_adj']; ?></td>
-                                    <td><?php echo $value[0][1]['negative_adj']; ?></td>
-                                    <td><?php echo $value[0][1]['losses']; ?></td>
-                                    <td><?php echo $value[0][1]['closing_stock']; ?></td>
-                                    <td><?php echo $value[0][1]['q_requested']; ?></td>
-                                </tr>
+                            <?php
+                                $a = 0;
+                                foreach ($value[$a] as  $values) {
+                                   
+                                    ?>
+                                   <tr>
+                                    <td><?php echo $values['commodity_name'];?></td>
+                                    <td><?php echo $values['amc'];?></td>                                    
+                                    <td><?php echo $values['beginning_bal']; ?></td>
+                                    <td><?php echo $values['q_received']; ?></td>
+                                    <td><?php echo $values['q_used']; ?></td>
+                                    <td><?php echo $values['no_of_tests_done']; ?></td>
+                                    <td><?php echo $values['positive_adj']; ?></td>
+                                    <td><?php echo $values['negative_adj']; ?></td>
+                                    <td><?php echo $values['losses']; ?></td>
+                                    <td><?php echo $values['closing_stock']; ?></td>
+                                    <td><?php echo $values['q_requested']; ?></td>
+                                </tr> 
+                                <?php $a++; }
+                            ?>
+                               
                             </tbody>
                         </table>
                     </div>

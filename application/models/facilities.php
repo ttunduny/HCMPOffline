@@ -303,6 +303,26 @@ AND d.id =  '$county_id'
 return $q;
 }
 
+public static function get_all_facilities_no(){
+	$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT COUNT( f.id ) AS total_no_of_facilities
+	FROM facilities f,districts d
+	 where f.`district` = d.id
+		");
+
+	return $query;
+}
+
+public static function get_all_facilities_active_no(){
+	$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT COUNT( f.id ) AS total_active_facilities
+	FROM facilities f,districts d
+	 where f.`district` = d.id AND f.using_hcmp = 1
+		");
+
+	return $query;
+}
+
 public static function get_total_facilities_district_ownership($county_id,$owner_type){
 	
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
@@ -477,7 +497,7 @@ public static function get_facilities_which_went_online_($district_id = null, $d
 	where 
 		f.district = d.id 
 		and d.id = $district_id 
-		and DATE_FORMAT(  `date_of_activation` ,  '%M %Y' ) = '$date_of_activation'");
+		and DATE_FORMAT(  `date_of_activation` ,  '%M %Y' ) = '$date_of_activation' AND using_hcmp=1");
 				
 		return $q;		
 }

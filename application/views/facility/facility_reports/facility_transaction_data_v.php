@@ -62,6 +62,7 @@
 <div class="container-fluid">
 <div style="float: right">
 <button class="btn btn-success" type="submit"><span class="glyphicon glyphicon-open"></span>Proceed to Order from KEMSA</button></div>
+
 <?php echo form_close();?>
 </div>
 </div>

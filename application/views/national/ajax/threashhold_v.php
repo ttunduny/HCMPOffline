@@ -12,7 +12,7 @@
         xAxis: {
             categories: <?php echo $category_data ;?>,
             labels: {
-                rotation: -75,
+                rotation: -60,
                 style: {
                     fontSize: '8px',
                     fontFamily: 'Verdana, sans-serif'

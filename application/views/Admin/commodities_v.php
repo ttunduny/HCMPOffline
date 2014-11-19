@@ -27,10 +27,7 @@
   <button type="button" class="order-for-excel btn btn-primary" id="order-for-excel">
   <span class="glyphicon glyphicon-floppy-open"></span>Upload File</button>    
   </div>
-<<<<<<< HEAD
-=======
-  
->>>>>>> 009c71465194e3d5f5df5d1d9e1da5d569082273
+
   </div>
 
 		</div>
