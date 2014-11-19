@@ -452,7 +452,69 @@ $data['msg'] = $msg;
 $this->load->view("rtk/template", $data);
 }
 
+public function check_empty_records(){
+    $orders_list = array();
+    $details_list = array();
 
+    $sql_o = "SELECT DISTINCT lab_commodity_orders.id FROM lab_commodity_orders WHERE lab_commodity_orders.order_date BETWEEN '2014-11-01' AND '2014-11-31' and district_id > 0";
+    $sql_d = "SELECT DISTINCT lab_commodity_details.order_id as id FROM  lab_commodity_details WHERE created_at BETWEEN '2014-11-01' AND '2014-11-31' and district_id > 0";
+
+    $orders = $this->db->query($sql_o)->result_array();    
+    $details = $this->db->query($sql_d)->result_array();
+    
+    
+
+    foreach ($orders as $key => $value) {
+        $id = $value['id'];
+        array_push($orders_list, $id);
+    }
+
+    foreach ($details as $key => $value) {
+        $id = $value['id'];
+        array_push($details_list, $id);
+    }
+    $empty = array_diff($orders_list, $details_list);
+    //echo count($empty);die();
+
+    // echo count($orders)."<br/>";
+    // echo count($details)."<br/>";
+    // echo count($orders) - count($details)."<br/>";
+    // echo "<pre>";
+    // print_r($empty);die();
+    $new_empty = array();
+    foreach ($empty as $key => $value) {
+        $q = "SELECT DISTINCT district_id FROM lab_commodity_orders where id='$value'";
+        $res = $this->db->query($q)->result_array();
+        array_push($new_empty, $res);
+    }
+
+    $latest = array();
+    foreach ($new_empty as $key => $value) {
+        foreach ($value as $keys=> $values) {
+            array_push($latest,$values['district_id']);
+        }
+    }
+    $latest = array_unique($latest);
+    asort($latest);
+    $users = array();
+    foreach ($latest as  $value) {
+        $sql = "SELECT counties.county, districts.district as district_name, user.* 
+                FROM user, districts,counties 
+                WHERE user.usertype_id = '7' 
+                AND user.district = '$value' 
+                AND user.district = districts.id
+                AND districts.county = counties.id LIMIT 0 , 1";
+        //echo "$sql";die();
+        $res = $this->db->query($sql)->result_array();
+        array_push($users, $res);
+    }
+    $data['title'] = "RTK Empty Lab Commodity Details";       
+    $data['users'] = $users;    
+    $data['banner_text'] = "RTK Empty Lab Commodity Details";
+    $data['content_view'] = "rtk/rtk/admin/empty_details";
+    $this->load->view("rtk/template", $data);
+
+}
 
     //VIew FCDRR Report
 public function lab_order_details($order_id, $msg = NULL) {
@@ -466,7 +528,7 @@ public function lab_order_details($order_id, $msg = NULL) {
     $data['lab_categories'] = Lab_Commodity_Categories::get_all();
     $data['detail_list'] = Lab_Commodity_Details::get_order($order_id);
 
-    $result = $this->db->query('SELECT * 
+    $sql = "SELECT * 
         FROM lab_commodity_details, counties, facilities, districts, lab_commodity_orders, lab_commodity_categories, lab_commodities
         WHERE lab_commodity_details.facility_code = facilities.facility_code
         AND counties.id = districts.county
@@ -475,7 +537,9 @@ public function lab_order_details($order_id, $msg = NULL) {
         AND lab_commodity_categories.id = lab_commodities.category
         AND facilities.district = districts.id
         AND lab_commodity_details.order_id = lab_commodity_orders.id
-        AND lab_commodity_orders.id = ' . $order_id . '');
+        AND lab_commodity_orders.id = '$order_id'";
+    //echo "$sql";die();
+    $result = $this->db->query($sql);
     $data['all_details'] = $result->result_array();
     $this->load->view("rtk/template", $data);
 }
@@ -3932,7 +3996,7 @@ public function rtk_summary_county($county, $year, $month) {
         $amc = 0;
         for ($commodity_id = 1; $commodity_id <= 6; $commodity_id++) {
             $amc = $this->_facility_amc($mfl, $commodity_id);
-            $q = "select * from facility_amc where facility_code='$mfl' and commodity_id='$commodity_id' and month='$month'";
+            $q = "select * from facility_amc where facility_code='$mfl' and commodity_id='$commodity_id'";
             $resq = $this->db->query($q)->result_array();
             $count = count($resq);
             if($count>0){
