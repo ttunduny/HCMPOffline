@@ -662,6 +662,7 @@ class Reports extends MY_Controller
 	}
 
 	public function stock_control($facility_code=null) {
+		//loads the bin card
 		$facility_code=isset($facility_code) ? $facility_code: $this -> session -> userdata('facility_id');
 		$facility_name=Facilities::get_facility_name_($facility_code)->toArray();
 		$data['facility_name']=$facility_name[0]['facility_name'];
@@ -676,6 +677,7 @@ class Reports extends MY_Controller
 
 	}
 	public function stock_control_ajax() {
+		//loads the bin card after the user selects the particular commodity
 		$facility_code = $this -> session -> userdata('facility_id');
 		$commodity_id = $_POST['commodity_select'];
 		$to = $_POST['to'];
@@ -690,6 +692,7 @@ class Reports extends MY_Controller
 		$data['to'] =$to;
 		$data['facility_code']= $this -> session -> userdata('facility_id');
 		$data_=	Facility_issues::get_bin_card($facility_code,$commodity_id,$from,$to);	
+		//echo "<pre>";print_r($data_);exit;
 		$data['bin_card'] =$data_ ;
 		$count_records=count($data);
 		
@@ -3089,19 +3092,25 @@ $graph_type = 'bar';
     }
    public function facility_stock_level_dashboard()
    {
+   		//facility level reports section - Stock Level
+   		
+   		//get the data from the session
 		$county_id = $this -> session -> userdata('county_id');
-		$view = 'shared_files/template/dashboard_template_v';
+		//load the district in that particluar county the facility is in
         $data['district_data'] = districts::getDistrict($county_id);
+		//get comodity data
         $data['c_data'] = Commodities::get_all_2();
+		//get commodity categories
 		$data['categories']=commodity_sub_category::get_all_pharm();
+		//load the page details
 		$data['banner_text'] = "Stocking Levels";
 		$data['title'] = "Stocking Levels";
+		$data['active_panel']='stocking_levels';
 		$data['content_view'] = "facility/facility_reports/reports_v";
-		$view = 'shared_files/template/template';
 		$data['report_view'] = "subcounty/reports/county_stock_level_filter_v";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
-		$data['active_panel']='stocking_levels';
- 		$data['title'] = "Reports";
+		$view = 'shared_files/template/template';
+ 		//load the page
 		$this -> load -> view($view, $data);
 
     }
