@@ -831,25 +831,39 @@ public function county_profile($county) {
                     }else{
                         $month = $this->session->userdata('Month');
                         if ($month == '') {
-                            $month = date('mY', time());
+                            $month = date('mY', strtotime('-1 month'));
+                          
                         }
-                        $year = substr($month, -4);
-                        $month = substr_replace($month, "", -4);
-                        $monthyear = $year . '-' . $month . '-1';
+                        $m =substr($month, 0,2);
+                        $y = substr($month, 2);
+                        $new_month = $y.'-'.$m.'-01';
+                        $d = new DateTime("$new_month");    
+                        $d->modify( 'last day of next month' );
+                        $month_db =  $d->format( 'mY' );                  
+                   
+                        // if ($month == '') {
+                        //     $month = date('mY', time());
+                        // }else{
+                        //     echo "$month";//die();                            
+                        // }
+                        // $year = substr($month, -4);
+                        // $month = substr_replace($month, "", -4);
+                        $monthyear = $y . '-' . $m . '-1';
                     }
                     $active_month = $month.$year;
+                    $current_month = date('mY', strtotime("-1 month"));
 
                     $countyid = $this->session->userdata('county_id');       
                     $county_name = counties::get_county_name($countyid);        
                     $County = $county_name['county'];
                     $res = $this->db->query("select facilities as total_facilities,percentage as total_percentage from rtk_county_percentage 
-                        where county_id='$countyid' and month='$active_month'");
+                        where county_id='$countyid' and month='$month_db'");
                     $result = $res->result_array();       
                     
                     $data['total_facilities'] = $result[0]['total_facilities'];             
                     $data['total_percentage'] = $result[0]['total_percentage'];             
 
-                    $englishdate = date('F, Y', strtotime($monthyear));
+                    $englishdate = date('F, Y', strtotime("-0 month",strtotime($monthyear)));
                     $reporting_rates = $this->reporting_rates($countyid,$year,$month);        
                     $xArr = array();
                     $yArr = array();
@@ -873,7 +887,8 @@ public function county_profile($county) {
                     $data['jsonx1'] = str_replace('"', "", json_encode($xArr1));
                     $data['englishdate'] = $englishdate;              
                     $data['county'] = $County;
-                    $data['active_month'] = $month.$year;
+                    $data['active_month'] = $active_month;
+                    $data['current_month'] = $current_month;
                     $Countyid = $this->session->userdata('county_id');
                     $data['user_logs'] = $this->rtk_logs();
                     $data['content_view'] = "rtk/rtk/clc/trend";
