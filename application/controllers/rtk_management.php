@@ -1939,9 +1939,9 @@ public function download_county_mos($county = null,$report_type) {
     }    
 
     $table_head = '<style>table.data-table {border: 1px solid #DDD;margin: 10px auto;border-spacing: 0px;}
-    table.data-table th {border: none;color: #036;text-align: center;background-color: #F5F5F5;border: 1px solid #DDD;border-top: none;max-width: 450px;}
+    table.data-table th {border: none;color: #036;text-align: center;background-color: #F5F5F5;border: 1px solid #DDD;border-top: none;max-width: 450px;font-weight:bold}
     table.data-table td, table th {padding: 4px;}
-    table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px solid #DDD;height: 30px;margin: 0px;border-bottom: 1px solid #DDD;}
+    table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px solid #DDD;height: 30px;margin: 0px;border-bottom: 1px solid #DDD;font-size:13px;}
     .col5{background:#D8D8D8;}</style></table>
     <table id="stock_card_table" class="data-table">
                     <thead>
@@ -1967,7 +1967,7 @@ public function download_county_mos($county = null,$report_type) {
     $report_name = "Stock Status as at end of $month_text for $county_name County";
     $title = "HIV Rapid Test Kit Stock Status as at end of $month_text for $county_name County";
     $html_data = $table_head . $table_body . $table_foot;
-
+    //echo "$html_data";die();
     switch ($report_type) {
         case 'excel' :
         $this->_generate_lab_report_excel($report_name, $title, $html_data);
