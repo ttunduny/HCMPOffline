@@ -6,7 +6,7 @@ if($reporting_percentage>100){
     $reporting_percentage = 100;
 }
 $reporting_percentage = number_format($reporting_percentage, $decimals = 0);
-$current_month = date('mY', time());     
+$current_month = date('mY', strtotime('-1 month'));   
 ?>
 
 <style type="text/css">

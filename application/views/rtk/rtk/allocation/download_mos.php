@@ -45,17 +45,9 @@
   background-color: #009933;
   color: #fff;
  }
- #download_pdf{
+ #download{
   text-decoration: underline;  
-  margin-left: 3%;
- }
- #download_excel{
-  text-decoration: underline;  
-  margin-left: 1%;
- }
- #or{
-  margin-left: 1%;
-  text-decoration: none;
+  margin-left: 10%;
  }
  </style>
 
@@ -70,32 +62,33 @@
     <?php echo $option_counties;?>
   </select>
   <button id="go_county">Go</button>
-  <a id="download_pdf" href="<?php echo base_url().'rtk_management/download_county_mos/'.$county_id.'/pdf'; ?>" target="_blank">
-    Download Facilities List as PDF
-  </a><a href="" id="or">or 
-  <a id="download_excel" href="<?php echo base_url().'rtk_management/download_county_mos/'.$county_id.'/excel'; ?>" target="_blank">
-    Download Facilities List as Excel
-  </a>
-  (<i>The Links open in a new Tab</i>)
+  <a id="download" href="">Download Facilities List</a>
+  
 </div>
   <div id="stock_card">    
     <table id="stock_card_table" class="data-table">
       <thead>
         <tr>
-          <th>Commodity Name</th>
-          <th>AMC</th>
-          <th>Stock on Hand at Facility</th>
-          <th>MOS Central</th>
+          <th colspan="7" id="th-banner">HIV Rapid Test Kit Stock Status as at end of <?php echo "$month_text";?> for <?php echo "$county_name";?> County</th>
         </tr>
         <tr>
-          <th colspan="4" id="th-banner">HIV Rapid Test Kit Stock Status as at end of <?php echo "$month_text";?></th>
-        </tr>
+          <th>District</th>
+          <th>Facility Code</th>
+          <th>Facility Name</th>                    
+          <th>Commodity Name</th>                    
+          <th>AMC</th>                    
+          <th>Ending Balance</th>                    
+          <th>MOS Central</th>
+        </tr>        
       </thead>
       <tbody style="border-top: solid 1px #828274;">
         
         <?php 
           foreach ($stock_details as $key => $value) { ?>
             <tr>
+              <td><?php echo $value['district'];?></td>
+              <td><?php echo $value['facility_code'];?></td>
+              <td><?php echo $value['facility_name'];?></td>
               <td><?php echo $value['commodity_name'];?></td>
               <td><?php echo $value['amc'];?></td>
               <td><?php echo $value['endbal'];?></td>
