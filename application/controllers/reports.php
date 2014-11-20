@@ -1059,11 +1059,13 @@ class Reports extends MY_Controller
 	public function get_counties_json_data() {
 		echo json_encode(Counties::getAll());
 	}
-	     
+	
 
 	 //For system uptake option on SUB-COUNTY dashboard
 	 public function get_sub_county_facility_mapping_data($year = null, $month = NULL) 
 	 {
+	 	
+	 	
 	 	$year = (isset($year)&& ($year>0))? $year : date("Y");
 		$month = (isset($month)&& ($month>0))? $month : date("m");
 		$identifier = $this -> session -> userdata('user_indicator');
@@ -3634,25 +3636,31 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 	    
 		return $this -> load -> view("subcounty/ajax/county_notification_v", $data);
 	}
-     public function monitoring(){
+	//for monitoring facility use of the tool
+     public function monitoring()
+     {
         $facility_code=(!$this -> session -> userdata('facility_id')) ? null: $this -> session -> userdata('facility_id');
         $district_id=(!$this -> session -> userdata('district_id')) ? null:$this -> session -> userdata('district_id');
         $county_id=(!$this -> session -> userdata('county_id')) ? null:$this -> session -> userdata('county_id');
         $category_data=$series_data = $graph_data= $series_data_=array();
 		$identifier = $this -> session -> userdata('user_indicator');
         $facility_data=Facilities::get_facilities_monitoring_data( $facility_code,$district_id,$county_id,$identifier);
-        foreach($facility_data as $facility){
- $date=(strtotime($facility['last_seen']))? date('j M, Y',strtotime($facility['last_seen'])):"N/A" ;
-          array_push($series_data,array(
-          $date,
-          $facility['days_last_seen'],
-          date('j M, Y',strtotime($facility['last_issued'])) ,
-          $facility['days_last_issued'],
-          $facility['district'],
-          $facility['facility_name'],
-          $facility['facility_code'])) ; 
+		
+        
+        foreach($facility_data as $facility)
+        {
+        	
+ 			$date=(strtotime($facility['last_seen']))? date('j M, Y',strtotime($facility['last_seen'])):"N/A" ;
+          	array_push($series_data,array(
+		          $date,
+		          $facility['days_last_seen'],
+		          date('j M, Y',strtotime($facility['last_issued'])) ,
+		          $facility['days_last_issued'],
+		          $facility['district'],
+		          $facility['facility_name'],
+		          $facility['facility_code'])) ; 
         }
-        $category_data=array(array("date last seen","# of days","date last issued","# of days","sub county","Facility Name","Mfl"));
+        $category_data=array(array("date last seen","# of days","date last issued","# of days","sub county","facility name","mfl"));
         $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_'));
         $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
         $graph_data=array_merge($graph_data,array("table_body"=>$series_data));                

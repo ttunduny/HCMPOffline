@@ -192,7 +192,7 @@ class Facilities extends Doctrine_Record {
     AND f.district = d.id
     and $where_clause
     GROUP BY f.facility_code
- ");
+ "); 
 return $q;  
     
 }
