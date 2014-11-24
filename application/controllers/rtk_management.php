@@ -4097,7 +4097,7 @@ public function rtk_summary_county($county, $year, $month) {
         $amc = 0;
         for ($commodity_id = 1; $commodity_id <= 6; $commodity_id++) {
             $amc = $this->_facility_amc($mfl, $commodity_id);
-            $q = "select * from facility_amc where facility_code='$mfl' and commodity_id='$commodity_id' and month='$month'";
+            $q = "select * from facility_amc where facility_code='$mfl' and commodity_id='$commodity_id' ";
             $resq = $this->db->query($q)->result_array();
             $count = count($resq);
             if($count>0){
@@ -5532,11 +5532,14 @@ public function get_all_zone_a_facilities($zone){
                         FROM
                             facilities,
                             counties,
-                            districts
+                            districts,
+                            lab_commodity_details
                         WHERE
                             facilities.zone = 'Zone $zone'
                                 AND facilities.rtk_enabled = 1
                                 AND districts.id = facilities.district
+                                 and lab_commodity_details.facility_code = facilities.facility_code                                
+                                  and lab_commodity_details.created_at between '2014-09-01' and '2014-11-31'
                                 AND counties.id = districts.county ";
 
                 $facilities = $this->db->query($sql)->result_array();
@@ -5545,7 +5548,7 @@ public function get_all_zone_a_facilities($zone){
                 foreach ($facilities as $key => $value) {
                     $fcode = $value['facility_code'];
                     $q = "SELECT DISTINCT
-                                lab_commodities.*, facility_amc.*, lab_commodity_details.closing_stock
+                                lab_commodities.*, facility_amc.*,lab_commodity_details.closing_stock
                             FROM
                                 lab_commodities,
                                 facility_amc,
@@ -5556,11 +5559,14 @@ public function get_all_zone_a_facilities($zone){
                                     AND lab_commodity_details.commodity_id = lab_commodities.id
                                     and lab_commodity_details.facility_code = facility_amc.facility_code
                                     AND lab_commodity_details.commodity_id BETWEEN 0 AND 6
-                                    and lab_commodity_details.created_at between '2014-11-01' and '2014-11-31' limit 0,20";
-                                
+                                    and lab_commodity_details.created_at between '2014-11-01' and '2014-11-31'";
+
                     $res1 = $this->db->query($q);
                     $amc_details = $res1->result_array();
-                    $amcs[$fcode] = $amc_details;                
+                    //echo "<pre>"; print_r($amc_details);die;
+                    
+                    $amcs[$fcode] = $amc_details;
+                    //$amcs2[$fcode] = $amc_details2;                 
 
                 }
                 // echo "<pre>"; print_r($amcs[$fcode]);die;
