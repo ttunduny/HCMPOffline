@@ -1270,7 +1270,7 @@ public function rtk_manager_stocks($month=null) {
     if(isset($month)){           
         $year = substr($month, -4);
         $month = substr($month, 0,2);            
-        $monthyear = $year . '-' . $month . '-1';         
+        $monthyear = $year . '-' . $month . '-01';         
 
     }else{
         $month = $this->session->userdata('Month');
@@ -1279,7 +1279,7 @@ public function rtk_manager_stocks($month=null) {
         }
         $year = substr($month, -4);
         $month = substr_replace($month, "", -4);
-        $monthyear = $year . '-' . $month . '-1';
+        $monthyear = $year . '-' . $month . '-01';
     }
     
     $englishdate = date('F, Y', strtotime($monthyear));
@@ -5308,13 +5308,14 @@ function _national_reports_sum($year, $month) {
         $returnable = array();
 
         $firstdate = $year . '-' . $month . '-01';
-        $firstday = date("Y-m-d", strtotime("$firstdate +1 Month "));
+        $firstday = date("Y-m-d", strtotime("$firstdate Month "));
 
-        $month = date("m", strtotime("$firstdate  +1 Month "));
-        $year = date("Y", strtotime("$firstdate  +1 Month "));
+        // $month = date("m", strtotime("$firstdate  Month "));
+        // $year = date("Y", strtotime("$firstdate  Month "));
         $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
         $lastdate = $year . '-' . $month . '-' . $num_days;
-        $sql = "SELECT     
+
+       /* $sql = "SELECT     
         counties.county, counties.id, lab_commodities.commodity_name,
         sum(lab_commodity_details.beginning_bal) as sum_opening,
         sum(lab_commodity_details.q_received) as sum_received,
@@ -5341,8 +5342,41 @@ function _national_reports_sum($year, $month) {
         AND facilities.facility_code = lab_commodity_details.facility_code
         AND facilities.district = districts.id
         AND districts.county = counties.id
-        AND lab_commodity_orders.order_date BETWEEN '$firstdate' AND '$lastdate'";    
+        AND lab_commodity_orders.order_date BETWEEN '$firstdate' AND '$lastdate'";   */
 
+      //  echo "$sql"; die();
+
+        $sql = "SELECT 
+                counties.county,
+                counties.id,
+                lab_commodities.commodity_name,
+                SUM(lab_commodity_details.beginning_bal) AS sum_opening,
+                SUM(lab_commodity_details.q_received) AS sum_received,
+                SUM(lab_commodity_details.q_used) AS sum_used,
+                SUM(lab_commodity_details.no_of_tests_done) AS sum_tests,
+                SUM(lab_commodity_details.positive_adj) AS sum_positive,
+                SUM(lab_commodity_details.negative_adj) AS sum_negative,
+                SUM(lab_commodity_details.losses) AS sum_losses,
+                SUM(lab_commodity_details.closing_stock) AS sum_closing_bal,
+                SUM(lab_commodity_details.q_requested) AS sum_requested,
+                SUM(lab_commodity_details.allocated) AS sum_allocated,
+                SUM(lab_commodity_details.allocated) AS sum_days,
+                SUM(lab_commodity_details.q_expiring) AS sum_expiring
+            FROM
+                lab_commodities,
+                lab_commodity_details,
+                facilities,
+                districts,
+                counties
+            WHERE
+                lab_commodity_details.commodity_id = lab_commodities.id
+                    AND lab_commodity_details.facility_code = facilities.facility_code
+                    AND facilities.district = districts.id
+                    AND districts.county = counties.id
+                    AND lab_commodity_details.created_at BETWEEN '$firstdate' AND '$lastdate'";                   
+            //         and lab_commodities.id between 0 and 6
+            // group by counties.id,lab_commodities.id";            
+            //$returnable = $this->db->query($sql)->result_array();
         $sql2 = $sql . " AND lab_commodities.id = 1 Group By counties.county";
         $res = $this->db->query($sql2)->result_array();
         array_push($returnable, $res);
@@ -5363,7 +5397,7 @@ function _national_reports_sum($year, $month) {
         $res5 = $this->db->query($sql6)->result_array();
         array_push($returnable, $res5);
         
-//         echo "<pre>";print_r($returnable);die;
+      // echo "<pre>";print_r($returnable);die;
         return $returnable;
       }
 	  public function rtk_manager_admin_settings() {
