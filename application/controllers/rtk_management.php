@@ -6051,6 +6051,7 @@ public function get_duplicates($month=null){
         ORDER BY facility_code,id,COUNT( lab_commodity_orders.facility_code ) DESC";              
         //echo "$sql";die();
         $result = $this->db->query($sql)->result_array();
+
         
         $facils = array();
         $orders = array();
@@ -6060,6 +6061,31 @@ public function get_duplicates($month=null){
             array_push($facils, $mfl);
             array_push($orders, $order);
         }   
+
+        for($i=0;$i<count($facils);$i++){    
+            $code= $facils[$i];
+            $order_id= $orders[$i];            
+            $sql1 = "select id from lab_commodity_orders where facility_code='$code' and order_date  BETWEEN '$first_date'
+            AND '$last_date' order by id asc";
+            $dups = $this->db->query($sql1)->result_array();
+            $new_dups = array();       
+
+            foreach ($dups as $key=>$value) {
+                $id = $value['id'];
+                array_push($new_dups,$id);                
+            }
+
+            
+            for ($a=1; $a <count($new_dups) ; $a++) { 
+                $id = $new_dups[$a];
+                $sql2 ="DELETE FROM `lab_commodity_orders` WHERE id='$id';";  
+                echo "$sql2<br/>";              
+                $this->db->query($sql2);
+            }                  
+            
+            //die();
+            
+        }      
 
         
         for($i=0;$i<count($facils);$i++){    
