@@ -54,6 +54,7 @@ class issues extends MY_Controller {
 		foreach ($data_ as $key => $data_1) {
 			$data_[$key]['commodity_name'] = preg_replace('/[^A-Za-z0-9\-]/', ' ', $data_1['commodity_name']);
 		}
+		//var_dump($data_);exit;
 		$data['facility_stock_data'] = json_encode($data_);
 
 		$this -> load -> view("shared_files/template/template", $data);
@@ -284,6 +285,7 @@ class issues extends MY_Controller {
 		if ($this -> input -> post('service_point')) :
 			$facility_code = $this -> session -> userdata('facility_id');
 			$service_points = array_values($this -> input -> post('service_point'));
+			$s11 = array_values($this -> input -> post('s11_no'));
 
 			$commodity_id = array_values($this -> input -> post('desc'));
 			$commodity_balance_before = array_values($this -> input -> post('commodity_balance'));
@@ -295,13 +297,17 @@ class issues extends MY_Controller {
 			$clone_datepicker_normal_limit_today = array_values($this -> input -> post('clone_datepicker_normal_limit_today'));
 			$total_units = array_values($this -> input -> post('total_units'));
 			$total_items = count($facility_stock_id);
-			print_r($total_units);
+			//var_dump($total_units);exit;
+			//print_r($total_units);
+			$mine=array();
 			for ($i = 0; $i < $total_items; $i++) ://compute the actual stock
-				$total_items_issues = ($commodity_unit_of_issue[$i] == 'Pack_Size') ? $quantity_issued[$i] * $total_units[$i] : $quantity_issued[$i];
+			  $total_items_issues = ($commodity_unit_of_issue[$i] == 'Pack_Size') ? ($quantity_issued[$i] * $total_units[$i]) : $quantity_issued[$i];
+			
+			
 				//prepare the issues data
-
-				$mydata = array('facility_code' => $facility_code, 's11_No' => 'internal issue', 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])), 'qty_issued' => $total_items_issues, 'issued_to' => $service_points[$i], 'balance_as_of' => $commodity_balance_before[$i], 'date_issued' => date('y-m-d', strtotime($clone_datepicker_normal_limit_today[$i])), 'issued_by' => $this -> session -> userdata('user_id'));
-
+				$mydata = array('facility_code' => $facility_code, 's11_No' => 'internal issue', 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])),
+				 'qty_issued' => $total_items_issues, 'issued_to' => $service_points[$i], 'balance_as_of' => $commodity_balance_before[$i], 'date_issued' => date('y-m-d', strtotime($clone_datepicker_normal_limit_today[$i])),
+				  'issued_by' => $this -> session -> userdata('user_id'));
 				// update the issues table
 				facility_issues::update_issues_table($mydata);
 				// reduce the stock levels
@@ -315,10 +321,10 @@ class issues extends MY_Controller {
             WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");
 
 			endfor;
-
-			//$user = $this -> session -> userdata('user_id');
-			//$user_action = "issue";
-			//Log::log_user_action($user, $user_action);
+			
+			$user = $this -> session -> userdata('user_id');
+			$user_action = "issue";
+			Log::log_user_action($user, $user_action);
 			$this -> session -> set_flashdata('system_success_message', "You have issued $total_items item(s)");
 			redirect(home);
 		endif;

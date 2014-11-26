@@ -1,4 +1,18 @@
+ <style>
+ 	.note{
+      padding:10px;
+}
+ </style>
  <div class="container" style="width: 96%; margin: auto;">
+ 	<div class="row">
+ 		<div class="col-lg-4 ">
+ 			
+ 			 <p class="bg-info note" style="">
+                <span class="badge ">NB</span>
+               <strong>You can edit your stock details below.</strong> 
+                </p>
+ 		</div>
+ 	</div>
      <?php echo form_open('stock/edit_facility_stock_data'); ?>  
  <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
@@ -12,7 +26,7 @@
 			<th>Manufacturer</th>
 			<th>Balance(units)</th>
 			<th>Balance(packs)</th>
-<?php  if($this -> session -> userdata('user_indicator')=='facility_admin') echo " <th>Delete</th>"; ?>	
+			<th>Delete</th>	
 		</tr>
 	</thead>
 	<tbody>
@@ -29,10 +43,9 @@ foreach ($facility_stock_data as $facility_stock_data) :
 			$commodity_id=$facility_stock_data['commodity_id'];
 			$manufacturer=$facility_stock_data['manufacture'];	
            // check if the user can edit the stock level
-if($this -> session -> userdata('user_indicator')=='facility_admin')
-		{$check_box="</td><td><input type='checkbox' id='delete[]' class='chkNumber' name='delete[]' value='1' />
-		<input class='forcheck' type='hidden' value='1' id='edit[]' name='edit[]'></td>";}
-		else{$check_box="<input type='hidden' name='delete[]' value='0' /></td>";}	
+		$check_box="</td><td><input type='checkbox' id='delete[]' class='chkNumber' name='delete[]' value='1' />
+		<input class='forcheck' type='hidden' value='1' id='edit[]' name='edit[]'></td>";
+		
 		echo "<tr>
 		<td>$commodity_name</td>
 		<td><input type='hidden' name='id[]' class='id' value='$facility_stock_data[facility_stock_id]'/>

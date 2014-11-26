@@ -226,7 +226,8 @@ if($this->input->is_ajax_request()):
         $insert->execute("INSERT INTO facility_monthly_stock 
         (`facility_code`, `commodity_id`, `consumption_level`, `total_units`, `selected_option`) 
         VALUES ('$facility_code', $commodity_id,'$consumption_level', $total_units,'$selected_option')");
-        }                
+        }    
+                  
 endif;    
       echo 'success ';
 endif;
@@ -487,6 +488,9 @@ endfor;
 		    facility_stocks_temp::delete_facility_temp(null, null,$facility_code);
           //set the notifications
 		  //$this->hcmp_functions->send_stock_update_sms();
+        $updateCase = Doctrine_Manager::getInstance()->getCurrentConnection();
+        $updateCase->execute("UPDATE facility_stocks SET 
+        manufacture=CONCAT(UCASE(SUBSTRING(`manufacture`, 1, 1)),LOWER(SUBSTRING(`manufacture`, 2)))");      //
 		  $this->session->set_flashdata('system_success_message', "Stock Levels Have Been Updated");
 		  redirect('reports/facility_stock_data');			  
 endif;

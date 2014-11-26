@@ -681,10 +681,12 @@ class Reports extends MY_Controller
 		$commodity_id = $_POST['commodity_select'];
 		$to = $_POST['to'];
 		$from = $_POST['from'];
+		$commodity_name = $_POST['commodity_name'];
 
 
 		//to enable pdf download
 		$data['commodity_id'] =$commodity_id;
+		$data['commodity_name'] =$commodity_name;
 		$data['from'] =$from;
 		$data['to'] =$to;
 		$data['facility_code']= $this -> session -> userdata('facility_id');
@@ -697,9 +699,9 @@ class Reports extends MY_Controller
 			echo ' <div class="" id="reports_display" style="min-height: 350px;" >
             <div style="margin:auto; text-align: center">
                 
-                <h2> No records</h2>
+                <h2>You have no Records, for the given filters</h2>
                 <h3>
-                  If you have selected filters above and you still see this message, You have no Records
+                  Please select filters above.
                 </h3>
                 
                 </div>
