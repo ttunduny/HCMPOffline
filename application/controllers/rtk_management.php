@@ -1165,6 +1165,24 @@ public function rtk_manager_users() {
     $data['users'] = $users;
     $this->load->view('rtk/template', $data);
 }
+
+public function delete_user_gen($user, $redirect_url = null) {
+        $sql = 'DELETE FROM `user` WHERE `id` =' . $user;
+
+        $object_id = $user;
+        $this->logData('2', $object_id);
+        $this->db->query($sql);
+
+        if ($redirect_url == 'county_user') {
+            redirect('rtk_management/county_admin/users');
+        }
+        if ($redirect_url == 'rtk_manager') {
+            redirect('rtk_management/rtk_manager_users');
+        } else {
+            redirect('home_controller');
+        }
+    }
+
 public function rtk_manager_facilities($zone = null){
     if(isset($zone)){
          $facilities = $this->_get_rtk_facilities($zone);
