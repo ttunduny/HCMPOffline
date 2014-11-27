@@ -6088,27 +6088,27 @@ public function get_duplicates($month=null){
         }      
 
         
-        for($i=0;$i<count($facils);$i++){    
-            $code= $facils[$i];
-            $order_id= $orders[$i];
+        // for($i=0;$i<count($facils);$i++){    
+        //     $code= $facils[$i];
+        //     $order_id= $orders[$i];
             
-            $sql1 = "select id from lab_commodity_orders where facility_code='$code' and id='$order_id' and order_date  BETWEEN '$first_date'
-            AND '$last_date' order by id asc";
-            $dups = $this->db->query($sql1)->result_array();
-            $new_dups = array();                       
-            foreach ($dups as $key=>$value) {
-                $id = $value['id'];
-                array_push($new_dups,$id);                
-            }
-            for ($a=0; $a <count($new_dups) ; $a++) { 
-                $id = $new_dups[$a];
-                $sql2 ="DELETE FROM `lab_commodity_orders` WHERE id='$id'";  
-                //echo "$sql2<br/>";              
-                $this->db->query($sql2);
-            }                  
+        //     $sql1 = "select id from lab_commodity_orders where facility_code='$code' and id='$order_id' and order_date  BETWEEN '$first_date'
+        //     AND '$last_date' order by id asc";
+        //     $dups = $this->db->query($sql1)->result_array();
+        //     $new_dups = array();                       
+        //     foreach ($dups as $key=>$value) {
+        //         $id = $value['id'];
+        //         array_push($new_dups,$id);                
+        //     }
+        //     for ($a=0; $a <count($new_dups) ; $a++) { 
+        //         $id = $new_dups[$a];
+        //         $sql2 ="DELETE FROM `lab_commodity_orders` WHERE id='$id'";  
+        //         //echo "$sql2<br/>";              
+        //         $this->db->query($sql2);
+        //     }                  
             
             
-        }      
+        // }      
 
     }     
     
