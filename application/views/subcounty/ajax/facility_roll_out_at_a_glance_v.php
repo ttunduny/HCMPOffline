@@ -32,13 +32,48 @@
 </div>
 	 <div id="temp"></div>
 	<?php echo @$data; ?>
+	<div style="padding-top: 25px;">
+		<!--<div class="filter" >
+<h5>
+	<select name="year" id="year_filter" style="width: 7.8em;">
+		<option value="0">Select Year</option>
+		<option value="2014">2014</option>
+		<option value="2013">2013</option>
+</select>
+	<select name="month" id="month_filter" >
+			<option value="0" selected="selected">Select month</option>
+			<option value="01">Jan</option>
+			<option value="02">Feb</option>
+			<option value="03">Mar</option>
+			<option value="04">Apr</option>
+			<option value="05">May</option>
+			<option value="06">Jun</option>
+			<option value="07">Jul</option>
+			<option value="08">Aug</option>
+			<option value="09">Sep</option>
+			<option value="10">Oct</option>
+			<option value="11">Nov</option>
+			<option value="12">Dec</option>
+		</select>
+ 
+	<button class="btn btn-small btn-success" id="filter" name="filter" style="margin-left: 1em;"><span class="glyphicon glyphicon-filter">Filter</button> 
+	<button class="btn btn-small btn-success" id="download" name="download" style="margin-left: 1em;"><span class="glyphicon glyphicon-save">Download</button> 
+	
+	</h5>
+</div>-->
 	<div>
-		<hr />
-	<div >
-  <b>Breakdown of System Usage</b>
-</div>
-	<div style="padding-top: 25px;" id="facility_monitoring"></div>
-</div>
+	<div id="container"  style="height:60%; width: 50%; margin: 0 auto; float: left">
+	</div>
+	<div id="container_monthly"  style="height:60%; width: 50%; margin: 0 auto;float: left"></div>	
+	</div>
+	<div id="log_data_graph"  style="height:60%; width: 50%; margin: 0 auto;float: left"></div>	
+	
+	<script>
+	<?php echo @$graph_data_daily;?>
+	<?php echo @$graph_data_monthly;?>
+	<?php echo @$graph_log;?>
+	</script>
+	</div>
 	
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -92,7 +127,6 @@
 <script>
 $(document).ready(function() {
 	
-    ajax_request_replace_div_content('reports/monitoring',"#facility_monitoring");
 	$(".ajax_call2").click(function(){
 		var url = "<?php echo base_url().'reports/get_district_drill_down_detail'?>";
 		// this is the data from the function
