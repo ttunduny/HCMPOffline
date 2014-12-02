@@ -45,7 +45,7 @@
 			<li><a class="drop-down" href="<?php echo base_url().'rtk_management/rtk_manager_facilities/D'; ?>">Zone D</a></li>			
 		</ul-->
 	
-	<!--a id="messaging_tab" href="<?php echo base_url().'rtk_management/rtk_manager_messages'; ?>" data-tab="1" class="tab">Messaging</a-->
+	<a id="messaging_tab" href="<?php echo base_url().'rtk_management/rtk_manager_messages'; ?>" data-tab="1" class="tab">Messaging</a>
 	<a id="settings_tab" href="<?php echo base_url().'rtk_management/rtk_manager_settings'; ?>" data-tab="2" class="tab">Settings</a>
 	<a id="activity_tab" href="<?php echo base_url().'rtk_management/rtk_manager_activity'; ?>" data-tab="2" class="tab">Activity</a>
 </div>
