@@ -1351,30 +1351,28 @@ public function weekly_potential_expiries_report() {
 public function ors_zinc_report() {
 		//Set the current year
 		$year = date("Y");
+		$county_total = array();
+		$excel_data = array();
+		$excel_data = array('doc_creator' =>"HCMP", 'doc_title' => $commodity_name['commodity_name'].' stock level report ', 'file_name' => 'stock level report');
+		$row_data = array();
+		$column_data = array("County","Sub-County","Facility Code", 
+							"Facility Name","Commodity Name","Unit Size","Unit Cost(KES)",
+							"Supplier","Manufacturer","Batch Number","Expiry Date",
+							"Stock at Hand (units)","Stock at Hand (packs)","AMC (packs)","Stock at Hand MOS(packs)");
+		$excel_data['column_data'] = $column_data;
 		//the commodities variable will hold the values for the three commodities ie ORS and Zinc
 		$commodities = array(51,267,36);
-		
 		foreach ($commodities as $commodities):
 			//holds the data for the entire county
 			//once it is done executing for one commodity it will reset to zero
 			$commodity_total = array();
-			$county_total = array();
-			//pick the commodity names and details
-			$commodity_name = Commodities::get_commodity_name($commodities);
 			
+			//pick the commodity names and details
+			//$commodity_name = Commodities::get_commodity_name($commodities);
 			//get the stock level for that commodity
 			$commodity_stock_level = Facility_stocks::get_commodity_stock_level($commodities);
 			//echo "<pre>";print_r($commodity_stock_level);exit;
 			//Start buliding the excel file
-			$excel_data = array();
-			$excel_data = array('doc_creator' =>"HCMP", 'doc_title' => $commodity_name['commodity_name'].' stock level report ', 'file_name' => 'stock level report');
-			$row_data = array();
-			$column_data = array("County","Sub-County","Facility Code", 
-								"Facility Name","Commodity Name","Unit Size","Unit Cost(KES)",
-								"Supplier","Manufacturer","Batch Number","Expiry Date",
-								"Stock at Hand (units)","Stock at Hand (packs)","AMC (packs)","Stock at Hand MOS(packs)");
-			$excel_data['column_data'] = $column_data;
-
 			foreach ($commodity_stock_level as $commodity_stock_level) :
 				array_push($row_data, 
 							array($commodity_stock_level["county"],
@@ -1394,35 +1392,40 @@ public function ors_zinc_report() {
 							$commodity_stock_level["mos"]));
 				
 			endforeach;
-			$excel_data['row_data'] = $row_data;
-			$excel_data['report_type'] = "download_file";
-			$excel_data['file_name'] = $commodity_name['commodity_name'] . "_Stock_Level_Report";
-			$excel_data['excel_title'] = "Stock Level Report for ".$commodity_name['commodity_name']." as at ".date("jS F Y");
-
-			$subject = "Stock Level Report: " . $commodity_name['commodity_name'];
-						
-			$message = "Good Morning,
-						<p>Find attached an excel sheet with the ".$commodity_name['commodity_name']." Stock Level Report
-						<p>You may log onto health-cmp.or.ke for follow up.</p>
-						
-						<p>----</p>
-						
-						<p>HCMP</p>
-						
-						<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-					
-			$report_type = "ors_report";
-			$this ->create_excel_ors($excel_data,$report_type);
-			//path for windows
-			$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-			//path for Mac
-			//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 			
-			$email_address = "collinsojenge@gmail.com";
-			
-			$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
-							
+			//array_push($county_total,array($row_data));				
 	endforeach;
+	//echo "<pre>";print_r($row_data);exit;
+			
+	
+	$excel_data['row_data'] = $row_data;
+	$excel_data['report_type'] = "download_file";
+	$excel_data['file_name'] = "Stock_Level_Report";
+	$excel_data['excel_title'] = "Stock Level Report for Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality (100) & (50) as at ".date("jS F Y");
+
+	$subject = "Stock Level Report: Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality ";
+				
+	$message = "Good Morning,
+				<p>Find attached an excel sheet with a Stock Level Report for Zinc Sulphate 20mg and ORS sachet (for 500ml) low osmolality
+				<p>You may log onto health-cmp.or.ke for follow up.</p>
+				
+				<p>----</p>
+				
+				<p>HCMP</p>
+				
+				<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
+			
+	$report_type = "ors_report";
+	$this ->create_excel($excel_data,$report_type);
+	//path for windows
+	$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+	//path for Mac
+	//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+	
+	$email_address = "collinsojenge@gmail.com,smutheu@clintonhealthaccess.org,bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org";
+	
+	
+	$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
 	}
 
