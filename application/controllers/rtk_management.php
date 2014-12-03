@@ -2079,12 +2079,24 @@ public function download_county_mos($county = null,$report_type) {
         return $zone_stats;
     }
 
+    // public function allocation_zone($zone = null) {
+    //     if (!isset($zone)) {
+    //         redirect('rtk_management/allocation_home');
+    //     }
+    //     $data['counties_in_zone'] = $this->_zone_counties($zone);
+    //     $data['banner_text'] = 'National';
+    //     $data['active_zone'] = "$zone";
+    //     $data['content_view'] = 'rtk/rtk/allocation/allocation_zone_view';
+    //     $data['title'] = 'National Summary: ';
+    //     $this->load->view("rtk/template", $data);
+    // }
+
     public function allocation_zone($zone = null) {
         if (!isset($zone)) {
             redirect('rtk_management/allocation_home');
         }
-        $data['counties_in_zone'] = $this->_zone_counties($zone);
-        $data['banner_text'] = 'National';
+        //$data['counties_in_zone'] = $this->_zone_counties($zone);
+        $data['banner_text'] = 'National Allocations: Zone: '.$zone;
         $data['active_zone'] = "$zone";
         $data['content_view'] = 'rtk/rtk/allocation/allocation_zone_view';
         $data['title'] = 'National Summary: ';
