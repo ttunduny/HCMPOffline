@@ -1310,8 +1310,8 @@ INNER JOIN districts ON districts.id=facilities.district WHERE expiry_date < NOW
 							    f.facility_code,
 							    d.commodity_name AS commodity_name,
 							    d.unit_size AS unit_size,
-							    f_s.current_balance AS balance_units,
-							    (f_s.current_balance / d.total_commodity_units) AS balance_packs,
+							    round(f_s.current_balance,0) AS balance_units,
+							    round((f_s.current_balance / d.total_commodity_units),0) AS balance_packs,
 							    d.unit_cost,
 							    f_s.manufacture,
 							    f_s.batch_no,
@@ -1341,10 +1341,57 @@ INNER JOIN districts ON districts.id=facilities.district WHERE expiry_date < NOW
 							        AND temp.commodity_id = f_s.commodity_id
 							        AND f_s.commodity_id = $commodity_id
 							        AND f_s.expiry_date >= NOW()
+									AND f_s.current_balance >0
 							GROUP BY d.id , f.facility_code
 							ORDER BY c.county ASC , d1.district ASC");
 		return $stock_level;
 		
+	}
+	
+	//query to get the number of facilities stocked out on a particular commodity for the year
+	public static function facilities_stocked_specific_commodity($commodity_id)
+	{
+		$year = date("Y");
+		$no_of_facilities = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT 
+					    distinct(facility_code)
+					FROM
+					    facility_stocks
+					WHERE
+					    current_balance = 0
+				        AND commodity_id = $commodity_id
+				        AND YEAR(date_added) = $year");
+		return count($no_of_facilities);
+	}
+	//query to get the number of facilities reporting on a particular commodity for the year
+	public static function facilities_reporting_on_a_specific_commodity($commodity_id)
+	{
+		$year = date("Y");
+		$no_of_facilities = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT 
+					    distinct(facility_code)
+					FROM
+					    facility_stocks
+					WHERE
+				        commodity_id = $commodity_id
+				        AND year(expiry_date)>=$year
+				        AND YEAR(date_added) = $year");
+		return count($no_of_facilities);
+	}
+	//query to get the number of batches expiring for a particular commodity for the year
+	public static function batches_expiring_specific_commodities($commodity_id)
+	{
+		$year = date("Y");
+		$no_of_facilities = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT DISTINCT
+					    (batch_no)
+					FROM
+					    facility_stocks
+					WHERE
+					    current_balance > 0
+					        AND commodity_id = $commodity_id
+					        AND expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 3 MONTH)");
+		return count($no_of_facilities);
 	}
 
 }

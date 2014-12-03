@@ -26,6 +26,22 @@ class Facilities extends Doctrine_Record {
 		$drugs = $query -> execute();
 		return $drugs;
 	}
+	//get the number of facilities using HCMP in the country
+	public static function get_all_on_HCMP()
+	{
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT 
+					    f.`using_hcmp`
+					FROM
+					    facilities f,
+					    districts d,
+					    counties c
+					WHERE
+					    f.district = d.id AND d.county = c.id
+					        AND f.`using_hcmp` = 1");
+		
+		return count($q);
+	}
 	public static function getAll_json() {
 		$query = Doctrine_Query::create() -> select("*") -> from("facilities");
 		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);

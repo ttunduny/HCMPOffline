@@ -1363,6 +1363,7 @@ public function ors_zinc_report() {
 		//the commodities variable will hold the values for the three commodities ie ORS and Zinc
 		$commodities = array(51,267,36);
 		foreach ($commodities as $commodities):
+			$commodity_stock_level = array();
 			//holds the data for the entire county
 			//once it is done executing for one commodity it will reset to zero
 			$commodity_total = array();
@@ -1393,20 +1394,61 @@ public function ors_zinc_report() {
 				
 			endforeach;
 			
+			//Switch statement to build on the remaining part of the message body
+			//get the number of facilities stocked out on a specific commodity
+			$no_of_stock_outs = Facility_stocks::facilities_stocked_specific_commodity($commodities);
+			
+			//get the number of facilities reporting on a specific commodity
+			$no_of_facilities_reporting = Facility_stocks::facilities_reporting_on_a_specific_commodity($commodities);
+			//get the number of batches expiring within 3 months
+			$no_of_batches = Facility_stocks::batches_expiring_specific_commodities($commodities);
+			//echo "<pre>";print_r($no_of_stock_outs);exit;
+	
+			switch($commodities):
+				case 51:
+					$message_body .= "<p>Number of Facilities Reporting on ORS Satchets (100):". $no_of_facilities_reporting."</p>";
+					$message_body .= "<p>Number of Facilities Stocked out on ORS Satchets (100): ".$no_of_stock_outs."</p>";
+					$message_body .= "<p>Number of ORS (100) Batches expiring in the next 3 months: ".$no_of_batches."</p>";
+					break;
+				case 267:
+					$message_body .= "<p>Number of Facilities Reporting on ORS Satchets (50):". $no_of_facilities_reporting."</p>";
+					$message_body .= "<p>Number of Facilities Stocked out on ORS Satchets (50): ".$no_of_stock_outs."</p>";
+					$message_body .= "<p>Number of ORS (50) Batches expiring in the next 3 months:  ".$no_of_batches."</p>";
+					break;
+				case 36:
+					$message_body .= "<p>Number of Facilities Reporting on Zinc Sulphate 20mg:". $no_of_facilities_reporting."</p>";
+					$message_body .= "<p>Number of Facilities Stocked out on Zinc Sulphate 20mg:".$no_of_stock_outs."</p>";
+					$message_body .= "<p>Number of Zinc Sulphate Batches expiring in the next 3 months:".$no_of_batches."</p>";
+					break;
+				
+					
+					
+			endswitch;
+			
 			//array_push($county_total,array($row_data));				
 	endforeach;
-	//echo "<pre>";print_r($row_data);exit;
 			
 	
 	$excel_data['row_data'] = $row_data;
 	$excel_data['report_type'] = "download_file";
 	$excel_data['file_name'] = "Stock_Level_Report";
 	$excel_data['excel_title'] = "Stock Level Report for Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality (100) & (50) as at ".date("jS F Y");
-
-	$subject = "Stock Level Report: Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality ";
+	
+	//Start the email section of the report
+	//Get the number of facilities using HCMP
+	$no_of_facilities = Facilities::get_all_on_HCMP();
+	
+	
+	$subject = "Daily Stock Level Report: Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality ";
 				
 	$message = "Good Morning,
-				<p>Find attached an excel sheet with a Stock Level Report for Zinc Sulphate 20mg and ORS sachet (for 500ml) low osmolality
+				<p>Find attached an excel sheet with a Stock Level Report for 
+				Zinc Sulphate 20mg and ORS sachet (for 500ml) low osmolality (100 & 50) as at ".date("jS F Y")."</p>";
+	$message .="<p>Number of facilities using HCMP: ".$no_of_facilities."</p>";
+	$message .= $message_body;
+	$message .="
+				
+				
 				<p>You may log onto health-cmp.or.ke for follow up.</p>
 				
 				<p>----</p>
@@ -1414,7 +1456,7 @@ public function ors_zinc_report() {
 				<p>HCMP</p>
 				
 				<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-			
+	//echo $message;exit;	
 	$report_type = "ors_report";
 	$this ->create_excel($excel_data,$report_type);
 	//path for windows
@@ -1422,7 +1464,7 @@ public function ors_zinc_report() {
 	//path for Mac
 	//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 	
-	$email_address = "collinsojenge@gmail.com,smutheu@clintonhealthaccess.org,bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org";
+	$email_address = "collinsojenge@gmail.com";//,smutheu@clintonhealthaccess.org,bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org";
 	
 	
 	$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);

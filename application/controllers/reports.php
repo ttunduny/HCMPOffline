@@ -1225,11 +1225,12 @@ class Reports extends MY_Controller
 		$data['graph_data_daily'] =	$graph_daily;
 		$data['graph_log'] = $graph_log;
 		
+		
 		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
 		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
 		
-		// echo "<pre>";print_r($data);echo "</pre>";exit;
+		
 		if($this->input->is_ajax_request()):
 			
 			return $this -> load -> view('subcounty/ajax/facility_roll_out_at_a_glance_v', $data);
