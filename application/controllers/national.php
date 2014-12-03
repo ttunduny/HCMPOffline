@@ -606,7 +606,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 		else :
 			$title = "National";
 		endif;
-		// echo .$commodity_id ; exit;
+		
 		if ($graph_type != "excel") :
 			$commodity_array = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select 
 		    d.commodity_name as drug_name,
@@ -760,27 +760,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 						        $and_data
 						group by d.id $group_by
 			");
-			echo "select 
-					    d.commodity_name as drug_name,
-					    f_s.current_balance as total
-						from
-						    facilities f,
-						    districts d1,
-						    counties c,
-						    facility_stocks f_s,
-						    commodities d
-						        left join
-						    facility_monthly_stock f_m_s ON f_m_s.`commodity_id` = d.id
-						where
-						    f_s.facility_code = f.facility_code
-						        and f.district = d1.id
-						        and d1.county = c.id
-						        and f_s.commodity_id = d.id
-						        and f_m_s.facility_code = f.facility_code
-						        $and_data
-						group by d.id $group_by";
-						
-						exit;
+			
 			$category_data = array();
 			$series_data = $series_data_ = array();
 			$temp_array = $temp_array_ = array();

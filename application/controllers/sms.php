@@ -1347,13 +1347,215 @@ public function weekly_potential_expiries_report() {
 
 	}
 	
+/*CHAI REPORTS for ORS AND ZINC FOR THE ENTIRE COUNTRY*/
+public function ors_zinc_report() {
+		//Set the current year
+		$year = date("Y");
+		$county_total = array();
+		$excel_data = array();
+		$excel_data = array('doc_creator' =>"HCMP", 'doc_title' => $commodity_name['commodity_name'].' stock level report ', 'file_name' => 'stock level report');
+		$row_data = array();
+		$column_data = array("County","Sub-County","Facility Code", 
+							"Facility Name","Commodity Name","Unit Size","Unit Cost(KES)",
+							"Supplier","Manufacturer","Batch Number","Expiry Date",
+							"Stock at Hand (units)","Stock at Hand (packs)","AMC (packs)","Stock at Hand MOS(packs)");
+		$excel_data['column_data'] = $column_data;
+		//the commodities variable will hold the values for the three commodities ie ORS and Zinc
+		$commodities = array(51,267,36);
+		foreach ($commodities as $commodities):
+			$commodity_stock_level = array();
+			//holds the data for the entire county
+			//once it is done executing for one commodity it will reset to zero
+			$commodity_total = array();
+			
+			//pick the commodity names and details
+			//$commodity_name = Commodities::get_commodity_name($commodities);
+			//get the stock level for that commodity
+			$commodity_stock_level = Facility_stocks::get_commodity_stock_level($commodities);
+			//echo "<pre>";print_r($commodity_stock_level);exit;
+			//Start buliding the excel file
+			foreach ($commodity_stock_level as $commodity_stock_level) :
+				array_push($row_data, 
+							array($commodity_stock_level["county"],
+							$commodity_stock_level["subcounty"],
+							$commodity_stock_level["facility_code"], 
+							$commodity_stock_level["facility_name"],
+							$commodity_stock_level["commodity_name"],
+							$commodity_stock_level["unit_size"],
+							$commodity_stock_level["unit_cost"],
+							$commodity_stock_level["supplier"],
+							$commodity_stock_level["manufacture"],
+							$commodity_stock_level["batch_no"],
+							$commodity_stock_level["expiry_date"],
+							$commodity_stock_level["balance_units"],
+							$commodity_stock_level["balance_packs"],
+							$commodity_stock_level["amc"],
+							$commodity_stock_level["mos"]));
+				
+			endforeach;
+			
+			//Switch statement to build on the remaining part of the message body
+			//get the number of facilities stocked out on a specific commodity
+			$no_of_stock_outs = Facility_stocks::facilities_stocked_specific_commodity($commodities);
+			
+			//get the number of facilities reporting on a specific commodity
+			$no_of_facilities_reporting = Facility_stocks::facilities_reporting_on_a_specific_commodity($commodities);
+			//get the number of batches expiring within 3 months
+			$no_of_batches = Facility_stocks::batches_expiring_specific_commodities($commodities);
+			//echo "<pre>";print_r($no_of_stock_outs);exit;
+	
+			switch($commodities):
+				case 51:
+					$message_body .= "<p>Number of Facilities Reporting on ORS Satchets (100):". $no_of_facilities_reporting."</p>";
+					$message_body .= "<p>Number of Facilities Stocked out on ORS Satchets (100): ".$no_of_stock_outs."</p>";
+					$message_body .= "<p>Number of ORS (100) Batches expiring in the next 3 months: ".$no_of_batches."</p>";
+					break;
+				case 267:
+					$message_body .= "<p>Number of Facilities Reporting on ORS Satchets (50):". $no_of_facilities_reporting."</p>";
+					$message_body .= "<p>Number of Facilities Stocked out on ORS Satchets (50): ".$no_of_stock_outs."</p>";
+					$message_body .= "<p>Number of ORS (50) Batches expiring in the next 3 months:  ".$no_of_batches."</p>";
+					break;
+				case 36:
+					$message_body .= "<p>Number of Facilities Reporting on Zinc Sulphate 20mg:". $no_of_facilities_reporting."</p>";
+					$message_body .= "<p>Number of Facilities Stocked out on Zinc Sulphate 20mg:".$no_of_stock_outs."</p>";
+					$message_body .= "<p>Number of Zinc Sulphate Batches expiring in the next 3 months:".$no_of_batches."</p>";
+					break;
+				
+					
+					
+			endswitch;
+			
+			//array_push($county_total,array($row_data));				
+	endforeach;
+			
+	
+	$excel_data['row_data'] = $row_data;
+	$excel_data['report_type'] = "download_file";
+	$excel_data['file_name'] = "Stock_Level_Report";
+	$excel_data['excel_title'] = "Stock Level Report for Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality (100) & (50) as at ".date("jS F Y");
+	
+	//Start the email section of the report
+	//Get the number of facilities using HCMP
+	$no_of_facilities = Facilities::get_all_on_HCMP();
+	
+	
+	$subject = "Daily Stock Level Report: Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality ";
+				
+	$message = "Good Morning,
+				<p>Find attached an excel sheet with a Stock Level Report for 
+				Zinc Sulphate 20mg and ORS sachet (for 500ml) low osmolality (100 & 50) as at ".date("jS F Y")."</p>";
+	$message .="<p>Number of facilities using HCMP: ".$no_of_facilities."</p>";
+	$message .= $message_body;
+	$message .="
+				
+				
+				<p>You may log onto health-cmp.or.ke for follow up.</p>
+				
+				<p>----</p>
+				
+				<p>HCMP</p>
+				
+				<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
+	//echo $message;exit;	
+	$report_type = "ors_report";
+	$this ->create_excel($excel_data,$report_type);
+	//path for windows
+	$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+	//path for Mac
+	//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+	
+	$email_address = "smutheu@clintonhealthaccess.org,bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org";
+	$bcc = null;
+	$cc = "collinsojenge@gmail.com,kelvinmwas@gmail.com,nmaingi@strathmore.edu";
+	$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler,$bcc,$cc);
+
+	}
+
+public function create_excel_ors($excel_data=NUll,$report_type = NULL, $total_figure =  NULL) 
+{
+	$styleArray = array('font' => array('bold' => true),'alignment'=>array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER));
+	$styleArray2 = array('font' => array('bold' => true));
+ 	//$objWorksheet1 = $objPHPExcel->createSheet();
+	//$objWorksheet1->setTitle('Another sheet'); 
+    //check if the excel data has been set if not exit the excel generation   
+	if(count($excel_data)>0):
+		
+		$objPHPExcel = new PHPExcel();
+		$objPHPExcel -> getProperties() -> setCreator("HCMP");
+		$objPHPExcel -> getProperties() -> setLastModifiedBy($excel_data['doc_creator']);
+		$objPHPExcel -> getProperties() -> setTitle($excel_data['doc_title']);
+		$objPHPExcel -> getProperties() -> setSubject($excel_data['doc_title']);
+		$objPHPExcel -> getProperties() -> setDescription("");
+
+		$objPHPExcel -> setActiveSheetIndex(0);
+		$objPHPExcel->getActiveSheet()->mergeCells('A1:H1');
+		$objPHPExcel->getActiveSheet()->setCellValue('A1', $excel_data['excel_title']);
+		$objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray($styleArray);
+		
+		$rowExec = 2;
+		$column = 0;
+		//Looping through the cells
+		
+		foreach ($excel_data['column_data'] as $column_data) 
+		{
+			$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $column_data);
+			$objPHPExcel -> getActiveSheet() -> getColumnDimension(PHPExcel_Cell::stringFromColumnIndex($column)) -> setAutoSize(true);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($column, $rowExec)->getFont()->setBold(true);
+			$column++;
+		}		
+		
+		$rowExec = 3;
+				
+		foreach ($excel_data['row_data'] as $row_data) 
+		{
+			$column = 0;
+	        foreach($row_data as $cell)
+	        {
+	        	//Looping through the cells per facility
+				$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $cell);
+				$column++;	
+			}
+        	
+        	$rowExec++;
+		}
+
+		$objPHPExcel -> getActiveSheet() -> setTitle('Simple');
+		//echo date('H:i:s') . " Write to Excel2007 format\n";
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+
+    	// We'll be outputting an excel file
+		if(isset($excel_data['report_type']))
+		{
+			///Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files
+			$objWriter->save("./print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
+			//$objWriter->save("/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
+			//exit;
+	   	} else{
+	   		// We'll be outputting an excel file
+			header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+	        header("Cache-Control: no-store, no-cache, must-revalidate");
+	        header("Cache-Control: post-check=0, pre-check=0", false);
+	        header("Pragma: no-cache");
+			// It will be called file.xls
+			header("Content-Disposition: attachment; filename=".$excel_data['file_name'].'.xls');
+			// Write file to the browser
+	        $objWriter -> save('php://output');
+	       $objPHPExcel -> disconnectWorksheets();
+	       unset($objPHPExcel);
+	   }
+		
+	endif;
+}
+ 
 
 public function create_excel($excel_data=NUll,$report_type = NULL, $total_figure =  NULL) 
 {
 	$styleArray = array('font' => array('bold' => true),'alignment'=>array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER));
 	$styleArray2 = array('font' => array('bold' => true));
 	
- 	//check if the excel data has been set if not exit the excel generation    
+ 	//check if the excel data has been set if not exit the excel generation   
+ 	//$objWorksheet1 = $objPHPExcel->createSheet();
+	//$objWorksheet1->setTitle('Another sheet'); 
      
 	if(count($excel_data)>0):
 		
@@ -1377,6 +1579,11 @@ public function create_excel($excel_data=NUll,$report_type = NULL, $total_figure
 			$objPHPExcel->getActiveSheet()->setCellValue('A'.$cell_count3, "Total Cost of Expiries");
 			$objPHPExcel->getActiveSheet()->getStyle('A'.$cell_count3)->applyFromArray($styleArray2);
 			$objPHPExcel->getActiveSheet()->getStyle('F'.$cell_count3)->applyFromArray($styleArray2);
+		
+		elseif($report_type=="ors_report"):
+			$objPHPExcel->getActiveSheet()->mergeCells('A1:H1');
+			$objPHPExcel->getActiveSheet()->setCellValue('A1', $excel_data['excel_title']);
+			$objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray($styleArray);
 			
 		elseif($report_type=="potential_expiries"):
 			$objPHPExcel->getActiveSheet()->mergeCells('A1:N1');
@@ -1439,6 +1646,8 @@ public function create_excel($excel_data=NUll,$report_type = NULL, $total_figure
 		if(isset($excel_data['report_type']))
 		{
 			$objWriter->save("./print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
+			//For Mac
+			//$objWriter->save("/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
 			//exit;
 	   	} else{
 	   		// We'll be outputting an excel file
