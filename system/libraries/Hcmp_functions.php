@@ -162,12 +162,12 @@ public function send_order_submission_email($message,$subject,$attach_file){
 
 	   $facility_code=$this -> session -> userdata('facility_id');
 	   $data=Users::getUsers($facility_code)->toArray();
-	   $email_address=$this->get_facility_email($facility_code);
-	   $bcc_email ='kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com';
-	   $cc_email=$this->get_ddp_email($data[0]['district']);	   
-	   $this->get_county_email($data[0]['district']) ;
+	   $email_address='kelvinmwas@gmail.com';
+	   //$bcc_email ='kelvinmwas@gmail.com';
+	  // $cc_email=$this->get_ddp_email($data[0]['district']);	   
+	 //  $this->get_county_email($data[0]['district']) ;
 	   
-	  return $this->send_email(substr($email_address,0,-1),$message, $subject,$attach_file,$bcc_email,substr( $cc_email,0,-1));
+	  return $this->send_email($email_address,$message, $subject,$attach_file);
 	
 }
 public function send_order_approval_email($message,$subject,$attach_file,$facility_code,$reject_order=null){

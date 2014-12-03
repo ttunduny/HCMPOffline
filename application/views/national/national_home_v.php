@@ -113,15 +113,19 @@ h4{
 	}
 	.modal-dialog {
 		
-		width: 74%;
+		width: 85%;
 	}
 	</style>
+	
+		
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    
   </script>
+  
   
   </head>
   
@@ -143,6 +147,7 @@ h4{
 					</nav>
 					
 					<div class="content-wrap">
+						<input type="hidden" name="current_filter" value="">
 						
 							<!-- BEGIN HCMP CONTENT -->
 						<section id="hcmp" class="row-fluid">
@@ -161,10 +166,23 @@ h4{
     				map.render("map");
     				
                     </script>
-                   		 <div style="">
-				            <div style="display:inline-block;width:9px;height:9px;background:#528f42">
+                   		 <div class="row-fluid">
+                   		 	<div class="col-lg-1">
+                   		 		<div style="display:inline-block;width:14px;height:12px;background:#528f42">
 				                
-				            </div> Using HCMP
+				            </div>
+                   		 	</div>
+                   		 	<div class="col-lg-4">
+                   		 		Using HCMP
+                   		 	</div>
+                   		 	<div class="col-lg-3">
+                   		 	</div>
+                   		 	<div class="col-lg-4">
+                   		 		<a href="" data-toggle="modal" data-target="#facilitystatsModal">
+                   		 		More data
+                   		 		</a>
+                   		 	</div>
+				             
 				            
 				            </div>
 							</div>
@@ -193,13 +211,13 @@ h4{
 								
 								<div class="col-xs-1"></div>
 								<div class="col-xs-10">
-									<a href="" data-toggle="modal" data-target="#facilitystatsModal">
-										<div class="">
+									<!--<a href="" data-toggle="modal" data-target="#facilitystatsModal">
+									<!--	<div class="">
 											<span class="glyphicon glyphicon-user"></span>
 					                  	Facilities with Stockouts <br/> <span id="hcw_trained"></span>
 					                            
-					                   </div>
-					                   </a>
+					                </div>
+					                   </a>-->
 								</div>
 								<div class="col-xs-1"></div>
 								
@@ -207,13 +225,13 @@ h4{
 							<div class="row" >
 								<div class="col-xs-1"></div>
 								<div class="col-xs-10">
-									<a href="" class="" data-toggle="modal" data-target="#Modal">
+									<!--<a href="" class="" data-toggle="modal" data-target="#Modal">
 											<div class="">
 												<span class="glyphicon "></span>
 						                 	Facilities Rolled Out <br/><span id="facilities_rolled_out"></span> 
 						                            
 						                   </div>
-						                   </a>
+						                   </a>-->
 								</div>
 								<div class="col-xs-1"></div>
 										
@@ -269,7 +287,7 @@ h4{
 		</div>
    	
   <!-- Modal -->
-<div class="modal fade" id="facilitystatsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -298,7 +316,7 @@ h4{
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        <h4 class="modal-title" id="myModalLabel">Facility Statistics</h4>
       </div>
       <div class="modal-body">
         ...
@@ -312,15 +330,72 @@ h4{
 <!-- end Modal consumptionModal -->
 
  <!-- Modal -->
-<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="facilitystatsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header" style="padding: 10px">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        <h4 class="modal-title" id="myModalLabel">Facility Statistics</h4>
       </div>
-      <div class="modal-body">
-        ...
+      <div class="modal-body" style="padding: 10px">
+      	<div class="row-fluid filters" style="height: 40px;">
+      		<section class="col-lg-3">
+      				
+					<select class="form-control " id="county_val">
+						<option value="NULL">Select County</option>
+						<?php
+							foreach($county as $data):
+							    $county_id=$data["id"];
+								$county_name=$data["county"];
+							      echo "<option class='item' value='$county_id'>$county_name</option>";
+							    
+							endforeach;
+						?>
+					</select>
+					
+					
+      		</section>
+      		<section class="col-lg-3">
+      				
+					<select class="form-control " id="subcounty_val">
+						<option value="NULL">Select sub-county</option>
+						
+					</select>
+					
+					
+					
+      		</section>
+      		<section class="col-lg-3">
+      			<div class="ui green button filterthis"><i class="fa fa-filter"></i> Filter</div>
+      		</section>
+      	</div>
+      	
+      	<div class="row-fluid">
+      		<section class="col-lg-5 " style="height: auto;border: 0px solid #036;">
+      			<div class="col-lg-6 piefilter">
+      				
+      				<select class="form-control " id="piefilter">
+						<option value="NULL">Select Option</option>
+						<option value="activation">Activation</option>
+						<option value="owner">Owner</option>
+						<option value="level">Level/Type</option>
+						
+					</select>
+      				
+      			</div>
+      			<div id="pie">
+      				
+      			</div>
+      			
+      		</section>
+      		<section class="col-lg-7 tabledata" style="border: 0px solid #036;">
+      			
+      			<div id="datatable" style="overflow-y: scroll;max-height: 400px;">
+      				
+      			</div>
+      			
+      		</section>
+      	</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -330,14 +405,22 @@ h4{
 </div>
 <!-- end Modal orderModal -->
    
-   
-   
-   
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
+     
+    
     <script src="<?php echo base_url().'assets/tab-style/js/cbpFWTabs.js'?>"></script>
 		<script>
+		$('.ui.dropdown').dropdown();			
+		</script>
+		
+		
+    <script>
+    
+    var url='<?php echo base_url(); ?>';
+    
+     $(document).ready(function () {
+     	
+     	
+     	
 			(function() {
 
 				[].slice.call( document.querySelectorAll( '.tabs' ) ).forEach( function( el ) {
@@ -345,107 +428,60 @@ h4{
 				});
 
 			})();
-		</script>
-		
-		<script>
-   
-  // ajax_fill_data('Kenya/facility_breakdown_pie',"#facility_breakdown");
-  // ajax_fill_data('Kenya/mos_graph/NULL/NULL/NULL/NULL/NULL/mos',"#mos");
-  // ajax_fill_data('Kenya/roll_out',"#roll_out");
-  // ajax_fill_data('Kenya/consumption',"#consumption");
-  // ajax_fill_data('national/expiry/NULL/NULL/NULL/NULL/NULL',"#actual_ex");
-  // ajax_fill_data('Kenya/potential_expiries',"#potential_ex");
-  // ajax_fill_data('national/order/NULL/NULL/NULL/NULL/NULL',"#orders");
-  // ajax_fill_data('Kenya/write_dashboard_html',"#hcw_trained");
-  // ajax_fill_data('Kenya/facility_over_view/',"#facilities_rolled_out");
-  // ajax_fill_data('Kenya/get_lead_infor/NULL/NULL/NULL/NULL/NULL',"#leadtime");
-   
-   		 $("#mosgraph").click(function() {
-    	ajax_fill_modal('Kenya/mos_graph/NULL/NULL/NULL/NULL/NULL/mosmodalgraph',"#mosmodalgraph");
-    	});
-    	
-    	function ajax_fill_modal(function_url,div){
-        var function_url =url+function_url;
-        var loading_icon=url+"assets/img/Preloader_1.gif";
-        $.ajax({
-        type: "POST",
-        url: function_url,
-        beforeSend: function() {
-        $(div).html("<img style='margin:20% 40% 0 40%;' src="+loading_icon+">");
-        },
-        success: function(msg) {
-        $(div).html(msg);
-        }
-        });
-        }  
-   
-   function ajax_fill_data(function_url,div){
-        var function_url =url+function_url;
-        var loading_icon=url+"assets/img/Preloader_1.gif";
-        $.ajax({
-        type: "POST",
-        url: function_url,
-        beforeSend: function() {
-        $(div).html("<img style='margin:40% 50% 0 50%;' src="+loading_icon+">");
-        },
-        success: function(msg) {
-        $(div).html(msg);
-        }
-        });
-        }  
+			
+						
+							
+				$("#county_val").change(function() {
+			var option_value=$(this).val();
+    		if(option_value==''){
+    			$("#subcounty_val").hide('slow'); 
+    		}else{
+				var drop_down='';
+ 				var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_sub_county_json_data/"+$("#county_val").val();
+ 				$.getJSON( hcmp_facility_api ,function( json ) {
+ 					$("#subcounty_val").html('<option  >Select Sub-county</option>');
+      				$.each(json, function( key, val ) {
+      					drop_down +="<option  value='"+json[key]["id"]+"'>"+json[key]["district"]+"</option>"; 
+      				});
+      				$("#subcounty_val").append(drop_down);
+    			});
+    			$("#subcounty_val").show('slow');  
+    			 
+    		}
+    	}); //end of district name change funtion
+				
+					//filter for statistics modal
+		$(".filterthis").click(function(e) {
+			
+          var countyvalue=$("#county_val").val(); 
+          var subcountyvalue=$("#subcounty_val").val();  
+          var piefiltervalue=$("#piefilter").val(); 
+              
+        ajax_request('Kenya/statistics_table/'+countyvalue+'/'+subcountyvalue+'/'+piefiltervalue+'/',"#datatable");
+        ajax_request('Kenya/statistics_pie/'+countyvalue+'/'+subcountyvalue+'/'+piefiltervalue+'/',"#pie");
         
-        function run(data){
-        var county_data=data.split('^');
-        $('.county-name').html(county_data[1]+"&nbsp;County &nbsp;");
-        ajax_fill_data('Kenya/facility_breakdown_pie/'+county_data[0],"#facility_breakdown");
-        ajax_fill_data('Kenya/facility_over_view/'+county_data[0],"#facilities_rolled_out");
-        ajax_fill_data('Kenya/write_dashboard_html/'+county_data[0],"#hcw_trained");
-        $('.county').val(county_data[0]);
-        $('#county_id').val(county_data[0]);
-        json_obj={"url":"<?php echo site_url("orders/getDistrict");?>",}
-        var baseUrl=json_obj.url;
-        dropdown(baseUrl,"county="+county_data[0],".subcounty");
-        ajax_fill_data('national/expiry/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#actual_ex");
-        ajax_fill_data('Kenya/potential_expiries/'+county_data[0]+'/NULL/NULL/NULL/NULL',"#potential_ex"); 
-        ajax_fill_data('Kenya/mos_graph/'+county_data[0]+'/NULL/NULL/NULL/NULL/mos',"#mos");
-        ajax_fill_data('Kenya/consumption/'+county_data[0]+'/NULL/NULL/NULL',"#consumption");
-       // ajax_request_replace_div_content('national/get_facility_infor/'+county_data[0]+'/NULL/NULL/NULL',"#facilities");
-        ajax_fill_data('national/order/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#orders");
-       // ajax_request_replace_div_content('national/get_lead_infor/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#lead_infor");
-    } 
-    
-        function dropdown(baseUrl,post,identifier){
-            /*
-             * ajax is used here to retrieve values from the server side and set them in dropdown list.
-             * the 'baseUrl' is the target ajax url, 'post' contains the a POST varible with data and
-             * 'identifier' is the id of the dropdown list to be populated by values from the server side
-             */
-            $.ajax({
-              type: "POST",
-              url: baseUrl,
-              data: post,
-              success: function(msg){
-                    var values=msg.split("_")
-                    var dropdown="<option value='NULL'>All</option>";
-                    for (var i=0; i < values.length-1; i++) {
-                        var id_value=values[i].split("*")
-                        dropdown+="<option value="+id_value[0]+">";
-                        dropdown+=id_value[1];
-                        dropdown+="</option>";
-                    };
-                    $(identifier).html(dropdown);
-              },
-              error: function(XMLHttpRequest, textStatus, errorThrown) {
-                   if(textStatus == 'timeout') {}
-               }
-            }).done(function( msg ) {
-            });
-        }
-         
-</script>
-    <script>
-    var url='<?php echo base_url(); ?>';
-    </script>
+        });
+     	
+     	function ajax_request(function_url,div){
+        var function_url =url+function_url;
+        var loading_icon=url+"assets/img/Preloader_2.gif";
+		        $.ajax({
+		        	type: "POST",
+		       		 url: function_url,
+		       			 beforeSend: function() {
+		       				 $(div).html("<img style='margin:35%;' src="+loading_icon+">");
+		       				 },
+		       				 success: function(msg) {
+		       					 $(div).html(msg);
+		       		 }
+        		});
+        	}   
+     	});
+		
+	</script>	
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
   		<script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
 		<script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
 		<!--  <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
