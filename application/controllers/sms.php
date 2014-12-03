@@ -1464,10 +1464,10 @@ public function ors_zinc_report() {
 	//path for Mac
 	//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 	
-	$email_address = "collinsojenge@gmail.com";//,smutheu@clintonhealthaccess.org,bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org";
-	
-	
-	$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+	$email_address = "smutheu@clintonhealthaccess.org,bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org";
+	$bcc = null;
+	$cc = "collinsojenge@gmail.com,kelvinmwas@gmail.com,nmaingi@strathmore.edu";
+	$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler,$bcc,$cc);
 
 	}
 
