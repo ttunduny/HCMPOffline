@@ -34,10 +34,30 @@
 	<div class="links" id="zoned"><a href="d" >Zone D</a></div>
 </ul>
 </div-->
+
 <br/>
 <div class="row" style="width: 100%;float: right;margin-top:60px;text-align:center">
+	<?php	
+		foreach ($facilities as $key => $value) {
+			$new_zone = substr($value['Zone'], 5);
 
-	<div class="span3 extra" style="width:20%;float:left">
+			?>			
+			<div class="span3 extra" style="width:20%;float:left">
+				<span> 
+				<a href="<?php echo base_url().'rtk_management/allocation_county_detail_zoom/'.$new_zone;?>">
+					<?php echo $value['Zone'];?>
+				</a>
+				</span>	<br>
+				<div class="progress progress-info"><div class="bar" style=""></div></div>
+				<div >
+					<div>Facilities Reporting: <?php echo $value['count'];?>
+					</div>
+				</div>
+			</div>
+	<?php 
+	}
+	?>
+	<!--div class="span3 extra" style="width:20%;float:left">
 		<span> 
 		<a href="<?php echo base_url().'rtk_management/get_all_zone_a_facilities/A';?>">
 			ZONE A 
@@ -45,7 +65,7 @@
 		</span>	<br>
 		<div class="progress progress-info"><div class="bar" style=""></div></div>
 		<div >
-			<div>Facilities Reporting: <?php echo "$facilities_a";?>
+			<div>Facilities Reporting: <?php echo "$facilities[0]['count']";?>
 			</div>
 		</div>
 	</div>
@@ -58,7 +78,7 @@
 		</span>	<br>
 		<div class="progress progress-info"><div class="bar" style=""></div></div>
 		<div >
-			<div>Facilities Reporting: <?php echo "$facilities_b";?>
+			<div>Facilities Reporting: <?php echo "$facilities[1]['count']";?>
 			</div>
 		</div>
 	</div>
@@ -71,7 +91,7 @@
 		</span>	<br>
 		<div class="progress progress-info"><div class="bar" style=""></div></div>
 		<div >
-			<div>Facilities Reporting: <?php echo "$facilities_c";?>
+			<div>Facilities Reporting: <?php echo "$facilities[2]['count']";?>
 				</div>
 			</div>
 		</div>
@@ -84,10 +104,10 @@
 		</span>	<br>
 		<div class="progress progress-info"><div class="bar" style=""></div></div>
 		<div >
-			<div>Facilities Reporting: <?php echo "$facilities_d";?>
+			<div>Facilities Reporting: <?php echo "$facilities[3]['count']";?>
 			</div>
 		</div>
-	</div>
+	</div-->
 
 </div>
 

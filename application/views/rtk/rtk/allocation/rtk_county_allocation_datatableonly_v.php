@@ -118,30 +118,39 @@
     echo form_open('rtk_management/rtk_allocation_data/' . $county_id, $attributes);
     ?>
 
-    <table id="example" style="width:96%" border="0">
+    <table id="example" style="width:96%" border="0px ridge #ccc">
         <thead>
             <tr>
-            <th><b>District</b></th>
+            <th><b>County</b></th>
+            <th><b>Sub-County</b></th>
             <th><b>MFL</b></th>
             <th><b>Facility Name</b></th>    
-            <th colspan="2"><b>Screening KHB</b></th>
-            <th colspan="2"><b>Confirmatory Unigold</b></th>
-            <th colspan="2"><b>Tie Breaker</b></th>
-            <th><b>Status</b></th>                                              
+            <th><b>Contact Person</b></th>    
+            <th><b>Phone Number</b></th>    
+            <th colspan="4" style="text-align:center"><b>Screening KHB</b></th>
+            <th colspan="4" style="text-align:center"><b>Confirmatory Unigold</b></th>
+            <th colspan="4" style="text-align:center"><b>Tie Breaker</b></th>                                                     
         </tr>
 
         <tr>
             <th></th>
             <th></th>
-            <th></th>    
-            <th>AMC</th>
-            <th>QTY to Allocate</th>
-            <th>AMC</th>
-            <th>QTY to Allocate</th>
-            <th>AMC</th>                                                
-            <th>QTY to Allocate</th>
             <th></th>
-        
+            <th></th>
+            <th></th>
+            <th></th>    
+            <th>EB</th>
+            <th>MMOS</th>
+            <th>AMC</th>
+            <th>QTY</th>
+            <th>EB</th>
+            <th>MMOS</th>
+            <th>AMC</th>
+            <th>QTY</th>
+            <th>EB</th>
+            <th>MMOS</th>
+            <th>AMC</th>
+            <th>QTY</th>        
         </tr>
         </thead>
         <tbody><?php echo $table_body; ?></tbody>
