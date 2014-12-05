@@ -3986,6 +3986,73 @@ public function list_facilities(){
 		$this -> load -> view("shared_files/template/template", $data);
        
        }
+
+public function weekly(){
+	
+		$data = $q = Doctrine_Manager::getInstance()
+	        ->getCurrentConnection()
+	        ->fetchAll("SELECT *
+FROM (SELECT f.facility_name,f.facility_code,l.user_id, 
+if(l.issued=0 and l.ordered=0 and l.redistribute=0 and l.decommissioned=0 ,l.start_time_of_event,null)
+ as login_only,
+l.issued,if(l.issued=1 and l.redistribute=0 ,l.start_time_of_event,null) as issue_event,
+l.ordered,if(l.ordered=1 ,l.start_time_of_event,null) as ordered_event,
+l.redistribute,if(l.redistribute=1 ,l.start_time_of_event,null) as redistribute_event,
+l.decommissioned,if(l.decommissioned=1 ,l.start_time_of_event,null) as decommissioned_event,
+max(l.start_time_of_event) as date_event FROM log l
+INNER JOIN user u ON l.user_id=u.id
+INNER JOIN facilities f ON u.facility=f.facility_code
+where  using_hcmp=1 group by l.issued,l.ordered,l.redistribute,l.decommissioned,f.facility_code) AS t
+group by issued,ordered,redistribute,decommissioned,facility_code");
+						 
+						 $mfl=array();
+						 
+				foreach ($data as $key) {
+						
+					$mfl[]=$key['facility_code'];
+							 
+						 }
+						 $unique_mfl=array_values(array_unique($mfl));
+						 //echo '<pre>';print_r($data); echo '</pre>';exit;
+						 $temp=array();
+						 foreach ($unique_mfl as $key ) {
+						 	
+						 	array_push($temp,array('mfl'=>$key,
+							        'facility_name'=>0,
+							        'user_id'=>0,
+							        'login_only'=>0,
+							        'issued'=>0,
+							        'ordered'=>0,
+							        'redistribute'=>0,
+							        'decommissioned'=>0,
+							        'date_event'=>0,
+							        ));
+							 
+						 }
+												 
+						 $multi_dimenetional = array();
+								foreach ($data  as $row) {
+								    $multi_dimenetional[$row['facility_code']][] = array( 'facility_name'=>$row['facility_name'],
+								    									'facility_code'=>$row['facility_code'],
+								    									  'issued'=>$row['issued'],
+								    									  'issue_event'=>$row['issue_event'],
+								    									  'login_event'=>$row['login_only'],
+								    									  'ordered'=>$row['ordered'],
+								    									  'ordered_event'=>$row['ordered_event'],
+								    									  'redistribute'=>$row['redistribute'],
+								    									  'redistribute_event'=>$row['redistribute_event'],
+								    									  'decommissioned'=>$row['decommissioned'],
+								    									  'decommissioned_event'=>$row['decommissioned_event'],
+								    									  'date_event'=>$row['date_event']
+																	        );
+								}
+						 echo '<pre>';print_r(array_values($multi_dimenetional)); echo '</pre>';exit;
+						// $this -> hcmp_functions -> create_excel($multi_dimenetional);
+						
+						
+						
+       
+       }
 	 
   
 }
