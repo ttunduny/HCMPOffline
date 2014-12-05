@@ -3986,6 +3986,19 @@ public function list_facilities(){
 		$this -> load -> view("shared_files/template/template", $data);
        
        }
+
+public function weekly(){
+	
+		$counties = $q = Doctrine_Manager::getInstance()
+	        ->getCurrentConnection()
+	        ->fetchAll("SELECT f.facility_name,f.facility_code,l.user_id, 
+						if(f.facility_name,l.start_time_of_event,null) as exam1,
+						l.issued,l.ordered,l.redistribute,l.decommissioned FROM hcmp_rtk.log l
+						INNER JOIN user u ON l.user_id=u.id
+						INNER JOIN facilities f ON u.facility=f.facility_code
+						 where  using_hcmp=1");// change  !!!!!!!!!!!!!
+       
+       }
 	 
   
 }
