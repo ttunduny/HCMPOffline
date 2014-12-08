@@ -834,7 +834,9 @@ $step_2_size=count($get_pushed_items);
 		<br>
 		<br>".$order_details['table'];				
 		$subject='Order Report For '.$order_details['facility_name'];
-        echo $message_1;exit;
+        $user = $this -> session -> userdata('user_id');
+			$user_action = "add_stock";
+			Log::log_user_action($user, $user_action);
 		$this->hcmp_functions ->send_order_delivery_email($message_1,$subject,null);
 		$this->session->set_flashdata('system_success_message', 'Stock details have been Updated');
 endif;
