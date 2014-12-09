@@ -2173,287 +2173,181 @@ public function download_county_mos($county = null,$report_type) {
         return $returnable;
     }
 
-    public function allocation_county_detail_zoom($zone) {
-        // $ish;
-        // $county = counties::get_county_name($county_id);
-        // $county_name = Counties::get_county_name($county_id);
-        // $data['countyname'] =$county_name['county'];
+    public function allocation_county_detail_zoom($county_id) {
+        $ish;
+        $county = counties::get_county_name($county_id);
+        $county_name = Counties::get_county_name($county_id);
+        $data['countyname'] =$county_name['county'];
 
         $htm = '';
         $table_body = '';
 
-        // $districts_in_county = districts::getDistrict($county_id);
-        // $data['districts_in_county'] = $districts_in_county;
-        // $htm .= '<ul class="facility-list">';
-        // foreach ($districts_in_county as $key => $district_arr)
-        //     $district = $district_arr['id'];
-        // $district_name = $district_arr['district'];
-        // $htm .= '<li>' . $district_name . '</li>';
-        // $htm .= '<ul class="sub-list">';
-            
+        $districts_in_county = districts::getDistrict($county_id);
+        $data['districts_in_county'] = $districts_in_county;
+        $htm .= '<ul class="facility-list">';
+        foreach ($districts_in_county as $key => $district_arr)
+            $district = $district_arr['id'];
+        $district_name = $district_arr['district'];
+        $htm .= '<li>' . $district_name . '</li>';
+        $htm .= '<ul class="sub-list">';
+     
+        
 
-        $beg_date = date('Y-m', strtotime("-3 Month")).'-01';
-        $beg_date_current = date('Y-m', strtotime("-1 Month")).'-01';        
+        $beg_date = date('Y-m', strtotime("-3 Month"));
+        $beg_date.='-01';
         $end_date = date('Y-m-d', strtotime("last day of previous Month"));
-        $end_date_current = date('Y-m-d', strtotime("last day of previous Month"));
-        //echo "begin $beg_date_current </br> end $end_date_current";die;
+        // echo "begin $beg_date </br> end $end_date";die;
 
-        $sql = "SELECT DISTINCT
-            facilities.*,districts.district,counties.county
-        FROM
-            facilities,districts,counties,lab_commodity_orders
-        WHERE
-            rtk_enabled = 1
-            and facilities.zone = 'Zone $zone'
-            and districts.id = facilities.district 
-            and counties.id  = districts.county
-            and facilities.facility_code = lab_commodity_orders.facility_code
-            and lab_commodity_orders.order_date between '$beg_date' and '$end_date' ORDER BY facilities.facility_code ASC" ;        
-               // echo($sql);die;
-        $facilities = $this->db->query($sql)->result_array();
-     //echo "<pre>";print_r($facilities);die;
-       foreach ($facilities as $key => $value) {
-                    $fcode = $value['facility_code'];
-                    $q = "SELECT DISTINCT
-    lab_commodities.*,
-    facility_amc.*,
-    lab_commodity_details.closing_stock,
-    lab_commodity_details.order_id
-FROM
-    lab_commodities,
-    facility_amc,
-    lab_commodity_details
-WHERE
-    lab_commodities.id = facility_amc.commodity_id
-        AND facility_amc.facility_code = '$fcode'
-        AND lab_commodity_details.commodity_id = lab_commodities.id
-        AND lab_commodity_details.facility_code = facility_amc.facility_code
-        AND lab_commodity_details.commodity_id BETWEEN 0 AND 6
-        AND lab_commodity_details.created_at BETWEEN '$beg_date_current' AND '$end_date_current'";
+        $sql = "SELECT DISTINCT facilities.facility_code,facilities.facility_name,districts.district
+        FROM facilities, districts, counties,lab_commodity_orders
+        WHERE facilities.district = districts.id
+        AND facilities.rtk_enabled = 1
+        AND counties.id = districts.county
+        AND facilities.facility_code = lab_commodity_orders.facility_code
+        AND lab_commodity_orders.order_date between '$beg_date' and '$end_date'
+        AND counties.id = '$county_id'
+        ORDER BY districts.district,facilities.facility_code  ASC ";        
+        $orders = $this->db->query($sql);
+      // echo "<pre>";print_r($orders->result_array());die;
+        foreach ($orders->result_array() as $orders_arr) {
+            $fcode = $orders_arr['facility_code'];           
+            $q = "SELECT DISTINCT
+                    lab_commodities.*,        
+                    lab_commodity_details.order_id,
+                    lab_commodity_details.q_requested,    
+                    lab_commodity_details.commodity_id,        
+                    lab_commodity_details.allocated,
+                    lab_commodity_details.q_used,    
+                    facility_amc.amc,    
+                    lab_commodity_details.allocated_date
+                FROM
+                    lab_commodities,
+                    facility_amc,
+                    facilities,        
+                    lab_commodity_orders,
+                    lab_commodity_details
+                WHERE
+                    lab_commodities.id = facility_amc.commodity_id
+                        AND facility_amc.facility_code = '$fcode'                
+                        AND facilities.facility_code = facility_amc.facility_code
+                        AND facility_amc.commodity_id = lab_commodity_details.commodity_id        
+                        AND lab_commodity_orders.facility_code = facilities.facility_code
+                        AND lab_commodity_orders.id = lab_commodity_details.order_id
+                        AND lab_commodity_details.commodity_id = lab_commodities.id
+                        AND lab_commodity_details.commodity_id BETWEEN 0 AND 6
+                        AND lab_commodity_orders.order_date BETWEEN '$beg_date' AND '$end_date'                        
+                        ORDER BY facilities.facility_code  ASC,lab_commodity_details.commodity_id ASC,lab_commodity_details.id desc";
+                        //group by lab_commodity_orders.facility_code,lab_commodity_details.commodity_id
+            $amc_details = $this->db->query($q)->result_array();
+            $amcs[$fcode] = $amc_details;
+            //echo "<pre>"; print_r($amcs[$fcode]);die();
 
-      
-                    $amc_details = $this->db->query($q)->result_array();                                        
+            $facility_code = $orders_arr['facility_code'];
+            $facility_name = $orders_arr['facility_name'];
+            $district_name = $orders_arr['district'];
 
-                    $order_id = $value['order_id'];
-                    $county = $value['county'];
-                    $district = $value['district'];
-                    $facility_name = $value['facility_name'];
-                    $facility_code = $value['facility_code'];
-                    $contactperson = $value['contactperson'];
-                    $phone_no = $value['cellphone'];
+            $order_detail_id = $amcs[$fcode][0]['order_id'];
 
-                    $amcs[$fcode] = $amc_details;
+            $last_allocated = $amcs[$fcode][4]['allocated_date'];
+            if($last_allocated == 0){
+                $allocation_status = 'Pending Allocation';
+            }else{
 
+                $last_allocated = date('d-m-Y',$last_allocated);
 
-                     $ending_bal_s = $amcs[$fcode][2]['closing_stock'];
-                     $ending_bal_c = $amcs[$fcode][3]['closing_stock'];
-                     $ending_bal_t = $amcs[$fcode][4]['closing_stock'];
+                $beg_date_ts = strtotime($beg_date);
+                $end_date_ts = strtotime($end_date);
 
-                     $amc_s = $amcs[$fcode][2]['amc'];
-                        $amc_s = str_replace(',', '', $amc_s);
-                        $comm_s = $amcs[$fcode][2]['commodity_id'];
-
-                        $amc_t = $amcs[$fcode][4]['amc'];
-                        $amc_t = str_replace(',', '', $amc_t);
-                        $comm_t = $amcs[$fcode][4]['commodity_id'];
-
-                        $amc_c = $amcs[$fcode][3]['amc'];
-                        $amc_c = str_replace(',', '', $amc_c);
-                        $comm_c = $amcs[$fcode][3]['commodity_id'];
-                        //$allocation = '<span class=\"label label-important\">Pending Allocation for  ' . $lastmonth . '</span>';
-                        if($amc_s==null||$amc_s==''){
-                            $amc_s =0;
-                        }
-                        if($amc_c==null||$amc_c==''){
-                            $amc_c =0;
-                        }
-                        if($amc_t==null||$amc_t==''){
-                            $amc_t =0;
-                        }            
-
-
-                        $mmos_s = ceil(($amc_s * 4)/50);
-                        $mmos_c = ceil(($amc_c * 4)/30);
-                        $mmos_t = ceil(($amc_t * 4)/20);
-
-                        if($mmos_s < $ending_bal_s){
-                          $qty_to_alloc_s = 0;
-                        }else{
-                          $qty_to_alloc_s = $mmos_s - $ending_bal_s;
-                        }
-
-                        if($mmos_c < $ending_bal_c){
-                          $qty_to_alloc_c = 0;
-                        }else{
-                          $qty_to_alloc_c = $mmos_c - $ending_bal_c;
-                        }
-
-                        if($mmos_t < $ending_bal_t){
-                          $qty_to_alloc_t = 0;
-                        }else{
-                          $qty_to_alloc_t = $mmos_t - $ending_bal_t;
-                        }
-
-                        $qty_of_issue_s = ceil($amc_s/$amcs[$fcode][2]['unit_of_issue']);
-                        $qty_of_issue_c = ceil($amc_c/$amcs[$fcode][3]['unit_of_issue']);
-                        $qty_of_issue_t = ceil($amc_t/$amcs[$fcode][4]['unit_of_issue']);
-
-                        if($qty_of_issue_t==0){
-                            $qty_of_issue_t +=1;
-                        }
-                        if($qty_of_issue_c==0){
-                            $qty_of_issue_c +=1;
-                        }
-                        if($qty_of_issue_s==0){
-                            $qty_of_issue_s +=1;
-                        }
-
-
-                     $table_body .= "
-                        <tr id=''>            
-                        <input type='hidden' name='order_id' value='$order_id' />
-                        <input type='hidden' name='fcode' value='$fcode' />
-                        <input type='hidden' name='screening_id' value='$comm_s' />
-                        <input type='hidden' name='confirm_id' value='$comm_c' />
-                        <input type='hidden' name='tiebreaker_id' value='$comm_t' />
-                        <td>$county</td>
-                        <td>$district</td>
-                        <td>$facility_code</td>                        
-                        <td>$facility_name</td>
-                        <td>$contactperson</td>
-                        <td>$phone_no</td>
-
-                        <td>$ending_bal_s</td>
-                        <td>$mmos_s</td>
-                        <td>$amc_s</td>
-                        <td><input type ='text' size = '5' name ='allocate_screening_khb' value ='$qty_of_issue_s'></td>
-                        
-                        <td>$ending_bal_c</td>
-                        <td>$mmos_c</td>
-                        <td>$amc_c</td>
-                        <td><input type ='text' size = '5' name ='allocate_confirm_first' value ='$qty_of_issue_c'></td>
-                        
-                        <td>$ending_bal_t</td>
-                        <td>$mmos_t</td>
-                        <td>$amc_t</td>
-                        <td><input type ='text' size = '5' name ='allocate_tie_breaker' value ='$qty_of_issue_t'></td>                                                
-                        </tr>";
-
-                   
-                              
-
+                if(($last_allocated>$beg_date_ts)){
+                    $allocation_status = 'Pending Allocation';
+                }else{
+                    $allocation_status = 'Allocated on '.$last_allocated;
                 }
+            }
 
-                //echo "$table_body";die();
-             //    echo "<pre>"; print_r($amcs[$fcode]);die;
-             // print_r($amcs[$fcode]);die();
+            $commodity_s = $amcs[$fcode][2]['commodity_name'];
+            $commodity_t = $amcs[$fcode][4]['commodity_name'];
+            $commodity_c = $amcs[$fcode][3]['commodity_name'];
 
-       //      $facility_code = $orders_arr['facility_code'];
-       //      $facility_name = $orders_arr['facility_name'];
-       //      $district_name = $orders_arr['district'];
+            $amc_s = $amcs[$fcode][2]['amc'];
+            $amc_s = str_replace(',', '', $amc_s);
+            $comm_s = $amcs[$fcode][2]['commodity_id'];
 
-       //      $order_detail_id = $amcs[$fcode][0]['order_id'];
+            $amc_t = $amcs[$fcode][4]['amc'];
+            $amc_t = str_replace(',', '', $amc_t);
+            $comm_t = $amcs[$fcode][4]['commodity_id'];
 
-       //      $last_allocated = $amcs[$fcode][4]['allocated_date'];
-       //      if($last_allocated == 0){
-       //          $allocation_status = 'Pending Allocation';
-       //      }else{
-
-       //          $last_allocated = date('d-m-Y',$last_allocated);
-
-       //          $beg_date_ts = strtotime($beg_date);
-       //          $end_date_ts = strtotime($end_date);
-
-       //          if(($last_allocated>$beg_date_ts)){
-       //              $allocation_status = 'Pending Allocation';
-       //          }else{
-       //              $allocation_status = 'Allocated on '.$last_allocated;
-       //          }
-       //      }
-
-       //      $commodity_s = $amcs[$fcode][2]['commodity_name'];
-       //      $commodity_t = $amcs[$fcode][4]['commodity_name'];
-       //      $commodity_c = $amcs[$fcode][3]['commodity_name'];
-
-       //      $amc_s = $amcs[$fcode][2]['amc'];
-       //      $amc_s = str_replace(',', '', $amc_s);
-       //      $comm_s = $amcs[$fcode][2]['commodity_id'];
-
-       //      $amc_t = $amcs[$fcode][4]['amc'];
-       //      $amc_t = str_replace(',', '', $amc_t);
-       //      $comm_t = $amcs[$fcode][4]['commodity_id'];
-
-       //      $amc_c = $amcs[$fcode][3]['amc'];
-       //      $amc_c = str_replace(',', '', $amc_c);
-       //      $comm_c = $amcs[$fcode][3]['commodity_id'];
-       //      //$allocation = '<span class=\"label label-important\">Pending Allocation for  ' . $lastmonth . '</span>';
-       //      if($amc_s==null||$amc_s==''){
-       //          $amc_s =0;
-       //      }
-       //      if($amc_c==null||$amc_c==''){
-       //          $amc_c =0;
-       //      }
-       //      if($amc_t==null||$amc_t==''){
-       //          $amc_t =0;
-       //      }            
+            $amc_c = $amcs[$fcode][3]['amc'];
+            $amc_c = str_replace(',', '', $amc_c);
+            $comm_c = $amcs[$fcode][3]['commodity_id'];
+            //$allocation = '<span class=\"label label-important\">Pending Allocation for  ' . $lastmonth . '</span>';
+            if($amc_s==null||$amc_s==''){
+                $amc_s =0;
+            }
+            if($amc_c==null||$amc_c==''){
+                $amc_c =0;
+            }
+            if($amc_t==null||$amc_t==''){
+                $amc_t =0;
+            }            
 
 
-       //      $mmos_s = ceil(($amc_s * 4)/50);
-       //      $mmos_c = ceil(($amc_c * 4)/30);
-       //      $mmos_t = ceil(($amc_t * 4)/20);
+            $mmos_s = ceil(($amc_s * 4)/50);
+            $mmos_c = ceil(($amc_c * 4)/30);
+            $mmos_t = ceil(($amc_t * 4)/20);
 
-       //      if($mmos_s < $ending_bal_s){
-       //        $qty_to_alloc_s = 0;
-       //      }else{
-       //        $qty_to_alloc_s = $mmos_s - $ending_bal_s;
-       //      }
+            if($mmos_s < $ending_bal_s){
+              $qty_to_alloc_s = 0;
+            }else{
+              $qty_to_alloc_s = $mmos_s - $ending_bal_s;
+            }
 
-       //      if($mmos_c < $ending_bal_c){
-       //        $qty_to_alloc_c = 0;
-       //      }else{
-       //        $qty_to_alloc_c = $mmos_c - $ending_bal_c;
-       //      }
+            if($mmos_c < $ending_bal_c){
+              $qty_to_alloc_c = 0;
+            }else{
+              $qty_to_alloc_c = $mmos_c - $ending_bal_c;
+            }
 
-       //      if($mmos_t < $ending_bal_t){
-       //        $qty_to_alloc_t = 0;
-       //      }else{
-       //        $qty_to_alloc_t = $mmos_t - $ending_bal_t;
-       //      }
+            if($mmos_t < $ending_bal_t){
+              $qty_to_alloc_t = 0;
+            }else{
+              $qty_to_alloc_t = $mmos_t - $ending_bal_t;
+            }
 
-       //      $qty_of_issue_s = ceil($amc_s/$amcs[$fcode][2]['unit_of_issue']);
-       //      $qty_of_issue_c = ceil($amc_c/$amcs[$fcode][3]['unit_of_issue']);
-       //      $qty_of_issue_t = ceil($amc_t/$amcs[$fcode][4]['unit_of_issue']);
+            $qty_of_issue_s = ceil($amc_s/$amcs[$fcode][2]['unit_of_issue']);
+            $qty_of_issue_c = ceil($amc_c/$amcs[$fcode][3]['unit_of_issue']);
+            $qty_of_issue_t = ceil($amc_t/$amcs[$fcode][4]['unit_of_issue']);
 
-       //      if($qty_of_issue_t==0){
-       //          $qty_of_issue_t +=1;
-       //      }
-       //      if($qty_of_issue_c==0){
-       //          $qty_of_issue_c +=1;
-       //      }
-       //      if($qty_of_issue_s==0){
-       //          $qty_of_issue_s +=1;
-       //      }
+            if($qty_of_issue_t==0){
+                $qty_of_issue_t +=1;
+            }
+            if($qty_of_issue_c==0){
+                $qty_of_issue_c +=1;
+            }
+            if($qty_of_issue_s==0){
+                $qty_of_issue_s +=1;
+            }
 
-       //      $table_body .= "
-       //      <tr id=''>            
-       //      <input type='hidden' name='order_detail_id' value='$order_detail_id' />
-       //      <input type='hidden' name='screening_id' value='$comm_s' />
-       //      <input type='hidden' name='confirm_id' value='$comm_c' />
-       //      <input type='hidden' name='tiebreaker_id' value='$comm_t' />
-       //      <td>$district_name</td>
-       //      <td>$facility_code</td>
-       //      <td>$facility_name</td>
-       //      <td>$amc_s </td>
-       //      <td><input type ='text' size = '5' name ='allocate_screening_khb' value ='$qty_of_issue_s'></td>
-       //      <td>$amc_c</td>
-       //      <td><input type ='text' size = '5' name ='allocate_confirm_first' value ='$qty_of_issue_c'></td>
-       //      <td>$amc_t</td>
-       //      <td><input type ='text' size = '5' name ='allocate_tie_breaker' value ='$qty_of_issue_t'></td>
-       //      <td>$allocation_status</td>
-       //      <input type='hidden' name='fcode' value='$fcode' />
-       //      </tr>";
-       //  }
-       // // die();
+            $table_body .= "
+            <tr id=''>            
+            <input type='hidden' name='order_detail_id' value='$order_detail_id' />
+            <input type='hidden' name='screening_id' value='$comm_s' />
+            <input type='hidden' name='confirm_id' value='$comm_c' />
+            <input type='hidden' name='tiebreaker_id' value='$comm_t' />
+            <td>$district_name</td>
+            <td>$facility_code</td>
+            <td>$facility_name</td>
+            <td>$amc_s </td>
+            <td><input type ='text' size = '5' name ='allocate_screening_khb' value ='$qty_of_issue_s'></td>
+            <td>$amc_c</td>
+            <td><input type ='text' size = '5' name ='allocate_confirm_first' value ='$qty_of_issue_c'></td>
+            <td>$amc_t</td>
+            <td><input type ='text' size = '5' name ='allocate_tie_breaker' value ='$qty_of_issue_t'></td>
+            <td>$allocation_status</td>
+            <input type='hidden' name='fcode' value='$fcode' />
+            </tr>";
+        }
+       // die();
           
         $data['county_id'] = $county_id;
         $data['table_body'] = $table_body;

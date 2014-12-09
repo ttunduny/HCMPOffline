@@ -142,7 +142,7 @@ $(document).ready(function() {
 			if (selector_object.val() <0) { alert_message+="<li>Value must be above 0</li>";}
 		    if (selector_object.val().indexOf('.') > -1) {alert_message+="<li>Decimals are not allowed.</li>";}		
 			if (isNaN(selector_object.val())){alert_message+="<li>Enter only numbers</li>";}	
-			if(total_units>donated_items){alert_message+="<li>You cannot receive more than was given to you</li>";}			
+			//if(total_units>donated_items){alert_message+="<li>You cannot receive more than was given to you</li>";}			
 			if(isNaN(alert_message)){
 	//reset the text field and the message dialog box 
     selector_object.val(""); var notification='<ol>'+alert_message+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';

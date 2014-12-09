@@ -22,6 +22,7 @@
 			}
 			th{
 				text-transform:capitalize;
+				background-color: rgb(231, 230, 230);
 			}
 		</style>
 	</head>
@@ -32,7 +33,7 @@
 			<div style=" width:100%;text-align: center;"><font color="#0000FF">EARLY INFANT DIAGNOSIS CONSUMPTION REPORT </font></div>
 			<h3>EID TESTS DONE :<?php echo $testsdone;?></h3>
 			<table class="table" id="tbl_subm_report" >
-				<thead>
+				<thead >
 					<tr>
 						<td rowspan="2" >&nbsp;</td>
 						<th style="" rowspan="2">COMMODITY </th>
@@ -240,6 +241,7 @@
 					  	echo '<em>Test Kit Lot No = '.@$kitlotno.'<br>Kit Source = '.@$labfrom.'<br>Date Received = '.@$ldatereceived.'<br>Date Entered = '.@$ldateentered.'</em>';
 					}?>
 				</div>
+				
 				
 			</div>
 		</div>
@@ -456,6 +458,13 @@
 					}?>
 				</div>
 				
+			</div>
+			<div style="width: 100%; border-top:solid 1px #000"> 
+				<?php 
+				if(date('Y-m-d',strtotime($approved_date))=="1970-01-01"){
+					$approved_date= $monthname.' '.$year;
+				}
+				echo "<b style='font-size:14px'>Approved date</b> : ".date('Y-m-10',strtotime($approved_date));?>
 			</div>
 		</div>
 	</body>

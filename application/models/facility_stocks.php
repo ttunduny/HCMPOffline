@@ -98,42 +98,42 @@ return $stocks ;
     public static function get_district_stock_amc($district_id){
   $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 	->fetchAll("			
-SELECT 
-    c.id AS commodity_id,
-    ds.id AS drug_store_stock_id,
-    c.commodity_name,
-    c.commodity_code,
-    c.unit_size,
-    fs.expiry_date,
-    ROUND(SUM(ds.total_balance), 1) AS commodity_balance,
-    ROUND((SUM(ds.total_balance) / c.total_commodity_units),
-            1) AS pack_balance,
-    c.total_commodity_units,
-    c_s.source_name,
-    c_s.id AS source_id,
-    CASE temp.selected_option
-        WHEN 'Pack_Size' THEN ROUND(temp.consumption_level, 1)
-        WHEN
-            'Unit_Size'
-        THEN
-            ROUND(temp.total_units / temp.consumption_level,
-                    1)
-        ELSE 0
-    END AS amc
-FROM
-    commodity_source c_s,
-    drug_store_totals ds,
-    facility_stocks fs,
-    commodities c
-        LEFT JOIN
-    facility_monthly_stock temp ON temp.commodity_id = c.id
-WHERE
-    ds.district_id = '$district_id'
-    AND fs.expiry_date >= NOW()
-    AND fs.commodity_id= ds.commodity_id
-        AND c.id = ds.commodity_id
-GROUP BY c.id
-		");
+			SELECT 
+			    c.id AS commodity_id,
+			    ds.id AS drug_store_stock_id,
+			    c.commodity_name,
+			    c.commodity_code,
+			    c.unit_size,
+			    fs.expiry_date,
+			    ROUND(SUM(ds.total_balance), 1) AS commodity_balance,
+			    ROUND((SUM(ds.total_balance) / c.total_commodity_units),
+			            1) AS pack_balance,
+			    c.total_commodity_units,
+			    c_s.source_name,
+			    c_s.id AS source_id,
+			    CASE temp.selected_option
+			        WHEN 'Pack_Size' THEN ROUND(temp.consumption_level, 1)
+			        WHEN
+			            'Unit_Size'
+			        THEN
+			            ROUND(temp.total_units / temp.consumption_level,
+			                    1)
+			        ELSE 0
+			    END AS amc
+			FROM
+			    commodity_source c_s,
+			    drug_store_totals ds,
+			    facility_stocks fs,
+			    commodities c
+			        LEFT JOIN
+			    facility_monthly_stock temp ON temp.commodity_id = c.id
+			WHERE
+			    ds.district_id = '$district_id'
+			    AND fs.expiry_date >= NOW()
+			    AND fs.commodity_id= ds.commodity_id
+			        AND c.id = ds.commodity_id
+			GROUP BY c.id
+					");
 return $stocks ;      
     }
     //for getting the stock outs for email
@@ -378,7 +378,7 @@ $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 		return $stocks;
 	}	
 	public static function potential_expiries_email($facility_code=null)
-		{
+	{
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		select 
 		    c.county,
@@ -846,18 +846,7 @@ public static function get_county_comparison_data($facility_code=null,$district_
      $and_data
      GROUP BY di.id having total>0 order by di.district asc
      ");	
-	 /*echo "SELECT  $selection_for_a_month $computation,
-	 ifnull(round(avg(IFNULL(fs.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),1),0) as total_mos
-     FROM facility_stocks fs, facilities f, commodities d,  districts di,
-	facility_monthly_stock f_m_s
-     WHERE fs.facility_code = f.facility_code
-     AND f_m_s.`commodity_id` = d.id
-     AND f.district =di.id
-     and fs.expiry_date>NOW()
-     AND fs.status=1
-     $and_data
-     GROUP BY di.id having total>0 order by di.district asc";
-	  exit;*/
+	
      return $inserttransaction ;
 }
   public static function get_county_consumption_level_new($facility_code, $district_id,$county_id,$category_id,$commodity_id, $option,$from,$to,$graph_type=null,$tracer = null){
@@ -1309,6 +1298,100 @@ INNER JOIN districts ON districts.id=facilities.district WHERE expiry_date < NOW
  group by facilities.facility_code ");
 			return $stocks ;
 		
+	}
+	//used to get the stock level for a specific commodity in the entire country
+	public static function get_commodity_stock_level($commodity_id)
+	{
+		$stock_level = Doctrine_Manager::getInstance()->getCurrentConnection()
+				->fetchAll("SELECT 
+							    c.county,
+							    d1.district AS subcounty,
+							    f.facility_name,
+							    f.facility_code,
+							    d.commodity_name AS commodity_name,
+							    d.unit_size AS unit_size,
+							    round(f_s.current_balance,0) AS balance_units,
+							    round((f_s.current_balance / d.total_commodity_units),0) AS balance_packs,
+							    d.unit_cost,
+							    f_s.manufacture,
+							    f_s.batch_no,
+							    f_s.expiry_date,
+							    cs.source_name AS supplier,
+							    CASE temp.selected_option
+							        WHEN 'Pack_Size' THEN ROUND(temp.consumption_level, 0)
+							        WHEN 'Unit_Size' THEN ROUND(temp.total_units / temp.consumption_level, 0)
+							        ELSE 0
+							    END AS amc,
+							    (ROUND(f_s.current_balance/temp.total_units,0)) as mos
+							FROM
+							    facilities f,
+							    districts d1,
+							    counties c,
+							    facility_stocks f_s,
+							    commodities d,
+							    facility_monthly_stock temp,
+							    commodity_source cs
+							WHERE
+							    f_s.facility_code = f.facility_code
+							        AND f.district = d1.id
+							        AND temp.facility_code = f.facility_code
+							        AND d1.county = c.id
+							        AND f_s.commodity_id = d.id
+							        AND d.commodity_source_id = cs.id
+							        AND temp.commodity_id = f_s.commodity_id
+							        AND f_s.commodity_id = $commodity_id
+							        AND f_s.expiry_date >= NOW()
+									AND f_s.current_balance >0
+							GROUP BY d.id , f.facility_code
+							ORDER BY c.county ASC , d1.district ASC");
+		return $stock_level;
+		
+	}
+	
+	//query to get the number of facilities stocked out on a particular commodity for the year
+	public static function facilities_stocked_specific_commodity($commodity_id)
+	{
+		$year = date("Y");
+		$no_of_facilities = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT 
+					    distinct(facility_code)
+					FROM
+					    facility_stocks
+					WHERE
+					    current_balance = 0
+				        AND commodity_id = $commodity_id
+				        AND YEAR(date_added) = $year");
+		return count($no_of_facilities);
+	}
+	//query to get the number of facilities reporting on a particular commodity for the year
+	public static function facilities_reporting_on_a_specific_commodity($commodity_id)
+	{
+		$year = date("Y");
+		$no_of_facilities = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT 
+					    distinct(facility_code)
+					FROM
+					    facility_stocks
+					WHERE
+				        commodity_id = $commodity_id
+				        AND year(expiry_date)>=$year
+				        AND YEAR(date_added) = $year");
+		return count($no_of_facilities);
+	}
+	//query to get the number of batches expiring for a particular commodity for the year
+	public static function batches_expiring_specific_commodities($commodity_id)
+	{
+		$year = date("Y");
+		$no_of_facilities = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT DISTINCT
+					    (batch_no)
+					FROM
+					    facility_stocks
+					WHERE
+					    current_balance > 0
+					        AND commodity_id = $commodity_id
+					        AND expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 3 MONTH)");
+		return count($no_of_facilities);
 	}
 
 }

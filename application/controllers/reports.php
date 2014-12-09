@@ -663,6 +663,7 @@ class Reports extends MY_Controller
 	}
 
 	public function stock_control($facility_code=null) {
+		//loads the bin card
 		$facility_code=isset($facility_code) ? $facility_code: $this -> session -> userdata('facility_id');
 		$facility_name=Facilities::get_facility_name_($facility_code)->toArray();
 		$data['facility_name']=$facility_name[0]['facility_name'];
@@ -677,6 +678,7 @@ class Reports extends MY_Controller
 
 	}
 	public function stock_control_ajax() {
+		//loads the bin card after the user selects the particular commodity
 		$facility_code = $this -> session -> userdata('facility_id');
 		$commodity_id = $_POST['commodity_select'];
 		$to = $_POST['to'];
@@ -691,6 +693,7 @@ class Reports extends MY_Controller
 		$data['to'] =$to;
 		$data['facility_code']= $this -> session -> userdata('facility_id');
 		$data_=	Facility_issues::get_bin_card($facility_code,$commodity_id,$from,$to);	
+		//echo "<pre>";print_r($data_);exit;
 		$data['bin_card'] =$data_ ;
 		$count_records=count($data);
 		
@@ -1056,11 +1059,13 @@ class Reports extends MY_Controller
 	public function get_counties_json_data() {
 		echo json_encode(Counties::getAll());
 	}
-	     
+	
 
 	 //For system uptake option on SUB-COUNTY dashboard
 	 public function get_sub_county_facility_mapping_data($year = null, $month = NULL) 
 	 {
+	 	
+	 	
 	 	$year = (isset($year)&& ($year>0))? $year : date("Y");
 		$month = (isset($month)&& ($month>0))? $month : date("m");
 		$identifier = $this -> session -> userdata('user_indicator');
@@ -1220,11 +1225,12 @@ class Reports extends MY_Controller
 		$data['graph_data_daily'] =	$graph_daily;
 		$data['graph_log'] = $graph_log;
 		
+		
 		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
 		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
 		
-		// echo "<pre>";print_r($data);echo "</pre>";exit;
+		
 		if($this->input->is_ajax_request()):
 			
 			return $this -> load -> view('subcounty/ajax/facility_roll_out_at_a_glance_v', $data);
@@ -3090,19 +3096,25 @@ $graph_type = 'bar';
     }
    public function facility_stock_level_dashboard()
    {
+   		//facility level reports section - Stock Level
+   		
+   		//get the data from the session
 		$county_id = $this -> session -> userdata('county_id');
-		$view = 'shared_files/template/dashboard_template_v';
+		//load the district in that particluar county the facility is in
         $data['district_data'] = districts::getDistrict($county_id);
+		//get comodity data
         $data['c_data'] = Commodities::get_all_2();
+		//get commodity categories
 		$data['categories']=commodity_sub_category::get_all_pharm();
+		//load the page details
 		$data['banner_text'] = "Stocking Levels";
 		$data['title'] = "Stocking Levels";
+		$data['active_panel']='stocking_levels';
 		$data['content_view'] = "facility/facility_reports/reports_v";
-		$view = 'shared_files/template/template';
 		$data['report_view'] = "subcounty/reports/county_stock_level_filter_v";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
-		$data['active_panel']='stocking_levels';
- 		$data['title'] = "Reports";
+		$view = 'shared_files/template/template';
+ 		//load the page
 		$this -> load -> view($view, $data);
 
     }
@@ -3625,25 +3637,31 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 	    
 		return $this -> load -> view("subcounty/ajax/county_notification_v", $data);
 	}
-     public function monitoring(){
+	//for monitoring facility use of the tool
+     public function monitoring()
+     {
         $facility_code=(!$this -> session -> userdata('facility_id')) ? null: $this -> session -> userdata('facility_id');
         $district_id=(!$this -> session -> userdata('district_id')) ? null:$this -> session -> userdata('district_id');
         $county_id=(!$this -> session -> userdata('county_id')) ? null:$this -> session -> userdata('county_id');
         $category_data=$series_data = $graph_data= $series_data_=array();
 		$identifier = $this -> session -> userdata('user_indicator');
         $facility_data=Facilities::get_facilities_monitoring_data( $facility_code,$district_id,$county_id,$identifier);
-        foreach($facility_data as $facility){
- $date=(strtotime($facility['last_seen']))? date('j M, Y',strtotime($facility['last_seen'])):"N/A" ;
-          array_push($series_data,array(
-          $date,
-          $facility['days_last_seen'],
-          date('j M, Y',strtotime($facility['last_issued'])) ,
-          $facility['days_last_issued'],
-          $facility['district'],
-          $facility['facility_name'],
-          $facility['facility_code'])) ; 
+		
+        
+        foreach($facility_data as $facility)
+        {
+        	
+ 			$date=(strtotime($facility['last_seen']))? date('j M, Y',strtotime($facility['last_seen'])):"N/A" ;
+          	array_push($series_data,array(
+		          $date,
+		          $facility['days_last_seen'],
+		          date('j M, Y',strtotime($facility['last_issued'])) ,
+		          $facility['days_last_issued'],
+		          $facility['district'],
+		          $facility['facility_name'],
+		          $facility['facility_code'])) ; 
         }
-        $category_data=array(array("date last seen","# of days","date last issued","# of days","sub county","Facility Name","Mfl"));
+        $category_data=array(array("date last seen","# of days","date last issued","# of days","sub county","facility name","mfl"));
         $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_'));
         $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
         $graph_data=array_merge($graph_data,array("table_body"=>$series_data));                

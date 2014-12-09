@@ -17,8 +17,8 @@
 
         $("#allocate").button().click(function() {
 
-        	var loading = '<div id="loading"> &nbsp;&nbsp;<img src="<?php echo base_url(); ?>assets/img/ajax-loader.gif"><span style="font-size: 13px;color: #92CA8F;margin-left:100px; font-family: calibri;">Saving Allocations</span></div>';
-        	$('#allocation-response').html(loading);      	
+            var loading = '<div id="loading"> &nbsp;&nbsp;<img src="<?php echo base_url(); ?>assets/img/ajax-loader.gif"><span style="font-size: 13px;color: #92CA8F;margin-left:100px; font-family: calibri;">Saving Allocations</span></div>';
+            $('#allocation-response').html(loading);        
 
             var data = $('#myform').serializeArray();
             
@@ -39,7 +39,7 @@
                     $('#allocation-response').html(response);
                     $('#allocation-response').addClass('alert alert-success');
                     location.reload(true);
-                                    $( "#loading" ).hide();
+                    $( "#loading" ).hide();
                 }).fail(function(request,error) {
                     console.log(arguments);
                     alert ( " Can't do because: " + error );
@@ -71,7 +71,7 @@
     .alerts{
         width:95%;
         height:auto;
-        background: #E3E4FA;	
+        background: #E3E4FA;    
         padding-bottom: 2px;
         padding-left: 2px;
         margin-left:0.5em;
@@ -99,47 +99,58 @@
 
     }
 </style> 
+<div id="nav" style="margin-top:10px;width:100%"><?php include('allocation_links.php');?></div>
 
-<div style="width:100%;font-size: 15px;background: #F8F8F8;padding: 10px 10px 10px 10px;border-bottom: solid 1px #ccc;">
+<div style="width:100%;font-size: 15px;background: #F8F8F8;padding: 10px 10px 10px 10px;border-bottom: solid 1px #ccc;margin-top:5%;">
     <ul class="navtbl nav nav-pills">
 
         <?php foreach ($districts_in_county as $value) { ?>
             <li class=""><a href="#"><?php echo $value['district']; ?></a></li>
         <?php } ?>
-       <a class="pull-right" href="../county_allocation/<?php echo $county_id;?>" style="line-height: 20px;margin: 8px 26px 0px 0px;text-decoration: none;color: #0088cc;">View <?php echo $countyname;?>  Allocations</a> 
+       <!--a class="pull-right" href="../county_allocation/<?php echo $county_id;?>" style="line-height: 20px;margin: 8px 26px 0px 0px;text-decoration: none;color: #0088cc;">View <?php echo $countyname;?>  Allocations</a--> 
 
     </ul>
 </div>
+
 <div style="height:411px;overflow:scroll;">
     <?php
     $attributes = array('name' => 'myform', 'id' => 'myform');
     echo form_open('rtk_management/rtk_allocation_data/' . $county_id, $attributes);
     ?>
 
-    <table id="example" style="width:96%" border="0">
+    <table id="example" style="width:96%" border="0px ridge #ccc">
         <thead>
             <tr>
-            <th><b>District</b></th>
+            <th><b>County</b></th>
+            <th><b>Sub-County</b></th>
             <th><b>MFL</b></th>
             <th><b>Facility Name</b></th>    
-            <th colspan="2"><b>Screening KHB</b></th>
-            <th colspan="2"><b>Confirmatory Unigold</b></th>
-            <th colspan="2"><b>Tie Breaker</b></th>
-            <th><b>Status</b></th>                                              
+            <th><b>Contact Person</b></th>    
+            <th><b>Phone Number</b></th>    
+            <th colspan="4" style="text-align:center"><b>Screening KHB</b></th>
+            <th colspan="4" style="text-align:center"><b>Confirmatory Unigold</b></th>
+            <th colspan="4" style="text-align:center"><b>Tie Breaker</b></th>                                                     
         </tr>
 
         <tr>
             <th></th>
             <th></th>
-            <th></th>    
-            <th>AMC</th>
-            <th>QTY to Allocate</th>
-            <th>AMC</th>
-            <th>QTY to Allocate</th>
-            <th>AMC</th>                                                
-            <th>QTY to Allocate</th>
             <th></th>
-        
+            <th></th>
+            <th></th>
+            <th></th>    
+            <th>EB</th>
+            <th>MMOS</th>
+            <th>AMC</th>
+            <th>QTY</th>
+            <th>EB</th>
+            <th>MMOS</th>
+            <th>AMC</th>
+            <th>QTY</th>
+            <th>EB</th>
+            <th>MMOS</th>
+            <th>AMC</th>
+            <th>QTY</th>        
         </tr>
         </thead>
         <tbody><?php echo $table_body; ?></tbody>
@@ -150,5 +161,11 @@
 <input class="pull-left" type="button" id="allocate" value="Allocate" style="background: #F8F7F7; padding: 7px;margin: 8px 0px 5px 19px;color: #0088cc;font-family: calibri;font-size: 18px;border: 1px solid #ccc;">
 <div id="allocation-response"></div>
 </div>
-<?php echo form_close(); ?>	
+<?php echo form_close(); ?> 
 </div>
+
+<script type="text/javascript">
+  $('#trend_tab').removeClass('active_tab');    
+  $('#stocks_tab').removeClass('active_tab');  
+  $('#allocations_tab').addClass('active_tab');
+</script>

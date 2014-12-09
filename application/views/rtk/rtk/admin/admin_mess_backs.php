@@ -1,8 +1,7 @@
 <?php 
     include('admin_links.php');    
 ?>
-<!DOCTYPE html>
-<html lang="en">
+
 <head>   
   <link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
     <link href="<?php echo base_url().'assets/css/offline.css'?>" type="text/css" rel="stylesheet"/> 
@@ -201,8 +200,7 @@
 </div>
 </center>
   
-</body>
-<script>
+</body><script>
 jQuery.browser = {};
 (function () {
   jQuery.browser.msie = false;
@@ -212,6 +210,7 @@ jQuery.browser = {};
     jQuery.browser.version = RegExp.$1;
   }
 })();
+
 var substringMatcher = function(strs) {
   return function findMatches(q, cb) {
     var matches, substringRegex;
@@ -308,6 +307,4 @@ var substringMatcher = function(strs) {
                  
 
 </script>
-
-</html>
 
