@@ -1408,7 +1408,7 @@ public function rtk_manager_stocks($month=null) {
                     $a +=$increment;
                     $b += $increment;
                 }    
-                
+
                 // $sql = "SELECT email FROM user WHERE usertype_id =13 and status =1 ORDER BY id DESC";
                 // $res = $this->db->query($sql)->result_array();                  
                 // $to =array();
@@ -6054,14 +6054,25 @@ public function get_all_zone_a_facilities($zone){
             echo "Alert Deleted Succesfully";
         }
 
-     public function update_labs($year,$month,$zone){                
+     public function update_labs($zone,$year=null,$month=null){                
                 ini_set(-1);
-                $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-                $firstdate = $year.'-'.$month.'-01';
-                $lastdate = $year.'-'.$month.'-'.$num_days;                
-
+                if(isset($year)){
+                    $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                    $firstdate = $year.'-'.$month.'-01';
+                    $lastdate = $year.'-'.$month.'-'.$num_days; 
+                }else{
+                    $month =  date("mY", time());
+                    $year = substr($month, -4);
+                    $month = substr($month, 0,2);
+                    $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                    $firstdate = $year.'-'.$month.'-01';
+                    $lastdate = $year.'-'.$month.'-'.$num_days; 
+                }
+                               
+                
                 $sql = "select distinct facility_code from facilities where rtk_enabled=1 and zone='Zone $zone' and exists
                  (select distinct facility_code from lab_commodity_details where created_at between '$firstdate' and '$lastdate') order by facility_code asc";
+                echo "$sql";
                  $facilities = $this->db->query($sql)->result_array();                    
                  $count = 0; 
                  $large_array[$code] = array();
