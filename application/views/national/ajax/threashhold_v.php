@@ -44,7 +44,7 @@
         series: [{
             name: 'Required M.O.S',
             color: '#F7D358',
-            data: [9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9],
+            data: <?php echo $series_data2 ;?>,
             pointPadding: 0.1,
             pointPlacement: -0.2
         }, {

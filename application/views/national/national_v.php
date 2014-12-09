@@ -406,7 +406,7 @@ echo $maps; ?>
       //ajax_request_replace_div_content('national/potential/NULL/NULL/NULL/NULL/NULL',"#potential"); 
       ajax_request_replace_div_content('national/facility_over_view/',"#facilities_rolled_out");
       ajax_request_replace_div_content('national/hcw/',"#hcw_trained");
-      ajax_request_replace_div_content('national/stock_level_mos/NULL/NULL/NULL/NULL',"#mos");
+      ajax_request_replace_div_content('kenya/mos_graph/NULL/NULL/NULL/NULL',"#mos");
       ajax_request_replace_div_content('national/consumption/NULL/NULL/NULL/NULL',"#consumption");
       ajax_request_replace_div_content('national/get_facility_infor/NULL/NULL/NULL/NULL',"#facilities");
       ajax_request_replace_div_content('national/order/NULL/NULL/NULL/NULL/NULL',"#orders");

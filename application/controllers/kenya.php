@@ -52,6 +52,7 @@ class Kenya extends MY_Controller
 		 
 		$data['county'] = Counties::getAll();
 		$data['title'] = "National Dashboard";
+		$data['commodities'] = Commodities::get_all();
         $data['maps'] = json_encode($finalMap);
         $data['counties']=$county_name;
 		
@@ -169,6 +170,93 @@ $using_hcmp = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetch
     $data['colors'] = "['#feab3a', '#4b0082', '#008b8b', '#a52a2a', '#6AF9C4']";
 	$this -> load -> view("national/ajax/pie_template",$data);	
 	}
+
+
+public function mos_graph($county_id=null, $district_id=null,$commodity_id=null,$graph_type=null,$div=null)
+			{
+				
+				$district_id=($district_id=="NULL") ? null :$district_id;
+	    $graph_type=($graph_type=="NULL") ? null :$graph_type;
+	    $facility_code=($facility_code=="NULL") ? null :$facility_code;
+	    $county_id=($county_id=="NULL") ? null :$county_id;
+		$commodity_id=($commodity_id=="ALL" || $commodity_id=="NULL") ? null :$commodity_id;
+	
+	    $and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
+	    $and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
+	    $and_data .=($county_id>0) ?" AND c.id='$county_id'" : null;
+	    $and_data =isset( $and_data) ?  $and_data:null;
+	    $and_data .=isset($commodity_id) ? "AND d.id =$commodity_id" : "AND d.tracer_item =1";
+	    
+	    $group_by =($district_id>0 && isset($county_id) && !isset($facility_code)) ?" ,d.id" : null;
+	    $group_by .=($facility_code>0 && isset($district_id)) ?"  ,f.facility_code" : null;
+	    $group_by .=($county_id>0 && !isset($district_id)) ?" ,c_.id" : null;
+	    $group_by =isset( $group_by) ?  $group_by: " ,c_.id";
+    
+    	$title='';
+		
+		if(isset($county_id)):
+		    $county_name = counties::get_county_name($county_id);   
+		    $name=$county_name[0]['county'] ;
+		    $title="$name County" ;
+	    elseif(isset($district_id)):
+		    $district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
+		    $district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " Subcounty" : null;
+		    $title = isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :
+		    		(isset($district_id) && !isset($facility_code) ?  "$district_name_": "$name County") ;
+	    elseif(isset($facility_code)):
+		    $facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code): null;
+		    $title=$facility_code_['facility_name'];
+	    else:
+	    	$title="National";
+	    endif;
+		
+		//if( $graph_type!="excel"):
+		
+    $commodity_array = Doctrine_Manager::getInstance()
+        ->getCurrentConnection()
+        ->fetchAll("SELECT d.commodity_name, avg(ft.total_issues) as total_issues , avg(ft.total_issues)/3 as avg_per_month,
+(avg(ft.total_issues)/3)/d.total_commodity_units as amc_packs_per_month,
+avg(fs.current_balance) as avg_balance,
+(avg(fs.current_balance))/d.total_commodity_units as avg_pack_balance,
+((avg(fs.current_balance))/(avg(ft.total_issues)/3))/d.total_commodity_units as mos,
+d.total_commodity_units,ft.date_added FROM hcmp_rtk.facility_transaction_table ft 
+INNER JOIN facility_stocks fs ON ft.facility_code=fs.facility_code
+INNER JOIN commodities d ON ft.commodity_id=d.id
+AND ft.date_added >= DATE_ADD(now(),INTERVAL -3 MONTH)
+			        $and_data
+			group by d.id
+		
+		"); 
+		 //var_dump($div)	;exit;
+		$category_data = array();
+        $series_data =$series_data_ = array();      
+        $temp_array =$temp_array_ = array();
+        $graph_data=array();
+        $graph_type='';
+        $arrayseries = array();
+		$arrayseries2 = array();
+        foreach ($commodity_array as $data) :
+			$arrayseries[] = (int)$data['amc_packs_per_month'];
+			$arrayseries2[] = (int)$data['mos'];
+        //$series_data = array_merge($series_data, array($data["drug_name"] => (int)$data['total']));
+        $category_data = array_merge($category_data, array($data["commodity_name"]));
+        endforeach;
+        //var_dump($category_data);exit;
+ 		//var_dump($series_data);exit;
+ 		
+        $data['graph_type'] = 'column';
+        $data['graph_title'] = "$title Stock Level in Months of Stock (MOS)";
+        $data['graph_yaxis_title'] = "MOS";
+        $data['graph_id'] = $div;
+        $data['legend'] = "M.O.S";
+        $data['colors'] = "['#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']";
+        $data['category_data'] = json_encode($category_data);
+        $data['series_data'] =  json_encode($arrayseries);
+		$data['series_data2'] =  json_encode($arrayseries2);
+				
+		$this -> load -> view("national/ajax/threashhold_v",$data);
+				
+			}
 
 
 	
