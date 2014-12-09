@@ -154,7 +154,7 @@
           </tr>
           <br/>
            <tr>
-            <textarea class="form-control" style="width:96%;;background:#ffffff;" rows="10" placeholder="Type Your Message Here" name="message" ></textarea>
+            <textarea class="form-control" id="new_message" style="width:94%;;background:#ffffff;" rows="10" placeholder="Type Your Message Here" name="new_message" ></textarea>
           </tr>          
           <br/>
           <tr>            
@@ -265,7 +265,7 @@ $('#save_message_btn').click(function(e) {
 // var form = $( "form[name=compose]").serialize();        
 //var receipient = $("#receipient").val();
   var subject = $("#subject").val();
-  var message = $("#message").val(); 
+  var message = $("#new_message").val(); 
   var id = $("#receipient_id").val();             
 //alert('Receipients='+receipients+' Subject'+subject+' Message'+message);
 
@@ -275,7 +275,7 @@ $('#save_message_btn').click(function(e) {
     id: id,            
   }).done(function(data) {
     alert("Data Loaded: " + data);                      
-    window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_messages'; ?>";
+   // window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_messages'; ?>";
   });
 }); 
 $('#clear_btn').click(function(e) {         

@@ -1142,7 +1142,7 @@ public function rtk_manager_activity($all=null) {
     if(isset($all)){
         $data['user_logs'] = $this->rtk_logs();
     }else{
-        $limit = 'LIMIT 0,100';
+        $limit = 'LIMIT 0,30';
         $data['user_logs'] = $this->rtk_logs(null, NULL, NULL, $timestamp, $timestamp1,$limit);
     }
     $data['englishdate'] = $englishdate;
@@ -1334,7 +1334,7 @@ public function rtk_manager_stocks($month=null) {
             include 'rtk_mailer.php';
             $newmail = new rtk_mailer();
 
-            $newmail->send_email('ttunduny@gmail.com', $message, $subject, $attach_file, $bcc_email);
+            //$newmail->send_email('ttunduny@gmail.com', $message, $subject, $attach_file, $bcc_email);
 
             $receipient = array();
             $month = date('mY');       
@@ -1348,11 +1348,14 @@ public function rtk_manager_stocks($month=null) {
                     $one = $value['email'];
                     $to.= $one.',';
                 }       
+            echo "<pre>";
+            print_r($res);die();
                   
             }elseif($receipient_id==2){
             //All SCMLTs
                 $sql = "SELECT email FROM user WHERE usertype_id = 7 and status = 1 ORDER BY id DESC";
-                $res = $this->db->query($sql)->result_array();                                  
+                $res = $this->db->query($sql)->result_array(); 
+                                                 
                 $to ="";
                 foreach ($res as $key => $value) {
                     $one = $value['email'];

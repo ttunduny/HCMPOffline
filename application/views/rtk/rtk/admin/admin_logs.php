@@ -91,8 +91,9 @@ $(document).ready(function(){
                         <?php
                         foreach ($user_logs as $logs) {                            
                             $link = "";
-                            //$date = date('H:m:s d F, Y', $logs['timestamp']);
-                            $date =  $logs['timestamp'];
+                            $date = date('H:m:s d F, Y', $logs['timestamp']);
+                            $date = timeAgo($logs['timestamp']);
+                            //$date =  $logs['timestamp'];
                             ?>
                             <li>
                                 <?php
@@ -106,7 +107,7 @@ $(document).ready(function(){
                                 . $date
                                 . '</a>'
                                 . $logs['description']. ' ';
-                                //timeAgo($logs['timestamp'])
+                                timeAgo($logs['timestamp'])
                                 ?>
                             </li>
                             <?php } ?>
