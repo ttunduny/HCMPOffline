@@ -1322,13 +1322,23 @@ public function rtk_manager_stocks($month=null) {
             $this->load->view('rtk/template', $data);
         }
 
+        public function send_message($count,$sql,$array){
+            $a = 0;
+            $b = 98;
+            for ($i=$a; $i <=$count ; $i+$b) { 
+
+                
+            }
+
+        }
+
         public function rtk_send_message() {
             $receipient_id = mysql_real_escape_string($_POST['id']);
             $subject = mysql_real_escape_string($_POST['subject']);
             $raw_message = mysql_real_escape_string($_POST['message']);             
             $attach_file = null;
             $bcc_email = null;
-            //$bcc_email = 'ttunduny@gmail.com,tngugi@clintonhealthaccess.org,annchemu@gmail.com';
+            $bcc_email = 'ttunduny@gmail.com,tngugi@clintonhealthaccess.org,annchemu@gmail.com';
             $message = str_replace(array('\\n', "\r", "\n"), "<br />", $raw_message); 
 
             include 'rtk_mailer.php';
@@ -1340,37 +1350,72 @@ public function rtk_manager_stocks($month=null) {
             $month = date('mY');       
             if($receipient_id==1){
             //all users
-                $sql = "SELECT email FROM user WHERE usertype_id in (0,7,8,11,13,14,15) and status=1 ORDER BY id DESC";
-                $res = $this->db->query($sql)->result_array();                  
-                //$to =array();
-                $to ="";
-                foreach ($res as $key => $value) {
-                    $one = $value['email'];
-                    $to.= $one.',';
-                }       
-            echo "<pre>";
-            print_r($res);die();
+                $q = "SELECT email FROM user WHERE usertype_id in (0,7,8,11,13,14,15) and status=1 ORDER BY id DESC";
+                $count = $this->db->query($q)->num_rows();
+                $a = 0;
+                $b = 98;
+                $increment = 98;
+                for ($i=$a; $a <=$count ; $i+$increment) { 
+                    $sql = "SELECT email FROM user WHERE usertype_id in (0,7,8,11,13,14,15) and status=1 ORDER BY id DESC LIMIT $a,$b";                    
+                    $res = $this->db->query($sql)->result_array();                                      
+                    $to ="";
+                    foreach ($res as $key => $value) {
+                        $one = $value['email'];
+                        $to.= $one.',';                        
+                    } 
+                    $newmail->send_email($to, $message, $subject, $attach_file, $bcc_email);
+                    $a +=$increment;
+                    $b += $increment;
+                }
+                die();               
                   
             }elseif($receipient_id==2){
             //All SCMLTs
-                $sql = "SELECT email FROM user WHERE usertype_id = 7 and status = 1 ORDER BY id DESC";
-                $res = $this->db->query($sql)->result_array(); 
-                                                 
-                $to ="";
-                foreach ($res as $key => $value) {
-                    $one = $value['email'];
-                    $to.= $one.',';
-                }             
+                $q = "SELECT email FROM user WHERE usertype_id = 7 and status = 1 ORDER BY id DESC";
+                $count = $this->db->query($q)->num_rows();
+                $a = 0;
+                $b = 98;
+                $increment = 98;
+                for ($i=$a; $a <=$count ; $i+$increment) { 
+                    $sql = "SELECT email FROM user WHERE usertype_id = 7 and status = 1 ORDER BY id DESC LIMIT $a,$b";                    
+                    $res = $this->db->query($sql)->result_array();                                      
+                    $to ="";
+                    foreach ($res as $key => $value) {
+                        $one = $value['email'];
+                        $to.= $one.',';                        
+                    } 
+                    $newmail->send_email($to, $message, $subject, $attach_file, $bcc_email);
+                    $a +=$increment;
+                    $b += $increment;
+                }                         
 
             }elseif($receipient_id==3){
             //All CLCs
-                $sql = "SELECT email FROM user WHERE usertype_id =13 and status =1 ORDER BY id DESC";
-                $res = $this->db->query($sql)->result_array();                  
-                $to =array();
-                foreach ($res as  $value) {
-                    $one = $value['email'];
-                    array_push($to,$one);
-                }          
+                $q = "SELECT email FROM user WHERE usertype_id =13 and status =1 ORDER BY id DESC";
+                $count = $this->db->query($q)->num_rows();
+                $a = 0;
+                $b = 98;
+                $increment = 98;
+                for ($i=$a; $a <=$count ; $i+$increment) { 
+                    $sql = "SELECT email FROM user WHERE usertype_id =13 and status =1 ORDER BY id DESC LIMIT $a,$b";                    
+                    $res = $this->db->query($sql)->result_array();                                      
+                    $to ="";
+                    foreach ($res as $key => $value) {
+                        $one = $value['email'];
+                        $to.= $one.',';                        
+                    } 
+                    $newmail->send_email($to, $message, $subject, $attach_file, $bcc_email);
+                    $a +=$increment;
+                    $b += $increment;
+                }    
+                
+                // $sql = "SELECT email FROM user WHERE usertype_id =13 and status =1 ORDER BY id DESC";
+                // $res = $this->db->query($sql)->result_array();                  
+                // $to =array();
+                // foreach ($res as  $value) {
+                //     $one = $value['email'];
+                //     array_push($to,$one);
+                // }          
 
             }elseif($receipient_id==4){
             //Sub C with more than 75% reporting
