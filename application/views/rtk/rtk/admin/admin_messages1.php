@@ -1,3 +1,6 @@
+<?php 
+    include('admin_links.php');    
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>   
@@ -10,7 +13,6 @@
   <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
   <link href="<?php echo base_url().'assets/css/jquery-ui.css'?>" type="text/css" rel="stylesheet"/>
   <link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
-  
   <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
     <script src="<?php echo base_url().'assets/scripts/offline-simulate-ui.min.js'?>" type="text/javascript"></script>
@@ -24,6 +26,9 @@
   <script src="<?php echo base_url().'assets/scripts/typehead/typeahead.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/tagsinput/tagmanager.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/tagsinput/bootstrap-tagsinput.js'?>" type="text/javascript"></script>
+  <link rel="stylesheet" href="<?php echo base_url().'assets/tagsinput/bootstrap-tagsinput.css'?>" />
+
 
   <script>
   paceOptions = {
@@ -138,40 +143,57 @@
    -o-transition: all 0.2s;
    transition: all 0.2s;
  }
- #message{
-  width: 60%;
+ #message_div{
+  width: 100%;
   height: auto;
   border: ridge 1px;
+  margin-top: 5%;
+  background-color: #F9F9F9;
+  text-align: left;
+}
+#message_div input{
+  float: left;
+  margin-left: 10px;
+}
+
+.twitter-typeahead{
+  width: 100%;
 }
 </style>
 </head> 
 <body style="padding-top: 0;">  
 </div>
-<div id="message">
+<center>
+<div id="message_div">
   <div class="panel-body">
     <form id="compose" name="compose">       
       <table id="compose_table" >
         <tr>
           <label>To:</label>
         </tr><br/>
+
         <tr>  
                               
-            <input class="typeahead form-control tm-input" id="receipient" type="text" placeholder="Enter Receipient" data-role="tagsinput" data-provide="typeahead" style="width:96%" />   
-          
+             <input type="hidden" class="form-control" id="receipient_id">
+            <input class="typeahead form-control tm-input" id="receipient" type="text" placeholder="Enter Receipient" data-provide="typeahead" style="width:96%" />             
+
         </tr><br/>    
         <tr>
           <label>Subject:</label>
         </tr><br/>
         <tr>                   
-          <input class="form-control" id="subject" type="text" style="width:96%" />   
+          <input class="form-control" id="subject" name="subject" type="text" style="width:96%" placeholder="RE:SUBJECT"/>   
           <tr>
             <label>Message:</label>
-          </tr><br/>
+          </tr>
           <tr>    
-            <textarea class="form-control" id="message" style="width:96%;" rows="10"></textarea>
-
+            <textarea class="form-control" id="message" name="message" style="width:96%;background:#ffffff;" rows="10" placeholder="Type your Message Here"></textarea>
           </tr> <br/>
-
+          <tr>            
+            <td><button id="save_message_btn" class="btn btn-primary">Send Message</button></td>
+            <td><button id="clear_btn" class="btn">Clear</button></td>
+          </tr>
+          <input type="hidden" name="receipient_id" id="receipient_id" value="NULL"/>
         </table>
       </form>   
     </div>
@@ -179,11 +201,8 @@
   </div>
 
 </div>
-
-
-
-
-<input type="hidden" name="facility_id" id="facility_id" value="NULL"/>  
+</center>
+  
 </body>
 <script>
 jQuery.browser = {};
@@ -216,8 +235,8 @@ var substringMatcher = function(strs) {
             };
             
             
-            var facilities = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('facilities'),
+            var messages = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('receipients'),
               queryTokenizer: Bloodhound.tokenizers.whitespace,
               prefetch: { 
                 url:'../assets/scripts/typehead/json/messages.json',
@@ -225,87 +244,70 @@ var substringMatcher = function(strs) {
               }
             });           
 
+
             
-            facilities.initialize();
+            messages.initialize();
             
-            $(".tm-input").tagsManager({               
+            /*$(".tm-input").tagsManager({               
               replace:false,                              
               onlyTagList: false,  
               
-            });
+            });*/
+
 
             $('.typeahead').typeahead({
               highlight: true
             },
             {
               name: 'facilities',
-              displayKey: 'facilities',
-              source: facilities.ttAdapter(),
+              displayKey: 'receipients',              
+              source: messages.ttAdapter(),
               templates: {
                 //header: '<h5 class="query-title">Facilities</h5>'
               }
-            })/*.on('typeahead:selected',onSelected)*/;
+            }).on('typeahead:selected',onSelected);/*.on('typeahead:selected',onSelected)*/;
             /*$('#receipient').tagsinput('items');
               var receipients = $(".tm-input").tagsManager({               
                 replace:false,                              
                 onlyTagList: true,  
                 
               });*/
-            /*$('#receipient').tagsinput({
-              typeaheadjs: {
-                name: 'facilities',
-                displayKey: 'facilities',
-                valueKey: 'facilities',
-                source: facilities.ttAdapter()
-              }
-            });*/
 
 
-            function onSelected($e, datum) {
-              $.each(datum, function( k, v ){
-                $('#county_id').val('NULL');
-                $("#district_id").val('NULL');
-                $("#facility_id").val('NULL');
-                var query_table= datum.name
-                if(query_table=='county'){
-                  ajax_request_replace_div_content('national/get_facility_infor/'+datum.id+'/NULL/NULL/NULL',"#facilities");  
-                  ajax_request_replace_div_content('national/facility_over_view/'+datum.id,"#facilities_rolled_out");
-                  ajax_request_replace_div_content('national/hcw/'+datum.id,"#hcw_trained"); 
-                  ajax_request_replace_div_content('national/expiry/NULL/'+datum.id+'/NULL/NULL/NULL',"#actual");
-                  ajax_request_replace_div_content('national/potential/'+datum.id+'/NULL/NULL/NULL/NULL',"#potential"); 
-                  ajax_request_replace_div_content('national/stock_level_mos/'+datum.id+'/NULL/NULL/NULL/ALL',"#mos");
-                  ajax_request_replace_div_content('national/consumption/'+datum.id+'/NULL/NULL/NULL',"#consumption");
-                  ajax_request_replace_div_content('national/order/NULL/'+datum.id+'/NULL/NULL/NULL',"#orders");
-                  ajax_request_replace_div_content('national/get_lead_infor/NULL/'+datum.id+'/NULL/NULL/NULL',"#lead_infor");
-                  $('#county_id').val(datum.id);
-                }
-                if(query_table=='district'){
-                  ajax_request_replace_div_content('national/get_facility_infor/NULL/'+datum.id+'/NULL/NULL',"#facilities");  
-                  ajax_request_replace_div_content('national/facility_over_view/NULL/'+datum.id+'/NULL/NULL',"#facilities_rolled_out");
-                  ajax_request_replace_div_content('national/hcw/NULL/'+datum.id,"#hcw_trained"); 
-                  ajax_request_replace_div_content('national/expiry/NULL/NULL/'+datum.id+'/NULL/NULL',"#actual");
-                  ajax_request_replace_div_content('national/potential/NULL/'+datum.id+'/NULL/NULL/NULL',"#potential"); 
-                  ajax_request_replace_div_content('national/stock_level_mos/NULL/'+datum.id+'/NULL/NULL/ALL',"#mos");
-                  ajax_request_replace_div_content('national/consumption/NULL/'+datum.id+'/NULL/NULL',"#consumption");
-                  ajax_request_replace_div_content('national/order/NULL/NULL/'+datum.id+'/NULL/NULL',"#orders");
-                  ajax_request_replace_div_content('national/get_lead_infor/NULL/NULL/'+datum.id+'/NULL/NULL',"#lead_infor");
-                  $("#district_id").val(datum.id);
-                }
+    function onSelected($e, datum) {
+          $.each(datum, function( k, v ){
+          $('#receipient_id').val('NULL');            
+          $('#receipient_id').val(datum.id);          
+        });
+        }
+      $(function(){
 
-                if(query_table=='facility'){
-                  ajax_request_replace_div_content('national/get_facility_infor/NULL/NULL/'+datum.id+'/NULL',"#facilities");  
-                  ajax_request_replace_div_content('national/facility_over_view/NULL/NULL/'+datum.id+'/NULL',"#facilities_rolled_out");
-                  ajax_request_replace_div_content('national/hcw/NULL/NULL/'+datum.id,"#hcw_trained"); 
-                  ajax_request_replace_div_content('national/expiry/NULL/NULL/NULL/'+datum.id+'/NULL',"#actual");
-                  ajax_request_replace_div_content('national/potential/NULL/NULL/'+datum.id+'/NULL/NULL',"#potential"); 
-                  ajax_request_replace_div_content('national/stock_level_mos/NULL/NULL/'+datum.id+'/NULL/ALL',"#mos");
-                  ajax_request_replace_div_content('national/consumption/NULL/NULL/'+datum.id+'/NULL',"#consumption");
-                  ajax_request_replace_div_content('national/order/NULL/NULL/NULL/'+datum.id+'/NULL',"#orders");
-                  ajax_request_replace_div_content('national/get_lead_infor/NULL/NULL/NULL/'+datum.id+'/NULL',"#lead_infor");
-                  $("#facility_id").val(datum.id);
-                }
-              });
-}
+             $('#save_message_btn').click(function(e) {         
+              e.preventDefault();          
+             // var form = $( "form[name=compose]").serialize();        
+              //var receipient = $("#receipient").val();
+              var subject = $("#subject").val();
+              var message = $("#message").val(); 
+              var id = $("#receipient_id").val();             
+              //alert('Receipients='+receipients+' Subject'+subject+' Message'+message);
+              
+              $.post("<?php echo base_url() . 'rtk_management/rtk_send_message'; ?>", {
+                  message: message,
+                  subject: subject,
+                  id: id,            
+                  }).done(function(data) {
+                      alert("Data Loaded: " + data);                      
+                      window.location = "<?php echo base_url() . 'rtk_management/rtk_manager_admin_messages'; ?>";
+                  });
+               }); 
+             $('#clear_btn').click(function(e) {         
+              e.preventDefault();                      
+              $("#subject").val('');
+              $("#message").val(''); 
+              $("#receipient_id").val('');  
+      });
+                  
+                 
 
 </script>
 
