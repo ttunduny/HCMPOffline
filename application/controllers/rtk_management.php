@@ -4351,15 +4351,15 @@ public function rtk_summary_county($county, $year, $month) {
         return $result;
     }
 
-function facility_amc_compute($a,$b) {
-        $sql = "select facilities.facility_code from facilities where facilities.rtk_enabled = '1' LIMIT $a,$b";
+function facility_amc_compute($zone) {
+        $sql = "select facilities.facility_code from facilities where facilities.rtk_enabled = '1' and zone='Zone $zone'";
         $res = $this->db->query($sql);
         $facility = $res->result_array();
         foreach ($facility as $value) {
             $fcode = $value['facility_code'];
             $this->update_amc($fcode);
         }
-    }
+ }
     //Update the Number of Reports Online
     function _update_reports_count($state,$county,$district){ 
         $month = date('mY',time());  
