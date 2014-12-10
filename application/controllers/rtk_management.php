@@ -5702,6 +5702,27 @@ function _national_reports_sum($year, $month) {
         echo "Deadline Added succesfully";
     }
 
+    public function create_DMLT() {
+
+        $fname = $_POST['first_name'];
+        $lname = $_POST['last_name'];
+        $email = $_POST['email'];
+        $phone = $_POST['phone'];
+        $district = $_POST['district'];
+        $county = $_POST['county'];
+        $time = date('Y-m-d', time());
+
+        $fname = addslashes($fname);
+        $lname = addslashes($lname);
+
+        $sql = "INSERT INTO `user` (`id`, `fname`, `lname`, `email`, `username`, `password`, `usertype_id`, `telephone`, `district`, `facility`, `created_at`, `updated_at`, `status`, `county_id`)
+        VALUES (NULL, '$fname', '$lname', '$email', '$email', 'b56578e2f9d28c7497f42b32cbaf7d68', '7', '$phone', '$district', NULL, '$time', '$time', '1', '$county');";
+        $this->db->query($sql);
+        $object_id = $this->db->insert_id();
+        $this->logData('1', $object_id);
+        echo "User has been created succesfully";
+    }
+
     public function update_Deadline() {
 
         $zones = json_decode($_POST['edit_zones']);
