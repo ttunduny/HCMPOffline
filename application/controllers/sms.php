@@ -760,8 +760,8 @@ public function weekly_potential_expiries_report() {
 		$year = date("Y");
 		//get the facilities in the district
 		//$counties = Facilities::get_Taita();
-		$counties = Facilities::get_counties_all_using_HCMP();
-		
+		//$counties = Facilities::get_counties_all_using_HCMP();
+		$counties = Facilities::get_Taita();
 		foreach ($counties as $counties) {
 			//holds the dat for the entire county
 			//once it is done executing for one county it is reset to zero
@@ -772,7 +772,8 @@ public function weekly_potential_expiries_report() {
 
 			//Get all the ddistricts in that  particular county
 			$districts = Facilities::get_all_using_HCMP($county_id);
-			
+			//echo "<pre>";print_r($districts);exit;
+				
 			//holds the data for all the districts in a particular county
 			$district_total = array();
 
@@ -782,7 +783,6 @@ public function weekly_potential_expiries_report() {
 				$district_name = $districts['name'];
 				//get all facilities in that district
 				$facilities = Facilities::getFacilities_for_email($district_id);
-				
 				//holds all the data for all facilities in a particular district
 				$facility_total = array();
 
@@ -832,11 +832,13 @@ public function weekly_potential_expiries_report() {
 						//Create the excel here
 						$report_type = "stockouts";
 						$this ->create_excel($excel_data,$report_type);
+						//For Mac
+						//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+						//For Windows
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						$subject = "Stock Outs Report: " . $facility_name;
 						
 						$email_address = $this -> get_facility_email($facility_code);
-						
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 						
 					}
@@ -870,6 +872,9 @@ public function weekly_potential_expiries_report() {
 						
 					$report_type = "stockouts";
 					$this ->create_excel($excel_data,$report_type);
+					//For Mac
+					//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+					//For Windows
 					$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 					
 					$subject = "Stock Outs: " . $district_name . " Sub County";
@@ -885,7 +890,6 @@ public function weekly_potential_expiries_report() {
 								<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 				
 					$email_address = $this -> get_ddp_email($district_id);
-					
 					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
 				}
@@ -921,9 +925,11 @@ public function weekly_potential_expiries_report() {
 					
 				$report_type = "stockouts";
 				$this ->create_excel($excel_data,$report_type);
-				
+				//For Mac
+				//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+				//For Windows
 				$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-				
+					
 				$subject = "Stock Outs: " . $county_name . " County";
 				
 				$message = "Dear ".$county_name." County,
@@ -936,10 +942,10 @@ public function weekly_potential_expiries_report() {
 							
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 				
-						
 				$email_address = $this -> get_ddp_email_county($county_id);
 				$bcc = $this -> get_bcc_notifications();
 				$cc = $this -> get_county_email($county_id);
+					
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler,$bcc,$cc);
 				
 			}

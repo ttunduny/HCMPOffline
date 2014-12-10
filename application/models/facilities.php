@@ -216,7 +216,7 @@ return $q;
 	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 select d.id, d.district,f.facility_name,f.type,f.facility_code,f.level,f.owner, DATE_FORMAT(`date_of_activation`,'%d %b %y') as date 
 from facilities f, districts d 
-where f.district=d.id and d.county='$county_id'
+where f.district=d.id and f.using_hcmp = 1 and d.county='$county_id'
 and unix_timestamp(f.`date_of_activation`) >0 
 order by d.district asc,f.`date_of_activation` asc
  ");
