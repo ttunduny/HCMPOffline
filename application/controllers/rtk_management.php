@@ -6072,7 +6072,7 @@ public function get_all_zone_a_facilities($zone){
                                
                 
                 $sql = "select distinct facility_code from facilities where rtk_enabled=1 and zone='Zone $zone' and exists
-                 (select distinct facility_code from lab_commodity_details where created_at between '$firstdate' and '$lastdate') order by facility_code asc limit 0,50";
+                 (select distinct facility_code from lab_commodity_details where created_at between '$firstdate' and '$lastdate') order by facility_code asc";
 
                  $facilities = $this->db->query($sql)->result_array();                    
                  $count = 0; 
