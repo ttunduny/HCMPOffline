@@ -1,6 +1,11 @@
 <?php 
   include('admin_links.php');    
 ?>
+<script type="text/javascript">
+        tinymce.init({
+            selector: "textarea"
+         });
+        </script>
 <link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
 <link href="<?php echo base_url().'assets/css/offline.css'?>" type="text/css" rel="stylesheet"/> 
 <link href="<?php echo base_url().'assets/css/select2.css'?>" type="text/css" rel="stylesheet"/> 

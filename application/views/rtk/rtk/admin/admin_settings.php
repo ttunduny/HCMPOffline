@@ -770,7 +770,7 @@
           });
         }); 
         $('#add_alert_btn').click(function() {         
-          var message = $('#a_message').val();
+          var message = $('#a_message').val();         
           var type = $('#a_type').val();
           var status = $('#a_status').val(); 
           var reference = $('#a_to').val(); 
