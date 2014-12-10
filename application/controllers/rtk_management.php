@@ -6061,8 +6061,8 @@ public function get_all_zone_a_facilities($zone){
                     $firstdate = $year.'-'.$month.'-01';
                     $lastdate = $year.'-'.$month.'-'.$num_days; 
                 }else{
-                    $month = date('mY',strtotime('-3 month'));      
-                    //$month =  date("mY", time());
+                    //$month = date('mY',strtotime('-3 month'));      
+                    $month =  date("mY", time());
                     $year = substr($month, -4);
                     $month = substr($month, 0,2);
                     $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
@@ -6072,7 +6072,7 @@ public function get_all_zone_a_facilities($zone){
                                
                 
                 $sql = "select distinct facility_code from facilities where rtk_enabled=1 and zone='Zone $zone' and exists
-                 (select distinct facility_code from lab_commodity_details where created_at between '$firstdate' and '$lastdate') order by facility_code asc";
+                 (select distinct facility_code from lab_commodity_details where created_at between '$firstdate' and '$lastdate') order by facility_code asc limit 0,50";
 
                  $facilities = $this->db->query($sql)->result_array();                    
                  $count = 0; 
@@ -6124,19 +6124,18 @@ public function get_all_zone_a_facilities($zone){
                                 $commodity_id = $values['commodity_id'];
                                 $created_at = $values['created_at'];
 
-                                $new_q = "select * from `lab_commodity_details1` where facility_code='$facility_code' and order_id = '$order_id' and created_at between '$firstdate' and '$lastdate'";
+                                $new_q = "select * from `lab_commodity_details1` where facility_code='$facility_code' and order_id = '$order_id' and commodity_id = '$commodity_id' and created_at between '$firstdate' and '$lastdate'";
                                 $new_res = $this->db->query($new_q)->result_array();   
-                                 if(count($new_res)<1){
+                                 if(count($new_res)>1){
                                     if($commodity_id==4){
                                        $sql1 = "update `lab_commodity_details1` set  `unit_of_issue`='$unit',
-                                        `q_used`='$new_val' where facility_code='$facility_code' and order_id = '$order_id' and `commodity_id`='$commodity_id'";
-                                         // echo "$sql1";die();
+                                        `q_used`='$new_val' where facility_code='$facility_code' and order_id = '$order_id' and `commodity_id`='$commodity_id'";                                          
                                          $this->db->query($sql1); 
                                     }else{
-                                        $sql1 = "update `lab_commodity_details1` set  `commodity_id`='$commodity_id', `unit_of_issue`='$unit',`q_used`='$q_used' where facility_code='$facility_code' and order_id = '$order_id' and `commodity_id`='$commodity_id'";
+                                        $sql1 = "update `lab_commodity_details1` set   `unit_of_issue`='$unit',`q_used`='$q_used' where facility_code='$facility_code' and order_id = '$order_id' and `commodity_id`='$commodity_id'";
                                         // $sql1 = "INSERT INTO `lab_commodity_details1`(`order_id`, `facility_code`, `commodity_id`, `unit_of_issue`, `q_used`, `created_at`) 
                                         //  VALUES ('$order_id','$facility_code','$commodity_id','$unit','$q_used','$created_at')";
-                                         // echo "$sql1";                              die(); 
+                                                                        //die(); 
                                          $this->db->query($sql1); 
 
                                     }
