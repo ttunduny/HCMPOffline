@@ -4317,8 +4317,7 @@ public function rtk_summary_county($county, $year, $month) {
                 $res = $this->db->query($sql); 
             }else{
 
-                $sql = "INSERT INTO `facility_amc`(`facility_code`, `commodity_id`, `amc`,`last_update`) 
-                VALUES ('$mfl','$commodity_id','$amc',$last_update')";
+                $sql = "INSERT INTO `facility_amc`(`facility_code`, `commodity_id`, `amc`,`last_update`) VALUES ('$mfl','$commodity_id','$amc','$last_update')";
                 $res = $this->db->query($sql);
             }
             
