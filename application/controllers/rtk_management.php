@@ -6061,7 +6061,8 @@ public function get_all_zone_a_facilities($zone){
                     $firstdate = $year.'-'.$month.'-01';
                     $lastdate = $year.'-'.$month.'-'.$num_days; 
                 }else{
-                    $month =  date("mY", time());
+                    $month = date('mY',strtotime('-3 month'));      
+                    //$month =  date("mY", time());
                     $year = substr($month, -4);
                     $month = substr($month, 0,2);
                     $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
