@@ -266,6 +266,26 @@ h4{
 							<div class="ui horizontal divider">
 								<i style="font-size: 16px;" class="fa fa-bar-chart-o"></i>
 								 </div>
+								 
+								 <div class="row-fluid" style=" margin-top:1.2%;">
+								<div class="col-lg-6 tile" style="height: 500px ;margin-right: 0">
+									<div class="col-lg-3" style="height: 50px; padding: 8px;margin: 0;">
+								
+								<button data-toggle="modal" data-target="#Modal" class="btn btn-sm btn-success "><span class="icon icon-display"></span>More</button>	
+								
+							</div>
+							<div id="expiries"></div>
+								</div>
+								<div class="col-lg-6 tile" style="height: 500px;margin-left: 0">
+									<div class="col-lg-3" style="height: 50px; padding: 8px;margin: 0;">
+								
+								<button data-toggle="modal" data-target="#Modal" class="btn btn-sm btn-success "><span class="icon icon-display"></span>More</button>	
+								
+							</div>
+							<div id=""></div>
+								</div>
+																
+							</div>
 							
 						</section>
 						<!-- /END HCMP CONTENT -->
@@ -651,8 +671,9 @@ unset($popup);
         
         });
         ajax_request('kenya/mos_graph/NULL/NULL/NULL/NULL/mos',"#mos");
-        ajax_request('national/consumption/NULL/NULL/NULL/NULL',"#consumption");
-        ajax_request_replace_div_content('national/order/NULL/NULL/NULL/NULL/NULL',"#orders");
+        ajax_request('Kenya/consumption/NULL/NULL/NULL/NULL',"#consumption");
+        ajax_request('Kenya/orders/NULL/NULL/NULL/NULL/NULL',"#orders");
+        ajax_request('Kenya/expiry/NULL/NULL/NULL/NULL/NULL',"#expiries");
      	
      	function ajax_request(function_url,div){
         var function_url =url+function_url;

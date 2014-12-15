@@ -541,6 +541,7 @@ endif;
   	$high_chart='';
   	if(isset($graph_data)):
 		$graph_id=$graph_data['graph_id'];
+		$color=$graph_data['color'];
 		$graph_title=$graph_data['graph_title'];
 		$graph_type=$graph_data['graph_type'];
         $stacking=isset($graph_data['stacking']) ? $graph_data['stacking'] : null;
@@ -577,6 +578,7 @@ endif;
             yAxis: { min: 0, title: {text: '$graph_yaxis_title' }},
             subtitle: {text: 'Source: HCMP', x: -20 },
             xAxis: { categories: $graph_categories },
+            colors: $color,
             tooltip: { crosshairs: [true,true] },
                scrollbar: {
                enabled: true
