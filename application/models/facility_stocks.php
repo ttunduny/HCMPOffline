@@ -749,8 +749,66 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
 
  return  $inserttransaction ;
 }
- public static function get_county_drug_stock_level_new($facility_code=null,$district_id=null,
- $county_id,$category_id=NULL,$commodity_id=NULL,$option=null,$graph_type=null,$division_id=NULL)
+//for getting the stock levels for county and subcounty levels
+public static function get_stock_levels_county($facility_code = null,$sub_county_id = null,$county_id = null, $commodity_id = null,$option = null)
+{
+	//the computation for the stock levels
+	//ie whether units, packs or ksh
+	switch ($option) :
+         case 'ksh':
+           $computation ="ifnull((SUM(ROUND(fs.current_balance/ cms.total_commodity_units)))*cms.unit_cost ,0) AS total";
+         break;
+         case 'units':
+           $computation ="ifnull(CEIL(SUM(fs.current_balance)),0) AS total" ;
+         break;
+         case 'packs':
+           $computation ="ifnull(SUM(ROUND(fs.current_balance/cms.total_commodity_units)),0) AS total" ;
+         break;
+         default:
+          $computation ="ifnull(CEIL(SUM(fs.current_balance)),0) AS total" ;
+      	 break;
+  	 endswitch;
+	
+	//set the parameters for the query blank at first
+	$and_data = "";
+	$and_data .= (isset($county_id)&&($county_id>0))? "AND c.id = $county_id": null;
+	$and_data .= (isset($sub_county_id)&&($sub_county_id>0))? "AND d.id = $sub_county_id": null;
+	$and_data .= (isset($commodity_id)&&($commodity_id>0))? "AND cms.id = $commodity_id": null;
+	
+	//for the group by statement
+	$group_by = "GROUP BY cms.id";
+	$group_by .= (isset($facility_code)&&($facility_code>0))? ", $facility_code": null;
+	$group_by .= (isset($sub_county_id)&&($sub_county_id>0))? ", $sub_county_id": null;
+	$group_by .=  (isset($county_id)&&($county_id>0))? "AND c.id = $county_id": null;
+	
+	$stock_levels = Doctrine_Manager::getInstance()->getCurrentConnection()
+    ->fetchAll("SELECT 
+				    d.district,
+				    cms.commodity_name,
+				    f.facility_name,
+				    f.facility_code,
+				    d.district AS name,
+				    $computation
+				FROM
+				    facility_stocks fs,
+				    facilities f,
+				    commodities cms,
+				    districts d
+				WHERE
+				    fs.facility_code = f.facility_code
+				        AND f.district = d.id
+				        AND cms.id = fs.commodity_id
+				        AND fs.expiry_date > NOW()
+				        AND fs.status = 1
+				        $and_data
+				$group_by
+				HAVING total > 0
+				ORDER BY di.district ASC , f.facility_name ASC
+     ");
+	 
+	 return $stock_levels;
+}
+ public static function get_county_drug_stock_level_new($facility_code=null,$district_id=null,$county_id,$category_id=NULL,$commodity_id=NULL,$option=null,$graph_type=null,$division_id=NULL)
  {
  	
      $selection_for_a_month = (isset($facility_code) && isset($district_id))||(($category_id>0))? " d.commodity_name as name," : 
@@ -795,8 +853,15 @@ public static function get_facility_cost_of_exipries_new($facility_code=null,$di
      AND fs.status=1
      $and_data
       $group_by_a_month
-     ");	
-	 
+     ");	echo "SELECT  $selection_for_a_month $computation
+     FROM facility_stocks fs, facilities f, commodities d,  districts di
+     WHERE fs.facility_code = f.facility_code
+     AND f.district =di.id
+     and fs.expiry_date>NOW()
+     AND fs.status=1
+     $and_data
+      $group_by_a_month";
+	 exit;
      return $inserttransaction ;
 }   
 //For the County Comparison
@@ -1317,6 +1382,7 @@ INNER JOIN districts ON districts.id=facilities.district WHERE expiry_date < NOW
 							    f_s.batch_no,
 							    f_s.expiry_date,
 							    cs.source_name AS supplier,
+							    temp.total_units as amc_units,
 							    CASE temp.selected_option
 							        WHEN 'Pack_Size' THEN ROUND(temp.consumption_level, 0)
 							        WHEN 'Unit_Size' THEN ROUND(temp.total_units / temp.consumption_level, 0)
@@ -1342,7 +1408,7 @@ INNER JOIN districts ON districts.id=facilities.district WHERE expiry_date < NOW
 							        AND f_s.commodity_id = $commodity_id
 							        AND f_s.expiry_date >= NOW()
 									AND f_s.current_balance >0
-							GROUP BY d.id , f.facility_code
+							GROUP BY f_s.batch_no,d.id , f.facility_code
 							ORDER BY c.county ASC , d1.district ASC");
 		return $stock_level;
 		

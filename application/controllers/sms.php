@@ -1,7 +1,7 @@
 <?php
 /**
- * @author Kariuki
- * Edited by Collins
+ * @author Collins
+ * 
  */
 ob_start();
 class sms extends MY_Controller {
@@ -284,7 +284,7 @@ class sms extends MY_Controller {
 
 	/*
 	 |--------------------------------------------------------------------------|
-	 | EMAIL SECTION															|
+	 | EMAIL REPORTS SECTION															|
 	 |--------------------------------------------------------------------------|
 	 */
 
@@ -352,6 +352,67 @@ class sms extends MY_Controller {
 		$this -> send_email(substr($email_address, 0, -1), $message, $subject, $attach_file);
 
 	}
+	/*
+	 |--------------------------------------------------------------------------|
+	 | EMAIL DAILY/WEEKLY/MONTHLY REPORTS SECTION															|
+	 |--------------------------------------------------------------------------|
+	 */
+	 public function facility_overview_report()
+	 {
+	 	//get all the facilities rolled out
+	 	$facilities = Facilities::get_all_facilities_on_HCMP();
+		//Start buliding the excel file
+		$excel_data = array();
+		$excel_data = array('doc_creator' => 'HCMP', 'doc_title' => 'facility overview monthly report ', 'file_name' => 'facility overview monthly report');
+		$row_data = array();
+		//contains the columns in the excel sheet
+		$column_data = array("County","Sub County", "MFL","Facility Name","Level","Type","Owner","Date of Activation");
+		$excel_data['column_data'] = $column_data;
+		//Loop through the data picked form the database and assign each row to the $row_data variable 
+		//$row_data is used to dump the data into rows for the excel
+		foreach ($facilities as $facilities) :
+			array_push($row_data, array($facilities["county"],
+										$facilities["sub_county"],
+										$facilities["facility_code"],
+										$facilities["facility_name"],
+										$facilities["level"],
+										$facilities["type"],
+										$facilities["owner"],
+										$facilities["date_of_activation"]));
+		endforeach;
+
+		
+		$excel_data['row_data'] = $row_data;
+		$excel_data['report_type'] = "download_file";
+		$excel_data['file_name'] = "Facility Overview Report";
+		
+		$excel_data['excel_title'] = "Facilities Rolled on HCMP as at".date("Js F Y");
+
+		$subject = "Facility Overview Report";
+		
+		$message = "Good Morning,</br>
+				<p>Find attached an excel sheet with the breakdown of facilities using HCMP
+				You may log onto health-cmp.or.ke to confirm.</p>
+				<p>----</p>
+				<p>HCMP</p>
+				<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
+		//used the same report type as for ORS
+		//they have the same number of columns
+		$report_type = "ors_report";
+		//create the excel sheet here
+		$this-> create_excel($excel_data,$report_type);
+		exit;
+		//where the excel sheet is stored before being attached
+		$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+		
+		//the email of the receipients
+		//$email_address = "collinsojenge@gmail.com";
+		//function for sending the actual email
+		//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+
+		
+	 }
+	 
 	public function expiries_report() {
 		//Set the current year
 		$year = date("Y");
@@ -760,8 +821,8 @@ public function weekly_potential_expiries_report() {
 		$year = date("Y");
 		//get the facilities in the district
 		//$counties = Facilities::get_Taita();
-		$counties = Facilities::get_counties_all_using_HCMP();
-		
+		//$counties = Facilities::get_counties_all_using_HCMP();
+		$counties = Facilities::get_Taita();
 		foreach ($counties as $counties) {
 			//holds the dat for the entire county
 			//once it is done executing for one county it is reset to zero
@@ -772,7 +833,8 @@ public function weekly_potential_expiries_report() {
 
 			//Get all the ddistricts in that  particular county
 			$districts = Facilities::get_all_using_HCMP($county_id);
-			
+			//echo "<pre>";print_r($districts);exit;
+				
 			//holds the data for all the districts in a particular county
 			$district_total = array();
 
@@ -782,7 +844,6 @@ public function weekly_potential_expiries_report() {
 				$district_name = $districts['name'];
 				//get all facilities in that district
 				$facilities = Facilities::getFacilities_for_email($district_id);
-				
 				//holds all the data for all facilities in a particular district
 				$facility_total = array();
 
@@ -832,11 +893,13 @@ public function weekly_potential_expiries_report() {
 						//Create the excel here
 						$report_type = "stockouts";
 						$this ->create_excel($excel_data,$report_type);
+						//For Mac
+						//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+						//For Windows
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						$subject = "Stock Outs Report: " . $facility_name;
 						
 						$email_address = $this -> get_facility_email($facility_code);
-						
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 						
 					}
@@ -870,6 +933,9 @@ public function weekly_potential_expiries_report() {
 						
 					$report_type = "stockouts";
 					$this ->create_excel($excel_data,$report_type);
+					//For Mac
+					//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+					//For Windows
 					$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 					
 					$subject = "Stock Outs: " . $district_name . " Sub County";
@@ -885,7 +951,6 @@ public function weekly_potential_expiries_report() {
 								<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 				
 					$email_address = $this -> get_ddp_email($district_id);
-					
 					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
 				}
@@ -921,9 +986,11 @@ public function weekly_potential_expiries_report() {
 					
 				$report_type = "stockouts";
 				$this ->create_excel($excel_data,$report_type);
-				
+				//For Mac
+				//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+				//For Windows
 				$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-				
+					
 				$subject = "Stock Outs: " . $county_name . " County";
 				
 				$message = "Dear ".$county_name." County,
@@ -936,10 +1003,10 @@ public function weekly_potential_expiries_report() {
 							
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 				
-						
 				$email_address = $this -> get_ddp_email_county($county_id);
 				$bcc = $this -> get_bcc_notifications();
 				$cc = $this -> get_county_email($county_id);
+					
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler,$bcc,$cc);
 				
 			}
@@ -1358,7 +1425,7 @@ public function ors_zinc_report() {
 		$column_data = array("County","Sub-County","Facility Code", 
 							"Facility Name","Commodity Name","Unit Size","Unit Cost(KES)",
 							"Supplier","Manufacturer","Batch Number","Expiry Date",
-							"Stock at Hand (units)","Stock at Hand (packs)","AMC (packs)","Stock at Hand MOS(packs)");
+							"Stock at Hand (units)","Stock at Hand (packs)","AMC (units)","AMC (packs)","Stock at Hand MOS(packs)");
 		$excel_data['column_data'] = $column_data;
 		//the commodities variable will hold the values for the three commodities ie ORS and Zinc
 		$commodities = array(51,267,36);
@@ -1389,6 +1456,7 @@ public function ors_zinc_report() {
 							$commodity_stock_level["expiry_date"],
 							$commodity_stock_level["balance_units"],
 							$commodity_stock_level["balance_packs"],
+							$commodity_stock_level["amc_units"],
 							$commodity_stock_level["amc"],
 							$commodity_stock_level["mos"]));
 				
@@ -1459,12 +1527,13 @@ public function ors_zinc_report() {
 	//echo $message;exit;	
 	$report_type = "ors_report";
 	$this ->create_excel($excel_data,$report_type);
+	
 	//path for windows
 	$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+	
 	//path for Mac
 	//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-	
-	$email_address = "collinsojenge@gmail.com";//,smutheu@clintonhealthaccess.org,bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org";
+	$email_address = "collinsojenge@gmail.com,smutheu@clintonhealthaccess.org,bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org,rkihoto@clintonhealthaccess.org";
 	
 	
 	$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
@@ -1645,6 +1714,7 @@ public function create_excel($excel_data=NUll,$report_type = NULL, $total_figure
     	// We'll be outputting an excel file
 		if(isset($excel_data['report_type']))
 		{
+			//For Windows				
 			$objWriter->save("./print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
 			//For Mac
 			//$objWriter->save("/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
