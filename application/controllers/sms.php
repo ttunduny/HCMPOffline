@@ -1,7 +1,7 @@
 <?php
 /**
- * @author Kariuki
- * Edited by Collins
+ * @author Collins
+ * 
  */
 ob_start();
 class sms extends MY_Controller {
@@ -284,7 +284,7 @@ class sms extends MY_Controller {
 
 	/*
 	 |--------------------------------------------------------------------------|
-	 | EMAIL SECTION															|
+	 | EMAIL REPORTS SECTION															|
 	 |--------------------------------------------------------------------------|
 	 */
 
@@ -352,6 +352,67 @@ class sms extends MY_Controller {
 		$this -> send_email(substr($email_address, 0, -1), $message, $subject, $attach_file);
 
 	}
+	/*
+	 |--------------------------------------------------------------------------|
+	 | EMAIL DAILY/WEEKLY/MONTHLY REPORTS SECTION															|
+	 |--------------------------------------------------------------------------|
+	 */
+	 public function facility_overview_report()
+	 {
+	 	//get all the facilities rolled out
+	 	$facilities = Facilities::get_all_facilities_on_HCMP();
+		//Start buliding the excel file
+		$excel_data = array();
+		$excel_data = array('doc_creator' => 'HCMP', 'doc_title' => 'facility overview monthly report ', 'file_name' => 'facility overview monthly report');
+		$row_data = array();
+		//contains the columns in the excel sheet
+		$column_data = array("County","Sub County", "MFL","Facility Name","Level","Type","Owner","Date of Activation");
+		$excel_data['column_data'] = $column_data;
+		//Loop through the data picked form the database and assign each row to the $row_data variable 
+		//$row_data is used to dump the data into rows for the excel
+		foreach ($facilities as $facilities) :
+			array_push($row_data, array($facilities["county"],
+										$facilities["sub_county"],
+										$facilities["facility_code"],
+										$facilities["facility_name"],
+										$facilities["level"],
+										$facilities["type"],
+										$facilities["owner"],
+										$facilities["date_of_activation"]));
+		endforeach;
+
+		
+		$excel_data['row_data'] = $row_data;
+		$excel_data['report_type'] = "download_file";
+		$excel_data['file_name'] = "Facility Overview Report";
+		
+		$excel_data['excel_title'] = "Facilities Rolled on HCMP as at".date("Js F Y");
+
+		$subject = "Facility Overview Report";
+		
+		$message = "Good Morning,</br>
+				<p>Find attached an excel sheet with the breakdown of facilities using HCMP
+				You may log onto health-cmp.or.ke to confirm.</p>
+				<p>----</p>
+				<p>HCMP</p>
+				<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
+		//used the same report type as for ORS
+		//they have the same number of columns
+		$report_type = "ors_report";
+		//create the excel sheet here
+		$this-> create_excel($excel_data,$report_type);
+		exit;
+		//where the excel sheet is stored before being attached
+		$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+		
+		//the email of the receipients
+		//$email_address = "collinsojenge@gmail.com";
+		//function for sending the actual email
+		//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+
+		
+	 }
+	 
 	public function expiries_report() {
 		//Set the current year
 		$year = date("Y");
@@ -1364,7 +1425,7 @@ public function ors_zinc_report() {
 		$column_data = array("County","Sub-County","Facility Code", 
 							"Facility Name","Commodity Name","Unit Size","Unit Cost(KES)",
 							"Supplier","Manufacturer","Batch Number","Expiry Date",
-							"Stock at Hand (units)","Stock at Hand (packs)","AMC (packs)","Stock at Hand MOS(packs)");
+							"Stock at Hand (units)","Stock at Hand (packs)","AMC (units)","AMC (packs)","Stock at Hand MOS(packs)");
 		$excel_data['column_data'] = $column_data;
 		//the commodities variable will hold the values for the three commodities ie ORS and Zinc
 		$commodities = array(51,267,36);
@@ -1395,6 +1456,7 @@ public function ors_zinc_report() {
 							$commodity_stock_level["expiry_date"],
 							$commodity_stock_level["balance_units"],
 							$commodity_stock_level["balance_packs"],
+							$commodity_stock_level["amc_units"],
 							$commodity_stock_level["amc"],
 							$commodity_stock_level["mos"]));
 				
@@ -1465,15 +1527,16 @@ public function ors_zinc_report() {
 	//echo $message;exit;	
 	$report_type = "ors_report";
 	$this ->create_excel($excel_data,$report_type);
+	
 	//path for windows
 	$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+	
 	//path for Mac
 	//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+	$email_address = "smutheu@clintonhealthaccess.org,bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org,rkihoto@clintonhealthaccess.org";
+	$bcc = "collinsojneg@gmail.com,kelvinmwas@gmail.com,nmaingi@strathmore.edu";
 	
-	$email_address = "smutheu@clintonhealthaccess.org,bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org";
-	$bcc = null;
-	$cc = "collinsojenge@gmail.com,kelvinmwas@gmail.com,nmaingi@strathmore.edu";
-	$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler,$bcc,$cc);
+	$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler,$bcc);
 
 	}
 
@@ -1651,6 +1714,7 @@ public function create_excel($excel_data=NUll,$report_type = NULL, $total_figure
     	// We'll be outputting an excel file
 		if(isset($excel_data['report_type']))
 		{
+			//For Windows				
 			$objWriter->save("./print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
 			//For Mac
 			//$objWriter->save("/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');

@@ -42,6 +42,28 @@ class Facilities extends Doctrine_Record {
 		
 		return count($q);
 	}
+	public static function get_all_facilities_on_HCMP()
+	{
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT 
+					    f.facility_code,
+					    f.owner,
+					    f.type,
+					    f.level,
+					    f.facility_name,
+					    f.date_of_activation,
+					    d.district as sub_county,
+					    c.county
+					FROM
+					    facilities f,
+					    districts d,
+					    counties c
+					WHERE
+					    f.using_hcmp = 1 AND f.district = d.id
+					        AND d.county = c.id");
+		
+		return $q;
+	}
 	public static function getAll_json() {
 		$query = Doctrine_Query::create() -> select("*") -> from("facilities");
 		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
