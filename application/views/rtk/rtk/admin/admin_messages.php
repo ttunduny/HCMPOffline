@@ -270,7 +270,9 @@ $('#save_message_btn').click(function(e) {
 // var form = $( "form[name=compose]").serialize();        
 //var receipient = $("#receipient").val();
   var subject = $("#subject").val();
-  var message = $("#new_message").val(); 
+  tinyMCE.triggerSave();
+     
+  var message = $("#new_message").val();  
   var id = $("#receipient_id").val();             
 //alert('Receipients='+receipients+' Subject'+subject+' Message'+message);
 

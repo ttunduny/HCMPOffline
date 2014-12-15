@@ -1344,7 +1344,8 @@ public function rtk_manager_stocks($month=null) {
             include 'rtk_mailer.php';
             $newmail = new rtk_mailer();
 
-            //$newmail->send_email('ttunduny@gmail.com', $message, $subject, $attach_file, $bcc_email);
+            // $newmail->send_email('ttunduny@gmail.com', $message, $subject, $attach_file, $bcc_email);
+            // die();
 
             $receipient = array();
             $month = date('mY');       
