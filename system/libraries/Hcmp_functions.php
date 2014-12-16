@@ -216,15 +216,7 @@ public function send_order_delivery_email($message,$subject,$attach_file=null){
 	return $this->send_email(substr($this->get_ddp_email($data[0]['district']),0,-1),$message,$subject,null,$bcc_email,substr($cc_email,0,-1));
 	
 }
-public function send_log_summary_email($message,$subject,$attach_file){
-	
-	  
-	   $email_address ='kelvinmwas@gmail.com';
-	   
-	   $this->send_email($email_address,$message,$subject,$attach_file);
-	   
-	 
-	}
+
 public function send_sms($phones,$message) {
 	
    $message=urlencode($message);
