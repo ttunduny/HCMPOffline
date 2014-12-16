@@ -1142,7 +1142,7 @@ public function rtk_manager_activity($all=null) {
     if(isset($all)){
         $data['user_logs'] = $this->rtk_logs();
     }else{
-        $limit = 'LIMIT 0,100';
+        $limit = 'LIMIT 0,30';
         $data['user_logs'] = $this->rtk_logs(null, NULL, NULL, $timestamp, $timestamp1,$limit);
     }
     $data['englishdate'] = $englishdate;
@@ -1322,52 +1322,100 @@ public function rtk_manager_stocks($month=null) {
             $this->load->view('rtk/template', $data);
         }
 
+        public function send_message($count,$sql,$array){
+            $a = 0;
+            $b = 98;
+            for ($i=$a; $i <=$count ; $i+$b) { 
+
+                
+            }
+
+        }
+
         public function rtk_send_message() {
             $receipient_id = mysql_real_escape_string($_POST['id']);
             $subject = mysql_real_escape_string($_POST['subject']);
             $raw_message = mysql_real_escape_string($_POST['message']);             
             $attach_file = null;
             $bcc_email = null;
-            //$bcc_email = 'ttunduny@gmail.com,tngugi@clintonhealthaccess.org,annchemu@gmail.com';
+            $bcc_email = 'ttunduny@gmail.com,tngugi@clintonhealthaccess.org,annchemu@gmail.com';
             $message = str_replace(array('\\n', "\r", "\n"), "<br />", $raw_message); 
 
             include 'rtk_mailer.php';
             $newmail = new rtk_mailer();
 
-            $newmail->send_email('ttunduny@gmail.com', $message, $subject, $attach_file, $bcc_email);
+            //$newmail->send_email('ttunduny@gmail.com', $message, $subject, $attach_file, $bcc_email);
 
             $receipient = array();
             $month = date('mY');       
             if($receipient_id==1){
             //all users
-                $sql = "SELECT email FROM user WHERE usertype_id in (0,7,8,11,13,14,15) and status=1 ORDER BY id DESC";
-                $res = $this->db->query($sql)->result_array();                  
-                //$to =array();
-                $to ="";
-                foreach ($res as $key => $value) {
-                    $one = $value['email'];
-                    $to.= $one.',';
-                }       
+                $q = "SELECT email FROM user WHERE usertype_id in (0,7,8,11,13,14,15) and status=1 ORDER BY id DESC";
+                $count = $this->db->query($q)->num_rows();
+                $a = 0;
+                $b = 98;
+                $increment = 98;
+                for ($i=$a; $a <=$count ; $i+$increment) { 
+                    $sql = "SELECT email FROM user WHERE usertype_id in (0,7,8,11,13,14,15) and status=1 ORDER BY id DESC LIMIT $a,$b";                    
+                    $res = $this->db->query($sql)->result_array();                                      
+                    $to ="";
+                    foreach ($res as $key => $value) {
+                        $one = $value['email'];
+                        $to.= $one.',';                        
+                    } 
+                    $newmail->send_email($to, $message, $subject, $attach_file, $bcc_email);
+                    $a +=$increment;
+                    $b += $increment;
+                }
+                die();               
                   
             }elseif($receipient_id==2){
             //All SCMLTs
-                $sql = "SELECT email FROM user WHERE usertype_id = 7 and status = 1 ORDER BY id DESC";
-                $res = $this->db->query($sql)->result_array();                                  
-                $to ="";
-                foreach ($res as $key => $value) {
-                    $one = $value['email'];
-                    $to.= $one.',';
-                }             
+                $q = "SELECT email FROM user WHERE usertype_id = 7 and status = 1 ORDER BY id DESC";
+                $count = $this->db->query($q)->num_rows();
+                $a = 0;
+                $b = 98;
+                $increment = 98;
+                for ($i=$a; $a <=$count ; $i+$increment) { 
+                    $sql = "SELECT email FROM user WHERE usertype_id = 7 and status = 1 ORDER BY id DESC LIMIT $a,$b";                    
+                    $res = $this->db->query($sql)->result_array();                                      
+                    $to ="";
+                    foreach ($res as $key => $value) {
+                        $one = $value['email'];
+                        $to.= $one.',';                        
+                    } 
+                    $newmail->send_email($to, $message, $subject, $attach_file, $bcc_email);
+                    $a +=$increment;
+                    $b += $increment;
+                }                         
 
             }elseif($receipient_id==3){
             //All CLCs
-                $sql = "SELECT email FROM user WHERE usertype_id =13 and status =1 ORDER BY id DESC";
-                $res = $this->db->query($sql)->result_array();                  
-                $to =array();
-                foreach ($res as  $value) {
-                    $one = $value['email'];
-                    array_push($to,$one);
-                }          
+                $q = "SELECT email FROM user WHERE usertype_id =13 and status =1 ORDER BY id DESC";
+                $count = $this->db->query($q)->num_rows();
+                $a = 0;
+                $b = 98;
+                $increment = 98;
+                for ($i=$a; $a <=$count ; $i+$increment) { 
+                    $sql = "SELECT email FROM user WHERE usertype_id =13 and status =1 ORDER BY id DESC LIMIT $a,$b";                    
+                    $res = $this->db->query($sql)->result_array();                                      
+                    $to ="";
+                    foreach ($res as $key => $value) {
+                        $one = $value['email'];
+                        $to.= $one.',';                        
+                    } 
+                    $newmail->send_email($to, $message, $subject, $attach_file, $bcc_email);
+                    $a +=$increment;
+                    $b += $increment;
+                }    
+
+                // $sql = "SELECT email FROM user WHERE usertype_id =13 and status =1 ORDER BY id DESC";
+                // $res = $this->db->query($sql)->result_array();                  
+                // $to =array();
+                // foreach ($res as  $value) {
+                //     $one = $value['email'];
+                //     array_push($to,$one);
+                // }          
 
             }elseif($receipient_id==4){
             //Sub C with more than 75% reporting
@@ -4269,8 +4317,7 @@ public function rtk_summary_county($county, $year, $month) {
                 $res = $this->db->query($sql); 
             }else{
 
-                $sql = "INSERT INTO `facility_amc`(`facility_code`, `commodity_id`, `amc`,`last_update`) 
-                VALUES ('$mfl','$commodity_id','$amc',$last_update')";
+                $sql = "INSERT INTO `facility_amc`(`facility_code`, `commodity_id`, `amc`,`last_update`) VALUES ('$mfl','$commodity_id','$amc','$last_update')";
                 $res = $this->db->query($sql);
             }
             
@@ -4303,15 +4350,15 @@ public function rtk_summary_county($county, $year, $month) {
         return $result;
     }
 
-function facility_amc_compute($a,$b) {
-        $sql = "select facilities.facility_code from facilities where facilities.rtk_enabled = '1' LIMIT $a,$b";
+function facility_amc_compute($zone) {
+        $sql = "select facilities.facility_code from facilities where facilities.rtk_enabled = '1' and zone='Zone $zone'";
         $res = $this->db->query($sql);
         $facility = $res->result_array();
         foreach ($facility as $value) {
             $fcode = $value['facility_code'];
             $this->update_amc($fcode);
         }
-    }
+ }
     //Update the Number of Reports Online
     function _update_reports_count($state,$county,$district){ 
         $month = date('mY',time());  
@@ -5654,6 +5701,27 @@ function _national_reports_sum($year, $month) {
         echo "Deadline Added succesfully";
     }
 
+    public function create_DMLT() {
+
+        $fname = $_POST['first_name'];
+        $lname = $_POST['last_name'];
+        $email = $_POST['email'];
+        $phone = $_POST['phone'];
+        $district = $_POST['district'];
+        $county = $_POST['county'];
+        $time = date('Y-m-d', time());
+
+        $fname = addslashes($fname);
+        $lname = addslashes($lname);
+
+        $sql = "INSERT INTO `user` (`id`, `fname`, `lname`, `email`, `username`, `password`, `usertype_id`, `telephone`, `district`, `facility`, `created_at`, `updated_at`, `status`, `county_id`)
+        VALUES (NULL, '$fname', '$lname', '$email', '$email', 'b56578e2f9d28c7497f42b32cbaf7d68', '7', '$phone', '$district', NULL, '$time', '$time', '1', '$county');";
+        $this->db->query($sql);
+        $object_id = $this->db->insert_id();
+        $this->logData('1', $object_id);
+        echo "User has been created succesfully";
+    }
+
     public function update_Deadline() {
 
         $zones = json_decode($_POST['edit_zones']);
@@ -6006,14 +6074,26 @@ public function get_all_zone_a_facilities($zone){
             echo "Alert Deleted Succesfully";
         }
 
-     public function update_labs($year,$month,$zone){                
+     public function update_labs($zone,$year=null,$month=null){                
                 ini_set(-1);
-                $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-                $firstdate = $year.'-'.$month.'-01';
-                $lastdate = $year.'-'.$month.'-'.$num_days;                
-
+                if(isset($year)){
+                    $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                    $firstdate = $year.'-'.$month.'-01';
+                    $lastdate = $year.'-'.$month.'-'.$num_days; 
+                }else{
+                    //$month = date('mY',strtotime('-3 month'));      
+                    $month =  date("mY", time());
+                    $year = substr($month, -4);
+                    $month = substr($month, 0,2);
+                    $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                    $firstdate = $year.'-'.$month.'-01';
+                    $lastdate = $year.'-'.$month.'-'.$num_days; 
+                }
+                               
+                
                 $sql = "select distinct facility_code from facilities where rtk_enabled=1 and zone='Zone $zone' and exists
                  (select distinct facility_code from lab_commodity_details where created_at between '$firstdate' and '$lastdate') order by facility_code asc";
+
                  $facilities = $this->db->query($sql)->result_array();                    
                  $count = 0; 
                  $large_array[$code] = array();
@@ -6063,18 +6143,38 @@ public function get_all_zone_a_facilities($zone){
                                 $q_used = $values['q_used'];
                                 $commodity_id = $values['commodity_id'];
                                 $created_at = $values['created_at'];
-                                if($commodity_id==4){
-                                   $sql1 = "INSERT INTO `lab_commodity_details1`(`order_id`, `facility_code`, `commodity_id`, `unit_of_issue`, `q_used`, `created_at`) 
-                                     VALUES ('$order_id','$facility_code','$commodity_id','$unit','$new_val','$created_at')";
-                                     // echo "$sql1";die();
-                                     $this->db->query($sql1); 
-                                }else{
-                                    $sql1 = "INSERT INTO `lab_commodity_details1`(`order_id`, `facility_code`, `commodity_id`, `unit_of_issue`, `q_used`, `created_at`) 
-                                     VALUES ('$order_id','$facility_code','$commodity_id','$unit','$q_used','$created_at')";
-                                     // echo "$sql1";                              die(); 
-                                     $this->db->query($sql1); 
 
-                                }
+                                $new_q = "select * from `lab_commodity_details1` where facility_code='$facility_code' and order_id = '$order_id' and commodity_id = '$commodity_id' and created_at between '$firstdate' and '$lastdate'";
+                                $new_res = $this->db->query($new_q)->result_array();   
+                                 if(count($new_res)>1){
+                                    if($commodity_id==4){
+                                       $sql1 = "update `lab_commodity_details1` set  `unit_of_issue`='$unit',
+                                        `q_used`='$new_val' where facility_code='$facility_code' and order_id = '$order_id' and `commodity_id`='$commodity_id'";                                          
+                                         $this->db->query($sql1); 
+                                    }else{
+                                        $sql1 = "update `lab_commodity_details1` set   `unit_of_issue`='$unit',`q_used`='$q_used' where facility_code='$facility_code' and order_id = '$order_id' and `commodity_id`='$commodity_id'";
+                                        // $sql1 = "INSERT INTO `lab_commodity_details1`(`order_id`, `facility_code`, `commodity_id`, `unit_of_issue`, `q_used`, `created_at`) 
+                                        //  VALUES ('$order_id','$facility_code','$commodity_id','$unit','$q_used','$created_at')";
+                                                                        //die(); 
+                                         $this->db->query($sql1); 
+
+                                    }
+                                 }else{
+                                    if($commodity_id==4){
+                                       $sql1 = "INSERT INTO `lab_commodity_details1`(`order_id`, `facility_code`, `commodity_id`, `unit_of_issue`, `q_used`, `created_at`) 
+                                         VALUES ('$order_id','$facility_code','$commodity_id','$unit','$new_val','$created_at')";
+                                         // echo "$sql1";die();
+                                         $this->db->query($sql1); 
+                                    }else{
+                                        $sql1 = "INSERT INTO `lab_commodity_details1`(`order_id`, `facility_code`, `commodity_id`, `unit_of_issue`, `q_used`, `created_at`) 
+                                         VALUES ('$order_id','$facility_code','$commodity_id','$unit','$q_used','$created_at')";
+                                         // echo "$sql1";                              die(); 
+                                         $this->db->query($sql1); 
+
+                                    }
+
+                                 }
+                               
                             }
                             
                         }

@@ -24,6 +24,9 @@
         <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/tablecloth/assets/css/tablecloth.css">
         <script type="text/javascript" language="javascript" src="<?php echo base_url();?>assets/datatable/jquery.dataTables.js"></script>
 
+        <!-- Place inside the <head> of your HTML -->
+        <script type="text/javascript" src="<?php echo base_url();?>assets/tinymce/tinymce.min.js"></script>
+        
 
         <title>HCMP | <?php echo $title; ?></title>
 
@@ -170,15 +173,15 @@
                     <table id="change_password_table">
                       <tr>    
                         <td>Old Password</td>
-                        <td><input class="form-control" id="old_pass" type="text" name="old_pass" style="width:96%"/></td>
+                        <td colspan="3"><input class="form-control" id="old_pass" type="text" name="old_pass" style="width:196%"/></td>
                       </tr>   
                       <tr>
                         <td>New Password</td>
-                        <td><input class="form-control" id="new_pass" type="text" name="new_pass" style="width:96%"/></td>
+                        <td colspan="3"><input class="form-control" id="new_pass" type="text" name="new_pass" style="width:196%"/></td>
                       </tr>             
                       <tr>
                         <td>Confirm Password</td>
-                        <td><input class="form-control" id="confirm_pass" type="text" name="confirm_pass" style="width:96%"/></td>
+                        <td colspan="3"><input class="form-control" id="confirm_pass" type="text" name="confirm_pass" style="width:196%"/></td>
                       </tr>
                       <tr>
                         <td colspan="2">
