@@ -30,7 +30,7 @@ if (!$this -> session -> userdata('user_id')) {
 	<link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
 	<script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
-     <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
+    <!-- <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>-->
      <script src="<?php echo base_url().'assets/scripts/select2.js'?>" type="text/javascript"></script>
 	<script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/bower_components/sweetalert/lib/sweet-alert.js'?>" type="text/javascript"></script>
