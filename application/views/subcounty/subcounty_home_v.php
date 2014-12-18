@@ -115,12 +115,7 @@ $('.page-header').html('Expiries');
 active_panel(this);
 ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
 });
-//Notifications function
-$("#notifications").on('click', function(){
-active_panel(this);
- ajax_request_replace_div_content('reports/notification_dashboard',"#notification");
-$('.page-header').html('Notifications');
-});
+
 //stocking_levels function
 $("#stocking_levels").on('click', function(){
 ajax_request_replace_div_content('reports/stock_level_dashboard',"#notification");

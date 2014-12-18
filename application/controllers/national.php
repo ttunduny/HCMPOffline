@@ -866,7 +866,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 			$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
 			$title = $facility_code_['facility_name'];
 		else :
-			$title = "Nationaly";
+			$title = "National";
 		endif;
 		if ($graph_type != "excel") :
 			// echo    .$to; exit;
@@ -1000,7 +1000,7 @@ order by c.county asc , d1.district asc
 				$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
 				$title = $facility_code_['facility_name'];
 			else :
-				$title = "Nationaly";
+				$title = "National";
 			endif;
 
 			foreach ($commodity_array as $data) :

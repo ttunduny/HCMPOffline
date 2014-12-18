@@ -355,7 +355,7 @@ echo $maps; ?>
 </a>
       <div class="row">
           <div class="col-md-12">
-       <div class="panel-heading">
+       <!--<div class="panel-heading">
        <h3 class="panel-title">Fill Rate</h3>
        </div>
        <div id="fill_rate">
@@ -364,7 +364,7 @@ echo $maps; ?>
         80%
     </div>
       </div>
-       </div>
+       </div>-->
        </div>  
        <div class="col-md-12">
        <div class="panel-heading">

@@ -1225,7 +1225,6 @@ class Reports extends MY_Controller
 		$data['graph_data_daily'] =	$graph_daily;
 		$data['graph_log'] = $graph_log;
 		
-		
 		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
 		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
@@ -3127,49 +3126,53 @@ $graph_type = 'bar';
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
 	    }
-
+		//for the county and subcounty interface
+		//stock levels tab table data tab
+			
+		public function get_county_stock_levels($facility_code = null,$sub_county_id = null,$commodity_id = null,$option = null)
+		{
+			//check if the values have been set from the view
+			//get_stock_levels_county($facility_code = null,$sub_county_id = null,$county_id = null, $commodity_id = null,$option = null)
+		
+			
+		}
      	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null,$tracer = null) 
      	{	
-     	 //echo $tracer;exit;
-     	//reset the values here
-		$tracer =(isset($tracer))? $tracer:null ;
-		$report_type =(isset($report_type))? $report_type:null ;
-      	$commodity_id = ($commodity_id=="NULL") ? null :$commodity_id;
-	 	$district_id = ($district_id=="NULL") ? null :$district_id;
-	 	$option = ($option=="NULL") ? null :$option;
-		$category_id = ($category_id=="NULL") ? null :$category_id;
-	 	$facility_code = ($facility_code=="NULL") ? null :$facility_code;
-		$option = ($option=="NULL" || $option=="null") ? null :$option;	
-		$county_id = $this -> session -> userdata('county_id');
-		$county_name = counties::get_county_name($county_id);
-		$category_data = $series_data = $series_data_ =  $graph_data = $data =array();
-		$title='';	
-		$year = date('Y');
-		$month_ = date('M d');
+	     	//reset the values here
+			$tracer =(isset($tracer))? $tracer:null ;
+			$report_type =(isset($report_type))? $report_type:null ;
+	      	$commodity_id = ($commodity_id=="NULL") ? null :$commodity_id;
+		 	$district_id = ($district_id=="NULL") ? null :$district_id;
+		 	$option = ($option=="NULL") ? null :$option;
+			$category_id = ($category_id=="NULL") ? null :$category_id;
+		 	$facility_code = ($facility_code=="NULL") ? null :$facility_code;
+			$option = ($option=="NULL" || $option=="null") ? null :$option;	
+			$county_id = $this -> session -> userdata('county_id');
+			$county_name = counties::get_county_name($county_id);
+			$category_data = $series_data = $series_data_ =  $graph_data = $data =array();
+			$title='';	
+			$year = date('Y');
+			$month_ = date('M d');
 		
-     	// echo "<br><br><br><br>".$report_type;exit;
-		
-		if(($option=="mos")&&($report_type == '1')){
-			//echo $category_id;exit;
-        //echo $district_id." Cty:".$county_id." Fcty:".$facility_code." Cmd_id:".$commodity_id." Report Type:".$report_type." TRacer:".$tracer;exit;
-        return $this->load_stock_level_graph($district_id,$county_id,$facility_code,$commodity_id,$report_type,$tracer);
-        }
+			if(($option=="mos")&&($report_type == '1')){
+        		return $this->load_stock_level_graph($district_id,$county_id,$facility_code,$commodity_id,$report_type,$tracer);
+        	}
 
-        //check if the district is set
-		$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
-		$district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " subcounty" : null;
-		$option_new = isset($option) ? $option : "Ksh";
-		$option_title = isset($option) ? $option : "Ksh";
-		$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
-		$facility_name = $facility_code_[0]['facility_name'];
-		$commodity_name = (isset($commodity_id))? Commodities::get_details($commodity_id)->toArray() : null;
-		$category_name_ = @$commodity_name[0]['commodity_name'];
-		$commodity_name = isset($category_name_)? " for ".$category_name_ : null;
-		$title = isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
-	 	isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
-
-		$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code, $district_id, $county_id,
-		$category_id, $commodity_id, $option_new, $report_type);
+	        //check if the district is set
+			$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
+			$district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " subcounty" : null;
+			$option_new = isset($option) ? $option : "Ksh";
+			$option_title = isset($option) ? $option : "Ksh";
+			$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
+			$facility_name = $facility_code_[0]['facility_name'];
+			$commodity_name = (isset($commodity_id))? Commodities::get_details($commodity_id)->toArray() : null;
+			$category_name_ = @$commodity_name[0]['commodity_name'];
+			$commodity_name = isset($category_name_)? " for ".$category_name_ : null;
+			$title = isset($facility_code) && isset($district_id)? "$district_name_ : $facility_name" :( 
+		 	isset($district_id) && !isset($facility_code) ?  "$district_name_": "$county_name[county] county") ;
+			
+			$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code, $district_id, $county_id,
+			$category_id, $commodity_id, $option_new, $report_type);
 
 		$mos_array = facility_stocks_temp::get_months_of_stock($district_id , $county_id , $facility_code ,$commodity_id,$report_type,$tracer);
 		//echo "<pre>";print_r($commodity_array);echo "</pre>";exit;
