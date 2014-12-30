@@ -533,7 +533,7 @@ FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDAT
 	}
 	public static function All_expiries_email($facility_code,$checker=null)
 	{
-		$year=date(Y);
+		$year=date("Y");
 		//$and=isset($checker)? " and (f_s.status =1 or f_s.status =2)" : " and f_s.status =1";
 		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		select 
