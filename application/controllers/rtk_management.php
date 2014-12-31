@@ -752,7 +752,10 @@ public function county_profile($county) {
                     $districts = districts::getDistrict($county);
                     $county_name = counties::get_county_name($county);         
                     $County = $county_name['county'];        
-                    $sql = "SELECT lab_commodity_orders.id, lab_commodity_orders.facility_code, lab_commodity_orders.compiled_by, lab_commodity_orders.order_date, lab_commodity_orders.district_id, districts.district, facilities.facility_name, facilities.facility_code
+                    $sql = "SELECT lab_commodity_orders.id, lab_commodity_orders.facility_code, 
+					lab_commodity_orders.compiled_by, lab_commodity_orders.order_date, lab_commodity_orders.district_id,
+                     DATE_ADD(lab_commodity_orders.order_date,INTERVAL -1 MONTH) as previous_date, 
+					districts.district, facilities.facility_name, facilities.facility_code
                     FROM lab_commodity_orders,  facilities, districts, counties
                     WHERE districts.county = counties.id
                     AND facilities.district = districts.id

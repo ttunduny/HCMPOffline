@@ -77,7 +77,8 @@ class Home extends MY_Controller
 			case 'rtk_manager':
 			case 'rtk_partner_admin':
 			case 'rtk_partner_super':
-			redirect('home_controller');
+			redirect('http://41.89.6.223/HCMP/user');
+			//redirect('http://192.168.133.23/HCMP/user');
 			break;
 			case 'super_admin':
 			$view = 'shared_files/template/dashboard_v';
