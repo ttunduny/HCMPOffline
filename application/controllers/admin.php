@@ -42,7 +42,32 @@ class Admin extends MY_Controller {
 		$data['user_types']=Access_level::get_access_levels($permissions);
 		$this -> load -> view("shared_files/template/dashboard_v", $data);
 	}
-	
+//manage facilities
+	public function manage_facilities() {
+		$permissions='super_permissions';
+		$data['title'] = "Users";
+		$data['content_view'] = "Admin/facilities_v";
+		$data['facilities_listing']= Users::get_facilities_list_all();
+		$data['facilities_listing_active']= Users::get_facilities_list_all_active(1);
+		$data['facilities_listing_inactive']= Users::get_facilities_list_all_active(0);
+		$data['active_count']= Facilities::get_all_facilities_active_no();
+		$data['facility_count']=Facilities::get_all_facilities_no();
+		$data['counties']=Counties::getAll();
+		$data['facilities']=Facilities::getAll();
+		$data['sub_counties']=Districts::getAll();
+		$data['user_types']=Access_level::get_access_levels($permissions);
+		$this -> load -> view("shared_files/template/dashboard_v", $data);
+	}
+
+	public function deactivate_facility(){
+		$le_facility = $_POST['ndata'];
+		$le_status = $_POST['status'];
+		//echo "This  ".$le_status;exit;
+		//something
+		$double_tap = Users::deactivate_facility($le_facility,$le_status);
+		//echo "Success";
+	}
+
 	public function edit_user(){
 		
 		$identifier = $this -> session -> userdata('user_indicator');

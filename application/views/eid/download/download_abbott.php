@@ -460,7 +460,15 @@
 				
 			</div>
 			<div style="width: 100%; border-top:solid 1px #000"> 
+<<<<<<< HEAD
 				<?php echo "<b style='font-size:14px'>Approved date</b> : ".date('Y-m-d',strtotime($approved_date));?>
+=======
+				<?php 
+				if(date('Y-m-d',strtotime($approved_date))=="1970-01-01"){
+					$approved_date= $monthname.' '.$year;
+				}
+				echo "<b style='font-size:14px'>Approved date</b> : ".date('Y-m-10',strtotime($approved_date));?>
+>>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
 			</div>
 		</div>
 	</body>

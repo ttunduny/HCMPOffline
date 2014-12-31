@@ -571,7 +571,7 @@ public function weekly_potential_expiries_report() {
 			//Get all the districts in that  particular county
 			$districts = Facilities::get_all_using_HCMP($county_id);
 			//holds the data for all the districts in a particular county
-			
+			//echo "<pre>";print_r($districts);exit;
 			$district_total = array();
 
 			foreach ($districts as $districts) {
@@ -637,6 +637,7 @@ public function weekly_potential_expiries_report() {
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						
 						$email_address = $this->get_facility_email($facility_code);
+						
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 						
 					}
@@ -742,11 +743,11 @@ public function weekly_potential_expiries_report() {
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 				
 				$email_address = $this -> get_ddp_email_county($county_id);
+				
 				$bcc = $this -> get_bcc_notifications();
 				$cc = $this -> get_county_email($county_id);
 				
-				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler,$bcc,$cc);
-				
+				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler,$bcc,$cc);				
 			}
 
 		}
@@ -834,9 +835,9 @@ public function weekly_potential_expiries_report() {
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						$subject = "Stock Outs Report: " . $facility_name;
 						
-						//$email_address = $this -> get_facility_email($facility_code);
+						$email_address = $this -> get_facility_email($facility_code);
 						
-						//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 						
 					}
 
@@ -883,9 +884,9 @@ public function weekly_potential_expiries_report() {
 								
 								<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 				
-					//$email_address = $this -> get_ddp_email($district_id);
+					$email_address = $this -> get_ddp_email($district_id);
 					
-					//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
 				}
 

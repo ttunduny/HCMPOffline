@@ -67,8 +67,7 @@ $district_id_active =  $this -> session -> userdata('district_id');
 </style>
 
 <div class="row-fluid" style="margin-bottom: 5px">
-	
-		
+			
     <?php if($county_dashboard_notifications['facility_donations']>0): ?>
  		 <a href="<?php echo base_url('reports/county_donation/')?>">
  					<div class="color_e stat_item <?php echo $class; ?>">

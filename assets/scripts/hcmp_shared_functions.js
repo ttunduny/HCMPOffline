@@ -243,6 +243,10 @@ function confirm_if_the_user_wants_to_save_the_form(form_id){
 				     	 swal("Saved!", "Your data was saved.", "success"); 
 				     	 if($(form_id).valid()){
 					           $(form_id).submit();      
+					          }else{
+					          	swal({   title: "Cancelled!",   text: "Your transaction was stopped ",  type: "warning", showCancelButton: false , timer: 3000 });
+					          	alertify.set({ delay: 10000 });
+											alertify.error("An error occured while processing your transaction. Check your fields.", null);
 					          }
 				     	 
 				     	   } else {

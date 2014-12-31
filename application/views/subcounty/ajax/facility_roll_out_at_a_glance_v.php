@@ -126,17 +126,7 @@
 
 <script>
 $(document).ready(function() {
-	//$(".ajax_call1").click( function (){
-		
-		//$('#myModal').modal({
- 		// show: true
-			//})
-			
-	//	var url_ = "reports/list_facilities/";
-	//	window.open(url+url_ ,'_blank'); 
-		
-   
-    //});
+	
 	$(".ajax_call2").click(function(){
 		var url = "<?php echo base_url().'reports/get_district_drill_down_detail'?>";
 		// this is the data from the function

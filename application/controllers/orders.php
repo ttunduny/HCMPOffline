@@ -312,6 +312,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 	}
 	public function facility_order() 
 	{
+		header('Content-Type: text/html; charset=UTF-8');
 		//$this -> load -> library('PHPExcel');
 		//ini_set("max_execution_time", "1000000");
 		$facility_code = $this -> session -> userdata('facility_id');
@@ -337,7 +338,14 @@ for ($row = 1; $row <= $highestRow; $row++){
     
         $highestColumn = $sheet->getHighestColumn();
         $temp=array();
-        $facility_code= $sheet->getCell('H4')->getValue();
+		if ($sheet->getCell('H4')->getValue()!='') {
+			$facility_code= $sheet->getCell('H4')->getValue();
+		} else {
+			$facility_code= $sheet->getCell('J4')->getValue();
+		}
+		
+        
+       $checker= $sheet->getCell('E17')->getValue();
    
    
         //  Loop through each row of the worksheet in turn
@@ -353,7 +361,21 @@ for ($row = 1; $row <= $highestRow; $row++){
         for ($row = 17; $row <= $highestRow; $row++){ 
         //  Read a row of data into an array
         $rowData = $objPHPExcel->getActiveSheet()->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);
-     	//var_dump($rowData); 
+		
+		if ($checker=='#REF!'||$checker=='=VLOOKUP(C17,#REF!,1,FALSE)') {
+		unset($rowData[0][4]);
+		unset($rowData[0][5]);
+			foreach ($rowData as $key => $value) {
+		unset($rowData);
+		$rowData[]=array_values($value);
+		
+	
+	}
+		
+	}
+		
+		
+     	//echo '<pre>';print_r($rowData); echo '</pre>';
 		//count($rowData);
 		$code=preg_replace('/\s+/ ','',$rowData[0][2]);
 		$code=str_replace('-','',$code);
@@ -365,6 +387,7 @@ for ($row = 1; $row <= $highestRow; $row++){
 		$array_order_qty[]=(int)$rowData[0][7];
 		$array_order_val[]=$rowData[0][8];
 		$array_pack[]=$rowData[0][5];
+		
 			
 		//if(isset($rowData[0][2]) && $rowData[0][2]!='Product Code'){
 			//echo '<pre>';print_r($rowData[0][7]); echo '</pre>';
@@ -375,9 +398,15 @@ for ($row = 1; $row <= $highestRow; $row++){
             //}   
             //}
 
+<<<<<<< HEAD
             }
 		
 		//echo '<pre>';print_r($array_order_qty); echo '</pre>';exit;
+=======
+            }//exit;
+		
+		//echo '<pre>';print_r($array_price); echo '</pre>';exit;
+>>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
 		foreach ($array_order_qty as $id => $key) {
 				//echo '<pre>';print_r($array_commodity[$id].'.'.$array_code[$id]); echo '</pre>';//exit;  
         	
@@ -385,8 +414,13 @@ for ($row = 1; $row <= $highestRow; $row++){
         array_push($temp,array('sub_category_name'=>$array_category[$id],
         'commodity_name'=>$array_commodity[$id],
         'unit_size'=>$array_pack[$id],
+<<<<<<< HEAD
         'unit_cost'=>($array_price[$id]=='')? 0:(int)$array_price[$id],
         'commodity_code'=>$array_code[$id],
+=======
+        'unit_cost'=>($array_price[$id]=='')? 0:(float)$array_price[$id],
+        'commodity_code'=>preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $array_code[$id]),
+>>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
         'commodity_id'=>$data['commodity_id'],
         'quantity_ordered'=>($array_order_qty[$id]=='')? 0:(int)$array_order_qty[$id],
         'total_commodity_units'=>0,
@@ -417,7 +451,12 @@ for ($row = 1; $row <= $highestRow; $row++){
 	}
 	
 	
+<<<<<<< HEAD
 }//echo '<pre>';print_r($temp); echo '</pre>';exit;
+=======
+}//$temp[]=array_values($temp);
+//echo '<pre>';print_r($temp); echo '</pre>';exit;
+>>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
 		//$c = array_combine($array_code, $array_commodity);
 		$array_id=array();
 		$array_codes=array();
@@ -425,28 +464,46 @@ for ($row = 1; $row <= $highestRow; $row++){
 		foreach ($temp as $keys ) {
 			
 			$kemsa=$keys['commodity_code'];
+			//echo strlen($kemsa).'-';
+			$kemsa = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $kemsa);
 			$unit_cost=$keys['unit_cost'];
-			//$unit_size=preg_replace("(')", "",$size);
+			//$kemsa = preg_replace('/\s+/', '', $kemsa);
+			
 			$get_id=Commodities::get_id($kemsa,$unit_cost);
-			//echo '<pre>';print_r($get_id); echo '</pre>';
+			
+			//if (count($get_id)==0) {
+			//echo count($get_id);
+			//echo "</br>";
+			//echo '<pre>';print_r("SELECT * FROM commodities WHERE commodity_code='$kemsa' AND unit_cost =$unit_cost;"); echo '</pre>';	
+			//}
+			
+			$array_codes[]=$kemsa;
 			$main_array[]=$keys;
 			foreach ($get_id as $key2) {
 				$array_id[]=$key2['id'];
 				$array_total_units[]=$key2['total_commodity_units'];
 				
-				//echo '<pre>';print_r($keys); echo '</pre>';
+				//echo '<pre>';print_r($get_id); echo '</pre>';
 			}
 			
 			//echo '<pre>';print_r($get_id[]); echo '</pre>';
+<<<<<<< HEAD
 		}
 		//echo '<pre>';print_r($main_array); echo '</pre>';exit;
 		//$new=array_combine($array_id, $array_codes);
 		//echo '<pre>';print_r($new); echo '</pre>';exit;
 			
+=======
+		}//exit;
+		//echo '<pre>';print_r($array_codes); echo '</pre>';exit;
+		//$new=array_combine($array_codes, $array_total_units);
+		//echo '<pre>';print_r($array_id); echo '</pre>';exit;
+>>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
 			
+			//echo count($array_codes);exit;
 		
 		$array_combined=array();
-		$id_count=count($array_id);
+		$id_count=count($main_array);
 		
 		for ($i=0; $i < $id_count;$i++) {
 			$main_array[$i]['commodity_id']=$array_id[$i];
@@ -656,7 +713,8 @@ for ($row = 1; $row <= $highestRow; $row++){
 			array_push($data_array, $temp_array);
 			
 			}// insert the data here
-			//var_dump($data_array);exit;
+			//echo "<pre>";print_r($data_array);echo "</pre>";exit;
+			//exit;
 			$this -> db -> insert_batch('facility_order_details', $data_array);
 			if ($this -> session -> userdata('user_indicator') == 'district') :
 			$order_listing = 'subcounty';
