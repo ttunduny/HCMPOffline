@@ -137,7 +137,7 @@ foreach ($res->result_array() as $key => $value) {
 
                 	  
                 			foreach ($reports as $value) {
-                				$order_date = date('F-Y', strtotime($value['order_date']));
+                				$order_date = date('F-Y', strtotime($value['previous_date']));
                 				$mfl = $value['facility_code'];
 	                			$facility = $value['facility_name'];	                			
 	                			$district = $value['district'];

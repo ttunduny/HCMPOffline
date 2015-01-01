@@ -154,7 +154,7 @@ class User extends MY_Controller {
 
 		//check if user exists and is activated
 
-		$myresult = Users::check_user_exist($email);
+		 $myresult = Users::check_user_exist($email);
 
 		//get user details
 		if (count($myresult) > 0) {
@@ -169,7 +169,7 @@ class User extends MY_Controller {
 			//check if user requested for a password recovery in last 3 days.
 
 			$check_code_request = Log_monitor::check_code_request($user_id);
-
+			
 			if (count($check_code_request) > 0) {
 				$data['user_email'] = $email_address;
 				$data['popup'] = "request_valid";

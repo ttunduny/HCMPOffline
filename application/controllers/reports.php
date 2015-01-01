@@ -4007,7 +4007,7 @@ public function list_facilities(){
 		$this -> load -> view("shared_files/template/template", $data);
        
        }
-	 
+
   
 }
 ?>

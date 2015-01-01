@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="<?php echo base_url().'assets/img/coat_of_arms.png'?>" type="image/x-icon" />
 	<link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
-    <link href="<?php echo base_url().'assets/css/offline.css'?>" type="text/css" rel="stylesheet"/> 
+    <link href="<?php echo base_url().'assets/css/styles.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/css/select2.css'?>" type="text/css" rel="stylesheet"/> 
     <link href="<?php echo base_url().'assets/css/offline-language-english.css'?>" type="text/css" rel="stylesheet"/>  
 	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
@@ -25,8 +25,8 @@
 	
 	<script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script> 
      <script src="<?php echo base_url().'assets/scripts/select2.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script> 
 	<script src="<?php echo base_url();?>assets/highcharts/highcharts.js"></script>
 	<script src="<?php echo base_url();?>assets/highcharts/exporting.js"></script>
 	<script src="<?php echo base_url().'assets/scripts/jquery-ui.js'?>" type="text/javascript"></script>
@@ -141,8 +141,14 @@ border-color: #e7e7e7;
             <li class="active"><a href="<?php echo base_url().'national';?>">Home</a></li>
             <li class=""><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>
             <li class=""><a href="<?php echo base_url().'national/search';?>">Search</a></li>
-            <li class="" style="background: #144d6e; color: white;"><a style="background: #144d6e; color: white;" href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-user"></span>Log in</a></li>
-            
+            <li class="dropdown" style="background: #144d6e; color: white;">
+              <a href="#" class="dropdown-toggle" style="color:white" data-toggle="dropdown" role="button" aria-expanded="false">Log In <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a style="background: #144d6e; color: white;" href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-user"></span>Essential Commodities</a></li>
+                <li><a style="background: #04B404; color: white;" href="http://41.89.6.223/HCMP/user"><span class="glyphicon glyphicon-user"></span>RTK</a></li>
+                
+              </ul>
+            </li>
                     
           </ul>
           
@@ -406,7 +412,7 @@ echo $maps; ?>
       //ajax_request_replace_div_content('national/potential/NULL/NULL/NULL/NULL/NULL',"#potential"); 
       ajax_request_replace_div_content('national/facility_over_view/',"#facilities_rolled_out");
       ajax_request_replace_div_content('national/hcw/',"#hcw_trained");
-      ajax_request_replace_div_content('national/stock_level_mos/NULL/NULL/NULL/NULL',"#mos");
+      ajax_request_replace_div_content('kenya/mos_graph/NULL/NULL/NULL/NULL',"#mos");
       ajax_request_replace_div_content('national/consumption/NULL/NULL/NULL/NULL',"#consumption");
       ajax_request_replace_div_content('national/get_facility_infor/NULL/NULL/NULL/NULL',"#facilities");
       ajax_request_replace_div_content('national/order/NULL/NULL/NULL/NULL/NULL',"#orders");

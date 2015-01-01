@@ -56,6 +56,15 @@
         </div>
     </div>
     <!--Divisional Reports Accordion-->
+    <div class="panel panel-default <?php echo $active_panel=='divisional'? 'active-panel': null; ?>">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-parent="#accordion" href="<?php echo base_url("divisional_reports/program_reports"); ?>" id="divisional_reports"><span class="glyphicon glyphicon-folder-open">
+                </span>Divisional Reports</a>
+            </h4>
+        </div>
+    </div>
+    <!--Divisional Reports Accordion-->
   
     <!--<div class="panel panel-default <?php echo $active_panel=='statistics'? 'active-panel': null; ?>">
         <div class="panel-heading">

@@ -390,6 +390,7 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "Expiries in $title $year"));
+			$graph_data = array_merge($graph_data, array("color" => "['#4b0082', '#6AF9C4']"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "KSH"));
 			$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
@@ -495,6 +496,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 	 $graph_type='spline';
 
 	 $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_1'));
+	 $graph_data = array_merge($graph_data, array("color" => "['#4b0082', '#6AF9C4']"));
 	 $graph_data=array_merge($graph_data,array("graph_title"=>"Stock Expiring $title in the Next $interval Months"));
 	 $graph_data=array_merge($graph_data,array("graph_type"=>$graph_type));
 	 $graph_data=array_merge($graph_data,array("graph_yaxis_title"=>"stock expiring in KSH"));
@@ -647,6 +649,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_mos'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "$title Stock Level in Months of Stock (MOS)"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
+			$graph_data = array_merge($graph_data, array("color" => "['#4b0082','#FFF263', '#6AF9C4']"));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "MOS"));
 			$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
 			$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
@@ -777,6 +780,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_mos'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "$title Stock Level"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
+			$graph_data = array_merge($graph_data, array("color" => "['#4b0082','#FFF263', '#6AF9C4']"));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "units"));
 			$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
 			$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
@@ -897,6 +901,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_consuption'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "$title Consumption (Packs) $time"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
+			$graph_data = array_merge($graph_data, array("color" => "['#4b0082','#FFF263', '#6AF9C4']"));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Packs"));
 			$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
 			$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
@@ -1023,6 +1028,7 @@ order by c.county asc , d1.district asc
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_order'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "$year $title Order Cost"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
+			$graph_data = array_merge($graph_data, array("color" => "['#4b0082','#FFF263', '#6AF9C4']"));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Cost in KSH"));
 			$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
 			$graph_data = array_merge($graph_data, array("series_data" => array('Cost of Orders Made' => $series_data, 'Cost of Orders delivered' => $series_data_2)));

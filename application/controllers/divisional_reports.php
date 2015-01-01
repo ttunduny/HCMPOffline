@@ -43,9 +43,14 @@ class Divisional_Reports extends MY_Controller
 				}
 					
 				$data['page_header'] = "Divisional Reports";	
+				$data['malaria'] = $report_malaria_report;
+				$data['RH'] = $report_RH_report;
+				$data['TB'] = $report_tuberculosis_report;
 				$data['title'] = "Facility Divisional Reports";
 				$data['banner_text'] = "Facility Divisional Reports";
+				$data['report_view'] = "subcounty/reports/program_reports_v";
 				$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+				$data['active_panel'] = "program_reports";
 				
 			break;
 			case district :
