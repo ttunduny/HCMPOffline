@@ -27,19 +27,19 @@
 			} );
 		</script>
 <div id="dialog"></div>
-	<div class="alert alert-info" >
-  <b>Below is the project status in the county</b>
-</div>
+	<!--<div class="alert alert-info" >
+		  <b>Below is the project status in the county</b>
+		</div>-->
 	 <div id="temp"></div>
 	<?php echo @$data; ?>
-	<div style="padding-top: 25px;">
+	<!--<div style="padding-top: 25px;">
 	<b>System Usage Breakdown</b>
 	<hr />
 	
 	<div id="facility_monitoring" >
 	</div>
 	
-	</div>
+	</div>-->
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">

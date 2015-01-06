@@ -135,7 +135,7 @@
     <div class="panel panel-default <?php echo $active_panel=='system_usage'? 'active-panel': null; ?>">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a  data-parent="#accordion" id="system_usage" href="<?php echo base_url("reports/get_sub_county_facility_mapping_data"); ?>"><span class="glyphicon glyphicon-sort">
+                <a  data-parent="#accordion" id="system_usage" href="<?php echo base_url("reports/facility_mapping"); ?>"><span class="glyphicon glyphicon-sort">
                 </span>System Usage</a>
             </h4>
         </div>

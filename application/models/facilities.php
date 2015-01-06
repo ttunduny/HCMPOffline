@@ -234,17 +234,33 @@ class Facilities extends Doctrine_Record {
 return $q;  
     
 }
-	public static function get_facilities_online_per_district($county_id){
-	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-select d.id, d.district,f.facility_name,f.type,f.facility_code,f.level,f.owner, DATE_FORMAT(`date_of_activation`,'%d %b %y') as date 
-from facilities f, districts d 
-where f.district=d.id and f.using_hcmp = 1 and d.county='$county_id'
-and unix_timestamp(f.`date_of_activation`) >0 
-order by d.district asc,f.`date_of_activation` asc
- ");
-return $q;	
+	//Used by facility_mapping function in reports controller
+	//Used to get the dates that facilities went online
+	public static function get_facilities_online_per_district($county_id)
+	{
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT 
+		    d.id,
+		    d.district,
+		    f.facility_name,
+		    f.type,
+		    f.facility_code,
+		    f.level,
+		    f.owner,
+		    DATE_FORMAT(`date_of_activation`, '%d %b %y') AS date
+		FROM
+		    facilities f,
+		    districts d
+		WHERE
+		    f.district = d.id AND f.using_hcmp = 1
+		        AND d.county = '$county_id'
+		        AND UNIX_TIMESTAMP(f.`date_of_activation`) > 0
+		ORDER BY d.district ASC , f.`date_of_activation` ASC
+	 	");
+		
+		return $q;	
 	
-}
+	}
 public static function get_facilities_all_per_district($county_id,$option=null){
 	$new=isset($option)  ? "and f.facility_code not in (select f.facility_code from facilities f, districts d 
 where f.district=d.id and d.id=$county_id and using_hcmp=1)" : null;
@@ -506,39 +522,49 @@ WHERE u.facility ="'.$facility_code.'"
 
 return $q;
 }
-public static function get_dates_facility_went_online($county_id, $district_id = null){
-	$addition = (isset($district_id)&& ($district_id>0)) ?"AND f.district = $district_id" : null;
-	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT 
-	DISTINCT DATE_FORMAT(  `date_of_activation` ,  '%M %Y' ) AS date_when_facility_went_online
-	FROM facilities f, districts d
-	WHERE f.district = d.id
-	AND d.county =$county_id
-	$addition
-	AND UNIX_TIMESTAMP(  `date_of_activation` ) >0
-	ORDER BY  `date_of_activation` ASC 
-	");
-	return $q;
+	//Used by facility_mapping function reports controller
+	//Used to get the months facilities went online
+	//Limits to the last 3 months of activation
+	public static function get_dates_facility_went_online($county_id, $district_id = null)
+	{
+		$addition = (isset($district_id)&& ($district_id>0)) ?"AND f.district = $district_id" : null;
 		
-}
-
-public static function get_facilities_which_went_online_($district_id = null, $date_of_activation)
-{
-	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-	SELECT 
-		(select count(targetted) from facilities f 	where f.district='$district_id' and f.targetted = 1) as total_facilities_targetted, 
-		(select count(facility_name) from facilities f where f.district = $district_id and using_hcmp=1) as total_using_hcmp,
-		count(facility_code) as total ,
-		(select count(id) from facilities f where f.district='$district_id') as total_facilities 
-	from 
-		facilities f, 
-		districts d 
-	where 
-		f.district = d.id 
-		and d.id = $district_id 
-		and DATE_FORMAT(  `date_of_activation` ,  '%M %Y' ) = '$date_of_activation' AND using_hcmp=1");
-				
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT DISTINCT
+		    DATE_FORMAT(`date_of_activation`, '%M %Y') AS date_when_facility_went_online
+		FROM
+		    facilities f,
+		    districts d
+		WHERE
+		    f.district = d.id
+		        AND d.county = $county_id
+		        $addition
+		        AND UNIX_TIMESTAMP(`date_of_activation`) > 0
+		ORDER BY `date_of_activation` desc
+		LIMIT 3
+		");
+		return $q;
+			
+	}
+	//used when building data for the facilities that went online in a particular district in a particular county
+	public static function get_facilities_which_went_online_($district_id = null, $date_of_activation)
+	{
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT 
+			(select count(targetted) from facilities f 	where f.district='$district_id' and f.targetted = 1) as total_facilities_targetted, 
+			(select count(facility_name) from facilities f where f.district = $district_id and using_hcmp=1) as total_using_hcmp,
+			count(facility_code) as total ,
+			(select count(id) from facilities f where f.district='$district_id') as total_facilities 
+		from 
+			facilities f, 
+			districts d 
+		where 
+			f.district = d.id 
+			and d.id = $district_id 
+			and DATE_FORMAT(  `date_of_activation` ,  '%M %Y' ) = '$date_of_activation' AND using_hcmp=1");
+			
 		return $q;		
-}
+	}
 public static function get_targetted_facilities($district_id = null)
 {
 	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
