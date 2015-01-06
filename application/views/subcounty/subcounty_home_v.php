@@ -63,7 +63,8 @@
                         </h4>
                     </div>
                 </div>
-                 <div class="panel panel-default">
+                <!-- Needs to be worked on ASAP Commented out till queries are redesigned. 
+		<div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseEight" id="system_usage"><span class="glyphicon glyphicon-sort">
@@ -71,7 +72,7 @@
                         </h4>
                     </div>
                     
-                </div>
+                </div>-->
             </div>
         </div>
       </div>

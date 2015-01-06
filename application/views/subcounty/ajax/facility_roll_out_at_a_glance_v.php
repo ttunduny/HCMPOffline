@@ -91,7 +91,7 @@
 
 <script>
 $(document).ready(function() {
-	ajax_request_replace_div_content('reports/monitoring',"#facility_monitoring");
+//	ajax_request_replace_div_content('reports/monitoring',"#facility_monitoring");
 	$(".ajax_call2").click(function(){
 		var url = "<?php echo base_url().'reports/get_district_drill_down_detail'?>";
 		// this is the data from the function
