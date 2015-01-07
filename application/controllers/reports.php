@@ -1091,7 +1091,7 @@ class Reports extends MY_Controller
 		
 		
 		if($this->input->is_ajax_request()):
-			
+			$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
 			return $this -> load -> view('subcounty/ajax/facility_roll_out_at_a_glance_v', $data);
 		else:
 			$data['title'] = "User Logs";
@@ -1100,6 +1100,7 @@ class Reports extends MY_Controller
 			$data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v":"shared_files/report_templates/side_bar_v";
 			$data['content_view'] = "facility/facility_reports/reports_v";
 			$data['active_panel'] =(!$this -> session -> userdata('facility_id')) ? "system_usage": "system_usage";
+			$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
 			$view = 'shared_files/template/template';
 			$this -> load -> view($view, $data);
 		
@@ -3706,6 +3707,47 @@ public function get_division_commodities_data($district_id = null, $facility_cod
         $category_data=$series_data = $graph_data= $series_data_=array();
 		$identifier = $this -> session -> userdata('user_indicator');
         
+        //the old query that causes too many locks on the mysql tables
+        //$facility_data=Facilities::get_facilities_monitoring_data( $facility_code,$district_id,$county_id,$identifier);
+		
+		//get the monitoring data from the log tables
+		$facility_data = Facilities::facility_monitoring($county_id, $district_id,$facility_code);
+		
+		//echo "<pre>";print_r($facility_data);exit;
+        
+        foreach($facility_data as $facility)
+        {
+        	
+ 			$date=(strtotime($facility['last_seen']))? date('j M, Y',strtotime($facility['last_seen'])):"N/A" ;
+          	array_push($series_data,array(
+          			$facility['fname'],
+          			$facility['lname'],
+		          $date,
+		          $facility['days_last_seen'],
+		          date('j M, Y',strtotime($facility['last_issued'])) ,
+		          $facility['days_last_issued'],
+		          $facility['district'],
+		          $facility['facility_name'],
+		          $facility['facility_code'])) ; 
+        }
+        $category_data=array(array("First Name","Last Name","date last seen","# of days","date last issued","# of days","Sub County","facility name","mfl"));
+        $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_'));
+        $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
+        $graph_data=array_merge($graph_data,array("table_body"=>$series_data));                
+        $data['table'] = $this->hcmp_functions->create_data_table($graph_data);
+        $data['table_id'] ="dem_graph_";
+        return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
+         
+     }
+	public function filter_monitoring($district_id=null)
+     {
+     	//pick values form the session
+        $facility_code=(!$this -> session -> userdata('facility_id')) ? null: $this -> session -> userdata('facility_id');
+        $district_id = (isset($district_id)&&($district_id>0))? $district_id:$this -> session -> userdata('district_id');
+        $county_id=(!$this -> session -> userdata('county_id')) ? null:$this -> session -> userdata('county_id');
+        
+        $category_data=$series_data = $graph_data= $series_data_=array();
+		
         //the old query that causes too many locks on the mysql tables
         //$facility_data=Facilities::get_facilities_monitoring_data( $facility_code,$district_id,$county_id,$identifier);
 		

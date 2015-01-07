@@ -606,7 +606,6 @@ return $q;
 		        $addition
 		        AND UNIX_TIMESTAMP(`date_of_activation`) > 0
 		ORDER BY `date_of_activation` desc
-		LIMIT 3
 		");
 		return $q;
 			
