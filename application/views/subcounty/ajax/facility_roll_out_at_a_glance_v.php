@@ -32,14 +32,14 @@
 		</div>-->
 	 <div id="temp"></div>
 	<?php echo @$data; ?>
-	<!--<div style="padding-top: 25px;">
+	<div style="padding-top: 25px;">
 	<b>System Usage Breakdown</b>
 	<hr />
 	
 	<div id="facility_monitoring" >
 	</div>
 	
-	</div>-->
+	</div>
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -91,7 +91,7 @@
 
 <script>
 $(document).ready(function() {
-//	ajax_request_replace_div_content('reports/monitoring',"#facility_monitoring");
+	ajax_request_replace_div_content('reports/monitoring',"#facility_monitoring");
 	$(".ajax_call2").click(function(){
 		var url = "<?php echo base_url().'reports/get_district_drill_down_detail'?>";
 		// this is the data from the function

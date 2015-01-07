@@ -202,8 +202,10 @@ class Facilities extends Doctrine_Record {
 		}	
 			
 	}
-	   public static function get_facilities_monitoring_data($facility_code=null,$district_id=null,$county_id=null,$identifier=null){
-        switch ($identifier){
+   public static function get_facilities_monitoring_data($facility_code=null,$district_id=null,$county_id=null,$identifier=null)
+   {
+        switch ($identifier)
+        {
         	case county:
 			 $where_clause= "d.county=$county_id " ;	
 			break;	
@@ -219,21 +221,84 @@ class Facilities extends Doctrine_Record {
 			  (isset($district_id) && !isset($county_id)? "d.id=$district_id ": "d.county=$county_id ") ;
 			break;	
         }
-    $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-    SELECT u.fname, u.lname,f.facility_name, f.facility_code,d.district,
-    MAX( f_i.`created_at` ) AS last_issued, ifnull(DATEDIFF( NOW( ) , MAX( f_i.`created_at` ) ),0) AS days_last_issued, 
-    MAX( l.end_time_of_event ) AS last_seen, ifnull(DATEDIFF( NOW( ) , MAX( l.end_time_of_event ) ),0) AS days_last_seen
-    FROM user u, log l, facilities f, districts d, facility_issues f_i
-    WHERE f_i.`issued_by` = u.id
-    and l.user_id=u.id
-    AND u.facility = f.facility_code
-    AND f.district = d.id
-    and $where_clause
-    GROUP BY f.facility_code
- "); 
-return $q;  
+	    $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+	    SELECT u.fname, u.lname,f.facility_name, f.facility_code,d.district,
+	    MAX( f_i.`created_at` ) AS last_issued, ifnull(DATEDIFF( NOW( ) , MAX( f_i.`created_at` ) ),0) AS days_last_issued, 
+	    MAX( l.end_time_of_event ) AS last_seen, ifnull(DATEDIFF( NOW( ) , MAX( l.end_time_of_event ) ),0) AS days_last_seen
+	    FROM user u, log l, facilities f, districts d, facility_issues f_i
+	    WHERE f_i.`issued_by` = u.id
+	    and l.user_id=u.id
+	    AND u.facility = f.facility_code
+	    AND f.district = d.id
+	    and $where_clause
+	    GROUP BY f.facility_code
+	 "); 
+		return $q;  
     
-}
+	}
+	//gets the monitoring data for all the facilities using HCMP
+	public static function facility_monitoring($county_id, $district_id, $facility_code=null)
+	{
+		if(isset($facility_code)&&($facility_code>0)):
+			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				SELECT 
+				    u.fname,
+				    u.lname,
+				    f.facility_name,
+				    f.facility_code,
+				    MAX(l.end_time_of_event) AS last_seen,
+				    (DATEDIFF(NOW(), MAX(l.end_time_of_event))) AS days_last_seen,
+				    MAX(fi.`created_at`) AS last_issued,
+				    IFNULL(DATEDIFF(NOW(), MAX(fi.`created_at`)),0) AS days_last_issued
+				FROM
+				    facilities f,
+				    user u,
+				    log l,
+				    facility_issues fi
+				WHERE
+				    f.facility_code = u.facility
+				        AND l.user_id = u.id
+				        AND u.facility = f.facility_code
+				        AND fi.`issued_by` = u.id
+				        AND f.facility_code = $facility_code
+			");
+			//return the monitoring data
+			return $data;
+		
+		else:
+			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				SELECT 
+				    u.fname,
+				    u.lname,
+				    f.facility_name,
+				    f.facility_code,
+				    d.district,
+				    MAX(f_i.`created_at`) AS last_issued,
+				    IFNULL(DATEDIFF(NOW(), MAX(f_i.`created_at`)),
+				            0) AS days_last_issued,
+				    MAX(l.end_time_of_event) AS last_seen,
+				    IFNULL(DATEDIFF(NOW(), MAX(l.end_time_of_event)),
+				            0) AS days_last_seen
+				FROM
+				    user u,
+				    log l,
+				    facilities f,
+				    districts d,
+				    facility_issues f_i
+				WHERE
+				    f_i.`issued_by` = u.id
+				        AND l.user_id = u.id
+				        AND u.facility = f.facility_code
+				        AND f.district = d.id
+				        AND d.county=$county_id
+				        AND d.id=$district_id
+				GROUP BY f.facility_code
+			");
+			//return the monitoring data
+			return $data; 
+		
+		endif;
+	}
 	//Used by facility_mapping function in reports controller
 	//Used to get the dates that facilities went online
 	public static function get_facilities_online_per_district($county_id)
