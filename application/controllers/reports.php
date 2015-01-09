@@ -1122,7 +1122,8 @@ class Reports extends MY_Controller
 		//for the summary table
 		$table_data_summary = "<tbody>";
 		//Holds the district names in a particular county
-		$district_names = "<thead><tr><th>Monthly Activities</th>";
+		$district_names = "<thead><tr><th>Sub County Roll Outs</th>";
+		$sub_county_names = "<thead><tr><th>Sub County</th>";
 		
 		//Total number of facilities using HCMP in the district
 		$district_total = array();
@@ -1202,6 +1203,7 @@ class Reports extends MY_Controller
 			$percentage_coverage_total_using = $percentage_coverage_total_using + $using_percentage;
 
 			$district_names .= "<th>$key</th>";
+			$sub_county_names .= "<th>$key</th>";
 
 			$total_facility_list .= ($checker == 1) ? "<tr><td><b>TOTAL: Facilities in Sub County</b></td><td>$district_total_facilities[$key]</td>" : "<td>$district_total_facilities[$key]</td>";
 			$table_data .= ($checker == 1) ? "<td><b>TOTAL: Facilities using HCMP</b></td><td>$value</td>" : "<td>$value</td>";
@@ -1227,7 +1229,7 @@ class Reports extends MY_Controller
 		$table_data_summary .= "<td><a href='#' id='total' class='ajax_call2 link' date='total'>$all_facilities</a></td></tr></tbody>";
 		$table_datas_summary .= "<td><a href='$list_url' id='total' class='ajax_call1 link' date='total'>$all_facilities</a></td>";
 		$district_names .= "<th>TOTAL</th></tr></thead>";
-		
+		$sub_county_names .= "<th>TOTAL</th></tr></thead>"; 
 		$final_coverage_total = 0;
 		$targetted_vs_using_hcmp = 0;
 		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
@@ -1249,7 +1251,7 @@ class Reports extends MY_Controller
 		
 		<div id='A' class='tab-pane fade active in' >
 		<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test2'>" 
-		. $district_names . $table_summary . $table_datas_summary . $total_facility_list. "<td>$total_facilities_in_county</td></tr>"
+		. $sub_county_names . $table_summary . $table_datas_summary . $total_facility_list. "<td>$total_facilities_in_county</td></tr>"
 		.$total_targetted_facility_list. $percentage_coverage .
 		"<td>$final_coverage_total %</td></tr>".$percentage_coverage_using."</tr></table>
 		 </div>
