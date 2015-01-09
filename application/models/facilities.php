@@ -265,7 +265,7 @@ class Facilities extends Doctrine_Record {
 			//return the monitoring data
 			return $data;
 		
-		else:
+		elseif(isset($district_id)&&!isset($facility_code)):
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 				SELECT 
 				    u.fname,
@@ -296,8 +296,39 @@ class Facilities extends Doctrine_Record {
 			");
 			//return the monitoring data
 			return $data; 
-		
+		else:
+			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				SELECT 
+				    u.fname,
+				    u.lname,
+				    f.facility_name,
+				    f.facility_code,
+				    d.district,
+				    MAX(f_i.`created_at`) AS last_issued,
+				    IFNULL(DATEDIFF(NOW(), MAX(f_i.`created_at`)),
+				            0) AS days_last_issued,
+				    MAX(l.end_time_of_event) AS last_seen,
+				    IFNULL(DATEDIFF(NOW(), MAX(l.end_time_of_event)),
+				            0) AS days_last_seen
+				FROM
+				    user u,
+				    log l,
+				    facilities f,
+				    districts d,
+				    facility_issues f_i
+				WHERE
+				    f_i.`issued_by` = u.id
+				        AND l.user_id = u.id
+				        AND u.facility = f.facility_code
+				        AND f.district = d.id
+				        AND d.county=$county_id
+				GROUP BY f.facility_code
+			");
+			//return the monitoring data
+			return $data; 
 		endif;
+		
+		
 	}
 	//Used by facility_mapping function in reports controller
 	//Used to get the dates that facilities went online
