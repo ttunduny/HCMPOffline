@@ -1238,7 +1238,6 @@ class Reports extends MY_Controller
         <ul class='nav nav-tabs'>
         <li class='active'><a href='#A' data-toggle='tab'>Roll out Summary</a></li>
         <li ><a href='#B' data-toggle='tab'>Monthly Break Down</a></li>
-        <li ><a href='#C' data-toggle='tab'>System Usage Breakdown</a></li>
         </ul>
          <div  id='B' class='tab-pane fade'>
 			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" 
