@@ -1196,28 +1196,26 @@ class Reports extends MY_Controller
 		foreach ($district_total as $key => $value) :
 			$coverage = 0;
 			$using = 0;
-			@$coverage = round((($value / $district_total_facilities[$key])) * 100, 1);
+			@$coverage = round((($value / $district_total_facilities[$key])) * 100, 0);
 			@$using_percentage = round((($district_total_facilities_targetted[$key]/$value)) * 100, 1);
 			$percentage_coverage_total = $percentage_coverage_total + $coverage;
 			$percentage_coverage_total_using = $percentage_coverage_total_using + $using_percentage;
 
 			$district_names .= "<th>$key</th>";
 
-			$total_facility_list .= ($checker == 1) ? "<tr><td><b>TOTAL: Facilities in District</b></td><td>$district_total_facilities[$key]</td>" : "<td>$district_total_facilities[$key]</td>";
+			$total_facility_list .= ($checker == 1) ? "<tr><td><b>TOTAL: Facilities in Sub County</b></td><td>$district_total_facilities[$key]</td>" : "<td>$district_total_facilities[$key]</td>";
 			$table_data .= ($checker == 1) ? "<td><b>TOTAL: Facilities using HCMP</b></td><td>$value</td>" : "<td>$value</td>";
 			$table_summary .= ($checker == 1) ? "<td><b>TOTAL: Facilities using HCMP</b></td><td>$value</td>" : "<td>$value</td>";
 			
-			$total_targetted_facility_list .= ($checker == 1) ? "<tr><td><b>TOTAL: Targetted Facilities in District</b></td><td>$district_total_facilities_targetted[$key]</td>":"<td>$district_total_facilities_targetted[$key]</td>";
+			//$total_targetted_facility_list .= ($checker == 1) ? "<tr><td><b>TOTAL: Targetted Facilities in Sub County</b></td><td>$district_total_facilities_targetted[$key]</td>":"<td>$district_total_facilities_targetted[$key]</td>";
 
 			$total_facilities_in_county = $total_facilities_in_county + $district_total_facilities[$key];
-			$targetted_total = $targetted_total + $district_total_facilities_targetted[$key];
+			//$targetted_total = $targetted_total + $district_total_facilities_targetted[$key];
 			$total_using_hcmp = $total_using_hcmp + $district_total_facilities_using_hcmp[$key];
 			
 			
 			@$targetted_vs_using_hcmp = round((($total_facilitites_using_hcmp /$total_facilities_targetted )) * 100, 1);
 			@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
-			$percentage_coverage_using .= ($checker == 1) ? "<tr><td><b>TOTAL: Targetted vs Using HCMP%</b></td>
-			<td>$targetted_vs_using_hcmp %</td>" : "<td>$using_percentage %</td>";
 			
 			$percentage_coverage .= ($checker == 1) ? "<tr><td><b>% Coverage</b></td>
 			<td>$coverage %</td>" : "<td>$coverage %</td>";
@@ -1233,28 +1231,32 @@ class Reports extends MY_Controller
 		$final_coverage_total = 0;
 		$targetted_vs_using_hcmp = 0;
 		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
-		@$targetted_vs_using_hcmp = round((($targetted_total/$all_facilities)) * 100, 1);
 		 
 		$data_ = "
 		<div class='tabbable tabs-left'>
 		<div class='tab-content'>
         <ul class='nav nav-tabs'>
-        <li class='active'><a href='#A' data-toggle='tab'>Monthly Break Down</a></li>
-        <li class=><a href='#B' data-toggle='tab'>Roll out Summary</a></li>
+        <li class='active'><a href='#A' data-toggle='tab'>Roll out Summary</a></li>
+        <li ><a href='#B' data-toggle='tab'>Monthly Break Down</a></li>
+        <li ><a href='#C' data-toggle='tab'>System Usage Breakdown</a></li>
         </ul>
-         <div  id='A' class='tab-pane fade active in'>
+         <div  id='B' class='tab-pane fade'>
 			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" 
 			. $district_names . $table_data . $total_facility_list .  "<td>$total_facilities_in_county</td></tr>" 
-			.$total_targetted_facility_list."<td>$targetted_total</td>" 
-			. $percentage_coverage. "<td>$final_coverage_total %</td></tr>".$percentage_coverage_using."<td>$targetted_vs_using_hcmp %</td></tr>
+			.$total_targetted_facility_list
+			. $percentage_coverage. "<td>$final_coverage_total %</td></tr>".$percentage_coverage_using."</tr>
 			</table>
 		</div>
 		
-		<div id='B' class='tab-pane fade' >
+		<div id='A' class='tab-pane fade active in' >
 		<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test2'>" 
 		. $district_names . $table_summary . $table_datas_summary . $total_facility_list. "<td>$total_facilities_in_county</td></tr>"
-		.$total_targetted_facility_list."<td>$targetted_total</td>" . $percentage_coverage .
-		"<td>$final_coverage_total %</td></tr>".$percentage_coverage_using."<td>$targetted_vs_using_hcmp %</td></tr></table>
+		.$total_targetted_facility_list. $percentage_coverage .
+		"<td>$final_coverage_total %</td></tr>".$percentage_coverage_using."</tr></table>
+		 </div>
+		 
+		 <div>
+		 
 		 </div>
 		 </div>";
 		
