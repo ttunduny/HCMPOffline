@@ -136,6 +136,44 @@ return $stocks ;
 					");
 return $stocks ;      
     }
+    //for the ZINC ORS analysis in Analysis controller
+    public function get_stock_levels($commodity_id)
+    {
+    	$year = date("Y");
+    	$stock_level = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+    	SELECT 
+		    cts.county,
+		    d.district AS subcounty,
+		    fs.batch_no,
+		    fs.manufacture,
+		    fs.current_balance AS total_units,
+		    ROUND(((fs.current_balance) / c.total_commodity_units),
+		            0) AS total_packs,
+		    fs.facility_code,
+		    fs.expiry_date,
+		    c.total_commodity_units,
+		    (fs.current_balance * c.unit_cost) AS total_cost,
+		    c.commodity_name,
+		    f.facility_name
+		FROM
+		    facility_stocks fs,
+		    commodities c,
+		    counties cts,
+		    districts d,
+		    facilities f
+		WHERE
+		    fs.commodity_id = c.id
+		        AND fs.facility_code = f.facility_code
+		        AND f.district = d.id
+		        AND d.county = cts.id
+		        AND fs.commodity_id = $commodity_id
+		        AND YEAR(expiry_date) >= $year
+		        AND fs.current_balance > 0");
+		        
+		
+		
+		return $stock_level;
+    }
     //for getting the stock outs for email
 public static function get_stock_outs_for_email($facility_code)
 {
@@ -580,25 +618,25 @@ FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDAT
 	public static function expiries_report($facility_code){
 		$stocks = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 			select 
-    f_s.facility_code,
-    f_s.commodity_id,
-    f_s.batch_no,
-    f_s.manufacture,
-    f_s.status,
-    c.commodity_name,
-    c.commodity_code,
-    DATE_FORMAT(f_s.expiry_date, '%d %b %y') as expiry_date,
-    DATE_FORMAT(f_s.expiry_date, '%M %Y') as expiry_month
-from
-    facility_stocks f_s
-        LEFT JOIN
-    commodities c ON c.id = f_s.commodity_id
-where
-    facility_code = $facility_code
-        and f_s.current_balance > 0
-        and year(expiry_date) between year(NOW()) and year(DATE_ADD(CURDATE(),
-        INTERVAL 2 year)) 
-        order by f_s.expiry_date asc");
+			    f_s.facility_code,
+			    f_s.commodity_id,
+			    f_s.batch_no,
+			    f_s.manufacture,
+			    f_s.status,
+			    c.commodity_name,
+			    c.commodity_code,
+			    DATE_FORMAT(f_s.expiry_date, '%d %b %y') as expiry_date,
+			    DATE_FORMAT(f_s.expiry_date, '%M %Y') as expiry_month
+			from
+			    facility_stocks f_s
+			        LEFT JOIN
+			    commodities c ON c.id = f_s.commodity_id
+			where
+			    facility_code = $facility_code
+			        and f_s.current_balance > 0
+			        and year(expiry_date) between year(NOW()) and year(DATE_ADD(CURDATE(),
+			        INTERVAL 2 year)) 
+			        order by f_s.expiry_date asc");
 		        return $stocks ;
 	}
 	      /////getting cost of exipries county

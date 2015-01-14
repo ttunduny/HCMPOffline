@@ -1233,6 +1233,7 @@ class Reports extends MY_Controller
 		$final_coverage_total = 0;
 		$targetted_vs_using_hcmp = 0;
 		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
+		//$system_usage = $this->monitoring();
 		 
 		$data_ = "
 		<div class='tabbable tabs-left'>
@@ -1254,10 +1255,6 @@ class Reports extends MY_Controller
 		. $sub_county_names . $table_summary . $table_datas_summary . $total_facility_list. "<td>$total_facilities_in_county</td></tr>"
 		.$total_targetted_facility_list. $percentage_coverage .
 		"<td>$final_coverage_total %</td></tr>".$percentage_coverage_using."</tr></table>
-		 </div>
-		 
-		 <div>
-		 
 		 </div>
 		 </div>";
 		
