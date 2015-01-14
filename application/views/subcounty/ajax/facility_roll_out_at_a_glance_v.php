@@ -27,11 +27,37 @@
 			} );
 		</script>
 <div id="dialog"></div>
-	<div class="alert alert-info" >
-  <b>Below is the project status in the county</b>
-</div>
+	<!--<div class="alert alert-info" >
+		  <b>Below is the project status in the county</b>
+		</div>-->
 	 <div id="temp"></div>
 	<?php echo @$data; ?>
+	<hr/>
+	<!--Filter row for the system usage breakdown
+	<div class="filter row">
+		<form class="form-inline" role="form">
+			<select id="district_filter" class="form-control col-md-2">
+			<option selected="selected" value="NULL">Select Sub-county</option>
+			<?php
+			
+				foreach($district_data as $district_):
+						$district_id=$district_->id;
+						$district_name=$district_->district;	
+						echo "<option value='$district_id'>$district_name</option>";
+						//echo "<option value='$district_id'>$district_name</option>";
+				endforeach;
+			?>
+			</select>
+
+			<div class="col-md-3">
+			<button class="btn btn-sm btn-small btn-success filter"><span class="glyphicon glyphicon-filter"></span>Filter</button>
+			</div> 
+
+		</form>
+	</div>
+	<div>
+		
+	</div> 
 	<div style="padding-top: 25px;">
 	<b>System Usage Breakdown</b>
 	<hr />
@@ -91,7 +117,7 @@
 
 <script>
 $(document).ready(function() {
-	ajax_request_replace_div_content('reports/monitoring',"#facility_monitoring");
+	//ajax_request_replace_div_content('reports/monitoring',"#facility_monitoring");
 	$(".ajax_call2").click(function(){
 		var url = "<?php echo base_url().'reports/get_district_drill_down_detail'?>";
 		// this is the data from the function
@@ -118,18 +144,15 @@ $(document).ready(function() {
           }
         }); 
 	}
-	$("#filter").click(function(){
-		var url = "reports/get_sub_county_facility_mapping_data/"+$("#year_filter").val()+ "/"+$("#month_filter").val();
-        	ajax_request_replace_div_content(url,'#container');
-        	ajax_request_replace_div_content(url,'#log_data_graph');
-		
+	
+       
+	$( "#district_filter" ).change(function() {
+  		$(".filter").click(function(){
+		var url = "reports/filter_monitoring/"+$("#district_filter").val();
+        	ajax_request_replace_div_content(url,'#facility_monitoring');
+        	return
           });
-	$("#download").click(function(){
-		var url_ = "reports/get_user_activities_excel/"+$("#year_filter").val()+
-				        "/"+$("#month_filter").val();
-		window.open(url+url_ ,'_blank'); 
-        			
-          });
+	});
 		
 		
  	});

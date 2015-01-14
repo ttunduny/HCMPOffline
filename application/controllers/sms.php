@@ -1420,7 +1420,7 @@ public function ors_zinc_report() {
 		$year = date("Y");
 		$county_total = array();
 		$excel_data = array();
-		$excel_data = array('doc_creator' =>"HCMP", 'doc_title' => $commodity_name['commodity_name'].' stock level report ', 'file_name' => 'stock level report');
+		$excel_data = array('doc_creator' =>"HCMP", 'doc_title' => ' stock level report ', 'file_name' => 'stock level report');
 		$row_data = array();
 		$column_data = array("County","Sub-County","Facility Code", 
 							"Facility Name","Commodity Name","Unit Size","Unit Cost(KES)",

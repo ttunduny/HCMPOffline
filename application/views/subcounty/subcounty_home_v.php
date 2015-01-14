@@ -63,7 +63,8 @@
                         </h4>
                     </div>
                 </div>
-                 <div class="panel panel-default">
+                <!-- Needs to be worked on ASAP Commented out till queries are redesigned. -->
+		<div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseEight" id="system_usage"><span class="glyphicon glyphicon-sort">
@@ -103,7 +104,7 @@
         $( ".col-md-2,.col-md-10" ).css( "position", "" );
     };
 });
-//expiries function
+//notifications function
 $("#notifications").on('click', function(){
 $('.page-header').html('Notifications');
 active_panel(this);
@@ -115,12 +116,7 @@ $('.page-header').html('Expiries');
 active_panel(this);
 ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
 });
-//Notifications function
-$("#notifications").on('click', function(){
-active_panel(this);
- ajax_request_replace_div_content('reports/notification_dashboard',"#notification");
-$('.page-header').html('Notifications');
-});
+
 //stocking_levels function
 $("#stocking_levels").on('click', function(){
 ajax_request_replace_div_content('reports/stock_level_dashboard',"#notification");
@@ -157,7 +153,7 @@ ajax_request_replace_div_content('divisional_reports/program_reports',"#notifica
 $("#system_usage").on('click', function(){
 active_panel(this);
 $('.page-header').html('System Usage');
-ajax_request_replace_div_content('reports/get_sub_county_facility_mapping_data',"#notification");
+ajax_request_replace_div_content('reports/facility_mapping',"#notification");
 });
 
 //
