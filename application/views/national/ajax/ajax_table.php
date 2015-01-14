@@ -47,9 +47,11 @@
 								<th>Facility mfl</th>
 								<th>Facility name</th>
 								<th>Date activated </th>
+								<th>County </th>
+								<th>Sub County </th>
 								<th>Owner</th>
 								<th>Type</th>
-								<th>Trained HCW</th>
+								<th>Level</th>
 								
 							</tr>
 						</thead>
@@ -62,9 +64,12 @@
 								<td class="facility_code" ><?php echo $list['facility_code']; ?></td>
 								<td class="facility_name"><?php echo $list['facility_name']; ?>	</td>
 								<td class="date_of_activation" data-attr=""><?php echo $list['date_of_activation']; ?></td>
+								<td class="" data-attr=""><?php echo $list['county']; ?></td>
+								<td class="" data-attr=""><?php echo $list['district']; ?></td>
 								<td class="phone"><?php echo $list['owner']; ?></td>
 								<td class="district"><?php echo $list['type']; ?></td>
-								<td class="facility_name" data-attr=""><?php echo $list['facility_name']; ?></td>
+								<td class="district"><?php echo $list['level']; ?></td>
+								
 							
 								
 

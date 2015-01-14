@@ -56,8 +56,17 @@ class Kenya extends MY_Controller
         $data['maps'] = json_encode($finalMap);
         $data['counties']=$county_name;
 		
-        $this -> load -> view("national/national_home_v",$data);
+        $this -> load -> view("national/dashboard",$data);
     } 
+		public function healthworkers($county_id=null, $district_id=null){
+			
+		}
+		public function facilities_rolled_out($county_id=null, $district_id=null){
+			
+		}
+		public function avg_fillrate($county_id=null, $district_id=null){
+			
+		}
 
 		public function statistics_table($county_id=null, $district_id=null){
 			

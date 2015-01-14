@@ -16,9 +16,10 @@
     <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/bower_components/semantic/packaged/css/semantic.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/font-awesome/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
+    <link href="<?php echo base_url().'assets/bower_components/ionicons-2.0.0/css/ionicons.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/tab-style/css/demo.css'?>" />
+    <!--<link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/tab-style/css/demo.css'?>" />-->
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/tab-style/css/tabs.css'?>" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/tab-style/css/tabstyles.css'?>" />
     <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
@@ -115,6 +116,42 @@ h4{
 		
 		width: 85%;
 	}
+	.statistic{
+		display: inline-block;
+		text-align: center;
+		cursor: pointer;
+	}
+	.statistic .label{
+		color:black;
+		font-weight: 400;
+	}
+	.statistic .value{
+		font-size:2.2em;
+		font-weight: 800;
+	}
+	.corner-label{
+		background-color: #5cb85c;
+		border-color: #4cae4c;
+		color:white;
+		text-align: center;
+		height:10%;
+		padding: 15 2 2 2;
+		width: 36;
+		margin-right:0.5%;
+		font-size:1.3rem;
+		cursor: pointer;
+	}
+	.tabs-style-bar nav ul li.tab-current a {
+	background: #4CAE4C;
+	color: #fff;
+}
+.tile-header{
+	background-color: #f7f7f7;
+	height:25px;
+	font-size:1.3rem;
+	text-align: center;
+	font-weight: 800;
+}
 	</style>
 	
 		
@@ -133,12 +170,38 @@ h4{
   	
 <div class="container-fluid">
 	
+	<div class="ui large menu">
+  <div style="margin: 13 6 0 0;">Ministry of Health</div>
+    
+     
+  
+  <div class="right menu">
+    <a class="active item">
+    <i class="home icon"></i> Home
+  </a>
+  <a class="item">
+    <i class="mail icon"></i> Settings
+  </a>1
+    <div class="ui dropdown item">
+      Log in <i class="dropdown icon"></i>
+      <div class="menu">
+        <a class="item">Login to HCMP</a>
+        <a class="item">Login to RTK</a>
+      </div>
+    </div>
+    <div class="item">
+        <div class="ui primary button">Sign Up</div>
+    </div>
+  </div>
+</div>
+	
 		<div class="tabs tabs-style-bar navbar-fixed-top">
 	
 					<nav>
 						<ul><div style="margin: 13 6 0 0;">Ministry of Health</div>
 							<a href="<?php echo base_url().'national';?>" style="margin-right: 60">   
-           						 <img style="display:inline-block;"  src="<?php echo base_url();?>assets/img/coat_of_arms_dash.png" class="img-responsive " alt="Responsive image" id="logo" ></a></li>
+           						 <img style="display:inline-block;"  src="<?php echo base_url();?>assets/img/coat_of_arms_dash.png" 
+           						 class="img-responsive " alt="Responsive image" id="logo" ></a></li>
 							<li><a href="#hcmp" class="icon icon-graph1"><span>HCMP Dashboard</span></a>
 							<li><a href="<?php echo base_url().'home';?>" class="icon icon-user"><span>System Log in</span></a></li>
 						</ul>
@@ -150,13 +213,14 @@ h4{
 							<!-- BEGIN HCMP CONTENT -->
 						<section id="hcmp" class="row-fluid">
 							
-							<div class="row-fluid" style="max-height: 460px">							
+							<div class="row-fluid ui stackable four column grid" style="max-height: 550px">							
 							
 							
-						<div id="" class="col-lg-4" style="margin-top: 1%;">
+						<div id="" class="five wide column" style="margin-top: 1%;">
 							
-							<div class="tile"  style="max-height: 460px;">
-							<div id="map" style="max-height: 400px;"></div>	
+							<div class="tile"  style="max-height: 500px;">
+								<div class="tile-header">National Over view</div>
+							<div id="map" style="max-height: 480px;"></div>	
 						<script>
 					var map= new FusionMaps ("assets/FusionMaps/FCMap_KenyaCounty.swf","KenyaMap","100%","100%","0","0");
 					map.setJSONData(<?php echo $maps; ?>);
@@ -176,9 +240,7 @@ h4{
                    		 	<div class="col-lg-3">
                    		 	</div>
                    		 	<div class="col-lg-4">
-                   		 		<a href="" data-toggle="modal" data-target="#facilitystatsModal">
-                   		 		More data
-                   		 		</a>
+                   		 		
                    		 	</div>
 				             
 				            
@@ -191,50 +253,77 @@ h4{
 						
 						</div>
 						
-						<div id="" class=" tile col-lg-6" style="margin-top: 1%;">
-							<div class="col-lg-3" style="height: 50px; padding: 8px;margin: 0;">
-								
-								<button data-toggle="modal" data-target="#mosModal" class="btn btn-sm btn-success "><span class="icon icon-display"></span>More</button>	
-								
-							</div>
-							<div class="" id="mos" style="height:380px ">
-					
-							</div>
-						</div>
 						
-						<div id="" class="col-lg-2 tile" style="margin-top: 1%;height: 420px">
+				<div id="" class="eleven wide column " style="margin-top: 1%;height: 480px">
+					
+					<div class="ui statistics ">
+						<div class="ui grid tile ">
+							<div class="tile-header">National Statistics</div>
+							  <div class="four wide column">
+								<div class="statistic">
+								    <div class="value">
+								      522
+								    </div>
+								    <div class="label">
+								     Total HCW Trained   
+								    </div>
+								  </div>
+							  </div>
+							  <div class="four wide column">
+								<div class="statistic">
+								    <div class="text value">
+								      184
+								    </div>
+								    <div class="label">
+								      Total Facilities Rolled Out
+								    </div>
+								  </div>
+							  </div>
+							  <div class="four wide column">
+								<div class="statistic">
+								    <div class="value">
+								      <i class="plane icon"></i> 5
+								    </div>
+								    <div class="label">
+								      Avg Stock out days
+								    </div>
+								  </div>
+							  </div>
+							  <div class="three wide column">
+								<div class="statistic">
+								    <div class="value">
+								      57%
+			   						 </div>
+			    					<div class="label">
+								      Avg order fill rate
+								    </div>
+								    
+			 					 </div>
+			 					
+
+							  </div>
+							  <div class="one wide column" style="padding:0.5%">
+							  	<div class="corner-label right" data-toggle="modal" data-target="#facilitystatsModal">
+							  		
+									    <div class="ion-chevron-right">More</div>
+							  	</div>
+							  	</div>
+							 
+						</div>
+					  
+					  <div class="ui grid">
+					  	<div class="tile" style="height: 420px"> 
+							<div class="" style="height: 50px; padding: 8px;margin: 0;">
+								
+								<button data-toggle="modal" data-target="#expiriesModal" class="btn btn-xs btn-success test "><span class="icon icon-display"></span>More</button>	
+								
+							</div>					  		<div id="expiries"></div>
+					  		</div>
+					  	</div>
+					  
+					  
+				</div>	
 							
-							<div class="" id="" style="height: ">
-							<div class="row" style="">
-								
-								<div class="col-xs-1"></div>
-								<div class="col-xs-10">
-									<!--<a href="" data-toggle="modal" data-target="#facilitystatsModal">
-									<!--	<div class="">
-											<span class="glyphicon glyphicon-user"></span>
-					                  	Facilities with Stockouts <br/> <span id="hcw_trained"></span>
-					                            
-					                </div>
-					                   </a>-->
-								</div>
-								<div class="col-xs-1"></div>
-								
-							</div>
-							<div class="row" >
-								<div class="col-xs-1"></div>
-								<div class="col-xs-10">
-									<!--<a href="" class="" data-toggle="modal" data-target="#Modal">
-											<div class="">
-												<span class="glyphicon "></span>
-						                 	Facilities Rolled Out <br/><span id="facilities_rolled_out"></span> 
-						                            
-						                   </div>
-						                   </a>-->
-								</div>
-								<div class="col-xs-1"></div>
-										
-							</div>
-							</div>
 						</div>
 						
 						
@@ -244,48 +333,68 @@ h4{
 								<i style="font-size: 16px;" class="fa fa-bar-chart-o"></i>
 								 </div>
 							
-							<div class="row-fluid" style=" margin-top:1.2%;">
-								<div class="col-lg-6 tile" style="height: 500px ;margin-right: 0">
-									<div class="col-lg-3" style="height: 50px; padding: 8px;margin: 0;">
+							<div class="row-fluid ui stackable four column grid" style=" margin-top:1.2%;">
+								<div class="five wide column tile " style="height: 500px ;margin-right: 0">
+									<div class="" style="height: 50px; padding: 8px;margin: 0;">
 								
-								<button data-toggle="modal" data-target="#consumptionModal" class="btn btn-sm btn-success "><span class="icon icon-display"></span>More</button>	
-								
-							</div>
-							<div id="consumption"></div>
-								</div>
-								<div class="col-lg-6 tile" style="height: 500px;margin-left: 0">
-									<div class="col-lg-3" style="height: 50px; padding: 8px;margin: 0;">
-								
-								<button data-toggle="modal" data-target="#ordersModal" class="btn btn-sm btn-success "><span class="icon icon-display"></span>More</button>	
+								<button data-toggle="modal" data-target="#mosModal" class="btn btn-xs btn-success "><span class="icon icon-display"></span>More</button>	
 								
 							</div>
-							<div id="orders"></div>
+							<div id="mos" class=""></div>
 								</div>
+								<div class="six wide column " style="height: 500px;margin-left: 0">
+									<div class="" style="height: 50px; padding: 8px;margin: 0;">
+								
+								<button data-toggle="modal" data-target="#ordersModal" class="btn btn-xs btn-success "><span class="icon icon-display"></span>More</button>	
+								
+							</div>
+							<div id="orders" class="tile"></div>
+								</div>
+								<div class="five wide column " style="height: 500px ;margin-right: 0">
+									<div class="" style="height: 50px; padding: 8px;margin: 0;">
+								
+								<button data-toggle="modal" data-target="#consumptionModal" class="btn btn-xs btn-success "><span class="icon icon-display"></span>More</button>	
+								
+							</div>
+							<div id="consumption" class="tile"></div>
+								</div>
+								
 																
 							</div>
+							
 							<div class="ui horizontal divider">
 								<i style="font-size: 16px;" class="fa fa-bar-chart-o"></i>
 								 </div>
 								 
-								 <div class="row-fluid" style=" margin-top:1.2%;">
-								<div class="col-lg-6 tile" style="height: 500px ;margin-right: 0">
-									<div class="col-lg-3" style="height: 50px; padding: 8px;margin: 0;">
+							<div class="row-fluid ui stackable four column grid" style=" margin-top:1.2%;">
+								<div class="five wide column " style="height: 500px ;margin-right: 0">
+									<div class="" style="height: 50px; padding: 8px;margin: 0;">
 								
-								<button data-toggle="modal" data-target="#Modal" class="btn btn-sm btn-success "><span class="icon icon-display"></span>More</button>	
-								
-							</div>
-							<div id="expiries"></div>
-								</div>
-								<div class="col-lg-6 tile" style="height: 500px;margin-left: 0">
-									<div class="col-lg-3" style="height: 50px; padding: 8px;margin: 0;">
-								
-								<button data-toggle="modal" data-target="#Modal" class="btn btn-sm btn-success "><span class="icon icon-display"></span>More</button>	
+								<button data-toggle="modal" data-target="#mosModal" class="btn btn-sm btn-success "><span class="icon icon-display"></span>More</button>	
 								
 							</div>
-							<div id=""></div>
+							<div id="" class="tile"></div>
 								</div>
+								<div class="six wide column " style="height: 500px;margin-left: 0">
+									<div class="" style="height: 50px; padding: 8px;margin: 0;">
+								
+								<button data-toggle="modal" data-target="#ordersModal" class="btn btn-sm btn-success "><span class="icon icon-display"></span>More</button>	
+								
+							</div>
+							<div id="" class="tile"></div>
+								</div>
+								<div class="five wide column " style="height: 500px ;margin-right: 0">
+									<div class="" style="height: 50px; padding: 8px;margin: 0;">
+								
+								<button data-toggle="modal" data-target="#consumptionModal" class="btn btn-sm btn-success "><span class="icon icon-display"></span>More</button>	
+								
+							</div>
+							<div id="" class="tile"></div>
+								</div>
+								
 																
-							</div>
+							</div>	
+								 
 							
 						</section>
 						<!-- /END HCMP CONTENT -->
@@ -588,10 +697,31 @@ unset($popup);
 </div>
 <!-- end Modal consumptionModal -->
 
+
+<!-- Modal -->
+<div class="modal fade" id="expiriesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Facility Statistics</h4>
+      </div>
+      <div class="modal-body">
+        <div class=""></div>
+        <div></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end Modal expiriesModal -->
     
     <script src="<?php echo base_url().'assets/tab-style/js/cbpFWTabs.js'?>"></script>
 		<script>
-		$('.ui.dropdown').dropdown();			
+		$('.ui.dropdown').dropdown();
+					
 		</script>
 		
 		
@@ -610,8 +740,7 @@ unset($popup);
 				});
 
 			})();
-			
-						
+					
 							
 				$("#county_val").change(function() {
 			var option_value=$(this).val();
@@ -670,7 +799,7 @@ unset($popup);
         ajax_request('Kenya/mos_graph/'+countyvalue2+'/'+subcountyvalue2+'/'+commodity+'/NULL/mosmodal',"#mosmodal");
         
         });
-        ajax_request('kenya/mos_graph/NULL/NULL/NULL/NULL/mos',"#mos");
+        //ajax_request('kenya/mos_graph/NULL/NULL/NULL/NULL/mos',"#mos");
         ajax_request('Kenya/consumption/NULL/NULL/NULL/NULL',"#consumption");
         ajax_request('Kenya/orders/NULL/NULL/NULL/NULL/NULL',"#orders");
         ajax_request('Kenya/expiry/NULL/NULL/NULL/NULL/NULL',"#expiries");
