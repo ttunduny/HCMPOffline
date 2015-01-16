@@ -3294,7 +3294,7 @@ $graph_type = 'bar';
 	//For the Sub County Comparison on the County and Sub County Interface
 	public function get_county_comparison_graph($commodity_id = null, $category_id = null, $district_id = null, $facility_code=null, $option = null,$report_type=null,$tracer = null) 
  	{
- 		echo $report_type;exit;
+ 		//echo $report_type;exit;
      	$tracer =(isset($tracer))? $tracer:null ;
 		$report_type =(isset($report_type))? $report_type:null ;
       	$commodity_id = ($commodity_id=="NULL") ? null :$commodity_id;

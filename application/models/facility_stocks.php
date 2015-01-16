@@ -891,15 +891,7 @@ public static function get_stock_levels_county($facility_code = null,$sub_county
      AND fs.status=1
      $and_data
       $group_by_a_month
-     ");	echo "SELECT  $selection_for_a_month $computation
-     FROM facility_stocks fs, facilities f, commodities d,  districts di
-     WHERE fs.facility_code = f.facility_code
-     AND f.district =di.id
-     and fs.expiry_date>NOW()
-     AND fs.status=1
-     $and_data
-      $group_by_a_month";
-	 exit;
+     ");
      return $inserttransaction ;
 }   
 //For the County Comparison
@@ -1020,15 +1012,6 @@ public static function get_county_comparison_data($facility_code=null,$district_
     $and_data
     $group_by_a_month
      ");		
-	/*echo "SELECT  $selection_for_a_month $computation
-    FROM facility_issues fs, facilities f, commodities d, districts di
-    WHERE fs.facility_code = f.facility_code
-    AND f.district = di.id
-    AND fs.qty_issued >0
-    $and 
-    AND d.id = fs.commodity_id
-    $and_data
-    $group_by_a_month";exit;*/
 	
      return $inserttransaction ;
   }     
