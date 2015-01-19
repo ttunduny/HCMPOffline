@@ -117,6 +117,10 @@
 
 <script>
 $(document).ready(function() {
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+          $('.graph_content').html('');
+          
+          })
 	//ajax_request_replace_div_content('reports/monitoring',"#facility_monitoring");
 	$(".ajax_call2").click(function(){
 		var url = "<?php echo base_url().'reports/get_district_drill_down_detail'?>";
@@ -145,7 +149,11 @@ $(document).ready(function() {
         }); 
 	}
 	
-       
+    $(".download").click(function(){
+    	var url_download = "<?php echo base_url().'reports/monitoring' ?>";
+		window.open(url_download ,'_blank'); 
+        	
+          });
 	$( "#district_filter" ).change(function() {
   		$(".filter").click(function(){
 		var url = "reports/filter_monitoring/"+$("#district_filter").val();

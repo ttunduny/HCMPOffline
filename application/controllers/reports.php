@@ -1241,6 +1241,7 @@ class Reports extends MY_Controller
         <ul class='nav nav-tabs'>
         <li class='active'><a href='#A' data-toggle='tab'>Roll out Summary</a></li>
         <li ><a href='#B' data-toggle='tab'>Monthly Break Down</a></li>
+        <li><button type='button' class='btn btn-default download'>System Usage Breakdown</button></li>
         </ul>
          <div  id='B' class='tab-pane fade'>
 			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" 
@@ -3714,12 +3715,13 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		$facility_data = Facilities::facility_monitoring($county_id, $district_id,$facility_code);
 		
 		//echo "<pre>";print_r($facility_data);exit;
-        
+        $row_data = array();
+		
         foreach($facility_data as $facility)
         {
         	
  			$date=(strtotime($facility['last_seen']))? date('j M, Y',strtotime($facility['last_seen'])):"N/A" ;
-          	array_push($series_data,array(
+          	array_push($row_data,array(
           			$facility['fname'],
           			$facility['lname'],
 		          $date,
@@ -3730,6 +3732,17 @@ public function get_division_commodities_data($district_id = null, $facility_cod
 		          $facility['facility_name'],
 		          $facility['facility_code'])) ; 
         }
+		
+		$excel_data = array();
+		$excel_data = array('doc_creator' => 'HCMP ', 'doc_title' => 'system usage breakdown ', 'file_name' => 'system usage breakdown');
+		$column_data = array("First Name","Last Name","date last seen","# of days","date last issued","# of days","Sub County","facility name","mfl");
+		
+		$excel_data['column_data'] = $column_data;
+		$excel_data['row_data'] = $row_data;
+
+		$this -> hcmp_functions -> create_excel($excel_data);
+		
+        /*
         $category_data=array(array("First Name","Last Name","date last seen","# of days","date last issued","# of days","Sub County","facility name","mfl"));
         $graph_data=array_merge($graph_data,array("table_id"=>'dem_graph_'));
         $graph_data=array_merge($graph_data,array("table_header"=>$category_data ));
@@ -3738,6 +3751,7 @@ public function get_division_commodities_data($district_id = null, $facility_cod
         $data['table_id'] ="dem_graph_";
         return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
          
+		 */
      }
 	public function filter_monitoring($district_id=null)
      {
