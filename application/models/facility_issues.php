@@ -109,7 +109,7 @@ INNER JOIN user u on f.issued_by = u.id
 INNER JOIN commodities c on c.id = f.commodity_id
 WHERE f.facility_code = $facility_code AND f.status = 1 
 AND f.commodity_id = $commodity_id AND f.date_issued 
-BETWEEN '$convertfrom' AND '$convertto' ORDER BY f.id,f.date_issued ASC"); 
+BETWEEN '$convertfrom' AND '$convertto' ORDER BY f.created_at ASC"); 
 		
 
 
