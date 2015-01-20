@@ -1234,6 +1234,7 @@ class Reports extends MY_Controller
 		$targetted_vs_using_hcmp = 0;
 		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
 		//$system_usage = $this->monitoring();
+		//<li><button type='button' class='btn btn-default download'>System Usage Breakdown</button></li>
 		 
 		$data_ = "
 		<div class='tabbable tabs-left'>
@@ -1241,7 +1242,7 @@ class Reports extends MY_Controller
         <ul class='nav nav-tabs'>
         <li class='active'><a href='#A' data-toggle='tab'>Roll out Summary</a></li>
         <li ><a href='#B' data-toggle='tab'>Monthly Break Down</a></li>
-        <li><button type='button' class='btn btn-default download'>System Usage Breakdown</button></li>
+        
         </ul>
          <div  id='B' class='tab-pane fade'>
 			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" 
