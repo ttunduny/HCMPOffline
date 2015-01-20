@@ -44,13 +44,13 @@ class Reports extends MY_Controller
 			case facility_admin :
 			case facility :
 				$facility_code = $this -> session -> userdata('facility_id');
-				$data['content_view'] = "facility/facility_reports/reports_v";
-				$data['facility_code'] = $this -> session -> userdata('facility_id');
-				$view = 'shared_files/template/template';
-				$data['report_view'] = "facility/facility_reports/potential_expiries_v";
+				$data['banner_text'] = "Facility Consumption"	;
+				$data['c_data'] = Commodities::get_facility_commodities($facility_code);
 				$data['sidebar'] = "shared_files/report_templates/side_bar_v";
-				$data['report_data'] = Facility_stocks::potential_expiries($facility_code);
-                $data['active_panel']='expiries';
+				$data['report_view']="facility/facility_reports/ajax/consumption_stats_ajax";
+				$data['content_view']="facility/facility_reports/reports_v";
+				$view = 'shared_files/template/template';
+				$data['active_panel']='consumption';
 				break;
 			case district_tech :
 				$data['content_view'] = "";
@@ -76,6 +76,8 @@ class Reports extends MY_Controller
 	 | SHARED REPORTS															|
 	 |--------------------------------------------------------------------------|
 	 */
+	 
+	 
 	//Default function for all non functioning parts of the system
 	public function work_in_progress()
 	{
@@ -130,6 +132,21 @@ class Reports extends MY_Controller
 	 | FACILITY REPORTS
 	 |--------------------------------------------------------------------------
 	 */
+	 //facility level potential expiries report
+	 public function potential_expiries()
+	 {
+	 	$facility_code = $this -> session -> userdata('facility_id');
+		$data['title'] = "Reports";
+		$data['content_view'] = "facility/facility_reports/reports_v";
+		$data['facility_code'] = $this -> session -> userdata('facility_id');
+		$view = 'shared_files/template/template';
+		$data['report_view'] = "facility/facility_reports/potential_expiries_v";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		$data['report_data'] = Facility_stocks::potential_expiries($facility_code);
+        $data['active_panel']='expiries';
+		$this -> load -> view($view, $data);
+		
+	 }
 	 //facility user manual
 	 public function get_manual()
 	 {
