@@ -96,12 +96,11 @@
     $(".activate_facility").click(function(e){
         e.preventDefault();
 
-        var facility_id = $(".lucky_facility").val();
-        var facility_status = $(".lucky_facility option:selected").attr("class");
+        var facility_id = $("#lucky_facility").val();
+        var facility_status = $("#lucky_facility option:selected").attr("class");
         // data-facility-status
         // alert(facility_id);
         // alert(facility_status);
-
         $.ajax({
           type:'POST',
           url:"deactivate_facility"

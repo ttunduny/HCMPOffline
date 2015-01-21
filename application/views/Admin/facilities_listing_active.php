@@ -74,10 +74,10 @@
 	</div>
 	<div class="col-md-9"  style="padding:5px 3px;">
 		<select class="lucky_facility" id="lucky_facility">
-			<option value="-000-">--Select Facility By Name--</option>
+			<option value="-000-">--Search By Facility Code or Name--</option>
 			<?php 
 			foreach ($facilities_listing_inactive as $released) {
-				echo "<option value=".$released['facility_code']." class =".$released['using_hcmp'].">".$released['facility_name']."</option>";
+				echo "<option value=".$released['facility_code']." class =".$released['using_hcmp'].">".$released['facility_code']."	|	".$released['facility_name']."</option>";
 			}
 			 ?>
 		</select>

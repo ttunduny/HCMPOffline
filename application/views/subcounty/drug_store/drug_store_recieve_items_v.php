@@ -1,4 +1,4 @@
-
+<?php echo "<pre>";print_r($store_commodities);echo "</pre>";exit; ?>
 <style>
 	.big{ width: 150px !important; }
 	.row div p{
@@ -21,7 +21,7 @@
 		
 	</div>
 <div class="table-responsive" style="height:400px; overflow-y: auto;">
- <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/external_issue',$att); ?>
+ <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/district_store_drug_recieval',$att); ?>
 <table width="100%"  class="table table-hover table-bordered table-update" id="facility_issues_table" >
 <thead style="background-color: white">
 					<tr>
@@ -44,33 +44,17 @@
 						<tr row_id='0'>
 							<td>
 								<select name="district[0]" class="form-control input-small district" style="width:110px !important;">
-								<option value="0">Select Sub-county</option>
 								<?php 
-								if ($district_store == 1) {//checks if accessed page is district store
-										echo '<option selected = "selected" value="'.$district_data['id'].'"> '.$district_data['district'].'</option>';
-								}else{
-									foreach ($subcounties as $district) {
-										$id=$district->id;
-										$name=$district->district;		
-										echo '<option value="'.$id.'"> '.$name.'</option>';
-									
-								}
-								}?>	
+								echo '<option selected = "selected" value="'.$district_data['id'].'"> '.$district_data['district'].'</option>';
+								?>	
 								</select>
 							</td>
 							<td>
-						<select name="mfl[0]" class="form-control input-small facility" style="width:110px !important;">
-						<?php 
-								if ($district_store == 1) {//checks if accessed page is district store
-									echo "<option value='2'>District Store</option>";
-								}else{
-									echo "<option value='0'>Select Facility</option>";
-								}
-
-								?>	
-
-                       
-					   </select>
+								<select name="mfl[0]" class="form-control input-small facility" style="width:110px !important;">
+								<?php 
+								echo "<option value='2'>District Store</option>";
+								?>
+							   </select>
 						</td>
 						<td>
 	<select class="form-control input-small service desc" name="desc[0]" style="width:110px !important;">
@@ -139,43 +123,6 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 	 scrollContainer: function($table){ return $table.closest('.table-responsive'); }
 	});	
 
-///// county district facility filter 
-       $('.district').on("change", function() {
-			/*
-			 * when clicked, this object should populate district names to district dropdown list.
-			 * Initially it sets default values to the 2 drop down lists(districts and facilities) 
-			 * then ajax is used is to retrieve the district names using the 'dropdown()' method that has
-			 * 3 arguments(the ajax url, value POSTed and the id of the object to populated)
-			 */
-	        var locator =$('option:selected', this);
-			json_obj={"url":"<?php echo site_url("reports/get_facilities");?>",}
-			var baseUrl=json_obj.url;
-			var id=$(this).val();
-		    var dropdown;
-			$.ajax({
-			  type: "POST",
-			  url: baseUrl,
-			  data: "district="+id,
-			  success: function(msg){ 
-			  	// alert(msg);return;s
-			  		var values=msg.split("_");
-			  		var txtbox;
-			  		for (var i=0; i < values.length-1; i++) {
-			  			var id_value=values[i].split("*");				  					  			
-			  			dropdown+="<option value="+id_value[0]+">";
-						dropdown+=id_value[1];						
-						dropdown+="</option>";	
-
-		  		}	
-			  },
-			  error: function(XMLHttpRequest, textStatus, errorThrown) {
-			       if(textStatus == 'timeout') {}
-			   }
-			}).done(function( msg ) {			
-				locator.closest("tr").find(".facility").html(dropdown);
-			});
-
-		});	
             ///when changing the commodity combobox
       		$(".desc").on('change',function(){
       		var row_id=$(this).closest("tr").index();	
@@ -432,7 +379,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			  		 "^"+facility_stock_data[i]['facility_stock_id']+
 			  		 "^"+facility_stock_data[i]['commodity_balance']+
 			  		 "^"+facility_stock_data[i]['manufacture']+">";
-			  				 expiry_date=$.datepicker.formatDate('dMy', new Date(facility_stock_data[i]['expiry_date']));
+			  				 expiry_date=facility_stock_data[i]['expiry_date'];
 			  				 bal=facility_stock_data[i]['commodity_balance'];
 			  				 facility_stock_id_=facility_stock_data[i]['facility_stock_id'];
 			  				 total_stock_bal=facility_stock_data[i]['commodity_balance'];

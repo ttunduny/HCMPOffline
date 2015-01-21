@@ -348,7 +348,7 @@ AND d.id= $district");
 return $q;
 }
 ////////////////////////////////////////////////
-public static function get_one_facility_details($facility_c){
+public static function get_one_facility_details($facility_code){
 	$facility_code = $facility_c;
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 SELECT DISTINCT f.id, f.facility_code, f.facility_name, f.district, f.owner, c.county, d.district as district_name
@@ -538,5 +538,11 @@ public static function get_total_facilities_rtk_in_district($district_id){
 return $q;
 }
 
-	
+//getting facility name without Doctrine
+public static function get_facility_details_simple($facility_code){
+	$mbegu = Doctrine_Manager::getInstance()->getCurrentConnection->fetchAll("
+		SELECT * from facilities WHERE facility_code = $facility_code
+		");
+	return $mbegu;
+	}
 }

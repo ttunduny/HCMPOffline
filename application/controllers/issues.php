@@ -28,48 +28,56 @@ class issues extends MY_Controller {
 				$data['content_view'] = "facility/facility_issues/facility_issues_service_points_v";
 				$data['title'] = "Issues to service points";
 				$data['banner_text'] = "Issues to service points";
+				$data['district_store'] = 0;
 				break;
 			case 'external' :
 				$data['content_view'] = "facility/facility_issues/facility_redistribute_items_v";
 				$data['subcounties'] = districts::getAll();
 				$data['banner_text'] = "Redistribute Commodities";
 				$data['title'] = "Redistribute Commodities";
+				$data['district_store'] = 0;
 				break;
 			case 'district_store':	
-					$district_id = $this -> session -> userdata('district_id');	
-					$dist = districts::get_district_name_($district_id);	
+					$district_id = $this -> session -> userdata('district_id');
+					$facility_code = 2;
+					$dist = districts::get_district_name_($district_id);
 					$data['district_id'] = $this -> session -> userdata('district_id');
 					$data['district_data'] = districts::get_district_name_($district_id);
-					$data['content_view'] = "facility/facility_issues/facility_redistribute_items_v";
+					$data['content_view'] = "subcounty/drug_store/drug_store_recieve_items_v";
 					$data['donate_destination'] = "district";
 					$data['subcounties']=districts::getAll();
 					$data['banner_text'] = "Redistribute Commodities";
 					$data['title'] ="Redistribute Commodities";						
+					$data['district_store'] = 1;
+					//$data['store_commodities'] = drug_store_issues::get_commodities_for_district($district_id);
 				break;	
 			default :
 		endswitch;
 		$data['service_point'] = service_points::get_all_active($facility_code);
 		$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_facility($facility_code, 1);
+
 		$data_ = facility_stocks::get_distinct_stocks_for_this_facility($facility_code, "batch_data");
 		foreach ($data_ as $key => $data_1) {
 			$data_[$key]['commodity_name'] = preg_replace('/[^A-Za-z0-9\-]/', ' ', $data_1['commodity_name']);
 		}
 		$data['facility_stock_data'] = json_encode($data_);
-
+		// echo "<pre>";print_r($data['commodities']);echo "</pre>";exit;
+		// echo $district_id;exit;
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 
 	public function store_home(){
 		$district_id = $this -> session -> userdata('district_id');	
-		$data['expiry_data'] = Facility_stocks::drug_store_commodity_expiries($district_id);
+		// echo $district_id;exit;
+		//$data['expiry_data'] = Facility_stocks::drug_store_commodity_expiries($district_id);
 		// echo "<pre>";print_r($data['expiry_data']);echo "</pre>";exit;
 
-		$view = 'shared_files/template/template';
 		    $data['content_view'] = "subcounty/subcounty_drug_store_home";	
 			$data['district_dashboard_notifications']=$this->get_district_dashboard_notifications_graph_data();
+		//echo $district_id;exit;
 			$data['title'] = "Drug Store Home";
 		$data['banner_text'] = "Drug Store";
-		$this -> load -> view($view, $data);
+		$this -> load -> view("shared_files/template/template", $data);
 	}
 
 	public function district_store(){
@@ -84,10 +92,57 @@ class issues extends MY_Controller {
 						$data['title'] ="Redistribute Commodities";		
 						//$data['service_point']=service_points::get_all_active($facility_code);		
 		$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_district_store($district_id,1);
+		// echo "<pre>";print_r($data['commodities']);echo "</pre>";exit;
 	    $data['facility_stock_data']=json_encode(facility_stocks::get_distinct_stocks_for_this_district_store($district_id,"batch_data"));	
      	$this -> load -> view("shared_files/template/template", $data);
 
 	}
+
+	public function get_district_dashboard_notifications_graph_data()
+     {
+     //format the graph here
+     //$facility_code=$this -> session -> userdata('facility_id');
+     $district_id = $this -> session -> userdata('district_id');	
+     $district_stock_=facility_stocks::get_district_stock_amc($district_id);
+ 	$district_stock_count=count($district_stock_);
+     $graph_data=array();
+ 	$graph_data=array_merge($graph_data,array("graph_id"=>'container'));
+ 	$graph_data=array_merge($graph_data,array("graph_title"=>'District Store Stock level'));
+ 	$graph_data=array_merge($graph_data,array("graph_type"=>'bar'));
+ 	$graph_data=array_merge($graph_data,array("graph_yaxis_title"=>'Total stock level  (values in packs)'));
+ 	$graph_data=array_merge($graph_data,array("graph_categories"=>array()));
+ 	$graph_data=array_merge($graph_data,array("series_data"=>array("Current Balance"=>array())));
+ 	$graph_data['stacking']='normal';
+ 	foreach($district_stock_ as $district_stock_):
+ 		$graph_data['graph_categories']=array_merge($graph_data['graph_categories'],array($district_stock_['commodity_name']));	
+ 		$graph_data['series_data']['Current Balance']=array_merge($graph_data['series_data']['Current Balance'],array((float) $district_stock_['pack_balance']));	
+ 
+ 	endforeach;
+ 	//create the graph here
+    //echo "I WORK";exit;
+ 
+ 	$district_stock_data=$this->hcmp_functions->create_high_chart_graph($graph_data);
+ 	$loading_icon=base_url('assets/img/no-record-found.png'); 
+ 	$district_stock_data=($district_stock_count>0)? $district_stock_data : "$('#container').html('<img src=$loading_icon>');" ;
+ 	
+     //get potential expiries info here
+     $potential_expiries_=count(Facility_stocks::drug_store_commodity_expiries($district_id));
+     //get actual Expiries info here
+     $actual_expiries=count(Facility_stocks::drug_store_commodity_expiries($district_id));
+ 	//get items they have been donated for
+ 	$facility_donations=redistribution_data::get_all_active_drug_store($district_id,"to-me")->count();
+    // echo "<pre>";print_r($facility_donations);echo "</pre>";exit;
+    //seth
+ 	//get stocks from v1
+ 	$stocks_from_v1=0;
+ 	return array('district_stock_count'=>$district_stock_count,
+ 	'district_stock_graph'=>$district_stock_data,
+ 	'potential_expiries'=>$potential_expiries_,
+ 	'actual_expiries'=>$actual_expiries,
+ 	'facility_donations'=>$facility_donations,
+ 	'stocks_from_v1'=>$stocks_from_v1
+ 	);	
+     }
 
 	public function district_store_issue()
 	{
@@ -200,72 +255,184 @@ class issues extends MY_Controller {
 
 	public function district_store_external_issue()
 		{
+			//echo "<pre>";print_r($this -> input -> post());echo "</pre>";exit;
 			//security check
-			if($this->input->post('mfl')):
-
+		if ($this -> input -> post('mfl')) :
+			$facility_code = $this -> session -> userdata('facility_id');
 			$district_id = $this -> session -> userdata('district_id');
-			$facility_code=$this -> session -> userdata('facility_id');
-			$service_point=array_values($this->input->post('mfl'));
-			$commodity_id=array_values($this->input->post('desc'));
-			$commodity_balance_before=array_values($this->input->post('commodity_balance'));
-			$facility_stock_id=array_values($this->input->post('facility_stock_id'));
-			$batch_no=array_values($this->input->post('batch_no'));
-			$expiry_date=array_values($this->input->post('expiry_date'));
-			$commodity_unit_of_issue=array_values($this->input->post('commodity_unit_of_issue'));
-			$quantity_issued=array_values($this->input->post('quantity_issued'));
-			$clone_datepicker_normal_limit_today=array_values($this->input->post('clone_datepicker_normal_limit_today'));
-			$manufacture=array_values($this->input->post('manufacture'));
+			$service_point = array_values($this -> input -> post('mfl'));
+			$commodity_id = array_values($this -> input -> post('desc'));
+			$commodity_balance_before = array_values($this -> input -> post('commodity_balance'));
+			$facility_stock_id = array_values($this -> input -> post('facility_stock_id'));
+			$batch_no = array_values($this -> input -> post('batch_no'));
+			$expiry_date = array_values($this -> input -> post('expiry_date'));
+			$commodity_unit_of_issue = array_values($this -> input -> post('commodity_unit_of_issue'));
+			$quantity_issued = array_values($this -> input -> post('quantity_issued'));
+			$clone_datepicker_normal_limit_today = array_values($this -> input -> post('clone_datepicker_normal_limit_today'));
+			$manufacture = array_values($this -> input -> post('manufacture'));
 
-			$total_units=array_values($this->input->post('total_units'));
-			$total_items=count($facility_stock_id);
-			$data_array_issues_table_store=array();
-			$data_array_redistribution_table_store=array();
-			        for($i=0;$i<$total_items;$i++)://compute the actual stock
-			        
-	        $total_items_issues=($commodity_unit_of_issue[$i]=='Pack_Size')? 
-	        $quantity_issued[$i]*$total_units[$i] : $quantity_issued[$i]; 
+			$total_units = array_values($this -> input -> post('total_units'));
+			$total_items = count($facility_stock_id);
+			//var_dump($total_units);exit;
+			$data_array_issues_table = array();
+			$data_array_redistribution_table = array();
+
+			$new_transaction_entry = array();
+			$digested_expiry = $expiry_date[0] ;
+			for ($i = 0; $i < $total_items; $i++) ://compute the actual stock
+
+				$total_items_issues = ($commodity_unit_of_issue[$i] == 'Pack_Size') ? $quantity_issued[$i] * $total_units[$i] : $quantity_issued[$i];
+
+				//prepare the issues data
+				$facility_name = isset($service_point[$i]) ? Facilities::get_facility_name2($service_point[$i]) : null;
+				$facility_name = isset($facility_name) ? $facility_name['facility_name'] : 'N/A';
+				$mydata = array('facility_code' => $facility_code, 's11_No' => '(-ve Adj) Stock Deduction', 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])), 'qty_issued' => $total_items_issues, 'issued_to' => "inter-facility donation:" . $facility_name, 'balance_as_of' => $commodity_balance_before[$i], 'date_issued' => date('y-m-d', strtotime($clone_datepicker_normal_limit_today[$i])), 'issued_by' => $this -> session -> userdata('user_id'));
+
+				$mydata_2 = array('manufacturer' => $manufacture[$i],'source_district_id'=> $district_id, 'source_facility_code' => $facility_code, 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])), 'quantity_sent' => $total_items_issues, 'receive_facility_code' => $service_point[$i], 'facility_stock_ref_id' => $facility_stock_id[$i], 'date_sent' => date('y-m-d'), 'sender_id' => $this -> session -> userdata('user_id'));
+				// update the issues table
+				array_push($data_array_issues_table, $mydata);
+				array_push($data_array_redistribution_table, $mydata_2);
+				// reduce the stock levels
+				//var_dump($mydata);exit;
+				$a = Doctrine_Manager::getInstance() -> getCurrentConnection();
+				$a -> execute("UPDATE `facility_stocks` SET `current_balance` = `current_balance`+$total_items_issues where id='$facility_stock_id[$i]'");
+				//update the transaction table here
+			// 	$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection();
+			// 	$inserttransaction -> execute("UPDATE `facility_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
+			// `closing_stock`=`closing_stock`-$total_items_issues
+  			//WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");
+
+				$existence = drug_store_issues::check_transaction_existence($commodity_id[$i],$service_point[$i]);
+					// echo "<pre>"; print_r($existence);echo "</pre>";;exit;
+				if ($existence[0]['present'] >= 1) {
+					$update_transactions = Doctrine_Manager::getInstance() -> getCurrentConnection();
+					$update_transactions -> execute("UPDATE `drug_store_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
+							`closing_stock`=`closing_stock`-$total_items_issues
+  							WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$service_point[$i]'"
+  							);
+		            // echo $update_transactions;exit;
+				}else{
+					$new_entry_details = array(
+							'facility_code'=>$service_point[$i],
+							'commodity_id'=>$commodity_id[$i],
+							'opening_balance'=>$total_items_issues,
+							'total_issues'=> $total_items_issues,
+							'closing_stock'=>$total_items_issues,
+							'status'=> 1
+						);
+
+					array_push($new_transaction_entry, $new_entry_details);
+					$data = $this->db->insert_batch('drug_store_transaction_table',$new_transaction_entry);
+					// echo $data;exit;
+				}//end of existence update/entry if
+
+			$update_totals = Doctrine_Manager::getInstance() -> getCurrentConnection();
+			$update_totals -> execute("UPDATE `drug_store_totals` SET `total_balance` = `total_balance`-$total_items_issues
+		            WHERE `commodity_id`= '$commodity_id[$i]' AND `district_id` ='$district_id'");
+			//echo $update_totals;exit;
 			
-		     //prepare the issues data
-		     $facility_name=isset($service_point[$i]) ? Facilities::get_facility_name2($service_point[$i]) : null;
-			 $facility_name=isset($facility_name)? $facility_name['facility_name']: 'N/A';
-		                 $mydata = array(
-		                 'facility_code' => $facility_code,	
-		                 'district_id' => $district_id,
-		                 's11_No'=>'(-ve Adj) Stock Deduction', 'batch_no' => $batch_no[$i] ,'commodity_id' => $commodity_id[$i],
-					     'expiry_date' => date('y-m-d',strtotime($expiry_date[$i])),'qty_issued'=> $total_items_issues ,
-					     'issued_to'=>"inter-facility donation:".$facility_name,'balance_as_of'=>$commodity_balance_before[$i], 
-					     'date_issued'=>date('y-m-d',strtotime($clone_datepicker_normal_limit_today[$i])),'issued_by'=>$this -> session -> userdata('user_id'));
-						 
-						  $mydata_2 = array(
-						  'manufacturer'=>$manufacture[$i],
-						  'district_id' => $district_id,	
-						  'source_facility_code' => $facility_code,	 
-		                  'batch_no' => $batch_no[$i] ,'commodity_id' => $commodity_id[$i],
-					      'expiry_date' => date('y-m-d',strtotime($expiry_date[$i])),'quantity_sent'=> $total_items_issues ,
-					      'receive_facility_code'=>$service_point[$i],'facility_stock_ref_id'=>$facility_stock_id[$i], 
-					      'date_sent'=>date('y-m-d'),'sender_id'=>$this -> session -> userdata('user_id'));				
-				// update the issues table 
-			array_push($data_array_issues_table_store,$mydata); 
-			array_push($data_array_redistribution_table_store,$mydata_2); 
-            // reduce the stock levels 
-			$a = Doctrine_Manager::getInstance()->getCurrentConnection();
-			$a->execute("UPDATE `drug_store_totals` SET `total_balance` = `total_balance`-$total_items_issues where commodity_id='$commodity_id[$i]' and district_id = $district_id");
-            //update the transaction table here 
-			$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
-			$inserttransaction->execute("UPDATE `drug_store_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
-			`closing_stock`=`closing_stock`-$total_items_issues
-            WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and district_id='$district_id';");		
-		endfor;
-		$user = $this -> session -> userdata('user_id');
-		 $user_action = "redistribute";
-		 Log::log_user_action($user, $user_action);
-         $this->db->insert_batch('drug_store_issues', $data_array_issues_table_store); 
-		 $this->db->insert_batch('redistribution_data', $data_array_redistribution_table_store); 
-         $this->session->set_flashdata('system_success_message', "You have issued $total_items item(s)");
-		 redirect();
+			endfor;
+
+			$user = $this -> session -> userdata('user_id');
+			$user_action = "redistribute";
+			Log::log_user_action($user, $user_action);
+			
+			// $this -> db -> insert_batch('facility_issues', $data_array_issues_table);
+			// $this -> db -> insert_batch('redistribution_data', $data_array_redistribution_table);
+			$this -> session -> set_flashdata('system_success_message', "You have issued $total_items item(s)");
+			redirect(home);
 		endif;
-		redirect();		
+		// redirect(home);		
 	}//district store external issue
+
+
+	public function district_store_drug_recieval()
+		{
+			//security check
+		if ($this -> input -> post('mfl')) :
+			$facility_code = $this -> session -> userdata('facility_id');
+			$district_id = $this -> session -> userdata('district_id');
+			$service_point = array_values($this -> input -> post('mfl'));
+			$commodity_id = array_values($this -> input -> post('desc'));
+			$commodity_balance_before = array_values($this -> input -> post('commodity_balance'));
+			$facility_stock_id = array_values($this -> input -> post('facility_stock_id'));
+			$batch_no = array_values($this -> input -> post('batch_no'));
+			$expiry_date = array_values($this -> input -> post('expiry_date'));
+			$commodity_unit_of_issue = array_values($this -> input -> post('commodity_unit_of_issue'));
+			$quantity_issued = array_values($this -> input -> post('quantity_issued'));
+			$clone_datepicker_normal_limit_today = array_values($this -> input -> post('clone_datepicker_normal_limit_today'));
+			$manufacture = array_values($this -> input -> post('manufacture'));
+
+			$total_units = array_values($this -> input -> post('total_units'));
+			$total_items = count($facility_stock_id);
+			//var_dump($total_units);exit;
+			$data_array_issues_table = array();
+			$data_array_redistribution_table = array();
+
+			$new_drug_store_entry = array();
+			$digested_expiry = $expiry_date[0] ;
+			for ($i = 0; $i < $total_items; $i++) ://compute the actual stock
+
+				$total_items_issues = ($commodity_unit_of_issue[$i] == 'Pack_Size') ? $quantity_issued[$i] * $total_units[$i] : $quantity_issued[$i];
+
+				//prepare the issues data
+				$facility_name = isset($service_point[$i]) ? Facilities::get_facility_name2($service_point[$i]) : null;
+				$facility_name = isset($facility_name) ? $facility_name['facility_name'] : 'N/A';
+				$mydata = array('facility_code' => $facility_code, 's11_No' => '(-ve Adj) Stock Deduction', 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])), 'qty_issued' => $total_items_issues, 'issued_to' => "inter-facility donation:" . $facility_name, 'balance_as_of' => $commodity_balance_before[$i], 'date_issued' => date('y-m-d', strtotime($clone_datepicker_normal_limit_today[$i])), 'issued_by' => $this -> session -> userdata('user_id'));
+
+				$mydata_2 = array('manufacturer' => $manufacture[$i],'source_district_id'=> $district_id, 'source_facility_code' => $facility_code, 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])), 'quantity_sent' => $total_items_issues, 'receive_facility_code' => $service_point[$i], 'facility_stock_ref_id' => $facility_stock_id[$i], 'date_sent' => date('y-m-d'), 'sender_id' => $this -> session -> userdata('user_id'));
+				// update the issues table
+				array_push($data_array_issues_table, $mydata);
+				array_push($data_array_redistribution_table, $mydata_2);
+				// reduce the stock levels
+				//var_dump($mydata);exit;
+				$a = Doctrine_Manager::getInstance() -> getCurrentConnection();
+				$a -> execute("UPDATE `facility_stocks` SET `current_balance` = `current_balance`-$total_items_issues where id='$facility_stock_id[$i]'");
+				//update the transaction table here
+				$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection();
+				$inserttransaction -> execute("UPDATE `facility_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
+			`closing_stock`=`closing_stock`-$total_items_issues
+            WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");
+
+				$existence = drug_store_issues::check_drug_existence($commodity_id[$i],$district_id);
+					// echo "<pre>"; print_r($existence);echo "</pre>";;exit;
+				if ($existence[0]['present'] >= 1) {
+					$update_totals = Doctrine_Manager::getInstance() -> getCurrentConnection();
+					$update_totals -> execute("UPDATE `drug_store_totals` SET `total_balance` = `total_balance`+$total_items_issues
+		            WHERE `commodity_id`= '$commodity_id[$i]' and district_id='$district_id';");
+		            //echo $update_totals;exit;
+				}else{
+					$new_entry_details = array(
+						'district_id'=>$district_id,
+						'commodity_id'=>$commodity_id[$i],
+						'total_balance'=>$total_items_issues,
+						'expiry_date'=>$digested_expiry
+						);
+
+					array_push($new_drug_store_entry, $new_entry_details);
+					$data = $this->db->insert_batch('drug_store_totals',$new_drug_store_entry);
+					//echo $data;exit;
+				}//end of existence update/entry if
+			endfor;
+
+			$user = $this -> session -> userdata('user_id');
+			$user_action = "redistribute";
+			Log::log_user_action($user, $user_action);
+			
+			$this -> db -> insert_batch('facility_issues', $data_array_issues_table);
+			$this -> db -> insert_batch('redistribution_data', $data_array_redistribution_table);
+			$this -> session -> set_flashdata('system_success_message', "You have issued $total_items item(s)");
+			redirect(home);
+		endif;
+		// redirect(home);		
+	}//district store external issue
+
+
+	public function tester(){
+		$district_id = $this -> session -> userdata('district_id');
+		$sth = drug_store_issues::get_commodities_for_district($district_id);
+		echo"<pre>"; print_r($sth); echo "</pre>";
+	}
 
 	public function confirm_store_external_issue($editable_=null){
 		//seth
@@ -329,6 +496,7 @@ class issues extends MY_Controller {
 		//security check
 		if ($this -> input -> post('mfl')) :
 			$facility_code = $this -> session -> userdata('facility_id');
+			$district_id = $this -> session -> userdata('district_id');
 			$service_point = array_values($this -> input -> post('mfl'));
 			$commodity_id = array_values($this -> input -> post('desc'));
 			$commodity_balance_before = array_values($this -> input -> post('commodity_balance'));
@@ -354,7 +522,7 @@ class issues extends MY_Controller {
 				$facility_name = isset($facility_name) ? $facility_name['facility_name'] : 'N/A';
 				$mydata = array('facility_code' => $facility_code, 's11_No' => '(-ve Adj) Stock Deduction', 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])), 'qty_issued' => $total_items_issues, 'issued_to' => "inter-facility donation:" . $facility_name, 'balance_as_of' => $commodity_balance_before[$i], 'date_issued' => date('y-m-d', strtotime($clone_datepicker_normal_limit_today[$i])), 'issued_by' => $this -> session -> userdata('user_id'));
 
-				$mydata_2 = array('manufacturer' => $manufacture[$i], 'source_facility_code' => $facility_code, 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])), 'quantity_sent' => $total_items_issues, 'receive_facility_code' => $service_point[$i], 'facility_stock_ref_id' => $facility_stock_id[$i], 'date_sent' => date('y-m-d'), 'sender_id' => $this -> session -> userdata('user_id'));
+				$mydata_2 = array('manufacturer' => $manufacture[$i],'source_district_id'=> $district_id, 'source_facility_code' => $facility_code, 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])), 'quantity_sent' => $total_items_issues, 'receive_facility_code' => $service_point[$i], 'facility_stock_ref_id' => $facility_stock_id[$i], 'date_sent' => date('y-m-d'), 'sender_id' => $this -> session -> userdata('user_id'));
 				// update the issues table
 				array_push($data_array_issues_table, $mydata);
 				array_push($data_array_redistribution_table, $mydata_2);
@@ -371,10 +539,11 @@ class issues extends MY_Controller {
 			$user = $this -> session -> userdata('user_id');
 			$user_action = "redistribute";
 			Log::log_user_action($user, $user_action);
+			
 			$this -> db -> insert_batch('facility_issues', $data_array_issues_table);
 			$this -> db -> insert_batch('redistribution_data', $data_array_redistribution_table);
 			$this -> session -> set_flashdata('system_success_message', "You have issued $total_items item(s)");
-			redirect(home);
+			// redirect(home);
 		endif;
 		redirect(home);
 	}//confirm the external issue
