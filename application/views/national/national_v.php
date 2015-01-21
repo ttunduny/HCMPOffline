@@ -27,8 +27,8 @@
 	<script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
     <script src="<?php echo base_url().'assets/scripts/offline-simulate-ui.min.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script> 
      <script src="<?php echo base_url().'assets/scripts/select2.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script> 
 	<script src="<?php echo base_url();?>assets/highcharts/highcharts.js"></script>
 	<script src="<?php echo base_url();?>assets/highcharts/exporting.js"></script>
 	<script src="<?php echo base_url().'assets/scripts/jquery-ui.js'?>" type="text/javascript"></script>
