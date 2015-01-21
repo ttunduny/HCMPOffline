@@ -40,7 +40,8 @@ class facility_orders extends Doctrine_Record {
 	}
     public static function get_facility_order_summary_count($facility_code=null,$district_id=null,$county_id=null)
     {
-    	$where_clause = isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
+    	$where_clause = isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)&&($district_id>0)? "d.id=$district_id ": "d.county=$county_id ") ;
+	
 		$orders = Doctrine_Manager::getInstance()->getCurrentConnection()
 		->fetchAll("SELECT  f_o_s.`status_desc` as status, 
 					count(f_o.`id`) as total 
