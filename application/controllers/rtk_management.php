@@ -620,20 +620,16 @@ public function get_lab_report($order_no, $report_type) {
                     $new_month = $y.'-'.$m.'-01';
                     $d = new DateTime("$new_month");    
                     $d->modify( 'last day of next month' );
-<<<<<<< HEAD
-                    $month_db =  $d->format( 'mY' );     
-=======
+
                     $month_db =  $d->format( 'mY' );                  
                    
->>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
+
                     $sql ="select rtk_district_percentage.percentage,districts.district from rtk_district_percentage,districts,counties
                     where rtk_district_percentage.district_id = districts.id and districts.county = counties.id and counties.id = '$countyid' 
                     and rtk_district_percentage.month = '$month_db'";
-                    
-<<<<<<< HEAD
-=======
+
                     //echo "$sql";
->>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
+
                     $year = substr($month, -4);
                     $month = substr_replace($month, "", -4);
                     $reporting_rates = $this->db->query($sql)->result_array();
@@ -689,12 +685,7 @@ public function county_stock() {
     if ($month == '') {
         $month = date('mY', strtotime('-1 month'));
     }
-<<<<<<< HEAD
 
-    $month_db = date("mY", strtotime("$month +0 month"));        
-    $data['county_summary'] = $this->_requested_vs_allocated($year, $month, $countyid); 
-    
-=======
     $year = substr($month, -4);
     $month = substr($month, 0,2);
 
@@ -704,7 +695,7 @@ public function county_stock() {
     // echo "<pre>";
     // print_r($data['county_summary']);die();
 
->>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
+
     $data['county'] = $County;
     $data['active_month'] = $month.$year;
     $data['title'] = 'RTK County Admin';
@@ -712,11 +703,9 @@ public function county_stock() {
     $data['content_view'] = "rtk/rtk/clc/stock_card";
     $this->load->view("rtk/template", $data);
 }
-<<<<<<< HEAD
-                public function county_profile($county) {
-=======
+
 public function county_profile($county) {
->>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
+
         $data = array();
         $lastday = date('Y-m-d', strtotime("last day of previous month"));
         $County = $this->session->userdata('county_name');

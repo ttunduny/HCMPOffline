@@ -1,13 +1,18 @@
 <?php //echo "<pre>";print_r($facilities_listing_inactive);echo "</pre>";exit; ?>
 <style type="text/css">
-	.deactivate_facility{
-		width: 200px;
+	.lucky_facility{
+		width: 100%;
+		/*margin-bottom: 10px;*/
 	}
 	.instruct{
 		margin-left: 5px;
 
 	}
+	#datatable{
+		margin-top: 10px;
+	}
 </style>
+
 <div class="container">
 	
 	<?php $x = array();
@@ -63,15 +68,13 @@
 			
 			<div class="row">
 				<div class="col-md-13 dt" style="border: 1px solid #ddd;padding-top: 1%; " id="test">
-
-					<table  class="table table-hover table-bordered table-update" id="datatable"  >
 	<tr>
 	<div class="col-md-13">
 		<p class="instruct">*Select facility to activate from list below.</p>
 	</div>
 	<div class="col-md-9"  style="padding:5px 3px;">
-		<select class="form-control lucky_facility" id="lucky_facility">
-			<option value="0">--Select Facility to Activate--</option>
+		<select class="lucky_facility" id="lucky_facility">
+			<option value="-000-">--Select Facility By Name--</option>
 			<?php 
 			foreach ($facilities_listing_inactive as $released) {
 				echo "<option value=".$released['facility_code']." class =".$released['using_hcmp'].">".$released['facility_name']."</option>";
@@ -85,6 +88,7 @@
 			<span class="glyphicon glyphicon-plus"></span>Activate Facility
 		</button>
 	</div>
+	<table  class="table table-hover table-bordered table-update" id="datatable"  >
 	</tr>
 						<thead style="background-color: white">
 							<tr style="font-size: 15px;">

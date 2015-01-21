@@ -39,6 +39,17 @@ table{
 
 <div class="main-container" style="width: 100%;float: right;">
 
+<div class="span3" style="float:left">
+<!--ul class="nav nav-tabs nav-stacked" style="width:100%;"-->
+<ul class="nav nav-tabs nav-stacked " style="width:100%;">
+  <div class="links" id="zonea"><a href="a" >Zone A</a></div>
+  <div class="links" id="zoneb"><a href="b" >Zone B</a></div>
+  <div class="links" id="zonec"><a href="c" >Zone C</a></div>
+  <div class="links" id="zoned"><a href="d" >Zone D</a></div>
+</ul>
+</div>
+<br/>
+
   <table id="pending_facilities" class="data-table"> 
     <thead>
     <tr>        

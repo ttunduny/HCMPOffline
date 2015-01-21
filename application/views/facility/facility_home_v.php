@@ -132,9 +132,13 @@
      </div>-->
         
  		<div style="height:auto; margin-bottom: 2px" class="distribute message ">
-        	<a href="<?php echo base_url('issues/confirm_external_issue')?>"><h5>Receive Commodities From Other Sources</h5></a>
+        	<a href="<?php echo base_url('issues/confirm_external_issue')?>"><h5>Receive Commodity From Other Facility (Redistributions)</h5></a>
         	 
-        </div> 
+        </div>
+       <!-- <div style="height:auto; margin-bottom: 2px" class="distribute message ">
+        	<a href="<?php echo base_url('issues/confirm_external_issue')?>"><h5>Receive Commodity From Other Sources</h5></a>
+        	 
+        </div> -->
          <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="order message " id="order_tab">
             <h5>Orders</h5>
         </div>
