@@ -3200,10 +3200,9 @@ class Reports extends MY_Controller {
 
 	public function consumption_data_dashboard($commodity_id = null, $district_id = null, $facility_code = null, $option = null, $from = null, $to = null, $graph_type = null, $tracer = null) {
 		//reset the values here
-		$data = array();
 		
 		$commodity_id = ($commodity_id == "NULL") ? null : $commodity_id;
-		$district_id = (isset($district_id) && ($district_id>0)) ? $district_id : $this -> session -> userdata('district_id');
+		$district_id = (isset($district_id) && ($district_id>0)) ? $district_id : NULL;
 		$county_id = (isset($county_id) && ($county_id>0)) ? $county_id : $this -> session -> userdata('county_id');
 		//$district_id = ($district_id=="NULL") ? null :$district_id;
 		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
@@ -3215,7 +3214,6 @@ class Reports extends MY_Controller {
 		$county_name = counties::get_county_name($county_id);
 			
 		//start building the notifications dashboaard first
-		
 		//compute stocked out items
 		$items_stocked_out_in_facility = count(facility_stocks::get_items_that_have_stock_out_in_facility($facility_code, $district_id, $county_id));
 		//get order information from the db
@@ -3279,7 +3277,8 @@ class Reports extends MY_Controller {
 		$default_consumption_graph_ = array_merge($default_consumption_graph_, array("graph_categories" => $category_data));
 		$default_consumption_graph_ = array_merge($default_consumption_graph_, array("series_data" => array('Consumption' => $series_data)));
 		$data = array();
-
+		$data = array();
+		
 		$def_cons = $this -> hcmp_functions -> create_high_chart_graph($default_consumption_graph_);
 		$data['default_consumption_graph'] = $def_cons;
 		$county_id = $this -> session -> userdata('county_id');

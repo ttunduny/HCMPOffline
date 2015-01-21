@@ -329,7 +329,6 @@ return $stocks ;
 $where_clause=isset($facility_code)? "f.facility_code=$facility_code ": (isset($district_id)? "d.id=$district_id ": "d.county=$county_id ") ;
 $group_by=isset($facility_code)? " order by c.commodity_name asc" : 
 (isset($district_id)? " order by f.facility_name asc" : " order by d.district asc" );
-
 $stocks = Doctrine_Manager::getInstance()->getCurrentConnection()
 ->fetchAll("SELECT 
 			    d.district,
