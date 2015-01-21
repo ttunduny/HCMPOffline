@@ -695,7 +695,7 @@ class Reports extends MY_Controller
 		$data_=	Facility_issues::get_bin_card($facility_code,$commodity_id,$from,$to);	
 		//echo "<pre>";print_r($data_);exit;
 		$data['bin_card'] =$data_ ;
-		$count_records=count($data);
+		$count_records=count($data_);
 		
 		if ($count_records<=0) {
 
