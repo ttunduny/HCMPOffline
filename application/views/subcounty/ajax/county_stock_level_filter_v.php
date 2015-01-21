@@ -66,102 +66,6 @@ $district_id_active =  $this -> session -> userdata('district_id');
 	}
 </style>
 
-<div class="row-fluid" style="margin-bottom: 5px">
-			
-    <?php if($county_dashboard_notifications['facility_donations']>0): ?>
- 		 <a href="<?php echo base_url('reports/county_donation/')?>">
- 					<div class="color_e stat_item <?php echo $class; ?>">
-						<span class="bold"><?php 
-				echo $county_dashboard_notifications['facility_donations'];?></span>
-                  	 <br/>
-                  	 <span id="">Items have been donated</span>
-                            
-                   </div></a>
-		  <?php endif; // Potential Expiries?>
-         <?php if($county_dashboard_notifications['actual_expiries']>0): ?>
-         	
-         	<a href="<?php echo base_url('reports/county_expiries/')?>">
- 					<div class="color_e stat_item <?php echo $class; ?>">
-						<span class="bold"><?php 
-				echo $county_dashboard_notifications['actual_expiries'];?></span>
-                  	<br/>
-                  	 <span id="">Expired Commodities</span>
-                            
-                   </div></a>
-      
-         <?php endif; // Actual Expiries?>
-          <?php if($county_dashboard_notifications['potential_expiries']>0): ?>
-          	
-          	<a href="<?php echo base_url('reports/county_expiries/')?>">
- 					<div class="color_e stat_item <?php echo $class; ?>">
-						<span class="bold"><?php 
-				echo $county_dashboard_notifications['potential_expiries'];?></span>
-                  	<br/>
-                  	 <span id="">Commodity (ies) Expiring in 6 months</span>
-                            
-                   </div></a>
-          	
-      	
-		  <?php endif; // Potential Expiries?>
-         <?php if($county_dashboard_notifications['items_stocked_out_in_facility']>0): ?>
-         	
-         	<a href="<?php echo base_url('reports/stock_out/')?>">
- 					<div class="color_e stat_item <?php echo $class; ?>">
-						<span class="bold"><?php 
-				echo $county_dashboard_notifications['items_stocked_out_in_facility'];?></span>
-                  	<br/>
-                  	 <span id="">Facilities have stock outs</span>
-                            
-                   </div></a>
-         	
-        <?php endif; // items_stocked_out_in_facility?>
-        <?php if(array_key_exists('pending', $county_dashboard_notifications['facility_order_count']) 
-        && @$county_dashboard_notifications['facility_order_count']['pending']>0): ?>
-        
-        <a href="<?php echo $link2 ?>">
- 					<div class="color_e stat_item <?php echo $class; ?>">
-						<span class="bold"><?php 
-				echo $county_dashboard_notifications['facility_order_count']['pending'];?></span>
-                  	<br/>
-                  	 <span id="">Order(s) Pending</span>
-                            
-                   </div></a>
-      	
-        <?php endif; //pending
-         if(array_key_exists('rejected', $county_dashboard_notifications['facility_order_count']) 
-         && @$county_dashboard_notifications['facility_order_count']['rejected']>0): ?>
-         
-         <a href="<?php echo $link ?>">
- 					<div class="color_e stat_item <?php echo $class; ?>">
-						<span class="bold"><?php 
-				echo $county_dashboard_notifications['facility_order_count']['rejected'];?></span>
-                  	<br/>
-                  	 <span id="">Order(s) rejected</span>
-                            
-                   </div></a>
-         
-        
-        <?php endif; //rejected
-        if(array_key_exists('approved', $county_dashboard_notifications['facility_order_count'])
-		 && @$county_dashboard_notifications['facility_order_count']['approved']>0): ?>
-		 
-		  <a href="<?php echo $link ?>">
- 					<div class="color_e stat_item <?php echo $class; ?>">
-						<span class="bold"><?php 
-				echo $county_dashboard_notifications['facility_order_count']['approved'];?></span>
-                  	<br/>
-                  	 <span id="">Order(s) pending dispatch from KEMSA</span>
-                            
-                   </div></a>
-		 
-         <?php endif; //approved?>
-           
-</div>
-	
-  
-	
-
-
 <div class="alert alert-info" style="width: 100%">
   <b>Below are the Stocking Levels in the County </b> :Select filter Options
 </div>
@@ -170,49 +74,50 @@ $district_id_active =  $this -> session -> userdata('district_id');
 	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Commodities <?php echo " ($number_of_tracer_items)"; ?></a></li>
       <li class=""><a href="#division" data-toggle="tab">Program Commodities</a></li>
       <!--<li class=""><a href="#cat" data-toggle="tab">Categories</a></li>-->
-
    	  <li class=""><a href="#county" data-toggle="tab">Sub County Comparison</a></li>
      <!--<li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>-->
 </ul>
     <div id="myTabContent" class="tab-content">
- 
-      <div  id="tracer" class="tab-pane fade active in">
+    	<div  id="tracer" class="tab-pane fade active in">
               <br>
               <div class="filter row">
-          <form class="form-inline" role="form">
-    <select id="tracer_district_filter" class="form-control col-md-2">
-<option selected="selected" value="NULL">Select Sub-county</option>
-<?php
-foreach($district_data as $district_):
-        $district_id=$district_->id;
-		$district=$district_->id;
-        $district_name=$district_->district; 
-		
-        echo "<option value='$district_id'>$district_name</option>";
-endforeach;
-?>
-</select> 
+          		<form class="form-inline" role="form">
+    			<select id="tracer_district_filter" class="form-control col-md-2">
+					<option selected="selected" value="NULL">Select Sub-county</option>
+					<?php
+					foreach($district_data as $district_):
+					        $district_id=$district_->id;
+							$district=$district_->id;
+					        $district_name=$district_->district; 
+							
+					        echo "<option value='$district_id'>$district_name</option>";
+					endforeach;
+					?>
+				</select> 
 
-<select id="tracer_facility_filter" class="form-control col-md-3">
-<option value="NULL">Select facility</option>
-</select>	
-<select id="tracer_plot_value_filter" class="form-control col-md-2">
-<option value="NULL">Select Plot value</option>
-<option value="packs">Packs</option>
-<option value="units">Units</option>
-<!--<option value="ksh">KSH</option>-->
-<option selected="selected" value="mos">Months of stock</option>
-</select>
-<div class="col-md-1">
-<button class="btn btn-sm btn-success tracer-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
-</div>
-<div class="col-md-1">
-<button class="btn btn-sm btn-success tracer-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
-</div>
-<!-- seth's button -->
-<div class="col-md-2">
-<button style="margin-left:30px;" class="btn btn-sm btn-primary tracer-filter-table"><span class="glyphicon glyphicon-th-list"></span>Results as Table</button> 
-</div>
+			<select id="tracer_facility_filter" class="form-control col-md-3">
+				<option value="NULL">Select facility</option>
+			</select>	
+			<select id="tracer_plot_value_filter" class="form-control col-md-2">
+				<option value="NULL">Select Plot value</option>
+				<option value="packs">Packs</option>
+				<option value="units">Units</option>
+				<!--<option value="ksh">KSH</option>-->
+				<option selected="selected" value="mos">Months of stock</option>
+			</select>
+			<!--First the filter buttons-->
+			<div class="col-md-2">
+			<button style="margin-left:30px;" class="btn btn-sm btn-success tracer-filter"><span class="glyphicon glyphicon-filter"></span>Filter Graph</button> 
+			</div>
+			<!-- seth's button -->
+			<div class="col-md-2">
+			<button style="margin-left:30px;" class="btn btn-sm btn-success tracer-filter-table"><span class="glyphicon glyphicon-th-list"></span>Filter Table</button> 
+			</div>
+			<!--Download button-->
+			<div class="col-md-1">
+			<button style="margin-left:30px;" class="btn btn-sm btn-primary tracer-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
+			</div>
+			
           </form>
          </div>
       </div>
@@ -294,7 +199,7 @@ endforeach;
 <button class="btn btn-sm btn-success county-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
 </div>
 <div class="col-md-2">
-<button style="margin-left:30px;" class="btn btn-sm btn-primary county-filter-table"><span class="glyphicon glyphicon-th-list"></span>Results as Table</button> 
+<button class="btn btn-sm btn-primary county-filter-table"><span class="glyphicon glyphicon-th-list"></span>Results as Table</button> 
 </div>
 </form>
 </div>
@@ -435,7 +340,7 @@ var drop_down='';
 		$("#division_facility_filter").show('slow');		
 		}
 		});	
-		//Tracer Filter Button
+		//Tracer Filter Graph Button
 		$(".tracer-filter").button().click(function(e) {
         e.preventDefault();
         var url_ = "reports/get_county_stock_level_new/"+"NULL/"+"NULL/"+$("#tracer_district_filter").val()+"/"+
@@ -445,7 +350,7 @@ var drop_down='';
         ajax_request_replace_div_content(url_,'.graph_content');    
           });
           
-          //Tracer Filter Table
+          //Tracer Items - Table Data
           $(".tracer-filter-table").button().click(function(e) {
         e.preventDefault();
         var url_ = "reports/get_county_stock_level_new/"+"NULL/"+"NULL/"+$("#tracer_district_filter").val()+"/"+

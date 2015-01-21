@@ -58,7 +58,7 @@
     
     </div>
 
-    <div class="span5" style="margin-left: 5px;">
+    <div class="span5" style="margin-left: 5px;width:20%;">
         <dl class="dl-horizontal">
                <dt>Reporting Period</dt>
                <dd><?php echo $district_summary['Month'] .', '.$district_summary['Year']; ?></dd>
@@ -84,7 +84,7 @@
                </dd>
                </dl>
     </div>
-    <div class="span4" style="border-left: solid 1px  #ccc;margin-left: 10px;padding-left: 10px;width:20%;float:left;">
+    <div class="span4" style="border-left: solid 1px  #ccc;font-size:9px;margin-left: 20px;padding-left: 10px;width:55%;float:left;height:400px;overflow:scroll;">
         <h4><?php echo $district_name; ?> Sub-County Stock Card</h4>
 
    <table class="table" width="60px">
@@ -106,7 +106,7 @@
                                 <tr>
                                 <?php 
                                 foreach ($district_balances_current as $key => $value) {?>
-                                        <td><?php echo $value['commodity_name'];?></td>
+                                      <tr><td><?php echo $value['commodity_name'];?></td>
                                         <td><?php echo $value['sum_opening']; ?></td>
                                         <td><?php echo $value['sum_received']; ?></td>
                                         <td><?php echo $value['sum_used']; ?></td>
@@ -116,6 +116,7 @@
                                         <td><?php echo $value['sum_requested']; ?></td>
                                         <td><?php echo $value['sum_expiring']; ?></td>
                                         <td><?php echo $value['sum_days']; ?></td>
+                                        </tr>
                                 <?php }
 
                                 ?>
@@ -124,7 +125,7 @@
                                 </tbody>
                             </table>
     </div>    
-    <div id="chart" style="margin-left:25%;margin-top:250px;height:380px;width:70%;border:1px ridge #ccc;">
+    <div id="chart" style="margin-left:25%;margin-top:400px;height:380px;width:70%;border:1px ridge #ccc;">
       
         
     </div>

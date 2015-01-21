@@ -15,34 +15,32 @@ if (!$this -> session -> userdata('user_id')) {
     <link rel="icon" href="<?php echo base_url().'assets/img/coat_of_arms.png'?>" type="image/x-icon" />
     <link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
     <link href="<?php echo base_url().'assets/css/select2.css'?>" type="text/css" rel="stylesheet"/> 
-     
-  <link href="<?php echo base_url().'assets/css/normalize.css'?>" type="text/css" rel="stylesheet"/>
-  <link href="<?php echo base_url().'assets/css/dashboard.css'?>" type="text/css" rel="stylesheet"/>
-  <link href="<?php echo base_url().'assets/css/jquery-ui-1.10.4.custom.min.css'?>" type="text/css" rel="stylesheet"/>
-  <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
-  <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
-  <link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
-  <link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
+	<link href="<?php echo base_url().'assets/css/normalize.css'?>" type="text/css" rel="stylesheet"/>
+	<link href="<?php echo base_url().'assets/css/dashboard.css'?>" type="text/css" rel="stylesheet"/>
+	<link href="<?php echo base_url().'assets/css/jquery-ui-1.10.4.custom.min.css'?>" type="text/css" rel="stylesheet"/>
+	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
+	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
+	<link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
+	<link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
+  <link rel="stylesheet" href="<?php echo base_url().'assets/bower_components/sweetalert/lib/sweet-alert.css'?>" />
+  <link rel="stylesheet" href="<?php echo base_url().'assets/bower_components/alertifyjs/dist/css/alertify_bootstrap_3.css'?>" />
     <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
-  <link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
-  <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
-  <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
-  <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
-     <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
+	<link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
+	<link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
+	<script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/select2.js'?>" type="text/javascript"></script>
-    <script src="<?php echo base_url().'assets/scripts/offline-simulate-ui.min.js'?>" type="text/javascript"></script>
-  
+	<script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/bower_components/sweetalert/lib/sweet-alert.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/bower_components/alertifyjs/dist/js/alertify.js'?>" type="text/javascript"></script>
   <link href="<?php echo base_url().'assets/bower_components/intro.js/introjs.css'?>" type="text/css" rel="stylesheet"/>
-    <link href="<?php echo base_url().'assets/css/offline-theme-default.css'?>" type="text/css" rel="stylesheet"/> 
-    <link href="<?php echo base_url().'assets/css/offline-language-english.css'?>" type="text/css" rel="stylesheet"/>
-    <link href="<?php echo base_url().'assets/css/styles.css'?>" type="text/css" rel="stylesheet"/>
-  <!-- <link href="<?php echo base_url().'assets/metro-bootstrap/docs/font-awesome.css'?>" type="text/css" rel="stylesheet"/>
+	<!-- <link href="<?php echo base_url().'assets/metro-bootstrap/docs/font-awesome.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/metro-bootstrap/css/metro-bootstrap.css'?>" type="text/css" rel="stylesheet"/>
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <script>
+   
    paceOptions = {
   ajax: false, // disabled
   document: true, // 
@@ -74,7 +72,6 @@ if (!$this -> session -> userdata('user_id')) {
 
     var url="<?php echo base_url(); ?>";
     </script>
-
     <style>
 .panel-success>.panel-heading {
 color: white;
@@ -97,29 +94,7 @@ border-color: #e7e7e7;
   </head>  
   <body screen_capture_injected="true" onload="set_interval()" onmouseover="reset_interval()" onclick="reset_interval()">
     <!-- Fixed navbar -->
-<!-- <div class="offline-ui offline-ui-up"><div class="offline-ui-content"></div><a href="" class="offline-ui-retry"></a></div> -->
-    <script>
-    $(function(){
-        var 
-            $online = $('.online'),
-            $offline = $('.offline');
-
-        Offline.on('confirmed-down', function () {
-      // alert("This is running");
-            $online.fadeOut(function () {
-                $offline.fadeIn();
-            });
-        });
-
-        Offline.on('confirmed-up', function () {
-      // alert("This is also running");
-            $offline.fadeOut(function () {
-                $online.fadeIn();
-            });
-        });
-
-    });
-</script>
+    
    <div class="navbar navbar-default navbar-fixed-top" id="welcome">
    <div class="container" style="width: 100%; padding-right: 0; ">
         <div class="navbar-header "  > 
@@ -171,24 +146,48 @@ foreach($menus as $menu){ $menu_id=(int)$menu['menu_id'];?>
               </ul>
             </li>
           </ul>
-     <div  id="system_alerts">
+    
       				<?php $flash_success_data = NULL;
 					      $flash_error_data = NULL;
 	                      $flash_success_data = $this -> session -> flashdata('system_success_message');
 						  $flash_error_data = $this -> session -> flashdata('system_error_message');
-							if ($flash_success_data != NULL) {
-							echo '<div class="alert alert-success alert-dismissable" >
-							<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button><h6>' . $flash_success_data . '</h6></div>';
-						   } elseif ($flash_error_data != NULL) {
-							echo '<div class="alert alert-danger alert-dismissable" >
-							<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button><h6>' . $flash_error_data . '</h6></div>';
-							}
-						   elseif (isset($system_error_message)) {
-							echo '<div class="alert alert-danger alert-dismissable"  style="width:80%; margin-top:-20px">
-							<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button><h6>' . $system_error_message . '</h6></div>';
-							}
+							if ($flash_success_data != NULL) { ?>
+								
+								<script>
+									$(document).ready(function() {
+											alertify.set({ delay: 10000 });
+											alertify.success("<?php echo $flash_success_data ?>", null);
+		
+										});
+										
+								</script>
+							
+						 <?php  } elseif ($flash_error_data != NULL) { ?>
+						 	
+						 		<script>
+									$(document).ready(function() {
+											alertify.set({ delay: 10000 });
+											alertify.error("<?php echo $flash_error_data  ?>", null);
+		
+										});
+										
+								</script>
+							
+						<?php 	}
+						   elseif (isset($system_error_message)) {?>
+						   	
+						   		<script>
+									$(document).ready(function() {
+											alertify.set({ delay: 10000 });
+											alertify.log("<?php echo $system_error_message   ?>", null);
+		
+										});
+										
+								</script>
+							
+						<?php	}
  						?>
- </div>
+ 
          </div><!--/.nav-collapse -->
       </div>
       <div class="container-fluid" style="/*border: 1px solid #036; */ height: 30px;" id="extras-bar">
@@ -358,17 +357,13 @@ if (i<10)
   }
 return i;
 }  
-	$(document).ready(function() {
-					$('.alert-success').fadeOut(10000, function() {
-    // Animation complete.
-});
-});
+	
 </script>
 
 <script>
 	$(document).ready(function() {
-		
-		$('#new_password').keyup(function() {
+ changeHashOnLoad();
+    	$('#new_password').keyup(function() {
 			$('#result').html(checkStrength($('#new_password').val()))
 		})
 		

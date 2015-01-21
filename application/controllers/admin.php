@@ -42,7 +42,7 @@ class Admin extends MY_Controller {
 		$data['user_types']=Access_level::get_access_levels($permissions);
 		$this -> load -> view("shared_files/template/dashboard_v", $data);
 	}
-
+//manage facilities
 	public function manage_facilities() {
 		$permissions='super_permissions';
 		$data['title'] = "Users";

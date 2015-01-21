@@ -49,7 +49,6 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	$( "#from" ).datepicker({
-      defaultDate: "+1w",
       changeMonth: true,
       numberOfMonths: 2,
       onClose: function( selectedDate ) {
@@ -67,7 +66,7 @@ $(document).ready(function() {
     });
 
     $("#filter").click(function() {
-      
+    	      
       var div="#reports_display";
       var url = "<?php echo base_url()."reports/stock_control_ajax"?>";
       ajax_post_process (url,div);
@@ -77,12 +76,11 @@ $(document).ready(function() {
    function ajax_post_process (url,div){
     var url =url;
 
-     //alert(url);
-    // return;
-     var loading_icon="<?php echo base_url().'assets/img/loader.gif' ?>";
+    var loading_icon="<?php echo base_url().'assets/img/loader.gif' ?>";
      $.ajax({
           type: "POST",
-          data:{ 'commodity_select': $('#commodity_select').val(),'from': $('#from').val(),'to': $('#to').val()},
+          data:{ 'commodity_select': $('#commodity_select').val(),'from': $('#from').val(),'to': $('#to').val(),
+          'commodity_name': $('#commodity_select  option:selected').text()},
           url: url,
           beforeSend: function() {
             $(div).html("");

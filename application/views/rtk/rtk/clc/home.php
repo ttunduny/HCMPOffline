@@ -63,7 +63,7 @@ $current_month = date('mY', strtotime('-1 month'));
 
             }
             ?>
-            <div>
+            <!--div>
                 <table class="table" style="font-size:13px;">
                     <thead>
                         <tr>
@@ -112,7 +112,7 @@ $current_month = date('mY', strtotime('-1 month'));
                         ?>                   
                 </tbody>
             </table>
-        </div>
+        </div-->
 
         <div id="container" style="min-width: 310px; height: auto; margin: 0 auto"></div>
 

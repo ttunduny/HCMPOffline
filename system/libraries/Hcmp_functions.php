@@ -162,12 +162,12 @@ public function send_order_submission_email($message,$subject,$attach_file){
 
 	   $facility_code=$this -> session -> userdata('facility_id');
 	   $data=Users::getUsers($facility_code)->toArray();
-	   $email_address=$this->get_facility_email($facility_code);
-	   $bcc_email ='kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com';
-	   $cc_email=$this->get_ddp_email($data[0]['district']);	   
-	   $this->get_county_email($data[0]['district']) ;
+	   $email_address='kelvinmwas@gmail.com';
+	   //$bcc_email ='kelvinmwas@gmail.com';
+	  // $cc_email=$this->get_ddp_email($data[0]['district']);	   
+	 //  $this->get_county_email($data[0]['district']) ;
 	   
-	  return $this->send_email(substr($email_address,0,-1),$message, $subject,$attach_file,$bcc_email,substr( $cc_email,0,-1));
+	  return $this->send_email($email_address,$message, $subject,$attach_file);
 	
 }
 public function send_order_approval_email($message,$subject,$attach_file,$facility_code,$reject_order=null){
@@ -216,6 +216,7 @@ public function send_order_delivery_email($message,$subject,$attach_file=null){
 	return $this->send_email(substr($this->get_ddp_email($data[0]['district']),0,-1),$message,$subject,null,$bcc_email,substr($cc_email,0,-1));
 	
 }
+
 public function send_sms($phones,$message) {
 	
    $message=urlencode($message);
@@ -237,9 +238,11 @@ public function send_sms($phones,$message) {
 
 public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL)
 {
-	
-	
-	//echo $email_address.'</br>'.$cc_email.'</br>'.$bcc_email;exit;	
+	 //echo $message;EXIT;
+	  //echo $subject;EXIT;
+	//echo $attach_file;exit;
+        
+	//echo $message.'</br>'.$subject.'</br>'.$attach_file;exit;	
 	$messages=$message;
 	$config['protocol']    = 'smtp';
     $config['smtp_host']    = 'ssl://smtp.gmail.com';
@@ -281,7 +284,7 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
 			
   		$this->email->subject($subject);
  		$this->email->message($mail_header.$message);
- 
+ 	
   if($this->email->send())
  {
  	$this->email->clear(TRUE);
@@ -577,6 +580,7 @@ endif;
             yAxis: { min: 0, title: {text: '$graph_yaxis_title' }},
             subtitle: {text: 'Source: HCMP', x: -20 },
             xAxis: { categories: $graph_categories },
+           // colors: $color,
             tooltip: { crosshairs: [true,true] },
                scrollbar: {
                enabled: true
@@ -825,4 +829,6 @@ Facility Order No $order_id| KEMSA Order No $kemsa_order_no | Total ordered valu
 HTML_DATA;
 return array('table'=>$message,'date_ordered'=>$order_date,'date_received'=>$deliver_date,'order_total'=>$order_total,'actual_order_total'=>$actual_order_total,'lead_time'=>$date_diff,'facility_name'=>$facility_name);
  }
+
+
 }

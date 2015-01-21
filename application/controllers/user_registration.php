@@ -60,7 +60,7 @@ class User_Registration extends MY_Controller {
   		$this->email->set_newline("\r\n");
   		$this->email->from($fromm,'Health Commodities Management Platform'); // change it to yours
   		$this->email->to($email); // change it to yours
-  		$this->email->bcc('kariukijackson@gmail.com,kelvinmwas@gmail.com,nicomaingi@gmail.com,jsphmk14@gmail.com');
+  		$this->email->bcc('kelvinmwas@gmail.com,nicomaingi@gmail.com,jsphmk14@gmail.com');
   		$this->email->subject('User Registration :'.$name1.' '.$name2);
  		$this->email->message($messages);
  

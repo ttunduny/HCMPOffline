@@ -22,6 +22,7 @@
 			}
 			th{
 				text-transform:capitalize;
+				background-color: rgb(231, 230, 230);
 			}
 		</style>
 	</head>
@@ -34,7 +35,7 @@
 			
 			<table class="table" id="tbl_subm_report" >
 				<thead>
-					<tr>
+					<tr >
 						<td rowspan="2" >&nbsp;</td>
 						<th style="" rowspan="2">COMMODITY </th>
 						<?php if(strtoupper($platform)=='TAQMAN'){ ?>
@@ -344,6 +345,13 @@
 					<?php
 					}
 					?>
+			</div>
+			<div style="width: 100%; border-top:solid 1px #000"> 
+				<?php 
+				if(date('Y-m-d',strtotime($approved_date))=="1970-01-01"){
+					$approved_date= $monthname.' '.$year;
+				}
+				echo "<b style='font-size:14px'>Approved date</b> : ".date('Y-m-10',strtotime($approved_date));?>
 			</div>
 		</div>
 	</body>

@@ -92,7 +92,7 @@ class Users extends Doctrine_Record {
 	}
 
 	public static function check_user_exist($email) {
-		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("email='$email' AND status IN(1,2)");
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("email='$email' AND status IN(1,2)") ;
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
 	}
@@ -225,7 +225,7 @@ FROM
         LEFT JOIN
     facilities f ON u.facility = f.facility_code
         LEFT JOIN
-    access_level a ON a.id = u.usertype_id
+    access_level a ON a.id = u.usertype_id WHERE f.using_hcmp=1
 				");
 		return $query;
 	}
@@ -289,6 +289,7 @@ public static function get_county_emails($county_id){
 				ON
 				a.id=u.usertype_id
 				where u.county_id=$county
+				and f.using_hcmp=1
 				and a.id != 10
 				Group by status
 				");
@@ -297,7 +298,7 @@ public static function get_county_emails($county_id){
 	
 	public static function get_users_count() {
 
-		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users")  ->Where("usertype_id !=9") -> groupBy("status");
+		$query = Doctrine_Query::create() -> select("count(*)") -> from("Users")  ->Where("usertype_id NOT IN(1,4,6,7,8,9,11,13,14,15)") -> groupBy("status");
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
 	}

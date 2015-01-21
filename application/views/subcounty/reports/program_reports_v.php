@@ -14,8 +14,8 @@
 		$RH_report_details='';
 		$TB_report_details='';
 		$link_new_report_malaria = base_url('divisional_reports/malaria_report');
-		$link_new_report_RH = base_url('divisional_reports/RH_report');
 		$link_TB = base_url('divisional_reports/tb_report');
+		$link_new_report_RH = base_url('divisional_reports/RH_report');
 		
 	foreach($malaria as $malaria_details1):
 		foreach($malaria_details1 as $malaria_details):
@@ -27,6 +27,7 @@
 			//Dowwnload links
 			$link = base_url('reports/get_facility_report_pdf/'.$malaria_details['report_id'].'/'.$malaria_details['facility_code'].'/malaria');	
 			$link_excel = base_url('reports/create_excel_facility_program_report/'.$malaria_details['report_id'].'/'.$malaria_details['facility_code'].'/malaria');
+		    
 		    $malaria_report_data .= <<<HTML_DATA
            <tr>           
 				<td>$facility</td>          
@@ -49,7 +50,6 @@ HTML_DATA;
 			endforeach;	
 			endforeach;	
 			
-
 			foreach($RH as $RH_details1):
 				foreach($RH_details1 as $RH_details):
 					
@@ -61,6 +61,8 @@ HTML_DATA;
 			$report_date = $RH_details['report_date'];
 			$link = base_url('reports/get_facility_report_pdf/'.$RH_details['report_id'].'/'.$RH_details['facility_code'].'/RH');	
 			$link_excel = base_url('reports/create_excel_facility_program_report/'.$RH_details['report_id'].'/'.$RH_details['facility_code'].'/RH');
+		    
+		    
 		    $RH_report_details .= <<<HTML_DATA
             <tr>           
 				<td>$facility</td>          
@@ -89,7 +91,7 @@ HTML_DATA;
 				$link = base_url('reports/get_facility_report_pdf/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/TB');	
 				$link_excel = base_url('reports/create_excel_facility_program_report/'.$TB_details['report_id'].'/'.$TB_details['facility_code'].'/TB');
 
-			    $link_TB = base_url('divisional_reports/tb_report');
+			    
 			    $TB_report_details .= <<<HTML_DATA
 	            <tr>           
 					<td>$facility</td>          
@@ -128,12 +130,10 @@ HTML_DATA;
 					<th>Facility Name</th>
 					<th>Prepared By:</th>
 					<th>Report Date</th>
-					<th>Action 
-					<a href='<?php echo $link_new_report_malaria;?>'>
-						<button  type='button' class='btn btn-xs btn-primary'style="float: right">
-	           			<span class='glyphicon glyphicon-floppy-disk'></span>Submit Malaria Report</button>
-		           	</a>
-		           		</th>
+					<th>Action <a href='<?php echo $link_new_report_malaria;?>'>
+							<button  type='button' class='btn btn-xs btn-primary'style="float: right">
+		           			<span class='glyphicon glyphicon-floppy-disk'></span>Submit Malaria Report</button>
+		           		</a></th>
 					
 				</tr>
 				

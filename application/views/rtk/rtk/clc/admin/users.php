@@ -158,6 +158,7 @@
                 window.location = "<?php echo base_url() . 'rtk_management/county_admin/users'; ?>";
             });
         });
+         $('#users_table').dataTable(); 
         $('#users_table').tablecloth({theme: "paper",         
           bordered: true,
           condensed: true,

@@ -6,8 +6,8 @@
 <div class="test"><div class="container" style="width: 96%; margin: auto;">
 	
 	<div class="row">
-		<div class="col-md-12" id=""><p class="bg-info">
-			<strong>Select the Commodities that are used in this facility by inputing the AMC or selecting the check box</strong>
+		<div class="col-md-7" id=""><p class="bg-info">
+			<strong>Step <span class="badge ">1 of 2</span>:</strong> Select the Commodities used in this facility by inputing the AMC or selecting the check box
 		</p></div>
 		
 	</div>
@@ -24,7 +24,7 @@
 						<th>In Use?</th>	
 						<th>Unit Size</th>
 						<th>Issue Type</th>
-					    <th>Average&nbsp;Monthly&nbsp;Consumption&nbsp;(Units) </th>
+					    <th>Average&nbsp;Monthly&nbsp;Consumption&nbsp; </th>
 					    <th>Total&nbsp;Units</th>
 					    		    
 </tr>
@@ -63,6 +63,13 @@
 </div>
 <script>
 $(document).ready(function() {	
+	window.onbeforeunload = function() {
+        return "Are you sure you want to leave?";
+    }
+    document.onkeydown = function(event) {
+  if(window.event){
+        event.preventDefault();
+  }}
 	//datatables settings 
 	$('#example').dataTable( {
 		   "sDom": "T lfrtip",
@@ -146,9 +153,36 @@ $(document).ready(function() {
 	   	
 	}
 	$('.save').button().click(function() {
-		//alert();
+
+		var saved = [];
+    		i = 0;
+
+		 $('.checkbox').each(function() {
+
+      if($(this).closest('tr').find('.checkbox').prop('checked')==true){
+
+      	 saved[i++] =$(this).closest('tr').find('.checkbox').prop('checked');
+
+      }
+                 
+        }); 
 		//window.
-		window.open("<?php echo base_url('stock/amc')?>",'_parent');
+		var size=saved.length;
+		swal({   title: "You have selected "+size+ " commodities.",  
+				 text: "Please click cancel to select more, or complete to continue.",  
+				 type: "warning",   showCancelButton: true,   confirmButtonColor: "#4cae4c",  
+				 confirmButtonText: "Yes, complete!",   closeOnConfirm: false },
+
+		 function(){  
+
+		 		 swal({   title: "Success!",   text: "Completed step 1 of 2.",   timer: 2000 , type: "success" });
+		 		 setTimeout(function () {
+          	 window.open("<?php echo base_url('stock/facility_stock_first_run/first_run')?>",'_parent');
+				
+        }, 3000);
+		 
+		  });
+		
 	});
 })
  

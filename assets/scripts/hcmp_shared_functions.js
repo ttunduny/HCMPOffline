@@ -165,6 +165,17 @@ function dialog_box(body_html_data,footer_html_data){
 	buttonImage: baseUrl,       });	
 	
 }
+
+function hcmp_message_box(title,notification,message_type) {
+      swal({  
+
+                  title: title,  
+                   text: '<div id="alert">'+notification+'</div>',
+                     type: message_type
+                     
+
+                     });
+}
 /******************---------------END--------------------------**********************/
  function number_format (number, decimals, dec_point, thousands_sep) {
     // *     example 1: number_format(1234.56);
@@ -218,22 +229,87 @@ function dialog_box(body_html_data,footer_html_data){
 
 function confirm_if_the_user_wants_to_save_the_form(form_id){
 	
-	   var buttons='<button type="button" class="save_issue btn btn-sm btn-success" data-dismiss="modal">Save</button>'+
-       '<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>';
-      dialog_box("Kindly confirm the values before saving",buttons);
-      $('.save_issue').on('click', function() {
-          
-          if($(form_id).valid()){
-           $(form_id).submit();      
-          }
-      
-      });
+	swal({   title: "Are you sure?",   
+				text: "Kindly confirm the values before saving!",  
+				 type: "warning",   showCancelButton: true,  
+				  confirmButtonColor: "#5cb85c",  
+				   confirmButtonText: "Yes, continue!",   
+				   cancelButtonText: "No, cancel please",  
+				    closeOnConfirm: false,  
+				     closeOnCancel: false }, 
+				     
+				     function(isConfirm){   if (isConfirm) {   
+				     	$(form_id).submit();  
+				     	 swal("Saved!", "Your data was saved.", "success"); 
+				     	 if($(form_id).valid()){
+					           $(form_id).submit();      
+					          }else{
+					          	swal({   title: "Cancelled!",   text: "Your transaction was stopped ",  type: "warning", showCancelButton: false , timer: 3000 });
+					          	alertify.set({ delay: 10000 });
+											alertify.error("An error occured while processing your transaction. Check your fields.", null);
+					          }
+				     	 
+				     	   } else {
+				     	   	
+				     	   	swal({   title: "Cancelled!",   text: "Your transaction was stopped ",  type: "warning", showCancelButton: false , timer: 3000 });
+				     	   	   
+				     	   	  return; 
+				     	   	  } });
+	
+	  // var buttons='<button type="button" class="save_issue btn btn-sm btn-success" data-dismiss="modal">Save</button>'+
+      // '<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>';
+     // dialog_box("Kindly confirm the values before saving",buttons);
+     
 }
 
+function confirm_with_summary(html_data,form_id){
+	
+	swal({   title: "Are you sure?",   
+				text: "Kindly confirm the values before saving!</br>"+html_data,  
+				 type: "warning",   showCancelButton: true,  
+				  confirmButtonColor: "#5cb85c",  
+				   confirmButtonText: "Yes, continue!",   
+				   cancelButtonText: "No, cancel please",  
+				    closeOnConfirm: false,  
+				     closeOnCancel: false }, 
+				     
+				     function(isConfirm){   if (isConfirm) {   
+				     	$(form_id).submit();  
+				     	 swal("Saved!", "Your data was saved.", "success"); 
+				     	 if($(form_id).valid()){
+					           $(form_id).submit();      
+					          }
+				     	 
+				     	   } else {
+				     	   	
+				     	   	swal({   title: "Cancelled!",   text: "Your transaction was stopped ",  type: "warning", showCancelButton: false , timer: 3000 });
+				     	   	   
+				     	   	  return; 
+				     	   	  } });
+	
+     
+}
+//Prevent dublication on refresh or back button
 function active_panel(div_object){
 
      	 $('.panel').removeClass('active-panel');
      	 $(div_object).parent().parent().parent().addClass('active-panel');
      }
+function changeHashOnLoad() {
+     window.location.href += "#";
+     setTimeout("changeHashAgain()", "50"); 
+}
+
+function changeHashAgain() {
+  window.location.href += "1";
+}
+
+var storedHash = window.location.hash;
+window.setInterval(function () {
+    if (window.location.hash != storedHash) {
+         window.location.hash = storedHash;
+    }
+}, 50);
+
 
 

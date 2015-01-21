@@ -77,14 +77,15 @@ class Home extends MY_Controller
 			case 'rtk_manager':
 			case 'rtk_partner_admin':
 			case 'rtk_partner_super':
-			redirect('home_controller');
+			redirect('http://41.89.6.223/HCMP/user');
+			//redirect('http://192.168.133.23/HCMP/user');
 			break;
 			case 'super_admin':
 			$view = 'shared_files/template/dashboard_v';
 			$data['content_view'] = "shared_files/template/super_admin_template";
 			break;
-			case 'allocation_committee':
-			$view = '';
+			// case 'allocation_committee':
+			// $view = '';
 			break;	
 			case 'county':
 			$view = 'shared_files/template/template';
@@ -108,6 +109,7 @@ class Home extends MY_Controller
     $graph_data=array();
 	$graph_data=array_merge($graph_data,array("graph_id"=>'container'));
 	$graph_data=array_merge($graph_data,array("graph_title"=>'Facility stock level'));
+	$graph_data = array_merge($graph_data, array("color" => "['#4b0082','#FFF263', '#6AF9C4']"));
 	$graph_data=array_merge($graph_data,array("graph_type"=>'bar'));
 	$graph_data=array_merge($graph_data,array("graph_yaxis_title"=>'Total stock level  (values in packs)'));
 	$graph_data=array_merge($graph_data,array("graph_categories"=>array()));

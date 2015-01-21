@@ -1,4 +1,6 @@
-<html lang="en"><head>
+<html lang="en">
+	
+	<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,29 +9,26 @@
     <!-- Bootstrap core CSS -->  
     <link rel="icon" href="<?php echo base_url().'assets/img/coat_of_arms.png'?>" type="image/x-icon" />
     <link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
-    <link href="<?php echo base_url().'assets/css/offline-theme-default.css'?>" type="text/css" rel="stylesheet"/> 
-    <link href="<?php echo base_url().'assets/css/styles.css'?>" type="text/css" rel="stylesheet"/>
-    <link href="<?php echo base_url().'assets/css/select2.css'?>" type="text/css" rel="stylesheet"/> 
-    <link href="<?php echo base_url().'assets/css/offline-language-english.css'?>" type="text/css" rel="stylesheet"/>  
-    <link href="<?php echo base_url().'assets/css/offline-theme-default.css'?>" type="text/css" rel="stylesheet"/> 
-    <link href="<?php echo base_url().'assets/css/styles.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/css/normalize.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/css/dashboard.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/css/jquery-ui-1.10.4.custom.min.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
-    <link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
-    <link href="<?php echo base_url().'assets/css/offline.css'?>" type="text/css" rel="stylesheet"/>
-    <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
+    <link href="<?php echo base_url().'assets/bower_components/semantic/packaged/css/semantic.css'?>" type="text/css" rel="stylesheet"/>
+    <link href="<?php echo base_url().'assets/font-awesome/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
+    <link href="<?php echo base_url().'assets/bower_components/ionicons-2.0.0/css/ionicons.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
+    <!--<link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/tab-style/css/demo.css'?>" />-->
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/tab-style/css/tabs.css'?>" />
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/tab-style/css/tabstyles.css'?>" />
+    <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
+    <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
     <script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
     <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
-     <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
-    <script src="<?php echo base_url().'assets/scripts/offline-simulate-ui.min.js'?>" type="text/javascript"></script>
-     <script src="<?php echo base_url().'assets/scripts/select2.js'?>" type="text/javascript"></script>
-     <script src="<?php echo base_url().'assets/scripts/select2.js'?>" type="text/javascript"></script>
+    <script src="<?php echo base_url().'assets/bower_components/semantic/packaged/javascript/semantic.js'?>" type="text/javascript"></script>
+     
     <title>HCMP | National</title>
 <script>
    paceOptions = {
@@ -61,721 +60,791 @@
     var url="<?php echo base_url(); ?>";
     </script>
 <style>
+a ,u {
+	text-decoration: none !important;
+}
 	.active-panel{
     	border-left: 6px solid #36BB24;
     }
     body {
-padding-top: 4.5%;
+padding-top: 1%;
 }
 
 .modal-content,.form-control
 {
   border-radius: 0 !important;
 }
-#overview{
-	padding-right:0;
-}
+
 h4{
 	
 	padding:4px;
-	color:white;
-	background:#528f42;
+	color:black;
+	background:white;
 	text-align:center;
-	margin:0;
-	
+	margin:0;	
 	font-size:15px;
 }
-/*state overview*/
 
-.state-overview .symbol, .state-overview .value {
-    display: inline-block;
-    text-align: center;
+.stat_item {
+		height: 36px;
+		padding: 2px 5px;
+		color: #fff;
+		text-align: center;
+		font-size: 1em;
+		
+	}	
+	
+	#notify .col-md-2,.col-md-1{
+		padding:3px;
+	}
+	#notify {
+		margin-bottom: 5px;
+	}
+	.tile{
+		box-shadow:  0px 1px 5px 0px #d3d3d3;
+		background:white;
+	}
+	.tile h4{
+		padding: 5px;
+		background-color:#528f42;
+		color: white;
+	}
+	.btn{
+		border-radius: 0;
+	}
+	.modal-dialog {
+		
+		width: 85%;
+	}
+	.statistic{
+		display: inline-block;
+		text-align: center;
+		cursor: pointer;
+	}
+	.statistic .label{
+		color:black;
+		font-weight: 400;
+	}
+	.statistic .value{
+		font-size:2.2em;
+		font-weight: 800;
+	}
+	.corner-label{
+		background-color: #5cb85c;
+		border-color: #4cae4c;
+		color:white;
+		text-align: center;
+		height:10%;
+		padding: 15 2 2 2;
+		width: 36;
+		margin-right:0.5%;
+		font-size:1.3rem;
+		cursor: pointer;
+	}
+	.tabs-style-bar nav ul li.tab-current a {
+	background: #4CAE4C;
+	color: #fff;
 }
-
-.state-overview .value  {
-    float: right;
-
+.tile-header{
+	background-color: #f7f7f7;
+	height:25px;
+	font-size:1.3rem;
+	text-align: center;
+	font-weight: 800;
 }
-
-.state-overview .value h1, .state-overview .value p  {
-    margin: 0;
-    padding: 0;
-    color: #c6cad6;
-}
-
-.state-overview .value h1 {
-    font-weight: 300;
-    font-size:30px;
-}
-
-.state-overview .symbol i {
-    color: #fff;
-    font-size: 50px;
-}
-
-.state-overview .symbol {
-    width: 35%;
-    padding: 25px 15px;
-    -webkit-border-radius: 4px 0px 0px 4px;
-    border-radius: 4px 0px 0px 4px;
-}
-
-.state-overview .value {
-    width: 58%;
-    padding-top: 0;
-}
-
-.state-overview .terques {
-    background: #6ccac9;
-}
-
-.state-overview .red {
-    background: #ff6c60;
-}
-
-.state-overview .yellow {
-    background: #f8d347;
-}
-
-.state-overview .blue {
-    background: #a7cfdf;
-}
-.state-overview .purple {
-    background: #e7b7dd;
-}
-.state-overview .seagreen {
-    background: #39b7ac;
-}
-.state-overview .b {
-    background: #8075c4;
-}
-.state-overview .b2 {
-    background: #fd7998;
-}
-
-</style>
+	</style>
+	
+		
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </script></head>
-  <body screen_capture_injected="true" style="">
-<div class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color:white">
-        <div class="container-fluid">
-            <div class="navbar-header" id="st-trigger-effects">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand " href="<?php echo base_url().'national';?>" >HCMP</a>
-
-        </div>
-        <div class="navbar-header" >
+    
+  </script>
   
-            <a href="<?php echo base_url().'national';?>">   
-            <img style="display:inline-block;"  src="<?php echo base_url();?>assets/img/coat_of_arms_dash.png" class="img-responsive " alt="Responsive image" id="logo" ></a>
-            
-        </div>
-        
-        <div class="collapse navbar-collapse navbar-right">
-          <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="<?php echo base_url().'national';?>">Home</a></li>
-            <li class=""><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>
-            <li class=""><a href="<?php echo base_url().'national/search';?>">Search</a></li>
-
-            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Welcome, Guest</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="<?php echo base_url();?>"><span class="glyphicon glyphicon-log-in" style="margin-right: 2%;"></span> Login</a></li>
-                            
-                            <li class="divider"></li>
-                        </ul>
-                    </li>
-          </ul>
-          
-                                        
-        </div><!--/.nav-collapse -->
-
+  
+  </head>
+  
+  <body screen_capture_injected="true" style="background-color: white;">
+  	
+<div class="container-fluid">
+	
+	<div class="ui large menu">
+  <div style="margin: 13 6 0 0;">Ministry of Health</div>
+    
+     
+  
+  <div class="right menu">
+    <a class="active item">
+    <i class="home icon"></i> Home
+  </a>
+  <a class="item">
+    <i class="mail icon"></i> Settings
+  </a>1
+    <div class="ui dropdown item">
+      Log in <i class="dropdown icon"></i>
+      <div class="menu">
+        <a class="item">Login to HCMP</a>
+        <a class="item">Login to RTK</a>
       </div>
     </div>
+    <div class="item">
+        <div class="ui primary button">Sign Up</div>
+    </div>
+  </div>
+</div>
 	
-	<div class="container-fluid" style="" id="main-content">
-	<div class="row">
-		
-		<div class="col-md-4">
-			
-			<div class="row">
-				<div class="col-md-12" style="/*border: 1px solid #000;*/height: 620px">
-					<div style="/*border: 1px solid #000;*/height: 500px"><div id="map" ></div></div>
-					<div style="width:130px;margin-left:30%;padding:2%">
-            <div style="display:inline-block;width:10px;height:10px;background:#FFCC99">
-                
-            </div>
-            <div style="width:80px;display:inline-block;margin-left:5px;font-size:120%">Using HCMP</div></div>
-					<script>
+		<div class="tabs tabs-style-bar navbar-fixed-top">
+	
+					<nav>
+						<ul><div style="margin: 13 6 0 0;">Ministry of Health</div>
+							<a href="<?php echo base_url().'national';?>" style="margin-right: 60">   
+           						 <img style="display:inline-block;"  src="<?php echo base_url();?>assets/img/coat_of_arms_dash.png" 
+           						 class="img-responsive " alt="Responsive image" id="logo" ></a></li>
+							<li><a href="#hcmp" class="icon icon-graph1"><span>HCMP Dashboard</span></a>
+							<li><a href="<?php echo base_url().'home';?>" class="icon icon-user"><span>System Log in</span></a></li>
+						</ul>
+					</nav>
+					
+					<div class="content-wrap">
+						<input type="hidden" name="current_filter" value="">
+						
+							<!-- BEGIN HCMP CONTENT -->
+						<section id="hcmp" class="row-fluid">
+							
+							<div class="row-fluid ui stackable four column grid" style="max-height: 550px">							
+							
+							
+						<div id="" class="five wide column" style="margin-top: 1%;">
+							
+							<div class="tile"  style="max-height: 500px;">
+								<div class="tile-header">National Over view</div>
+							<div id="map" style="max-height: 480px;"></div>	
+						<script>
 					var map= new FusionMaps ("assets/FusionMaps/FCMap_KenyaCounty.swf","KenyaMap","100%","100%","0","0");
 					map.setJSONData(<?php echo $maps; ?>);
 					
     				map.render("map");
     				
                     </script>
-				
-					</div>
-				
-			</div>
+                   		 <div class="row-fluid">
+                   		 	<div class="col-lg-1">
+                   		 		<div style="display:inline-block;width:14px;height:12px;background:#528f42">
+				                
+				            </div>
+                   		 	</div>
+                   		 	<div class="col-lg-4">
+                   		 		Using HCMP
+                   		 	</div>
+                   		 	<div class="col-lg-3">
+                   		 	</div>
+                   		 	<div class="col-lg-4">
+                   		 		
+                   		 	</div>
+				             
+				            
+				            </div>
+							</div>
+							
 			
-			</div>
-		<div class="col-md-8">
-			
-			<div class="row">
-				<div class="col-md-12" style="/*border: 1px solid #000;*/height: 200px" id="overview">
 					
-					<div class="row state-overview">
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol terques">
-                          	<span class="glyphicon glyphicon-user"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Health Workers Trained</p>
-                              <h1 class="count" id="hcw_trained"></h1>
-                              
-                          </div>
-                      </section>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol red">
-                              <span class="glyphicon glyphicon-user"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Facilities Rolled Out</p>
-                              <h1 class=" count2" id="facilities_rolled_out"></h1>
-                              
-                          </div>
-                      </section>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol yellow">
-                              <span class="glyphicon glyphicon-user"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Total facilities</p>
-                              <h1 class=" count3">328</h1>
-                              
-                          </div>
-                      </section>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol blue">
-                              <span class="glyphicon glyphicon-user"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Public health facilities	</p>
-                              <h1 class=" count4">10328</h1>
-                              
-                          </div>
-                      </section>
-                  </div>
-              </div>
-              
-              <div class="row state-overview">
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol purple">
-                          	<span class="glyphicon glyphicon-user"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Private health facilities</p>
-                              <h1 class="count">495</h1>
-                              
-                          </div>
-                      </section>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol b">
-                              <span class="glyphicon glyphicon-user"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Faith-based Facilities</p>
-                              <h1 class=" count2">947</h1>
-                              
-                          </div>
-                      </section>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol seagreen">
-                              <span class="glyphicon glyphicon-user"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Other Facilities</p>
-                              <h1 class=" count3">328</h1>
-                              
-                          </div>
-                      </section>
-                  </div>
-                  <div class="col-lg-3 col-sm-6">
-                      <section class="panel">
-                          <div class="symbol b2">
-                              <span class="glyphicon glyphicon-user"></span>
-                          </div>
-                          <div class="value">
-                          	<p>Facilities Using HCMP</p>
-                              <h1 class=" count4">10328</h1>
-                              
-                          </div>
-                      </section>
-                  </div>
-              </div>
-				</div>
+						
+						
+						</div>
+						
+						
+				<div id="" class="eleven wide column " style="margin-top: 1%;height: 480px">
+					
+					<div class="ui statistics ">
+						<div class="ui grid tile ">
+							<div class="tile-header">National Statistics</div>
+							  <div class="four wide column">
+								<div class="statistic">
+								    <div class="value">
+								      522
+								    </div>
+								    <div class="label">
+								     Total HCW Trained   
+								    </div>
+								  </div>
+							  </div>
+							  <div class="four wide column">
+								<div class="statistic">
+								    <div class="text value">
+								      184
+								    </div>
+								    <div class="label">
+								      Total Facilities Rolled Out
+								    </div>
+								  </div>
+							  </div>
+							  <div class="four wide column">
+								<div class="statistic">
+								    <div class="value">
+								      <i class="plane icon"></i> 5
+								    </div>
+								    <div class="label">
+								      Avg Stock out days
+								    </div>
+								  </div>
+							  </div>
+							  <div class="three wide column">
+								<div class="statistic">
+								    <div class="value">
+								      57%
+			   						 </div>
+			    					<div class="label">
+								      Avg order fill rate
+								    </div>
+								    
+			 					 </div>
+			 					
+
+							  </div>
+							  <div class="one wide column" style="padding:0.5%">
+							  	<div class="corner-label right" data-toggle="modal" data-target="#facilitystatsModal">
+							  		
+									    <div class="ion-chevron-right">More</div>
+							  	</div>
+							  	</div>
+							 
+						</div>
+					  
+					  <div class="ui grid">
+					  	<div class="tile" style="height: 420px"> 
+							<div class="" style="height: 50px; padding: 8px;margin: 0;">
+								
+								<button data-toggle="modal" data-target="#expiriesModal" class="btn btn-xs btn-success test "><span class="icon icon-display"></span>More</button>	
+								
+							</div>					  		<div id="expiries"></div>
+					  		</div>
+					  	</div>
+					  
+					  
+				</div>	
+							
+						</div>
+						
+						
+							</div>
+							
+							<div class="ui horizontal divider">
+								<i style="font-size: 16px;" class="fa fa-bar-chart-o"></i>
+								 </div>
+							
+							<div class="row-fluid ui stackable four column grid" style=" margin-top:1.2%;">
+								<div class="five wide column tile " style="height: 500px ;margin-right: 0">
+									<div class="" style="height: 50px; padding: 8px;margin: 0;">
+								
+								<button data-toggle="modal" data-target="#mosModal" class="btn btn-xs btn-success "><span class="icon icon-display"></span>More</button>	
+								
+							</div>
+							<div id="mos" class=""></div>
+								</div>
+								<div class="six wide column " style="height: 500px;margin-left: 0">
+									<div class="" style="height: 50px; padding: 8px;margin: 0;">
+								
+								<button data-toggle="modal" data-target="#ordersModal" class="btn btn-xs btn-success "><span class="icon icon-display"></span>More</button>	
+								
+							</div>
+							<div id="orders" class="tile"></div>
+								</div>
+								<div class="five wide column " style="height: 500px ;margin-right: 0">
+									<div class="" style="height: 50px; padding: 8px;margin: 0;">
+								
+								<button data-toggle="modal" data-target="#consumptionModal" class="btn btn-xs btn-success "><span class="icon icon-display"></span>More</button>	
+								
+							</div>
+							<div id="consumption" class="tile"></div>
+								</div>
+								
+																
+							</div>
+							
+							<div class="ui horizontal divider">
+								<i style="font-size: 16px;" class="fa fa-bar-chart-o"></i>
+								 </div>
+								 
+							<div class="row-fluid ui stackable four column grid" style=" margin-top:1.2%;">
+								<div class="five wide column " style="height: 500px ;margin-right: 0">
+									<div class="" style="height: 50px; padding: 8px;margin: 0;">
+								
+								<button data-toggle="modal" data-target="#mosModal" class="btn btn-sm btn-success "><span class="icon icon-display"></span>More</button>	
+								
+							</div>
+							<div id="" class="tile"></div>
+								</div>
+								<div class="six wide column " style="height: 500px;margin-left: 0">
+									<div class="" style="height: 50px; padding: 8px;margin: 0;">
+								
+								<button data-toggle="modal" data-target="#ordersModal" class="btn btn-sm btn-success "><span class="icon icon-display"></span>More</button>	
+								
+							</div>
+							<div id="" class="tile"></div>
+								</div>
+								<div class="five wide column " style="height: 500px ;margin-right: 0">
+									<div class="" style="height: 50px; padding: 8px;margin: 0;">
+								
+								<button data-toggle="modal" data-target="#consumptionModal" class="btn btn-sm btn-success "><span class="icon icon-display"></span>More</button>	
+								
+							</div>
+							<div id="" class="tile"></div>
+								</div>
+								
+																
+							</div>	
+								 
+							
+						</section>
+						<!-- /END HCMP CONTENT -->
+						
+						<section id="section-underline-3">
+							
+	<div class="container-fluid">
+		
+		<div class="row">
+			<div class="col-md-4" style="">
 				
 			</div>
+			<div class="col-md-4" style="">
+				
+				
+ <?php 
+if ($popup=="errorpopup") {
+  
+ echo '<div class="alert alert-danger alert-dismissable" style="text-align:center;"> Error! Wrong Credentials! Try Again.
+<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>
+','</div>';
+}elseif ($popup=="passwordchange") {
+  echo  '<div class="alert alert-success alert-dismissable" style="text-align:center;">Your password '.$user_email.' has been changed. Please login.
+<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>
+','</div>';
+}elseif ($popup=="activation") {
+  echo  '<div class="alert alert-success alert-dismissable" style="text-align:center;">Your account has been Activated. Please login.
+<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>
+','</div>';
+}
+unset($popup);
 
-			<div class="row">
-				<div class="col-md-12" style="border: 1px solid #000;height: 420px">
-					
-					<div class="panel panel-success">
-       <div class="panel-heading">
-       <h3 class="panel-title" style="display:inline-block;"><div class="county-name" style="display:inline-block"></div>Expiries</h3>
-       </div>
-       
-        <div class="row" style="margin-left: 2px">
-
-       <div class="col-md-6" style="border: 1px solid #DDD;height: 530px; ">
-
-      
-       <div class="panel-heading">
-       <h4 class="panel-title">Actual Expiries </h4>
-       </div>
-        <div class="panel-body" style="margin-left: 2px">
-      <ul class='nav nav-tabs' id="actual_">
-      <li class="active"><a href="#acounty" data-toggle="tab">County View</a></li>
-      <li class=""><a href="#asubcounty" data-toggle="tab">Sub County View</a></li>
-       </ul>
-       <div id="myTabContent" class="tab-content ">
-            <div  id="acounty" class="tab-pane active fade in">
-       <div class="filter row" style="margin-left: 2px;">
-<form class="form-inline" role="form">
-<select id="ecounty_filter" class="form-control col-md-2 county">
-<option value="NULL">Select County</option>
-<?php
-foreach($counties as $data):
-    foreach($data as $key=>$name):
-      echo "<option value='$key'>$name</option>";
-    endforeach;
-       
-endforeach;
-?>
-</select>   
-<select id="eyear" class="form-control col-md-2">
-<option selected="selected" value="NULL">Select Year</option>
-<option  value="2014">2014</option>
-<option  value="2013">2013</option>
-</select> 
-<div class="col-md-2">
-<button class="btn btn-sm btn-success ecounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
-</div>
-
-</form>
-</div>
-       </div> 
-        <div  id="asubcounty" class="tab-pane fade in">
-            <!-- -->
-<div class="filter row" style="margin-left: 2px;">
-<form class="form-inline" role="form">
-<select id="asubcounty_filter" class="form-control col-md-2 subcounty">
-<option value="NULL">Select Sub-County</option>
-</select>
-<select id="asubcounty_facility_filter" class="form-control col-md-3 facility">
-<option value="NULL">Select facility</option>
-</select>   
-<select id="asubcountyyear" class="form-control col-md-2">
-<option selected="selected" value="NULL">Select Year</option>
-<option  value="2014">2014</option>
-<option  value="2013">2013</option>
-</select> 
-<div class="col-md-2">
-<button class="btn btn-sm btn-success asubcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
-</div>
-
-</form>
-</div>
-       </div>   
-      </div>
-       <div id="actual">test</div>
-       </div> 
-        </div> 
-       <div class="col-md-6" style="border: 1px solid #DDD;height: 530px;" >
-
-      
-       <div class="panel-heading">
-       <h4 class="panel-title">Potential Expiries </h4>
-       </div>
-        <div class="panel-body">
-        <ul class='nav nav-tabs' id="potential_">
-      <li class="active"><a href="#pcounty" data-toggle="tab">County View</a></li>
-      <li class=""><a href="#psubcounty" data-toggle="tab">Sub County View</a></li>
-       </ul>
-       <div id="myTabContent" class="tab-content">
-            <div  id="pcounty" class="tab-pane active fade in">
-       <div class="filter row" style="margin-left: 2px;">
-<form class="form-inline" role="form">
-<select id="pcounty_filter" class="form-control col-md-2 county">
-<option value="NULL">Select County</option>
-<?php
-foreach($counties as $data):
-    foreach($data as $key=>$name):
-      echo "<option value='$key'>$name</option>";
-    endforeach;
-       
-endforeach;
-?>
-</select>   
-<div class="col-md-2">
-<button class="btn btn-sm btn-success pcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
-</div>
-
-</form>
-</div>
-       </div> 
-        <div  id="psubcounty" class="tab-pane fade in">
-                        <!-- -->
-<div class="filter row" >
-<form class="form-inline" role="form">
-<select id="psubcounty_filter" class="form-control col-md-2 subcounty">
-<option value="NULL">Select Sub-County</option>
-</select> 
-<select id="psubcounty_facility_filter" class="form-control col-md-3 facility">
-<option value="NULL">Select facility</option>
-</select>   
-<div class="col-md-2">
-<button class="btn btn-sm btn-success psubcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
-</div>
-<div class="col-md-1">
-<button class="btn btn-sm btn-success psubcounty-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
-</div>
-</form>
-</div>
-            </div>   
-      </div>
-      <div id="potential">test</div>
-       </div>    
-      
-       </div> 
-        </div>
-          
-       </div> 
-
-			<div class="row" style="margin-bottom: 5.5%;">
-				<div class="col-md-12" style="/*border: 1px solid #000;*/height: 420px" id="expiries">
-					
-					<h4>National  Expiries</h4>
-       
-       <div class="col-md-6" style="border: 1px solid #DDD; ">
-      
-       <div class="panel-heading">
-       <h5 class="panel-title">Actual Expiries </h5>
-       </div>
-
-       
-       <div id="actual" style=""></div>
-       
-        </div> 
-        
-        <div class="col-md-6" style="border: 1px solid #DDD;" >
-      
-       <div class="panel-heading">
-       <h5 class="panel-title">Potential Expiries </h5>
-       </div>
-        
-      <div id="potential"></div>
-          
-      
-       </div> 
-				</div>
+ ?>
 			</div>
-			
+			<div class="col-md-4" style="">
+				
+				
+			</div>
 		</div>
+		
 	</div>
 	
-	<div class="container-fluid">
-			
-    <div class="row">
-                <div class="col-md-6">
-       <h4>Stock Level in Months of Stock (MOS)</h4>
+	
+  	
+  		   
+<div class="container" style="margin-top: 3%;" id="containerlogin">
       
-      <ul class='nav nav-tabs'style="margin-top: 1%">
-      <li class="active"><a href="#stracer" data-toggle="tab">Tracer Items</a></li>
-      </ul>
-      <div id="myTabContent" class="tab-content">
-      <div  id="stracer" class="tab-pane fade active in">
-<br>
-<div class="col-md-1">
-    <a href="national/search" target="_blank">
-    <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
-</a>
-
-</div>
-      </div>
-       </div>
-        <div id="mos" style="width: "></div> <!--- MOS -->
-        
-        
-      			 </div>
-       <div class="col-md-6">
-       <h4>Consumption</h4>
-       
-       <ul class='nav nav-tabs' style="margin-top: 1%">
-      <li class="active"><a href="#tracer" data-toggle="tab">Tracer Items</a></li>
-       </ul>
-   <div id="myTabContent" class="tab-content">
-                <div  id="tracer" class="tab-pane fade active in">
-<br>
-<div class="col-md-1">
-    <a href="national/search" target="_blank">
-    <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
-</a>
-
-</div>
-
-        
-      </div>
-      </div>
-      <div id="consumption"></div> <!-- consumption -->
-       
-       </div>
- </div><!--- row 2 -->
- 
+                
  <div class="row">
-                <div class="col-md-6">
-       <div class="">
-       
-       <h4 class=""><div class="county-name" style="display:inline-block"></div>Cost of Orders</h4>
-       
-        <div class="" style="height:500px;">
-        <ul class='nav nav-tabs'>
-      <li class="active"><a href="#corders" data-toggle="tab">Year</a></li>
-      </ul>
-      <div id="myTabContent" class="tab-content">
-      <div  id="corders" class="tab-pane fade active in">
-<br>
-<div class="col-md-1">
-    <a href="national/search" target="_blank">
-    <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
-</a>
+        <div class="col-md-3">
 
+       <!--<a href="<?php echo base_url('national/demo_accounts') ?>"><button class="btn btn-primary ">Demo Site Login Credentials </button></a>--></div>
+
+  <div class="col-md-6"> 
+  			<div class="row">
+          <div class="col-md-1"></div>
+          <div class="col-md-10">
+            <div id="contain_login" class="">
+    <h2><span style="margin-right: 0.5em;" class="glyphicon glyphicon-lock"></span>Login</h2> 
+    <?php 
+    
+   echo form_open('user/login_submit'); ?>
+<div id="login" >
+
+    
+  <div class="form-group" style="margin-top: 2.3em;">
+    <label for="exampleInputEmail1">Email address</label>
+    <input type="text" class="form-control input-lg" name="username" id="username" placeholder="Enter email" required="required">
+  </div>
+  <div class="form-group" style="margin-bottom: 2em;">
+    <label for="exampleInputPassword1">Password</label>
+    <input type="password" class="form-control input-lg" name="password" id="password" placeholder="Password" required="required">
+  </div>
+  
+   <input type="submit" class="btn btn-primary " name="register" id="register" value="Log in" style="margin-bottom: 3%;">
+   
+  <a class="" style="margin-left: 2%;" href="<?php echo base_url().'user/forgot_password'?>" id="modalbox">Can't access your account ?</a>
+  <a class="" style="margin-left: 2%;" href="<?php echo base_url().'user/sms_activate'?>" id="modalbox">Activate my Account?</a>
+    
+    
 </div>
+
+<?php 
+
+    echo form_close();
+    ?>
+</div><!-- #contain_login -->
+
+
+          </div>
+          <div class="col-md-1"></div>
+  
+</div><!-- .row #contain_login -->
+</div>
+  		<div class="col-md-3"></div>  
+   
+ </div><!-- .row -->
+ </div><!-- .container -->
+ <div id="footer">
+      <div class="container">
+        <p class="text-muted"> Government of Kenya &copy <?php echo date('Y');?>. All Rights Reserved</p>
       </div>
-       </div>
-        <div id="orders"></div> <!--- MOS -->
-       </div>
-       
-       </div>
-      
-       </div>
-       <div class="col-md-6">
-       <div class="">
-       
-       <h4 class=""><div class="county-name" style="display:inline-block"></div>Order Lead Time</h4>
-       
-        <div class="" style="height: 500px;">
-  <hr />
-    <a href="national/search" target="_blank">
-    <button class="btn btn-sm btn-success"><span class="glyphicon glyphicon-filter"></span>More</button> 
-</a>
-      <div class="row">
-          <div class="col-md-12">
-       <div class="panel-heading">
-       <h3 class="panel-title">Fill Rate</h3>
-       </div>
-       <div id="fill_rate">
-            <div class="progress">
-    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 80%;">
-        80%
     </div>
+							
+						</section>
+					</div><!-- /content -->
+					
+				</div><!-- /tabs -->
+				
+				
+				
+				
+		</div>
+   	
+  <!-- Modal -->
+<div class="modal fade" id="mosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">MOS</h4>
       </div>
+      <div class="modal-body">
+       	<div class="row-fluid filters" style="height: 40px;">
+      		<section class="col-lg-3">
+      				
+					<select class="form-control " id="county_val">
+						<option value="NULL">Select County</option>
+						<?php
+							foreach($county as $data):
+							    $county_id=$data["id"];
+								$county_name=$data["county"];
+							      echo "<option class='item' value='$county_id'>$county_name</option>";
+							    
+							endforeach;
+						?>
+					</select>
+					
+					
+      		</section>
+      		
+      		<section class="col-lg-3">
+      				
+					<select class="form-control " id="subcounty_val">
+						<option value="NULL">Select sub-county</option>
+						
+					</select>
+					
+					
+					
+      		</section>
+      		<section class="col-lg-3">
+      				
+					<select class="form-control " id="commodity_name">
+						<option value="NULL">Select Commodity</option>
+						<?php
+							foreach($commodities as $data):
+							    $c_id=$data["id"];
+								$c_name=$data["commodity_name"];
+							      echo "<option class='item' value='$c_id'>$c_name</option>";
+							    
+							endforeach;
+						?>
+					</select>
+					
+					
+					
+      		</section>
+      		<section class="col-lg-3">
+      			<div class="ui green button mosfilter"><i class="fa fa-filter"></i> Filter</div>
+      		</section>
+      	</div>
+       <div id="mosmodal">
+       	
        </div>
-       </div>  
-       <div class="col-md-12">
-       <div class="panel-heading">
-       <h3 class="panel-title">Order Lead Time</h3>
-       </div>
-       <div id="lead_infor">
-         
-
-
-       </div>
-       </div>  
       </div>
-    
-       </div>    
-       </div>
-       </div>
-     </div>
-     </div>
-    </div> <!-- /container -->
-    <input type="hidden" name="county_id" id="county_id" />
-    
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end Modal stockmosModal -->
 
-    
-   <script>
-         //auto run
-         var url ='<?php echo base_url()?>';
-         $('#potential_').on('shown.bs.tab', function (e) {
-         $('#potential').html('');
-         });
-         $('#actual_').on('shown.bs.tab', function (e) {
-         $('#actual').html('');
-         });
-
-      $('.county-name').html("National "+" &nbsp;");
-      ajax_request_replace_div_content('national/expiry/NULL/NULL/NULL/NULL/NULL',"#actual"); 
-      ajax_request_replace_div_content('national/potential/NULL/NULL/NULL/NULL/NULL',"#potential"); 
-      ajax_request_replace_div_content('national/facility_over_view/',"#facilities_rolled_out");
-      ajax_request_replace_div_content('national/hcw/',"#hcw_trained");
-      ajax_request_replace_div_content('national/stock_level_mos/NULL/NULL/NULL/NULL',"#mos");
-      ajax_request_replace_div_content('national/consumption/NULL/NULL/NULL/NULL',"#consumption");
-      ajax_request_replace_div_content('national/get_facility_infor/NULL/NULL/NULL/NULL',"#facilities");
-      ajax_request_replace_div_content('national/order/NULL/NULL/NULL/NULL/NULL',"#orders");
-      ajax_request_replace_div_content('national/get_lead_infor/NULL/NULL/NULL/NULL/NULL',"#lead_infor");
-      
-        $(".ecounty-filter").button().click(function(e) {
-        e.preventDefault(); 
-        var year = $("#eyear").val();
-        var county = $("#ecounty_filter").val();
-       // var district=$(this).closest("tr").find("#ecounty_filter").val();
-       // var facility=$(this).closest("tr").find("#ecounty_filter").val();
-           ajax_request_replace_div_content('national/expiry/'+year+'/'+county+'/NULL/NULL/NULL',"#actual");
-        });
-        
-        $(".asubcounty-filter").button().click(function(e) {
-        e.preventDefault(); 
-        var year=$("#asubcountyyear").val();
-        var county_id=$('#county_id').val();
-        var district=$("#asubcounty_filter").val();
-        var facility=$("#asubcounty_facility_filter").val();
-        ajax_request_replace_div_content('national/expiry/'+year+'/'+county_id+'/'+district+'/'+facility+'/NULL',"#actual");
-        });
-        /////potential
-        $(".pcounty-filter").button().click(function(e) {
-        e.preventDefault(); 
-        var county=$("#pcounty_filter").val();
-        ajax_request_replace_div_content('national/potential/'+county+'/NULL/NULL/NULL',"#potential");
-        });
-        
-        $(".psubcounty-filter").button().click(function(e) {
-        e.preventDefault(); 
-        var county_id=$('#county_id').val();
-        var district=$("#psubcounty_filter").val();
-        var facility=$("#psubcounty_facility_filter").val();
-        ajax_request_replace_div_content('national/potential/'+county_id+'/'+district+'/'+facility+'/NULL',"#potential");
-        });
-     
-         $(".subcounty").click(function(){
-            /*
-             * when clicked, this object should populate facility names to facility dropdown list.
-             * Initially it sets a default value to the facility drop down list then ajax is used 
-             * is to retrieve the district names using the 'dropdown()' method used above.
-             */
-            json_obj = {"url":"<?php echo site_url("orders/getFacilities");?>",}
-            var baseUrl = json_obj.url;
-            var id = $(this).attr("value");
-            $('.subcounty').val(id);
-            dropdown(baseUrl,"district="+id,".facility");
  
-          
-        });
+ <!-- Modal -->
+<div class="modal fade" id="facilitystatsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="padding: 10px">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Facility Statistics</h4>
+      </div>
+      <div class="modal-body" style="padding: 10px">
+      	<div class="row-fluid filters" style="height: 40px;">
+      		<section class="col-lg-3">
+      				
+					<select class="form-control " id="county_val2">
+						<option value="NULL">Select County</option>
+						<?php
+							foreach($county as $data):
+							    $county_id=$data["id"];
+								$county_name=$data["county"];
+							      echo "<option class='item' value='$county_id'>$county_name</option>";
+							    
+							endforeach;
+						?>
+					</select>
+					
+					
+      		</section>
+      		<section class="col-lg-3">
+      				
+					<select class="form-control " id="subcounty_val2">
+						<option value="NULL">Select sub-county</option>
+						
+					</select>
+					
+					
+					
+      		</section>
+      		<section class="col-lg-3 piefilter">
+      				
+      				<select class="form-control " id="piefilter">
+						<option value="NULL">Select Criteria</option>
+						<option value="activation">Activation</option>
+						<option value="owner">Owner</option>
+						<option value="level">Level/Type</option>
+						
+					</select>
+      				
+      			</section>
+      		<section class="col-lg-3">
+      			<div class="ui green button filterthis"><i class="fa fa-filter"></i> Filter</div>
+      		</section>
+      	</div>
+      	
+      	<div class="row-fluid">
+      		<section class="col-lg-5 " style="height: auto;border: 0px solid #036;">
+      			
+      			<div id="pie">
+      				
+      			</div>
+      			
+      		</section>
+      		<section class="col-lg-7 tabledata" style="border: 0px solid #036;">
+      			
+      			<div id="datatable" style="overflow-y: scroll;max-height: 400px;">
+      				
+      			</div>
+      			
+      		</section>
+      	</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end Modal orderModal -->
+   
+      <!-- Modal -->
+<div class="modal fade" id="consumptionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Facility Statistics</h4>
+      </div>
+      <div class="modal-body">
+        <div class=""></div>
+        <div></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end Modal consumptionModal -->
 
-      
-    function run(data){
-        var county_data=data.split('^');
-        $('.county-name').html(county_data[1]+"&nbsp;County &nbsp;");
-        ajax_request_replace_div_content('national/facility_over_view/'+county_data[0],"#facilities_rolled_out");
-        ajax_request_replace_div_content('national/hcw/'+county_data[0],"#hcw_trained");
-        $('.county').val(county_data[0]);
-        $('#county_id').val(county_data[0]);
-        json_obj={"url":"<?php echo site_url("orders/getDistrict");?>",}
-        var baseUrl=json_obj.url;
-        dropdown(baseUrl,"county="+county_data[0],".subcounty");
-        ajax_request_replace_div_content('national/expiry/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#actual");
-        ajax_request_replace_div_content('national/potential/'+county_data[0]+'/NULL/NULL/NULL/NULL',"#potential"); 
-        ajax_request_replace_div_content('national/stock_level_mos/'+county_data[0]+'/NULL/NULL/NULL/ALL',"#mos");
-        ajax_request_replace_div_content('national/consumption/'+county_data[0]+'/NULL/NULL/NULL',"#consumption");
-        ajax_request_replace_div_content('national/get_facility_infor/'+county_data[0]+'/NULL/NULL/NULL',"#facilities");
-        ajax_request_replace_div_content('national/order/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#orders");
-        ajax_request_replace_div_content('national/get_lead_infor/NULL/'+county_data[0]+'/NULL/NULL/NULL',"#lead_infor");
-    }
-            function dropdown(baseUrl,post,identifier){
-            /*
-             * ajax is used here to retrieve values from the server side and set them in dropdown list.
-             * the 'baseUrl' is the target ajax url, 'post' contains the a POST varible with data and
-             * 'identifier' is the id of the dropdown list to be populated by values from the server side
-             */
-            $.ajax({
-              type: "POST",
-              url: baseUrl,
-              data: post,
-              success: function(msg){
-                    var values=msg.split("_")
-                    var dropdown="<option value='NULL'>All</option>";
-                    for (var i=0; i < values.length-1; i++) {
-                        var id_value=values[i].split("*")
-                        dropdown+="<option value="+id_value[0]+">";
-                        dropdown+=id_value[1];
-                        dropdown+="</option>";
-                    };
-                    $(identifier).html(dropdown);
-              },
-              error: function(XMLHttpRequest, textStatus, errorThrown) {
-                   if(textStatus == 'timeout') {}
-               }
-            }).done(function( msg ) {
-            });
-        }
-       function ajax_request_replace_div_content(function_url,div){
-        var function_url =url+function_url;
-        var loading_icon=url+"assets/img/loader2.gif";
-        $.ajax({
-        type: "POST",
-        url: function_url,
-        beforeSend: function() {
-        $(div).html("<img style='margin-left:20%;' src="+loading_icon+">");
-        },
-        success: function(msg) {
-        $(div).html(msg);
-        }
+   <!-- Modal -->
+<div class="modal fade" id="ordersModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Facility Statistics</h4>
+      </div>
+      <div class="modal-body">
+        <div class=""></div>
+        <div></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end Modal consumptionModal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="expiriesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Facility Statistics</h4>
+      </div>
+      <div class="modal-body">
+        <div class=""></div>
+        <div></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end Modal expiriesModal -->
+    
+    <script src="<?php echo base_url().'assets/tab-style/js/cbpFWTabs.js'?>"></script>
+		<script>
+		$('.ui.dropdown').dropdown();
+					
+		</script>
+		
+		
+    <script>
+    
+    var url='<?php echo base_url(); ?>';
+    
+     $(document).ready(function () {
+     	
+     	
+     	
+			(function() {
+
+				[].slice.call( document.querySelectorAll( '.tabs' ) ).forEach( function( el ) {
+					new CBPFWTabs( el );
+				});
+
+			})();
+					
+							
+				$("#county_val").change(function() {
+			var option_value=$(this).val();
+    		if(option_value==''){
+    			$("#subcounty_val").hide('slow'); 
+    		}else{
+				var drop_down='';
+ 				var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_sub_county_json_data/"+$("#county_val").val();
+ 				$.getJSON( hcmp_facility_api ,function( json ) {
+ 					$("#subcounty_val").html('<option  >Select Sub-county</option>');
+      				$.each(json, function( key, val ) {
+      					drop_down +="<option  value='"+json[key]["id"]+"'>"+json[key]["district"]+"</option>"; 
+      				});
+      				$("#subcounty_val").append(drop_down);
+    			});
+    			$("#subcounty_val").show('slow');  
+    			 
+    		}
+    	}); //end of district name change funtion
+    	$("#county_val2").change(function() {
+			var option_value=$(this).val();
+    		if(option_value==''){
+    			$("#subcounty_val2").hide('slow'); 
+    		}else{
+				var drop_down='';
+ 				var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_sub_county_json_data/"+$("#county_val2").val();
+ 				$.getJSON( hcmp_facility_api ,function( json ) {
+ 					$("#subcounty_val2").html('<option  >Select Sub-county</option>');
+      				$.each(json, function( key, val ) {
+      					drop_down +="<option  value='"+json[key]["id"]+"'>"+json[key]["district"]+"</option>"; 
+      				});
+      				$("#subcounty_val2").append(drop_down);
+    			});
+    			$("#subcounty_val2").show('slow');  
+    			 
+    		}
+    	}); //end of district name change funtion
+				
+					//filter for statistics modal
+		$(".filterthis").click(function(e) {
+			
+          var countyvalue=$("#county_val2").val(); 
+          var subcountyvalue=$("#subcounty_val2").val();  
+          var piefiltervalue=$("#piefilter").val(); 
+              
+        ajax_request('Kenya/statistics_table/'+countyvalue+'/'+subcountyvalue+'/'+piefiltervalue+'/',"#datatable");
+        ajax_request('Kenya/statistics_pie/'+countyvalue+'/'+subcountyvalue+'/'+piefiltervalue+'/',"#pie");
+        
         });
-        }   
-</script>
+        $(".mosfilter").click(function(e) {
+			
+          var countyvalue2=$("#county_val").val(); 
+          var subcountyvalue2=$("#subcounty_val").val() 
+          var commodity=$("#commodity_name").val() 
+              
+        ajax_request('Kenya/mos_graph/'+countyvalue2+'/'+subcountyvalue2+'/'+commodity+'/NULL/mosmodal',"#mosmodal");
+        
+        });
+        //ajax_request('kenya/mos_graph/NULL/NULL/NULL/NULL/mos',"#mos");
+        ajax_request('Kenya/consumption/NULL/NULL/NULL/NULL',"#consumption");
+        ajax_request('Kenya/orders/NULL/NULL/NULL/NULL/NULL',"#orders");
+        ajax_request('Kenya/expiry/NULL/NULL/NULL/NULL/NULL',"#expiries");
+     	
+     	function ajax_request(function_url,div){
+        var function_url =url+function_url;
+        var loading_icon=url+"assets/img/Preloader_2.gif";
+		        $.ajax({
+		        	type: "POST",
+		       		 url: function_url,
+		       			 beforeSend: function() {
+		       				 $(div).html("<img style='margin:25% 40% 20% 20%;' src="+loading_icon+">");
+		       				 },
+		       				 success: function(msg) {
+		       					 $(div).html(msg);
+		       		 }
+        		});
+        	}   
+     	});
+		
+	</script>	
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script>
-    var url='<?php echo base_url(); ?>';
-    </script>
-    	 <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
-    <!-- Bootstrap core JavaScript===================== --> 
-  <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
- 
-  <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
-   <script src="<?php echo base_url().'assets/scripts/exporting.js'?>" type="text/javascript"></script>
-  <script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>  
-  <!-- Placed at the end of the document so the pages load faster -->
-  <script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
-    <!--Datatables==========================  -->
-  <script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>    
-  <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrap.js'?>" type="text/javascript"></script>
-  <script src="<?php echo base_url().'assets/datatable/TableTools.js'?>" type="text/javascript"></script>
-  <script src="<?php echo base_url().'assets/datatable/ZeroClipboard.js'?>" type="text/javascript"></script>
-  <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrapPagination.js'?>" type="text/javascript"></script>
-  <!-- validation ===================== -->
-  <script src="<?php echo base_url().'assets/scripts/jquery.validate.min.js'?>" type="text/javascript"></script>
-	    <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/loadingbar.css'?>" />
-	    <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/elusive-webfont.css'?>" />
-<div id="window-resizer-tooltip" style="display: none;"><a href="#" title="Edit settings" style="background-image: url(chrome-extension://kkelicaakdanhinjdeammmilcgefonfh/images/icon_19.png);"></a><span class="tooltipTitle">Window size: </span><span class="tooltipWidth" id="winWidth">1366</span> x <span class="tooltipHeight" id="winHeight">768</span><br><span class="tooltipTitle">Viewport size: </span><span class="tooltipWidth" id="vpWidth">1366</span> x <span class="tooltipHeight" id="vpHeight">449</span></div></body></html>
+  		<script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
+		<script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
+		<!--  <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
+		<!-- Bootstrap core JavaScript===================== -->
+		<script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
+		<script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
+		<script src="<?php echo base_url().'assets/scripts/exporting.js'?>" type="text/javascript"></script>
+		<script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
+		<!--Datatables==========================  -->
+		<script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>
+		<script src="<?php echo base_url().'assets/datatable/dataTables.bootstrap.js'?>" type="text/javascript"></script>
+		<script src="<?php echo base_url().'assets/datatable/TableTools.js'?>" type="text/javascript"></script>
+		<script src="<?php echo base_url().'assets/datatable/ZeroClipboard.js'?>" type="text/javascript"></script>
+		<script src="<?php echo base_url().'assets/datatable/dataTables.bootstrapPagination.js'?>" type="text/javascript"></script>
+		<!-- validation ===================== -->
+		<script src="<?php echo base_url().'assets/scripts/jquery.validate.min.js'?>" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/loadingbar.css'?>" />
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/elusive-webfont.css'?>" />
+
+</body>
+
+</html>
