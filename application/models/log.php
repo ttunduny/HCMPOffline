@@ -73,8 +73,7 @@ class Log extends Doctrine_Record {
 			case 'add_stock':
 				$action = 'add_stock = 1';
 			break;
-			default:
-			break;
+			
 			endswitch;
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->execute("
 			update log set $action  
