@@ -38,7 +38,7 @@
 |	['stricton'] TRUE/FALSE - forces 'Strict Mode' connections
 |							- good for ensuring strict SQL while developing
 |
-| The $active_group variable lets you choose which connection group t
+| The $active_group variable lets you choose which connection group to
 | make active.  By default there is only one group (the 'default' group).
 |
 | The $active_record variables lets you determine whether or not to load
