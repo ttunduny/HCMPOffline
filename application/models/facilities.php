@@ -182,6 +182,7 @@ class Facilities extends Doctrine_Record {
 			  (isset($district_id) && !isset($county_id)? "d.id=$district_id ": "d.county=$county_id ") ;
 			break;	
         }
+		
         $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
         SELECT SUM( targetted ) AS targetted, SUM( using_hcmp ) AS using_hcmp, COUNT( facility_code ) AS total
         FROM districts d, facilities f
