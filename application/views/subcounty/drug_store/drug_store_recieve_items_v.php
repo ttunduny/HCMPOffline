@@ -1,4 +1,4 @@
-<?php echo "<pre>";print_r($store_commodities);echo "</pre>";exit; ?>
+<?php //echo "<pre>";print_r($store_commodities);echo "</pre>";exit; ?>
 <style>
 	.big{ width: 150px !important; }
 	.row div p{

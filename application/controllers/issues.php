@@ -39,7 +39,7 @@ class issues extends MY_Controller {
 				break;
 			case 'district_store':	
 					$district_id = $this -> session -> userdata('district_id');
-					$facility_code = 2;
+					//$facility_code = 2;
 					$dist = districts::get_district_name_($district_id);
 					$data['district_id'] = $this -> session -> userdata('district_id');
 					$data['district_data'] = districts::get_district_name_($district_id);
@@ -49,7 +49,7 @@ class issues extends MY_Controller {
 					$data['banner_text'] = "Redistribute Commodities";
 					$data['title'] ="Redistribute Commodities";						
 					$data['district_store'] = 1;
-					//$data['store_commodities'] = drug_store_issues::get_commodities_for_district($district_id);
+					$data['store_commodities'] = drug_store_issues::get_commodities_for_district($district_id);
 				break;	
 			default :
 		endswitch;
