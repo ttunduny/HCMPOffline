@@ -40,7 +40,7 @@
             </div>
         </div>
     </div>
-    <!--Program Reports Accordion
+    <!--Program Reports Accordion-->
     <div class="panel panel-default <?php echo $active_panel=='divisional'? 'active-panel': null; ?>">
         <div class="panel-heading">
             <h4 class="panel-title">
@@ -48,7 +48,7 @@
                 </span>Program Reports</a>
             </h4>
         </div>
-    </div>-->
+    </div>
     <!--Stock Control Card-->
     <div class="panel panel-default <?php echo $active_panel=='stock_control_card'? 'active-panel': null; ?>">
         <div class="panel-heading">
