@@ -174,18 +174,31 @@ class Divisional_Reports extends MY_Controller
 
 		if ($items) {
 			foreach ($items as $key => $value) {
+				$coloring = '';
+				$negative = '';
+				$value['adjustmentnve'] = -150;
+				if($value['adjustmentnve'] < 0)
+				{
+					$coloring = 'style = "color: red"';
+					$number = explode('-', $value['adjustmentnve']);
+					$negative = $number[1];
+				}
+				else
+				{
+					$negative = $value['adjustmentnve'];
+				}
 				$malariatable .= '<tr>';
 				$malariatable .= '<td>'.$value['commodity_name'].'</td>';
-				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['unit_size'].'"></td>';
-				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['unit_cost'].'"></td>';
-				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['opening_balance'].'"></td>';
-				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['total_receipts'].'"></td>';
-				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['total_issues'].'"></td>';
-				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['adjustmentpve'].'"></td>';
-				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['adjustmentnve'].'"></td>';
-				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['losses'].'"></td>';
-				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['days_out_of_stock'].'"></td>';
-				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['closing_stock'].'"></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['unit_size'].'" disabled></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['unit_cost'].'" disabled></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['opening_balance'].'" disabled></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['total_receipts'].'" disabled></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['total_issues'].'" disabled></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$negative.'" disabled '.$coloring.'></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['adjustmentpve'].'" disabled></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['losses'].'" disabled></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['days_out_of_stock'].'" disabled></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['closing_stock'].'" disabled></td>';
 				$malariatable .= '</tr>';
 			}
 		}
@@ -378,16 +391,16 @@ $this->db->insert('tuberculosis_report_info',$data_);
 			foreach ($items as $key => $value) {
 				$rhtable .= '<tr>';
 				$rhtable .= '<td>'.$value['commodity_name'].'</td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['unit_size'].'"></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['unit_cost'].'"></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['opening_balance'].'"></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['total_receipts'].'"></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['total_issues'].'"></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['adjustmentpve'].'"></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['adjustmentnve'].'"></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['losses'].'"></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['days_out_of_stock'].'"></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['closing_stock'].'"></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['unit_size'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['unit_cost'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['opening_balance'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['total_receipts'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['total_issues'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['adjustmentnve'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['adjustmentpve'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['losses'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['days_out_of_stock'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['closing_stock'].'" disabled></td>';
 				$rhtable .= '</tr>';
 			}
 		}
