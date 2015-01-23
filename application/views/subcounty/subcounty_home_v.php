@@ -41,7 +41,7 @@ $identifier = $this -> session -> userdata('user_indicator');
                         </h4>
                     </div>
                 </div>
-                <!--Program Reports
+                <!--Program Reports-->
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
@@ -49,7 +49,7 @@ $identifier = $this -> session -> userdata('user_indicator');
                             </span>Program Reports</a>
                         </h4>
                     </div>
-                </div>-->
+                </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
@@ -140,9 +140,8 @@ ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
 });
 //orders function
 $("#orders").on('click', function(){
-$('.page-header').html('Expiries');
+$('.page-header').html('Orders');
 active_panel(this);
-//http://localhost/hcmp/reports/order_listing/subcounty/true#
 ajax_request_replace_div_content('reports/order_listing/'+'<?php echo $for;?>'+'/true',"#notification");
 });
 //stocking_levels function
