@@ -11,6 +11,7 @@ class Home extends MY_Controller
 		parent::__construct();
 		$this -> load -> helper(array('form', 'url'));
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
+		// echo "<pre>";print_r(Malaria_Data::get_facility_stock_data(13041));die;
 	}
 
   public function reset_(){
