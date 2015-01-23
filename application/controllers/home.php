@@ -160,5 +160,10 @@ class Home extends MY_Controller
 	'stocks_from_v1'=>$stocks_from_v1
 	);	
     }
-	
+	public function tester(){
+			$this->load->model('users');
+			$last_inserted = $this->users->set_report_access();
+			echo "<pre>This";print_r($last_inserted);echo "</pre>";exit;
+			//$this->Users::set_report_access();
+		}
 }

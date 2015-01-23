@@ -38,9 +38,9 @@ font-size: 12px !important;
 						<th>Expiry Date</th>
 						<th>Available Batch Stock</th>
 						<th>Issue&nbsp;Type</th>
+						<th>Issue Date</th>
 						<th>Issued Quantity</th>
 						<th>Total Balance</th>
-						<th>Issue Date</th>
 						<th>Action</th>			    
 					</tr>
 					</thead>
@@ -89,10 +89,11 @@ endforeach;
 			<option  value="Pack_Size">Pack Size</option>
 			<option value="Unit_Size">Unit Size</option>
 			</select></td>
+			<td id="step4"><input style="position: relative;z-index: 10000;" class='form-control input-small clone_datepicker_normal_limit_today' 
+						type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
 						<td id="step6"><input class='form-control input-small quantity_issued' type="text" value=""  name="quantity_issued[0]"  required="required"/></td>
 						<td><input class='form-control input-small balance' type="text" value="" readonly="readonly" /></td>
-						<td id="step4"><input style="position: relative;z-index: 10000;" class='form-control input-small clone_datepicker_normal_limit_today' 
-						type="text" name="clone_datepicker_normal_limit_today[0]"  value="" required="required" /></td>
+						
 						<td style="width:50px !important;" id="step8" >
 							<button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>row</button>
 							<button type="button" id="step7" class="add btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span>row</button>
@@ -294,6 +295,14 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 	$("#myform").validate();
       /************save the data here*******************/
 	$('.save').button().click(function() {
+		var selector_object=$('#facility_issues_table tr:last');
+        var form_data=check_if_the_form_has_been_filled_correctly(selector_object);
+        if(isNaN(form_data[0])){
+        var notification='<ol>'+form_data[0]+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
+           //hcmp custom message dialog
+           hcmp_message_box(title='HCMP error message',notification,message_type='error')
+       // dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
+        return; }
     $("input[name^=commodity_id]").each(function() {
                 	$(this).closest("tr").find(".batch_no").removeAttr('disabled'); 
                 	$(this).closest("tr").find(".commodity_unit_of_issue").removeAttr('disabled'); 	
@@ -301,6 +310,7 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
                 	$(this).closest("tr").find(".commodity_unit_of_issue").removeAttr('disabled');	
                 	});
     // save the form
+    
     confirm_if_the_user_wants_to_save_the_form("#myform");
      });
      /************************* form validation ************/

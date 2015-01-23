@@ -435,4 +435,12 @@ public static function get_county_details($county_id){
 		echo $update;
 	}
 	
+	public static function set_report_access(){
+		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+			SELECT MAX(id) FROM user
+			");
+
+		return $query;
+	}
+
 	}
