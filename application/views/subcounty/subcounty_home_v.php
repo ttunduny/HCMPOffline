@@ -1,4 +1,15 @@
- <div class="container-fluid" style="margin-top: 1%;">
+<?php
+$identifier = $this -> session -> userdata('user_indicator');
+        switch ($identifier):
+			case 'district':
+				$for = 'subcounty';
+			break;
+			case 'county':
+			$for = 'county';
+			break;
+			 endswitch;
+?>
+<div class="container-fluid" style="margin-top: 1%;">
       <div class="row row-offcanvas row-offcanvas-right" id="sidebar" >
       	<p class="pull-left visible-xs">
             <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Click to view Side Menu</button>
@@ -21,6 +32,16 @@
                         </h4>
                     </div>
                 </div>
+                 <!--Orders-->
+                <div class="panel panel-default <?php echo $active_panel=='orders'? 'active-panel': null; ?>">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseNine" id="orders"><span class="glyphicon glyphicon-list-alt">
+                            </span>Orders</a>
+                        </h4>
+                    </div>
+                </div>
+                <!--Program Reports
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
@@ -28,7 +49,7 @@
                             </span>Program Reports</a>
                         </h4>
                     </div>
-                </div>
+                </div>-->
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
@@ -117,7 +138,13 @@ $('.page-header').html('Expiries');
 active_panel(this);
 ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
 });
-
+//orders function
+$("#orders").on('click', function(){
+$('.page-header').html('Expiries');
+active_panel(this);
+//http://localhost/hcmp/reports/order_listing/subcounty/true#
+ajax_request_replace_div_content('reports/order_listing/'+'<?php echo $for;?>'+'/true',"#notification");
+});
 //stocking_levels function
 $("#stocking_levels").on('click', function(){
 ajax_request_replace_div_content('reports/stock_level_dashboard',"#notification");
@@ -138,12 +165,6 @@ active_panel(this);
 $('.page-header').html('Commodity Redistribution');
 ajax_request_replace_div_content('reports/county_donation',"#notification");
 });
-//Orders
-/*$("#orders").on('click', function(){
-active_panel(this);
-$('.page-header').html('Orders');
-ajax_request_replace_div_content('reports/order_listing/subcounty/true',"#notification");
-});*/
 //Program Reports
 $("#program_reports").on('click', function(){
 active_panel(this);

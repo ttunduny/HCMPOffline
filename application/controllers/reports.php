@@ -26,11 +26,11 @@ class Reports extends MY_Controller {
 				$data['district_data'] = districts::getDistrict($county_id);
 				$data['c_data'] = Commodities::get_all_2();
 				$data['categories'] = commodity_sub_category::get_all_pharm();
-				$data['banner_text'] = "Stocking Levels";
-				$data['title'] = "Stocking Levels";
+				$data['banner_text'] = "Consumption";
+				$data['title'] = "Consumption";
 				$data['content_view'] = "facility/facility_reports/reports_v";
+				$data['report_view'] = "subcounty/reports/county_consumption_data_filter_v";
 				$view = 'shared_files/template/template';
-				$data['report_view'] = "subcounty/reports/county_stock_level_filter_v";
 				$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
 				$data['active_panel'] = 'consumption';
 				break;
@@ -3510,7 +3510,19 @@ class Reports extends MY_Controller {
 		$data['active_panel'] = 'consumption';
 		$this -> load -> view("shared_files/template/template", $data);
 	}
-
+	//sub county level stock data filter
+	public function county_stock_level() {
+		$county_id = $this -> session -> userdata('county_id');
+		$data['district_data'] = districts::getDistrict($county_id);
+		$data['c_data'] = Commodities::get_all_2();
+		$data['title'] = "Stocking Levels";
+		$data['banner_text'] = "Stocking Levels";
+		$data['content_view'] = "facility/facility_reports/reports_v";
+		$data['report_view'] = "subcounty/reports/county_stock_level_filter_v";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
+		$data['active_panel'] = 'stocking_levels';
+		$this -> load -> view("shared_files/template/template", $data);
+	}
 	//Function for commodity redistributions
 	public function county_donation() {
 		$data['year'] = date('Y');
