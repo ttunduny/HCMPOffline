@@ -7,12 +7,5 @@
 /drugs not in commodities table.txt
 /nbproject
 .htaccess
-
-application/config/database.php
-
-
-
-
-
-
+database.php
 application/config/database.php
