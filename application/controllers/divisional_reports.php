@@ -176,7 +176,6 @@ class Divisional_Reports extends MY_Controller
 			foreach ($items as $key => $value) {
 				$coloring = '';
 				$negative = '';
-				$value['adjustmentnve'] = -150;
 				if($value['adjustmentnve'] < 0)
 				{
 					$coloring = 'style = "color: red"';
