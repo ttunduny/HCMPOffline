@@ -34,7 +34,7 @@ class Divisional_Reports extends MY_Controller
 						
 				if ((!empty($report_RH))&&(!empty($report_malaria))&&(!empty($report_TB)))
 				{
-					$report_RH_report[$index] = $report_RH;
+				$report_RH_report[$index] = $report_RH;
 					$report_malaria_report[$index] = $report_malaria;
 					$report_tuberculosis_report[$index] = $report_TB;
 				
@@ -42,12 +42,12 @@ class Divisional_Reports extends MY_Controller
 					
 				}
 					
-				$data['page_header'] = "Divisional Reports";	
+				$data['page_header'] = "Program Reports";	
 				$data['malaria'] = $report_malaria_report;
 				$data['RH'] = $report_RH_report;
 				$data['TB'] = $report_tuberculosis_report;
-				$data['title'] = "Facility Divisional Reports";
-				$data['banner_text'] = "Facility Divisional Reports";
+				$data['title'] = "Facility Program Reports";
+				$data['banner_text'] = "Facility Program Reports";
 				$data['report_view'] = "subcounty/reports/program_reports_v";
 				$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 				$data['active_panel'] = "program_reports";
@@ -104,7 +104,7 @@ class Divisional_Reports extends MY_Controller
 				
 				$index++;
 			 }
-			 $data['page_header'] = "County Program Reports";	
+			 $data['page_header'] = "Program Reports";	
 			 $data['title'] = "County Program Reports";
 			 $data['banner_text'] = " County Program Reports";
 			 $data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
@@ -154,28 +154,54 @@ class Divisional_Reports extends MY_Controller
 	public function malaria_report()
 	{
 		//Used to pick the kemsa code and assign it to elements displayed on the report
+		$malariatable = '';
+		$facility = $this -> session -> userdata('facility_id');
 		$malaria_name =  Malaria_Drugs::getName();
 		$malaria_array = array();
 		$counter = 0;
+
+		$items = Facility_Transaction_Table::get_commodities_for_ordering_report($facility, 4);
+		// echo "<pre>";print_r($items);die;
 		
-		foreach ($malaria_name as $drug)
-		{
-			$malaria_drugs = array();
-			$malaria_drugs = $drug;
-			$malaria_array[$counter] = $malaria_drugs;
-			$counter++;
+		// foreach ($malaria_name as $drug)
+		// {
+		// 	$malaria_drugs = array();
+		// 	$malaria_drugs = $drug;
+		// 	$malaria_array[$counter] = $malaria_drugs;
+		// 	$counter++;
 			
+		// }
+
+		if ($items) {
+			foreach ($items as $key => $value) {
+				$malariatable .= '<tr>';
+				$malariatable .= '<td>'.$value['commodity_name'].'</td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['unit_size'].'"></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['unit_cost'].'"></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['opening_balance'].'"></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['total_receipts'].'"></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['total_issues'].'"></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['adjustmentpve'].'"></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['adjustmentnve'].'"></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['losses'].'"></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['days_out_of_stock'].'"></td>';
+				$malariatable .= '<td><input type = "text" class = "form-control" value = "'.$value['closing_stock'].'"></td>';
+				$malariatable .= '</tr>';
+			}
+		}
+		else
+		{
+			$malariatable .= '<tr><td colspan = "11"><center>No Data Found...</center></td></tr>';
 		}
 		$user_id = $this -> session -> userdata('user_id');
 		$user_names = Users::get_user_names($user_id);
 		$data['user_data'] = Malaria_Data::getall($user_id);
 		$data['user_names'] = ($user_names[0]['fname']." ".$user_names[0]['lname']);
 
-
-		$data['malaria_data'] = $malaria_array;
+		$data['malaria_data'] = $malariatable;
 		$data['drug_rows'] = Malaria_Drugs::getName();
 		
-		$facility = $this -> session -> userdata('facility_id');
+		
 		$facility_info = tb_data::get_facility_name($facility);
 		$data['facility_code'] = $facility;
 		$data['facility_name'] = ($facility_info['facility_name']);
@@ -334,6 +360,7 @@ $this->db->insert('tuberculosis_report_info',$data_);
 	public function RH_report()
 	{
 		//Used to pick the kemsa code and assign it to elements displayed on the report
+		$rhtable = '';
 		$facility = $this -> session -> userdata('facility_id');
 		$user_id = $this -> session -> userdata('user_id');
 		$facility_info = tb_data::get_facility_name($facility);
@@ -345,7 +372,32 @@ $this->db->insert('tuberculosis_report_info',$data_);
 		$data['facility_name'] = ($facility_info['facility_name']);
 		$data['facility_type_'] = ($facility_info['owner']);
 
+		$items = Facility_Transaction_Table::get_commodities_for_ordering_report($facility, 3);
+
+		if ($items) {
+			foreach ($items as $key => $value) {
+				$rhtable .= '<tr>';
+				$rhtable .= '<td>'.$value['commodity_name'].'</td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['unit_size'].'"></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['unit_cost'].'"></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['opening_balance'].'"></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['total_receipts'].'"></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['total_issues'].'"></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['adjustmentpve'].'"></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['adjustmentnve'].'"></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['losses'].'"></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['days_out_of_stock'].'"></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['closing_stock'].'"></td>';
+				$rhtable .= '</tr>';
+			}
+		}
+		else
+		{
+			$rhtable .= '<tr><td colspan = "11"><center>No Data Found...</center></td></tr>';
+		}
+
 		$data['content_view'] = "facility/facility_reports/facility_reports_RH_reports_v";
+		$data['rhdata'] = $rhtable;
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		$data['title'] = "RH Report";
 		$data['banner_text'] = "Facility RH Commodities Order";

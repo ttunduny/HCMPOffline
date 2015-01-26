@@ -182,6 +182,7 @@ class Facilities extends Doctrine_Record {
 			  (isset($district_id) && !isset($county_id)? "d.id=$district_id ": "d.county=$county_id ") ;
 			break;	
         }
+		
         $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
         SELECT SUM( targetted ) AS targetted, SUM( using_hcmp ) AS using_hcmp, COUNT( facility_code ) AS total
         FROM districts d, facilities f
@@ -498,7 +499,7 @@ AND d.id= $district");
 return $q;
 }
 ////////////////////////////////////////////////
-public static function get_one_facility_details($facility_c){
+public static function get_one_facility_details($facility_code){
 	$facility_code = $facility_c;
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 SELECT DISTINCT f.id, f.facility_code, f.facility_name, f.district, f.owner, c.county, d.district as district_name
@@ -698,5 +699,11 @@ public static function get_total_facilities_rtk_in_district($district_id){
 return $q;
 }
 
-	
+//getting facility name without Doctrine
+public static function get_facility_details_simple($facility_code){
+	$mbegu = Doctrine_Manager::getInstance()->getCurrentConnection->fetchAll("
+		SELECT * from facilities WHERE facility_code = $facility_code
+		");
+	return $mbegu;
+	}
 }

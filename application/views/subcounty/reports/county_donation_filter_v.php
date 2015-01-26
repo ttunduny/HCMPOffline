@@ -42,7 +42,7 @@ endforeach;
 <select id="facility_filter" class="form-control col-md-2">
 <option value="NULL">Select facility</option>
 </select>	
-<div class="col-md-1">
+<div class="col-md-2">
 <button class="btn btn-sm btn-success filter" id="filter" name="filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div> 
 </form>

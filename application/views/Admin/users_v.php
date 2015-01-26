@@ -286,9 +286,26 @@ var drop_down='';
     return false;
 
     }) 
+
+
+
+     $("#all_reports").change(function(){
+      if ($(this).is(":checked")) {
+        $("#stocks").prop("checked",true);
+        $("#stocking_levels").prop("checked",true);
+        $("#consumption").prop("checked",true);
+        $("#potential_exp").prop("checked",true);
+        $("#expiries").prop("checked",true);
+      }else{
+        $("#stocks").prop("checked",false);
+        $("#stocking_levels").prop("checked",false);
+        $("#consumption").prop("checked",false);
+        $("#potential_exp").prop("checked",false);
+        $("#expiries").prop("checked",false);
+      };
+     });
     
     $("#create_new").click(function() {
-
       var first_name = $('#first_name').val()
       var last_name = $('#last_name').val()
       var telephone = $('#telephone').val()
@@ -299,7 +316,22 @@ var drop_down='';
       var sub_county = $('#sub_county').val()
       var county = $('#county').val()
       var user_type = $('#user_type').val()
+      // reports
+      var stocks_ = $('#stocks').is(":checked")
+      var stocking_levels_ = $('#stocking_levels').is(":checked")
+      var consumption_ = $('#consumption').is(":checked")
+      var potential_exp_ = $('#potential_exp').is(":checked")
+      var expiries_ = $('#expiries').is(":checked")
+      //alert(stocking_levels);return;
+      var stocks,stocking_levels,consumption,potential_exp,expiries;
 
+      stocks_==true ? stocks = 1 :stocks = 0;
+      stocking_levels_==true ? stocking_levels = 1 :stocking_levels = 0;
+      consumption_==true ? consumption = 1 :consumption = 0;
+      potential_exp_==true ? potential_exp = 1 :potential_exp = 0;
+      expiries_==true ? expiries = 1 :expiries = 0;
+
+      // alert(stocks);return;
 
 		if(user_type==10){
 			
@@ -341,7 +373,9 @@ var drop_down='';
           'telephone': $('#telephone').val(),'email': $('#email').val(),
           'username': $('#username').val(),'facility_id': $('#facility_name').val(),
           'county_id':$('#county').val(),
-          'district_name': $('#sub_county').val(),'user_type': $('#user_type').val()},
+          'district_name': $('#sub_county').val(),'user_type': $('#user_type').val(),
+          'stocks':stocks,'stocking_levels':stocking_levels,'consumption':consumption,'potential_exp':potential_exp,'expiries':expiries
+        },
           url: url,
           beforeSend: function() {
            
@@ -354,7 +388,7 @@ var drop_down='';
            
           },
           success: function(msg) {
-         // $('.modal-body').html(msg);
+         $('.modal-body').html(msg);
         setTimeout(function () {
           	$('.modal-body').html("<div class='bg-warning' style='height:30px'>"+
 							"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"+
