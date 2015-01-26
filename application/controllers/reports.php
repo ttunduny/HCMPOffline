@@ -1122,6 +1122,7 @@ class Reports extends MY_Controller
 			$this -> load -> view($view, $data);
 		
 		endif;
+		//echo $data['data'];die();
 		
 		
 		
@@ -1276,13 +1277,35 @@ class Reports extends MY_Controller
 		"<td>$final_coverage_total %</td></tr>".$percentage_coverage_using."</tr></table>
 		 </div>
 		 </div>";
+		 
+		 $mine = "
+		<div class='tabbable tabs-left'>
+		<div class='tab-content'>
+        <ul class='nav nav-tabs'>
+        
+        <li ><a href='#B' data-toggle='tab'>Monthly Break Down</a></li>
+        
+        </ul>
+         <div  id='B' class='tab-pane fade'>
+			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" 
+			. $district_names . $table_data . $total_facility_list .  "<td>$total_facilities_in_county</td></tr>" 
+			.$total_targetted_facility_list
+			. $percentage_coverage. "<td>$final_coverage_total %</td></tr>".$percentage_coverage_using."</tr>
+			</table>
+		</div>
+		
+		
+		 </div>
+		 </div>";
+		 
+		 //echo $mine;die();
 		
 		if (isset($option)) :
 			return $data_;
 		else : echo $data_;
 		endif;
 		
-				
+		//echo $data_;die();	
 		
 	}
 	

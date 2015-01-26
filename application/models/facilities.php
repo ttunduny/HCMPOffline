@@ -621,6 +621,7 @@ return $q;
 	//Used by facility_mapping function reports controller
 	//Used to get the months facilities went online
 	//Limits to the last 3 months of activation
+	
 	public static function get_dates_facility_went_online($county_id, $district_id = null)
 	{
 		$addition = (isset($district_id)&& ($district_id>0)) ?"AND f.district = $district_id" : null;
