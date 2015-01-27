@@ -39,8 +39,8 @@ font-size: 12px !important;
 						<th>Available Batch Stock</th>
 						<th>Issue&nbsp;Type</th>
 						<th>Issue Date</th>
+						<th>Issued Quantity</th>
 						<th>Total Balance</th>
-						<th>Issue Date</th>
 						<th>Action</th>			    
 					</tr>
 					</thead>
@@ -111,14 +111,7 @@ endforeach;
 <?php echo form_close();?>
 <script>
 $(document).ready(function() {	
- window.onbeforeunload = function() {
-        return "Are you sure you want to leave?";
-    }
-    document.onkeydown = function(event) {
-  if(window.event){
-        event.preventDefault();
-  }
-}
+
  var $table = $('table');
 //float the headers
   $table.floatThead({ 

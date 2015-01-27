@@ -8,10 +8,5 @@
 /nbproject
 .htaccess
 database.php
-
-
-
-
-
-
+application/config/database.php
 application/config/database.php

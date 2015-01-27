@@ -203,7 +203,7 @@ $district_id_active =  $this -> session -> userdata('district_id');
 					<option selected="selected" value="NULL">Select Plot value</option>
 					<option value="packs">Packs</option>
 					<option value="units">Units</option>
-					<!--<option value="ksh">KSH</option>-->
+					<option value="ksh">KSH</option>
 				</select>
 				<div class="col-md-1">
 					<button class="btn btn-sm btn-success tracer-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
@@ -422,10 +422,10 @@ var drop_down='';
         
         if(from==''){from="NULL";}
         if(to==''){to="NULL";}
-
-        var url_ = "reports/consumption_stats_graph/"+
-       $("#tracer_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#tracer_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to); 
-        ajax_request_replace_div_content(url_,'.graph_content');    
+        var url_ = "reports/consumption_data_dashboard/"+
+       $("#tracer_commodity_filter").val()+"/NULL/NULL/"+$("#tracer_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/NULL/1"; 
+        ajax_request_replace_div_content(url_,'.graph_content'); 
+        
           });   
 		 // tracer filter table
 		 $(".tracer-filter-table").button().click(function(e) {
