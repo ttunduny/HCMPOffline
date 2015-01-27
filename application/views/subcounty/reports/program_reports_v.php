@@ -132,7 +132,7 @@ HTML_DATA;
 					<th>Report Date</th>
 					<th>Action <a href='<?php echo $link_new_report_malaria;?>'>
 							<button  type='button' class='btn btn-xs btn-primary'style="float: right">
-		           			<span class='glyphicon glyphicon-floppy-disk'></span>Submit Malaria Report</button>
+		           			<span class='glyphicon glyphicon-floppy-disk'></span>View Malaria Report</button>
 		           		</a></th>
 					
 				</tr>
@@ -160,7 +160,7 @@ HTML_DATA;
 				<th>Report Date</th>
 				<th>Action <a href='<?php echo $link_new_report_RH;?>' style="float: right">
 						<button  type='button' class='btn btn-xs btn-primary'>
-	           			<span class='glyphicon glyphicon-floppy-disk'></span>Submit RH Report</button>
+	           			<span class='glyphicon glyphicon-floppy-disk'></span>View RH Report</button>
 		           	</a></th>
 			
 			</tr>
@@ -187,7 +187,7 @@ HTML_DATA;
 				<th>Report Date</th>
 				<th>Action <a href='<?php echo $link_TB;?>' target='_blank'>
 						<button  type='button' class='btn btn-xs btn-primary' style="float: right">
-		       			<span class='glyphicon glyphicon-floppy-disk'></span>Submit TB Report</button>
+		       			<span class='glyphicon glyphicon-floppy-disk'></span>View TB Report</button>
        				</a>
 				</th>
 			</tr>
