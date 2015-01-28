@@ -1052,6 +1052,9 @@ class Reports extends MY_Controller {
 		$percentage_coverage_total_using = 0;
 
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
+		$get_year_facility_went_online = Facilities::get_year_facility_went_online($county_id);
+		
+//		echo $get_dates_facility_went_online;exit;
 
 		foreach ($get_dates_facility_went_online as $facility_dates) :
 
@@ -1151,27 +1154,6 @@ class Reports extends MY_Controller {
 		
 		<div id='A' class='tab-pane fade active in' >
 		<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test2'>" . $sub_county_names . $table_summary . $table_datas_summary . $total_facility_list . "<td>$total_facilities_in_county</td></tr>" . $total_targetted_facility_list . $percentage_coverage . "<td>$final_coverage_total %</td></tr>" . $percentage_coverage_using . "</tr></table>
-		 </div>
-		 </div>";
-
-		 
-		 $mine = "
-		<div class='tabbable tabs-left'>
-		<div class='tab-content'>
-        <ul class='nav nav-tabs'>
-        
-        <li ><a href='#B' data-toggle='tab'>Monthly Break Down</a></li>
-        
-        </ul>
-         <div  id='B' class='tab-pane fade'>
-			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" 
-			. $district_names . $table_data . $total_facility_list .  "<td>$total_facilities_in_county</td></tr>" 
-			.$total_targetted_facility_list
-			. $percentage_coverage. "<td>$final_coverage_total %</td></tr>".$percentage_coverage_using."</tr>
-			</table>
-		</div>
-		
-		
 		 </div>
 		 </div>";
 		 

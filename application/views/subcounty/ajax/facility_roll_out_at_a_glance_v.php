@@ -1,4 +1,4 @@
-<?php //echo @$data; die();?>
+<?php //echo $get_dates_facility_went_online; die();?>
 <style>
 
 	#myModal .modal-dialog {

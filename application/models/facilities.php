@@ -640,9 +640,15 @@ return $q;
 		        AND UNIX_TIMESTAMP(`date_of_activation`) > 0
 		ORDER BY `date_of_activation` desc
 		");
+		
 		return $q;
 			
 	}
+	
+	//used by facility mapping function
+	//used to get the distinct years facilities went online
+	
+	
 	//used when building data for the facilities that went online in a particular district in a particular county
 	public static function get_facilities_which_went_online_($district_id = null, $date_of_activation)
 	{
