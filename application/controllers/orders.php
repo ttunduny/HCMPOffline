@@ -467,7 +467,6 @@ class orders extends MY_Controller {
 
 	public function facility_new_order() {
 		//security check
-		// echo "<pre>";print_r($this->input->post());echo "</pre>";exit;
 		if ($this -> input -> post('commodity_id')) :
 			$this -> load -> database();
 			$data_array = array();
