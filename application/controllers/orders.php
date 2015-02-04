@@ -166,13 +166,15 @@ class orders extends MY_Controller {
 		echo $list;
 	}
 
-	public function facility_order() {
+	public function facility_order($source = NULL) {
 		header('Content-Type: text/html; charset=UTF-8');
 		//$this -> load -> library('PHPExcel');
 		//ini_set("max_execution_time", "1000000");
+
 		$facility_code = $this -> session -> userdata('facility_id');
 
-		$items = Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
+		$items = ((isset($source))&&($source = 2))?Facility_Transaction_Table::get_commodities_for_ordering_meds($facility_code):Facility_Transaction_Table::get_commodities_for_ordering($facility_code);;
+		// echo "<pre>";print_r($items);echo "</pre>";exit;
 		if (isset($_FILES['file']) && $_FILES['file']['size'] > 0) {
 			$ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
 			//echo $ext;
@@ -325,11 +327,11 @@ class orders extends MY_Controller {
 		//var_dump($temp);exit;
 		$facility_code = $this -> session -> userdata('facility_id');
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
-		$data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";
+		$data['content_view'] =((isset($source))&&($source = 2))? "facility/facility_orders/facility_order_meds": "facility/facility_orders/facility_order_from_kemsa_v";
 		$data['title'] = "Facility New Order";
 		$data['banner_text'] = "Facility New Order";
 		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];
-		$data['facility_commodity_list'] = Commodities::get_commodities_not_in_facility($facility_code);
+		$data['facility_commodity_list'] = ((isset($source))&&($source = 2))?Commodities::get_meds_commodities_not_in_facility($facility_code):Commodities::get_commodities_not_in_facility($facility_code);
 
 		$this -> load -> view('shared_files/template/template', $data);
 	}
@@ -465,6 +467,7 @@ class orders extends MY_Controller {
 
 	public function facility_new_order() {
 		//security check
+		// echo "<pre>";print_r($this->input->post());echo "</pre>";exit;
 		if ($this -> input -> post('commodity_id')) :
 			$this -> load -> database();
 			$data_array = array();
