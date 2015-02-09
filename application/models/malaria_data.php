@@ -92,6 +92,30 @@ class Malaria_Data extends Doctrine_Record
 		return $query;
 			
 	}
+
+	public static function get_facility_stock_data($facility_code = NULL)
+	{
+		$facility_data = array();
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->
+		fetchAll("SELECT 
+			    fs.facility_code,
+			    fs.commodity_id,
+			    c.commodity_name,
+			    fs.initial_quantity as 'Beginning Balance'
+			FROM
+			    facility_stocks fs
+			        JOIN
+			    commodities c ON c.id = fs.commodity_id
+			        JOIN
+			    facilities f ON fs.facility_code = f.facility_code
+			WHERE
+			    c.commodity_division = 4
+			        AND f.facility_code = ".$facility_code."
+			GROUP BY fs.batch_no
+			ORDER BY c.commodity_name ASC");
+
+		return $query;	
+	}
 	/*
 	 * $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as commodity_id, c.total_commodity_units,

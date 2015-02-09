@@ -183,10 +183,7 @@
         	window.onbeforeunload = function() {
         return "Are you sure you want to leave?";
     }
-    document.onkeydown = function(event) {
-  if(window.event){
-        event.preventDefault();
-  }}
+   
             changeHashOnLoad();
 
         setTimeout(function () {
