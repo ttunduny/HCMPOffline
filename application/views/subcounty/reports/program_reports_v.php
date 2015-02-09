@@ -7,10 +7,9 @@
 		border:none;
 	}
 </style>
-
 <?php   $identifier = $this -> session -> userdata('user_indicator');
 		$countyname = $this -> session -> userdata('county_name');
-		$malaria_report_data='';
+		// $malaria_report_data='';
 		$RH_report_details='';
 		$TB_report_details='';
 		$link_new_report_malaria = base_url('divisional_reports/malaria_report');
@@ -28,7 +27,7 @@
 			$link = base_url('reports/get_facility_report_pdf/'.$malaria_details['report_id'].'/'.$malaria_details['facility_code'].'/malaria');	
 			$link_excel = base_url('reports/create_excel_facility_program_report/'.$malaria_details['report_id'].'/'.$malaria_details['facility_code'].'/malaria');
 		    
-		    $malaria_report_data .= <<<HTML_DATA
+		    /*$malaria_report_data .= <<<HTML_DATA
            <tr>           
 				<td>$facility</td>          
  				<td>$username</td>
@@ -45,7 +44,7 @@
            		</td>
            </tr>
            
-HTML_DATA;
+HTML_DATA;*/
 //echo $link;
 			endforeach;	
 			endforeach;	
@@ -124,24 +123,19 @@ HTML_DATA;
     <div id="myTabContent" class="tab-content">
  		<div  id="Malaria" class="tab-pane fade active in">
 	        <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="test1">
-			<thead>
-				
+			<thead>				
 				<tr>
 					<th>Facility Name</th>
-					<th>Prepared By:</th>
-					<th>Report Date</th>
-					<th>Action <a href='<?php echo $link_new_report_malaria;?>'>
-							<button  type='button' class='btn btn-xs btn-primary'style="float: right">
-		           			<span class='glyphicon glyphicon-floppy-disk'></span>Submit Malaria Report</button>
-		           		</a></th>
-					
+					<th>MFL Code</th>
+					<th>Prepared By</th>
+					<th>Action</th>
 				</tr>
 				
 			</thead>
 			<tbody>
 				<?php 
 				
-				echo $malaria_report_data; 
+				echo $mal_report_data; 
 					
 				?>
 				
@@ -156,13 +150,9 @@ HTML_DATA;
 		<thead>
 			<tr>
 				<th>Facility Name</th>
-				<th>Prepared By:</th>
-				<th>Report Date</th>
-				<th>Action <a href='<?php echo $link_new_report_RH;?>' style="float: right">
-						<button  type='button' class='btn btn-xs btn-primary'>
-	           			<span class='glyphicon glyphicon-floppy-disk'></span>Submit RH Report</button>
-		           	</a></th>
-			
+				<th>MFL Code</th>
+				<th>Prepared By</th>
+				<th>Action</th>			
 			</tr>
 		</thead>
 		<tbody>
@@ -183,13 +173,10 @@ HTML_DATA;
 		<thead>
 			<tr>
 				<th>Facility Name</th>
-				<th>Prepared By:</th>
-				<th>Report Date</th>
-				<th>Action <a href='<?php echo $link_TB;?>' target='_blank'>
-						<button  type='button' class='btn btn-xs btn-primary' style="float: right">
-		       			<span class='glyphicon glyphicon-floppy-disk'></span>Submit TB Report</button>
-       				</a>
-				</th>
+				<th>MFL Code</th>
+				<th>Prepared By</th>
+				<th>Action</th>
+
 			</tr>
 		</thead>
 		<tbody>
