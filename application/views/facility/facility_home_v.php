@@ -130,7 +130,7 @@
         </div>
          <div style="height:auto; margin-bottom: 2px" class="" id="distribute_hide">
          	<a href="<?php echo base_url('issues/index/external'); ?>"><h5>Other Facilities</h5></a>	 
-           <!-- <a href="<?php echo base_url('issues/index/district_store'); ?>"><h5>District Store</h5></a>  --> 
+           <a href="<?php echo base_url('issues/index/district_store'); ?>"><h5>District Store</h5></a>  
         
         </div>
           
