@@ -3200,7 +3200,20 @@ class Reports extends MY_Controller {
 
 	public function consumption_data_dashboard($commodity_id = null, $district_id = null, $facility_code = null, $option = null, $from = null, $to = null, $graph_type = null, $tracer = null) {
 		//reset the values here
-		
+		switch ($option) :
+			case 'ksh':
+			$axis ="Ksh";
+			break;
+			case 'units':
+			$axis ="Units";
+			break;
+			case 'packs':
+			$axis ="Packs";
+			break;
+			default:
+			$axis ="packs";
+			break;
+ endswitch;		
 		$commodity_id = ($commodity_id == "NULL") ? null : $commodity_id;
 		$district_id = (isset($district_id) && ($district_id>0)) ? $district_id : $this -> session -> userdata('district_id');
 		$county_id = (isset($county_id) && ($county_id>0)) ? $county_id : $this -> session -> userdata('county_id');
@@ -3238,7 +3251,7 @@ class Reports extends MY_Controller {
 		//check if the district is set
 		$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
 		$district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " subcounty" : null;
-		$option = "packs";
+		//$option = "packs";
 		$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
 		$facility_name = $facility_code_[0]['facility_name'];
 		$commodity_name = (isset($commodity_id)) ? Commodities::get_details($commodity_id) -> toArray() : null;
@@ -3273,7 +3286,7 @@ class Reports extends MY_Controller {
 		$default_consumption_graph_ = array_merge($default_consumption_graph_, array("graph_id" => 'graph_content_'));
 		$default_consumption_graph_ = array_merge($default_consumption_graph_, array("graph_title" => "Consumption level $commodity_name $title $time"));
 		$default_consumption_graph_ = array_merge($default_consumption_graph_, array("graph_type" => $graph_type));
-		$default_consumption_graph_ = array_merge($default_consumption_graph_, array("graph_yaxis_title" => "$option_new"));
+		$default_consumption_graph_ = array_merge($default_consumption_graph_, array("graph_yaxis_title" => "$axis"));
 		$default_consumption_graph_ = array_merge($default_consumption_graph_, array("graph_categories" => $category_data));
 		$default_consumption_graph_ = array_merge($default_consumption_graph_, array("series_data" => array('Consumption' => $series_data)));
 		$data = array();
