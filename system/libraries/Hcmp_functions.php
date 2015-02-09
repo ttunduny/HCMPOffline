@@ -431,7 +431,6 @@ for ($row = 17; $row <= $highestRow; $row++){
 /*********KEMSA UPLOADER**********/
  public function kemsa_excel_order_uploader($inputFileName){
    // $inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx';
-
 	if(isset($inputFileName)):
 	$item_details = Commodities::get_all_from_supllier(1);
     $ext = pathinfo($inputFileName, PATHINFO_EXTENSION);
@@ -479,11 +478,9 @@ array_push($temp,array('sub_category_name'=>$data['sub_category_name'],'commodit
    	} 	
    }
 }
-
    unset($objPHPExcel);
   return(array('row_data'=>$temp,'facility_code'=>$facility_code));
    endif;
-
  }
 /*************/	
 /* HCMP file downloader 

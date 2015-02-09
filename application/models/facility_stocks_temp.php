@@ -51,7 +51,49 @@ class facility_stocks_temp extends Doctrine_Record {
 		//$result = $query_1 -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $query_1;
 	}
+	//New MoS fucntion.
+	//County and Sub County level
+	//Default graph that loads when you select the stocking levels tab
+	public static function get_county_month_of_stock_default($district_id = NULL, $county_id = NULL)
+	{
+		//check if the values have been set
+		$and_data =(isset($district_id)&&($district_id>0))?" AND d1.id = '$district_id'" : null;
+    	$and_data =(isset($county_id)&&($county_id>0))?" AND c.id = $county_id" : null;
+    	
+		$and_data =isset( $and_data) ?  $and_data : null;
+		
+		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() 
+			    ->fetchAll("
+					  SELECT 
+						    cm.commodity_name,
+						    IFNULL(ROUND(AVG(IFNULL(f_s.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),
+						                    1),
+						            0) AS total,
+						    d1.district,
+						    f.facility_name
+						FROM
+						    facilities f,
+						    districts d1,
+						    counties c,
+						    facility_stocks f_s,
+						    commodities cm
+						        LEFT JOIN
+						    facility_monthly_stock f_m_s ON f_m_s.`commodity_id` = cm.id
+						WHERE
+						    f_s.facility_code = f.facility_code
+						        AND f.district = d1.id
+						        AND d1.county = c.id
+						        AND f_s.commodity_id = cm.id
+						        AND f_m_s.facility_code = f.facility_code
+						        AND cm.tracer_item =1
+				        		$and_data
+								group by cm.id
+		 				");
+		
 
+		return $query;
+		
+	}
 	public static function get_months_of_stock($district_id = NULL, $county_id = NULL, $facility_code = NULL,$commodity_id=null, $option = null,$tracer = null) 
 	{ 
 		$month = date('F Y');
@@ -74,27 +116,31 @@ class facility_stocks_temp extends Doctrine_Record {
     	$group_by=(isset($option))? " group by cm.id $new" : " group by cm.id ";
 		
 
-    $query_1 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
-		 select 
-    cm.commodity_name,
-    ifnull(round(avg(IFNULL(f_s.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),
-            1),0) as total, d1.district, f.facility_name
-			from
-   				facilities f,
-    			districts d1,
-    			counties c,
-    			facility_stocks f_s,
-    			commodities cm
-        	left join
-    			facility_monthly_stock f_m_s ON f_m_s.`commodity_id` = cm.id
-			where
-    			f_s.facility_code = f.facility_code
-        		and f.district = d1.id
-        		and d1.county = c.id
-        		and f_s.commodity_id = cm.id
-        		and f_m_s.facility_code = f.facility_code
-        		$and_data
-				$group_by
+    $query_1 = Doctrine_Manager::getInstance() -> getCurrentConnection() 
+    ->fetchAll("
+		  SELECT 
+			    cm.commodity_name,
+			    IFNULL(ROUND(AVG(IFNULL(f_s.current_balance, 0) / IFNULL(f_m_s.total_units, 0)),
+			                    1),
+			            0) AS total,
+			    d1.district,
+			    f.facility_name
+			FROM
+			    facilities f,
+			    districts d1,
+			    counties c,
+			    facility_stocks f_s,
+			    commodities cm
+			        LEFT JOIN
+			    facility_monthly_stock f_m_s ON f_m_s.`commodity_id` = cm.id
+			WHERE
+			    f_s.facility_code = f.facility_code
+			        AND f.district = d1.id
+			        AND d1.county = c.id
+			        AND f_s.commodity_id = cm.id
+			        AND f_m_s.facility_code = f.facility_code
+	        		$and_data
+					$group_by
 
 		 ");
 		

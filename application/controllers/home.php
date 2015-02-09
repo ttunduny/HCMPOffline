@@ -11,6 +11,7 @@ class Home extends MY_Controller
 		parent::__construct();
 		$this -> load -> helper(array('form', 'url'));
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
+		// echo "<pre>";print_r(Malaria_Data::get_facility_stock_data(13041));die;
 	}
 
   public function reset_(){
@@ -159,5 +160,10 @@ class Home extends MY_Controller
 	'stocks_from_v1'=>$stocks_from_v1
 	);	
     }
-	
+	public function tester(){
+			$this->load->model('users');
+			$last_inserted = $this->users->set_report_access();
+			echo "<pre>This";print_r($last_inserted);echo "</pre>";exit;
+			//$this->Users::set_report_access();
+		}
 }
