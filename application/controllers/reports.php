@@ -1134,7 +1134,6 @@ class Reports extends MY_Controller {
 		$targetted_vs_using_hcmp = 0;
 		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
 		//$system_usage = $this->monitoring();
-		//<li><button type='button' class='btn btn-default download'>System Usage Breakdown</button></li>
 
 		$data_ = "
 		<div class='tabbable tabs-left'>
@@ -1142,6 +1141,7 @@ class Reports extends MY_Controller {
         <ul class='nav nav-tabs'>
         <li class='active'><a href='#A' data-toggle='tab'>Roll out Summary</a></li>
         <li ><a href='#B' data-toggle='tab'>Monthly Break Down</a></li>
+		<li><button type='button' class='btn btn-default download'>System Usage Breakdown</button></li>
         
         </ul>
          <div  id='B' class='tab-pane fade'>
@@ -3564,6 +3564,7 @@ class Reports extends MY_Controller {
 
 		//get the monitoring data from the log tables
 		$facility_data = Facilities::facility_monitoring($county_id, $district_id, $facility_code);
+		//echo $facility_data;die();
 
 		//echo "<pre>";print_r($facility_data);exit;
 		$row_data = array();
@@ -3571,12 +3572,17 @@ class Reports extends MY_Controller {
 		foreach ($facility_data as $facility) {
 
 			$date = (strtotime($facility['last_seen'])) ? date('j M, Y', strtotime($facility['last_seen'])) : "N/A";
-			array_push($row_data, array($facility['fname'], $facility['lname'], $date, $facility['days_last_seen'], date('j M, Y', strtotime($facility['last_issued'])), $facility['days_last_issued'], $facility['district'], $facility['facility_name'], $facility['facility_code']));
+			//array_push($row_data, array($facility['fname'], $facility['lname'], $date, $facility['days_last_seen'], date('j M, Y', strtotime($facility['last_issued'])), $facility['days_last_issued'], $facility['district'], $facility['facility_name'], $facility['facility_code']));
+			array_push($row_data, array($facility['Facility Name'], $facility['Facility Code'], $facility['County'], $facility['Sub-County'], date('j M, Y', strtotime($facility['Date Last Issued'])), $facility['Days from last issue'], date('j M, Y', strtotime($facility['Date Last Redistributed'])), $facility['Days From last Redistributed'], 
+				date('j M, Y', strtotime($facility['Date Last ordered'])),$facility['Days From Last order'],date('j M, Y', strtotime($facility['Date Last Decommissioned'])), $facility['Days From Last Decommissioned'],date('j M, Y', strtotime($facility['Date From Last Received Order'])), $facility['Days From Last Received Order'], 
+				date('j M, Y', strtotime($facility['Date Last Seen'])), $facility['Days From Last Seen']));
 		}
 
 		$excel_data = array();
 		$excel_data = array('doc_creator' => 'HCMP ', 'doc_title' => 'system usage breakdown ', 'file_name' => 'system usage breakdown');
-		$column_data = array("First Name", "Last Name", "date last seen", "# of days", "date last issued", "# of days", "Sub County", "facility name", "mfl");
+	    //$column_data = array("First Name", "Last Name", "date last seen", "# of days", "date last issued", "# of days", "Sub County", "facility name", "mfl");
+		$column_data = array("Facility Name", "Facility Code", "County", "Sub-County", "Date Last Issued", "Days from last issue", "Date Last Redistributed", 
+			"Days From last Redistributed", "Date Last ordered", "Days From Last order", "Date Last Decommissioned", "Days From Last Decommissioned", "Date From Last Received Order", "Days From Last Received Order", "Date Last Seen", "Days From Last Seen");
 
 		$excel_data['column_data'] = $column_data;
 		$excel_data['row_data'] = $row_data;
