@@ -98,6 +98,8 @@ class issues extends MY_Controller {
 	}
 
 	public function district_store_internal(){
+	//THIS FUNCTION VANISHES WHEN A COLLINS RELATED PULL GOES DOWN
+	//#collins_repo #my_function_my_choice #hahahaha # this was some random thing so that i can commit this function. Cheers
 		$district_id = $this -> session -> userdata('district_id');	
 						$dist = districts::get_district_name_($district_id);	
 						$data['district_id'] = $this -> session -> userdata('district_id');

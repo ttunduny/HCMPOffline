@@ -18,7 +18,6 @@
 <thead style="background-color: white">
 					<tr>
 						<th>Select Subcounty</th>
-						<th>Select Facility</th>
 						<th>Description</th>
 						<th>Supplier</th>
 						<th>Unit Size</th>
