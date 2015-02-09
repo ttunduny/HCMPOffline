@@ -1052,17 +1052,32 @@ class Reports extends MY_Controller {
 		$percentage_coverage_total_using = 0;
 
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
-		$get_year_facility_went_online = Facilities::get_year_facility_went_online($county_id);
-		
-//		echo $get_dates_facility_went_online;exit;
+		//echo "<pre>";print_r($get_dates_facility_went_online);echo "</pre>";exit;
 
-		foreach ($get_dates_facility_went_online as $facility_dates) :
-
+		$accordion = "";
+		foreach ($get_dates_facility_went_online as $key => $facility_dates) :
+			$accordion .= '<div class="accordion-group">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+        '.$key.'
+      </a>
+    </div>
+    <div id="collapseOne" class="accordion-body collapse in">
+      <div class="accordion-inner">';
+	  $accordion .= '<table><thead><tr><th>';
+	  $accordion .= '</table></div>
+    </div>
+  </div>';
+  
 			$monthly_total = 0;
-			$date = $facility_dates['date_when_facility_went_online'];
-			$table_data .= "<tr><td>" . $date . "</td>";
-
+			$date = $get_dates_facility_went_online['date_when_facility_went_online'];
+			$table_data .= "<tr><td>" . $get_dates_facility_went_online . "</td>";
+			
+			//$my_date = $get_dates_facility_went_online['date_when_facility_went_online'];
+			
+			//echo "<pre>";print_r($facility_dates[1]);echo "</pre>";exit;
 			//loop through the districts in the county
+			
 			foreach ($district_data as $district_detail) :
 
 				$district_id = $district_detail -> id;
@@ -1093,6 +1108,7 @@ class Reports extends MY_Controller {
 			$table_data .= "<td>$monthly_total</td></tr>";
 
 		endforeach;
+		//echo "<pre>";print_r($district_data);echo "</pre>";exit;
 
 		$table_data .= "<tr>";
 		$table_data_summary .= "<tr>";

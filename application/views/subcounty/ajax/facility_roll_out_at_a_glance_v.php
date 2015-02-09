@@ -1,4 +1,5 @@
-<?php //echo $get_dates_facility_went_online; die();?>
+<?php //echo $county_id; die();?>
+
 <style>
 
 	#myModal .modal-dialog {
@@ -51,7 +52,7 @@
     </div>
     <div id="collapseTwo" class="accordion-body collapse">
       <div class="accordion-inner">
-        Anim pariatur cliche...
+         <?php echo @$data;?>
       </div>
     </div>
   </div>
