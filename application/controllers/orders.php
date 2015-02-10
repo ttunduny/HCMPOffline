@@ -166,13 +166,15 @@ class orders extends MY_Controller {
 		echo $list;
 	}
 
-	public function facility_order() {
+	public function facility_order($source = NULL) {
 		header('Content-Type: text/html; charset=UTF-8');
 		//$this -> load -> library('PHPExcel');
 		//ini_set("max_execution_time", "1000000");
+
 		$facility_code = $this -> session -> userdata('facility_id');
 
-		$items = Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
+		$items = ((isset($source))&&($source = 2))?Facility_Transaction_Table::get_commodities_for_ordering_meds($facility_code):Facility_Transaction_Table::get_commodities_for_ordering($facility_code);;
+		// echo "<pre>";print_r($items);echo "</pre>";exit;
 		if (isset($_FILES['file']) && $_FILES['file']['size'] > 0) {
 			$ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
 			//echo $ext;
@@ -325,42 +327,42 @@ class orders extends MY_Controller {
 		//var_dump($temp);exit;
 		$facility_code = $this -> session -> userdata('facility_id');
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
-		$data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";
+		$data['content_view'] =((isset($source))&&($source = 2))? "facility/facility_orders/facility_order_meds": "facility/facility_orders/facility_order_from_kemsa_v";
 		$data['title'] = "Facility New Order";
 		$data['banner_text'] = "Facility New Order";
 		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];
-		$data['facility_commodity_list'] = Commodities::get_commodities_not_in_facility($facility_code);
+		$data['facility_commodity_list'] = ((isset($source))&&($source = 2))?Commodities::get_meds_commodities_not_in_facility($facility_code):Commodities::get_commodities_not_in_facility($facility_code);
 
 		$this -> load -> view('shared_files/template/template', $data);
 	}
 
-public function facility_order_($facility_code=null) {
+	public function facility_order_($facility_code = null) {
 		// hack to ensure that when you are ordering for a facility that is not using hcmp they have all the items
-		$checker= $this -> session -> userdata('facility_id') ? null : 1; 
-		if(isset($_FILES['file']) && $_FILES['file']['size'] > 0){
-			$more_data=$this -> hcmp_functions -> kemsa_excel_order_uploader($_FILES["file"]["tmp_name"]);
-			$data['order_details'] = $data['facility_order'] =$more_data['row_data'];
-			
-			$facility_data = Facilities::get_facility_name($more_data['facility_code'])->toArray();
-			if(count($facility_data)==0){
-			$this -> session -> set_flashdata('system_error_message', "Kindly upload a file with correct facility MFL code ");
-			redirect("reports/order_listing/subcounty");	
+		$checker = $this -> session -> userdata('facility_id') ? null : 1;
+		if (isset($_FILES['file']) && $_FILES['file']['size'] > 0) {
+			$more_data = $this -> hcmp_functions -> kemsa_excel_order_uploader($_FILES["file"]["tmp_name"]);
+			$data['order_details'] = $data['facility_order'] = $more_data['row_data'];
+
+			$facility_data = Facilities::get_facility_name($more_data['facility_code']) -> toArray();
+			$facility_code=$facility_data[0]['facility_code'];
+			if (count($facility_data) == 0) {
+				$this -> session -> set_flashdata('system_error_message', "Kindly upload a file with correct facility MFL code ");
+				redirect("reports/order_listing/subcounty");
 			}
-			if($facility_data[0]['using_hcmp']==1){
-			$this -> session -> set_flashdata('system_error_message', "You cannot order for a". 
-			" facility that is already using HCMP, they need to place their order using their accounts");
-			redirect("reports/order_listing/subcounty");		
+			if ($facility_data[0]['using_hcmp'] == 1) {
+				//$this -> session -> set_flashdata('system_error_message', "You cannot order for a" . " facility that is already using HCMP, they need to place their order using their accounts");
+				//redirect("reports/order_listing/subcounty");
 			}
-		}else{
-		$data['order_details'] = $data['facility_order'] = Facility_Transaction_Table::get_commodities_for_ordering($facility_code,$checker);
-		$facility_data = Facilities::get_facility_name($facility_code)->toArray();	
+		} else {
+			$data['order_details'] = $data['facility_order'] = Facility_Transaction_Table::get_commodities_for_ordering($facility_code, $checker);
+			$facility_data = Facilities::get_facility_name($facility_code) -> toArray();
 		}
 		$data['content_view'] = "facility/facility_orders/facility_order_from_kemsa_v";
 		$data['title'] = "Facility New Order";
-		$data['system_error_message']="You are ordering for ".$facility_data[0]['facility_name'] ;
+		$data['system_error_message'] = "You are ordering for " . $facility_data[0]['facility_name'];
 		$data['facility_code'] = $facility_code;
 		$data['banner_text'] = "Facility New Order";
-		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];		
+		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];
 		$data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
 		$this -> load -> view('shared_files/template/template', $data);
 	}

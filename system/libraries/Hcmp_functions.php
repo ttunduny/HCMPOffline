@@ -433,14 +433,15 @@ for ($row = 17; $row <= $highestRow; $row++){
    // $inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx';
 	if(isset($inputFileName)):
 	$item_details = Commodities::get_all_from_supllier(1);
-    $ext = pathinfo($inputFileName, PATHINFO_EXTENSION);
-    if($ext=='xls'){
-    $excel2 = PHPExcel_IOFactory::createReader('Excel5');    
-    }else if($ext=='xlsx'){
-    $excel2 = PHPExcel_IOFactory::createReader('Excel2007');    
-    }else{
-    die('Invalid file format given'.$inputFileName);   
-    }
+    $ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
+			if ($ext == 'xls') {
+				$excel2 = PHPExcel_IOFactory::createReader('Excel5');
+			} else if ($ext == 'xlsx') {
+				$excel2 = PHPExcel_IOFactory::createReader('Excel2007');
+			} else {
+				die('Invalid file format given' . $_FILES['file']);
+			}
+			//exit;
     $excel2=$objPHPExcel= $excel2->load($inputFileName); // Empty Sheet
     
     $sheet = $objPHPExcel->getSheet(0); 
