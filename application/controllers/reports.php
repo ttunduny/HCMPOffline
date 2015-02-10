@@ -3572,10 +3572,10 @@ class Reports extends MY_Controller {
 		foreach ($facility_data as $facility) {
 
 			$date = (strtotime($facility['last_seen'])) ? date('j M, Y', strtotime($facility['last_seen'])) : "N/A";
-			//array_push($row_data, array($facility['fname'], $facility['lname'], $date, $facility['days_last_seen'], date('j M, Y', strtotime($facility['last_issued'])), $facility['days_last_issued'], $facility['district'], $facility['facility_name'], $facility['facility_code']));
+		  //array_push($row_data, array($facility['fname'], $facility['lname'], $date, $facility['days_last_seen'], date('j M, Y', strtotime($facility['last_issued'])), $facility['days_last_issued'], $facility['district'], $facility['facility_name'], $facility['facility_code']));
 			array_push($row_data, array($facility['Facility Name'], $facility['Facility Code'], $facility['County'], $facility['Sub-County'], date('j M, Y', strtotime($facility['Date Last Issued'])), $facility['Days from last issue'], date('j M, Y', strtotime($facility['Date Last Redistributed'])), $facility['Days From last Redistributed'], 
-				date('j M, Y', strtotime($facility['Date Last ordered'])),$facility['Days From Last order'],date('j M, Y', strtotime($facility['Date Last Decommissioned'])), $facility['Days From Last Decommissioned'], 
-				date('j M, Y', strtotime($facility['Date Last Seen'])), $facility['Days From Last Seen']));
+			      date('j M, Y', strtotime($facility['Date Last ordered'])),$facility['Days From Last order'],date('j M, Y', strtotime($facility['Date Last Decommissioned'])), $facility['Days From Last Decommissioned'], 
+				  date('j M, Y', strtotime($facility['Date Last Seen'])), $facility['Days From Last Seen']));
 		}
 
 		$excel_data = array();
