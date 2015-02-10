@@ -192,3 +192,9 @@ HTML_DATA;
  	</div>
   </div>
 
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#test1').dataTable();
+		$('#test2').dataTable();
+	});
+</script>

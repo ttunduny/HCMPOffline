@@ -34,7 +34,10 @@ class Divisional_Reports extends MY_Controller
 				$facility_details = Facilities::get_facility_name2($facility_id);
 				$facility_mfl = $facility_id;
 				$facility_name = $facility_details['facility_name'];
-				$malaria_report_data = '<tr><td>'.$facility_name.'</td><td>'.$facility_mfl.'</td><td>HCMP</td><td><a href = "'.base_url().'divisional_reports/malaria_report" class = "btn btn-primary btn-sm">View Malaria Report</a></td></tr>';																																																																																																																																																																																					
+				if($report_malaria)
+				{
+					$malaria_report_data = '<tr><td>'.$facility_name.'</td><td>'.$facility_mfl.'</td><td>HCMP</td><td><a href = "'.base_url().'divisional_reports/malaria_report" class = "btn btn-primary btn-sm">View Malaria Report</a></td></tr>';
+				}
 						
 				if ((!empty($report_RH))&&(!empty($report_malaria))&&(!empty($report_TB)))
 				{
@@ -70,7 +73,9 @@ class Divisional_Reports extends MY_Controller
 					$facility_details = Facilities::get_facility_name2($facility_id);
 					$facility_mfl = $facility_id;
 					$facility_name = $facility_details['facility_name'];
-					$malaria_report_data .= '<tr><td>'.$facility_name.'</td><td>'.$facility_mfl.'</td><td>HCMP</td><td><a class = "btn btn-primary btn-sm" href = "'.base_url().'divisional_reports/malaria_report/'.$facility_mfl.'">View Malaria Report</a></td></tr>';
+					if($report_malaria){
+						$malaria_report_data .= '<tr><td>'.$facility_name.'</td><td>'.$facility_mfl.'</td><td>HCMP</td><td><a class = "btn btn-primary btn-sm" href = "'.base_url().'divisional_reports/malaria_report/'.$facility_mfl.'">View Malaria Report</a></td></tr>';
+					}
 					if ((!empty($report_RH))&&(!empty($report_malaria)))
 					{
 						$report_RH_report[$index] = $report_RH;
@@ -104,7 +109,13 @@ class Divisional_Reports extends MY_Controller
 				$facility_details = Facilities::get_facility_name2($facility_id);
 				$facility_mfl = $facility_id;
 				$facility_name = $facility_details['facility_name'];
-				$malaria_report_data .= '<tr><td>'.$facility_name.'</td><td>'.$facility_mfl.'</td><td>HCMP</td><td><a class = "btn btn-primary btn-sm" href = "'.base_url().'divisional_reports/malaria_report/'.$facility_mfl.'"><i class = "glyphicon glyphicon-eye"></i> View Malaria Report</a></td></tr>';
+				if($report_malaria){
+					$malaria_report_data .= '<tr><td>'.$facility_name.'</td><td>'.$facility_mfl.'</td><td>HCMP</td><td><a class = "btn btn-primary btn-sm" href = "'.base_url().'divisional_reports/malaria_report/'.$facility_mfl.'"><i class = "glyphicon glyphicon-eye"></i> View Malaria Report</a></td></tr>';
+				}
+				else
+				{
+					$malaria_report_data .= '';
+				}
 				if ((!empty($report_RH))&&(!empty($report_malaria)))
 				{
 					$report_RH_report[$index] = $report_RH;
@@ -780,7 +791,7 @@ $this->db->insert('tuberculosis_report_info',$data_);
 
 	 public function checkfordata()
 	 {
-	 	
+
 	 }
 	
 }
