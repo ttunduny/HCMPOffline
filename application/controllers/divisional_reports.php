@@ -777,5 +777,10 @@ $this->db->insert('tuberculosis_report_info',$data_);
 		$this -> load -> view('shared_files/template/template', $data);
 		
 	 }
+
+	 public function checkfordata()
+	 {
+	 	
+	 }
 	
 }
