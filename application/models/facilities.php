@@ -242,88 +242,21 @@ class Facilities extends Doctrine_Record {
 	{
 		if(isset($facility_code)&&($facility_code>0)):
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				SELECT 
-				    u.fname,
-				    u.lname,
-				    f.facility_name,
-				    f.facility_code,
-				    MAX(l.end_time_of_event) AS last_seen,
-				    (DATEDIFF(NOW(), MAX(l.end_time_of_event))) AS days_last_seen,
-				    MAX(fi.`created_at`) AS last_issued,
-				    IFNULL(DATEDIFF(NOW(), MAX(fi.`created_at`)),0) AS days_last_issued
-				FROM
-				    facilities f,
-				    user u,
-				    log l,
-				    facility_issues fi
-				WHERE
-				    f.facility_code = u.facility
-				        AND l.user_id = u.id
-				        AND u.facility = f.facility_code
-				        AND fi.`issued_by` = u.id
-				        AND f.facility_code = $facility_code
+				CALL facility_monitoring('facility','".$facility_code."');
 			");
 			//return the monitoring data
+			//echo $data; exit;
 			return $data;
 		
 		elseif(isset($district_id)&&!isset($facility_code)):
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				SELECT 
-				    u.fname,
-				    u.lname,
-				    f.facility_name,
-				    f.facility_code,
-				    d.district,
-				    MAX(f_i.`created_at`) AS last_issued,
-				    IFNULL(DATEDIFF(NOW(), MAX(f_i.`created_at`)),
-				            0) AS days_last_issued,
-				    MAX(l.end_time_of_event) AS last_seen,
-				    IFNULL(DATEDIFF(NOW(), MAX(l.end_time_of_event)),
-				            0) AS days_last_seen
-				FROM
-				    user u,
-				    log l,
-				    facilities f,
-				    districts d,
-				    facility_issues f_i
-				WHERE
-				    f_i.`issued_by` = u.id
-				        AND l.user_id = u.id
-				        AND u.facility = f.facility_code
-				        AND f.district = d.id
-				        AND d.county=$county_id
-				        AND d.id=$district_id
-				GROUP BY f.facility_code
+				CALL facility_monitoring('district','".$district_id."');
 			");
 			//return the monitoring data
 			return $data; 
 		else:
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				SELECT 
-				    u.fname,
-				    u.lname,
-				    f.facility_name,
-				    f.facility_code,
-				    d.district,
-				    MAX(f_i.`created_at`) AS last_issued,
-				    IFNULL(DATEDIFF(NOW(), MAX(f_i.`created_at`)),
-				            0) AS days_last_issued,
-				    MAX(l.end_time_of_event) AS last_seen,
-				    IFNULL(DATEDIFF(NOW(), MAX(l.end_time_of_event)),
-				            0) AS days_last_seen
-				FROM
-				    user u,
-				    log l,
-				    facilities f,
-				    districts d,
-				    facility_issues f_i
-				WHERE
-				    f_i.`issued_by` = u.id
-				        AND l.user_id = u.id
-				        AND u.facility = f.facility_code
-				        AND f.district = d.id
-				        AND d.county=$county_id
-				GROUP BY f.facility_code
+				CALL facility_monitoring('county','".$county_id."');
 			");
 			//return the monitoring data
 			return $data; 
