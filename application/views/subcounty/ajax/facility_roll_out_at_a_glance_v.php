@@ -33,6 +33,7 @@
 	 <div id="temp"></div>
 	<?php echo @$data; ?>
 	<hr/>
+	
 	<!--Filter row for the system usage breakdown
 	<div class="filter row">
 		<form class="form-inline" role="form">
@@ -115,7 +116,17 @@
   </div>
 </div>
 
+    <div id="issued-graph">
+<?php echo $graph_data; ?>
+    </div>
+	<div id="ordered-graph"></div>
+	<div id="logged-graph"></div>
+
 <script>
+$(function () { 
+<?php echo $facility_graph_data; ?>
+});
+
 $(document).ready(function() {
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           $('.graph_content').html('');

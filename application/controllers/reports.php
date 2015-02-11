@@ -657,6 +657,8 @@ class Reports extends MY_Controller {
 		$data['report_title'] = "Divisional Malaria Reports";
 	}
 
+	
+
 	public function load_expiries() {
 		$facility_code = isset($facility_code) ? $facility_code : $this -> session -> userdata('facility_id');
 		$facility_name = Facilities::get_facility_name_($facility_code) -> toArray();
@@ -989,7 +991,7 @@ class Reports extends MY_Controller {
 		//pick the district from the session then get the name
 		$district_id = $this -> session -> userdata('district_id');
 		//$district = $this -> session -> userdata('district_id');
-
+		// echo $district_id;exit;
 		//Get the name of the county
 		$county_name = Counties::get_county_name($county_id);
 		$county_name = $county_name['county'];
@@ -998,6 +1000,34 @@ class Reports extends MY_Controller {
 		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
 		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
+
+
+		// Graph data of last issued
+             $facility_issues = Facilities::facility_issued($county_id, $district_id);
+
+	    echo '<pre>';print_r($facility_issues);echo "</pre>";die();
+
+		$facility_graph_data = array();
+		$facility_graph_data = array_merge($facility_graph_data, array("graph_id" => 'issued-graph'));
+		$facility_graph_data = array_merge($facility_graph_data, array("graph_title" => 'Last Issued in ' . $facility_name.'county  <--should be changed to county name'));
+		$facility_graph_data = array_merge($facility_graph_data, array("graph_type" => 'bar'));
+		$facility_graph_data = array_merge($facility_graph_data, array("graph_yaxis_title" => 'County Facilities'));
+		$facility_graph_data = array_merge($facility_graph_data, array("graph_categories" => array()));
+		$facility_graph_data = array_merge($facility_graph_data, array("series_data" => array("Days from Last Issued" => array())));
+
+		foreach ($facility_issues as $last_issued) :
+			$facility_graph_data['graph_categories'] = array_merge($facility_graph_data['graph_categories'], array($last_issued['Facility Name']));
+			$facility_graph_data['series_data']['Days from Last Issued'] = array_merge($facility_graph_data['series_data']['Days from Last Issued'], array((int)$last_issued['Days from last issue']));
+		endforeach;
+
+		$facility_issued_ = $this -> hcmp_functions -> create_high_chart_graph($facility_graph_data);
+
+        $data['facility_graph_data'] = $facility_issued_;
+      //echo '<pre>';print_r($facility_issued);echo "</pre>";die();
+		// /Graph data of last issued
+
+
+
 
 		if ($this -> input -> is_ajax_request()) :
 			$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
@@ -1010,10 +1040,26 @@ class Reports extends MY_Controller {
 			$data['content_view'] = "facility/facility_reports/reports_v";
 			$data['active_panel'] = (!$this -> session -> userdata('facility_id')) ? "system_usage" : "system_usage";
 			$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
+			$data['graph_data'] = $faciliy_issued;
 			$view = 'shared_files/template/template';
+
 			$this -> load -> view($view, $data);
 
 		endif;
+ 
+   
+
+
+		
+		// $data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v" : "shared_files/report_templates/side_bar_v";
+		// $data['report_view'] = "subcounty/ajax/facility_roll_out_at_a_glance_v";
+		// $data['content_view'] = "facility/facility_reports/reports_v";
+		// $view = 'shared_files/template/template';
+		// $data['active_panel'] = (!$this -> session -> userdata('facility_id')) ? "system_usage" : "system_usage";
+		// $this -> load -> view($view, $data);
+
+
+
 
 	}
 
@@ -3572,10 +3618,10 @@ class Reports extends MY_Controller {
 		foreach ($facility_data as $facility) {
 
 			$date = (strtotime($facility['last_seen'])) ? date('j M, Y', strtotime($facility['last_seen'])) : "N/A";
-		  //array_push($row_data, array($facility['fname'], $facility['lname'], $date, $facility['days_last_seen'], date('j M, Y', strtotime($facility['last_issued'])), $facility['days_last_issued'], $facility['district'], $facility['facility_name'], $facility['facility_code']));
+			//array_push($row_data, array($facility['fname'], $facility['lname'], $date, $facility['days_last_seen'], date('j M, Y', strtotime($facility['last_issued'])), $facility['days_last_issued'], $facility['district'], $facility['facility_name'], $facility['facility_code']));
 			array_push($row_data, array($facility['Facility Name'], $facility['Facility Code'], $facility['County'], $facility['Sub-County'], date('j M, Y', strtotime($facility['Date Last Issued'])), $facility['Days from last issue'], date('j M, Y', strtotime($facility['Date Last Redistributed'])), $facility['Days From last Redistributed'], 
-			      date('j M, Y', strtotime($facility['Date Last ordered'])),$facility['Days From Last order'],date('j M, Y', strtotime($facility['Date Last Decommissioned'])), $facility['Days From Last Decommissioned'], 
-				  date('j M, Y', strtotime($facility['Date Last Seen'])), $facility['Days From Last Seen']));
+				date('j M, Y', strtotime($facility['Date Last ordered'])),$facility['Days From Last order'],date('j M, Y', strtotime($facility['Date Last Decommissioned'])), $facility['Days From Last Decommissioned'], 
+				date('j M, Y', strtotime($facility['Date Last Seen'])), $facility['Days From Last Seen']));
 		}
 
 		$excel_data = array();

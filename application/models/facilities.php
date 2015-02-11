@@ -237,6 +237,10 @@ class Facilities extends Doctrine_Record {
 		return $q;  
     
 	}
+
+
+
+
 	//gets the monitoring data for all the facilities using HCMP
 	public static function facility_monitoring($county_id, $district_id, $facility_code=null)
 	{
@@ -264,6 +268,77 @@ class Facilities extends Doctrine_Record {
 		
 		
 	}
+
+	public static function facility_issued($county_id = NULL, $district_id = NULL)
+	{
+		if(( (isset($county_id)) && (isset($district_id)) )):
+			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				SELECT 
+				              
+				    f.facility_name as 'Facility Name',
+				    f.facility_code as 'Facility Code',
+                    c.county as 'County',
+                    d.district as 'Sub-County',
+				    IFNULL(DATEDIFF(NOW(), MAX(fi.created_at)),0) as 'Days from last issue'
+				
+
+				FROM
+				    facility_issues fi,
+                    facilities f
+                 JOIN districts d ON d.id = f.district
+				 JOIN counties c ON c.id = d.county
+                
+			     
+				
+				WHERE
+                        fi.facility_code = f.facility_code
+                        
+				        
+				        AND d.county = $district_id
+				GROUP BY f.facility_name;
+			");
+			//return the monitoring data
+			//echo $data; exit;
+			return $data; 
+		elseif(( (isset($county_id)) && (!(isset($district_id))) )):
+			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				SELECT 
+				              
+				    f.facility_name as 'Facility Name',
+				    f.facility_code as 'Facility Code',
+                    c.county as 'County',
+                    d.district as 'Sub-County',
+                    
+				    IFNULL(DATEDIFF(NOW(), MAX(fi.`created_at`)),0) as 'Days from last issue'
+                   
+				
+
+				FROM
+				    
+				    facility_issues fi,
+                    facilities f
+                 JOIN districts d ON d.id = f.district
+				 JOIN counties c ON c.id = d.county
+				 JOIN facility_orders fo ON fo.facility_code = f.facility_code
+                    
+				WHERE
+						f.district = d.id
+						AND fi.facility_code = f.facility_code
+				        AND d.id= $county_id
+				GROUP BY f.facility_code;
+
+			");
+			//return the monitoring data
+			return $data; 
+		endif;
+		
+		
+	}
+
+
+
+
+
 	//Used by facility_mapping function in reports controller
 	//Used to get the dates that facilities went online
 	public static function get_facilities_online_per_district($county_id)
