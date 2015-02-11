@@ -1,20 +1,32 @@
 <?php //echo "<pre>";print_r($commodities);echo "</pre>";exit; ?>
-<style>
-	.big{ width: 150px !important; }
+<style type="text/css">
+.row div p,.row-fluid div p{
+	padding:10px;
+
+}
+.form-control {
+
+font-size: 12px !important;
+}
 </style>
-<div class="container" style="width: 94%; margin: auto;">
-<span  class='label label-info'>To Issue Commodities 
-	i) Select commodity to issue 
-	ii) Enter the Service Point and Quanitity you wish to issue and select the Batch No
-	iii) To add more Issues press Add Row</span><br /><span class="label label-danger">Available Batch Stock is for a specific 
-	batch, Total Balance is the total for the commodity</span>
-	<hr />
-<div class="table-responsive" style="height:400px; overflow-y: auto;">
+<div class="container-fluid" style="">
+<div class="container" style="width: 100%; margin: auto;">
+
+	<div class="row">
+		<div class="col-md-6" id=""><p class="bg-info"><span class="badge ">1</span>Select commodity to issue,Enter the Service Point and Quanitity you wish to issue and select the Batch No</p></div>
+		<div class="col-md-5" id=""><p class="text-danger"><span class="badge ">NB</span>Available Batch Stock is for a specific 
+	batch, Total Balance is the total for the commodity</p></div>
+		
+		
+	</div>
+	</div>
+
+<div class="table-responsive" style="min-height:300px; overflow-y: auto;">
 
  <?php
   $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/district_store_external_issue',$att); 
   ?>
-<table width="100%"  class="table table-hover table-bordered table-update" id="facility_issues_table" >
+<table width="100%"  class="table table-hover table-bordered table-update" id="subcounty_issues_table" >
 <thead style="background-color: white">
 					<tr>
 						<th>Select Subcounty</th>
@@ -251,7 +263,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
    	selector_object.closest("tr").find(".balance").val(remainder1);	
         });// adding a new row 
         $(".add").click(function() {
-        var selector_object = $('#facility_issues_table tr:last');
+        var selector_object = $('#subcounty_issues_table tr:last');
         var form_data = check_if_the_form_has_been_filled_correctly(selector_object);
         if(isNaN(form_data[0])){
         var notification='<ol>'+form_data[0]+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -356,7 +368,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
     confirm_if_the_user_wants_to_save_the_form("#myform");
      });
         function clone_the_last_row_of_the_table(){
-            var last_row = $('#facility_issues_table tr:last');
+            var last_row = $('#subcounty_issues_table tr:last');
             var cloned_object = last_row.clone(true);
             var table_row = cloned_object.attr("row_id");
             var next_table_row = parseInt(table_row) + 1;           
@@ -385,7 +397,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
             cloned_object.find(".batch_no").html("");  
             // remove the error class
             cloned_object.find("label.error").remove();           
-			cloned_object.insertAfter('#facility_issues_table tr:last').find('input').val('');;	
+			cloned_object.insertAfter('#subcounty_issues_table tr:last').find('input').val('');;	
 			refresh_clone_datepicker_normal_limit_today();	
         }
 		function check_if_the_form_has_been_filled_correctly(selector_object){
