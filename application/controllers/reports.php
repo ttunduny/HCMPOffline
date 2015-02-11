@@ -1023,24 +1023,24 @@ class Reports extends MY_Controller {
 		$facility_issued_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_issue);
 
         $data['facility_last_issues'] = $facility_issued_;
-      //echo '<pre>';print_r($facility_issued);echo "</pre>";die();
+      //echo '<pre>';print_r($facility_issued_);echo "</pre>";die();
 		// /Graph data of last issued
 
 
-		// Graph data of last ordered
-             $facility_ordering = Facilities::facility_ordered($county_id, $district_id);
+		// Graph data of last orders
+             $facility_orderings = Facilities::facility_ordered($county_id, $district_id);
 
-	    //echo '<pre>';print_r($facility_ordering);echo "</pre>";die();
+	    //echo '<pre>';print_r($facility_orderings);echo "</pre>";die();
 
 		$facility_last_order = array();
 		$facility_last_order = array_merge($facility_last_order, array("graph_id" => 'ordered-graph'));
-		$facility_last_order = array_merge($facility_last_order, array("graph_title" => 'Days Last Order '));
+		$facility_last_order = array_merge($facility_last_order, array("graph_title" => 'Days Last Ordered '));
 		$facility_last_order = array_merge($facility_last_order, array("graph_type" => 'bar'));
 		$facility_last_order = array_merge($facility_last_order, array("graph_yaxis_title" => 'County Facilities'));
 		$facility_last_order = array_merge($facility_last_order, array("graph_categories" => array()));
 		$facility_last_order = array_merge($facility_last_order, array("series_data" => array("Days from last order" => array())));
 
-		foreach ($facility_ordering as $last_ordered) :
+		foreach ($facility_orderings as $last_ordered) :
 			$facility_last_order['graph_categories'] = array_merge($facility_last_order['graph_categories'], array($last_ordered['Facility Name']));
 			$facility_last_order['series_data']['Days from last order'] = array_merge($facility_last_order['series_data']['Days from last order'], array((int)$last_ordered['Days from last order']));
 		endforeach;
@@ -1048,8 +1048,8 @@ class Reports extends MY_Controller {
 		$facility_ordered_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_order);
 
         $data['facility_last_orders'] = $facility_ordered_;
-      echo '<pre>';print_r($facility_ordered_);echo "</pre>";die();
-		// /Graph data of last ordered
+      //echo '<pre>';print_r($facility_ordered_);echo "</pre>";die();
+		// /Graph data of last orders
 
 
 		

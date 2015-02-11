@@ -344,7 +344,7 @@ class Facilities extends Doctrine_Record {
                     c.county as 'County',
                     d.district as 'Sub-County',
                     
-				    IFNULL(DATEDIFF(NOW(), MAX(fo.order_date)),0) as 'Days From Last order'
+				    IFNULL(DATEDIFF(NOW(), MAX(fo.order_date)),0) as 'Days from last order'
 
 				FROM
 				    
@@ -370,7 +370,7 @@ class Facilities extends Doctrine_Record {
 				    f.facility_code as 'Facility Code',
                     c.county as 'County',
                     d.district as 'Sub-County',
-				    IFNULL(DATEDIFF(NOW(), MAX(fo.order_date)),0) as 'Days From Last order'
+				    IFNULL(DATEDIFF(NOW(), MAX(fo.order_date)),0) as 'Days from last order'
 				
 
 				FROM
@@ -421,7 +421,7 @@ class Facilities extends Doctrine_Record {
 						l.user_id = u.id AND
                         u.facility = f.facility_code
 				        AND d.id= $district_id
-				GROUP BY f.facility_code;
+				GROUP BY f.facility_name;
 			");
 			//return the monitoring data
 			//echo $data; exit;
