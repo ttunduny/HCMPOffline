@@ -3694,6 +3694,7 @@ class Reports extends MY_Controller {
 	}
 	//Function for commodity redistributions
 	public function county_donation() {
+		//echo $district_id.$county_id;exit;
 		$data['year'] = date('Y');
 		$county_id = $this -> session -> userdata('county_id');
 		$data['district_data'] = districts::getDistrict($county_id);
@@ -3702,7 +3703,9 @@ class Reports extends MY_Controller {
 		$data['report_view'] = "subcounty/reports/county_donation_filter_v";
 
 		if ($this -> input -> is_ajax_request()) :
+			
 			return $this -> load -> view("subcounty/reports/county_donation_filter_v", $data);
+			
 		else :
 			$data['report_view'] = "subcounty/reports/county_donation_filter_v";
 			$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
@@ -3811,7 +3814,7 @@ class Reports extends MY_Controller {
 		$total_expiry = number_format($total_expiry, 2, '.', ',');
 		// array_push($series_data, array("","","Total for the next $year months",$total_expiry,''));
 
-		$category_data = array( array("From", 'To', "Commodity Name", "District From", "District To", "Unit Size", 'Batch No', 'Expiry Date', 'Manufacturer', 'Quantity Sent(units)', 'Quantity Sent(packs)', 'Quantity Received (units)', 'Quantity Received (packs)', 'Date sent', 'Date Received', 'status'));
+		$category_data = array( array("From", 'To', "Commodity Name", "District From", "District To", "Unit Size", 'Batch No', 'Expiry Date', 'Manufacturer', 'Quantity Sent(packs)', 'Quantity Sent(units)', 'Quantity Received (packs)', 'Quantity Received (units)', 'Date sent', 'Date Received', 'status'));
 
 		$graph_data = array_merge($graph_data, array("table_id" => 'dem_graph_1'));
 		$graph_data = array_merge($graph_data, array("table_header" => $category_data));
