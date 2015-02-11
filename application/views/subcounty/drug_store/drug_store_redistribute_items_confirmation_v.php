@@ -50,6 +50,7 @@
 			}
 		echo "<tr>
 		<td>
+		<input type='hidden' name='id[]' class='source_of_item' value='$redistribution_data->id'>
 		<input type='hidden' name='source_of_item[]' class='source_of_item' value='$source_of_item'>
 		<input type='hidden' name='service_point[]' class='service_point' value='$mfl'>
 		<input type='hidden' name='total_commodity_units[]' class='total_commodity_units' value='$total_commodity_units'>
