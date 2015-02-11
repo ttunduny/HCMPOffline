@@ -592,6 +592,7 @@ endif;
 public function add_more_stock_level_store_external(){
     //seth
     // echo "<pre>";print_r($this->input->post());echo "</pre>";
+    //random change for pushmentation
         if($this->input->post('facility_stock_id')):
         $district_id = $this -> session -> userdata('district_id');
          $commodity_id=array_values($this->input->post('commodity_id'));
