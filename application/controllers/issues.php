@@ -171,7 +171,7 @@ class issues extends MY_Controller {
 				$existence = drug_store_issues::check_internal_transaction_existence($commodity_id[$i],$destined_district[$i]);
 				$store_existence = drug_store_issues::check_drug_existence($commodity_id[$i],$district_id);
 					// echo "<pre>"; print_r($existence);echo "</pre>";;exit;
-				if ($existence[0]['present'] >= 1) {
+				if ($existence[0]['present'] >= 0) {
 					$update_transactions = Doctrine_Manager::getInstance() -> getCurrentConnection();
 					$update_transactions -> execute("UPDATE `drug_store_internal_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
 							`closing_stock`=`closing_stock`-$total_items_issues
@@ -240,12 +240,14 @@ class issues extends MY_Controller {
  	$graph_data=array_merge($graph_data,array("graph_type"=>'bar'));
  	$graph_data=array_merge($graph_data,array("graph_yaxis_title"=>'Total stock level  (values in packs)'));
  	$graph_data=array_merge($graph_data,array("graph_categories"=>array()));
- 	$graph_data=array_merge($graph_data,array("series_data"=>array("Current Balance"=>array())));
+ 	$graph_data=array_merge($graph_data,array("series_data"=>array("Current Pack Balance"=>array(),"Current Unit Balance"=>array())));
  	$graph_data['stacking']='normal';
  	foreach($district_stock_ as $district_stock_):
  		$graph_data['graph_categories']=array_merge($graph_data['graph_categories'],array($district_stock_['commodity_name']));	
- 		$graph_data['series_data']['Current Balance']=array_merge($graph_data['series_data']['Current Balance'],array((float) $district_stock_['pack_balance']));	
- 
+ 		$graph_data['series_data']['Current Pack Balance']=array_merge($graph_data['series_data']['Current Pack Balance'],array((float) $district_stock_['pack_balance']));	
+ 		$graph_data['series_data']['Current Unit Balance']=array_merge($graph_data['series_data']['Current Unit Balance'],array((float) $district_stock_['commodity_balance']));	
+			// $graph_data['series_data'] = array_merge($graph_data['series_data'], array("Potential Expiries" => $series_data2, "Actual Expiries" => $series_data));
+ 	
  	endforeach;
  	//create the graph here
     //echo "I WORK";exit;
@@ -433,7 +435,7 @@ class issues extends MY_Controller {
 
 				$existence = drug_store_issues::check_transaction_existence($commodity_id[$i],$service_point[$i]);
 					// echo "<pre>"; print_r($existence);echo "</pre>";;exit;
-				if ($existence[0]['present'] >= 1) {
+				if ($existence[0]['present'] >= 0) {
 					$update_transactions = Doctrine_Manager::getInstance() -> getCurrentConnection();
 					$update_transactions -> execute("UPDATE `drug_store_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
 							`closing_stock`=`closing_stock`-$total_items_issues
@@ -525,7 +527,7 @@ class issues extends MY_Controller {
 
 				$existence = drug_store_issues::check_drug_existence($commodity_id[$i],$district_id);
 					// echo "<pre>"; print_r($existence);echo "</pre>";;exit;
-				if ($existence[0]['present'] >= 1) {
+				if ($existence[0]['present'] >= 0) {
 					$update_totals = Doctrine_Manager::getInstance() -> getCurrentConnection();
 					$update_totals -> execute("UPDATE `drug_store_totals` SET `total_balance` = `total_balance`+$total_items_issues
 		            WHERE `commodity_id`= '$commodity_id[$i]' and district_id='$district_id';");
@@ -569,6 +571,7 @@ class issues extends MY_Controller {
 		$data['title'] ="Confirm Redistribution";	
 		$data['banner_text'] = "Confirm Redistribution";
 		$data['redistribution_data']=redistribution_data::get_all_active_drug_store($district_id,$editable_);
+		// echo "<pre>";print_r($data['redistribution_data']);echo "</pre>";exit;
 		$data['editable']=$editable_;
 		$data['content_view'] = "subcounty/drug_store/drug_store_redistribute_items_confirmation_v";
 		$this -> load -> view("shared_files/template/template", $data);		
