@@ -1005,26 +1005,81 @@ class Reports extends MY_Controller {
 		// Graph data of last issued
              $facility_issues = Facilities::facility_issued($county_id, $district_id);
 
-	    echo '<pre>';print_r($facility_issues);echo "</pre>";die();
+	    //echo '<pre>';print_r($facility_issues);echo "</pre>";die();
 
-		$facility_graph_data = array();
-		$facility_graph_data = array_merge($facility_graph_data, array("graph_id" => 'issued-graph'));
-		$facility_graph_data = array_merge($facility_graph_data, array("graph_title" => 'Last Issued in ' . $facility_name.'county  <--should be changed to county name'));
-		$facility_graph_data = array_merge($facility_graph_data, array("graph_type" => 'bar'));
-		$facility_graph_data = array_merge($facility_graph_data, array("graph_yaxis_title" => 'County Facilities'));
-		$facility_graph_data = array_merge($facility_graph_data, array("graph_categories" => array()));
-		$facility_graph_data = array_merge($facility_graph_data, array("series_data" => array("Days from Last Issued" => array())));
+		$facility_last_issue = array();
+		$facility_last_issue = array_merge($facility_last_issue, array("graph_id" => 'issued-graph'));
+		$facility_last_issue = array_merge($facility_last_issue, array("graph_title" => 'Days Last Issued '));
+		$facility_last_issue = array_merge($facility_last_issue, array("graph_type" => 'bar'));
+		$facility_last_issue = array_merge($facility_last_issue, array("graph_yaxis_title" => 'County Facilities'));
+		$facility_last_issue = array_merge($facility_last_issue, array("graph_categories" => array()));
+		$facility_last_issue = array_merge($facility_last_issue, array("series_data" => array("Days from Last issued" => array())));
 
 		foreach ($facility_issues as $last_issued) :
-			$facility_graph_data['graph_categories'] = array_merge($facility_graph_data['graph_categories'], array($last_issued['Facility Name']));
-			$facility_graph_data['series_data']['Days from Last Issued'] = array_merge($facility_graph_data['series_data']['Days from Last Issued'], array((int)$last_issued['Days from last issue']));
+			$facility_last_issue['graph_categories'] = array_merge($facility_last_issue['graph_categories'], array($last_issued['Facility Name']));
+			$facility_last_issue['series_data']['Days from Last issued'] = array_merge($facility_last_issue['series_data']['Days from Last issued'], array((int)$last_issued['Days from last issue']));
 		endforeach;
 
-		$facility_issued_ = $this -> hcmp_functions -> create_high_chart_graph($facility_graph_data);
+		$facility_issued_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_issue);
 
-        $data['facility_graph_data'] = $facility_issued_;
+        $data['facility_last_issues'] = $facility_issued_;
       //echo '<pre>';print_r($facility_issued);echo "</pre>";die();
 		// /Graph data of last issued
+
+
+		// Graph data of last ordered
+             $facility_ordering = Facilities::facility_ordered($county_id, $district_id);
+
+	    //echo '<pre>';print_r($facility_ordering);echo "</pre>";die();
+
+		$facility_last_order = array();
+		$facility_last_order = array_merge($facility_last_order, array("graph_id" => 'ordered-graph'));
+		$facility_last_order = array_merge($facility_last_order, array("graph_title" => 'Days Last Order '));
+		$facility_last_order = array_merge($facility_last_order, array("graph_type" => 'bar'));
+		$facility_last_order = array_merge($facility_last_order, array("graph_yaxis_title" => 'County Facilities'));
+		$facility_last_order = array_merge($facility_last_order, array("graph_categories" => array()));
+		$facility_last_order = array_merge($facility_last_order, array("series_data" => array("Days from last order" => array())));
+
+		foreach ($facility_ordering as $last_ordered) :
+			$facility_last_order['graph_categories'] = array_merge($facility_last_order['graph_categories'], array($last_ordered['Facility Name']));
+			$facility_last_order['series_data']['Days from last order'] = array_merge($facility_last_order['series_data']['Days from last order'], array((int)$last_ordered['Days from last order']));
+		endforeach;
+
+		$facility_ordered_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_order);
+
+        $data['facility_last_orders'] = $facility_ordered_;
+      echo '<pre>';print_r($facility_ordered_);echo "</pre>";die();
+		// /Graph data of last ordered
+
+
+		
+
+		// Graph data of last loggins
+             $facility_loggins = Facilities::facility_loggins($county_id, $district_id);
+
+	    //echo '<pre>';print_r($facility_loggins);echo "</pre>";die();
+
+		$facility_last_log = array();
+		$facility_last_log = array_merge($facility_last_log, array("graph_id" => 'logged-graph'));
+		$facility_last_log = array_merge($facility_last_log, array("graph_title" => 'Days Last Logged '));
+		$facility_last_log = array_merge($facility_last_log, array("graph_type" => 'bar'));
+		$facility_last_log = array_merge($facility_last_log, array("graph_yaxis_title" => 'County Facilities'));
+		$facility_last_log = array_merge($facility_last_log, array("graph_categories" => array()));
+		$facility_last_log = array_merge($facility_last_log, array("series_data" => array("Days From Last Seen" => array())));
+
+		foreach ($facility_loggins as $last_logged) :
+			$facility_last_log['graph_categories'] = array_merge($facility_last_log['graph_categories'], array($last_logged['Facility Name']));
+			$facility_last_log['series_data']['Days From Last Seen'] = array_merge($facility_last_log['series_data']['Days From Last Seen'], array((int)$last_logged['Days From Last Seen']));
+		endforeach;
+
+		$facility_logged_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_log);
+
+        $data['facility_last_loggins'] = $facility_logged_;
+      //echo '<pre>';print_r($facility_logged_);echo "</pre>";die();
+		// /Graph data of last loggins
+
+
+
 
 
 
@@ -1040,7 +1095,7 @@ class Reports extends MY_Controller {
 			$data['content_view'] = "facility/facility_reports/reports_v";
 			$data['active_panel'] = (!$this -> session -> userdata('facility_id')) ? "system_usage" : "system_usage";
 			$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
-			$data['graph_data'] = $faciliy_issued;
+			
 			$view = 'shared_files/template/template';
 
 			$this -> load -> view($view, $data);

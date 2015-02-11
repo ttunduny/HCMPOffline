@@ -115,16 +115,16 @@
     </div>
   </div>
 </div>
-
-    <div id="issued-graph">
-<?php echo $graph_data; ?>
-    </div>
-	<div id="ordered-graph"></div>
+    <div id="ordered-graph"></div>
+    <div id="issued-graph"></div>
+	
 	<div id="logged-graph"></div>
 
 <script>
 $(function () { 
-<?php echo $facility_graph_data; ?>
+<?php echo $facility_last_issues; ?>
+<?php echo $facility_last_orders; ?>
+<?php echo $facility_last_loggins; ?>
 });
 
 $(document).ready(function() {
