@@ -25,7 +25,7 @@
 	<!-- <div  style="margin:5px 0;">
 		<p class="label label-info">Enter appropriate values in all fields as indicated: </p>
 	</div> -->
-
+	
 	<table width="98%" border="0" class="table-condensed row-fluid table table-hover table-bordered table-update"  id="example">
 		<tr>
 		<div class="input-group">
@@ -69,7 +69,7 @@
 		    <th>Adjustments(+ve) (Units)</th>
 		    <th>Losses (Units)</th>
 		    <th>No days out of stock</th>
-		    <th>Closing Stock</th>					    
+		    <th>Closing Stock(Units)</th>					    
 		</tr>
 	</thead>
 	<tbody><?php
