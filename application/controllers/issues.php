@@ -87,7 +87,7 @@ class issues extends MY_Controller {
 						$data['content_view'] = "subcounty/subcounty_drug_store";
 						$data['donate_destination'] = "facility";
 						$data['subcounties']=districts::getAll();
-						$data['banner_text'] = "Redistribute Commodities";
+						$data['banner_text'] = "Redistribute Commodities to Facilities";
 						$data['title'] ="Redistribute Commodities";		
 						//$data['service_point']=service_points::get_all_active($facility_code);		
 		$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_district_store($district_id,1);
@@ -107,7 +107,7 @@ class issues extends MY_Controller {
 						$data['content_view'] = "subcounty/drug_store/drug_store_internal";
 						$data['donate_destination'] = "facility";
 						$data['subcounties']=districts::getAll();
-						$data['banner_text'] = "Redistribute Commodities";
+						$data['banner_text'] = "Redistribute Commodities to District Stores";
 						$data['title'] ="Redistribute Commodities";		
 						//$data['service_point']=service_points::get_all_active($facility_code);		
 		$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_district_store($district_id,1);
