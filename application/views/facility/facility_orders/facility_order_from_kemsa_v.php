@@ -54,19 +54,19 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 						<th>Commodity&nbsp;Code</th>
 						<th>Order Unit Size</th>
 						<th>Order Unit Cost (Ksh)</th>
-						<th>Opening Balance</th>
-						<th>Total Receipts</th>
-					    <th>Total issues</th>
-					    <th>Adjustments(-ve)</th>
-					    <th>Adjustments(+ve)</th>
-					    <th>Losses</th>
-					    <th>No days out of stock</th>
-					    <th>Closing Stock</th>
+						<th>Opening Balance (units)</th>
+						<th>Total Receipts (units)</th>
+					    <th>Total issues (units)</th>
+					    <th>Adjustments(-ve) (units)</th>
+					    <th>Adjustments(+ve) (units)</th>
+					    <th>Losses (units)</th>
+					    <th>No days out of stock (units)</th>
+					    <th>Closing Stock (units)</th>
 					    <th>AMC (Packs)</th>
-					    <th>Suggested Order Quantity</th>
-					    <th>Order Quantity</th>
+					    <th>Suggested Order Quantity (units)</th>
+					    <th>Order Quantity (units)</th>
 					    <th>Actual Units</th>
-					    <th>Order Cost</th>	
+					    <th>Order Cost (units)</th>	
 					    <th>Comment (if any)</th>				    
 	</tr>
 </thead>

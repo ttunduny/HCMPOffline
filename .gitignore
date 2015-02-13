@@ -6,7 +6,8 @@
 /drug_commodity_map.sql
 /drugs not in commodities table.txt
 /nbproject
+
+
+
+application/config/database.php
 .htaccess
-database.php
-application/config/database.php
-application/config/database.php

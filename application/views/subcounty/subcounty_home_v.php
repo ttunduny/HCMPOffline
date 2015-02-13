@@ -41,7 +41,7 @@ $identifier = $this -> session -> userdata('user_indicator');
                         </h4>
                     </div>
                 </div>
-                <!--Program Reports
+                <!--Program Reports-->
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
@@ -49,7 +49,7 @@ $identifier = $this -> session -> userdata('user_indicator');
                             </span>Program Reports</a>
                         </h4>
                     </div>
-                </div>-->
+                </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">

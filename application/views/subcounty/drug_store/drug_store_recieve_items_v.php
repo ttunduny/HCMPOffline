@@ -1,4 +1,3 @@
-<?php //echo "<pre>";print_r($store_commodities);echo "</pre>";exit; ?>
 <style>
 	.big{ width: 150px !important; }
 	.row div p{
@@ -8,7 +7,7 @@
 <div class="container" style="width: 100%; margin: auto;">
 
 	<div class="row">
-		<div class="col-md-4" id=""><p class="bg-info"><span class="badge ">1</span>Select commodity to issue</p></div>
+		<div class="col-md-4" id=""><p class="bg-info"><span class="badge ">1</span>Select commoditasdfasdfasfdy to issue</p></div>
 		<div class="col-md-5" id=""><p class="bg-info"><span class="badge ">2</span>Enter the Service Point and Quanitity you wish to issue and select the Batch No</p></div>
 		<div class="col-md-3" id=""><p class="bg-info"><span class="badge ">3</span>To add more Issues click Add Row
 		<span class="glyphicon glyphicon-question-sign toolt" data-toggle="tooltip" data-placement="left" title="click for help" href="javascript:void(0);" onclick="startIntro();" style="margin-left:20%;"></span></p>

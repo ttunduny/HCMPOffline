@@ -51,6 +51,9 @@
        <?php if($district_dashboard_notifications['district_stock_count']>0): ?>
         <div style="height:auto; margin-bottom: 2px" class="distribute message ">
           <a href="<?php echo base_url('issues/district_store'); ?>"><h5>Redistribute Commodities to Facilities</h5></a>   
+        </div>  
+        <div style="height:auto; margin-bottom: 2px" class="distribute message ">
+          <a href="<?php echo base_url('issues/district_store_internal'); ?>"><h5>Redistribute Commodities to Other District Stores</h5></a>   
         </div>        
          <div style="height:auto; margin-bottom: 2px" class="reports message ">
           <a href="<?php echo base_url("reports/district_store_reports") ?>"><h5>Reports</h5></a>        
