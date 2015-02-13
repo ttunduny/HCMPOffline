@@ -117,7 +117,7 @@ HTML_DATA;
 <div class="" style="background-color: white;">
 	<ul class='nav nav-tabs'>
       <li class="active"><a href="#Malaria" data-toggle="tab">Malaria</a></li>
-      <li class=""><a href="#RH" data-toggle="tab">Reproductive Health</a></li>
+      <!--<li class=""><a href="#RH" data-toggle="tab">Reproductive Health</a></li>-->
     </ul>
     <div id="myTabContent" class="tab-content">
  		<div  id="Malaria" class="tab-pane fade active in">
