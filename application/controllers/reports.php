@@ -1003,7 +1003,7 @@ class Reports extends MY_Controller {
 
 
 		// Graph data of last issued
-             $facility_issues = Facilities::facility_issued($county_id, $district_id, $facility_code);
+             $facility_issues = Facilities::facility_issued($this->session->userdata('user_indicator'),$county_id, $district_id,$facility_code);
 
 	    //echo '<pre>';print_r($facility_issues);echo "</pre>";die();
 
@@ -1028,7 +1028,7 @@ class Reports extends MY_Controller {
 
 
 		// Graph data of last orders
-             $facility_orderings = Facilities::facility_ordered($county_id, $district_id, $facility_code);
+             $facility_orderings = Facilities::facility_ordered($this->session->userdata('user_indicator'),$county_id, $district_id,$facility_code);
 
 	    //echo '<pre>';print_r($facility_orderings);echo "</pre>";die();
 
@@ -1038,11 +1038,11 @@ class Reports extends MY_Controller {
 		$facility_last_order = array_merge($facility_last_order, array("graph_type" => 'bar'));
 		$facility_last_order = array_merge($facility_last_order, array("graph_yaxis_title" => 'County Facilities'));
 		$facility_last_order = array_merge($facility_last_order, array("graph_categories" => array()));
-		$facility_last_order = array_merge($facility_last_order, array("series_data" => array("Days from last order" => array())));
+		$facility_last_order = array_merge($facility_last_order, array("series_data" => array("Days From Last Order" => array())));
 
 		foreach ($facility_orderings as $last_ordered) :
 			$facility_last_order['graph_categories'] = array_merge($facility_last_order['graph_categories'], array($last_ordered['Facility Name']));
-			$facility_last_order['series_data']['Days from last order'] = array_merge($facility_last_order['series_data']['Days from last order'], array((int)$last_ordered['Days from last order']));
+			$facility_last_order['series_data']['Days From Last Order'] = array_merge($facility_last_order['series_data']['Days From Last Order'], array((int)$last_ordered['Days From Last Order']));
 		endforeach;
 
 		$facility_ordered_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_order);
@@ -1055,7 +1055,7 @@ class Reports extends MY_Controller {
 		
 
 		// Graph data of last loggins
-             $facility_loggins = Facilities::facility_loggins($county_id, $district_id, $facility_code);
+             $facility_loggins = Facilities::facility_loggins($this->session->userdata('user_indicator'), $county_id, $district_id,$facility_code);
 
 	    //echo '<pre>';print_r($facility_loggins);echo "</pre>";die();
 
