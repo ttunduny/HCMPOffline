@@ -249,7 +249,7 @@ class Facilities extends Doctrine_Record {
 				CALL facility_monitoring('facility','".$facility_code."');
 			");
 			//return the monitoring data
-			//echo $data; exit;
+			//echo "<pre>";print_r($data);exit;
 			return $data;
 		
 		elseif(isset($district_id)&&!isset($facility_code)):
@@ -257,12 +257,14 @@ class Facilities extends Doctrine_Record {
 				CALL facility_monitoring('district','".$district_id."');
 			");
 			//return the monitoring data
+
 			return $data; 
 		else:
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 				CALL facility_monitoring('county','".$county_id."');
 			");
 			//return the monitoring data
+		
 			return $data; 
 		endif;
 		
