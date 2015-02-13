@@ -50,20 +50,27 @@ endforeach;
 </div>
 </div>
 <div class="graph_content">	
-<div class="graph_content" id="dem_graph_1"  ></div>
+<div class="graph_content" id="dem_graph_"  ></div>
 </div>
 <script>
 
 $(window).load(function(){
-		var year  = '<?php echo $year; ?>';
+		
         var url_ = "reports/donation_reports/"+
-        year+
+        "<?php echo $year; ?>"+
         "/NULL"+
         "/NULL";	
 		ajax_request_replace_div_content(url_,'.graph_content');	
 	
 
 });	
+	var year  = '<?php echo $year; ?>';
+	$.get("reports/donation_reports/"+year+"/NULL"+"/NULL", function(data){
+		$("#dem_graph_").html(data);
+		
+		
+	});
+	
 	$(document).ready(function() {
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           $('.graph_content').html('');
