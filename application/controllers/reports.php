@@ -1003,7 +1003,7 @@ class Reports extends MY_Controller {
 
 
 		// Graph data of last issued
-             $facility_issues = Facilities::facility_issued($county_id, $district_id);
+             $facility_issues = Facilities::facility_issued($county_id, $district_id, $facility_code);
 
 	    //echo '<pre>';print_r($facility_issues);echo "</pre>";die();
 
@@ -1028,7 +1028,7 @@ class Reports extends MY_Controller {
 
 
 		// Graph data of last orders
-             $facility_orderings = Facilities::facility_ordered($county_id, $district_id);
+             $facility_orderings = Facilities::facility_ordered($county_id, $district_id, $facility_code);
 
 	    //echo '<pre>';print_r($facility_orderings);echo "</pre>";die();
 
@@ -1055,7 +1055,7 @@ class Reports extends MY_Controller {
 		
 
 		// Graph data of last loggins
-             $facility_loggins = Facilities::facility_loggins($county_id, $district_id);
+             $facility_loggins = Facilities::facility_loggins($county_id, $district_id, $facility_code);
 
 	    //echo '<pre>';print_r($facility_loggins);echo "</pre>";die();
 
