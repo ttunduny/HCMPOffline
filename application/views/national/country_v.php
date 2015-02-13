@@ -16,11 +16,8 @@
     <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/font-awesome/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
-<<<<<<< HEAD
-=======
     <link href="<?php echo base_url().'assets/css/tabs.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/css/tabstyles.css'?>" type="text/css" rel="stylesheet"/>
->>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
     <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
     <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
     <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
@@ -30,40 +27,6 @@
     
      
     <title>HCMP | National</title>
-<<<<<<< HEAD
-<script>
-   paceOptions = {
-  ajax: false, // disabled
-  document: true, // 
-  eventLag: true,
-  restartOnPushState: false,
-  elements:{
-  	selectors:['body']
-  } // 
-  
-};
- 
-    function load(time){
-      var x = new XMLHttpRequest()
-      x.open('GET', document.URL , true);
-      x.send();
-    };
-    setTimeout(function(){
-      Pace.ignore(function(){
-        load(3100);
-      });
-    },4500);
-
-    Pace.on('hide', function(){
-   //   console.log('done');
-    });
-
-    var url="<?php echo base_url(); ?>";
-    </script>
-<style>
-	.active-panel{
-    	border-left: 6px solid #36BB24;
-=======
     <STYLE TYPE="text/css">
 
      a:hover{
@@ -72,7 +35,6 @@
 
 .active-panel{
       border-left: 6px solid #36BB24;
->>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
     }
     body {
 padding-top: 4.5%;
@@ -84,54 +46,6 @@ padding-top: 4.5%;
 }
 
 h4{
-<<<<<<< HEAD
-	
-	padding:4px;
-	color:black;
-	background:white;
-	text-align:center;
-	margin:0;	
-	font-size:15px;
-}
-
-.stat_item {
-		height: 36px;
-		padding: 2px 5px;
-		color: #fff;
-		text-align: center;
-		font-size: 1em;
-		
-	}	
-	
-	#notify .col-md-2,.col-md-1{
-		padding:3px;
-	}
-	#notify {
-		margin-bottom: 5px;
-	}
-	.tile{
-		box-shadow:  0px 1px 5px 0px #d3d3d3;
-		background:white;
-	}
-	.tile h4{
-		padding: 5px;
-		background-color:#528f42;
-		color: white;
-	}
-	.btn{
-		border-radius: 0;
-	}
-	.modal-dialog {
-		
-		width: 74%;
-	}
-	</style>
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-=======
   
   padding:4px;
   color:black;
@@ -213,20 +127,15 @@ h4{
     </STYLE>
 <script>
   
->>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
   </script>
   
   </head>
   
   <body screen_capture_injected="true" style="background-color: white;">
   	
-<<<<<<< HEAD
-  	<div class="container-fluid navbar-default navbar-fixed-top" role="navigation" style="background-color:white">
-=======
   	
     
    <div class="container-fluid navbar-default navbar-fixed-top" role="navigation" style="background-color:white">
->>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
         <div class="container-fluid">
             <div class="navbar-header" id="st-trigger-effects">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -260,31 +169,6 @@ h4{
 
       </div>
     </div>
-<<<<<<< HEAD
-    
-   <div class="container-fluid">
-
-<section>
-        <div class="tabs tabs-style-underline">
-          <nav>
-            <ul>
-              <li><a href="#section-underline-1" class="icon icon-home"><span>Home</span></a></li>
-              <li><a href="#section-underline-2" class="icon icon-gift"><span>Deals</span></a></li>
-              <li><a href="#section-underline-3" class="icon icon-upload"><span>Upload</span></a></li>
-              <li><a href="#section-underline-4" class="icon icon-coffee"><span>Work</span></a></li>
-              <li><a href="#section-underline-5" class="icon icon-config"><span>Settings</span></a></li>
-            </ul>
-          </nav>
-          <div class="content-wrap">
-            <section id="section-underline-1"><p>1</p></section>
-            <section id="section-underline-2"><p>2</p></section>
-            <section id="section-underline-3"><p>3</p></section>
-            <section id="section-underline-4"><p>4</p></section>
-            <section id="section-underline-5"><p>5</p></section>
-          </div><!-- /content -->
-        </div><!-- /tabs -->
-      </section>
-=======
 
 <div class="container-fluid" style="">
   <div class="row-fluid">
@@ -474,7 +358,6 @@ h4{
   <div></div>
 </div>
 
->>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
 
 
 	
@@ -482,18 +365,8 @@ h4{
 	</div>
 	
 	
-<<<<<<< HEAD
-   	
- 
-
-   
-   
-   <script>
-   
-=======
   <script>
     var url="<?php echo base_url(); ?>";
->>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
    ajax_fill_data('Kenya/facility_breakdown_pie',"#facility_breakdown");
    ajax_fill_data('Kenya/mos_graph/NULL/NULL/NULL/NULL/NULL/mos',"#mos");
    ajax_fill_data('Kenya/roll_out',"#roll_out");
@@ -505,19 +378,11 @@ h4{
    ajax_fill_data('Kenya/facility_over_view/',"#facilities_rolled_out");
    ajax_fill_data('Kenya/get_lead_infor/NULL/NULL/NULL/NULL/NULL',"#leadtime");
    
-<<<<<<< HEAD
-   		 $("#mosgraph").click(function() {
-    	ajax_fill_modal('Kenya/mos_graph/NULL/NULL/NULL/NULL/NULL/mosmodalgraph',"#mosmodalgraph");
-    	});
-    	
-    	function ajax_fill_modal(function_url,div){
-=======
        $("#mosgraph").click(function() {
       ajax_fill_modal('Kenya/mos_graph/NULL/NULL/NULL/NULL/NULL/mosmodalgraph',"#mosmodalgraph");
       });
       
       function ajax_fill_modal(function_url,div){
->>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
         var function_url =url+function_url;
         var loading_icon=url+"assets/img/Preloader_1.gif";
         $.ajax({
@@ -603,10 +468,6 @@ h4{
     var url='<?php echo base_url(); ?>';
     </script>
   <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
-<<<<<<< HEAD
-  <script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
-=======
->>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
  <!--  <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
     <!-- Bootstrap core JavaScript===================== --> 
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
@@ -615,10 +476,7 @@ h4{
   <script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>  
   <!-- Placed at the end of the document so the pages load faster -->
   <script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
-<<<<<<< HEAD
-=======
   <script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
->>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98
     <!--Datatables==========================  -->
   <script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>    
   <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrap.js'?>" type="text/javascript"></script>
@@ -629,9 +487,5 @@ h4{
   <script src="<?php echo base_url().'assets/scripts/jquery.validate.min.js'?>" type="text/javascript"></script>
   <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/loadingbar.css'?>" />
   <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/elusive-webfont.css'?>" />
-<<<<<<< HEAD
-</body></html>
-=======
 </body>
 </html>
->>>>>>> 1ca86e45c255ddcacd9dd3bd925f7c63e1954a98

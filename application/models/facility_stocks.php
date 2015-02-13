@@ -875,7 +875,7 @@ FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDAT
 					GROUP BY c.id $group_by
         
      ");
-     /*echo "SELECT 
+    /* echo "SELECT 
 					    c.commodity_name,
 					    fs.current_balance as balance,
 					    fs.batch_no,

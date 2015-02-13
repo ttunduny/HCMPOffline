@@ -1,12 +1,8 @@
-<?php //echo $county_id; die();?>
-
 <style>
-
 	#myModal .modal-dialog {
 		width: 70%;
 	}
 </style>
-
 <script type="text/javascript" charset="utf-8">
 			/* Define two custom functions (asc and desc) for string sorting */
 			jQuery.fn.dataTableExt.oSort['string-case-asc']  = function(x,y) {
@@ -30,41 +26,12 @@
 				} );
 			} );
 		</script>
-		
-		<div class="accordion" id="accordion2">
-  <div class="accordion-group">
-    <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-        2014
-      </a>
-    </div>
-    <div id="collapseOne" class="accordion-body collapse in">
-      <div class="accordion-inner">
-        <?php echo @$data;?> 
-      </div>
-    </div>
-  </div>
-  <div class="accordion-group">
-    <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-        2013
-      </a>
-    </div>
-    <div id="collapseTwo" class="accordion-body collapse">
-      <div class="accordion-inner">
-         <?php echo @$data;?>
-      </div>
-    </div>
-  </div>
-</div>
-...
-		
 <div id="dialog"></div>
 	<!--<div class="alert alert-info" >
 		  <b>Below is the project status in the county</b>
 		</div>-->
 	 <div id="temp"></div>
-	<?php //echo @$data; ?>
+	<?php echo @$data; ?>
 	<hr/>
 	<!--Filter row for the system usage breakdown
 	<div class="filter row">
@@ -99,9 +66,7 @@
 	</div>
 	
 	</div>
-	
 <!-- Modal -->
-
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">

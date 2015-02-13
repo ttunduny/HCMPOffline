@@ -1052,32 +1052,14 @@ class Reports extends MY_Controller {
 		$percentage_coverage_total_using = 0;
 
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
-		//echo "<pre>";print_r($get_dates_facility_went_online);echo "</pre>";exit;
 
-		$accordion = "";
-		foreach ($get_dates_facility_went_online as $key => $facility_dates) :
-			$accordion .= '<div class="accordion-group">
-    <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-        '.$key.'
-      </a>
-    </div>
-    <div id="collapseOne" class="accordion-body collapse in">
-      <div class="accordion-inner">';
-	  $accordion .= '<table><thead><tr><th>';
-	  $accordion .= '</table></div>
-    </div>
-  </div>';
-  
+		foreach ($get_dates_facility_went_online as $facility_dates) :
+
 			$monthly_total = 0;
-			$date = $get_dates_facility_went_online['date_when_facility_went_online'];
-			$table_data .= "<tr><td>" . $get_dates_facility_went_online . "</td>";
-			
-			//$my_date = $get_dates_facility_went_online['date_when_facility_went_online'];
-			
-			//echo "<pre>";print_r($facility_dates[1]);echo "</pre>";exit;
+			$date = $facility_dates['date_when_facility_went_online'];
+			$table_data .= "<tr><td>" . $date . "</td>";
+
 			//loop through the districts in the county
-			
 			foreach ($district_data as $district_detail) :
 
 				$district_id = $district_detail -> id;
@@ -1108,7 +1090,6 @@ class Reports extends MY_Controller {
 			$table_data .= "<td>$monthly_total</td></tr>";
 
 		endforeach;
-		//echo "<pre>";print_r($district_data);echo "</pre>";exit;
 
 		$table_data .= "<tr>";
 		$table_data_summary .= "<tr>";
@@ -1153,7 +1134,6 @@ class Reports extends MY_Controller {
 		$targetted_vs_using_hcmp = 0;
 		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
 		//$system_usage = $this->monitoring();
-		//<li><button type='button' class='btn btn-default download'>System Usage Breakdown</button></li>
 
 		$data_ = "
 		<div class='tabbable tabs-left'>
@@ -1162,6 +1142,7 @@ class Reports extends MY_Controller {
         <li class='active'><a href='#A' data-toggle='tab'>Roll out Summary</a></li>
         <li ><a href='#B' data-toggle='tab'>Monthly Break Down</a></li>
         <li><button type='button' class='btn btn-default download'>System Usage Breakdown</button></li>
+
         </ul>
          <div  id='B' class='tab-pane fade'>
 			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" . $district_names . $table_data . $total_facility_list . "<td>$total_facilities_in_county</td></tr>" . $total_targetted_facility_list . $percentage_coverage . "<td>$final_coverage_total %</td></tr>" . $percentage_coverage_using . "</tr>
@@ -1172,8 +1153,6 @@ class Reports extends MY_Controller {
 		<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test2'>" . $sub_county_names . $table_summary . $table_datas_summary . $total_facility_list . "<td>$total_facilities_in_county</td></tr>" . $total_targetted_facility_list . $percentage_coverage . "<td>$final_coverage_total %</td></tr>" . $percentage_coverage_using . "</tr></table>
 		 </div>
 		 </div>";
-		 
-		 //echo $mine;die();
 
 		if (isset($option)) :
 			return $data_;
@@ -2999,7 +2978,7 @@ class Reports extends MY_Controller {
 		
 		//getting the stock level data from the database
 		$stock_level = Facility_stocks::get_county_stock_level_tracer($county_id,$district_id,$facility_code,$option);
-		echo "<pre>";print_r($stock_level);exit;
+		//echo "<pre>";print_r($stock_level);exit;
 		//title for the graph or table
 		$title = '';
 		if(isset($facility_code) && isset($district_id)):
@@ -3023,7 +3002,7 @@ class Reports extends MY_Controller {
 			$category_data = array_merge($category_data, array($data["commodity_name"]));
 			
 		endforeach;
-		if($report = "excel"):
+		/*if($report = "excel"):
 		
 		elseif($report=="table_data"):
 			
@@ -3036,7 +3015,7 @@ class Reports extends MY_Controller {
 
 			return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
 		
-		else:
+		else:*/
 			//build the graph here
 			$graph_type = 'bar';
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
@@ -3049,7 +3028,7 @@ class Reports extends MY_Controller {
 			//echo "<pre>";print_r($graph_data);exit;
 			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
 			return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
-		endif;
+	//	endif;
 		
 		
 		
@@ -3367,7 +3346,7 @@ class Reports extends MY_Controller {
 			$axis ="Packs";
 			break;
 			default:
-			$axis ="Ksh";
+			$axis ="packs";
 			break;
  endswitch;		
 		$commodity_id = ($commodity_id == "NULL") ? null : $commodity_id;
@@ -3585,6 +3564,7 @@ class Reports extends MY_Controller {
 
 		//get the monitoring data from the log tables
 		$facility_data = Facilities::facility_monitoring($county_id, $district_id, $facility_code);
+		//echo $facility_data;die();
 
 		//echo "<pre>";print_r($facility_data);exit;
 		$row_data = array();
@@ -3592,12 +3572,17 @@ class Reports extends MY_Controller {
 		foreach ($facility_data as $facility) {
 
 			$date = (strtotime($facility['last_seen'])) ? date('j M, Y', strtotime($facility['last_seen'])) : "N/A";
-			array_push($row_data, array($facility['fname'], $facility['lname'], $date, $facility['days_last_seen'], date('j M, Y', strtotime($facility['last_issued'])), $facility['days_last_issued'], $facility['district'], $facility['facility_name'], $facility['facility_code']));
+		  //array_push($row_data, array($facility['fname'], $facility['lname'], $date, $facility['days_last_seen'], date('j M, Y', strtotime($facility['last_issued'])), $facility['days_last_issued'], $facility['district'], $facility['facility_name'], $facility['facility_code']));
+			array_push($row_data, array($facility['Facility Name'], $facility['Facility Code'], $facility['County'], $facility['Sub-County'], date('j M, Y', strtotime($facility['Date Last Issued'])), $facility['Days from last issue'], date('j M, Y', strtotime($facility['Date Last Redistributed'])), $facility['Days From last Redistributed'], 
+			      date('j M, Y', strtotime($facility['Date Last ordered'])),$facility['Days From Last order'],date('j M, Y', strtotime($facility['Date Last Decommissioned'])), $facility['Days From Last Decommissioned'], 
+				  date('j M, Y', strtotime($facility['Date Last Seen'])), $facility['Days From Last Seen']));
 		}
 
 		$excel_data = array();
 		$excel_data = array('doc_creator' => 'HCMP ', 'doc_title' => 'system usage breakdown ', 'file_name' => 'system usage breakdown');
-		$column_data = array("First Name", "Last Name", "date last seen", "# of days", "date last issued", "# of days", "Sub County", "facility name", "mfl");
+	    //$column_data = array("First Name", "Last Name", "date last seen", "# of days", "date last issued", "# of days", "Sub County", "facility name", "mfl");
+		$column_data = array("Facility Name", "Facility Code", "County", "Sub-County", "Date Last Issued", "Days from last issue", "Date Last Redistributed", 
+			"Days From last Redistributed", "Date Last ordered", "Days From Last order", "Date Last Decommissioned", "Days From Last Decommissioned", "Date Last Seen", "Days From Last Seen");
 
 		$excel_data['column_data'] = $column_data;
 		$excel_data['row_data'] = $row_data;
