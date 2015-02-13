@@ -130,7 +130,7 @@
         </div>
          <div style="height:auto; margin-bottom: 2px" class="" id="distribute_hide">
          	<a href="<?php echo base_url('issues/index/external'); ?>"><h5>Other Facilities</h5></a>	 
-           <!-- <a href="<?php echo base_url('issues/index/district_store'); ?>"><h5>District Store</h5></a>  --> 
+           <a href="<?php echo base_url('issues/index/district_store'); ?>"><h5>District Store</h5></a>  
         
         </div>
           
@@ -153,6 +153,7 @@
             <h5>Place an Order</h5>
         </div>
          <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
+            <a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>MEDS online</h5></a>
             <a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>KEMSA online</h5></a>
             <a href="" class="order-for-excel"><h5>KEMSA via excel</h5></a>
             

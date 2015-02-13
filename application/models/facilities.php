@@ -242,88 +242,21 @@ class Facilities extends Doctrine_Record {
 	{
 		if(isset($facility_code)&&($facility_code>0)):
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				SELECT 
-				    u.fname,
-				    u.lname,
-				    f.facility_name,
-				    f.facility_code,
-				    MAX(l.end_time_of_event) AS last_seen,
-				    (DATEDIFF(NOW(), MAX(l.end_time_of_event))) AS days_last_seen,
-				    MAX(fi.`created_at`) AS last_issued,
-				    IFNULL(DATEDIFF(NOW(), MAX(fi.`created_at`)),0) AS days_last_issued
-				FROM
-				    facilities f,
-				    user u,
-				    log l,
-				    facility_issues fi
-				WHERE
-				    f.facility_code = u.facility
-				        AND l.user_id = u.id
-				        AND u.facility = f.facility_code
-				        AND fi.`issued_by` = u.id
-				        AND f.facility_code = $facility_code
+				CALL facility_monitoring('facility','".$facility_code."');
 			");
 			//return the monitoring data
+			//echo $data; exit;
 			return $data;
 		
 		elseif(isset($district_id)&&!isset($facility_code)):
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				SELECT 
-				    u.fname,
-				    u.lname,
-				    f.facility_name,
-				    f.facility_code,
-				    d.district,
-				    MAX(f_i.`created_at`) AS last_issued,
-				    IFNULL(DATEDIFF(NOW(), MAX(f_i.`created_at`)),
-				            0) AS days_last_issued,
-				    MAX(l.end_time_of_event) AS last_seen,
-				    IFNULL(DATEDIFF(NOW(), MAX(l.end_time_of_event)),
-				            0) AS days_last_seen
-				FROM
-				    user u,
-				    log l,
-				    facilities f,
-				    districts d,
-				    facility_issues f_i
-				WHERE
-				    f_i.`issued_by` = u.id
-				        AND l.user_id = u.id
-				        AND u.facility = f.facility_code
-				        AND f.district = d.id
-				        AND d.county=$county_id
-				        AND d.id=$district_id
-				GROUP BY f.facility_code
+				CALL facility_monitoring('district','".$district_id."');
 			");
 			//return the monitoring data
 			return $data; 
 		else:
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				SELECT 
-				    u.fname,
-				    u.lname,
-				    f.facility_name,
-				    f.facility_code,
-				    d.district,
-				    MAX(f_i.`created_at`) AS last_issued,
-				    IFNULL(DATEDIFF(NOW(), MAX(f_i.`created_at`)),
-				            0) AS days_last_issued,
-				    MAX(l.end_time_of_event) AS last_seen,
-				    IFNULL(DATEDIFF(NOW(), MAX(l.end_time_of_event)),
-				            0) AS days_last_seen
-				FROM
-				    user u,
-				    log l,
-				    facilities f,
-				    districts d,
-				    facility_issues f_i
-				WHERE
-				    f_i.`issued_by` = u.id
-				        AND l.user_id = u.id
-				        AND u.facility = f.facility_code
-				        AND f.district = d.id
-				        AND d.county=$county_id
-				GROUP BY f.facility_code
+				CALL facility_monitoring('county','".$county_id."');
 			");
 			//return the monitoring data
 			return $data; 
@@ -622,13 +555,19 @@ return $q;
 	//Used by facility_mapping function reports controller
 	//Used to get the months facilities went online
 	//Limits to the last 3 months of activation
-	public static function get_dates_facility_went_online($county_id, $district_id = null)
+	
+	public static function get_dates_facility_went_online($county_id, $district_id = null, $year)
 	{
-		$addition = (isset($district_id)&& ($district_id>0)) ?"AND f.district = $district_id" : null;
 		
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		$addition = (isset($district_id)&& ($district_id>0)) ?"AND f.district = $district_id" : null;
+		$data = array();
+		$years = array('2015', '2014', '2013');
+		
+		foreach ($years as $year ) {
+			$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		SELECT DISTINCT
-		    DATE_FORMAT(`date_of_activation`, '%M %Y') AS date_when_facility_went_online
+		    DATE_FORMAT(`date_of_activation`, '%M %Y') AS date_when_facility_went_online,
+		    YEAR(`date_of_activation`) 
 		FROM
 		    facilities f,
 		    districts d
@@ -637,11 +576,22 @@ return $q;
 		        AND d.county = $county_id
 		        $addition
 		        AND UNIX_TIMESTAMP(`date_of_activation`) > 0
+		        AND YEAR(`date_of_activation`) = $year
 		ORDER BY `date_of_activation` desc
 		");
-		return $q;
+		
+		$data[$year]=$q;
+		}
+		
+		
+		return $data;
 			
 	}
+	
+	//used by facility mapping function
+	//used to get the distinct years facilities went online
+	
+	
 	//used when building data for the facilities that went online in a particular district in a particular county
 	public static function get_facilities_which_went_online_($district_id = null, $date_of_activation)
 	{
