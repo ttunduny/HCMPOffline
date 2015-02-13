@@ -382,7 +382,7 @@ public static function get_all_facilities_in_county($county_id){
 SELECT DISTINCT( f.facility_code ) as facilities
 FROM facilities f, districts d
 WHERE f.`district` = d.id
-AND d.id =  '$county_id'
+AND d.county =  '$county_id'
 ");
 return $q;
 }

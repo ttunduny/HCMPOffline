@@ -149,6 +149,14 @@ return $inserttransaction;
               
   return $getdata;
 	}
+	
+	public static function get_meds_id($meds,$unit_cost){
+		
+	$getdata = Doctrine_Manager::getInstance()->getCurrentConnection()
+    ->fetchAll("SELECT * FROM meds_commodities WHERE commodity_code='$meds' AND unit_price =$unit_cost;"); 
+              
+  return $getdata;
+	}
 
 }
 ?>
