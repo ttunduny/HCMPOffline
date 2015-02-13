@@ -1242,8 +1242,8 @@ class Reports extends MY_Controller {
         <ul class='nav nav-tabs'>
         <li class='active'><a href='#A' data-toggle='tab'>Roll out Summary</a></li>
         <li ><a href='#B' data-toggle='tab'>Monthly Break Down</a></li>
-		<li><button type='button' class='btn btn-default download'>System Usage Breakdown</button></li>
-        
+        <li><button type='button' class='btn btn-default download'>System Usage Breakdown</button></li>
+
         </ul>
          <div  id='B' class='tab-pane fade'>
 			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" . $district_names . $table_data . $total_facility_list . "<td>$total_facilities_in_county</td></tr>" . $total_targetted_facility_list . $percentage_coverage . "<td>$final_coverage_total %</td></tr>" . $percentage_coverage_using . "</tr>
@@ -3079,7 +3079,7 @@ class Reports extends MY_Controller {
 		
 		//getting the stock level data from the database
 		$stock_level = Facility_stocks::get_county_stock_level_tracer($county_id,$district_id,$facility_code,$option);
-		echo "<pre>";print_r($stock_level);exit;
+		//echo "<pre>";print_r($stock_level);exit;
 		//title for the graph or table
 		$title = '';
 		if(isset($facility_code) && isset($district_id)):
@@ -3103,7 +3103,7 @@ class Reports extends MY_Controller {
 			$category_data = array_merge($category_data, array($data["commodity_name"]));
 			
 		endforeach;
-		if($report = "excel"):
+		/*if($report = "excel"):
 		
 		elseif($report=="table_data"):
 			
@@ -3116,7 +3116,7 @@ class Reports extends MY_Controller {
 
 			return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
 		
-		else:
+		else:*/
 			//build the graph here
 			$graph_type = 'bar';
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
@@ -3129,7 +3129,7 @@ class Reports extends MY_Controller {
 			//echo "<pre>";print_r($graph_data);exit;
 			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
 			return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
-		endif;
+	//	endif;
 		
 		
 		
@@ -3447,7 +3447,7 @@ class Reports extends MY_Controller {
 			$axis ="Packs";
 			break;
 			default:
-			$axis ="Ksh";
+			$axis ="packs";
 			break;
  endswitch;		
 		$commodity_id = ($commodity_id == "NULL") ? null : $commodity_id;
