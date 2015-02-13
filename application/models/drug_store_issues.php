@@ -55,6 +55,13 @@ class drug_store_issues extends Doctrine_Record {
 		return $existence;
 	}
 
+	public static function check_internal_transaction_existence($commodity_id=NULL,$district_id = NULL){
+		$commodity_info = $commodity_id;
+		$existence = Doctrine_Manager::getInstance()->getCurrentConnection()->
+		fetchAll("SELECT COUNT(commodity_id) AS present FROM drug_store_internal_transaction_table where commodity_id = $commodity_id AND district_id = $district_id");
+		return $existence;
+	}
+
 	public static function get_commodities_for_district($district_id = NULL){
 		$commodities = Doctrine_Manager::getInstance()->getCurrentConnection()->
 		fetchAll("SELECT * FROM `drug_store_totals` WHERE `district_id` = '$district_id'");

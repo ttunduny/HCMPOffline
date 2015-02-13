@@ -1,12 +1,1 @@
-*.class
-*.pyc
-*.pyo
-/nbproject/private/
-/pdf/
-/drug_commodity_map.sql
-/drugs not in commodities table.txt
-/nbproject
-.htaccess
 database.php
-application/config/database.php
-application/config/database.php

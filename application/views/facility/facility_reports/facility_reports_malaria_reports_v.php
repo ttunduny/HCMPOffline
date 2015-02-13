@@ -22,10 +22,10 @@
 	</div>
 	-->
 
-	<div  style="margin:5px 0;">
+	<!-- <div  style="margin:5px 0;">
 		<p class="label label-info">Enter appropriate values in all fields as indicated: </p>
-	</div>
-
+	</div> -->
+	
 	<table width="98%" border="0" class="table-condensed row-fluid table table-hover table-bordered table-update"  id="example">
 		<tr>
 		<div class="input-group">
@@ -49,33 +49,27 @@
 			<label>Report Date:</label>
 
 			<!-- <input type= 'date' name="district_name" class="form-control" value=""> -->
-			<input type="text" class="form-control clone_datepicker_normal_limit_today"  name="district_name" value="<?php echo date('d M Y'); ?>" />
+			<input type="text" class="form-control"  name="district_name" disabled value="<?php echo date('d M Y'); ?>" />
 			</td>
 		</div>
 
 		</tr>
 	</table>
 
-	<table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
-	<thead style="background-color: white">
-
-<!-- second row -->
-		
-
+	<table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example2">
+	<thead>
 		<tr>
 			<th>Drug Name</th>
 			<th>Order Unit Size</th>
 			<th>Order Unit Cost (Ksh)</th>
-			<th>Opening Balance</th>
-			<th>Total Receipts</th>
-		    <th>Total issues</th>
-		    <th>Adjustments(-ve)</th>
-		    <th>Adjustments(+ve)</th>
-		    <th>Losses</th>
+			<th>Opening Balance (Units)</th>
+			<th>Total Receipts (Units)</th>
+		    <th>Total issues (Units)</th>
+		    <th>Adjustments(-ve) (Units)</th>
+		    <th>Adjustments(+ve) (Units)</th>
+		    <th>Losses (Units)</th>
 		    <th>No days out of stock</th>
-		    <th>Closing Stock</th>
-			
-					    
+		    <th>Closing Stock(Units)</th>					    
 		</tr>
 	</thead>
 	<tbody><?php
@@ -146,28 +140,39 @@
 <script>
 $(document).ready(function() {	
 	//datatables settings 
-	$('#example').dataTable( {
-		 //"sDom": "T<'clear'>lfrtip",
-	     "sScrollY": "377px",
+	$('#example2').dataTable( {"sDom": "T lfrtip",
+	     "sScrollY": "310px",
 	     "sScrollX": "100%",
                     "sPaginationType": "bootstrap",
                     "oLanguage": {
                         "sLengthMenu": "_MENU_ Records per page",
                         "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
                     },
-			     
+			      "oTableTools": {
+                 "aButtons": [
+				"copy",
+				"print",
+				{
+					"sExtends":    "collection",
+					"sButtonText": 'Save',
+					"aButtons":    [ "csv", "xls", "pdf" ]
+				}
+			],
+
+			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+		}
 	} );
-	$('#example_filter label input').addClass('form-control');
-	$('#example_length label select').addClass('form-control');
- var $table = $('table');
+
+	$('#example2 input').addClass('form-control');
+ // var $table = $('#example2');
 //float the headers
-  $table.floatThead({ 
-	 scrollingTop: 100,
-	 zIndex: 1001,
-	 scrollContainer: function($table){ return $table.closest('.table-responsive'); }
-	});	
+ //  $table.floatThead({ 
+	//  scrollingTop: 100,
+	//  zIndex: 1001,
+	//  scrollContainer: function($table){ return $table.closest('.table-responsive'); }
+	// });	
 //step one load all the facility data here
-var facility_stock_data=<?php echo $facility_stock_data;     ?>;
+var facility_stock_data="<?php echo $facility_stock_data;     ?>";
             ///when changing the commodity combobox
       		$(".desc").on('change',function(){
       		var row_id=$(this).closest("tr").index();	

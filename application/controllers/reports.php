@@ -657,6 +657,8 @@ class Reports extends MY_Controller {
 		$data['report_title'] = "Divisional Malaria Reports";
 	}
 
+	
+
 	public function load_expiries() {
 		$facility_code = isset($facility_code) ? $facility_code : $this -> session -> userdata('facility_id');
 		$facility_name = Facilities::get_facility_name_($facility_code) -> toArray();
@@ -989,7 +991,7 @@ class Reports extends MY_Controller {
 		//pick the district from the session then get the name
 		$district_id = $this -> session -> userdata('district_id');
 		//$district = $this -> session -> userdata('district_id');
-
+		// echo $district_id;exit;
 		//Get the name of the county
 		$county_name = Counties::get_county_name($county_id);
 		$county_name = $county_name['county'];
@@ -998,6 +1000,89 @@ class Reports extends MY_Controller {
 		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
 		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
+
+
+		// Graph data of last issued
+             $facility_issues = Facilities::facility_issued($this->session->userdata('user_indicator'),$county_id, $district_id,$facility_code);
+
+	    //echo '<pre>';print_r($facility_issues);echo "</pre>";die();
+
+		$facility_last_issue = array();
+		$facility_last_issue = array_merge($facility_last_issue, array("graph_id" => 'issued-graph'));
+		$facility_last_issue = array_merge($facility_last_issue, array("graph_title" => 'Days Last Issued '));
+		$facility_last_issue = array_merge($facility_last_issue, array("graph_type" => 'bar'));
+		$facility_last_issue = array_merge($facility_last_issue, array("graph_yaxis_title" => 'County Facilities'));
+		$facility_last_issue = array_merge($facility_last_issue, array("graph_categories" => array()));
+		$facility_last_issue = array_merge($facility_last_issue, array("series_data" => array("Days from Last issued" => array())));
+
+		foreach ($facility_issues as $last_issued) :
+			$facility_last_issue['graph_categories'] = array_merge($facility_last_issue['graph_categories'], array($last_issued['Facility Name']));
+			$facility_last_issue['series_data']['Days from Last issued'] = array_merge($facility_last_issue['series_data']['Days from Last issued'], array((int)$last_issued['Days from last issue']));
+		endforeach;
+
+		$facility_issued_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_issue);
+
+        $data['facility_last_issues'] = $facility_issued_;
+      //echo '<pre>';print_r($facility_issued_);echo "</pre>";die();
+		// /Graph data of last issued
+
+
+		// Graph data of last orders
+             $facility_orderings = Facilities::facility_ordered($this->session->userdata('user_indicator'),$county_id, $district_id,$facility_code);
+
+	    //echo '<pre>';print_r($facility_orderings);echo "</pre>";die();
+
+		$facility_last_order = array();
+		$facility_last_order = array_merge($facility_last_order, array("graph_id" => 'ordered-graph'));
+		$facility_last_order = array_merge($facility_last_order, array("graph_title" => 'Days Last Ordered '));
+		$facility_last_order = array_merge($facility_last_order, array("graph_type" => 'bar'));
+		$facility_last_order = array_merge($facility_last_order, array("graph_yaxis_title" => 'County Facilities'));
+		$facility_last_order = array_merge($facility_last_order, array("graph_categories" => array()));
+		$facility_last_order = array_merge($facility_last_order, array("series_data" => array("Days From Last Order" => array())));
+
+		foreach ($facility_orderings as $last_ordered) :
+			$facility_last_order['graph_categories'] = array_merge($facility_last_order['graph_categories'], array($last_ordered['Facility Name']));
+			$facility_last_order['series_data']['Days From Last Order'] = array_merge($facility_last_order['series_data']['Days From Last Order'], array((int)$last_ordered['Days From Last Order']));
+		endforeach;
+
+		$facility_ordered_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_order);
+
+        $data['facility_last_orders'] = $facility_ordered_;
+      //echo '<pre>';print_r($facility_ordered_);echo "</pre>";die();
+		// /Graph data of last orders
+
+
+		
+
+		// Graph data of last loggins
+             $facility_loggins = Facilities::facility_loggins($this->session->userdata('user_indicator'), $county_id, $district_id,$facility_code);
+
+	    //echo '<pre>';print_r($facility_loggins);echo "</pre>";die();
+
+		$facility_last_log = array();
+		$facility_last_log = array_merge($facility_last_log, array("graph_id" => 'logged-graph'));
+		$facility_last_log = array_merge($facility_last_log, array("graph_title" => 'Days Last Logged '));
+		$facility_last_log = array_merge($facility_last_log, array("graph_type" => 'bar'));
+		$facility_last_log = array_merge($facility_last_log, array("graph_yaxis_title" => 'County Facilities'));
+		$facility_last_log = array_merge($facility_last_log, array("graph_categories" => array()));
+		$facility_last_log = array_merge($facility_last_log, array("series_data" => array("Days From Last Seen" => array())));
+
+		foreach ($facility_loggins as $last_logged) :
+			$facility_last_log['graph_categories'] = array_merge($facility_last_log['graph_categories'], array($last_logged['Facility Name']));
+			$facility_last_log['series_data']['Days From Last Seen'] = array_merge($facility_last_log['series_data']['Days From Last Seen'], array((int)$last_logged['Days From Last Seen']));
+		endforeach;
+
+		$facility_logged_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_log);
+
+        $data['facility_last_loggins'] = $facility_logged_;
+      //echo '<pre>';print_r($facility_logged_);echo "</pre>";die();
+		// /Graph data of last loggins
+
+
+
+
+
+
 
 		if ($this -> input -> is_ajax_request()) :
 			$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
@@ -1010,10 +1095,26 @@ class Reports extends MY_Controller {
 			$data['content_view'] = "facility/facility_reports/reports_v";
 			$data['active_panel'] = (!$this -> session -> userdata('facility_id')) ? "system_usage" : "system_usage";
 			$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
+			
 			$view = 'shared_files/template/template';
+
 			$this -> load -> view($view, $data);
 
 		endif;
+ 
+   
+
+
+		
+		// $data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v" : "shared_files/report_templates/side_bar_v";
+		// $data['report_view'] = "subcounty/ajax/facility_roll_out_at_a_glance_v";
+		// $data['content_view'] = "facility/facility_reports/reports_v";
+		// $view = 'shared_files/template/template';
+		// $data['active_panel'] = (!$this -> session -> userdata('facility_id')) ? "system_usage" : "system_usage";
+		// $this -> load -> view($view, $data);
+
+
+
 
 	}
 
@@ -1134,7 +1235,6 @@ class Reports extends MY_Controller {
 		$targetted_vs_using_hcmp = 0;
 		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
 		//$system_usage = $this->monitoring();
-		//<li><button type='button' class='btn btn-default download'>System Usage Breakdown</button></li>
 
 		$data_ = "
 		<div class='tabbable tabs-left'>
@@ -1142,7 +1242,8 @@ class Reports extends MY_Controller {
         <ul class='nav nav-tabs'>
         <li class='active'><a href='#A' data-toggle='tab'>Roll out Summary</a></li>
         <li ><a href='#B' data-toggle='tab'>Monthly Break Down</a></li>
-        
+        <li><button type='button' class='btn btn-default download'>System Usage Breakdown</button></li>
+
         </ul>
          <div  id='B' class='tab-pane fade'>
 			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" . $district_names . $table_data . $total_facility_list . "<td>$total_facilities_in_county</td></tr>" . $total_targetted_facility_list . $percentage_coverage . "<td>$final_coverage_total %</td></tr>" . $percentage_coverage_using . "</tr>
@@ -2831,7 +2932,10 @@ class Reports extends MY_Controller {
 		}
 
 		$tracer = $report_type = 1;
-		$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id, $county_id, NULL, NULL, $report_type, $tracer);
+		//changed the function. this is the old one
+		//$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id, $county_id, NULL, NULL, $report_type, $tracer);
+		//this is the new one
+		$final_graph_data = facility_stocks_temp::get_county_month_of_stock_default($district_id, $county_id);
 
 		$graph_type = 'bar';
 		$graph_data = array_merge($graph_data, array("graph_id" => 'default_graph_'));
@@ -2859,7 +2963,60 @@ class Reports extends MY_Controller {
 		return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);
 
 	}
+	//for the county and sub county interface.
+	//stock level graphs for tracer items
+	public function county_stock_level_tracer()
+	{
+		//check if the values have been passed correctly
+		$commodity_id = (isset($commodity_id)&& ($commodity_id>0)) ? $commodity_id :null ;
+		$district_id = ($district_id == "NULL") ? null : $district_id;
+		
+		$option = ($option == "NULL") ? null : $option;
+		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
+		
+		$category_data = $series_data = $series_data_ = $graph_data = $data = array();
+		$title = '';
+		
+		$year = date('Y');
+		$month_ = date('M d');
+		//check the session that is set
+		$district = $this -> session -> userdata('district_id');
+		$county_id = $this -> session -> userdata('county_id');
+		
+		$user = $this -> session -> userdata('user_indicator');
+		$graph_data_default = $series_data = $series_data_ = array();
+		if ($user == "district") {
+			$district_name = districts::get_district_name($district) -> toArray();
+			$district_name_ = $district_name[0]['district'];
+			$title .= ' ' . $district_name_ . " Subcounty";
+		} elseif ($user == "county") {
+			$county_name = counties::get_county_name($county_id);
+			$county_name_ = $county_name['county'];
+			$title .= ' ' . $county_name_ . " County ";
+		}
 
+		$tracer = $report_type = 1;
+		
+		$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id, $county_id, NULL, NULL, $report_type, $tracer);
+		
+					
+		foreach ($final_graph_data as $final_graph_data_) :
+				$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'], array($final_graph_data_['commodity_name']));
+				$graph_data['series_data']['Month of Stock'] = array_merge($graph_data['series_data']['Month of Stock'], array((int)$final_graph_data_['total']));
+		endforeach;
+
+		$district_id = (!$this -> session -> userdata('district_id')) ? null : $this -> session -> userdata('district_id');
+		
+		$data['graph_data_default'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
+		$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
+		$data['c_data'] = Commodities::get_all_2();
+		$data['tracer_items'] = Commodities::get_tracer_items();
+		$data['division_commodities'] = commodity_division_details::get_all_divisions();
+		$data['categories'] = commodity_sub_category::get_all_pharm();
+		$data['number_of_tracer_items'] = count(facility_stocks_temp::get_tracer_item_names());
+
+		return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);	
+	}
 	public function facility_stock_level_dashboard() {
 		//facility level reports section - Stock Level
 
@@ -2895,12 +3052,91 @@ class Reports extends MY_Controller {
 	}
 
 	//for the county and subcounty interface
-	//stock levels tab table data tab
+	//stock levels graph option for tracer commodities
 
-	public function get_county_stock_levels($facility_code = null, $sub_county_id = null, $commodity_id = null, $option = null) {
+	public function get_county_stock_levels_tracer($facility_code = null, $district_id = null, $option = null, $report) 
+	{
+		//set the date and time
+		$year = date('Y');
+		$month_ = date('M d');
+		
 		//check if the values have been set from the view
-		//get_stock_levels_county($facility_code = null,$sub_county_id = null,$county_id = null, $commodity_id = null,$option = null)
+		$facility_code = (isset($facility_code)&&($facility_code>0))?$facility_code:null;
+		$district_id = (isset($district_id)&&($district_id != 0))?$district_id : $this -> session -> userdata('district_id');
+		$option = (isset($option)&&($option != "NULL"))?$option:'units';
+		
+		//pick county id from session and set the name
+		$county_id = $this -> session -> userdata('county_id');
+		$county_name_ = counties::get_county_name($county_id);
+		$county_name = $county_name_['county'];
+		
+		//get the district name		
+		$district_data = (isset($district_id) && ($district_id != 0)) ? districts::get_district_name($district_id) -> toArray() : null;
+		$district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " subcounty" : null;
+		//getting the facility name
+		$facility_code_ = (isset($facility_code)&&($facility_code>0)) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
+		$facility_name = $facility_code_[0]['facility_name'];
+		
+		//getting the stock level data from the database
+		$stock_level = Facility_stocks::get_county_stock_level_tracer($county_id,$district_id,$facility_code,$option);
+		//echo "<pre>";print_r($stock_level);exit;
+		//title for the graph or table
+		$title = '';
+		if(isset($facility_code) && isset($district_id)):
+			$title = "$facility_name $district_name_ $county_name County";
+		elseif(isset($district_id) && !isset($facility_code)):
+			$title = "$district_name_ $county_name County";
+		else:
+			$title = "$county_name County";
+		endif;
+			
+		//set the arrays
+		$category_data = $series_data = $series_data_ = $graph_data = $data = array();
+		
+		//loop through the data
+		foreach ($stock_level as $data):
+			//for graph
+			$series_data = array_merge($series_data, array((int)$data['total']));
+			$series_data_ = array_merge($series_data_, array( array($data['district'], $data["facility_name"], $data["facility_code"], $data["commodity_name"], (int)$data['total'])));
+			$category_data = array_merge($category_data, array($data["commodity_name"]));
+			
+			$category_data = array_merge($category_data, array($data["commodity_name"]));
+			
+		endforeach;
+		/*if($report = "excel"):
+		
+		elseif($report=="table_data"):
+			
+			$graph_data = array_merge($graph_data, array("table_id" => 'dem_graph_'));
+			$graph_data = array_merge($graph_data, array("table_header" => $category_data));
+			$graph_data = array_merge($graph_data, array("table_body" => $series_data));
 
+			$data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);
+			$data['table_id'] = "dem_graph_";
+
+			return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
+		
+		else:*/
+			//build the graph here
+			$graph_type = 'bar';
+			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
+			$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level for $title as at $month_ $year"));
+			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
+			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Commodity Stock level in $option"));
+			$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
+			$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
+			
+			//echo "<pre>";print_r($graph_data);exit;
+			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
+			return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
+	//	endif;
+		
+		
+		
+		
+
+		
+		
 	}
 
 	public function get_county_stock_level_new($commodity_id = null, $category_id = null, $district_id = null, $facility_code = null, $option = null, $report_type = null, $tracer = null) {
@@ -3211,7 +3447,7 @@ class Reports extends MY_Controller {
 			$axis ="Packs";
 			break;
 			default:
-			$axis ="Ksh";
+			$axis ="packs";
 			break;
  endswitch;		
 		$commodity_id = ($commodity_id == "NULL") ? null : $commodity_id;
@@ -3429,19 +3665,23 @@ class Reports extends MY_Controller {
 
 		//get the monitoring data from the log tables
 		$facility_data = Facilities::facility_monitoring($county_id, $district_id, $facility_code);
+		//echo $facility_data;die();
 
-		//echo "<pre>";print_r($facility_data);exit;
+		// echo "<pre>";print_r($facility_data);exit;
 		$row_data = array();
 
 		foreach ($facility_data as $facility) {
 
 			$date = (strtotime($facility['last_seen'])) ? date('j M, Y', strtotime($facility['last_seen'])) : "N/A";
-			array_push($row_data, array($facility['fname'], $facility['lname'], $date, $facility['days_last_seen'], date('j M, Y', strtotime($facility['last_issued'])), $facility['days_last_issued'], $facility['district'], $facility['facility_name'], $facility['facility_code']));
+			//array_push($row_data, array($facility['fname'], $facility['lname'], $date, $facility['days_last_seen'], date('j M, Y', strtotime($facility['last_issued'])), $facility['days_last_issued'], $facility['district'], $facility['facility_name'], $facility['facility_code']));
+			array_push($row_data, array($facility['Facility Name'], $facility['Facility Code'], $facility['County'], $facility['Sub County'], date('j M, Y', strtotime($facility['Date Last Issued'])), $facility['Days from last issue'], 
+				date('j M, Y', strtotime($facility['Date Last Seen'])), $facility['Days From Last Seen']));
 		}
 
 		$excel_data = array();
-		$excel_data = array('doc_creator' => 'HCMP ', 'doc_title' => 'system usage breakdown ', 'file_name' => 'system usage breakdown');
-		$column_data = array("First Name", "Last Name", "date last seen", "# of days", "date last issued", "# of days", "Sub County", "facility name", "mfl");
+		$excel_data = array('doc_creator' => 'HCMP ', 'doc_title' => 'System Usage Breakdown ', 'file_name' => 'system usage breakdown');
+	    //$column_data = array("First Name", "Last Name", "date last seen", "# of days", "date last issued", "# of days", "Sub County", "facility name", "mfl");
+		$column_data = array("Facility Name", "Facility Code", "County", "Sub County", "Date Last Issued", "Days From Last Issue", "Date Last Seen", "Days From Last Seen");
 
 		$excel_data['column_data'] = $column_data;
 		$excel_data['row_data'] = $row_data;
@@ -3538,6 +3778,7 @@ class Reports extends MY_Controller {
 	}
 	//Function for commodity redistributions
 	public function county_donation() {
+		//echo $district_id.$county_id;exit;
 		$data['year'] = date('Y');
 		$county_id = $this -> session -> userdata('county_id');
 		$data['district_data'] = districts::getDistrict($county_id);
@@ -3546,7 +3787,9 @@ class Reports extends MY_Controller {
 		$data['report_view'] = "subcounty/reports/county_donation_filter_v";
 
 		if ($this -> input -> is_ajax_request()) :
+			
 			return $this -> load -> view("subcounty/reports/county_donation_filter_v", $data);
+			
 		else :
 			$data['report_view'] = "subcounty/reports/county_donation_filter_v";
 			$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
@@ -3655,7 +3898,7 @@ class Reports extends MY_Controller {
 		$total_expiry = number_format($total_expiry, 2, '.', ',');
 		// array_push($series_data, array("","","Total for the next $year months",$total_expiry,''));
 
-		$category_data = array( array("From", 'To', "Commodity Name", "District From", "District To", "Unit Size", 'Batch No', 'Expiry Date', 'Manufacturer', 'Quantity Sent(units)', 'Quantity Sent(packs)', 'Quantity Received (units)', 'Quantity Received (packs)', 'Date sent', 'Date Received', 'status'));
+		$category_data = array( array("From", 'To', "Commodity Name", "District From", "District To", "Unit Size", 'Batch No', 'Expiry Date', 'Manufacturer', 'Quantity Sent(packs)', 'Quantity Sent(units)', 'Quantity Received (packs)', 'Quantity Received (units)', 'Date sent', 'Date Received', 'status'));
 
 		$graph_data = array_merge($graph_data, array("table_id" => 'dem_graph_1'));
 		$graph_data = array_merge($graph_data, array("table_header" => $category_data));
