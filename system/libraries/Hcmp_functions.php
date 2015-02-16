@@ -10,7 +10,7 @@ class Hcmp_functions extends MY_Controller {
 		parent::__construct();
 		$this -> load -> helper(array('url', 'file', 'download'));
 
-		$this -> load -> library(array('PHPExcel/PHPExcel', 'mpdf/mpdf'));
+		 $this -> load -> library(array('PHPExcel/PHPExcel', 'mpdf/mpdf'));
 
 	}
 
