@@ -1,4 +1,4 @@
-<div class="container" style="width: 96%; margin: auto;">
+  <div class="container" style="width: 96%; margin: auto;">
 <div class="row">
         <?php if($facility_dashboard_notifications['stocks_from_v1']>0): ?>
         <div style="height:auto; margin-bottom: 2px" class="warn message col-md-4" id="">        
@@ -21,7 +21,7 @@
       	<input type="hidden" id="stocklevel" value="<?php echo $facility_dashboard_notifications['facility_stock_count'] ?>" readonly/>
     <?php if($facility_dashboard_notifications['facility_donations_pending']>0): ?>
       	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
-        <h5>Inter Facility Donation</h5> 
+        <h5>Donations</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/pending') ?>"><span class="badge"><?php 
 				echo $facility_dashboard_notifications['facility_donations_pending'];?></span> Items have been donated and are pending receipt</a> 
@@ -30,7 +30,7 @@
 		  <?php endif; //donations_pending?>
 		      <?php if($facility_dashboard_notifications['facility_donations']>0): ?>
       	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
-        <h5>Inter Facility Donation</h5> 
+        <h5>Donations</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/to-me') ?>"><span class="badge"><?php 
 				echo $facility_dashboard_notifications['facility_donations'];?></span> Items have been donated to you</a> 
@@ -130,7 +130,7 @@
         </div>
          <div style="height:auto; margin-bottom: 2px" class="" id="distribute_hide">
          	<a href="<?php echo base_url('issues/index/external'); ?>"><h5>Other Facilities</h5></a>	 
-           <!-- <a href="<?php echo base_url('issues/index/district_store'); ?>"><h5>District Store</h5></a>  --> 
+          <a href="<?php echo base_url('issues/index/district_store'); ?>"><h5>District Store</h5></a>
         
         </div>
           

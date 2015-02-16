@@ -18,6 +18,10 @@
         echo $district_dashboard_notifications['facility_donations'];?></span> Items have been donated to you</a> 
       </p>
        </div>
+     <?php else: ?>
+      <div style="height:auto; margin-bottom: 2px" class="warning message ">   
+      <p><span class="glyphicon glyphicon-info-sign"></span>There have been no donations to you since last visit</p>
+      </div>
             <?php endif; // items_stocked_out_in_facility?>
          <?php if($district_dashboard_notifications['actual_expiries']>0): ?>
         <div style="height:auto; margin-bottom: 2px" class="warning message ">        
@@ -27,6 +31,10 @@
         echo $district_dashboard_notifications['actual_expiries'];?></span>Expired Commodities Awaiting Decommisioning.</a> 
       </p> 
         </div>
+        <?php else: ?>
+      <div style="height:auto; margin-bottom: 2px" class="warning message ">   
+      <p><span class="glyphicon glyphicon-info-sign"></span>There are no Expired Commodities</p>
+      </div>
          <?php endif; // Actual Expiries?>
           <?php if($district_dashboard_notifications['potential_expiries']>0): ?>
          <div style="height:auto; margin-bottom: 2px" class="warning message ">       
@@ -36,6 +44,10 @@
         echo $district_dashboard_notifications['potential_expiries'];?></span>Commodities Expiring in the next 6 months</a> 
       </p>
        </div>
+       <?php else: ?>
+      <div style="height:auto; margin-bottom: 2px" class="warning message ">   
+      <p><span class="glyphicon glyphicon-info-sign"></span>There are no Potential Expiries (6 Month Interval)</p>
+      </div>
       <?php endif; // Potential Expiries?>
       </div>    
     </div>
