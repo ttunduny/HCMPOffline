@@ -168,13 +168,12 @@ class orders extends MY_Controller {
 
 	public function facility_order($source = NULL) {
 		header('Content-Type: text/html; charset=UTF-8');
-		//$this -> load -> library('PHPExcel');
-		//ini_set("max_execution_time", "1000000");
 
+		//pick the facility code from the session as it is set
 		$facility_code = $this -> session -> userdata('facility_id');
 
-		$items = ((isset($source))&&($source = 2))?Facility_Transaction_Table::get_commodities_for_ordering_meds($facility_code):Facility_Transaction_Table::get_commodities_for_ordering($facility_code);;
-		// echo "<pre>";print_r($items);echo "</pre>";exit;
+		$items = ((isset($source)) && ($source = 2)) ? Facility_Transaction_Table::get_commodities_for_ordering_meds($facility_code) : Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
+		
 		if (isset($_FILES['file']) && $_FILES['file']['size'] > 0) {
 			$ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
 			//echo $ext;
@@ -327,11 +326,11 @@ class orders extends MY_Controller {
 		//var_dump($temp);exit;
 		$facility_code = $this -> session -> userdata('facility_id');
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
-		$data['content_view'] =((isset($source))&&($source = 2))? "facility/facility_orders/facility_order_meds": "facility/facility_orders/facility_order_from_kemsa_v";
+		$data['content_view'] = ((isset($source)) && ($source = 2)) ? "facility/facility_orders/facility_order_meds" : "facility/facility_orders/facility_order_from_kemsa_v";
 		$data['title'] = "Facility New Order";
 		$data['banner_text'] = "Facility New Order";
 		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];
-		$data['facility_commodity_list'] = ((isset($source))&&($source = 2))?Commodities::get_meds_commodities_not_in_facility($facility_code):Commodities::get_commodities_not_in_facility($facility_code);
+		$data['facility_commodity_list'] = ((isset($source)) && ($source = 2)) ? Commodities::get_meds_commodities_not_in_facility($facility_code) : Commodities::get_commodities_not_in_facility($facility_code);
 
 		$this -> load -> view('shared_files/template/template', $data);
 	}
@@ -344,7 +343,7 @@ class orders extends MY_Controller {
 			$data['order_details'] = $data['facility_order'] = $more_data['row_data'];
 
 			$facility_data = Facilities::get_facility_name($more_data['facility_code']) -> toArray();
-			$facility_code=$facility_data[0]['facility_code'];
+			$facility_code = $facility_data[0]['facility_code'];
 			if (count($facility_data) == 0) {
 				$this -> session -> set_flashdata('system_error_message', "Kindly upload a file with correct facility MFL code ");
 				redirect("reports/order_listing/subcounty");
@@ -578,6 +577,7 @@ class orders extends MY_Controller {
 	public function update_facility_new_order() {
 		//security check
 		if ($this -> input -> post('commodity_id')) :
+			//just picks values from the view and assigns them to a variable
 			$this -> load -> database();
 			$data_array = array();
 			$rejected = $this -> input -> post('rejected');
@@ -614,55 +614,56 @@ class orders extends MY_Controller {
 			$subject = $file_name = $title = $info = $attach_file = null;
 			for ($i = 0; $i < $number_of_id; $i++) {
 
-				$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("INSERT INTO facility_order_details (  `id`,
-			`order_number_id`,
-			`commodity_id`,
-			`quantity_ordered_pack`,
-			`quantity_ordered_unit`,
-			`price`,
-			`o_balance`,
-			`t_receipts`,
-			`t_issues`,
-			`adjustpve`,
-			`losses`,
-			`days`,
-			`comment`,
-			`c_stock`,
-			`amc`,
-			`adjustnve`)
-			VALUES ($facility_order_details_id[$i],
-			$order_id,
-			$commodity_id[$i],
-			$quantity_ordered_pack[$i],
-			$quantity_ordered_unit[$i],
-			$price[$i],
-			$o_balance[$i],
-			$t_receipts[$i],
-			$t_issues[$i],
-			$adjustpve[$i],
-			$losses[$i],
-			$days[$i],
-			'$comment[$i]',
-			$c_stock[$i],
-			$amc[$i],
-			$adjustnve[$i]
-			)
-			ON DUPLICATE KEY UPDATE
-			`commodity_id`=$commodity_id[$i],
-			`quantity_ordered_pack`=$quantity_ordered_pack[$i],
-			`quantity_ordered_unit`=$quantity_ordered_unit[$i],
-			`price`=$price[$i],
-			`o_balance`=$o_balance[$i],
-			`t_receipts`=$t_receipts[$i],
-			`t_issues`=$t_issues[$i],
-			`adjustpve`=$adjustpve[$i],
-			`adjustnve`=$adjustnve[$i],
-			`losses`=$losses[$i],
-			`days`=$days[$i],
-			`c_stock`=$c_stock[$i],
-			`comment`='$comment[$i]',
-			`amc`=$amc[$i],
-			`order_number_id`=$order_id;");
+				$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() 
+				-> execute("INSERT INTO facility_order_details (  `id`,
+					`order_number_id`,
+					`commodity_id`,
+					`quantity_ordered_pack`,
+					`quantity_ordered_unit`,
+					`price`,
+					`o_balance`,
+					`t_receipts`,
+					`t_issues`,
+					`adjustpve`,
+					`losses`,
+					`days`,
+					`comment`,
+					`c_stock`,
+					`amc`,
+					`adjustnve`)
+					VALUES ($facility_order_details_id[$i],
+					$order_id,
+					$commodity_id[$i],
+					$quantity_ordered_pack[$i],
+					$quantity_ordered_unit[$i],
+					$price[$i],
+					$o_balance[$i],
+					$t_receipts[$i],
+					$t_issues[$i],
+					$adjustpve[$i],
+					$losses[$i],
+					$days[$i],
+					'$comment[$i]',
+					$c_stock[$i],
+					$amc[$i],
+					$adjustnve[$i]
+					)
+					ON DUPLICATE KEY UPDATE
+					`commodity_id`=$commodity_id[$i],
+					`quantity_ordered_pack`=$quantity_ordered_pack[$i],
+					`quantity_ordered_unit`=$quantity_ordered_unit[$i],
+					`price`=$price[$i],
+					`o_balance`=$o_balance[$i],
+					`t_receipts`=$t_receipts[$i],
+					`t_issues`=$t_issues[$i],
+					`adjustpve`=$adjustpve[$i],
+					`adjustnve`=$adjustnve[$i],
+					`losses`=$losses[$i],
+					`days`=$days[$i],
+					`c_stock`=$c_stock[$i],
+					`comment`='$comment[$i]',
+					`amc`=$amc[$i],
+					`order_number_id`=$order_id;");
 
 			}//insert the data here
 
