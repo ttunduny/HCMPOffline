@@ -271,30 +271,7 @@ class Facilities extends Doctrine_Record {
 		switch ($type) {
 			case 'facility':
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-               SELECT 
-				              
-				    f.facility_name as 'Facility Name',
-				    f.facility_code as 'Facility Code',
-                    
-                    
-				    IFNULL(DATEDIFF(NOW(), MAX(fo.order_date)),0) as 'Days From Last Order'
-				
-
-				FROM
-				    facility_orders fo,
-                    facilities f,
-					counties c
-				 
-                
-			     
-				
-				WHERE
-                        fo.facility_code = f.facility_code
-                        
-				        
-				        AND f.facility_code = $facility_code
-
-				GROUP BY f.facility_name;
+               CALL facility_orders('facility','".$facility_code."');
              
 			");
 			//return the monitoring data
@@ -303,26 +280,7 @@ class Facilities extends Doctrine_Record {
 		
 			case 'district':
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				SELECT 
-				              
-				    f.facility_name as 'Facility Name',
-				    f.facility_code as 'Facility Code',
-                    c.county as 'County',
-                    d.district as 'Sub-County',
-                    
-				    IFNULL(DATEDIFF(NOW(), MAX(fo.order_date)),0) as 'Days From Last Order'
-
-				FROM
-				    
-				    facility_orders fo,
-                    facilities f
-                 JOIN districts d ON d.id = f.district
-				 JOIN counties c ON c.id = d.county
-                    
-				WHERE
-						fo.facility_code = f.facility_code
-				        AND d.id= $district_id
-				GROUP BY f.facility_name;
+				CALL facility_orders('district','".$district_id."');
 
 			");
 			//return the monitoring data
@@ -330,30 +288,7 @@ class Facilities extends Doctrine_Record {
 		
 			case 'county':
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-		   SELECT 
-				              
-				    f.facility_name as 'Facility Name',
-				    f.facility_code as 'Facility Code',
-                    c.county as 'County',
-                    
-				    IFNULL(DATEDIFF(NOW(), MAX(fo.order_date)),0) as 'Days From Last Order'
-				
-
-				FROM
-				    facility_orders fo,
-                    facilities f,
-					counties c
-				 
-                
-			     
-				
-				WHERE
-                        fo.facility_code = f.facility_code
-                        
-				        
-				        AND c.id = $county_id
-
-				GROUP BY f.facility_name;
+		   CALL facility_orders('county','".$county_id."');
               
               ");
 			break;
@@ -369,28 +304,7 @@ class Facilities extends Doctrine_Record {
 		switch ($type) {
 			case 'facility':
 				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-             SELECT 
-				              
-				    f.facility_name as 'Facility Name',
-				    f.facility_code as 'Facility Code',
-                    
-				    IFNULL(DATEDIFF(NOW(), MAX(fi.created_at)),0) as 'Days from last issue'
-				
-
-				FROM
-				    facility_issues fi,
-                    facilities f
-                 JOIN districts d ON d.id = f.district
-				 JOIN counties c ON c.id = d.county
-                
-			     
-				
-				WHERE
-                        fi.facility_code = f.facility_code
-                        
-				        
-				         AND f.facility_code = $facility_code
-				GROUP BY f.facility_name;
+             CALL facility_issues('facility','".$facility_code."');
             
              
 			");
@@ -400,56 +314,14 @@ class Facilities extends Doctrine_Record {
 
 			case 'county':
 				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-		    SELECT 
-				              
-				    f.facility_name as 'Facility Name',
-				    f.facility_code as 'Facility Code',
-                    c.county as 'County',
-                    d.district as 'Sub-County',
-				    IFNULL(DATEDIFF(NOW(), MAX(fi.created_at)),0) as 'Days from last issue'
-				
-
-				FROM
-				    facility_issues fi,
-                    facilities f
-                 JOIN districts d ON d.id = f.district
-				 JOIN counties c ON c.id = d.county
-                
-			     
-				
-				WHERE
-                        fi.facility_code = f.facility_code
-                        
-				        
-				        AND c.id = $county_id
-				GROUP BY f.facility_name;
+		    CALL facility_issues('county','".$county_id."');
               
               ");
 		//return the monitoring data
 			break;	
 			case 'district':
 				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				SELECT 
-				              
-				    f.facility_name as 'Facility Name',
-				    f.facility_code as 'Facility Code',
-                    c.county as 'County',
-                    d.district as 'Sub-County',
-                    
-				    IFNULL(DATEDIFF(NOW(), MAX(fi.`created_at`)),0) as 'Days from last issue'
-
-				FROM
-				    
-				    facility_issues fi,
-                    facilities f
-                 JOIN districts d ON d.id = f.district
-				 JOIN counties c ON c.id = d.county
-				 JOIN facility_orders fo ON fo.facility_code = f.facility_code
-                    
-				WHERE
-						fi.facility_code = f.facility_code
-				        AND d.id= $district_id
-				GROUP BY f.facility_name;
+				CALL facility_issues('district','".$district_id."');
 			");
 			//return the monitoring data
 			break;
@@ -472,25 +344,7 @@ class Facilities extends Doctrine_Record {
 		switch ($type) {
 			case 'facility':
 				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-              SELECT 
-				    f.facility_name as 'Facility Name',
-				    f.facility_code as 'Facility Code',
-				    IFNULL(DATEDIFF(NOW(), MAX(l.end_time_of_event)),0) as 'Days From Last Seen'
-					 
-				FROM
-				    user u,
-                    log l,
-                    facilities f
-                 JOIN districts d ON d.id = f.district
-				 JOIN counties c ON c.id = d.county
-			 
-                 
-				WHERE
-				        l.user_id = u.id AND
-                        u.facility = f.facility_code
-				        AND f.facility_code = $facility_code
-
-				        GROUP BY f.facility_name;
+              CALL facility_loggins('facility','".$facility_code."');
             
              
 			");
@@ -500,58 +354,14 @@ class Facilities extends Doctrine_Record {
 
 			case 'county':
 				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-		    SELECT 
-				              
-				    f.facility_name as 'Facility Name',
-				    f.facility_code as 'Facility Code',
-                    c.county as 'County',
-                    
-				    IFNULL(DATEDIFF(NOW(), MAX(l.end_time_of_event)),0) as 'Days From Last Seen'
-				
-
-				FROM
-					user u,
-				    log l,
-                    facilities f
-                 JOIN districts d ON d.id = f.district
-				 JOIN counties c ON c.id = d.county
-                
-			     
-				
-				WHERE
-                        l.user_id = u.id AND
-                        u.facility = f.facility_code
-
-				        AND c.id = $county_id
-				GROUP BY f.facility_name;
+		    CALL facility_loggins('county','".$county_id."');
               
               ");
 		//return the monitoring data
 			break;	
 			case 'district':
 				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				SELECT 
-				              
-				    f.facility_name as 'Facility Name',
-				    f.facility_code as 'Facility Code',
-                    c.county as 'County',
-                    d.district as 'Sub-County',
-                    
-				    IFNULL(DATEDIFF(NOW(), MAX(l.end_time_of_event)),0) as 'Days From Last Seen'
-
-				FROM
-				    user u,
-                    log l,
-                    facilities f
-                 JOIN districts d ON d.id = f.district
-				 JOIN counties c ON c.id = d.county
-				 
-                    
-				WHERE
-						l.user_id = u.id AND
-                        u.facility = f.facility_code
-				        AND d.id= $district_id
-				GROUP BY f.facility_name;
+				CALL facility_loggins('district','".$district_id."');
 			");
 			//return the monitoring data
 			break;
