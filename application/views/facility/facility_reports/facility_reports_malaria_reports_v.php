@@ -25,7 +25,7 @@
 	<!-- <div  style="margin:5px 0;">
 		<p class="label label-info">Enter appropriate values in all fields as indicated: </p>
 	</div> -->
-
+	
 	<table width="98%" border="0" class="table-condensed row-fluid table table-hover table-bordered table-update"  id="example">
 		<tr>
 		<div class="input-group">
@@ -69,7 +69,7 @@
 		    <th>Adjustments(+ve) (Units)</th>
 		    <th>Losses (Units)</th>
 		    <th>No days out of stock</th>
-		    <th>Closing Stock</th>					    
+		    <th>Closing Stock(Units)</th>					    
 		</tr>
 	</thead>
 	<tbody><?php
@@ -140,16 +140,27 @@
 <script>
 $(document).ready(function() {	
 	//datatables settings 
-	$('#example2').dataTable( {
-		 //"sDom": "T<'clear'>lfrtip",
-	     "sScrollY": "377px",
+	$('#example2').dataTable( {"sDom": "T lfrtip",
+	     "sScrollY": "310px",
 	     "sScrollX": "100%",
                     "sPaginationType": "bootstrap",
                     "oLanguage": {
                         "sLengthMenu": "_MENU_ Records per page",
                         "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
                     },
-			     
+			      "oTableTools": {
+                 "aButtons": [
+				"copy",
+				"print",
+				{
+					"sExtends":    "collection",
+					"sButtonText": 'Save',
+					"aButtons":    [ "csv", "xls", "pdf" ]
+				}
+			],
+
+			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+		}
 	} );
 
 	$('#example2 input').addClass('form-control');

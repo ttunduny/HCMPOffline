@@ -382,7 +382,7 @@ public static function get_all_facilities_in_county($county_id){
 SELECT DISTINCT( f.facility_code ) as facilities
 FROM facilities f, districts d
 WHERE f.`district` = d.id
-AND d.id =  '$county_id'
+AND d.county =  '$county_id'
 ");
 return $q;
 }
@@ -555,13 +555,19 @@ return $q;
 	//Used by facility_mapping function reports controller
 	//Used to get the months facilities went online
 	//Limits to the last 3 months of activation
-	public static function get_dates_facility_went_online($county_id, $district_id = null)
+	
+	public static function get_dates_facility_went_online($county_id, $district_id = null, $year)
 	{
-		$addition = (isset($district_id)&& ($district_id>0)) ?"AND f.district = $district_id" : null;
 		
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		$addition = (isset($district_id)&& ($district_id>0)) ?"AND f.district = $district_id" : null;
+		$data = array();
+		$years = array('2015', '2014', '2013');
+		
+		foreach ($years as $year ) {
+			$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		SELECT DISTINCT
-		    DATE_FORMAT(`date_of_activation`, '%M %Y') AS date_when_facility_went_online
+		    DATE_FORMAT(`date_of_activation`, '%M %Y') AS date_when_facility_went_online,
+		    YEAR(`date_of_activation`) 
 		FROM
 		    facilities f,
 		    districts d
@@ -570,11 +576,22 @@ return $q;
 		        AND d.county = $county_id
 		        $addition
 		        AND UNIX_TIMESTAMP(`date_of_activation`) > 0
+		        AND YEAR(`date_of_activation`) = $year
 		ORDER BY `date_of_activation` desc
 		");
-		return $q;
+		
+		$data[$year]=$q;
+		}
+		
+		
+		return $data;
 			
 	}
+	
+	//used by facility mapping function
+	//used to get the distinct years facilities went online
+	
+	
 	//used when building data for the facilities that went online in a particular district in a particular county
 	public static function get_facilities_which_went_online_($district_id = null, $date_of_activation)
 	{

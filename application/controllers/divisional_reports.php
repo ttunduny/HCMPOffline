@@ -34,7 +34,9 @@ class Divisional_Reports extends MY_Controller
 				$facility_details = Facilities::get_facility_name2($facility_id);
 				$facility_mfl = $facility_id;
 				$facility_name = $facility_details['facility_name'];
-				$malaria_report_data = '<tr><td>'.$facility_name.'</td><td>'.$facility_mfl.'</td><td>HCMP</td><td><a href = "'.base_url().'divisional_reports/malaria_report" class = "btn btn-primary btn-sm">View Malaria Report</a></td></tr>';																																																																																																																																																																																					
+
+				// $malaria_report_data = '<tr><td>'.$facility_name.'</td><td>'.$facility_mfl.'</td><td>HCMP</td><td><a href = "'.base_url().'divisional_reports/malaria_report" class = "btn btn-primary btn-sm">View Malaria Report</a></td></tr>';
+
 						
 				if ((!empty($report_RH))&&(!empty($report_malaria))&&(!empty($report_TB)))
 				{
@@ -45,7 +47,7 @@ class Divisional_Reports extends MY_Controller
 				}else{
 					
 				}
-					
+				$data['mal_report_data'] = $this->createmalariareport($facility_mfl);
 				$data['page_header'] = "Program Reports";	
 				$data['malaria'] = $report_malaria_report;
 				$data['RH'] = $report_RH_report;
@@ -83,7 +85,7 @@ class Divisional_Reports extends MY_Controller
 					
 					$index++;
 				}
-			
+				$data['mal_report_data'] = $malaria_report_data;
 				$data['page_header'] = "Program Reports";
 				$data['title'] = "District Program Reports";
 				$data['banner_text'] = "District Program Reports";
@@ -117,6 +119,7 @@ class Divisional_Reports extends MY_Controller
 				
 				$index++;
 			 }
+			 $data['mal_report_data'] = $malaria_report_data;
 			 $data['page_header'] = "Program Reports";	
 			 $data['title'] = "County Program Reports";
 			 $data['banner_text'] = " County Program Reports";
@@ -124,7 +127,7 @@ class Divisional_Reports extends MY_Controller
 			 
 		 break;
 		}
-		$data['mal_report_data'] = $malaria_report_data;
+		
  		$data['malaria'] = $report_malaria_report;
 		$data['RH'] = $report_RH_report;
 		$data['TB'] = $report_tuberculosis_report;
@@ -183,43 +186,12 @@ class Divisional_Reports extends MY_Controller
 		$malaria_name =  Malaria_Drugs::getName();
 		$malaria_array = array();
 		$counter = 0;
-
-		$items = Facility_Transaction_Table::get_commodities_for_ordering_report($facility, 4);
-		if ($items) {
-			foreach ($items as $key => $value) {
-				$coloring = '';
-				$negative = '';
-				if($value['adjustmentnve'] < 0)
-				{
-					$coloring = 'style = "color: red"';
-					$number = explode('-', $value['adjustmentnve']);
-					$negative = $number[1];
-				}
-				else
-				{
-					$negative = $value['adjustmentnve'];
-				}
-				$malariatable .= '<tr>';
-				$malariatable .= '<td>'.$value['commodity_name'].'</td>';
-				$malariatable .= '<td>'.$value['unit_size'].'</td>';
-				$malariatable .= '<td>'.$value['unit_cost'].'</td>';
-				$malariatable .= '<td>'.$value['opening_balance'].'</td>';
-				$malariatable .= '<td>'.$value['total_receipts'].'</td>';
-				$malariatable .= '<td>'.$value['total_issues'].'</td>';
-				$malariatable .= '<td '.$coloring.'>'.$negative.'</td>';
-				$malariatable .= '<td>'.$value['adjustmentpve'].'</td>';
-				$malariatable .= '<td>'.$value['losses'].'</td>';
-				$malariatable .= '<td>'.$value['days_out_of_stock'].'</td>';
-				$malariatable .= '<td>'.$value['closing_stock'].'</td>';
-				$malariatable .= '</tr>';
-			}
-		}
 		$user_id = $this -> session -> userdata('user_id');
 		$user_names = Users::get_user_names($user_id);
 		$data['user_data'] = Malaria_Data::getall($user_id);
 		$data['user_names'] = ($user_names[0]['fname']." ".$user_names[0]['lname']);
 
-		$data['malaria_data'] = $malariatable;
+		$data['malaria_data'] = $this->createmalariareport($facility);
 		$data['drug_rows'] = Malaria_Drugs::getName();
 		
 		
@@ -778,9 +750,41 @@ $this->db->insert('tuberculosis_report_info',$data_);
 		
 	 }
 
-	 public function checkfordata()
-	 {
-	 	
-	 }
+	public function createmalariareport($facility)
+	{
+		$malariatable = '';
+		$items = Facility_Transaction_Table::get_commodities_for_ordering_report($facility, 4);
+		if ($items) {
+			foreach ($items as $key => $value) {
+				$coloring = '';
+				$negative = '';
+				if($value['adjustmentnve'] < 0)
+				{
+					$coloring = 'style = "color: red"';
+					$number = explode('-', $value['adjustmentnve']);
+					$negative = $number[1];
+				}
+				else
+				{
+					$negative = $value['adjustmentnve'];
+				}
+				$malariatable .= '<tr>';
+				$malariatable .= '<td>'.$value['commodity_name'].'</td>';
+				$malariatable .= '<td>'.$value['unit_size'].'</td>';
+				$malariatable .= '<td>'.$value['unit_cost'].'</td>';
+				$malariatable .= '<td>'.$value['opening_balance'].'</td>';
+				$malariatable .= '<td>'.$value['total_receipts'].'</td>';
+				$malariatable .= '<td>'.$value['total_issues'].'</td>';
+				$malariatable .= '<td '.$coloring.'>'.$negative.'</td>';
+				$malariatable .= '<td>'.$value['adjustmentpve'].'</td>';
+				$malariatable .= '<td>'.$value['losses'].'</td>';
+				$malariatable .= '<td>'.$value['days_out_of_stock'].'</td>';
+				$malariatable .= '<td>'.$value['closing_stock'].'</td>';
+				$malariatable .= '</tr>';
+			}
+		}
+
+		return $malariatable;
+	}
 	
 }
