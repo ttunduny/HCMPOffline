@@ -68,7 +68,8 @@ class User extends MY_Controller {
             $district_name = districts::get_district_name_($district_id);
 			$county_name = Counties::get_county_name($county_id);
             $banner_name = $county_name['county']." County".", ".$district_name['district']." Sub-county ";
-            elseif ($user_indicator  == 'county') :            
+            elseif ($user_indicator  == 'county') : 
+				           
             //get county name
             $county_name = Counties::get_county_name($county_id);
             $banner_name = $county_name['county']." County";
