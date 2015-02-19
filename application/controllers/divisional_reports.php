@@ -72,7 +72,7 @@ class Divisional_Reports extends MY_Controller
 					$facility_details = Facilities::get_facility_name2($facility_id);
 					$facility_mfl = $facility_id;
 					$facility_name = $facility_details['facility_name'];
-					$malaria_report_data .= '<tr><td>'.$facility_name.'</td><td>'.$facility_mfl.'</td><td>HCMP</td><td><a class = "btn btn-primary btn-sm" href = "'.base_url().'divisional_reports/malaria_report/'.$facility_mfl.'">View Malaria Report</a></td></tr>';
+					$malaria_report_data .= '<option value = "'.$facility_mfl.'">'.$facility_name.'</option>';
 					if ((!empty($report_RH))&&(!empty($report_malaria)))
 					{
 						$report_RH_report[$index] = $report_RH;
@@ -106,7 +106,7 @@ class Divisional_Reports extends MY_Controller
 				$facility_details = Facilities::get_facility_name2($facility_id);
 				$facility_mfl = $facility_id;
 				$facility_name = $facility_details['facility_name'];
-				$malaria_report_data .= '<tr><td>'.$facility_name.'</td><td>'.$facility_mfl.'</td><td>HCMP</td><td><a class = "btn btn-primary btn-sm" href = "'.base_url().'divisional_reports/malaria_report/'.$facility_mfl.'"><i class = "glyphicon glyphicon-eye"></i> View Malaria Report</a></td></tr>';
+				$malaria_report_data .= '<option value = "'.$facility_mfl.'">'.$facility_name.'</option>';
 				if ((!empty($report_RH))&&(!empty($report_malaria)))
 				{
 					$report_RH_report[$index] = $report_RH;
@@ -200,12 +200,12 @@ class Divisional_Reports extends MY_Controller
 		$data['facility_name'] = ($facility_info['facility_name']);
 
 		$data['title'] = "Malaria Report";
-		$data['banner_text'] = "Facility Malaria Commodities Order";
-		$data['content_view'] = "facility/facility_reports/facility_reports_malaria_reports_v";
-		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		// $data['banner_text'] = "Facility Malaria Commodities Order";
+		$content_view = "facility/facility_reports/facility_reports_malaria_reports_v";
+		// $data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		
-		$view = 'shared_files/template/template';
-		$this -> load -> view($view, $data);
+		// $view = 'shared_files/template/template';
+		echo $this -> load -> view($content_view, $data);
 	}
 	
 	//for loading the TB report
