@@ -33,13 +33,13 @@
 	<div class="page_content">
 		
 		<div class="container-fluid">
-				<div class="col-md-1" style="padding-left: 0; float:right; right:0;clear:both;">
+			
+			<div class="row">
+				<div class="col-md-1" style="padding-left: 0; float:right; right:0;clear:both;  margin-bottom:5px;">
 					<button class="btn btn-primary add" data-toggle="modal" data-target="#addModal" id="add_new">
 						<span class="glyphicon glyphicon-plus"></span>Add User
 					</button>
 				</div> 
-			
-			<div class="row">
 
 				<div class="col-md-13 dt" style="border: 1px solid #ddd;padding-top: 1%; " id="test">
 

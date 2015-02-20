@@ -25,6 +25,7 @@
 						$x[] = $key['count'];
 					}
 					?>
+					<!--
 					<div class="col-md-3">
 						<div class="panel panel-default">
 							<div class="panel-body" id="active">
@@ -45,7 +46,7 @@
 							</div>
 						</div>
 					</div>
-
+					-->
 					<div class="col-md-3">
 						
 					</div>
@@ -55,12 +56,12 @@
 			
 			<div class="row">
 
-				<div class="col-md-2" style="padding-left: 0;">
+				<div class="col-md-1" style="padding-left: 0; right:0; float:right; margin-bottom:5px;">
 					<button class="btn btn-primary add" data-toggle="modal" data-target="#addModal" id="add_new">
 						<span class="glyphicon glyphicon-plus"></span>Add User
 					</button>
 				</div>
-				<div class="col-md-10 dt" style="border: 1px solid #ddd;padding-top: 1%; " id="test">
+				<div class="col-md-12 dt" style="border: 1px solid #ddd;padding-top: 1%; " id="test">
 
 					<table  class="table table-hover table-bordered table-update" id="datatable"  >
 						<thead style="background-color: white">
@@ -72,7 +73,7 @@
 								<th>Sub-County</th>
 								<th>Health Facility</th>
 								<th>User Type</th>
-								<th>Status</th>
+								<th>Status (Checked means Active)</th>
 								<th>Action</th>
 
 							</tr>
@@ -91,18 +92,12 @@
 								<td class="district" data-attr="<?php echo $list['district_id']; ?>"><?php echo $list['district']; ?></td>
 								<td class="facility_name" data-attr="<?php echo $list['facility_code']; ?>"><?php echo $list['facility_name']; ?></td>
 								<td class="level" data-attr="<?php echo $list['level_id']; ?>"><?php echo $list['level']; ?></td>
-								<td >
-								<?php
-									if ($list['status']==1) {
-								?>
-								<div class="status_item color_d" data-attr="true">
-									<span>Active</span>
-								</div>
+								<td style="width:20px;" >
+								<?php if ($list['status']==1) {?>
+								<input type="checkbox" name="status-checkbox" id="status_switch_change" data-attr="<?php echo $list['user_id']; ?>" class="small-status-switch" checked = "checked" style="border-radius:0px!important;">
 								<?php }else{ ?>
-
-								<div class=" status_item color_g" data-attr="false">
-									<span>Deactivated</span>
-								</div> <?php } ?> </td>
+								<input type="checkbox" name="status-checkbox" id="status_switch_change" data-attr="<?php echo $list['user_id']; ?>" class="small-status-switch" style="border-radius:0px!important;">
+								<?php } ?> 
 								<td>
 								<button class="btn btn-primary btn-xs edit " data-toggle="modal" data-target="#myModal" id="<?php echo $list['user_id']; ?>" data-target="#">
 									<span class="glyphicon glyphicon-edit"></span>Edit
@@ -870,9 +865,78 @@ $("#create_new").click(function() {
 				
 				oTable.fnFilter('deactivated');
 			})
+	
 			
-			
-			
+	$('input[name="status-checkbox"]').change(function(e){
+		// e.prevenDefault();
+      value = $(this).attr('checked');//member id
+      user_id = $(this).attr("data-attr");//member id
+      if ($(this).prop('checked') == false){
+        // alert($(this).prop("checked"));
+        // console.log(user_id);
+        change_status(user_id,0,"unchecked");
+        // $('input[name="status-checkbox"]').prop('checked', false);
+      
+      } else{
+        // alert("checked");
+        // console.log(user_id);
+        // alert($(this).prop("checked"));
+        change_status(user_id,1,"checked");
+        // $('input[name="status-checkbox"]').prop('checked', true);
+      };
+      
+      console.log(value);
+   });
+
+    function change_status(user_id,stati,checked){//seth
+      // alert(checked);return;
+      message = "";
+      if (stati == 0) {
+        message_after = "User has been Deactivated";
+      }else{
+        message_after = "User has been Activated";
+
+      };
+      var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";
+      // alert(stati);
+
+      $.ajax({
+          type:"POST",
+          data:{
+            'user_id': user_id,
+            'status': stati
+        },
+
+          url:"<?php echo base_url()."admin/change_status";?>",
+
+          beforeSend: function() {
+            //$(div).html("");
+            // alert($('#email_recieve_edit').prop('checked'));return;
+            var answer = confirm("Are you sure you want to proceed?");
+            if (answer){
+                $('.modal-body').html("<img style='margin:30% 0 20% 42%;' src="+loading_icon+">");
+            } else {
+            	message_denial = "No action has been taken";
+            	alertify.set({ delay: 10000 });
+             	alertify.success(message_denial, null);
+            	if (checked == "checked") {
+            		// alert("im checked");
+            		$('input[data-attr="'+user_id+'"]').prop('checked' ,false);
+            	}else{
+            		// alert("im unchecked");
+            		$('input[data-attr="'+user_id+'"]').prop('checked' ,true);
+
+
+            	};
+                return false;
+            }},
+            success: function(msg){
+              alertify.set({ delay: 10000 });
+              alertify.success(message_after, null);
+            }
+
+        });
+    }//end of change status function
 			
 			});
     </script>

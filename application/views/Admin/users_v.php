@@ -627,27 +627,29 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
         }); 
 }
 
-    $('input[name="status-checkbox"]').change(function(){
+    $('input[name="status-checkbox"]').change(function(e){
+    // e.prevenDefault();
       value = $(this).attr('checked');//member id
       user_id = $(this).attr("data-attr");//member id
       if ($(this).prop('checked') == false){
-        // alert("unchecked");
+        // alert($(this).prop("checked"));
         // console.log(user_id);
-        change_status(user_id,0);
+        change_status(user_id,0,"unchecked");
         // $('input[name="status-checkbox"]').prop('checked', false);
       
       } else{
         // alert("checked");
         // console.log(user_id);
-        change_status(user_id,1);
+        // alert($(this).prop("checked"));
+        change_status(user_id,1,"checked");
         // $('input[name="status-checkbox"]').prop('checked', true);
       };
       
       console.log(value);
    });
 
-    function change_status(user_id,stati){
-      // alert(member_id);return;
+    function change_status(user_id,stati,checked){//seth
+      // alert(checked);return;
       message = "";
       if (stati == 0) {
         message_after = "User has been Deactivated";
@@ -674,6 +676,18 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
             if (answer){
                 $('.modal-body').html("<img style='margin:30% 0 20% 42%;' src="+loading_icon+">");
             } else {
+              message_denial = "No action has been taken";
+              alertify.set({ delay: 5000 });
+              alertify.success(message_denial, null);
+              if (checked == "checked") {
+                // alert("im checked");
+                $('input[data-attr="'+user_id+'"]').prop('checked' ,false);
+              }else{
+                // alert("im unchecked");
+                $('input[data-attr="'+user_id+'"]').prop('checked' ,true);
+
+
+              };
                 return false;
             }},
             success: function(msg){
@@ -682,7 +696,7 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
             }
 
         });
-    }
+    }//end of change status function
 	});//end of script...i think
 	
 	
