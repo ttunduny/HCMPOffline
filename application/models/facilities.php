@@ -242,21 +242,21 @@ class Facilities extends Doctrine_Record {
 	{
 		if(isset($facility_code)&&($facility_code>0)):
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				CALL facility_monitoring('facility','".$facility_code."');
+				CALL facility_monitoring('facility','$facility_code');
 			");
 			//return the monitoring data
-			//echo $data; exit;
+			//echo "<pre>";print_r($data) ;exit;
 			return $data;
 		
 		elseif(isset($district_id)&&!isset($facility_code)):
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				CALL facility_monitoring('district','".$district_id."');
+				CALL facility_monitoring('district',$district_id');
 			");
 			//return the monitoring data
 			return $data; 
 		else:
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				CALL facility_monitoring('county','".$county_id."');
+				CALL facility_monitoring('county','$county_id');
 			");
 			//return the monitoring data
 			return $data; 
