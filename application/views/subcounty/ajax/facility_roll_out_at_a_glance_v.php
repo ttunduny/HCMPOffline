@@ -114,6 +114,7 @@
       </div>
     </div>
   </div>
+  <hr />
 </div>
     <div id="ordered-graph"></div>
     <div id="issued-graph"></div>

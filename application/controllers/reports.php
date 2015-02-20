@@ -1009,7 +1009,7 @@ class Reports extends MY_Controller {
 
 		$facility_last_issue = array();
 		$facility_last_issue = array_merge($facility_last_issue, array("graph_id" => 'issued-graph'));
-		$facility_last_issue = array_merge($facility_last_issue, array("graph_title" => 'Days Last Issued '));
+		$facility_last_issue = array_merge($facility_last_issue, array("graph_title" => 'Days Since Last Issue'));
 		$facility_last_issue = array_merge($facility_last_issue, array("graph_type" => 'bar'));
 		$facility_last_issue = array_merge($facility_last_issue, array("graph_yaxis_title" => 'County Facilities'));
 		$facility_last_issue = array_merge($facility_last_issue, array("graph_categories" => array()));
@@ -1034,7 +1034,7 @@ class Reports extends MY_Controller {
 
 		$facility_last_order = array();
 		$facility_last_order = array_merge($facility_last_order, array("graph_id" => 'ordered-graph'));
-		$facility_last_order = array_merge($facility_last_order, array("graph_title" => 'Days Last Ordered '));
+		$facility_last_order = array_merge($facility_last_order, array("graph_title" => 'Days Since Last Order'));
 		$facility_last_order = array_merge($facility_last_order, array("graph_type" => 'bar'));
 		$facility_last_order = array_merge($facility_last_order, array("graph_yaxis_title" => 'County Facilities'));
 		$facility_last_order = array_merge($facility_last_order, array("graph_categories" => array()));
@@ -1155,8 +1155,6 @@ class Reports extends MY_Controller {
 		//get the months and dates the facilities rolled out on HCMP
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
 		
-		//echo "<pre>";print_r($get_dates_facility_went_online);exit;
-		
 		foreach ($get_dates_facility_went_online as $facility_dates) :
 			$monthly_total = 0;
 			$date = $facility_dates['date_when_facility_went_online'];
@@ -1171,8 +1169,6 @@ class Reports extends MY_Controller {
 				
 				//picks the respective details from the db using the date and district id
 				$get_facilities_which_went_online_ = facilities::get_facilities_which_went_online_($district_id, $facility_dates['date_when_facility_went_online']);
-
-				//echo "<pre>";print_r($get_facilities_which_went_online_);exit;
 
 				$total = $get_facilities_which_went_online_[0]['total'];
 				$total_facilities = $get_facilities_which_went_online_[0]['total_facilities'];
