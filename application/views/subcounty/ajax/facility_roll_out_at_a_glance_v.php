@@ -85,18 +85,18 @@ $facilty_code =  $this -> session -> userdata('facility_id');
   </div>
   <hr />
 </div>
-    <div id="ordered-graph"></div>
+   	<!-- <div id="ordered-graph"></div>
     <div id="issued-graph"></div>
-	<!-- <div id="logged-graph"></div>-->
+ <div id="logged-graph"></div>-->
 
 	
 
 <script>
 <?php
-if(!isset($facility_code)):
+/*if(!isset($facility_code)):
 	echo $facility_last_orders;
 	echo $facility_last_issues;
-endif;
+endif;*/
 ?>
 
 
