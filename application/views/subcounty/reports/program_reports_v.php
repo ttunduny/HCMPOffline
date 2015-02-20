@@ -6,6 +6,35 @@
 	.page-header{
 		border:none;
 	}
+
+	.input-group
+	{
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+	.filter-instruction
+	{
+		border: 0;
+		background-color: transparent;
+	}
+
+	.filter-button
+	{
+		text-decoration: none;
+		background-color: #27ae60;
+		color: #fff;
+		border-radius: 0;
+	}
+
+	.filter-button a
+	{
+		color: #fff;
+	}
+
+	.filter-button a:hover
+	{
+		text-decoration: none;
+	}
 </style>
 <?php   $identifier = $this -> session -> userdata('user_indicator');
 		$countyname = $this -> session -> userdata('county_name');
@@ -129,11 +158,11 @@ HTML_DATA;
 					switch ($user_indicator) {
 						case 'county':
 						case 'district':
-							echo '<div class = "input-group"><span class = "input-group-addon">Select a Facility:</span>';
+							echo '<div class = "input-group"><span class = "input-group-addon filter-instruction">Select a Facility:</span>';
 							echo '<select class = "form-control" name = "facilities">';
 							echo $mal_report_data;
 							echo '</select>';
-							echo '<span class="input-group-addon" id = "filter"><a href = "#">Filter</a></span></div>';
+							echo '<span class="input-group-addon filter-button" id = "filter"><a href = "#"><i class = "glyphicon glyphicon-filter"></i> Filter</a></span></div>';
 							break;
 						
 						default:
