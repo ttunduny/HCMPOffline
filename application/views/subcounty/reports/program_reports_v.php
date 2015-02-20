@@ -159,7 +159,7 @@ HTML_DATA;
 						case 'county':
 						case 'district':
 							echo '<div class = "input-group"><span class = "input-group-addon filter-instruction">Select a Facility:</span>';
-							echo '<select class = "form-control" name = "facilities">';
+							echo '<select class = "form-control" name = "facilities"><option selected="selected">Select Facility</option>';
 							echo $mal_report_data;
 							echo '</select>';
 							echo '<span class="input-group-addon filter-button" id = "filter"><a href = "#"><i class = "glyphicon glyphicon-filter"></i> Filter</a></span></div>';
