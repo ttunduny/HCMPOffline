@@ -173,10 +173,9 @@ class orders extends MY_Controller {
 		$facility_code = $this -> session -> userdata('facility_id');
 
 		$items = ((isset($source)) && ($source = 2)) ? Facility_Transaction_Table::get_commodities_for_ordering_meds($facility_code) : Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
-		
+		//checks to see whether the order is being uploaded via excel
 		if (isset($_FILES['file']) && $_FILES['file']['size'] > 0) {
 			$ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
-			//echo $ext;
 			if ($ext == 'xls') {
 				$excel2 = PHPExcel_IOFactory::createReader('Excel5');
 			} else if ($ext == 'xlsx') {
@@ -226,8 +225,6 @@ class orders extends MY_Controller {
 
 				}
 
-				//echo '<pre>';print_r($rowData); echo '</pre>';
-				//count($rowData);
 				$code = preg_replace('/\s+/ ', '', $rowData[0][2]);
 				$code = str_replace('-', '', $code);
 				$array_index[] = $rowData[0][1] - 1;
@@ -239,19 +236,9 @@ class orders extends MY_Controller {
 				$array_order_val[] = $rowData[0][8];
 				$array_pack[] = $rowData[0][5];
 
-				//if(isset($rowData[0][2]) && $rowData[0][2]!='Product Code'){
-				//echo '<pre>';print_r($rowData[0][7]); echo '</pre>';
-				//foreach($items as $key=> $data){
-				//echo '<pre>';print_r($rowData); echo '</pre>';
+			}
 
-				//}
-				//}
-
-			}//exit;
-
-			//echo '<pre>';print_r($array_price); echo '</pre>';exit;
 			foreach ($array_order_qty as $id => $key) {
-				//echo '<pre>';print_r($array_commodity[$id].'.'.$array_code[$id]); echo '</pre>';//exit;
 
 				//foreach($items as $key=> $data){
 				array_push($temp, array('sub_category_name' => $array_category[$id], 'commodity_name' => $array_commodity[$id], 'unit_size' => $array_pack[$id], 'unit_cost' => ($array_price[$id] == '') ? 0 : (float)$array_price[$id], 'commodity_code' => preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $array_code[$id]), 'commodity_id' => $data['commodity_id'], 'quantity_ordered' => ($array_order_qty[$id] == '') ? 0 : (int)$array_order_qty[$id], 'total_commodity_units' => 0, 'opening_balance' => 0, 'total_receipts' => 0, 'total_issues' => 0, 'comment' => '', 'closing_stock_' => 0, 'closing_stock' => 0, 'days_out_of_stock' => 0, 'date_added' => '', 'losses' => 0, 'status' => 0, 'adjustmentpve' => 0, 'adjustmentnve' => 0, 'historical' => 0));
@@ -260,7 +247,6 @@ class orders extends MY_Controller {
 
 			}//exit;
 			foreach ($temp as $key => $value) {
-				//echo '<pre>';print_r($value['commodity_code']); echo '</pre>';
 				if ($value['commodity_code'] == "" || $value['quantity_ordered'] == 0) {
 					unset($temp[$key]);
 				}
@@ -281,11 +267,6 @@ class orders extends MY_Controller {
 
 				$get_id = Commodities::get_id($kemsa, $unit_cost);
 
-				//if (count($get_id)==0) {
-				//echo count($get_id);
-				//echo "</br>";
-				//echo '<pre>';print_r("SELECT * FROM commodities WHERE commodity_code='$kemsa' AND unit_cost =$unit_cost;"); echo '</pre>';
-				//}
 
 				$array_codes[] = $kemsa;
 				$main_array[] = $keys;
@@ -293,16 +274,9 @@ class orders extends MY_Controller {
 					$array_id[] = $key2['id'];
 					$array_total_units[] = $key2['total_commodity_units'];
 
-					//echo '<pre>';print_r($get_id); echo '</pre>';
 				}
 
-				//echo '<pre>';print_r($get_id[]); echo '</pre>';
-			}//exit;
-			//echo '<pre>';print_r($array_codes); echo '</pre>';exit;
-			//$new=array_combine($array_codes, $array_total_units);
-			//echo '<pre>';print_r($array_id); echo '</pre>';exit;
-
-			//echo count($array_codes);exit;
+			}
 
 			$array_combined = array();
 			$id_count = count($main_array);
@@ -310,20 +284,16 @@ class orders extends MY_Controller {
 			for ($i = 0; $i < $id_count; $i++) {
 				$main_array[$i]['commodity_id'] = $array_id[$i];
 				$main_array[$i]['total_commodity_units'] = $array_total_units[$i];
-				//echo '<pre>';print_r($main_array[$i]); echo '</pre>';
 
-			}//exit;
-
-			//echo '<pre>';print_r($main_array); echo '</pre>';
-			//exit;
-
-			//unset($objPHPExcel);
+			}
 			$data['order_details'] = $data['facility_order'] = $main_array;
-		} else {
+		} 	
+		//when the order is not via excel
+		else 
+		{
 			$data['order_details'] = $data['facility_order'] = $items;
 		}
 
-		//var_dump($temp);exit;
 		$facility_code = $this -> session -> userdata('facility_id');
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
 		$data['content_view'] = ((isset($source)) && ($source = 2)) ? "facility/facility_orders/facility_order_meds" : "facility/facility_orders/facility_order_from_kemsa_v";
@@ -486,37 +456,57 @@ class orders extends MY_Controller {
 			$comment = $this -> input -> post('comment');
 			$s_quantity = $this -> input -> post('suggested');
 			$amc = $this -> input -> post('amc');
-			$workload = $this -> input -> post('workload');
+			//$workload = $this -> input -> post('workload');
 			//order table details
-			$bed_capacity = $this -> input -> post('bed_capacity');
-			$drawing_rights = $this -> input -> post('drawing_rights');
+			//$bed_capacity = $this -> input -> post('bed_capacity');
+			//$drawing_rights = $this -> input -> post('drawing_rights');
 			$order_total = $this -> input -> post('total_order_value');
-			$order_no = $this -> input -> post('order_no');
+			//$order_no = $this -> input -> post('order_no');
 			$facility_code = $this -> input -> post('facility_code');
 			$user_id = $this -> session -> userdata('user_id');
 			$order_date = date('y-m-d');
 			$number_of_id = count($commodity_id);
-
+			
+			//loop through the order dumping the amounts in an array
 			for ($i = 0; $i < $number_of_id; $i++) {
 				if ($i == 0) {
-					$order_details = array("workload" => $workload, 'bed_capacity' => $bed_capacity, 'order_total' => $order_total, 'order_no' => $order_no, 'order_date' => $order_date, 'facility_code' => $facility_code, 'ordered_by' => $user_id, 'drawing_rights' => $drawing_rights);
+					$order_details = array('order_total' => $order_total, 'order_no' => $order_no, 'order_date' => $order_date, 'facility_code' => $facility_code, 'ordered_by' => $user_id);
 					$this -> db -> insert('facility_orders', $order_details);
 					$new_order_no = $this -> db -> insert_id();
 				}
-				$temp_array = array("commodity_id" => (int)$commodity_id[$i], 'quantity_ordered_pack' => (int)$quantity_ordered_pack[$i], 'quantity_ordered_unit' => (int)$quantity_ordered_units[$i], 'quantity_recieved' => 0, 'price' => $price[$i], 'o_balance' => $o_balance[$i], 't_receipts' => $t_receipts[$i], 't_issues' => $t_issues[$i], 'adjustpve' => $adjustpve[$i], 'adjustnve' => $adjustnve[$i], 'losses' => $losses[$i], 'days' => $days[$i], 'c_stock' => $c_stock[$i], 'comment' => $comment[$i], 's_quantity' => $s_quantity[$i], 'amc' => $amc[0], 'order_number_id' => $new_order_no);
+				$temp_array = array("commodity_id" => (int)$commodity_id[$i], 
+									'quantity_ordered_pack' => (int)$quantity_ordered_pack[$i], 
+									'quantity_ordered_unit' => (int)$quantity_ordered_units[$i], 
+									'quantity_recieved' => 0, 
+									'price' => $price[$i], 
+									'o_balance' => $o_balance[$i], 
+									't_receipts' => $t_receipts[$i], 
+									't_issues' => $t_issues[$i], 
+									'adjustpve' => $adjustpve[$i], 
+									'adjustnve' => $adjustnve[$i], 
+									'losses' => $losses[$i], 
+									'days' => $days[$i], 
+									'c_stock' => $c_stock[$i], 
+									'comment' => $comment[$i], 
+									's_quantity' => $s_quantity[$i], 
+									'amc' => $amc[0], 
+									'order_number_id' => $new_order_no);
 				//create the array to push to the db
 				array_push($data_array, $temp_array);
 
-			}// insert the data here
-			//echo "<pre>";print_r($data_array);echo "</pre>";exit;
-			//exit;
+			}
+			
+			// insert the data here
 			$this -> db -> insert_batch('facility_order_details', $data_array);
+			
 			if ($this -> session -> userdata('user_indicator') == 'district') :
 				$order_listing = 'subcounty';
 			elseif ($this -> session -> userdata('user_indicator') == 'county') :
 				$order_listing = 'county';
 			else :
+				//for facility level
 				$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($facility_code);
+				
 				$facility_name = $myobj -> facility_name;
 				// get the order form details here
 				//create the pdf here
@@ -819,40 +809,41 @@ class orders extends MY_Controller {
 	}
 
 	public function create_order_pdf_template($order_no) {
+		//gets the details from the order table and returns them as an object
 		$from_order_table = facility_orders::get_order_($order_no);
 		//get the order data here
-		$from_order_details_table = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT 
-
-    a.sub_category_name,
-    b.commodity_name,
-    b.commodity_code,
-    b.unit_size,
-    b.unit_cost,
-    c.quantity_ordered_pack,
-    c.quantity_ordered_unit,
-    c.price,
-    c.quantity_recieved,
-    c.o_balance,
-    c.t_receipts,
-    c.t_issues,
-    c.adjustnve,
-    c.adjustpve,
-    c.losses,
-    c.days,
-    c.comment,
-    c.c_stock,
-    c.s_quantity
-    
-FROM
-    commodity_sub_category a,
-    commodities b,
-    facility_order_details c
-WHERE
-    c.order_number_id = $order_no
-        AND b.id = c.commodity_id
-        AND a.id = b.commodity_sub_category_id
-group by b.id
-ORDER BY a.id ASC , b.commodity_name ASC  ");
+		$from_order_details_table = Doctrine_Manager::getInstance() -> getCurrentConnection() -> 
+		fetchAll("SELECT 
+				    a.sub_category_name,
+				    b.commodity_name,
+				    b.commodity_code,
+				    b.unit_size,
+				    b.unit_cost,
+				    c.quantity_ordered_pack,
+				    c.quantity_ordered_unit,
+				    c.price,
+				    c.quantity_recieved,
+				    c.o_balance,
+				    c.t_receipts,
+				    c.t_issues,
+				    c.adjustnve,
+				    c.adjustpve,
+				    c.losses,
+				    c.days,
+				    c.comment,
+				    c.c_stock,
+				    c.s_quantity
+				    
+				FROM
+				    commodity_sub_category a,
+				    commodities b,
+				    facility_order_details c
+				WHERE
+				    c.order_number_id = $order_no
+				        AND b.id = c.commodity_id
+				        AND a.id = b.commodity_sub_category_id
+				group by b.id
+				ORDER BY a.id ASC , b.commodity_name ASC  ");
 		// get the order details here
 		$from_order_details_table_count = count($from_order_details_table);
 		foreach ($from_order_table as $order) {
@@ -899,7 +890,6 @@ ORDER BY a.id ASC , b.commodity_name ASC  ");
 <tr>
 <td>MFL No: $mfl</td> 
 <td>Health Facility Name:<br/> $facility_name</td>
-<td>Total OPD Visits & Revisits: $o_workload </td>
 <td>Level:</td>
 <td>Dispensary</td>
 <td>Health Centre</td>
@@ -980,10 +970,6 @@ Start Date:  <br/>  End Date: " . date('d M, Y', strtotime($o_date)) . "
 		  <div style="float:right; width: 40%;"> Total Order Value:</div>
 		  <div style="float:right; width: 40%;" >KSH ' . number_format($order_total, 2, '.', ',') . '</div> </div></td></tr>
 		  <tr style="background-color: 	#FFFFFF;"  > 
-		  <td colspan="4" ><div>
-		  <div style="float: left" > Drawing Rights Available Balance:</div>
-		  <div style="float: right" >KSH		' . number_format($bal, 2, '.', ',') . '</div> </td></tr>
-		  <tr><td>FACILITY TEL NO:</td><td colspan="3">FACILITY EMAIL:</td>
 		  </tr>
 		  <tr><td >Prepared by (Name/Designation) ' . $creator_name1 . ' ' . $creator_name2 . '
 		  <br/>

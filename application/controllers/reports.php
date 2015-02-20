@@ -1009,7 +1009,7 @@ class Reports extends MY_Controller {
 
 		$facility_last_issue = array();
 		$facility_last_issue = array_merge($facility_last_issue, array("graph_id" => 'issued-graph'));
-		$facility_last_issue = array_merge($facility_last_issue, array("graph_title" => 'Days Last Issued '));
+		$facility_last_issue = array_merge($facility_last_issue, array("graph_title" => 'Days Since Last Issue'));
 		$facility_last_issue = array_merge($facility_last_issue, array("graph_type" => 'bar'));
 		$facility_last_issue = array_merge($facility_last_issue, array("graph_yaxis_title" => 'County Facilities'));
 		$facility_last_issue = array_merge($facility_last_issue, array("graph_categories" => array()));
@@ -1034,7 +1034,7 @@ class Reports extends MY_Controller {
 
 		$facility_last_order = array();
 		$facility_last_order = array_merge($facility_last_order, array("graph_id" => 'ordered-graph'));
-		$facility_last_order = array_merge($facility_last_order, array("graph_title" => 'Days Last Ordered '));
+		$facility_last_order = array_merge($facility_last_order, array("graph_title" => 'Days Since Last Order'));
 		$facility_last_order = array_merge($facility_last_order, array("graph_type" => 'bar'));
 		$facility_last_order = array_merge($facility_last_order, array("graph_yaxis_title" => 'County Facilities'));
 		$facility_last_order = array_merge($facility_last_order, array("graph_categories" => array()));
@@ -1054,29 +1054,29 @@ class Reports extends MY_Controller {
 
 		
 
-		// Graph data of last loggins
-             $facility_loggins = Facilities::facility_loggins($this->session->userdata('user_indicator'), $county_id, $district_id,$facility_code);
+		// // Graph data of last loggins
+  //            $facility_loggins = Facilities::facility_loggins($this->session->userdata('user_indicator'), $county_id, $district_id,$facility_code);
 
-	    //echo '<pre>';print_r($facility_loggins);echo "</pre>";die();
+	 //    //echo '<pre>';print_r($facility_loggins);echo "</pre>";die();
 
-		$facility_last_log = array();
-		$facility_last_log = array_merge($facility_last_log, array("graph_id" => 'logged-graph'));
-		$facility_last_log = array_merge($facility_last_log, array("graph_title" => 'Days Last Logged '));
-		$facility_last_log = array_merge($facility_last_log, array("graph_type" => 'bar'));
-		$facility_last_log = array_merge($facility_last_log, array("graph_yaxis_title" => 'County Facilities'));
-		$facility_last_log = array_merge($facility_last_log, array("graph_categories" => array()));
-		$facility_last_log = array_merge($facility_last_log, array("series_data" => array("Days From Last Seen" => array())));
+		// $facility_last_log = array();
+		// $facility_last_log = array_merge($facility_last_log, array("graph_id" => 'logged-graph'));
+		// $facility_last_log = array_merge($facility_last_log, array("graph_title" => 'Days Last Logged '));
+		// $facility_last_log = array_merge($facility_last_log, array("graph_type" => 'bar'));
+		// $facility_last_log = array_merge($facility_last_log, array("graph_yaxis_title" => 'County Facilities'));
+		// $facility_last_log = array_merge($facility_last_log, array("graph_categories" => array()));
+		// $facility_last_log = array_merge($facility_last_log, array("series_data" => array("Days From Last Seen" => array())));
 
-		foreach ($facility_loggins as $last_logged) :
-			$facility_last_log['graph_categories'] = array_merge($facility_last_log['graph_categories'], array($last_logged['Facility Name']));
-			$facility_last_log['series_data']['Days From Last Seen'] = array_merge($facility_last_log['series_data']['Days From Last Seen'], array((int)$last_logged['Days From Last Seen']));
-		endforeach;
+		// foreach ($facility_loggins as $last_logged) :
+		// 	$facility_last_log['graph_categories'] = array_merge($facility_last_log['graph_categories'], array($last_logged['Facility Name']));
+		// 	$facility_last_log['series_data']['Days From Last Seen'] = array_merge($facility_last_log['series_data']['Days From Last Seen'], array((int)$last_logged['Days From Last Seen']));
+		// endforeach;
 
-		$facility_logged_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_log);
+		// $facility_logged_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_log);
 
-        $data['facility_last_loggins'] = $facility_logged_;
-      //echo '<pre>';print_r($facility_logged_);echo "</pre>";die();
-		// /Graph data of last loggins
+  //       $data['facility_last_loggins'] = $facility_logged_;
+  //     //echo '<pre>';print_r($facility_logged_);echo "</pre>";die();
+		// // /Graph data of last loggins
 
 
 
@@ -1120,19 +1120,19 @@ class Reports extends MY_Controller {
 
 	//AJAX Request from the System Usage View in the County, Sub County and Facility interfaces
 	public function get_county_facility_mapping_ajax_request($option = null) {
-		//$district_id = $this -> session -> userdata('district_id');
+		//pick the county id from the session
 		$county_id = $this -> session -> userdata('county_id');
-		//echo $county_id;
+		//get the names and ids of the districts in the county
 		$district_data = districts::getDistrict($county_id);
+		
 		//Start building the table with the data
 		$table_data = "<tbody>";
 		//for the summary table
 		$table_data_summary = "<tbody>";
-		//Holds the district names in a particular county
+		//Holds the district names and months rolled out in a particular county
 		$district_names = "<thead><tr><th>Sub County Roll Outs</th>";
 		$sub_county_names = "<thead><tr><th>Sub County</th>";
-
-		//Total number of facilities using HCMP in the district
+		//Total number of facilities in the district
 		$district_total = array();
 		//Total number of facilities in the district
 		$district_total_facilities = array();
@@ -1140,7 +1140,7 @@ class Reports extends MY_Controller {
 		$district_total_facilities_targetted = array();
 		//total number of facilities using HCMP
 		$district_total_facilities_using_hcmp = array();
-
+		//initialize the variables
 		$table_district_totals = "";
 		$all_facilities = 0;
 		$total_using_hcmp = 0;
@@ -1151,21 +1151,23 @@ class Reports extends MY_Controller {
 		$percentage_coverage_total = 0;
 		$percentage_coverage_using = "";
 		$percentage_coverage_total_using = 0;
-
+		
+		//get the months and dates the facilities rolled out on HCMP
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
-
+		
 		foreach ($get_dates_facility_went_online as $facility_dates) :
-
 			$monthly_total = 0;
 			$date = $facility_dates['date_when_facility_went_online'];
+			//table data is for the monthly roll out progress
 			$table_data .= "<tr><td>" . $date . "</td>";
-
+			
 			//loop through the districts in the county
 			foreach ($district_data as $district_detail) :
-
+				//picks the id and name 
 				$district_id = $district_detail -> id;
 				$district_name = $district_detail -> district;
-
+				
+				//picks the respective details from the db using the date and district id
 				$get_facilities_which_went_online_ = facilities::get_facilities_which_went_online_($district_id, $facility_dates['date_when_facility_went_online']);
 
 				$total = $get_facilities_which_went_online_[0]['total'];
@@ -1175,6 +1177,7 @@ class Reports extends MY_Controller {
 
 				$monthly_total = $monthly_total + $total;
 				$all_facilities = $all_facilities + $total;
+				
 				//total facilities online in that particular month
 				(array_key_exists($district_name, $district_total)) ? $district_total[$district_name] = $district_total[$district_name] + $total : $district_total = array_merge($district_total, array($district_name => ($total)));
 				//total facilities in the district
@@ -1183,43 +1186,43 @@ class Reports extends MY_Controller {
 				(array_key_exists($district_name, $district_total_facilities_targetted)) ? $district_total_facilities_targetted[$district_name] = $total_facilities_targetted : $district_total_facilities_targetted = array_merge($district_total_facilities_targetted, array($district_name => $total_facilities_targetted));
 				//total facilities using hcmp using HCMP in the district
 				(array_key_exists($district_name, $district_total_facilities_using_hcmp)) ? $district_total_facilities_using_hcmp[$district_name] = $total_facilitites_using_hcmp : $district_total_facilities_using_hcmp = array_merge($district_total_facilities_using_hcmp, array($district_name => $total_facilitites_using_hcmp));
-
+				
 				$table_data .= ($total > 0) ? "<td><a href='#' id='$district_id' class='ajax_call2 link' date='$date'> $total</a></td>" : "<td>$total</td>";
-
+			
 			endforeach;
-
+			
 			$table_data .= "<td>$monthly_total</td></tr>";
 
 		endforeach;
-
+		
 		$table_data .= "<tr>";
+		
 		$table_data_summary .= "<tr>";
-
 		$checker = 1;
+		//echo "<pre>";print_r($district_total);exit;
 		foreach ($district_total as $key => $value) :
 			$coverage = 0;
 			$using = 0;
+			//calculates total coverage %
 			@$coverage = round((($value / $district_total_facilities[$key])) * 100, 0);
 			@$using_percentage = round((($district_total_facilities_targetted[$key] / $value)) * 100, 1);
+			
 			$percentage_coverage_total = $percentage_coverage_total + $coverage;
 			$percentage_coverage_total_using = $percentage_coverage_total_using + $using_percentage;
-
+			
+			//the names of the sub counties in a county
 			$district_names .= "<th>$key</th>";
 			$sub_county_names .= "<th>$key</th>";
-
+			
 			$total_facility_list .= ($checker == 1) ? "<tr><td><b>TOTAL: Facilities in Sub County</b></td><td>$district_total_facilities[$key]</td>" : "<td>$district_total_facilities[$key]</td>";
-			$table_data .= ($checker == 1) ? "<td><b>TOTAL: Facilities using HCMP</b></td><td>$value</td>" : "<td>$value</td>";
-			$table_summary .= ($checker == 1) ? "<td><b>TOTAL: Facilities using HCMP</b></td><td>$value</td>" : "<td>$value</td>";
-
+			$table_data .= ($checker == 1) ? "<td><b>TOTAL: Facilities using HCMP</b></td><td>$district_total_facilities_using_hcmp[$key]</td>" : "<td>$district_total_facilities_using_hcmp[$key]</td>";
+			$table_summary .= ($checker == 1) ? "<td><b>TOTAL: Facilities using HCMP</b></td><td>$district_total_facilities_using_hcmp[$key]</td>" : "<td>$district_total_facilities_using_hcmp[$key]</td>";
 			//$total_targetted_facility_list .= ($checker == 1) ? "<tr><td><b>TOTAL: Targetted Facilities in Sub County</b></td><td>$district_total_facilities_targetted[$key]</td>":"<td>$district_total_facilities_targetted[$key]</td>";
-
 			$total_facilities_in_county = $total_facilities_in_county + $district_total_facilities[$key];
 			//$targetted_total = $targetted_total + $district_total_facilities_targetted[$key];
 			$total_using_hcmp = $total_using_hcmp + $district_total_facilities_using_hcmp[$key];
-
 			@$targetted_vs_using_hcmp = round((($total_facilitites_using_hcmp / $total_facilities_targetted)) * 100, 1);
 			@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
-
 			$percentage_coverage .= ($checker == 1) ? "<tr><td><b>% Coverage</b></td>
 			<td>$coverage %</td>" : "<td>$coverage %</td>";
 			$checker++;
@@ -1243,7 +1246,6 @@ class Reports extends MY_Controller {
         <li class='active'><a href='#A' data-toggle='tab'>Roll out Summary</a></li>
         <li ><a href='#B' data-toggle='tab'>Monthly Break Down</a></li>
         <li><button type='button' class='btn btn-default download'>System Usage Breakdown</button></li>
-
         </ul>
          <div  id='B' class='tab-pane fade'>
 			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" . $district_names . $table_data . $total_facility_list . "<td>$total_facilities_in_county</td></tr>" . $total_targetted_facility_list . $percentage_coverage . "<td>$final_coverage_total %</td></tr>" . $percentage_coverage_using . "</tr>
@@ -1254,18 +1256,15 @@ class Reports extends MY_Controller {
 		<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test2'>" . $sub_county_names . $table_summary . $table_datas_summary . $total_facility_list . "<td>$total_facilities_in_county</td></tr>" . $total_targetted_facility_list . $percentage_coverage . "<td>$final_coverage_total %</td></tr>" . $percentage_coverage_using . "</tr></table>
 		 </div>
 		 </div>";
-
 		if (isset($option)) :
 			return $data_;
 		else : echo $data_;
 		endif;
-
 	}
-
 	//For system uptake option on SUB-COUNTY dashboard
 	public function get_sub_county_facility_mapping_data($year = null, $month = NULL) {
 
-		$year = (isset($year) && ($year > 0)) ? $year : date("Y");
+		/*$year = (isset($year) && ($year > 0)) ? $year : date("Y");
 		$month = (isset($month) && ($month > 0)) ? $month : date("m");
 		$identifier = $this -> session -> userdata('user_indicator');
 		$county_id = $this -> session -> userdata('county_id');
@@ -1281,7 +1280,7 @@ class Reports extends MY_Controller {
 
 		$county_name = Counties::get_county_name($county_id);
 		$county_name = $county_name;
-		// echo $county_id."<pre>";echo $county_name;echo "</pre>";exit;
+
 		//get the name of the district
 		$district_name_ = (isset($district_id) && ($district_id > 0)) ? Districts::get_district_name_($district_id) : null;
 		$district_name = $district_name_['district'];
@@ -1414,6 +1413,9 @@ class Reports extends MY_Controller {
 		$data['graph_data_daily'] = $graph_daily;
 		$data['graph_log'] = $graph_log;
 
+		*/
+		$county_id = $this -> session -> userdata('county_id');
+		
 		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
 		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
@@ -3778,7 +3780,6 @@ class Reports extends MY_Controller {
 	}
 	//Function for commodity redistributions
 	public function county_donation() {
-		//echo $district_id.$county_id;exit;
 		$data['year'] = date('Y');
 		$county_id = $this -> session -> userdata('county_id');
 		$data['district_data'] = districts::getDistrict($county_id);
@@ -3787,9 +3788,7 @@ class Reports extends MY_Controller {
 		$data['report_view'] = "subcounty/reports/county_donation_filter_v";
 
 		if ($this -> input -> is_ajax_request()) :
-			
 			return $this -> load -> view("subcounty/reports/county_donation_filter_v", $data);
-			
 		else :
 			$data['report_view'] = "subcounty/reports/county_donation_filter_v";
 			$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
@@ -3898,7 +3897,7 @@ class Reports extends MY_Controller {
 		$total_expiry = number_format($total_expiry, 2, '.', ',');
 		// array_push($series_data, array("","","Total for the next $year months",$total_expiry,''));
 
-		$category_data = array( array("From", 'To', "Commodity Name", "District From", "District To", "Unit Size", 'Batch No', 'Expiry Date', 'Manufacturer', 'Quantity Sent(packs)', 'Quantity Sent(units)', 'Quantity Received (packs)', 'Quantity Received (units)', 'Date sent', 'Date Received', 'status'));
+		$category_data = array( array("From", 'To', "Commodity Name", "District From", "District To", "Unit Size", 'Batch No', 'Expiry Date', 'Manufacturer', 'Quantity Sent(units)', 'Quantity Sent(packs)', 'Quantity Received (units)', 'Quantity Received (packs)', 'Date sent', 'Date Received', 'status'));
 
 		$graph_data = array_merge($graph_data, array("table_id" => 'dem_graph_1'));
 		$graph_data = array_merge($graph_data, array("table_header" => $category_data));

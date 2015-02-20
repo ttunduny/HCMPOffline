@@ -264,6 +264,117 @@ class Facilities extends Doctrine_Record {
 		
 		
 	}
+
+
+	public static function facility_ordered($type, $county_id = NULL, $district_id = NULL, $facility_code=null)
+	{
+		switch ($type) {
+			case 'facility':
+			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+               CALL facility_orders('facility','".$facility_code."');
+             
+			");
+			//return the monitoring data
+			//echo '<pre>';print_r($data);echo "</pre>";die();
+			break;
+		
+			case 'district':
+			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				CALL facility_orders('district','".$district_id."');
+
+			");
+			//return the monitoring data
+			return $data;
+		
+			case 'county':
+			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		   CALL facility_orders('county','".$county_id."');
+              
+              ");
+			break;
+		}
+		//return the monitoring data
+			return $data;
+		
+		
+	}
+
+	public static function facility_issued($type, $county_id = NULL, $district_id = NULL, $facility_code=null)
+	{
+		switch ($type) {
+			case 'facility':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+             CALL facility_issues('facility','".$facility_code."');
+            
+             
+			");
+			//return the monitoring data
+			//echo '<pre>';print_r($data);echo "</pre>";die();
+				break;
+
+			case 'county':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		    CALL facility_issues('county','".$county_id."');
+              
+              ");
+		//return the monitoring data
+			break;	
+			case 'district':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				CALL facility_issues('district','".$district_id."');
+			");
+			//return the monitoring data
+			break;
+			default:
+				# code...
+				break;
+		}
+
+		//echo "<pre>";print_r($data);die;
+		return $data;
+		
+	}
+
+
+	 
+
+
+	public static function facility_loggins($type, $county_id = NULL, $district_id = NULL, $facility_code=null)
+	{
+		switch ($type) {
+			case 'facility':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+              CALL facility_loggins('facility','".$facility_code."');
+            
+             
+			");
+			//return the monitoring data
+			//echo '<pre>';print_r($data);echo "</pre>";die();
+				break;
+
+			case 'county':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		    CALL facility_loggins('county','".$county_id."');
+              
+              ");
+		//return the monitoring data
+			break;	
+			case 'district':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				CALL facility_loggins('district','".$district_id."');
+			");
+			//return the monitoring data
+			break;
+			default:
+				# code...
+				break;
+		}
+
+		//echo "<pre>";print_r($data);die;
+		return $data;
+		
+	}
+
 	//Used by facility_mapping function in reports controller
 	//Used to get the dates that facilities went online
 	public static function get_facilities_online_per_district($county_id)
@@ -556,15 +667,9 @@ return $q;
 	//Used to get the months facilities went online
 	//Limits to the last 3 months of activation
 	
-	public static function get_dates_facility_went_online($county_id, $district_id = null, $year)
+	public static function get_dates_facility_went_online($county_id)
 	{
-		
-		$addition = (isset($district_id)&& ($district_id>0)) ?"AND f.district = $district_id" : null;
-		$data = array();
-		$years = array('2015', '2014', '2013');
-		
-		foreach ($years as $year ) {
-			$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		SELECT DISTINCT
 		    DATE_FORMAT(`date_of_activation`, '%M %Y') AS date_when_facility_went_online,
 		    YEAR(`date_of_activation`) 
@@ -576,13 +681,8 @@ return $q;
 		        AND d.county = $county_id
 		        $addition
 		        AND UNIX_TIMESTAMP(`date_of_activation`) > 0
-		        AND YEAR(`date_of_activation`) = $year
 		ORDER BY `date_of_activation` desc
 		");
-		
-		$data[$year]=$q;
-		}
-		
 		
 		return $data;
 			
@@ -590,8 +690,6 @@ return $q;
 	
 	//used by facility mapping function
 	//used to get the distinct years facilities went online
-	
-	
 	//used when building data for the facilities that went online in a particular district in a particular county
 	public static function get_facilities_which_went_online_($district_id = null, $date_of_activation)
 	{
@@ -609,7 +707,7 @@ return $q;
 			and d.id = $district_id 
 			and DATE_FORMAT(  `date_of_activation` ,  '%M %Y' ) = '$date_of_activation' AND using_hcmp=1");
 			
-		return $q;		
+			return $q;
 	}
 public static function get_targetted_facilities($district_id = null)
 {

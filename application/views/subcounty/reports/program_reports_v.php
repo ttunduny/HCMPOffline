@@ -6,6 +6,35 @@
 	.page-header{
 		border:none;
 	}
+
+	.input-group
+	{
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+	.filter-instruction
+	{
+		border: 0;
+		background-color: transparent;
+	}
+
+	.filter-button
+	{
+		text-decoration: none;
+		background-color: #27ae60;
+		color: #fff;
+		border-radius: 0;
+	}
+
+	.filter-button a
+	{
+		color: #fff;
+	}
+
+	.filter-button a:hover
+	{
+		text-decoration: none;
+	}
 </style>
 <?php   $identifier = $this -> session -> userdata('user_indicator');
 		$countyname = $this -> session -> userdata('county_name');
@@ -121,48 +150,28 @@ HTML_DATA;
     </ul>
     <div id="myTabContent" class="tab-content">
  		<div  id="Malaria" class="tab-pane fade active in">
-	        <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="test1">
-			<thead>				
-				<tr>
-					<?php $user_indicator = $this -> session -> userdata('user_indicator');
-
-						switch ($user_indicator) {
-							case facility_admin:
-							case facility:
-					?>
-						<th>Drug Name</th>
-						<th>Order Unit Size</th>
-						<th>Order Unit Cost (Ksh)</th>
-						<th>Opening Balance (Units)</th>
-						<th>Total Receipts (Units)</th>
-					    <th>Total issues (Units)</th>
-					    <th>Adjustments(-ve) (Units)</th>
-					    <th>Adjustments(+ve) (Units)</th>
-					    <th>Losses (Units)</th>
-					    <th>No days out of stock</th>
-					    <th>Closing Stock(Units)</th>
-					<?php break;
-					default: ?>
-						<th>Facility Name</th>
-						<th>MFL Code</th>
-						<th>Prepared By</th>
-						<th>Action</th>
-					<?php 
-					break; } ?>
-				</tr>
-				
-			</thead>
-			<tbody>
-				<?php 
-				
-				echo $mal_report_data; 
-					
-				?>
-				
-			</tbody>
-			
-			</table> 
+	        <!-- <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="test1"> -->
+			<!-- <thead>				 -->
+				<!-- <tr> -->
+				<?php
+					$user_indicator = $this->session->userdata('user_indicator');
+					switch ($user_indicator) {
+						case 'county':
+						case 'district':
+							echo '<div class = "input-group"><span class = "input-group-addon filter-instruction">Select a Facility:</span>';
+							echo '<select class = "form-control" name = "facilities"><option selected="selected">Select Facility</option>';
+							echo $mal_report_data;
+							echo '</select>';
+							echo '<span class="input-group-addon filter-button" id = "filter"><a href = "#"><i class = "glyphicon glyphicon-filter"></i> Filter</a></span></div>';
+							break;
 						
+						default:
+							# code...
+							break;
+					}
+				?>
+				<div id = "table-holder">
+				</div>						
 		    
       </div>
      <div class="tab-pane fade" id="RH">
@@ -197,4 +206,37 @@ HTML_DATA;
 		$('#test1').dataTable();
 		$('#test2').dataTable();
 	});
+</script>
+
+<script type="text/javascript">
+	user_indicator = '<?php echo $this->session->userdata("user_indicator"); ?>';
+	base_url = '<?php echo base_url(); ?>';
+	$(document).ready(function(){
+		switch(user_indicator)
+		{
+			case 'facility':
+			case 'facility_admin':
+				facility = '<?php echo $this->session->userdata("facility_id"); ?>';
+				table_url = base_url + 'divisional_reports/malaria_report/'+facility;
+				createtable(table_url);
+				break;
+			default:
+				break;
+		}
+	});
+	
+	$('#filter').click(function(){
+		facility = $('select[name="facilities"]').val();
+		table_url = base_url + 'divisional_reports/malaria_report/'+facility;
+		createtable(table_url);
+		
+	});
+
+	function createtable(table_url)
+	{
+		$.get(table_url, function(data)
+		{
+			$('#table-holder').html(data);
+		});
+	}
 </script>

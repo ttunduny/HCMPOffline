@@ -1,1 +1,20 @@
+<<<<<<< HEAD
 database.php
+=======
+*.class
+*.pyc
+*.pyo
+/nbproject/private/
+/pdf/
+/drug_commodity_map.sql
+/drugs not in commodities table.txt
+/nbproject
+
+
+
+
+application/config/database.php
+.htaccess
+
+system/libraries/Hcmp_functions.php
+>>>>>>> 28e9aab1d9ee2dfe5f7c1fd6f5b36763c36ec278
