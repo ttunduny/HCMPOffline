@@ -1171,21 +1171,14 @@ class Reports extends MY_Controller {
 				
 				//picks the respective details from the db using the date and district id
 				$get_facilities_which_went_online_ = facilities::get_facilities_which_went_online_($district_id, $facility_dates['date_when_facility_went_online']);
-<<<<<<< HEAD
-                //echo'<pre>';print_r($get_facilities_which_went_online_);echo'</pre>';die;
-=======
+
 				//echo "<pre>";print_r($get_facilities_which_went_online_);exit;
->>>>>>> 7c4b474d48e10de57f3e6da296fce5ab5c8ef6c9
+
 				$total = $get_facilities_which_went_online_[0]['total'];
 				$total_facilities = $get_facilities_which_went_online_[0]['total_facilities'];
 				$total_facilities_targetted = $get_facilities_which_went_online_[0]['total_facilities_targetted'];
 				$total_facilitites_using_hcmp = $get_facilities_which_went_online_[0]['total_using_hcmp'];
-<<<<<<< HEAD
-                //echo'<pre>';print_r($total);echo'</pre>';die;
 
-=======
-				
->>>>>>> 7c4b474d48e10de57f3e6da296fce5ab5c8ef6c9
 				$monthly_total = $monthly_total + $total;
 				$all_facilities = $all_facilities + $total;
 				
@@ -1203,11 +1196,7 @@ class Reports extends MY_Controller {
 			endforeach;
 			
 			$table_data .= "<td>$monthly_total</td></tr>";
-<<<<<<< HEAD
-            //echo'<pre>';print_r($monthly_total);echo'</pre>';die;
-=======
-		
->>>>>>> 7c4b474d48e10de57f3e6da296fce5ab5c8ef6c9
+
 		endforeach;
 		
 		$table_data .= "<tr>";
@@ -1241,10 +1230,7 @@ class Reports extends MY_Controller {
 			$percentage_coverage .= ($checker == 1) ? "<tr><td><b>% Coverage</b></td>
 			<td>$coverage %</td>" : "<td>$coverage %</td>";
 			$checker++;
-<<<<<<< HEAD
-            //echo'<pre>';print_r($coverage);echo'</pre>';die;
-=======
->>>>>>> 7c4b474d48e10de57f3e6da296fce5ab5c8ef6c9
+
 		endforeach;
 		$list_url = base_url() . 'reports/list_facilities';
 		$table_data .= "<td><a href='#' id='total' class='ajax_call1 link' option='total' date='total'>$all_facilities</a></td></tr></tbody>";
@@ -1256,11 +1242,7 @@ class Reports extends MY_Controller {
 		$targetted_vs_using_hcmp = 0;
 		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
 		//$system_usage = $this->monitoring();
-<<<<<<< HEAD
-		//<li><button type='button' class='btn btn-default download'>System Usage Breakdown</button></li>
-         //echo'<pre>';print_r($percentage_coverage);echo'</pre>';die;
-=======
->>>>>>> 7c4b474d48e10de57f3e6da296fce5ab5c8ef6c9
+
 		$data_ = "
 		<div class='tabbable tabs-left'>
 		<div class='tab-content'>
