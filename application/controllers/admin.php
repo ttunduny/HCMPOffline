@@ -35,6 +35,7 @@ class Admin extends MY_Controller {
 		$data['title'] = "Users";
 		$data['content_view'] = "Admin/users_v";
 		$data['listing']= Users::get_user_list_all();
+		// echo "<pre>";print_r($data['listing']);echo "</pre>";exit;
 		$data['counts']=Users::get_users_count();
 		$data['counties']=Counties::getAll();
 		$data['facilities']=Facilities::getAll();
@@ -123,6 +124,17 @@ class Admin extends MY_Controller {
 									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county'
                                   	WHERE `id`= '$user_id'");
 		
+	}
+
+	public function change_status(){
+		$user_id = $_POST['user_id'];
+		$status = $_POST['status'];
+
+		// echo $status. " " . $member_id;exit;
+		// echo "UPDATE `user` SET status = '$status' WHERE `id`= '$user_id'";exit;
+		$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
+			$update_user->execute("UPDATE `user` SET status = '$status' WHERE `id`= '$user_id'");
+			echo $update_user." success";
 	}
 	
 }
