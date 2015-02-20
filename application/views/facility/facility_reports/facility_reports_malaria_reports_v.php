@@ -4,7 +4,7 @@
 
 	};
 </style>
-<div class="container" style="width: 96%; margin: auto;">
+<div class="container" style="width: 100%; margin: auto;">
 	
 <div class="table-responsive">
 	<?php 
@@ -26,7 +26,7 @@
 		<p class="label label-info">Enter appropriate values in all fields as indicated: </p>
 	</div> -->
 	
-	<table width="98%" border="0" class="table-condensed row-fluid table table-hover table-bordered table-update"  id="example">
+	<!-- <table width="98%" border="0" class="table-condensed row-fluid table table-hover table-bordered table-update"  id="example">
 		<tr>
 		<div class="input-group">
 
@@ -48,13 +48,13 @@
 		<td  class="col-xs-1">
 			<label>Report Date:</label>
 
-			<!-- <input type= 'date' name="district_name" class="form-control" value=""> -->
+			 <input type= 'date' name="district_name" class="form-control" value=""> 
 			<input type="text" class="form-control"  name="district_name" disabled value="<?php echo date('d M Y'); ?>" />
 			</td>
 		</div>
 
 		</tr>
-	</table>
+	</table> -->
 
 	<table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example2">
 	<thead>
@@ -73,58 +73,6 @@
 		</tr>
 	</thead>
 	<tbody><?php
-	//Used to puck the Kemsa code from the malaria drugs table in order to save it in the Malaria Data table
-	// $code = "";
-	// foreach ($malaria_data as $row)
-	// {
-	// 	extract($row, EXTR_OVERWRITE);
-	// 	$code .= $kemsa_code. " ";
-	
-	// }
-	// $code1 = explode(" ", $code);
-	// $counter = 0;
-	// foreach($drug_rows as $drug)
-	// {		
-	// 	echo"
-	// 	<tr row_id='0'>
-	// 	<td>".$drug['drug_name']."</td>
-	// 	<td>
-	// 		<input type='text' class='form-control input-small Beginning_Balance' name='Beginning_Balance[".$counter."]' required='required' required='required'/>
-	// 	</td>
-	//     <td>
-	//     	<input type='text' class='form-control input-small Quantity_Received' name='Quantity_Received[".$counter."]'' required='required' required='required'/>
-	//     </td>
-	//     <td>
-	//     	<input type='text' class='form-control input-small Quantity_Dispensed' name='Quantity_Dispensed[".$counter."]'' required='required' required='required'/>
-	//     </td>
-	//     <td>
-	//     	<input type='text' class='form-control input-small Losses_Excluding_Expiries' name='Losses_Excluding_Expiries[".$counter."]'' required='required' required='required'/>
-	//     </td>
-	//     <td>
-	//     	<input type='text' class='form-control input-small Positive_Adjustments' name='Positive_Adjustments[".$counter."]'' required='required' required='required'/>
-	//     </td>
-	//     <td>
-	//     	<input type='text' class='form-control input-small Negative_Adjustments' name='Negative_Adjustments[".$counter."]'' required='required' required='required'/>
-	//     </td>
-	//     <td>
-	//     	<input type='text' class='form-control input-small Physical_Count' name='Physical_Count[".$counter."]'' required='required'/>
-	//     </td>
-	//     <td>
-	//     	<input type='text' class='form-control input-small Expired_Drugs' name='Expired_Drugs[".$counter."]'' required='required'/>
-	//     </td>
-	//     <td>
-	//     	<input type='text' class='form-control input-small Days_Out_Stock' name='Days_Out_Stock[".$counter."]'' required='required'/>
-	//     </td>
-	//     <td>
-	//     	<input type='text' class='form-control input-small Report_Total' name='Total[".$counter."]'' required='required'/>
-	//     </td>
-	//     <td style='display:none;'>
-	//     	<input type='hidden' class='kemsa' name='kemsa[".$counter."]'' value='".$code1[$counter]."'/>
-	//     </td>
-	//     ";
-	//     $counter++;
-		
-	// };
 		echo $malaria_data;
 	?>
 		     </tbody>
