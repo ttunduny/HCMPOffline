@@ -16,10 +16,9 @@
     <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/bower_components/semantic/packaged/css/semantic.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/font-awesome/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
-    <link href="<?php echo base_url().'assets/bower_components/ionicons-2.0.0/css/ionicons.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
-    <!--<link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/tab-style/css/demo.css'?>" />-->
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/tab-style/css/demo.css'?>" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/tab-style/css/tabs.css'?>" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/tab-style/css/tabstyles.css'?>" />
     <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
@@ -114,55 +113,15 @@ h4{
 	}
 	.modal-dialog {
 		
-		width: 85%;
+		width: 76%;
 	}
-	.statistic{
-		display: inline-block;
-		text-align: center;
-		cursor: pointer;
-	}
-	.statistic .label{
-		color:black;
-		font-weight: 400;
-	}
-	.statistic .value{
-		font-size:2.2em;
-		font-weight: 800;
-	}
-	.corner-label{
-		background-color: #5cb85c;
-		border-color: #4cae4c;
-		color:white;
-		text-align: center;
-		height:10%;
-		padding: 15 2 2 2;
-		width: 36;
-		margin-right:0.5%;
-		font-size:1.3rem;
-		cursor: pointer;
-	}
-	.tabs-style-bar nav ul li.tab-current a {
-	background: #4CAE4C;
-	color: #fff;
-}
-.tile-header{
-	background-color: #f7f7f7;
-	height:25px;
-	font-size:1.3rem;
-	text-align: center;
-	font-weight: 800;
-}
 	</style>
-	
-		
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    
   </script>
-  
   
   </head>
   
@@ -170,57 +129,31 @@ h4{
   	
 <div class="container-fluid">
 	
-	<div class="ui large menu">
-  <div style="margin: 13 6 0 0;">Ministry of Health</div>
-    
-     
-  
-  <div class="right menu">
-    <a class="active item">
-    <i class="home icon"></i> Home
-  </a>
-  <a class="item">
-    <i class="mail icon"></i> Settings
-  </a>1
-    <div class="ui dropdown item">
-      Log in <i class="dropdown icon"></i>
-      <div class="menu">
-        <a class="item">Login to HCMP</a>
-        <a class="item">Login to RTK</a>
-      </div>
-    </div>
-    <div class="item">
-        <div class="ui primary button">Sign Up</div>
-    </div>
-  </div>
-</div>
-	
 		<div class="tabs tabs-style-bar navbar-fixed-top">
 	
 					<nav>
 						<ul><div style="margin: 13 6 0 0;">Ministry of Health</div>
 							<a href="<?php echo base_url().'national';?>" style="margin-right: 60">   
-           						 <img style="display:inline-block;"  src="<?php echo base_url();?>assets/img/coat_of_arms_dash.png" 
-           						 class="img-responsive " alt="Responsive image" id="logo" ></a></li>
-							<li><a href="#hcmp" class="icon icon-graph1"><span>HCMP Dashboard</span></a>
+           						 <img style="display:inline-block;"  src="<?php echo base_url();?>assets/img/coat_of_arms_dash.png" class="img-responsive " alt="Responsive image" id="logo" ></a></li>
+							<li><a href="#hcmp" class="icon icon-graph1"><span>HCMP</span></a>
+							<li><a href="#rtk" class="icon icon-display"><span>RTK</span></a></li>
 							<li><a href="<?php echo base_url().'home';?>" class="icon icon-user"><span>System Log in</span></a></li>
+							<li><a href="#section-underline-5" class="icon icon-config"><span>Settings</span></a></li>
 						</ul>
 					</nav>
 					
 					<div class="content-wrap">
-						<input type="hidden" name="current_filter" value="">
 						
 							<!-- BEGIN HCMP CONTENT -->
 						<section id="hcmp" class="row-fluid">
 							
-							<div class="row-fluid ui stackable four column grid" style="max-height: 550px">							
+							<div class="row-fluid" style="max-height: 460px">							
 							
 							
-						<div id="" class="five wide column" style="margin-top: 1%;">
+						<div id="" class="col-lg-4" style="margin-top: 1%;">
 							
-							<div class="tile"  style="max-height: 500px;">
-								<div class="tile-header">National Over view</div>
-							<div id="map" style="max-height: 480px;"></div>	
+							<div class="tile"  style="max-height: 460px;">
+							<div id="map" style="max-height: 400px;"></div>	
 						<script>
 					var map= new FusionMaps ("assets/FusionMaps/FCMap_KenyaCounty.swf","KenyaMap","100%","100%","0","0");
 					map.setJSONData(<?php echo $maps; ?>);
@@ -240,7 +173,9 @@ h4{
                    		 	<div class="col-lg-3">
                    		 	</div>
                    		 	<div class="col-lg-4">
-                   		 		
+                   		 		<a href="" data-toggle="modal" data-target="#facilitystatsModal">
+                   		 		More data
+                   		 		</a>
                    		 	</div>
 				             
 				            
@@ -253,253 +188,90 @@ h4{
 						
 						</div>
 						
-						
-				<div id="" class="eleven wide column " style="margin-top: 1%;height: 480px">
+						<div id="" class=" tile col-lg-6" style="margin-top: 1%;">
+							<div class="" style="height: 50px;">
+								
+									<button class="btn btn-sm btn-success"><span class="icon icon-display"></span>More</button>
+								
+							</div>
+							<div class="" id="mos" style="height:370px ">
 					
-					<div class="ui statistics ">
-						<div class="ui grid tile ">
-							<div class="tile-header">National Statistics</div>
-							  <div class="four wide column">
-								<div class="statistic">
-								    <div class="value">
-								      522
-								    </div>
-								    <div class="label">
-								     Total HCW Trained   
-								    </div>
-								  </div>
-							  </div>
-							  <div class="four wide column">
-								<div class="statistic">
-								    <div class="text value">
-								      184
-								    </div>
-								    <div class="label">
-								      Total Facilities Rolled Out
-								    </div>
-								  </div>
-							  </div>
-							  <div class="four wide column">
-								<div class="statistic">
-								    <div class="value">
-								      <i class="plane icon"></i> 5
-								    </div>
-								    <div class="label">
-								      Avg Stock out days
-								    </div>
-								  </div>
-							  </div>
-							  <div class="three wide column">
-								<div class="statistic">
-								    <div class="value">
-								      57%
-			   						 </div>
-			    					<div class="label">
-								      Avg order fill rate
-								    </div>
-								    
-			 					 </div>
-			 					
-
-							  </div>
-							  <div class="one wide column" style="padding:0.5%">
-							  	<div class="corner-label right" data-toggle="modal" data-target="#facilitystatsModal">
-							  		
-									    <div class="ion-chevron-right">More</div>
-							  	</div>
-							  	</div>
-							 
+							</div>
 						</div>
-					  
-					  <div class="ui grid">
-					  	<div class="tile" style="height: 420px"> 
-							<div class="" style="height: 50px; padding: 8px;margin: 0;">
-								
-								<button data-toggle="modal" data-target="#expiriesModal" class="btn btn-xs btn-success test "><span class="icon icon-display"></span>More</button>	
-								
-							</div>					  		<div id="expiries"></div>
-					  		</div>
-					  	</div>
-					  
-					  
-				</div>	
+						
+						<div id="" class="col-lg-2 tile" style="margin-top: 1%;height: 420px">
 							
+							<div class="" id="" style="height: ">
+							<div class="row" style="">
+								
+								<div class="col-xs-1"></div>
+								<div class="col-xs-10">
+									<!--<a href="" data-toggle="modal" data-target="#facilitystatsModal">
+									<!--	<div class="">
+											<span class="glyphicon glyphicon-user"></span>
+					                  	Facilities with Stockouts <br/> <span id="hcw_trained"></span>
+					                            
+					                </div>
+					                   </a>-->
+								</div>
+								<div class="col-xs-1"></div>
+								
+							</div>
+							<div class="row" >
+								<div class="col-xs-1"></div>
+								<div class="col-xs-10">
+									<!--<a href="" class="" data-toggle="modal" data-target="#Modal">
+											<div class="">
+												<span class="glyphicon "></span>
+						                 	Facilities Rolled Out <br/><span id="facilities_rolled_out"></span> 
+						                            
+						                   </div>
+						                   </a>-->
+								</div>
+								<div class="col-xs-1"></div>
+										
+							</div>
+							</div>
 						</div>
 						
 						
 							</div>
 							
 							<div class="ui horizontal divider">
-								<i style="font-size: 16px;" class="fa fa-bar-chart-o"></i>
+								<i class="fa fa-bar-chart-o"></i>
 								 </div>
 							
-							<div class="row-fluid ui stackable four column grid" style=" margin-top:1.2%;">
-								<div class="five wide column tile " style="height: 500px ;margin-right: 0">
-									<div class="" style="height: 50px; padding: 8px;margin: 0;">
+							<div class="row-fluid" style=" margin-top:1.2%;min-height: 400px">
 								
-								<button data-toggle="modal" data-target="#mosModal" class="btn btn-xs btn-success "><span class="icon icon-display"></span>More</button>	
 								
 							</div>
-							<div id="mos" class=""></div>
-								</div>
-								<div class="six wide column " style="height: 500px;margin-left: 0">
-									<div class="" style="height: 50px; padding: 8px;margin: 0;">
-								
-								<button data-toggle="modal" data-target="#ordersModal" class="btn btn-xs btn-success "><span class="icon icon-display"></span>More</button>	
-								
-							</div>
-							<div id="orders" class="tile"></div>
-								</div>
-								<div class="five wide column " style="height: 500px ;margin-right: 0">
-									<div class="" style="height: 50px; padding: 8px;margin: 0;">
-								
-								<button data-toggle="modal" data-target="#consumptionModal" class="btn btn-xs btn-success "><span class="icon icon-display"></span>More</button>	
-								
-							</div>
-							<div id="consumption" class="tile"></div>
-								</div>
-								
-																
-							</div>
-							
-							<div class="ui horizontal divider">
-								<i style="font-size: 16px;" class="fa fa-bar-chart-o"></i>
-								 </div>
-								 
-							<div class="row-fluid ui stackable four column grid" style=" margin-top:1.2%;">
-								<div class="five wide column " style="height: 500px ;margin-right: 0">
-									<div class="" style="height: 50px; padding: 8px;margin: 0;">
-								
-								<button data-toggle="modal" data-target="#mosModal" class="btn btn-sm btn-success "><span class="icon icon-display"></span>More</button>	
-								
-							</div>
-							<div id="" class="tile"></div>
-								</div>
-								<div class="six wide column " style="height: 500px;margin-left: 0">
-									<div class="" style="height: 50px; padding: 8px;margin: 0;">
-								
-								<button data-toggle="modal" data-target="#ordersModal" class="btn btn-sm btn-success "><span class="icon icon-display"></span>More</button>	
-								
-							</div>
-							<div id="" class="tile"></div>
-								</div>
-								<div class="five wide column " style="height: 500px ;margin-right: 0">
-									<div class="" style="height: 50px; padding: 8px;margin: 0;">
-								
-								<button data-toggle="modal" data-target="#consumptionModal" class="btn btn-sm btn-success "><span class="icon icon-display"></span>More</button>	
-								
-							</div>
-							<div id="" class="tile"></div>
-								</div>
-								
-																
-							</div>	
-								 
 							
 						</section>
 						<!-- /END HCMP CONTENT -->
 						
-						<section id="section-underline-3">
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						<section id="rtk" class="row-fluid">
+							<div id="" class="col-lg-3">
+							<p>RTK dash</p>
 							
-	<div class="container-fluid">
-		
-		<div class="row">
-			<div class="col-md-4" style="">
-				
-			</div>
-			<div class="col-md-4" style="">
-				
-				
- <?php 
-if ($popup=="errorpopup") {
-  
- echo '<div class="alert alert-danger alert-dismissable" style="text-align:center;"> Error! Wrong Credentials! Try Again.
-<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>
-','</div>';
-}elseif ($popup=="passwordchange") {
-  echo  '<div class="alert alert-success alert-dismissable" style="text-align:center;">Your password '.$user_email.' has been changed. Please login.
-<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>
-','</div>';
-}elseif ($popup=="activation") {
-  echo  '<div class="alert alert-success alert-dismissable" style="text-align:center;">Your account has been Activated. Please login.
-<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>
-','</div>';
-}
-unset($popup);
-
- ?>
-			</div>
-			<div class="col-md-4" style="">
-				
-				
-			</div>
-		</div>
-		
-	</div>
-	
-	
-  	
-  		   
-<div class="container" style="margin-top: 3%;" id="containerlogin">
-      
-                
- <div class="row">
-        <div class="col-md-3">
-
-       <!--<a href="<?php echo base_url('national/demo_accounts') ?>"><button class="btn btn-primary ">Demo Site Login Credentials </button></a>--></div>
-
-  <div class="col-md-6"> 
-  			<div class="row">
-          <div class="col-md-1"></div>
-          <div class="col-md-10">
-            <div id="contain_login" class="">
-    <h2><span style="margin-right: 0.5em;" class="glyphicon glyphicon-lock"></span>Login</h2> 
-    <?php 
-    
-   echo form_open('user/login_submit'); ?>
-<div id="login" >
-
-    
-  <div class="form-group" style="margin-top: 2.3em;">
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="text" class="form-control input-lg" name="username" id="username" placeholder="Enter email" required="required">
-  </div>
-  <div class="form-group" style="margin-bottom: 2em;">
-    <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control input-lg" name="password" id="password" placeholder="Password" required="required">
-  </div>
-  
-   <input type="submit" class="btn btn-primary " name="register" id="register" value="Log in" style="margin-bottom: 3%;">
-   
-  <a class="" style="margin-left: 2%;" href="<?php echo base_url().'user/forgot_password'?>" id="modalbox">Can't access your account ?</a>
-  <a class="" style="margin-left: 2%;" href="<?php echo base_url().'user/sms_activate'?>" id="modalbox">Activate my Account?</a>
-    
-    
-</div>
-
-<?php 
-
-    echo form_close();
-    ?>
-</div><!-- #contain_login -->
-
-
-          </div>
-          <div class="col-md-1"></div>
-  
-</div><!-- .row #contain_login -->
-</div>
-  		<div class="col-md-3"></div>  
-   
- </div><!-- .row -->
- </div><!-- .container -->
- <div id="footer">
-      <div class="container">
-        <p class="text-muted"> Government of Kenya &copy <?php echo date('Y');?>. All Rights Reserved</p>
-      </div>
-    </div>
+						</div>
 							
 						</section>
+						
+						
+						
+						<section id="section-underline-3"><p>Log in</p></section>
+						<section id="section-underline-5"><p>Settings</p></section>
 					</div><!-- /content -->
 					
 				</div><!-- /tabs -->
@@ -510,64 +282,18 @@ unset($popup);
 		</div>
    	
   <!-- Modal -->
-<div class="modal fade" id="mosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">MOS</h4>
+        <h4 class="modal-title" id="myModalLabel">Facility Statistics</h4>
       </div>
       <div class="modal-body">
-       	<div class="row-fluid filters" style="height: 40px;">
-      		<section class="col-lg-3">
-      				
-					<select class="form-control " id="county_val">
-						<option value="NULL">Select County</option>
-						<?php
-							foreach($county as $data):
-							    $county_id=$data["id"];
-								$county_name=$data["county"];
-							      echo "<option class='item' value='$county_id'>$county_name</option>";
-							    
-							endforeach;
-						?>
-					</select>
-					
-					
-      		</section>
-      		
-      		<section class="col-lg-3">
-      				
-					<select class="form-control " id="subcounty_val">
-						<option value="NULL">Select sub-county</option>
-						
-					</select>
-					
-					
-					
-      		</section>
-      		<section class="col-lg-3">
-      				
-					<select class="form-control " id="commodity_name">
-						<option value="NULL">Select Commodity</option>
-						<?php
-							foreach($commodities as $data):
-							    $c_id=$data["id"];
-								$c_name=$data["commodity_name"];
-							      echo "<option class='item' value='$c_id'>$c_name</option>";
-							    
-							endforeach;
-						?>
-					</select>
-					
-					
-					
-      		</section>
-      		<section class="col-lg-3">
-      			<div class="ui green button mosfilter"><i class="fa fa-filter"></i> Filter</div>
-      		</section>
-      	</div>
-       <div id="mosmodal">
+       <div class="">
+       	
+       </div>
+       <div id="mosmodalgraph">
        	
        </div>
       </div>
@@ -579,72 +305,65 @@ unset($popup);
 </div>
 <!-- end Modal stockmosModal -->
 
- 
+  <!-- Modal -->
+<div class="modal fade" id="consumptionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end Modal consumptionModal -->
+
  <!-- Modal -->
 <div class="modal fade" id="facilitystatsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header" style="padding: 10px">
+      <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Facility Statistics</h4>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
       </div>
-      <div class="modal-body" style="padding: 10px">
+      <div class="modal-body">
       	<div class="row-fluid filters" style="height: 40px;">
-      		<section class="col-lg-3">
-      				
-					<select class="form-control " id="county_val2">
-						<option value="NULL">Select County</option>
-						<?php
+      		<section class="col-lg-6">
+      				<div class="ui selection dropdown">
+					  <input type="hidden" name="gender">
+					  <div class="default text">Select County</div>
+					  <i class="dropdown icon"></i>
+					  <div class="menu">
+					  	<?php
 							foreach($county as $data):
 							    $county_id=$data["id"];
 								$county_name=$data["county"];
-							      echo "<option class='item' value='$county_id'>$county_name</option>";
+							      echo "<div class='item' data-value='$county_id'>$county_name</div>";
 							    
 							endforeach;
 						?>
-					</select>
-					
-					
+					    <div class="item" data-value="1">Nairobi</div>
+					    <div class="item" data-value="0">Kirinyaga</div>
+					  </div>
+					</div>
+					<div class="ui green button"><i class="fa fa-filter"></i> Filter</div>
       		</section>
-      		<section class="col-lg-3">
-      				
-					<select class="form-control " id="subcounty_val2">
-						<option value="NULL">Select sub-county</option>
-						
-					</select>
-					
-					
-					
-      		</section>
-      		<section class="col-lg-3 piefilter">
-      				
-      				<select class="form-control " id="piefilter">
-						<option value="NULL">Select Criteria</option>
-						<option value="activation">Activation</option>
-						<option value="owner">Owner</option>
-						<option value="level">Level/Type</option>
-						
-					</select>
-      				
-      			</section>
-      		<section class="col-lg-3">
-      			<div class="ui green button filterthis"><i class="fa fa-filter"></i> Filter</div>
+      		<section class="col-lg-6">
+      			
       		</section>
       	</div>
       	
       	<div class="row-fluid">
-      		<section class="col-lg-5 " style="height: auto;border: 0px solid #036;">
-      			
-      			<div id="pie">
-      				
-      			</div>
+      		<section class="col-lg-5 pie" style="height: 70px;border: 1px solid #036;">
       			
       		</section>
-      		<section class="col-lg-7 tabledata" style="border: 0px solid #036;">
-      			
-      			<div id="datatable" style="overflow-y: scroll;max-height: 400px;">
-      				
-      			</div>
+      		<section class="col-lg-7 tabledata" style="height: 70px;border: 1px solid #036;">
       			
       		</section>
       	</div>
@@ -657,82 +376,17 @@ unset($popup);
 </div>
 <!-- end Modal orderModal -->
    
-      <!-- Modal -->
-<div class="modal fade" id="consumptionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Facility Statistics</h4>
-      </div>
-      <div class="modal-body">
-        <div class=""></div>
-        <div></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- end Modal consumptionModal -->
-
-   <!-- Modal -->
-<div class="modal fade" id="ordersModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Facility Statistics</h4>
-      </div>
-      <div class="modal-body">
-        <div class=""></div>
-        <div></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- end Modal consumptionModal -->
-
-
-<!-- Modal -->
-<div class="modal fade" id="expiriesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Facility Statistics</h4>
-      </div>
-      <div class="modal-body">
-        <div class=""></div>
-        <div></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- end Modal expiriesModal -->
-    
+   
+   
+   
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
     <script src="<?php echo base_url().'assets/tab-style/js/cbpFWTabs.js'?>"></script>
 		<script>
-		$('.ui.dropdown').dropdown();
-					
-		</script>
-		
-		
-    <script>
-    
-    var url='<?php echo base_url(); ?>';
-    
-     $(document).ready(function () {
-     	
-     	
-     	
+		$('.ui.dropdown')
+  .dropdown()
+;
 			(function() {
 
 				[].slice.call( document.querySelectorAll( '.tabs' ) ).forEach( function( el ) {
@@ -740,90 +394,18 @@ unset($popup);
 				});
 
 			})();
-					
-							
-				$("#county_val").change(function() {
-			var option_value=$(this).val();
-    		if(option_value==''){
-    			$("#subcounty_val").hide('slow'); 
-    		}else{
-				var drop_down='';
- 				var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_sub_county_json_data/"+$("#county_val").val();
- 				$.getJSON( hcmp_facility_api ,function( json ) {
- 					$("#subcounty_val").html('<option  >Select Sub-county</option>');
-      				$.each(json, function( key, val ) {
-      					drop_down +="<option  value='"+json[key]["id"]+"'>"+json[key]["district"]+"</option>"; 
-      				});
-      				$("#subcounty_val").append(drop_down);
-    			});
-    			$("#subcounty_val").show('slow');  
-    			 
-    		}
-    	}); //end of district name change funtion
-    	$("#county_val2").change(function() {
-			var option_value=$(this).val();
-    		if(option_value==''){
-    			$("#subcounty_val2").hide('slow'); 
-    		}else{
-				var drop_down='';
- 				var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_sub_county_json_data/"+$("#county_val2").val();
- 				$.getJSON( hcmp_facility_api ,function( json ) {
- 					$("#subcounty_val2").html('<option  >Select Sub-county</option>');
-      				$.each(json, function( key, val ) {
-      					drop_down +="<option  value='"+json[key]["id"]+"'>"+json[key]["district"]+"</option>"; 
-      				});
-      				$("#subcounty_val2").append(drop_down);
-    			});
-    			$("#subcounty_val2").show('slow');  
-    			 
-    		}
-    	}); //end of district name change funtion
-				
-					//filter for statistics modal
-		$(".filterthis").click(function(e) {
-			
-          var countyvalue=$("#county_val2").val(); 
-          var subcountyvalue=$("#subcounty_val2").val();  
-          var piefiltervalue=$("#piefilter").val(); 
-              
-        ajax_request('Kenya/statistics_table/'+countyvalue+'/'+subcountyvalue+'/'+piefiltervalue+'/',"#datatable");
-        ajax_request('Kenya/statistics_pie/'+countyvalue+'/'+subcountyvalue+'/'+piefiltervalue+'/',"#pie");
-        
-        });
-        $(".mosfilter").click(function(e) {
-			
-          var countyvalue2=$("#county_val").val(); 
-          var subcountyvalue2=$("#subcounty_val").val() 
-          var commodity=$("#commodity_name").val() 
-              
-        ajax_request('Kenya/mos_graph/'+countyvalue2+'/'+subcountyvalue2+'/'+commodity+'/NULL/mosmodal',"#mosmodal");
-        
-        });
-        //ajax_request('kenya/mos_graph/NULL/NULL/NULL/NULL/mos',"#mos");
-        ajax_request('Kenya/consumption/NULL/NULL/NULL/NULL',"#consumption");
-        ajax_request('Kenya/orders/NULL/NULL/NULL/NULL/NULL',"#orders");
-        ajax_request('Kenya/expiry/NULL/NULL/NULL/NULL/NULL',"#expiries");
+		</script>
+		
+		<script>
+    var url='<?php echo base_url(); ?>';
+     $(document).ready(function () {
      	
-     	function ajax_request(function_url,div){
-        var function_url =url+function_url;
-        var loading_icon=url+"assets/img/Preloader_2.gif";
-		        $.ajax({
-		        	type: "POST",
-		       		 url: function_url,
-		       			 beforeSend: function() {
-		       				 $(div).html("<img style='margin:25% 40% 20% 20%;' src="+loading_icon+">");
-		       				 },
-		       				 success: function(msg) {
-		       					 $(div).html(msg);
-		       		 }
-        		});
-        	}   
      	});
 		
 	</script>	
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
+    <script>
+    var url='<?php echo base_url(); ?>';
+    </script>
   		<script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
 		<script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
 		<!--  <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>

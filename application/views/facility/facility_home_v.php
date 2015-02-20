@@ -1,4 +1,4 @@
-  <div class="container" style="width: 96%; margin: auto;">
+<div class="container" style="width: 96%; margin: auto;">
 <div class="row">
         <?php if($facility_dashboard_notifications['stocks_from_v1']>0): ?>
         <div style="height:auto; margin-bottom: 2px" class="warn message col-md-4" id="">        
@@ -21,7 +21,7 @@
       	<input type="hidden" id="stocklevel" value="<?php echo $facility_dashboard_notifications['facility_stock_count'] ?>" readonly/>
     <?php if($facility_dashboard_notifications['facility_donations_pending']>0): ?>
       	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
-        <h5>Donations</h5> 
+        <h5>Inter Facility Donation</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/pending') ?>"><span class="badge"><?php 
 				echo $facility_dashboard_notifications['facility_donations_pending'];?></span> Items have been donated and are pending receipt</a> 
@@ -30,7 +30,7 @@
 		  <?php endif; //donations_pending?>
 		      <?php if($facility_dashboard_notifications['facility_donations']>0): ?>
       	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
-        <h5>Donations</h5> 
+        <h5>Inter Facility Donation</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/to-me') ?>"><span class="badge"><?php 
 				echo $facility_dashboard_notifications['facility_donations'];?></span> Items have been donated to you</a> 
@@ -124,36 +124,21 @@
         <div style="height:auto; margin-bottom: 2px" class="issue message ">	 
         	<a href="<?php echo base_url("issues/index/internal") ?>"><h5>Issue Commodities to Service Points</h5></a>       	 
         </div>
-        
-        <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="distribute message " id="distribute_tab">
-            <h5>Redistribute Commodities</h5>
-        </div>
-         <div style="height:auto; margin-bottom: 2px" class="" id="distribute_hide">
-         	<a href="<?php echo base_url('issues/index/external'); ?>"><h5>Other Facilities</h5></a>	 
-          <a href="<?php echo base_url('issues/index/district_store'); ?>"><h5>District Store</h5></a>
-        
-        </div>
-          
-       <!-- <div style="height:auto; margin-bottom: 2px" class="distribute message ">
+        <div style="height:auto; margin-bottom: 2px" class="distribute message ">
         	<a href="<?php echo base_url('issues/index/external'); ?>"><h5>Redistribute Commodities to Other Facilities</h5></a>	 
         </div>
-        <div style="height:auto; margin-bottom: 2px" class="distribute message ">
+    <!--    <div style="height:auto; margin-bottom: 2px" class="distribute message ">
           <a href="<?php echo base_url('issues/index/district_store'); ?>"><h5>Redistribute Commodities to District Store</h5></a>   
-        </div>-->
+     </div>-->
         
  		<div style="height:auto; margin-bottom: 2px" class="distribute message ">
-        	<a href="<?php echo base_url('issues/confirm_external_issue')?>"><h5>Receive Commodity From Other Facility (Redistributions)</h5></a>
+        	<a href="<?php echo base_url('issues/confirm_external_issue')?>"><h5>Receive Commodities From Other Sources</h5></a>
         	 
-        </div>
-       <!-- <div style="height:auto; margin-bottom: 2px" class="distribute message ">
-        	<a href="<?php echo base_url('issues/confirm_external_issue')?>"><h5>Receive Commodity From Other Sources</h5></a>
-        	 
-        </div> -->
+        </div> 
          <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="order message " id="order_tab">
-            <h5>Place an Order</h5>
+            <h5>Orders</h5>
         </div>
          <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
-            <a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>MEDS online</h5></a>
             <a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>KEMSA online</h5></a>
             <a href="" class="order-for-excel"><h5>KEMSA via excel</h5></a>
             
@@ -206,19 +191,14 @@
 
    		startIntro();
    	}
-   	//for hiding the tabs when the page loads
+   	
    	$('#update_order_hide').hide() 
        $('#order_hide').hide() 
-       $('#distribute_hide').hide()
 
        $('#order_tab').click(function(event) {
            /* Act on the event */
            $('#order_hide').toggle('slow')
        }); 
-       $('#distribute_tab').click(function(event) {
-           /* Act on the event */
-           $('#distribute_hide').toggle('slow')
-       });
        $('#update_order').click(function(event) {
            /* Act on the event */
            $('#update_order_hide').toggle('slow')
