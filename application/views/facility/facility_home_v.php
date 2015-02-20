@@ -126,7 +126,7 @@
         </div>
         
         <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="distribute message " id="distribute_tab">
-            <h5>Redistribute Commodities</h5>
+            <h5>Redistribute Commodities to...</h5>
         </div>
          <div style="height:auto; margin-bottom: 2px" class="" id="distribute_hide">
          	<a href="<?php echo base_url('issues/index/external'); ?>"><h5>Other Facilities</h5></a>	 

@@ -6,7 +6,11 @@
 /drug_commodity_map.sql
 /drugs not in commodities table.txt
 /nbproject
+Hcmp_functions.php
+<<<<<<< HEAD
 
+=======
+>>>>>>> 256e783584cf459bd9d4a98619dc33586b9d5f79
 
 
 application/config/database.php
