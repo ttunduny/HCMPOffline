@@ -264,6 +264,117 @@ class Facilities extends Doctrine_Record {
 		
 		
 	}
+
+
+	public static function facility_ordered($type, $county_id = NULL, $district_id = NULL, $facility_code=null)
+	{
+		switch ($type) {
+			case 'facility':
+			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+               CALL facility_orders('facility','".$facility_code."');
+             
+			");
+			//return the monitoring data
+			//echo '<pre>';print_r($data);echo "</pre>";die();
+			break;
+		
+			case 'district':
+			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				CALL facility_orders('district','".$district_id."');
+
+			");
+			//return the monitoring data
+			return $data;
+		
+			case 'county':
+			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		   CALL facility_orders('county','".$county_id."');
+              
+              ");
+			break;
+		}
+		//return the monitoring data
+			return $data;
+		
+		
+	}
+
+	public static function facility_issued($type, $county_id = NULL, $district_id = NULL, $facility_code=null)
+	{
+		switch ($type) {
+			case 'facility':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+             CALL facility_issues('facility','".$facility_code."');
+            
+             
+			");
+			//return the monitoring data
+			//echo '<pre>';print_r($data);echo "</pre>";die();
+				break;
+
+			case 'county':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		    CALL facility_issues('county','".$county_id."');
+              
+              ");
+		//return the monitoring data
+			break;	
+			case 'district':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				CALL facility_issues('district','".$district_id."');
+			");
+			//return the monitoring data
+			break;
+			default:
+				# code...
+				break;
+		}
+
+		//echo "<pre>";print_r($data);die;
+		return $data;
+		
+	}
+
+
+	 
+
+
+	public static function facility_loggins($type, $county_id = NULL, $district_id = NULL, $facility_code=null)
+	{
+		switch ($type) {
+			case 'facility':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+              CALL facility_loggins('facility','".$facility_code."');
+            
+             
+			");
+			//return the monitoring data
+			//echo '<pre>';print_r($data);echo "</pre>";die();
+				break;
+
+			case 'county':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		    CALL facility_loggins('county','".$county_id."');
+              
+              ");
+		//return the monitoring data
+			break;	
+			case 'district':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				CALL facility_loggins('district','".$district_id."');
+			");
+			//return the monitoring data
+			break;
+			default:
+				# code...
+				break;
+		}
+
+		//echo "<pre>";print_r($data);die;
+		return $data;
+		
+	}
+
 	//Used by facility_mapping function in reports controller
 	//Used to get the dates that facilities went online
 	public static function get_facilities_online_per_district($county_id)
