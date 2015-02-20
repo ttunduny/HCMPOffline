@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 database.php
-=======
 *.class
 *.pyc
 *.pyo
@@ -17,4 +15,3 @@ application/config/database.php
 .htaccess
 
 system/libraries/Hcmp_functions.php
->>>>>>> 28e9aab1d9ee2dfe5f7c1fd6f5b36763c36ec278
