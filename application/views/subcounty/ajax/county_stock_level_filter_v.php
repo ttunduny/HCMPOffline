@@ -41,6 +41,7 @@ $identifier = $this -> session -> userdata('user_indicator');
       <li class=""><a href="#division" data-toggle="tab">Program Commodities</a></li>
       <!--<li class=""><a href="#cat" data-toggle="tab">Categories</a></li>-->
    	  <li class=""><a href="#county" data-toggle="tab">Sub County Comparison</a></li>
+   	  <li class=""><a href="#stockouts" data-toggle="tab" onclick="stockouts_clicked()">Stock outs</a></li>
      <!--<li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>-->
 </ul>
     <div id="myTabContent" class="tab-content">
@@ -215,6 +216,33 @@ endforeach;
 </form>
 </div>
 </div>
+
+<div  id="stockouts" class="tab-pane fade in">
+	
+<br>
+<!-- <form class="form-inline" role="form">
+
+	<select id="district_filter" class="form-control col-md-2">
+<option selected="selected" value="NULL">Select Sub-county</option>
+<?php
+foreach($district_data as $district_):
+		$district_id=$district_->id;
+		$district_name=$district_->district;	
+		echo "<option value='$district_id'>$district_name</option>";
+endforeach;
+?>
+</select> 
+<select id="facility_filter" class="form-control col-md-2">
+<option value="NULL">Select facility</option>
+</select>	
+<div class="col-md-1">
+<button class="btn btn-sm btn-success filter" id="filter" name="filter">
+<span class="glyphicon glyphicon-filter"></span>Filter</button> 
+</div> 
+</form> -->
+<div class="graph_content" id="stockouts_graph"  ></div>
+</div>
+
 </div>
 <div class="graph_content" id="default_graph_"  ></div>	
 
@@ -225,8 +253,12 @@ endforeach;
 <?php echo $default_graph; ?>
 });
 
+	function stockouts_clicked(){
+	$.get("reports/stock_out_reports", function(data){
+		$("#stockouts_graph").html(data);
+	});
+	};
 	$(document).ready(function() {
-
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           $('.graph_content').html('');
           
