@@ -556,15 +556,9 @@ return $q;
 	//Used to get the months facilities went online
 	//Limits to the last 3 months of activation
 	
-	public static function get_dates_facility_went_online($county_id, $district_id = null, $year)
+	public static function get_dates_facility_went_online($county_id)
 	{
-		
-		$addition = (isset($district_id)&& ($district_id>0)) ?"AND f.district = $district_id" : null;
-		$data = array();
-		$years = array('2015', '2014', '2013');
-		
-		foreach ($years as $year ) {
-			$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		SELECT DISTINCT
 		    DATE_FORMAT(`date_of_activation`, '%M %Y') AS date_when_facility_went_online,
 		    YEAR(`date_of_activation`) 
@@ -576,13 +570,8 @@ return $q;
 		        AND d.county = $county_id
 		        $addition
 		        AND UNIX_TIMESTAMP(`date_of_activation`) > 0
-		        AND YEAR(`date_of_activation`) = $year
 		ORDER BY `date_of_activation` desc
 		");
-		
-		$data[$year]=$q;
-		}
-		
 		
 		return $data;
 			
@@ -590,8 +579,6 @@ return $q;
 	
 	//used by facility mapping function
 	//used to get the distinct years facilities went online
-	
-	
 	//used when building data for the facilities that went online in a particular district in a particular county
 	public static function get_facilities_which_went_online_($district_id = null, $date_of_activation)
 	{
@@ -609,7 +596,7 @@ return $q;
 			and d.id = $district_id 
 			and DATE_FORMAT(  `date_of_activation` ,  '%M %Y' ) = '$date_of_activation' AND using_hcmp=1");
 			
-		return $q;		
+			return $q;
 	}
 public static function get_targetted_facilities($district_id = null)
 {
