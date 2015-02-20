@@ -1054,29 +1054,29 @@ class Reports extends MY_Controller {
 
 		
 
-		// Graph data of last loggins
-             $facility_loggins = Facilities::facility_loggins($this->session->userdata('user_indicator'), $county_id, $district_id,$facility_code);
+		// // Graph data of last loggins
+  //            $facility_loggins = Facilities::facility_loggins($this->session->userdata('user_indicator'), $county_id, $district_id,$facility_code);
 
-	    //echo '<pre>';print_r($facility_loggins);echo "</pre>";die();
+	 //    //echo '<pre>';print_r($facility_loggins);echo "</pre>";die();
 
-		$facility_last_log = array();
-		$facility_last_log = array_merge($facility_last_log, array("graph_id" => 'logged-graph'));
-		$facility_last_log = array_merge($facility_last_log, array("graph_title" => 'Days Last Logged '));
-		$facility_last_log = array_merge($facility_last_log, array("graph_type" => 'bar'));
-		$facility_last_log = array_merge($facility_last_log, array("graph_yaxis_title" => 'County Facilities'));
-		$facility_last_log = array_merge($facility_last_log, array("graph_categories" => array()));
-		$facility_last_log = array_merge($facility_last_log, array("series_data" => array("Days From Last Seen" => array())));
+		// $facility_last_log = array();
+		// $facility_last_log = array_merge($facility_last_log, array("graph_id" => 'logged-graph'));
+		// $facility_last_log = array_merge($facility_last_log, array("graph_title" => 'Days Last Logged '));
+		// $facility_last_log = array_merge($facility_last_log, array("graph_type" => 'bar'));
+		// $facility_last_log = array_merge($facility_last_log, array("graph_yaxis_title" => 'County Facilities'));
+		// $facility_last_log = array_merge($facility_last_log, array("graph_categories" => array()));
+		// $facility_last_log = array_merge($facility_last_log, array("series_data" => array("Days From Last Seen" => array())));
 
-		foreach ($facility_loggins as $last_logged) :
-			$facility_last_log['graph_categories'] = array_merge($facility_last_log['graph_categories'], array($last_logged['Facility Name']));
-			$facility_last_log['series_data']['Days From Last Seen'] = array_merge($facility_last_log['series_data']['Days From Last Seen'], array((int)$last_logged['Days From Last Seen']));
-		endforeach;
+		// foreach ($facility_loggins as $last_logged) :
+		// 	$facility_last_log['graph_categories'] = array_merge($facility_last_log['graph_categories'], array($last_logged['Facility Name']));
+		// 	$facility_last_log['series_data']['Days From Last Seen'] = array_merge($facility_last_log['series_data']['Days From Last Seen'], array((int)$last_logged['Days From Last Seen']));
+		// endforeach;
 
-		$facility_logged_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_log);
+		// $facility_logged_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_log);
 
-        $data['facility_last_loggins'] = $facility_logged_;
-      //echo '<pre>';print_r($facility_logged_);echo "</pre>";die();
-		// /Graph data of last loggins
+  //       $data['facility_last_loggins'] = $facility_logged_;
+  //     //echo '<pre>';print_r($facility_logged_);echo "</pre>";die();
+		// // /Graph data of last loggins
 
 
 
@@ -1167,11 +1167,12 @@ class Reports extends MY_Controller {
 				$district_name = $district_detail -> district;
 
 				$get_facilities_which_went_online_ = facilities::get_facilities_which_went_online_($district_id, $facility_dates['date_when_facility_went_online']);
-
+                //echo'<pre>';print_r($get_facilities_which_went_online_);echo'</pre>';die;
 				$total = $get_facilities_which_went_online_[0]['total'];
 				$total_facilities = $get_facilities_which_went_online_[0]['total_facilities'];
 				$total_facilities_targetted = $get_facilities_which_went_online_[0]['total_facilities_targetted'];
 				$total_facilitites_using_hcmp = $get_facilities_which_went_online_[0]['total_using_hcmp'];
+                //echo'<pre>';print_r($total);echo'</pre>';die;
 
 				$monthly_total = $monthly_total + $total;
 				$all_facilities = $all_facilities + $total;
@@ -1189,7 +1190,7 @@ class Reports extends MY_Controller {
 			endforeach;
 
 			$table_data .= "<td>$monthly_total</td></tr>";
-
+            //echo'<pre>';print_r($monthly_total);echo'</pre>';die;
 		endforeach;
 
 		$table_data .= "<tr>";
@@ -1223,7 +1224,7 @@ class Reports extends MY_Controller {
 			$percentage_coverage .= ($checker == 1) ? "<tr><td><b>% Coverage</b></td>
 			<td>$coverage %</td>" : "<td>$coverage %</td>";
 			$checker++;
-
+            //echo'<pre>';print_r($coverage);echo'</pre>';die;
 		endforeach;
 		$list_url = base_url() . 'reports/list_facilities';
 		$table_data .= "<td><a href='#' id='total' class='ajax_call1 link' option='total' date='total'>$all_facilities</a></td></tr></tbody>";
@@ -1235,7 +1236,8 @@ class Reports extends MY_Controller {
 		$targetted_vs_using_hcmp = 0;
 		@$final_coverage_total = round((($all_facilities / $total_facilities_in_county)) * 100, 1);
 		//$system_usage = $this->monitoring();
-
+		//<li><button type='button' class='btn btn-default download'>System Usage Breakdown</button></li>
+         //echo'<pre>';print_r($percentage_coverage);echo'</pre>';die;
 		$data_ = "
 		<div class='tabbable tabs-left'>
 		<div class='tab-content'>
@@ -1243,7 +1245,6 @@ class Reports extends MY_Controller {
         <li class='active'><a href='#A' data-toggle='tab'>Roll out Summary</a></li>
         <li ><a href='#B' data-toggle='tab'>Monthly Break Down</a></li>
         <li><button type='button' class='btn btn-default download'>System Usage Breakdown</button></li>
-
         </ul>
          <div  id='B' class='tab-pane fade'>
 			<table class='row-fluid table table-hover table-bordered table-update' width='80%' id='test1'>" . $district_names . $table_data . $total_facility_list . "<td>$total_facilities_in_county</td></tr>" . $total_targetted_facility_list . $percentage_coverage . "<td>$final_coverage_total %</td></tr>" . $percentage_coverage_using . "</tr>
