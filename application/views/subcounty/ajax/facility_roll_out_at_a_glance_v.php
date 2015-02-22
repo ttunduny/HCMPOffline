@@ -115,8 +115,10 @@
     </div>
   </div>
 </div>
-    <div id="ordered-graph"></div>
-    <div id="issued-graph"></div>
+<div class="col-sm-12">
+    <div class="col-sm-6" id="ordered-graph"></div>
+    <div class="col-sm-6" id="issued-graph"></div>
+</div>
 	<!-- <div id="logged-graph"></div>-->
 
 	
