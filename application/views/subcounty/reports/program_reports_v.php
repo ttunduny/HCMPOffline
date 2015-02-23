@@ -149,7 +149,6 @@ HTML_DATA;
 							break;
 						case 'district':
 							$facility_listing .= '<table class = "col-md-12" id = "information-table">';
-							$facility_listing .= '<thead><th style = "width :80%;">Facility</th><th style = "width :10%;"></th><th style = "width :10%;"></th></thead>';
 							$facility_listing .= '<tbody><tr>
 							<td><select class = "form-control" name = "facilities" id = "facilities"><option value = "" selected = "selected">Select a Facility</option><optgroup id = "facility_listing">'.$mal_report_data.'</optgroup></select></td>
 							<td><a href = "#" class = "btn btn-success" id = "filter"><i class = "glyphicon glyphicon-filter"></i> Filter</a></td>
@@ -187,7 +186,6 @@ HTML_DATA;
 					break;
 				case 'district':
 					$facility_listing .= '<table class = "col-md-12" id = "information-table">';
-					$facility_listing .= '<thead><th style = "width :80%;">Facility</th><th style = "width :10%;"></th><th style = "width :10%;"></th></thead>';
 					$facility_listing .= '<tbody><tr>
 					<td><select class = "form-control" name = "rh-facilities" id = "rh-facilities"><option value = "" selected = "selected">Select a Facility</option><optgroup id = "facility_listing">'.$mal_report_data.'</optgroup></select></td>
 					<td><a href = "#" class = "btn btn-success" id = "rh-filter"><i class = "glyphicon glyphicon-filter"></i> Filter</a></td>
