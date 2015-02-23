@@ -282,7 +282,7 @@ class Facilities extends Doctrine_Record {
 				//echo '<pre>';print_r($data);echo "</pre>";die();
                $sort[$key] = $part['Days From Last Order'];
              }
-              array_multisort($sort, SORT_ASC, $data);
+              array_multisort($sort, SORT_DESC, $data);
 			//return the monitoring data
 			//echo '<pre>';print_r($data);echo "</pre>";die();
 			break;
@@ -296,7 +296,7 @@ class Facilities extends Doctrine_Record {
 				//echo '<pre>';print_r($data);echo "</pre>";die();
                $sort[$key] = $part['Days From Last Order'];
              }
-              array_multisort($sort, SORT_ASC, $data);
+              array_multisort($sort, SORT_DESC, $data);
 			//return the monitoring data
 			return $data;
 		
@@ -310,7 +310,7 @@ class Facilities extends Doctrine_Record {
 				//echo '<pre>';print_r($data);echo "</pre>";die();
                $sort[$key] = $part['Days From Last Order'];
              }
-              array_multisort($sort, SORT_ASC, $data);
+              array_multisort($sort, SORT_DESC, $data);
 			
 			break;
 		}
@@ -335,7 +335,7 @@ class Facilities extends Doctrine_Record {
 				//echo '<pre>';print_r($data);echo "</pre>";die();
                $sort[$key] = $part['Days from last issue'];
              }
-              array_multisort($sort, SORT_ASC, $data);
+              array_multisort($sort, SORT_DESC, $data);
 				break;
 
 			case 'county':
@@ -347,7 +347,7 @@ class Facilities extends Doctrine_Record {
 				//echo '<pre>';print_r($data);echo "</pre>";die();
                $sort[$key] = $part['Days from last issue'];
              }
-              array_multisort($sort, SORT_ASC, $data);
+              array_multisort($sort, SORT_DESC, $data);
 		//return the monitoring data
 			break;	
 			case 'district':
@@ -360,7 +360,7 @@ class Facilities extends Doctrine_Record {
 				//echo '<pre>';print_r($data);echo "</pre>";die();
                $sort[$key] = $part['Days from last issue'];
              }
-              array_multisort($sort, SORT_ASC, $data);
+              array_multisort($sort, SORT_DESC, $data);
 			break;
 			default:
 				# code...
@@ -389,7 +389,7 @@ class Facilities extends Doctrine_Record {
 				//echo '<pre>';print_r($data);echo "</pre>";die();
                $sort[$key] = $part['Days From Last Seen'];
              }
-              array_multisort($sort, SORT_ASC, $data);
+              array_multisort($sort, SORT_DESC, $data);
 			//return the monitoring data
 			//echo '<pre>';print_r($data);echo "</pre>";die();
 				$data = sort($data,'descend');
@@ -404,7 +404,7 @@ class Facilities extends Doctrine_Record {
 				//echo '<pre>';print_r($data);echo "</pre>";die();
                $sort[$key] = $part['Days From Last Seen'];
              }
-              array_multisort($sort, SORT_ASC, $data);
+              array_multisort($sort, SORT_DESC, $data);
 		//return the monitoring data
 			break;	
 			case 'district':
@@ -415,7 +415,7 @@ class Facilities extends Doctrine_Record {
 				//echo '<pre>';print_r($data);echo "</pre>";die();
                $sort[$key] = $part['Days From Last Seen'];
              }
-              array_multisort($sort, SORT_ASC, $data);
+              array_multisort($sort, SORT_DESC, $data);
 			//return the monitoring data
 			break;
 			default:

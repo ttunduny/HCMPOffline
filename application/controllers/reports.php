@@ -1011,7 +1011,7 @@ class Reports extends MY_Controller {
 		$facility_last_issue = array_merge($facility_last_issue, array("graph_id" => 'issued-graph'));
 		$facility_last_issue = array_merge($facility_last_issue, array("graph_title" => 'Days Last Issued '));
 		$facility_last_issue = array_merge($facility_last_issue, array("graph_type" => 'bar'));
-		$facility_last_issue = array_merge($facility_last_issue, array("graph_yaxis_title" => 'County Facilities'));
+		$facility_last_issue = array_merge($facility_last_issue, array("graph_yaxis_title" => 'Days'));
 		$facility_last_issue = array_merge($facility_last_issue, array("graph_categories" => array()));
 		$facility_last_issue = array_merge($facility_last_issue, array("series_data" => array("Days from Last issued" => array())));
 
