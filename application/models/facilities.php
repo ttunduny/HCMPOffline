@@ -655,4 +655,20 @@ public static function get_facility_details_simple($facility_code){
 		");
 	return $mbegu;
 	}
+
+//get facility county and district4
+public static function get_facility_district_county_level($facility_code)
+{
+	// echo $facility_code;die;
+	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT d.district as district, c.county as county, f.type as type FROM
+		facilities f, districts d, counties c
+		WHERE f.facility_code = '$facility_code'
+		AND f.district = d.id
+		AND c.id = d.county");
+
+	return $q[0];
 }
+
+}
+
