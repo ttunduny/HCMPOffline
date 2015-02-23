@@ -145,8 +145,8 @@ HTML_DATA;
 <div class="row container" style="width: 100%; margin: auto; background-color: white;">
 <div class="" style="background-color: white;">
 	<ul class='nav nav-tabs'>
-      <li class="active"><a href="#Malaria" data-toggle="tab">Malaria Reports</a></li>
-      <li class=""><a href="#RH" data-toggle="tab">RH Reports</a></li>
+      <li class="active"><a href="#Malaria" data-toggle="tab">Malaria</a></li>
+      <!--<li class=""><a href="#RH" data-toggle="tab">Reproductive Health</a></li>-->
     </ul>
     <div id="myTabContent" class="tab-content">
  		<div  id="Malaria" class="tab-pane fade active in">
@@ -203,8 +203,52 @@ HTML_DATA;
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		$('#test1').dataTable();
-		$('#test2').dataTable();
+		$('#test1').dataTable({
+			"sDom": "T lfrtip",
+	     "sScrollY": "310px",
+	     "sScrollX": "100%",
+                    "sPaginationType": "bootstrap",
+                    "oLanguage": {
+                        "sLengthMenu": "_MENU_ Records per page",
+                        "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
+                    },
+			      "oTableTools": {
+                 "aButtons": [
+				"copy",
+				"print",
+				{
+					"sExtends":    "collection",
+					"sButtonText": 'Save',
+					"aButtons":    [ "csv", "xls", "pdf" ]
+				}
+			],
+
+			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+		}
+		});
+		$('#test2').dataTable({
+			"sDom": "T lfrtip",
+	     "sScrollY": "310px",
+	     "sScrollX": "100%",
+                    "sPaginationType": "bootstrap",
+                    "oLanguage": {
+                        "sLengthMenu": "_MENU_ Records per page",
+                        "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
+                    },
+			      "oTableTools": {
+                 "aButtons": [
+				"copy",
+				"print",
+				{
+					"sExtends":    "collection",
+					"sButtonText": 'Save',
+					"aButtons":    [ "csv", "xls", "pdf" ]
+				}
+			],
+
+			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+		}
+		});
 	});
 </script>
 
@@ -240,3 +284,4 @@ HTML_DATA;
 		});
 	}
 </script>
+
