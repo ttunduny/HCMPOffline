@@ -591,84 +591,102 @@ endif;
 
 public function add_more_stock_level_store_external(){
     //seth
+    // echo "<pre>";print_r($this->input->post());echo "</pre>";
+    //random change for pushmentation
         if($this->input->post('facility_stock_id')):
         $district_id = $this -> session -> userdata('district_id');
          $commodity_id=array_values($this->input->post('commodity_id'));
+         $id=array_values($this->input->post('id'));
          $expiry_date=array_values($this->input->post('clone_datepicker'));
          $batch_no=array_values($this->input->post('commodity_batch_no'));
          $manu=array_values($this->input->post('commodity_manufacture'));
-         $total_unit_count=array_values($this->input->post('actual_quantity'));              
+         $total_unit_count=array_values($this->input->post('actual_quantity'));             
          $service_point=array_values($this->input->post('service_point'));
          $source_of_item=array_values($this->input->post('source_of_item'));
-         $count=count($commodity_id);
+         $actual_quantity=array_values($this->input->post('actual_quantity'));
+         $date_issued=array_values($this->input->post('clone_datepicker'));
+
+         // $count=count($commodity_id);
+         $count=count(array_filter($actual_quantity));
          $date_of_entry=date('y-m-d H:i:s');
+         $new_drug_store_entry = array();
          //collect n set the data in the array
+         // print_r(array_filter($actual_quantity));exit;
         for($i=0;$i<$count;$i++):
 
            if($total_unit_count[$i]>0)://check if the balance is more than 0 ie they recieved something
-           if($this -> session -> userdata('user_indicator')=='district'):  
+    // echo "RUNNING";exit;
+           // if($this -> session -> userdata('user_indicator')=='district'):  
            //check if the user is district if so the facility which was given the item is not using HCMP        
-           else:                   
-            $mydata=array('facility_code'=>$facility_code,
+           // else:                
+    // echo "ELSE RUNNING";exit;
+       // TOTALs UPDATING
+       $existence = drug_store_issues::check_drug_existence($commodity_id[$i],$district_id);
+        echo "<pre>"; print_r($existence[0]['present']);echo"</pre>";
+
+        if ($existence[0]['present'] > 0) {
+            echo $commodity_id[$i];
+                    // echo "Update RUNNING";
+                    $update_totals = Doctrine_Manager::getInstance() -> getCurrentConnection();
+                    $update_totals -> execute("UPDATE `drug_store_totals` SET `total_balance` = `total_balance`+$total_unit_count[$i]
+                    WHERE `commodity_id`= '$commodity_id[$i]' and `district_id`=$district_id");
+
+                    // echo "UPDATE `drug_store_totals` SET `total_balance` = `total_balance`+$total_unit_count[$i]
+                    // WHERE `commodity_id`= '$commodity_id[$i]' and district_id=$district_id";
+                    // echo $update_totals;exit;
+                }else{
+                    // echo "Entry RUNNING";
+                    $new_entry_details = array(
+                        'district_id'=>$district_id,
+                        'commodity_id'=>$commodity_id[$i],
+                        'total_balance'=>$total_unit_count[$i],
+                        'expiry_date'=>date('y-m-d', strtotime(str_replace(",", " ",$expiry_date[$i]))),
+                        'status'=> 1
+                        );
+
+                    array_push($new_drug_store_entry, $new_entry_details);
+                    $data = $this->db->insert_batch('drug_store_totals',$new_drug_store_entry);
+                    //echo $data;exit;
+                }//end of existence update/entry if
+
+                // echo $clone_datepicker[$i];exit;
+            $new_store_issue_entry = array();
+            $mydata=array(
+            'facility_code'=>$service_point[$i],
+            'district_id'=>$district_id[$i],
             'commodity_id'=>$commodity_id[$i],
+            's11_No'=>'(+ve Adj) Stock Addition',
             'batch_no'=>$batch_no[$i],
-            'manufacture'=>$manu[$i],
             'expiry_date'=> date('y-m-d', strtotime(str_replace(",", " ",$expiry_date[$i]))),
-            'initial_quantity'=>$total_unit_count[$i],
-            'current_balance'=>$total_unit_count[$i],
-            'source_of_commodity'=>$source_of_item[$i],
-            'date_added'=>$date_of_entry );
-             //get the closing stock of the given item           
-            $district_stock=drug_store_issues::get_store_commodity_total($district_id,$commodity_id[$i]);
-            //update the facility stock table
-            drug_store_issues::update_drug_store_issues_table($mydata);
-            // save this infor in the issues table
-            
-            $total_unit_count_=$total_unit_count[$i]*-1;
-            $mydata=array('facility_code'=>$facility_code,
-            'district_id'=>$district_id,
-            's11_No' => '(+ve Adj) Stock Addition',
-            'commodity_id'=>$commodity_id[$i],
-            'batch_no'=>$batch_no[$i],
-            'expiry_date'=> date('y-m-d', strtotime(str_replace(",", " ",$expiry_date[$i]))),
-            'balance_as_of'=>$district_stock['commodity_balance'],
-            'date_issued' => date('y-m-d'),
-            'issued_to'=>"inter-facility donation: ".$facility_name,
-            'qty_issued' => $total_unit_count_,
-            'issued_by' =>$this -> session -> userdata('user_id') ); //$this -> session -> userdata('identity')
-             // update the issues table 
-            drug_store_issues::update_drug_store_issues_table($mydata);           
-             //check    
-            $facility_has_commodity=facility_transaction_table::get_if_commodity_is_in_table($facility_code,$commodity_id[$i]);
-                    
-          if($facility_has_commodity>0): //update the opening balance for the transaction table 
-            $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
-            $inserttransaction->execute("UPDATE `facility_transaction_table` SET `opening_balance` =`opening_balance`+$total_unit_count[$i]
-                                          WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code=$facility_code");                                                         
-else:       //get the data to send to the facility_transaction_table
-            $mydata2=array('facility_code'=>$facility_code,
-            'commodity_id'=>$commodity_id[$i],
-            'opening_balance'=>$total_unit_count[$i],
-            'total_issues'=>0,
-            'total_receipts'=>0,
+            'balance_as_of'=>$total_unit_count[$i],
             'adjustmentpve'=>0,
             'adjustmentnve'=>0,
-            'date_added'=>$date_of_entry,
-            'closing_stock'=>$total_unit_count[$i],
-            'status'=>1);   //send the data to the facility_transaction_table       
-            facility_transaction_table::update_facility_table($mydata2);            
-endif;      
+            'qty_issued'=>$total_unit_count[$i],
+            'date_issued'=>$date_issued[$i],
+            'created_at'=>NULL,
+            'issued_by'=>$this -> session -> userdata('user_id'),
+            'status'=>1 );
 
-    //update the redistribution data
-    $myobj = Doctrine::getTable('redistribution_data')->find($facility_stock_id[$i]);
-    $myobj->quantity_received=$total_unit_count[$i];
-    $myobj->receiver_id=$this -> session -> userdata('user_id');
-    $myobj->date_received=date('y-m-d');
-    $myobj->status=1;
-    $myobj->save();
-    endif;  
-    endif;                      
+            array_push($new_store_issue_entry, $mydata);
+
+            $sth = $this->db->insert_batch('drug_store_issues',$new_store_issue_entry);
+
+            $update_redistribution = Doctrine_Manager::getInstance() -> getCurrentConnection();
+            $update_redistribution -> execute("UPDATE `redistribution_data` SET `status` = 1
+            WHERE `id`= '$id[$i]' and `source_district_id`=$district_id");
+
+            // echo $sth;exit;
+            //  //get the closing stock of the given item           
+            // $district_stock=drug_store_issues::get_store_commodity_total($district_id,$commodity_id[$i]);
+            // //update the facility stock table
+            // $sth = drug_store_issues::update_drug_store_issues_table($mydata);
+            // echo $sth;exit;
+            // save this infor in the issues table
+            
+                                
+endif;  
 endfor;      
+            // echo "<pre>Successful";print_r($mydata);echo "</pre>";exit;
           //set the notifications
           //$this->hcmp_functions->send_stock_update_sms();
           $this->session->set_flashdata('system_success_message', "Stock Levels Have Been Updated");

@@ -21,14 +21,16 @@
 	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
 	 <link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
+    <link href="<?php echo base_url().'assets/css/bootstrap-switch.css'?>" type="text/css" rel="stylesheet"/>
     <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
-	<link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
-	<link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
-	<script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
+  <link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
+  <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
+  <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
     <script src="<?php echo base_url().'assets/scripts/offline-simulate-ui.min.js'?>" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/select2.js'?>" type="text/javascript"></script>
-     
+     <script src="<?php echo base_url().'assets/bower_components/alertifyjs/dist/js/alertify.js'?>" type="text/javascript"></script>
+    <link rel="stylesheet" href="<?php echo base_url().'assets/bower_components/alertifyjs/dist/css/alertify_bootstrap_3.css'?>" />
 	
     <title>HCMP | <?php echo $title;?></title>
     <style type="text/css">
@@ -81,7 +83,47 @@
  </head>
 
 <body screen_capture_injected="true" >
+    <?php $flash_success_data = NULL;
+                $flash_error_data = NULL;
+                        $flash_success_data = $this -> session -> flashdata('system_success_message');
+              $flash_error_data = $this -> session -> flashdata('system_error_message');
+              if ($flash_success_data != NULL) { ?>
+                
+                <script>
+                  $(document).ready(function() {
+                      alertify.set({ delay: 10000 });
+                      alertify.success("<?php echo $flash_success_data ?>", null);
     
+                    });
+                    
+                </script>
+              
+             <?php  } elseif ($flash_error_data != NULL) { ?>
+              
+                <script>
+                  $(document).ready(function() {
+                      alertify.set({ delay: 10000 });
+                      alertify.error("<?php echo $flash_error_data  ?>", null);
+    
+                    });
+                    
+                </script>
+              
+            <?php   }
+               elseif (isset($system_error_message)) {?>
+                
+                  <script>
+                  $(document).ready(function() {
+                      alertify.set({ delay: 10000 });
+                      alertify.log("<?php echo $system_error_message   ?>", null);
+    
+                    });
+                    
+                </script>
+              
+            <?php }
+            ?>
+
          <div class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header" id="st-trigger-effects">
@@ -177,15 +219,15 @@
 <!-- /.modal -->  
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
-    <!-- Bootstrap core JavaScript===================== -->	
+    <!-- Bootstrap core JavaScript===================== --> 
   <script src="<?php echo base_url().'assets/scripts/jquery-ui-1.10.4.custom.min.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
    <script src="<?php echo base_url().'assets/scripts/exporting.js'?>" type="text/javascript"></script>
-  <script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>	
+  <script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>  
   <!-- Placed at the end of the document so the pages load faster -->
   <script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
     <!--Datatables==========================  -->
-  <script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>	
+  <script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>  
   <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrap.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/datatable/TableTools.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/datatable/ZeroClipboard.js'?>" type="text/javascript"></script>
@@ -193,9 +235,10 @@
   <!-- validation ===================== -->
   <script src="<?php echo base_url().'assets/scripts/jquery.validate.min.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrapPagination.js'?>" type="text/javascript"></script>
-	<script type="text/javascript" src="<?php echo base_url().'assets/scripts/jquery.loadingbar.js'?>"></script>
+  <script type="text/javascript" src="<?php echo base_url().'assets/scripts/jquery.loadingbar.js'?>"></script>
     <script src="<?php echo base_url().'assets/scripts/sidebarEffects.js'?>" type="text/javascript"></script>
     <script src="<?php echo base_url().'assets/scripts/classie.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/bootstrap-switch.js'?>" type="text/javascript"></script>
 	 
 </body>
 </html>

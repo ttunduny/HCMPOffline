@@ -87,7 +87,7 @@ class issues extends MY_Controller {
 						$data['content_view'] = "subcounty/subcounty_drug_store";
 						$data['donate_destination'] = "facility";
 						$data['subcounties']=districts::getAll();
-						$data['banner_text'] = "Redistribute Commodities";
+						$data['banner_text'] = "Redistribute Commodities to Facilities";
 						$data['title'] ="Redistribute Commodities";		
 						//$data['service_point']=service_points::get_all_active($facility_code);		
 		$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_district_store($district_id,1);
@@ -107,7 +107,7 @@ class issues extends MY_Controller {
 						$data['content_view'] = "subcounty/drug_store/drug_store_internal";
 						$data['donate_destination'] = "facility";
 						$data['subcounties']=districts::getAll();
-						$data['banner_text'] = "Redistribute Commodities";
+						$data['banner_text'] = "Redistribute Commodities to District Stores";
 						$data['title'] ="Redistribute Commodities";		
 						//$data['service_point']=service_points::get_all_active($facility_code);		
 		$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_district_store($district_id,1);
@@ -171,7 +171,7 @@ class issues extends MY_Controller {
 				$existence = drug_store_issues::check_internal_transaction_existence($commodity_id[$i],$destined_district[$i]);
 				$store_existence = drug_store_issues::check_drug_existence($commodity_id[$i],$district_id);
 					// echo "<pre>"; print_r($existence);echo "</pre>";;exit;
-				if ($existence[0]['present'] >= 1) {
+				if ($existence[0]['present'] >= 0) {
 					$update_transactions = Doctrine_Manager::getInstance() -> getCurrentConnection();
 					$update_transactions -> execute("UPDATE `drug_store_internal_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
 							`closing_stock`=`closing_stock`-$total_items_issues
@@ -240,12 +240,14 @@ class issues extends MY_Controller {
  	$graph_data=array_merge($graph_data,array("graph_type"=>'bar'));
  	$graph_data=array_merge($graph_data,array("graph_yaxis_title"=>'Total stock level  (values in packs)'));
  	$graph_data=array_merge($graph_data,array("graph_categories"=>array()));
- 	$graph_data=array_merge($graph_data,array("series_data"=>array("Current Balance"=>array())));
+ 	$graph_data=array_merge($graph_data,array("series_data"=>array("Current Pack Balance"=>array(),"Current Unit Balance"=>array())));
  	$graph_data['stacking']='normal';
  	foreach($district_stock_ as $district_stock_):
  		$graph_data['graph_categories']=array_merge($graph_data['graph_categories'],array($district_stock_['commodity_name']));	
- 		$graph_data['series_data']['Current Balance']=array_merge($graph_data['series_data']['Current Balance'],array((float) $district_stock_['pack_balance']));	
- 
+ 		$graph_data['series_data']['Current Pack Balance']=array_merge($graph_data['series_data']['Current Pack Balance'],array((float) $district_stock_['pack_balance']));	
+ 		$graph_data['series_data']['Current Unit Balance']=array_merge($graph_data['series_data']['Current Unit Balance'],array((float) $district_stock_['commodity_balance']));	
+			// $graph_data['series_data'] = array_merge($graph_data['series_data'], array("Potential Expiries" => $series_data2, "Actual Expiries" => $series_data));
+ 	
  	endforeach;
  	//create the graph here
     //echo "I WORK";exit;
@@ -383,8 +385,8 @@ class issues extends MY_Controller {
 	}//confirm distribution to district store
 
 	public function district_store_external_issue()
-		{
-			//echo "<pre>";print_r($this -> input -> post());echo "</pre>";exit;
+		{//karsan
+			// echo "<pre>";print_r($this -> input -> post());echo "</pre>";exit;
 			//security check
 		if ($this -> input -> post('mfl')) :
 			$facility_code = $this -> session -> userdata('facility_id');
@@ -417,23 +419,24 @@ class issues extends MY_Controller {
 				$facility_name = isset($facility_name) ? $facility_name['facility_name'] : 'N/A';
 				$mydata = array('facility_code' => $facility_code, 's11_No' => '(-ve Adj) Stock Deduction', 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])), 'qty_issued' => $total_items_issues, 'issued_to' => "inter-facility donation:" . $facility_name, 'balance_as_of' => $commodity_balance_before[$i], 'date_issued' => date('y-m-d', strtotime($clone_datepicker_normal_limit_today[$i])), 'issued_by' => $this -> session -> userdata('user_id'));
 
-				$mydata_2 = array('manufacturer' => $manufacture[$i],'source_district_id'=> $district_id, 'source_facility_code' => $facility_code, 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])), 'quantity_sent' => $total_items_issues, 'receive_facility_code' => $service_point[$i], 'facility_stock_ref_id' => $facility_stock_id[$i], 'date_sent' => date('y-m-d'), 'sender_id' => $this -> session -> userdata('user_id'));
+				$mydata_2 = array('manufacturer' => $manufacture[$i],'source_district_id'=> $district_id, 'source_facility_code' => 2, 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])), 'quantity_sent' => $total_items_issues, 'receive_facility_code' => $service_point[$i], 'facility_stock_ref_id' => $facility_stock_id[$i], 'date_sent' => date('y-m-d'), 'sender_id' => $this -> session -> userdata('user_id'));
 				// update the issues table
 				array_push($data_array_issues_table, $mydata);
 				array_push($data_array_redistribution_table, $mydata_2);
 				// reduce the stock levels
 				//var_dump($mydata);exit;
-				$a = Doctrine_Manager::getInstance() -> getCurrentConnection();
-				$a -> execute("UPDATE `facility_stocks` SET `current_balance` = `current_balance`+$total_items_issues where id='$facility_stock_id[$i]'");
-				//update the transaction table here
-			// 	$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection();
-			// 	$inserttransaction -> execute("UPDATE `facility_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
-			// `closing_stock`=`closing_stock`-$total_items_issues
-  			//WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");
 
+				// $a = Doctrine_Manager::getInstance() -> getCurrentConnection();
+				// $a -> execute("UPDATE `facility_stocks` SET `current_balance` = `current_balance`+$total_items_issues where id='$facility_stock_id[$i]'");
+				//update the transaction table here
+				$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection();
+				$inserttransaction -> execute("UPDATE `facility_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
+			`closing_stock`=`closing_stock`-$total_items_issues
+            WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");
+	
 				$existence = drug_store_issues::check_transaction_existence($commodity_id[$i],$service_point[$i]);
 					// echo "<pre>"; print_r($existence);echo "</pre>";;exit;
-				if ($existence[0]['present'] >= 1) {
+				if ($existence[0]['present'] >= 0) {
 					$update_transactions = Doctrine_Manager::getInstance() -> getCurrentConnection();
 					$update_transactions -> execute("UPDATE `drug_store_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
 							`closing_stock`=`closing_stock`-$total_items_issues
@@ -467,7 +470,7 @@ class issues extends MY_Controller {
 			Log::log_user_action($user, $user_action);
 			
 			// $this -> db -> insert_batch('facility_issues', $data_array_issues_table);
-			// $this -> db -> insert_batch('redistribution_data', $data_array_redistribution_table);
+			$this -> db -> insert_batch('redistribution_data', $data_array_redistribution_table);
 			$this -> session -> set_flashdata('system_success_message', "You have issued $total_items item(s)");
 			redirect(home);
 		endif;
@@ -525,7 +528,7 @@ class issues extends MY_Controller {
 
 				$existence = drug_store_issues::check_drug_existence($commodity_id[$i],$district_id);
 					// echo "<pre>"; print_r($existence);echo "</pre>";;exit;
-				if ($existence[0]['present'] >= 1) {
+				if ($existence[0]['present'] >= 0) {
 					$update_totals = Doctrine_Manager::getInstance() -> getCurrentConnection();
 					$update_totals -> execute("UPDATE `drug_store_totals` SET `total_balance` = `total_balance`+$total_items_issues
 		            WHERE `commodity_id`= '$commodity_id[$i]' and district_id='$district_id';");
@@ -569,6 +572,7 @@ class issues extends MY_Controller {
 		$data['title'] ="Confirm Redistribution";	
 		$data['banner_text'] = "Confirm Redistribution";
 		$data['redistribution_data']=redistribution_data::get_all_active_drug_store($district_id,$editable_);
+		// echo "<pre>";print_r($data['redistribution_data']);echo "</pre>";exit;
 		$data['editable']=$editable_;
 		$data['content_view'] = "subcounty/drug_store/drug_store_redistribute_items_confirmation_v";
 		$this -> load -> view("shared_files/template/template", $data);		

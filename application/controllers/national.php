@@ -667,7 +667,82 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 			$row_data = array();
 			$column_data = array("County", "Sub-County", "Facility Name", "Facility Code", "Item Name", "MOS");
 			$excel_data['column_data'] = $column_data;
-			// echo ; exit;
+			 //echo '' ; exit;
+			$commodity_array = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT d.id,ct.county,sc.district,f.facility_code,
+			f.facility_name,sum(fs.current_balance) as bal
+,sum(fs.current_balance)/d.total_commodity_units as packs,d.total_commodity_units,fs.batch_no,fs.expiry_date,d.commodity_name
+FROM hcmp_rtk.facility_stocks fs
+INNER JOIN facilities f ON  fs.facility_code=f.facility_code
+INNER JOIN commodities d ON  fs.commodity_id=d.id
+INNER JOIN districts sc ON  f.district=sc.id
+INNER JOIN counties ct ON  sc.county=ct.id
+$and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
+		
+		");
+		
+		echo'<table><tr>
+					<th>County</th>
+					<th>Sub-County</th>
+					<th>Facility code</th>
+					<th>Facility name</th>
+					<th>Commodity name</th>
+					<th>Batch affected</th>
+					<th>Expiry date</th>
+					<th>Bal(units)</th>
+					<th>Bal(packs)</th>
+					<th>AMC(packs)</th>
+					<th>MOS(packs)</th>
+					</tr>';
+		
+		foreach ($commodity_array as $key) {
+			$commodity=$key['id'];
+			$f_code=$key['facility_code'];
+			$batch_n=$key['batch_no'];
+					$amc = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+							SELECT sum(qty_issued) as amc FROM hcmp_rtk.facility_issues where commodity_id=$commodity and facility_code=$f_code AND batch_no='$batch_n' AND
+							date_issued	> DATE_SUB(CURDATE(), INTERVAL 31 DAY)
+							 ");
+							 foreach ($amc as $val ) {
+								$amc= $val['amc'];
+								if ($amc<0) {
+									$amc=$amc*-1;
+																	}
+																	$amc_packs=round(($amc/$key['total_commodity_units']));
+																	if ($amc_packs<0) {
+																		$amc_packs=$amc_packs*-1;
+																	}
+																	if ($key['bal']<0 ) {
+																		$bal=$key['bal']*-1;
+																	}else{
+																		$bal=$key['bal'];
+																	}
+																	if ($key['packs']<0 ) {
+																		$packs=$key['packs']*-1;
+																	}else{
+																		$packs=$key['packs'];
+																	}
+
+											
+							 }
+				
+			
+			echo'<tr>';
+			echo '<td>'.$key['county'].'</td>';
+			echo '<td>'.$key['district'].'</td>';
+			echo '<td>'.$key['facility_code'].'</td>';
+			echo '<td>'.$key['facility_name'].'</td>';
+			echo '<td>'.$key['commodity_name'].'</td>';
+			echo '<td>'.$key['batch_no'].'</td>';
+			echo '<td>'.$key['expiry_date'].'</td>';
+			echo '<td>'.$bal.'</td>';
+			echo '<td>'.round($packs,2).'</td>';
+			echo '<td>'.$amc_packs.'</td>';
+			echo '<td>'.round($packs/$amc_packs,2).'</td>';
+			echo'</tr>';
+		}
+		echo '</table>';
+		exit;
+		
 			$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> 
 			fetchAll("select 
 					   c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.commodity_name as drug_name,
