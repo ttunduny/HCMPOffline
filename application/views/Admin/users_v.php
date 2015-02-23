@@ -11,14 +11,18 @@
 		
 	}
 	.panel-body {
-		
+	
 		padding: 8px;
 	}
 	#addModal .modal-dialog,#editModal .modal-dialog {
 		width: 54%;
 		
 	}
-		
+	.small--status-switch{
+    width: 10px;
+    font-size: 3px;
+
+  }
 	
 </style>
 
@@ -57,26 +61,26 @@
 <script>
 	
 	$(document).ready(function () {
-		$(".editable").on('click',function() {
-		
-  				$("#edit_user").attr("disabled", false);
-		});
-		
-		$("#edit_user").attr("disabled", "disabled");
-		       $('#main-content').on('hidden.bs.modal','#myModal', function () {
-				$("#datatable").hide().fadeIn('fast');
-				// location.reload();
-			});
-			
-				
-		$('#Tab a').click(function (e) {
- 		 e.preventDefault()
-  			$(this).tab('show')
-		})
-		
-		$("#sub_county").hide(); 
-		$("#facility_name").hide();
-		
+
+    $(".editable").on('click',function() {
+    
+          $("#edit_user").attr("disabled", false);
+    });
+    
+    $("#edit_user").attr("disabled", "disabled");
+           $('#main-content').on('hidden.bs.modal','#myModal', function () {
+        $("#datatable").hide().fadeIn('fast');
+        // location.reload();
+      });
+      
+        
+    $('#Tab a').click(function (e) {
+     e.preventDefault()
+        $(this).tab('show')
+    })
+    
+    $("#sub_county").hide(); 
+    $("#facility_name").hide();
 		
 $('#add_new').click(function () {
 	
@@ -89,13 +93,14 @@ $('.edit').click(function () {
  		 $("#edit_user").attr("disabled", 'disabled');
 })
 
-
+// $("[name='status-checkbox']").bootstrapSwitch();
 
 $('.dataTables_filter label input').addClass('form-control');
 	$('.dataTables_length label select').addClass('form-control');
 $('#datatable').dataTable( {
      "sDom": "T lfrtip",
        "sScrollY": "320px",   
+       "iDisplayLength": 50,
                     "sPaginationType": "bootstrap",
                     "oLanguage": {
                         "sLengthMenu": "_MENU_ Records per page",
@@ -117,7 +122,6 @@ $('#datatable').dataTable( {
   } ); 
   $('div.dataTables_filter input').addClass('form-control search');
   $('div.dataTables_length select').addClass('form-control');
-
 		
 		oTable = $('#datatable').dataTable();
 			
@@ -475,10 +479,10 @@ if (sms_recieve=2) {
 };
 
 
-if($(this).closest('tr').find('.status_item').attr('data-attr')=="false"){
-	$('.onoffswitch-checkbox').prop('checked', false) 	
-}else if($(this).closest('tr').find('.status_item').attr('data-attr')=="true"){
-	$('.onoffswitch-checkbox').prop('checked', true) 
+if($(this).closest('tr').find('.user-status').attr('data-attr')=="false"){
+	$('.onoffswitch-checkbox-secondary').prop('checked', false) 	
+}else if($(this).closest('tr').find('.user-status').attr('data-attr')=="true"){
+	$('.onoffswitch-checkbox-secondary').prop('checked', true) 
 }
 
 if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
@@ -623,9 +627,77 @@ if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
         }); 
 }
 
+    $('input[name="status-checkbox"]').change(function(e){
+    // e.prevenDefault();
+      value = $(this).attr('checked');//member id
+      user_id = $(this).attr("data-attr");//member id
+      if ($(this).prop('checked') == false){
+        // alert($(this).prop("checked"));
+        // console.log(user_id);
+        change_status(user_id,0,"unchecked");
+        // $('input[name="status-checkbox"]').prop('checked', false);
+      
+      } else{
+        // alert("checked");
+        // console.log(user_id);
+        // alert($(this).prop("checked"));
+        change_status(user_id,1,"checked");
+        // $('input[name="status-checkbox"]').prop('checked', true);
+      };
+      
+      console.log(value);
+   });
 
-    
-	});
+    function change_status(user_id,stati,checked){//seth
+      // alert(checked);return;
+      message = "";
+      if (stati == 0) {
+        message_after = "User has been Deactivated";
+      }else{
+        message_after = "User has been Activated";
+
+      };
+      var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";
+      // alert(stati);
+
+      $.ajax({
+          type:"POST",
+          data:{
+            'user_id': user_id,
+            'status': stati
+        },
+
+          url:"<?php echo base_url()."admin/change_status";?>",
+
+          beforeSend: function() {
+            //$(div).html("");
+            // alert($('#email_recieve_edit').prop('checked'));return;
+            var answer = confirm("Are you sure you want to proceed?");
+            if (answer){
+                $('.modal-body').html("<img style='margin:30% 0 20% 42%;' src="+loading_icon+">");
+            } else {
+              message_denial = "No action has been taken";
+              alertify.set({ delay: 5000 });
+              alertify.success(message_denial, null);
+              if (checked == "checked") {
+                // alert("im checked");
+                $('input[data-attr="'+user_id+'"]').prop('checked' ,false);
+              }else{
+                // alert("im unchecked");
+                $('input[data-attr="'+user_id+'"]').prop('checked' ,true);
+
+
+              };
+                return false;
+            }},
+            success: function(msg){
+              alertify.set({ delay: 10000 });
+              alertify.success(message_after, null);
+            }
+
+        });
+    }//end of change status function
+	});//end of script...i think
 	
 	
 </script>

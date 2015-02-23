@@ -2,13 +2,16 @@
 <style>
 	.big{ width: 150px !important; }
 </style>
-<div class="container" style="width: 94%; margin: auto;">
-<span  class='label label-info'>To Issue Commodities 
-	i) Select commodity to issue 
-	ii) Enter the Service Point and Quanitity you wish to issue and select the Batch No
-	iii) To add more Issues press Add Row</span><br /><span class="label label-danger">Available Batch Stock is for a specific 
-	batch, Total Balance is the total for the commodity</span>
-	<hr />
+<div class="container" style="width: 100%; margin: auto;">
+
+	<div class="row">
+		<div class="col-md-6" id=""><p class="bg-info"><span class="badge ">1</span>Select commodity to issue,Enter the Service Point and Quanitity you wish to issue and select the Batch No</p></div>
+		<div class="col-md-5" id=""><p class="text-danger"><span class="badge ">NB</span>Available Batch Stock is for a specific 
+	batch, Total Balance is the total for the commodity</p></div>
+		
+		
+	</div>
+	</div>
 <div class="table-responsive" style="height:400px; overflow-y: auto;">
 
  <?php

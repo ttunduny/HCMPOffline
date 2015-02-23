@@ -13,55 +13,12 @@
 		echo form_open('divisional_reports/save_malaria_report',$att); 
 	
 	?>
-	<!--
-	<div class="report-info">
-	<h2>Malaria Report</h2>
-	<h3><?php //echo $facility_name; ?></h3>
-	<h4><?php //echo $facility_code; ?></h4>
-	<h5><?php //echo $user_names; ?></h5>
-	</div>
-	-->
-
-	<!-- <div  style="margin:5px 0;">
-		<p class="label label-info">Enter appropriate values in all fields as indicated: </p>
-	</div> -->
-	
-	<!-- <table width="98%" border="0" class="table-condensed row-fluid table table-hover table-bordered table-update"  id="example">
-		<tr>
-		<div class="input-group">
-
-		<td  class="col-xs-3">
-			<label>Facility Name: </label>
-			<input type="text" name="facility_name" class="form-control" disabled value="<?php echo $facility_name; ?>">
-		</td>			
-		
-		<td  class="col-xs-2">
-		<label>Facility Code: </label>
-			<input type="text" name="facility_code: " class="form-control" disabled value="<?php echo $facility_code; ?>">
-		</td>
-
-		<td class="col-xs-3">
-		<label>User Name: </label>
-			<input type="text" name="facility_code: " class="form-control" disabled value="<?php echo $user_names; ?>">	
-		</td>
-
-		<td  class="col-xs-1">
-			<label>Report Date:</label>
-
-			 <input type= 'date' name="district_name" class="form-control" value=""> 
-			<input type="text" class="form-control"  name="district_name" disabled value="<?php echo date('d M Y'); ?>" />
-			</td>
-		</div>
-
-		</tr>
-	</table> -->
-
 	<table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example2">
 	<thead>
 		<tr>
 			<th>Drug Name</th>
-			<th>Order Unit Size</th>
-			<th>Order Unit Cost (Ksh)</th>
+			<th>Unit Size</th>
+			<th>Unit Cost (Ksh)</th>
 			<th>Opening Balance (Units)</th>
 			<th>Total Receipts (Units)</th>
 		    <th>Total issues (Units)</th>
@@ -81,7 +38,7 @@
 <hr />
 <div class="container-fluid" style="clear:both;">
 <div style="float: right">
-<button class="save btn btn-sm btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>
+<!-- <button class="save btn btn-sm btn-success"><span class="glyphicon glyphicon-open"></span>Save</button></div>-->
 </div>
 </div>
 <?php echo form_close();?>
@@ -95,23 +52,21 @@ $(document).ready(function() {
                     "oLanguage": {
                         "sLengthMenu": "_MENU_ Records per page",
                         "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
+                        "sEmptyTable": "No report for this facility",
                     },
 			      "oTableTools": {
                  "aButtons": [
 				"copy",
-				"print",
-				{
-					"sExtends":    "collection",
-					"sButtonText": 'Save',
-					"aButtons":    [ "csv", "xls", "pdf" ]
-				}
+				"print"
 			],
 
 			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
 		}
+
 	} );
 
-	$('#example2 input').addClass('form-control');
+	$('#example2_filter label input').addClass('form-control');
+	$('#example2_length label select').addClass('form-control');
  // var $table = $('#example2');
 //float the headers
  //  $table.floatThead({ 
