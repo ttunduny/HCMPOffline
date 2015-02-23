@@ -1015,7 +1015,7 @@ class Reports extends MY_Controller {
 			$facility_last_issue['graph_categories'] = array_merge($facility_last_issue['graph_categories'], array($last_issued['Facility Name']));
 			$facility_last_issue['series_data']['Days from Last issued'] = array_merge($facility_last_issue['series_data']['Days from Last issued'], array((int)$last_issued['Days from last issue']));
 		endforeach;
-
+             //$facility_last_issue['series_data']['Days from Last issued'] = sort($facility_last_issue['series_data']['Days from Last issued'],'descend');
 		$facility_issued_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_issue);
 
         $data['facility_last_issues'] = $facility_issued_;
