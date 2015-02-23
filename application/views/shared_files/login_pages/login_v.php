@@ -122,8 +122,15 @@ unset($popup);
                 
  <div class="row">
         <div class="col-md-3">
+        	<a href="mailto:hcmphelpdesk@googlegroups.com">
+        		<span><h5>Experiencing any challenges?
+        		<br />
+        		Click on this link to send an email to hcmphelpdesk@googlegroups.com</h5>
+        		</span>
+        		</a>
 
-       <!--<a href="<?php echo base_url('national/demo_accounts') ?>"><button class="btn btn-primary ">Demo Site Login Credentials </button></a>--></div>
+        
+       </div>
 
   <div class="col-md-6"> 
   			<div class="row">
