@@ -127,6 +127,8 @@ unset($popup);
         		<br />
         		Click on this link to send an email to hcmphelpdesk@googlegroups.com</h5>
         		</span>
+        		<img src="<?php echo base_url('assets/img/email.png')?>" alt="Email Icon" />
+        		<?php echo img('assets/img/healpdesk.jpg', TRUE);?>
         		</a>
 
         
