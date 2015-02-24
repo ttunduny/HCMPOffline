@@ -10,11 +10,7 @@
     <meta name="author" content="">
     
 
-    <link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
-    <link href="<?php echo base_url().'assets/css/offline-theme-default.css'?>" type="text/css" rel="stylesheet"/> 
-    <link href="<?php echo base_url().'assets/css/styles.css'?>" type="text/css" rel="stylesheet"/>
-    <link href="<?php echo base_url().'assets/css/select2.css'?>" type="text/css" rel="stylesheet"/> 
-    <link href="<?php echo base_url().'assets/css/offline-language-english.css'?>" type="text/css" rel="stylesheet"/> 
+    <link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/>
     <link rel="icon" href="<?php echo base_url().'assets/img/coat_of_arms.png'?>" type="image/x-icon" />
     <link href="<?php echo base_url().'assets/metro-bootstrap/docs/font-awesome.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/metro-bootstrap/css/metro-bootstrap.css'?>" type="text/css" rel="stylesheet"/>
@@ -48,13 +44,16 @@
 };
   </script>
     <script type="text/javascript">
+
    function changeHashOnLoad() {
      window.location.href += "#";
      setTimeout("changeHashAgain()", "50"); 
 }
+
 function changeHashAgain() {
   window.location.href += "1";
 }
+
 var storedHash = window.location.hash;
 window.setInterval(function () {
     if (window.location.hash != storedHash) {
@@ -104,6 +103,7 @@ if ($popup=="errorpopup") {
 ','</div>';
 }
 unset($popup);
+
  ?>
 			</div>
 			<div class="col-md-4" style="">
@@ -127,10 +127,10 @@ unset($popup);
         		<br />
         		Click on this link to send an email to hcmphelpdesk@googlegroups.com</h5>
         		</span>
-        		</a>
+        		<img alt="Email Icon" src="<?php echo base_url('assets/img/healpdesk.jpg') ?>" height="120" width="200" /></a>
 
-        
-       </div>
+
+       <!--<a href="<?php echo base_url('national/demo_accounts') ?>"><button class="btn btn-primary ">Demo Site Login Credentials </button></a>--></div>
 
   <div class="col-md-6"> 
   			<div class="row">
@@ -157,11 +157,12 @@ unset($popup);
    
   <a class="" style="margin-left: 2%;" href="<?php echo base_url().'user/forgot_password'?>" id="modalbox">Can't access your account ?</a>
   <a class="" style="margin-left: 2%;" href="<?php echo base_url().'user/sms_activate'?>" id="modalbox">Activate my Account?</a>
-    
+     
     
 </div>
 
 <?php 
+
     echo form_close();
     ?>
 </div><!-- #contain_login -->

@@ -1,7 +1,3 @@
-<?php
-//Check the session
-$facilty_code =  $this -> session -> userdata('facility_id');
-?>
 <style>
 	#myModal .modal-dialog {
 		width: 70%;
@@ -31,11 +27,46 @@ $facilty_code =  $this -> session -> userdata('facility_id');
 			} );
 		</script>
 <div id="dialog"></div>
-
+	<!--<div class="alert alert-info" >
+		  <b>Below is the project status in the county</b>
+		</div>-->
 	 <div id="temp"></div>
 	<?php echo @$data; ?>
 	<hr/>
+	
+	<!--Filter row for the system usage breakdown
+	<div class="filter row">
+		<form class="form-inline" role="form">
+			<select id="district_filter" class="form-control col-md-2">
+			<option selected="selected" value="NULL">Select Sub-county</option>
+			<?php
+			
+				foreach($district_data as $district_):
+						$district_id=$district_->id;
+						$district_name=$district_->district;	
+						echo "<option value='$district_id'>$district_name</option>";
+						//echo "<option value='$district_id'>$district_name</option>";
+				endforeach;
+			?>
+			</select>
 
+			<div class="col-md-3">
+			<button class="btn btn-sm btn-small btn-success filter"><span class="glyphicon glyphicon-filter"></span>Filter</button>
+			</div> 
+
+		</form>
+	</div>
+	<div>
+		
+	</div> 
+	<div style="padding-top: 25px;">
+	<b>System Usage Breakdown</b>
+	<hr />
+	
+	<div id="facility_monitoring" >
+	</div>
+	
+	</div>
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -83,22 +114,22 @@ $facilty_code =  $this -> session -> userdata('facility_id');
       </div>
     </div>
   </div>
-  <hr />
 </div>
-   	<!-- <div id="ordered-graph"></div>
-    <div id="issued-graph"></div>
- <div id="logged-graph"></div>-->
+<div class="col-sm-12">
+    <div class="col-sm-6" id="ordered-graph"></div>
+    <div class="col-sm-6" id="issued-graph"></div>
+</div>
+	<!-- <div id="logged-graph"></div>-->
 
 	
 
 <script>
-<?php
-/*if(!isset($facility_code)):
-	echo $facility_last_orders;
-	echo $facility_last_issues;
-endif;*/
-?>
+$(function () { 
 
+<?php echo $facility_last_orders; ?>
+<?php echo $facility_last_issues; ?>
+
+});
 
 $(document).ready(function() {
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {

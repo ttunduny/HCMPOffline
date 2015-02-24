@@ -237,6 +237,10 @@ class Facilities extends Doctrine_Record {
 		return $q;  
     
 	}
+
+
+
+
 	//gets the monitoring data for all the facilities using HCMP
 	public static function facility_monitoring($county_id, $district_id, $facility_code=null)
 	{
@@ -274,6 +278,11 @@ class Facilities extends Doctrine_Record {
                CALL facility_orders('facility','".$facility_code."');
              
 			");
+            foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days From Last Order'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
 			//return the monitoring data
 			//echo '<pre>';print_r($data);echo "</pre>";die();
 			break;
@@ -281,8 +290,13 @@ class Facilities extends Doctrine_Record {
 			case 'district':
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 				CALL facility_orders('district','".$district_id."');
-
 			");
+
+			foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days From Last Order'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
 			//return the monitoring data
 			return $data;
 		
@@ -291,6 +305,13 @@ class Facilities extends Doctrine_Record {
 		   CALL facility_orders('county','".$county_id."');
               
               ");
+
+			foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days From Last Order'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
+			
 			break;
 		}
 		//return the monitoring data
@@ -310,6 +331,11 @@ class Facilities extends Doctrine_Record {
 			");
 			//return the monitoring data
 			//echo '<pre>';print_r($data);echo "</pre>";die();
+				foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days from last issue'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
 				break;
 
 			case 'county':
@@ -317,13 +343,24 @@ class Facilities extends Doctrine_Record {
 		    CALL facility_issues('county','".$county_id."');
               
               ");
+				foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days from last issue'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
 		//return the monitoring data
 			break;	
 			case 'district':
 				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 				CALL facility_issues('district','".$district_id."');
 			");
+				//$data = sortrows($data,'RowNames')
 			//return the monitoring data
+				foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days from last issue'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
 			break;
 			default:
 				# code...
@@ -348,8 +385,14 @@ class Facilities extends Doctrine_Record {
             
              
 			");
+				foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days From Last Seen'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
 			//return the monitoring data
 			//echo '<pre>';print_r($data);echo "</pre>";die();
+				$data = sort($data,'descend');
 				break;
 
 			case 'county':
@@ -357,12 +400,22 @@ class Facilities extends Doctrine_Record {
 		    CALL facility_loggins('county','".$county_id."');
               
               ");
+				foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days From Last Seen'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
 		//return the monitoring data
 			break;	
 			case 'district':
 				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 				CALL facility_loggins('district','".$district_id."');
 			");
+				foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days From Last Seen'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
 			//return the monitoring data
 			break;
 			default:
