@@ -119,9 +119,11 @@
 
 			<div class="row">
 				<div class="col-md-3">
-					<!--<a href="mailto:hcmphelpdesk@googlegroups.com"> <span><h5>Experiencing any challenges?
+					<a href="mailto:hcmphelpdesk@googlegroups.com"> <span><h5>Experiencing any challenges?
 						<br />
-						Click on this link to send an email to hcmphelpdesk@googlegroups.com</h5> </span> </a>-->
+						Click on this link to send an email to hcmphelpdesk@googlegroups.com</h5> </span> 
+						<img src="<?php echo base_url('assets/img/healpdesk.jpg')?>" height="130" width="200" />
+						</a>
 
 				</div>
 
