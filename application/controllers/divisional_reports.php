@@ -47,6 +47,7 @@ class Divisional_Reports extends MY_Controller
 				}else{
 					
 				}
+				$data['fac_mfl'] = $facility_mfl;
 				$data['mal_report_data'] = $this->createmalariareport($facility_mfl);
 				$data['page_header'] = "Program Reports";	
 				$data['malaria'] = $report_malaria_report;
@@ -72,7 +73,7 @@ class Divisional_Reports extends MY_Controller
 					$facility_details = Facilities::get_facility_name2($facility_id);
 					$facility_mfl = $facility_id;
 					$facility_name = $facility_details['facility_name'];
-					$malaria_report_data .= '<tr><td>'.$facility_name.'</td><td>'.$facility_mfl.'</td><td>HCMP</td><td><a class = "btn btn-primary btn-sm" href = "'.base_url().'divisional_reports/malaria_report/'.$facility_mfl.'">View Malaria Report</a></td></tr>';
+					$malaria_report_data .= '<option value = "'.$facility_mfl.'">'.$facility_name.'</option>';
 					if ((!empty($report_RH))&&(!empty($report_malaria)))
 					{
 						$report_RH_report[$index] = $report_RH;
@@ -94,31 +95,37 @@ class Divisional_Reports extends MY_Controller
 			break;
 			case county:
 			 $county_id = $this -> session -> userdata('county_id');
-			 $facilities = Facilities::get_all_facilities_in_county($county_id);
-			 $index = 0;
-			 foreach ($facilities as $ids)
-			 {
-				$facility_id = $ids['facilities'];
-				$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
-				$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
-				$report_TB = tb_data::get_facility_report_details($facility_id);
-
-				$facility_details = Facilities::get_facility_name2($facility_id);
-				$facility_mfl = $facility_id;
-				$facility_name = $facility_details['facility_name'];
-				$malaria_report_data .= '<tr><td>'.$facility_name.'</td><td>'.$facility_mfl.'</td><td>HCMP</td><td><a class = "btn btn-primary btn-sm" href = "'.base_url().'divisional_reports/malaria_report/'.$facility_mfl.'"><i class = "glyphicon glyphicon-eye"></i> View Malaria Report</a></td></tr>';
-				if ((!empty($report_RH))&&(!empty($report_malaria)))
-				{
-					$report_RH_report[$index] = $report_RH;
-					$report_malaria_report[$index] = $report_malaria;
-					$report_tuberculosis[$index] = $report_TB;
-					
-				}else{
-					
-				}
-				
-				$index++;
+			 // $facilities = Facilities::get_all_facilities_in_county($county_id);
+			 $subcounties = Counties::get_subcounties_in_county($county_id);
+			 $subcounties_listing = '';
+			 foreach ($subcounties as $key => $value) {
+			 	$subcounties_listing .= '<option value = "'.$value['id'].'">'.$value['district'].'</option>';
 			 }
+			 $index = 0;
+			 // foreach ($facilities as $ids)
+			 // {
+				// $facility_id = $ids['facilities'];
+				// $report_malaria = Malaria_Data::get_facility_report_details($facility_id);
+				// $report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
+				// $report_TB = tb_data::get_facility_report_details($facility_id);
+
+				// $facility_details = Facilities::get_facility_name2($facility_id);
+				// $facility_mfl = $facility_id;
+				// $facility_name = $facility_details['facility_name'];
+				// $malaria_report_data .= '<option value = "'.$facility_mfl.'">'.$facility_name.'</option>';
+				// if ((!empty($report_RH))&&(!empty($report_malaria)))
+				// {
+				// 	$report_RH_report[$index] = $report_RH;
+				// 	$report_malaria_report[$index] = $report_malaria;
+				// 	$report_tuberculosis[$index] = $report_TB;
+					
+				// }else{
+					
+				// }
+				
+				// $index++;
+			 // }
+			 $data['sub_counties'] = $subcounties_listing;
 			 $data['mal_report_data'] = $malaria_report_data;
 			 $data['page_header'] = "Program Reports";	
 			 $data['title'] = "County Program Reports";
@@ -200,12 +207,12 @@ class Divisional_Reports extends MY_Controller
 		$data['facility_name'] = ($facility_info['facility_name']);
 
 		$data['title'] = "Malaria Report";
-		$data['banner_text'] = "Facility Malaria Commodities Order";
-		$data['content_view'] = "facility/facility_reports/facility_reports_malaria_reports_v";
-		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		// $data['banner_text'] = "Facility Malaria Commodities Order";
+		$content_view = "facility/facility_reports/facility_reports_malaria_reports_v";
+		// $data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		
-		$view = 'shared_files/template/template';
-		$this -> load -> view($view, $data);
+		// $view = 'shared_files/template/template';
+		echo $this -> load -> view($content_view, $data);
 	}
 	
 	//for loading the TB report
@@ -350,11 +357,11 @@ $this->db->insert('tuberculosis_report_info',$data_);
 }
 
 	//For the RH Report
-	public function RH_report()
+	public function RH_report($facility = NULL)
 	{
 		//Used to pick the kemsa code and assign it to elements displayed on the report
 		$rhtable = '';
-		$facility = $this -> session -> userdata('facility_id');
+		if($facility == NULL){$facility = $this -> session -> userdata('facility_id');}
 		$user_id = $this -> session -> userdata('user_id');
 		$facility_info = tb_data::get_facility_name($facility);
 		$district_name_ = Districts::get_district_name_($facility_district);
@@ -365,38 +372,16 @@ $this->db->insert('tuberculosis_report_info',$data_);
 		$data['facility_name'] = ($facility_info['facility_name']);
 		$data['facility_type_'] = ($facility_info['owner']);
 
-		$items = Facility_Transaction_Table::get_commodities_for_ordering_report($facility, 3);
-
-		if ($items) {
-			foreach ($items as $key => $value) {
-				$rhtable .= '<tr>';
-				$rhtable .= '<td>'.$value['commodity_name'].'</td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['unit_size'].'" disabled></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['unit_cost'].'" disabled></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['opening_balance'].'" disabled></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['total_receipts'].'" disabled></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['total_issues'].'" disabled></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['adjustmentnve'].'" disabled></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['adjustmentpve'].'" disabled></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['losses'].'" disabled></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['days_out_of_stock'].'" disabled></td>';
-				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['closing_stock'].'" disabled></td>';
-				$rhtable .= '</tr>';
-			}
-		}
-		else
-		{
-			$rhtable .= '<tr><td colspan = "11"><center>No Data Found...</center></td></tr>';
-		}
+		
+		$data['rh_data'] = $this->createrhreport($facility);
 
 		$data['content_view'] = "facility/facility_reports/facility_reports_RH_reports_v";
-		$data['rhdata'] = $rhtable;
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		$data['title'] = "RH Report";
 		$data['banner_text'] = "Facility RH Commodities Order";
 
-		$view = 'shared_files/template/template';
-		$this -> load -> view($view, $data);
+		// $view = 'shared_files/template/template';
+		$this -> load -> view($data['content_view'], $data);
 		
 	}
 	 
@@ -764,10 +749,16 @@ $this->db->insert('tuberculosis_report_info',$data_);
 					$number = explode('-', $value['adjustmentnve']);
 					$negative = $number[1];
 				}
+				else if($value['adjustmentnve'] == 0)
+				{
+					$coloring = 'style = "color: red"';
+					$negative = 0;
+				}
 				else
 				{
 					$negative = $value['adjustmentnve'];
 				}
+
 				$malariatable .= '<tr>';
 				$malariatable .= '<td>'.$value['commodity_name'].'</td>';
 				$malariatable .= '<td>'.$value['unit_size'].'</td>';
@@ -776,7 +767,7 @@ $this->db->insert('tuberculosis_report_info',$data_);
 				$malariatable .= '<td>'.$value['total_receipts'].'</td>';
 				$malariatable .= '<td>'.$value['total_issues'].'</td>';
 				$malariatable .= '<td '.$coloring.'>'.$negative.'</td>';
-				$malariatable .= '<td>'.$value['adjustmentpve'].'</td>';
+				$malariatable .= '<td style = "color: green;">'.$value['adjustmentpve'].'</td>';
 				$malariatable .= '<td>'.$value['losses'].'</td>';
 				$malariatable .= '<td>'.$value['days_out_of_stock'].'</td>';
 				$malariatable .= '<td>'.$value['closing_stock'].'</td>';
@@ -787,4 +778,119 @@ $this->db->insert('tuberculosis_report_info',$data_);
 		return $malariatable;
 	}
 	
+	public function createrhreport($facility)
+	{
+		$rhtable = '';
+		$items = Facility_Transaction_Table::get_commodities_for_ordering_report($facility, 3);
+
+		if ($items) {
+			foreach ($items as $key => $value) {
+
+				$coloring = '';
+				$negative = '';
+				if($value['adjustmentnve'] < 0)
+				{
+					$coloring = 'style = "color: red"';
+					$number = explode('-', $value['adjustmentnve']);
+					$negative = $number[1];
+				}
+				else if($value['adjustmentnve'] == 0)
+				{
+					$coloring = 'style = "color: red"';
+					$negative = 0;
+				}
+				else
+				{
+					$negative = $value['adjustmentnve'];
+				}
+
+				$rhtable .= '<tr>';
+				$rhtable .= '<td>'.$value['commodity_name'].'</td>';
+				$rhtable .= '<td>'.$value['unit_size'].'</td>';
+				$rhtable .= '<td>'.$value['unit_cost'].'</td>';
+				$rhtable .= '<td>'.$value['opening_balance'].'</td>';
+				$rhtable .= '<td>'.$value['total_receipts'].'</td>';
+				$rhtable .= '<td>'.$value['total_issues'].'</td>';
+				$rhtable .= '<td '.$coloring.'>'.$negative.'</td>';
+				$rhtable .= '<td>'.$value['adjustmentpve'].'</td>';
+				$rhtable .= '<td>'.$value['losses'].'</td>';
+				$rhtable .= '<td>'.$value['days_out_of_stock'].'</td>';
+				$rhtable .= '<td>'.$value['closing_stock'].'</td>';
+				$rhtable .= '</tr>';
+			}
+		}
+		
+		return $rhtable;
+	}
+	public function createfacilitiessubcounty($sub_county, $type = NULL)
+	{
+		$facilities = Facilities::getFacilities_json($sub_county);
+
+		$facility_listing = '';
+		
+		foreach ($facilities as $key => $value) {
+			$facility_listing .= '<option value = "'.$value['facility_code'] .'">'.$value['facility_name'].'</option>';
+		}
+
+		switch ($type) {
+			case 'ajax':
+				echo $facility_listing;
+				break;
+			default:
+				return $facility_listing;
+				break;
+		}
+	}
+
+	public function pdfreport($report_type, $facility_code)
+	{
+		$facility_information = $report_data = $heading = $report_title = $data = '';
+		$facility_name = Facilities::get_facility_name2($facility_code)['facility_name'];
+		$facility_obj = Facilities::get_facility_district_county_level($facility_code);
+		$facility_information = '<table class = "data-table"><thead><tr><th>Facility Code</th><th>Facility Name</th><th>County</th><th>District</th><th>Type</th></tr></thead>
+		<tbody><tr><td>' . $facility_code .'</td><td>' .$facility_name .'</td><td>'.$facility_obj['county'].'</td><td>'.$facility_obj['district'].'</td><td>'.$facility_obj['type'].'</td></tr></tbody>';
+		$facility_information .= '</table>';
+
+		switch ($report_type) {
+			case 'malaria':
+				$heading = '<th>Drug Name</th>';
+				$report_title = 'Malaria Program Report For: ' . $facility_name;
+				$file_name = $facility_name . ' Malaria Report';
+				$data = $this->createmalariareport($facility_code);
+				break;
+
+			case 'rh';
+				$heading = '<th>Contraceptive</th>';
+				$report_title = 'Reproductive Health Program Report For: ' . $facility_name;
+				$file_name = $facility_name . ' RH Report';
+				$data = $this->createrhreport($facility_code);
+				break;
+			default:
+				break;
+		}
+		$report_table = '<table class = "data-table">
+	<thead>
+		<tr>'.$heading.'
+			<th>Unit Size</th>
+			<th>Unit Cost (Ksh)</th>
+			<th>Opening Balance (Units)</th>
+			<th>Total Receipts (Units)</th>
+		    <th>Total issues (Units)</th>
+		    <th>Adjustments(-ve) (Units)</th>
+		    <th>Adjustments(+ve) (Units)</th>
+		    <th>Losses (Units)</th>
+		    <th>No days out of stock</th>
+		    <th>Closing Stock(Units)</th>					    
+		</tr>
+	</thead>';
+		if (!$data) {
+			$data = '<tr><td colspan = "11"><center>There is no report for this facility</center></td></tr>';
+		}
+		$report_table .= $data;
+		$report_table .= '</table>';
+		$pdf_data['pdf_title'] = $report_title;
+		$pdf_data['file_name'] = $file_name;
+		$pdf_data['pdf_html_body'] = $facility_information . $report_table;
+		$this->hcmp_functions->create_pdf($pdf_data);
+	}
 }

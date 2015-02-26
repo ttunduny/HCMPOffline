@@ -1,70 +1,70 @@
 <style>
 .stat_item {
-		height: 48px;
-		padding: 2px 20px;
-		color: #fff;
-		text-align: center;
-		font-size: 1.5em;
-		-webkit-box-shadow: 3px 0px 5px 0px rgba(51, 50, 50, 0.59);
+        height: 48px;
+        padding: 2px 20px;
+        color: #fff;
+        text-align: center;
+        font-size: 1.5em;
+        -webkit-box-shadow: 3px 0px 5px 0px rgba(51, 50, 50, 0.59);
 -moz-box-shadow:    3px 0px 5px 0px rgba(51, 50, 50, 0.59);
 box-shadow:         3px 0px 5px 0px rgba(51, 50, 50, 0.59);
-	}	
-	
-	#footer{
-		position: relative
-	}
+    }   
+    
+    #footer{
+        position: relative
+    }
 </style>
 
 <div class="container">
 
 <div class="row" style="padding-top: 1%" >
-	
-	<div class="col-md-2">
-					<div class="color_g stat_item">
-						<span class="glyphicon glyphicon-user"></span>
-                  	Users
+    
+    <div class="col-md-2">
+                    <div class="color_g stat_item">
+                        <span class="glyphicon glyphicon-user"></span>
+                    Users
                             
                    </div>
-	</div>
-	
-	<div class="col-md-2">
-					<div class="color_e stat_item">
-						<span class="glyphicon glyphicon-shopping-cart"></span>
-                 	 Orders
+    </div>
+    
+    <div class="col-md-2">
+                    <div class="color_e stat_item">
+                        <span class="glyphicon glyphicon-shopping-cart"></span>
+                     Orders
                             
                    </div>
-	</div>
-	
-	<div class="col-md-2">
-					<div class="color_f stat_item">
-						<span class="glyphicon glyphicon-usd"></span>
-                 	 
+    </div>
+    
+    <div class="col-md-2">
+                    <div class="color_f stat_item">
+                        <span class="glyphicon glyphicon-usd"></span>
+                     
                         Order total Ksh    
                    </div>
-	</div>
-	
-	<div class="col-md-2">
-					<div class="color_c stat_item">
-						<span class="glyphicon glyphicon-map-marker"></span>
+    </div>
+    
+    <div class="col-md-2">
+                    <div class="color_c stat_item">
+                        <span class="glyphicon glyphicon-map-marker"></span>
                   
                      Counties       
                    </div>
-	</div>
-	<div class="col-md-2">
-					<div class="color_b stat_item">
-						<span class="glyphicon glyphicon-pushpin"></span>
+    </div>
+    <div class="col-md-2">
+                    <div class="color_b stat_item">
+                        <span class="glyphicon glyphicon-pushpin"></span>
                   
                     notifications     
                    </div>
-	</div>
-	<div class="col-md-2">
-					<div class="color_a stat_item">
-					<span class="glyphicon glyphicon-dashboard"></span>
+    </div>
+    <div class="col-md-2">
+                    <div class="color_a stat_item">
+                    <span class="glyphicon glyphicon-dashboard"></span>
                   
                     notifications      
                    </div>
-	</div>
-	
+    </div>
+    
 </div>
 
 </div>
@@ -76,89 +76,89 @@ box-shadow:         3px 0px 5px 0px rgba(51, 50, 50, 0.59);
 
 <div class="col-md-6"  id="">
 <div class="row" style="margin-left: 0px;"> 
-	<div class="col-md-12" style="height:350px;border: 0px solid #036;">
-	
-	</div>
-	
-	</div>
-	
-	<div class="row" style="margin-left: 0px;"> 
-	<div class="col-md-12" style="border: 0px solid #036;">
-	
-	<div class="panel panel-default">
+    <div class="col-md-12" style="height:350px;border: 0px solid #036;">
+    
+    </div>
+    
+    </div>
+    
+    <div class="row" style="margin-left: 0px;"> 
+    <div class="col-md-12" style="border: 0px solid #036;">
+    
+    <div class="panel panel-default">
   <!-- Default panel contents -->
-  	<div class="panel-heading">Panel heading</div>
+    <div class="panel-heading">Panel heading</div>
 <div class="panel-body">
     <div id="container">
-    	
+        
     </div>
   </div>
   
-	</div>
-	
-	</div>
-	
-	</div>
+    </div>
+    
+    </div>
+    
+    </div>
 
 
 </div>
 <div class="col-md-6" >
-	<div class="row" style="margin-left: 0px;"> 
-	<div class="col-md-12" style="border: 0px solid #036;">
-		
-		<div class="panel panel-default">
+    <div class="row" style="margin-left: 0px;"> 
+    <div class="col-md-12" style="border: 0px solid #036;">
+        
+        <div class="panel panel-default">
   <!-- Default panel contents -->
   <div class="panel-heading">Panel heading</div>
 
   <div class="panel-body">
     <div id="container2">
-    	
+        
     </div>
   </div>
   
-	</div>
-	
-	</div>
-	
-	</div>
-	
-	<div class="row" style="margin-left: 0px;"> 
-	<div class="col-md-12" style="border: 0px solid #036;">
-		
-		<div class="panel panel-default">
+    </div>
+    
+    </div>
+    
+    </div>
+    
+    <div class="row" style="margin-left: 0px;"> 
+    <div class="col-md-12" style="border: 0px solid #036;">
+        
+        <div class="panel panel-default">
   <!-- Default panel contents -->
   <div class="panel-heading">Panel heading</div>
 
   
   <div class="panel-body">
     <div id="container2">
-    	
+        
     </div>
   </div>
   
-	
-	</div>
-	
-	</div>
-	
-	<div class="row" style="margin-left: 0px;"> 
-	<div class="col-md-12" style="border: 0px solid #036;">
-		
-		<div class="panel panel-default">
+    
+    </div>
+    
+    </div>
+    
+    <div class="row" style="margin-left: 0px;"> 
+    <div class="col-md-12" style="border: 0px solid #036;">
+        
+        <div class="panel panel-default">
   <!-- Default panel contents -->
   <div class="panel-heading">Panel heading</div>
 
   <div class="panel-body">
     <div id="container3">
-    	
+        
     </div
   </div>
   
-	</div>
-	
-	</div>
-	
-	</div>
+    </div>
+    
+    </div>
+    
+    </div>
 
 
 </div>
@@ -169,8 +169,8 @@ box-shadow:         3px 0px 5px 0px rgba(51, 50, 50, 0.59);
 
 <script>
 $(document).ready(function () {
-	
-	$(function () {
+    
+    $(function () {
         $('#container2').highcharts({
             chart: {
                 type: 'line'
@@ -207,10 +207,9 @@ $(document).ready(function () {
         });
     });
     
-
-	
-	
-	$(function () {
+    
+    
+    $(function () {
         $('#container3').highcharts({
             chart: {
                 type: 'column'
@@ -277,14 +276,13 @@ $(document).ready(function () {
         });
     });
     
-
-	
-	$(function () {
+    
+    $(function () {
     var chart;
     
     $(document).ready(function () {
-    	
-    	// Build the chart
+        
+        // Build the chart
         $('#container').highcharts({
             chart: {
                 plotBackgroundColor: null,
@@ -295,7 +293,7 @@ $(document).ready(function () {
                 text: 'Browser market shares at a specific website, 2014'
             },
             tooltip: {
-        	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
             },
             plotOptions: {
                 pie: {
@@ -328,10 +326,9 @@ $(document).ready(function () {
     });
     
 });
-	
-	
-
+    
+    
     
      });
-	
+    
 </script>
