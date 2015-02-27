@@ -64,17 +64,21 @@ class User extends MY_Controller {
 			$user_indicator = $access_level['user_indicator'];
             
             if ($user_indicator  == 'district') :
-             //get county name
+             //get subcounty name
             $district_name = districts::get_district_name_($district_id);
-            $banner_name = $district_name['district']." Sub-county";
-            elseif ($user_indicator  == 'county') :            
+			$county_name = Counties::get_county_name($county_id);
+            $banner_name = $county_name['county']." County".", ".$district_name['district']." Sub-county ";
+            elseif ($user_indicator  == 'county') : 
+				           
             //get county name
             $county_name = Counties::get_county_name($county_id);
             $banner_name = $county_name['county']." County";
             elseif ($user_indicator  == 'facility' || $user_indicator == 'facility_admin') :
-             //get county name
+             //get facility name
             $facility_name = Facilities::get_facility_name2($facility_id);
-            $banner_name = $facility_name['facility_name'];
+			$district_name = districts::get_district_name_($district_id);
+			$county_name = Counties::get_county_name($county_id);
+            $banner_name = $county_name['county']." County, ".$district_name['district']." Sub-county, ".$facility_name['facility_name'];
             endif;
    
 			$session_data = array('county_id' => $county_id,'partner_id' => $partner_id, 'phone_no' => $phone,
@@ -759,14 +763,7 @@ endif;
 		
 		
 		//update user
-		 $q="UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
-									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county',
-									email_recieve ='$email_recieve_edit',
-									sms_recieve ='$sms_recieve_edit'
-                                  	WHERE `id`= '$user_id'";
-echo json_encode($q);
-                                  	exit;
-		
+				
 			$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
 			$update_user->execute("UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
 									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county',

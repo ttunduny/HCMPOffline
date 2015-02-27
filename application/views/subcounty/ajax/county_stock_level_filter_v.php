@@ -1,44 +1,10 @@
 <?php
+//Notifications part of the view
 $year = date("Y");
 $county_id = $this -> session -> userdata('county_id');
 $district_id_active =  $this -> session -> userdata('district_id');
+$identifier = $this -> session -> userdata('user_indicator');
 
-		  $identifier = $this -> session -> userdata('user_indicator');
-		
-        switch ($identifier):
-			case 'district':
-			$link=	base_url('reports/order_listing/subcounty/true');
-			$link2=	base_url('reports/order_listing/subcounty');
-			break;
-			case 'county':
-			$link=	base_url('reports/order_listing/county/true');
-			$link2=	base_url('reports/order_listing/county');
-			break;
-			 endswitch;
-			$temp = array_filter($county_dashboard_notifications, function($value){
-			    return $value > 0;
-			});	
-			$count_for_class=count($temp);
-			$class="";
-			if ($count_for_class==1) {
-				
-				 $class="col-md-12 stat_item";
-				
-			} elseif($count_for_class==2) {
-				
-				$class="col-md-6 stat_item";
-				
-			}elseif($count_for_class==3) {
-				
-				 $class="col-md-4 stat_item ";
-				
-			}elseif($count_for_class==4) {
-				
-				 $class="col-md-3 stat_item ";
-				
-			}else {
-				$class="col-md-2 stat_item";
-			}	
 ?>
 <style>
 	
@@ -75,12 +41,14 @@ $district_id_active =  $this -> session -> userdata('district_id');
       <li class=""><a href="#division" data-toggle="tab">Program Commodities</a></li>
       <!--<li class=""><a href="#cat" data-toggle="tab">Categories</a></li>-->
    	  <li class=""><a href="#county" data-toggle="tab">Sub County Comparison</a></li>
+   	  <li class=""><a href="#stockouts" data-toggle="tab" onclick="stockouts_clicked()">Stock outs</a></li>
      <!--<li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>-->
 </ul>
     <div id="myTabContent" class="tab-content">
+    	<!-- div for tracer items-->
     	<div  id="tracer" class="tab-pane fade active in">
-              <br>
-              <div class="filter row">
+          	<br>
+          	<div class="filter row">
           		<form class="form-inline" role="form">
     			<select id="tracer_district_filter" class="form-control col-md-2">
 					<option selected="selected" value="NULL">Select Sub-county</option>
@@ -95,30 +63,31 @@ $district_id_active =  $this -> session -> userdata('district_id');
 					?>
 				</select> 
 
-			<select id="tracer_facility_filter" class="form-control col-md-3">
-				<option value="NULL">Select facility</option>
-			</select>	
-			<select id="tracer_plot_value_filter" class="form-control col-md-2">
-				<option value="NULL">Select Plot value</option>
-				<option value="packs">Packs</option>
-				<option value="units">Units</option>
-				<!--<option value="ksh">KSH</option>-->
-				<option selected="selected" value="mos">Months of stock</option>
-			</select>
-			<!--First the filter buttons-->
-			<div class="col-md-2">
-			<button style="margin-left:30px;" class="btn btn-sm btn-success tracer-filter"><span class="glyphicon glyphicon-filter"></span>Filter Graph</button> 
-			</div>
-			<!-- seth's button -->
-			<div class="col-md-2">
-			<button style="margin-left:30px;" class="btn btn-sm btn-success tracer-filter-table"><span class="glyphicon glyphicon-th-list"></span>Filter Table</button> 
-			</div>
-			<!--Download button-->
-			<div class="col-md-1">
-			<button style="margin-left:30px;" class="btn btn-sm btn-primary tracer-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
-			</div>
-			
-          </form>
+				<select id="tracer_facility_filter" class="form-control col-md-3">
+					<option value="NULL">Select facility</option>
+				</select>	
+				<select id="tracer_plot_value_filter" class="form-control col-md-2">
+					<option value="NULL">Select Plot value</option>
+					<option value="packs">Packs</option>
+					<option value="units">Units</option>
+					<!--<option value="ksh">KSH</option>-->
+					<!-- MoS has been removed until the issue of the amc is sorted out
+					<option selected="selected" value="mos">Months of stock</option>-->
+				</select>
+				<!--First the filter buttons-->
+				<div class="col-md-2">
+					<button style="margin-left:30px;" class="btn btn-sm btn-success tracer-filter"><span class="glyphicon glyphicon-filter"></span>Filter Graph</button> 
+				</div>
+				<!-- seth's button -->
+				<div class="col-md-2">
+					<button style="margin-left:30px;" class="btn btn-sm btn-success tracer-filter-table"><span class="glyphicon glyphicon-th-list"></span>Filter Table</button> 
+				</div>
+				<!--Download button-->
+				<div class="col-md-1">
+					<button style="margin-left:30px;" class="btn btn-sm btn-primary tracer-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
+				</div>
+				
+          	</form>
          </div>
       </div>
       <div  id="division" class="tab-pane fade">
@@ -247,6 +216,33 @@ endforeach;
 </form>
 </div>
 </div>
+
+<div  id="stockouts" class="tab-pane fade in">
+	
+<br>
+<!-- <form class="form-inline" role="form">
+
+	<select id="district_filter" class="form-control col-md-2">
+<option selected="selected" value="NULL">Select Sub-county</option>
+<?php
+foreach($district_data as $district_):
+		$district_id=$district_->id;
+		$district_name=$district_->district;	
+		echo "<option value='$district_id'>$district_name</option>";
+endforeach;
+?>
+</select> 
+<select id="facility_filter" class="form-control col-md-2">
+<option value="NULL">Select facility</option>
+</select>	
+<div class="col-md-1">
+<button class="btn btn-sm btn-success filter" id="filter" name="filter">
+<span class="glyphicon glyphicon-filter"></span>Filter</button> 
+</div> 
+</form> -->
+<div class="graph_content" id="stockouts_graph"  ></div>
+</div>
+
 </div>
 <div class="graph_content" id="default_graph_"  ></div>	
 
@@ -257,107 +253,121 @@ endforeach;
 <?php echo $default_graph; ?>
 });
 
+	function stockouts_clicked(){
+	$.get("reports/stock_out_reports", function(data){
+		$("#stockouts_graph").html(data);
+	});
+	};
 	$(document).ready(function() {
-
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           $('.graph_content').html('');
           
           })
 		$("#subcounty_facility_filter,#category_facility_filter,#tracer_facility_filter,#division_commodity_filter,#division_facility_filter").hide();
 		$("#subcounty_district_filter").change(function() {
-		var option_value=$(this).val();
-		
-		if(option_value=='NULL'){
-			$("#subcounty_facility_filter").hide('slow');	
-		}
-		else{
-			var drop_down='';
-		 	var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+option_value;
-		  	$.getJSON( hcmp_facility_api ,function( json ) {
-		     	$("#subcounty_facility_filter").html('<option value="NULL" selected="selected">--select facility--</option>');
-		      	$.each(json, function( key, val ) {
-			      	drop_down +="<option value='"+json[key]["facility_code"]+"'>"+json[key]["facility_name"]+"</option>";	
-			      });
-			      $("#subcounty_facility_filter").append(drop_down);
-			    });
-				$("#subcounty_facility_filter").show('slow');		
-		}
+			var option_value=$(this).val();
+			
+			if(option_value=='NULL'){
+				$("#subcounty_facility_filter").hide('slow');	
+			}
+			else{
+				var drop_down='';
+			 	var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+option_value;
+			  	$.getJSON( hcmp_facility_api ,function( json ) {
+			     	$("#subcounty_facility_filter").html('<option value="NULL" selected="selected">--select facility--</option>');
+			      	$.each(json, function( key, val ) {
+				      	drop_down +="<option value='"+json[key]["facility_code"]+"'>"+json[key]["facility_name"]+"</option>";	
+				      });
+				      $("#subcounty_facility_filter").append(drop_down);
+				    });
+					$("#subcounty_facility_filter").show('slow');		
+			}
 		});	
 		$("#category_district_filter").change(function() {
-		var option_value=$(this).val();
-		if(option_value=='NULL'){
-		$("#category_facility_filter").hide('slow');	
-		}
-		else{
-var drop_down='';
- var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+option_value;
-  $.getJSON( hcmp_facility_api ,function( json ) {
-     $("#facility_filter").html('<option value="NULL" selected="selected">--select facility--</option>');
-      $.each(json, function( key, val ) {
-      	drop_down +="<option value='"+json[key]["facility_code"]+"'>"+json[key]["facility_name"]+"</option>";	
-      });
-      $("#category_facility_filter").append(drop_down);
-    });
-		$("#category_facility_filter").show('slow');		
-		}
+				var option_value=$(this).val();
+				if(option_value=='NULL'){
+				$("#category_facility_filter").hide('slow');	
+				}
+				else{
+		var drop_down='';
+		 var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+option_value;
+		  $.getJSON( hcmp_facility_api ,function( json ) {
+		     $("#facility_filter").html('<option value="NULL" selected="selected">--select facility--</option>');
+		      $.each(json, function( key, val ) {
+		      	drop_down +="<option value='"+json[key]["facility_code"]+"'>"+json[key]["facility_name"]+"</option>";	
+		      });
+		      $("#category_facility_filter").append(drop_down);
+		    });
+				$("#category_facility_filter").show('slow');		
+				}
 		});			
 
 		$("#tracer_district_filter").change(function() {
-		var option_value=$(this).val();
-		if(option_value=='NULL'){
-		$("#tracer_facility_filter").hide('slow');	
-		}
-		else{
-var drop_down='';
- var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+option_value;
-  $.getJSON( hcmp_facility_api ,function( json ) {
-     $("#tracer_facility_filter").html('<option value="NULL" selected="selected">--select facility--</option>');
-      $.each(json, function( key, val ) {
-      	drop_down +="<option value='"+json[key]["facility_code"]+"'>"+json[key]["facility_name"]+"</option>";	
-      });
-      $("#tracer_facility_filter").append(drop_down);
-    });
-		$("#tracer_facility_filter").show('slow');		
-		}
+				var option_value=$(this).val();
+				if(option_value=='NULL'){
+				$("#tracer_facility_filter").hide('slow');	
+				}
+				else{
+		var drop_down='';
+		 var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+option_value;
+		  $.getJSON( hcmp_facility_api ,function( json ) {
+		     $("#tracer_facility_filter").html('<option value="NULL" selected="selected">--select facility--</option>');
+		      $.each(json, function( key, val ) {
+		      	drop_down +="<option value='"+json[key]["facility_code"]+"'>"+json[key]["facility_name"]+"</option>";	
+		      });
+		      $("#tracer_facility_filter").append(drop_down);
+		    });
+				$("#tracer_facility_filter").show('slow');		
+				}
 		});		
 		
 		//Divion District filter
 		$("#division_district_filter").change(function() {
-		var option_value=$(this).val();
-		if(option_value=='NULL'){
-		$("#division_facility_filter").hide('slow');	
-		}
-		else{
-var drop_down='';
- var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+option_value;
-  $.getJSON( hcmp_facility_api ,function( json ) {
-     $("#division_facility_filter").html('<option value="NULL" selected="selected">--Select Facility--</option>');
-      $.each(json, function( key, val ) {
-      	drop_down +="<option value='"+json[key]["facility_code"]+"'>"+json[key]["facility_name"]+"</option>";	
-      });
-      $("#division_facility_filter").append(drop_down);
-    });
-		$("#division_facility_filter").show('slow');		
-		}
+				var option_value=$(this).val();
+				if(option_value=='NULL'){
+				$("#division_facility_filter").hide('slow');	
+				}
+				else{
+		var drop_down='';
+		 var hcmp_facility_api = "<?php echo base_url(); ?>reports/get_facility_json_data/"+option_value;
+		  $.getJSON( hcmp_facility_api ,function( json ) {
+		     $("#division_facility_filter").html('<option value="NULL" selected="selected">--Select Facility--</option>');
+		      $.each(json, function( key, val ) {
+		      	drop_down +="<option value='"+json[key]["facility_code"]+"'>"+json[key]["facility_name"]+"</option>";	
+		      });
+		      $("#division_facility_filter").append(drop_down);
+		    });
+				$("#division_facility_filter").show('slow');		
+				}
 		});	
-		//Tracer Filter Graph Button
+		//Tracer Filter Graph Button for the stock levels graph 
 		$(".tracer-filter").button().click(function(e) {
-        e.preventDefault();
-        var url_ = "reports/get_county_stock_level_new/"+"NULL/"+"NULL/"+$("#tracer_district_filter").val()+"/"+
-        $("#tracer_facility_filter").val()+"/"+
-        $("#tracer_plot_value_filter").val()+
-        "/1/1";
-        ajax_request_replace_div_content(url_,'.graph_content');    
+	        e.preventDefault();
+	        //($facility_code = null, $district_id = null, $option = null,$report) 
+	        var url_ = "reports/get_county_stock_levels_tracer/"
+	        					+$("#tracer_facility_filter").val()+"/"
+	        					+$("#tracer_district_filter").val()+"/"
+	        					+$("#tracer_plot_value_filter").val()+"/graph";
+	        ajax_request_replace_div_content(url_,'.graph_content');    
           });
           
           //Tracer Items - Table Data
           $(".tracer-filter-table").button().click(function(e) {
-        e.preventDefault();
-        var url_ = "reports/get_county_stock_level_new/"+"NULL/"+"NULL/"+$("#tracer_district_filter").val()+"/"+
-        $("#tracer_facility_filter").val()+"/"+
-        $("#tracer_plot_value_filter").val()+
-        "/table_data/1";
-        ajax_request_replace_div_content(url_,'.graph_content');    
+	        e.preventDefault();
+	        var url_ = "reports/get_county_stock_levels_tracer/"
+	        					+$("#tracer_facility_filter").val()+"/"
+	        					+$("#tracer_district_filter").val()+"/"
+	        					+$("#tracer_plot_value_filter").val()+"/table_data";
+	        ajax_request_replace_div_content(url_,'.graph_content');    
+          });
+          
+          $(".tracer-download").button().click(function(e) {
+	       	e.preventDefault(); 
+	        var url_ = "reports/get_county_stock_levels_tracer/"
+	        					+$("#tracer_facility_filter").val()+"/"
+	        					+$("#tracer_district_filter").val()+"/"
+	        					+$("#tracer_plot_value_filter").val()+"/excel";
+	        window.open(url+url_ ,'_blank');   
           });
 
           //Division button filter
@@ -381,13 +391,6 @@ var drop_down='';
 	        $("#division_plot_value_filter").val()+
 	        "/table_data";
 	        ajax_request_replace_div_content(url_,'.graph_content');    
-          });
-          
-         $(".tracer-download").button().click(function(e) {
-        e.preventDefault(); 
-        var url_ = "reports/get_county_stock_level_new/"+"NULL/"+"NULL/"+
-        $("#tracer_district_filter").val()+"/"+$("#tracer_facility_filter").val()+"/"+$("#tracer_plot_value_filter").val()+"/csv_data"+"/1";   
-         window.open(url+url_ ,'_blank');   
           });
           
           $(".division-download").button().click(function(e) {

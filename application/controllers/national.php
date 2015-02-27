@@ -453,6 +453,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 	}
 
 	public function potential($county_id=null, $district_id=null,$facility_code=null,$graph_type=null,$interval=null)
+
 	 {
 
 	 $and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
@@ -574,6 +575,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 	 endif;
 
 	 }
+
 	public function stock_level_mos($county_id = null, $district_id = null, $facility_code = null, $commodity_id = null, $graph_type = null) {
 		$district_id = ($district_id == "NULL") ? null : $district_id;
 		$graph_type = ($graph_type == "NULL") ? null : $graph_type;

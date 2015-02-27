@@ -35,7 +35,7 @@
 			
 			<ul class="nav nav-tabs" id="Tab">
   <li class="active"><a href="#home" data-toggle="tab"><span class="glyphicon glyphicon-cog"></span>User Settings</a></li>
-  <li><a href="#profile" data-toggle="tab"><span class="glyphicon glyphicon-list"></span> Graphs & Statistics</a></li>
+  <!-- <li><a href="#profile" data-toggle="tab"><span class="glyphicon glyphicon-list"></span> Graphs & Statistics</a></li> -->
 </ul>
 
 <div class="tab-content" style="margin-top: 5px;">
@@ -478,7 +478,7 @@ if (sms_recieve=2) {
   $('#sms_recieve_selection').val(sms_recieve);
 };
 
-
+/*
 if($(this).closest('tr').find('.user-status').attr('data-attr')=="false"){
 	$('.onoffswitch-checkbox-secondary').prop('checked', false) 	
 }else if($(this).closest('tr').find('.user-status').attr('data-attr')=="true"){
@@ -488,7 +488,7 @@ if($(this).closest('tr').find('.user-status').attr('data-attr')=="false"){
 if($(this).closest('tr').find('.facility_name').attr('data-attr')==""){
 	$("#facility_id_edit").attr("disabled", "disabled"); 
 }
-
+*/
 
 
   });
