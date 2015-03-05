@@ -82,13 +82,15 @@ class facility_orders extends Doctrine_Record {
 		AND o.facility_code = f.facility_code
 		$and_data" ;
 		
-		if($order_status=="pending"):// pending approval
-		$query=$standard_query."AND o.status =1";
+		if($order_status=="pending_all"):// pending approval
+		$query=$standard_query."AND o.status =1 order by o.id desc";
 		elseif($order_status=="approved"):
-		$query=$standard_query."AND o.status =2";
+		$query=$standard_query."AND o.status =2 order by o.id desc";
 		elseif($order_status=="rejected"):
-		$query=$standard_query."AND o.status =3";
-		else: $query=$standard_query."AND o.status =4";
+		$query=$standard_query."AND o.status =3 order by o.id desc";
+		elseif($order_status=="pending_cty"):
+		$query=$standard_query."AND o.status =6 order by o.id desc";
+		else: $query=$standard_query."AND o.status =4 order by o.id desc";
 		endif;
 	
 		$query_results=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($query);

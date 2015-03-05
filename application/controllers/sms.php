@@ -1413,6 +1413,13 @@ public function weekly_potential_expiries_report() {
 		}
 
 	}
+public function test_sms(){
+	
+	$phones='254726416795';
+	$message='test from system live server';
+	
+	$this -> hcmp_functions -> send_sms($phones,$message);
+}
 	
 /*CHAI REPORTS for ORS AND ZINC FOR THE ENTIRE COUNTRY*/
 public function ors_zinc_report() {

@@ -12,6 +12,10 @@ class facility_order_details extends Doctrine_Record {
 				$this->hasColumn('quantity_ordered_unit', 'int');
 				$this->hasColumn('quantity_recieved_pack_pack', 'int');
                 $this->hasColumn('quantity_recieved_pack_unit', 'int');
+				$this->hasColumn('scp_qty_units', 'int');
+                $this->hasColumn('scp_qty_packs', 'int');
+				$this->hasColumn('cty_qty_units', 'int');
+                $this->hasColumn('cty_qty_packs', 'int');
 				$this->hasColumn('price', 'int');
 				$this->hasColumn('o_balance', 'int');
 				$this->hasColumn('t_receipts', 'int');
@@ -68,6 +72,8 @@ $fill_rate_compute
 `c`.`quantity_recieved_unit`,
 `c`.`expiry_date`,
 `c`.`batch_no`,
+`c`.`scp_qty_packs` AS scp_qty,
+`c`.`cty_qty_packs` AS cty_qty,
 `c`.`maun`,
 `c`.`o_balance` AS `opening_balance`,
 `c`.`t_receipts` AS `total_receipts`,

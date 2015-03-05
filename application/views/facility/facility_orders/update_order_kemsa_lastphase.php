@@ -2,7 +2,7 @@
  	.input-small{
  		width: 55px !important;
  	}
- 	.row-fluid div p{
+ 	.row div p{
 	padding:10px;
 }
 .table-bordered {
@@ -13,38 +13,33 @@ border: 0px ;
 		width: 55%;
 	}
  </style>
- <div class="container-fluid" style="width: 100%; margin: auto;">
+ <div class="container" style="width: 100%; margin: auto;">
 
 <?php $identifier = $this -> session -> userdata('user_indicator');
- $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/update_order_sub_county',$att); 
- //echo "<pre>"; print_r($facility_order);echo "<pre>";exit;
+ $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/update_order_county',$att); 
 //?>
-<div class="row-fluid">
-		<div class="col-md-8">
-			<div class="col-md-3">
-				<p class="bg-info">
+<div class="row" style="margin: 1%;">
+	<div class="col-md-6">
+		<p class="bg-info">
 			<span  class='' style="display: inline">
-				<strong>Fill the Order Quantity to complete order </strong>
+				<strong>Enter Order Quantity and Comment,Order Quantity = (Monthly Consumption * 4) - Closing Stock </strong>
 			</p>
-			</div>
-			<div class="col-md-9">
-				<p class="bg-info" style="margin-top: 2%">
-			<strong>Suggested Order Quantity (Quarterly)  = ((Average Monthly Consumption *
-				 <span id="month" style="display: inline"> 3</span>) - Closing Stock) + AMC</span></strong>
-				</p>
-			</div>
-			
-		</div>
-		<div class="col-md-2">
-			<b>*Order Frequency</b><input  type="text" class="form-control input-large commodity_code" readonly="readonly" value="Quarterly" />
-		</div>
-		<div class="col-md-2">
-			<b>Total Order Value(KSH)</b>
-<input type="text" class="form-control" name="total_order_value" id="total_order_value" readonly="readonly" value="0"/>	
-<input type="hidden" id="actual_drawing_rights" name="drawing_rights" value="<?php echo $drawing_rights; ?>" />		
-		</div>
-		
 	</div>
+	<div class="col-md-3">
+	<b>*Ordering Frequency</b> <select class="form-control" name="order_period" id="order_period" 
+	<?php  echo  ($option_==="readonly_")?  "disabled='true'" : null;?>>
+ 	<option>Quarterly</option>	
+ 	<!--<option>Monthly</option>-->
+ 	</select> 	
+	</div>
+	
+<div class="col-md-3">
+<b>Total Order Value</b>
+<input type="text" class="form-control" value="<?php echo $order_details[0]['order_total']; ?>" name="total_order_value" id="total_order_value" readonly="readonly"/>	
+<input type="hidden" id="actual_drawing_rights" name="actual_drawing_rights" value="<?php echo $order_details[0]['drawing_rights']; ?>" />				
+</div>
+
+</div>
 <?php $order_number=$order_details[0]['id']; echo "<input type='hidden' name='order_number' value='$order_number'/>
 <input type='hidden' name='rejected' value='$rejected'/>
 <input type='hidden' name='rejected_admin' id='rejected_admin' value='0'/>
@@ -52,27 +47,25 @@ border: 0px ;
 <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 <thead>
 <tr style="background-color: white">
-						<!--<th>Category</th>-->
+						<th>Category</th>
 						<th>Description</th>
-						<!--<th>Commodity&nbsp;Code</th>-->
+						<th>Commodity&nbsp;Code</th>
 						<th>Order Unit Size</th>
 						<th>Order Unit Cost (Ksh)</th>
 						<th>Opening Balance (Units)</th>
-						<th>Total Receipts (Units)</th>
-					    <th>Total issues (Units)</th>
-					    <th>Adj(-ve) (Units)</th>
-					    <th>Adj(+ve) (Units)</th>
-					    <th>Losses (Units)</th>
-					    <th>Closing Stock (Units)</th>
-					    <th>No Days Out Of Stock</th>
-					    <th>AMC (Packs)</th>
-					    <th>Suggested Order Qty (Packs)</th>
-					    <th>Facility Order Qty (Packs)</th>
-					    <th>CP Order Qty  (Packs)</th>
-					    <th>SCP Order Qty  (Packs)</th>
-					    <th>Actual Order Qty (Units)</th>
+						<th>Total Receipts(Units)</th>
+					    <th>Total issues(Units)</th>
+					    <th>Adjustments(-ve)(Units)</th>
+					    <th>Adjustments(+ve)(Units)</th>
+					    <th>Losses(Units)</th>
+					    <th>No days out of stock</th>
+					    <th>Closing Stock(Units)</th>
+					    <th>AMC(Packs)</th>
+					    <th>Suggested Order Qty(Packs)</th>
+					    <th>SCP Order Qty(Packs)</th>
+					    <th>SCP Order Qty(Units)</th>
 					    <th>Order Cost(Ksh)</th>	
-					    <!--<th>Comment</th>	-->					    
+					    <th>Comment</th>				    
 	</tr>
 </thead>
 <tbody>
@@ -81,7 +74,7 @@ border: 0px ;
 								$j=count($facility_order);
 								for($i=0;$i<$j;$i++){?>
 						<tr>
-							<!--<td><?php echo $facility_order[$i]['sub_category_name'];?></td>-->
+							<td><?php echo $facility_order[$i]['sub_category_name'];?></td>
 							<?php 
 							      $price=$facility_order[$i]['unit_cost'];
 								  $price=str_replace(",", '',$price);
@@ -103,7 +96,7 @@ border: 0px ;
 					 form_input(array('name' => 'unit_cost['.$i.']', 'type'=>'hidden',
 					 'id' =>'test','value'=>$facility_order[$i]['unit_cost'],'class'=>'unit_cost'));?>
 							<td><?php echo $facility_order[$i]['commodity_name']?></td>
-							<!--<td><?php echo $facility_order[$i]['commodity_code'];?></td>-->
+							<td><?php echo $facility_order[$i]['commodity_code'];?></td>
 							<td><?php echo $facility_order[$i]['unit_size']?> </td>
 							<td><?php echo $facility_order[$i]['unit_cost']; ?> </td>
 							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="open['.$i.']"'; ?>  value="<?php echo $facility_order[$i]['opening_balance'];?>" /></td>
@@ -112,38 +105,18 @@ border: 0px ;
 				<td><input  class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="adjustmentnve['.$i.']"'; ?> value="<?php echo $facility_order[$i]['adjustmentnve']?>" /></td>
 				<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="adjustmentpve['.$i.']"'; ?> value="<?php echo $facility_order[$i]['adjustmentpve']?>" /></td>
 							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="losses['.$i.']"'; ?> value="<?php echo $facility_order[$i]['losses'] ?>" /></td>
-							
+							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="days['.$i.']"'; ?> value="<?php echo $facility_order[$i]['days_out_of_stock'];?>" /></td>
 							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="closing['.$i.']"'; ?> value="<?php echo $facility_order[$i]['closing_stock'];?>" /></td>
-							<td>
-								<input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="days['.$i.']"'; ?> 
-								value="<?php 
-								$closing_stock=$facility_order[$i]['closing_stock'];
-								
-								if ((int)$closing_stock <= 0) {
-								      $date_mod = $facility_order[$i]['date_modified'];
-									  
-										  $now = time(); 
-									      $my_date = strtotime($date_mod);
-									       $datediff = $now - $my_date;
-									     echo floor($datediff/(60*60*24));
-									
-								} else{
-									echo "0";
-								}?>" />
-								
-								</td>
 							<td><input class="form-control input-small" readonly="readonly" type="text" <?php echo 'name="amc['.$i.']"'; ?> value="<?php echo $facility_order[$i]['historical'];?>" /></td>
-							<td><input style="background-color: #B2EFB2;" class="form-control input-small" readonly="readonly" type="text" name="suggested[<?php echo $i;?>]" value="0"/></td>
-							
-							<td><input style="background-color: #B2EFB2;" class="form-control input-small" readonly="readonly" type="text" name="facility_quantity[<?php echo $i;?>]"  value="<?php $qty=$facility_order[$i]['quantity_ordered_pack'];if($qty>0){echo $qty;} else echo 0;?>"/></td>
-							
-							<td><input style="background-color: #B2EFB2;" class="form-control input-small " readonly="readonly" type="text" name="cty_qty[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['scp_qty'];?>"/></td>
-							<td><input style="background-color: " class="form-control input-small quantity" type="text" name="quantity[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['cty_qty'];?>"/></td>
-							
-							<td><input class="form-control input-small actual_quantity" readonly="readonly" type="text" name="actual_quantity[<?php echo $i ;?>]" value="0"/></td>
-							<td><?php echo '<input type="text" class="form-control input-small cost" name="cost['.$i.']" value="0" readonly="yes"   />';?></td>
-							<!--<td><input class="form-control input-small" type="text" name="comment[<?php echo $i ;?>]" value="N/A" /></td>-->
-			       			</tr>					
+							<td><input class="form-control input-small" readonly="readonly" type="text" <?php echo 'name="suggested['.$i.']"';?> value="0"/></td>
+							<td><input class="form-control input-small quantity" type="text" <?php echo 'name="quantity['.$i.']"';?> value="<?php $qty=$facility_order[$i]['quantity_ordered_pack'];
+							if($qty>0){echo $qty;} else echo 0;?>" <?php echo ($option_==="readonly_")? 'readonly="readonly"' :  null?> /></td>
+							<td><input class="form-control input-small actual_quantity" readonly="readonly" type="text" <?php echo 'name="actual_quantity['.$i.']"';?> 
+								value="<?php echo $facility_order[$i]['quantity_ordered_unit'];?>" /></td>
+							<td><?php $cost=$qty*$facility_order[$i]['unit_cost'];
+							 echo '<input type="text" class="form-control input-small cost" name="cost['.$i.']" value="'.$cost.'" readonly="yes"   />';?></td>
+							<td><input class="form-control input-small" type="text" <?php echo 'name="comment['.$i.']"' ?>  value="<?php echo $facility_order[$i]['comment'];?>" /></td>
+			       			</tr>						
 						<?php } $i=$i-1; echo form_close()."<script>var count=".$i."</script>"	?>
 </tbody>
 </table>
@@ -157,14 +130,10 @@ border: 0px ;
 <span class="glyphicon glyphicon-save"></span>Download Order</button>
 </a>
 <?php else:?>
-<?php if($identifier==='district'):	?>
 <button type="button" class="reject btn btn-danger"><span class="glyphicon glyphicon-plus"></span>Reject Order</button>
 <button type="button" class="approve btn btn-success"><span class="glyphicon glyphicon-open"></span>Approve Order</button>
 <button type="button" class="add btn btn-sm btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Item</button></div>
-<?php else: ?>
-<button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
-<button type="button" class="btn btn-success reject_fixed"><span class="glyphicon glyphicon-open"></span>Edit Order</button></div>
-<?php endif; endif?>
+<?php endif?>
 </div>
 </form>  
 </div>

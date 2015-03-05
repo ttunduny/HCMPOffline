@@ -346,6 +346,7 @@ class Reports extends MY_Controller {
 		//get order information from the db
 		$facility_order_count_ = facility_orders::get_facility_order_summary_count($facility_code, $district_id, $county_id);
 		$facility_order_count = array();
+		//echo "<pre>";	print_r($facility_order_count_);exit;
 
 		foreach ($facility_order_count_ as $facility_order_count_) {
 			$facility_order_count[$facility_order_count_['status']] = $facility_order_count_['total'];
@@ -353,7 +354,8 @@ class Reports extends MY_Controller {
 
 		$data['order_counts'] = $facility_order_count;
 		$data['delivered'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "delivered");
-		$data['pending'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending");
+		$data['pending_all'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_all");
+		$data['pending_cty'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_cty");
 		$data['approved'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "approved");
 		$data['rejected'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "rejected");
 		$data['facilities'] = ($for == 'subcounty') ? Facilities::get_facilities_all_per_district($this -> session -> userdata('district_id'), 'set') : array();

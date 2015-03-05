@@ -73,6 +73,7 @@ class facility_transaction_table extends Doctrine_Record {
 	}
 	return $temp;
 endif;
+
 	 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 ->fetchAll("select `c`.`facility_code` AS `facility_code`,
 `a`.`sub_category_name` AS `sub_category_name`,
@@ -95,7 +96,7 @@ ceiling((`c`.`closing_stock` / `b`.`total_commodity_units`)) AS `closing_stock_`
 `c`.`status` AS `status`,
 `c`.`adjustmentpve` AS `adjustmentpve`,
 `c`.`adjustmentnve` AS `adjustmentnve`,
-ifnull(ceiling(sum((`h`.`total_units` / `b`.`total_commodity_units`))),0) AS `historical` 
+ifnull(ceiling(sum((`h`.`total_units` / `b`.`total_commodity_units`))),0) AS `historical` ,`c`.`date_modified`
 from  `commodities` `b`,`commodity_sub_category` `a` ,`facility_transaction_table` `c`
 left join `facility_monthly_stock` `h` on (h.`facility_code`=$facility_code
 and  `h`.`commodity_id` = `c`.`commodity_id`)

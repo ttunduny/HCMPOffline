@@ -173,7 +173,7 @@ class orders extends MY_Controller {
 		$facility_code = $this -> session -> userdata('facility_id');
 
 		$items = ((isset($source)) && ($source = 2)) ? Facility_Transaction_Table::get_commodities_for_ordering_meds($facility_code) : Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
-		
+		//echo '<pre>';print_r($items); echo '</pre>';
 		if (isset($_FILES['file']) && $_FILES['file']['size'] > 0) {
 			$ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
 			//echo $ext;
@@ -378,6 +378,18 @@ class orders extends MY_Controller {
 		$data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
 		$this -> load -> view('shared_files/template/template', $data);
 	}
+	public function order_last_phase($order_id, $rejected = null, $option = null) {
+		$order_data = facility_orders::get_order_($order_id) -> toArray();
+		$data['content_view'] = "facility/facility_orders/update_order_kemsa_lastphase";
+		$data['title'] = "Approve Order";
+		$data['banner_text'] = "Approve Order";
+		$data['rejected'] = ($rejected == 'rejected') ? 1 : 0;
+		$data['option_'] = ($option == 'readonly') ? 'readonly_' : 0;
+		$data['order_details'] = $order_data;
+		$data['facility_order'] = facility_order_details::get_order_details($order_id);
+		$data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
+		$this -> load -> view('shared_files/template/template', $data);
+	}
 
 	public function facility_meds_order() {
 		// echo "<pre>";print_r($this->input->post('commodity_code'));echo "</pre>";exit;
@@ -488,10 +500,10 @@ class orders extends MY_Controller {
 			$amc = $this -> input -> post('amc');
 			$workload = $this -> input -> post('workload');
 			//order table details
-			$bed_capacity = $this -> input -> post('bed_capacity');
-			$drawing_rights = $this -> input -> post('drawing_rights');
+			$bed_capacity = '0';
+			$drawing_rights = '0';;
 			$order_total = $this -> input -> post('total_order_value');
-			$order_no = $this -> input -> post('order_no');
+			$order_no = '0';
 			$facility_code = $this -> input -> post('facility_code');
 			$user_id = $this -> session -> userdata('user_id');
 			$order_date = date('y-m-d');
@@ -528,23 +540,22 @@ class orders extends MY_Controller {
 				$this -> hcmp_functions -> clone_excel_order_template($new_order_no, 'save_file', $file_name);
 				//create excel
 				$order_listing = 'facility';
-				$message_1 = '
+				$message = '
 						<br>
-						Please find the Order Made by ' . $facility_name . ' below for approval.
+						Please find the Order Made by ' . $facility_name . ' attached.
 						<br>
-						You may log in to the HCMP system to approve it.<a href="http://health-cmp.or.ke/" target="_blank">Click here</a>
+						You may log in <a href="http://health-cmp.or.ke/" target="_blank">here</a> to approve.
 						<br>
 						<br>
 						<br>
 						';
-				$subject = 'Pending Approval Order Report For ' . $facility_name;
+				$subject = 'Order Pending Approval(Sub-County Pharmascist) Report For ' . $facility_name;
 
-				$attach_file1 = './pdf/' . $file_name . '.pdf';
-				$attach_file2 = "./print_docs/excel/excel_files/" . $file_name . '.xls';
+				//$attach_file1 = './pdf/'.$file_name.'.pdf';
+				$attach_file2 = "./print_docs/excel/excel_files/" .$file_name.'.xls';
 
-				$message = $message_1 . $pdf_body;
-
-				$response = $this -> hcmp_functions -> send_order_submission_email($message, $subject, $attach_file1 . "(more)" . $attach_file2, null);
+				
+				$response = $this -> hcmp_functions -> send_order_submission_email($message, $subject, $attach_file2, null);
 
 				if ($response) {
 					delete_files($attach_file1);
@@ -574,7 +585,7 @@ class orders extends MY_Controller {
 
 	}
 
-	public function update_facility_new_order() {
+	public function update_order_sub_county() {
 		//security check
 		if ($this -> input -> post('commodity_id')) :
 			//just picks values from the view and assigns them to a variable
@@ -601,12 +612,12 @@ class orders extends MY_Controller {
 			$comment = $this -> input -> post('comment');
 			$s_quantity = $this -> input -> post('suggested');
 			(int)$amc = $this -> input -> post('amc');
-			$workload = $this -> input -> post('workload');
+			$workload = '0';
 			//order table details
-			$bed_capacity = $this -> input -> post('bed_capacity');
-			$drawing_rights = $this -> input -> post('drawing_rights');
+			$bed_capacity = '0';
+			$drawing_rights = '0';
 			$order_total = $this -> input -> post('total_order_value');
-			$order_no = $this -> input -> post('order_no');
+			$order_no = '0';
 			//$facility_code=$this -> session -> userdata('facility_id');
 			//$user_id=$this->session->userdata('user_id');
 			$order_date = date('y-m-d');
@@ -618,8 +629,8 @@ class orders extends MY_Controller {
 				-> execute("INSERT INTO facility_order_details (  `id`,
 					`order_number_id`,
 					`commodity_id`,
-					`quantity_ordered_pack`,
-					`quantity_ordered_unit`,
+					`scp_qty_packs`,
+					`scp_qty_units`,
 					`price`,
 					`o_balance`,
 					`t_receipts`,
@@ -650,8 +661,8 @@ class orders extends MY_Controller {
 					)
 					ON DUPLICATE KEY UPDATE
 					`commodity_id`=$commodity_id[$i],
-					`quantity_ordered_pack`=$quantity_ordered_pack[$i],
-					`quantity_ordered_unit`=$quantity_ordered_unit[$i],
+					`scp_qty_packs`=$quantity_ordered_pack[$i],
+					`scp_qty_units`=$quantity_ordered_unit[$i],
 					`price`=$price[$i],
 					`o_balance`=$o_balance[$i],
 					`t_receipts`=$t_receipts[$i],
@@ -667,7 +678,7 @@ class orders extends MY_Controller {
 
 			}//insert the data here
 
-			$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("UPDATE `facility_orders` SET `order_total` = $order_total,`order_total` = $order_total,`order_no` = $order_no
+			$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("UPDATE `facility_orders` SET `order_total` = $order_total,`order_no` = $order_no
 						,`workload` = $workload ,`bed_capacity` = $bed_capacity WHERE `facility_orders`.`id` = $order_id;");
 
 			$myobj = Doctrine::getTable('facility_orders') -> find($order_id);
@@ -714,11 +725,12 @@ class orders extends MY_Controller {
 
 			}
 			if ($approved_admin == 1) {
-				$myobj -> status = 2;
+				$myobj -> status = 6;
 				$myobj -> approval_date = date('y-m-d');
 				$myobj -> approved_by = $this -> session -> userdata('user_id');
 				$status = "Approved";
-				$subject = 'Approved Order Report For ' . $facility_name;
+				
+				$subject = 'Order Pending Approval(County Pharmacist) Report For ' . $facility_name;
 
 			}
 
@@ -731,6 +743,184 @@ class orders extends MY_Controller {
 				$order_listing = 'facility';
 			endif;
 
+		  $message = '
+						<br>
+						Please find the '. $status .' Order Made by ' . $facility_name . ' attached.
+						<br>' . $info ;'
+						<br>
+						You may log in <a href="http://health-cmp.or.ke/" target="_blank">here</a> to follow up/Approve.
+						<br>
+						<br>
+						<br>
+						';
+
+			$response = $this -> hcmp_functions -> send_order_sc_approval_email($message, $subject,$attach_file2, $facility_code, $status);
+			if ($response) {
+				delete_files($attach_file1);
+				delete_files($attach_file2);
+			} else {
+
+			}
+			//Test for sms
+			//$this -> hcmp_functions -> order_update_sms($this -> session -> userdata('facility_id'),$status);
+			$this -> session -> set_flashdata('system_success_message', "Facility Order No $order_id has Been $status");
+			redirect("reports/order_listing/$order_listing");
+
+		endif;
+
+	}
+
+public function update_order_county() {
+		//security check
+		if ($this -> input -> post('commodity_id')) :
+			//just picks values from the view and assigns them to a variable
+			$this -> load -> database();
+			$data_array = array();
+			$rejected = $this -> input -> post('rejected');
+			$rejected_admin = $this -> input -> post('rejected_admin');
+			$approved_admin = $this -> input -> post('approved_admin');
+			$commodity_id = $this -> input -> post('commodity_id');
+			//order details table details
+			$quantity_ordered_pack = $this -> input -> post('quantity');
+			$order_id = $this -> input -> post('order_number');
+			$facility_order_details_id = $this -> input -> post('facility_order_details_id');
+			$quantity_ordered_unit = $this -> input -> post('actual_quantity');
+			(int)$price = $this -> input -> post('unit_cost');
+			$o_balance = $this -> input -> post('open');
+			$t_receipts = $this -> input -> post('receipts');
+			$t_issues = $this -> input -> post('issues');
+			$adjustpve = $this -> input -> post('adjustmentpve');
+			$adjustnve = $this -> input -> post('adjustmentnve');
+			$losses = $this -> input -> post('losses');
+			$days = $this -> input -> post('days');
+			$c_stock = $this -> input -> post('closing');
+			$comment = $this -> input -> post('comment');
+			$s_quantity = $this -> input -> post('suggested');
+			(int)$amc = $this -> input -> post('amc');
+			$workload = '0';
+			//order table details
+			$bed_capacity = '0';
+			$drawing_rights = '0';
+			$order_total = $this -> input -> post('total_order_value');
+			$order_no = '0';
+			//$facility_code=$this -> session -> userdata('facility_id');
+			//$user_id=$this->session->userdata('user_id');
+			$order_date = date('y-m-d');
+			$number_of_id = count($commodity_id);
+			$subject = $file_name = $title = $info = $attach_file = null;
+			for ($i = 0; $i < $number_of_id; $i++) {
+
+				$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() 
+				-> execute("INSERT INTO facility_order_details (  `id`,
+					`order_number_id`,
+					`commodity_id`,
+					`cty_qty_packs`,
+					`cty_qty_units`,
+					`price`,
+					`o_balance`,
+					`t_receipts`,
+					`t_issues`,
+					`adjustpve`,
+					`losses`,
+					`days`,
+					`comment`,
+					`c_stock`,
+					`amc`,
+					`adjustnve`)
+					VALUES ($facility_order_details_id[$i],
+					$order_id,
+					$commodity_id[$i],
+					$quantity_ordered_pack[$i],
+					$quantity_ordered_unit[$i],
+					$price[$i],
+					$o_balance[$i],
+					$t_receipts[$i],
+					$t_issues[$i],
+					$adjustpve[$i],
+					$losses[$i],
+					$days[$i],
+					'$comment[$i]',
+					$c_stock[$i],
+					$amc[$i],
+					$adjustnve[$i]
+					)
+					ON DUPLICATE KEY UPDATE
+					`commodity_id`=$commodity_id[$i],
+					`cty_qty_packs`=$quantity_ordered_pack[$i],
+					`cty_qty_units`=$quantity_ordered_unit[$i],
+					`price`=$price[$i],
+					`o_balance`=$o_balance[$i],
+					`t_receipts`=$t_receipts[$i],
+					`t_issues`=$t_issues[$i],
+					`adjustpve`=$adjustpve[$i],
+					`adjustnve`=$adjustnve[$i],
+					`losses`=$losses[$i],
+					`days`=$days[$i],
+					`c_stock`=$c_stock[$i],
+					`comment`='$comment[$i]',
+					`amc`=$amc[$i],
+					`order_number_id`=$order_id;");
+
+			}//insert the data here
+
+			$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("UPDATE `facility_orders` SET `order_total` = $order_total,`order_no` = $order_no
+						,`workload` = $workload ,`bed_capacity` = $bed_capacity WHERE `facility_orders`.`id` = $order_id;");
+
+			$myobj = Doctrine::getTable('facility_orders') -> find($order_id);
+			$myobj -> workload = $workload;
+			$myobj -> bed_capacity = $bed_capacity;
+			$myobj -> order_no = $order_no;
+			$myobj -> order_total = $order_total;
+			$facility_code = $myobj -> facility_code;
+
+			$myobj1 = Doctrine::getTable('Facilities') -> findOneByfacility_code($facility_code);
+			$facility_name = $myobj1 -> facility_name;
+			$pdf_body = $this -> create_order_pdf_template($order_id);
+
+			$file_name = $facility_name . '_facility_order_no_' . $order_id . "_date_created_" . date('d-m-y');
+
+			$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
+
+			$this -> hcmp_functions -> create_pdf($pdf_data);
+			// create pdf
+			$this -> hcmp_functions -> clone_excel_order_template($order_id, 'save_file', $file_name);
+			//create excel
+
+			$attach_file1 = './pdf/' . $file_name . '.pdf';
+			$attach_file2 = "./print_docs/excel/excel_files/" . $file_name . '.xls';
+			//echo $attach_file;
+
+			//exit;
+
+			if ($rejected == 1) {
+				$myobj -> status = 1;
+				$status = "Updated";
+				$subject = 'Updated Order Report Pending Approval For ' . $facility_name;
+
+				$attach_file = './pdf/' . $file_name . '.pdf';
+			}
+			if ($rejected_admin == 1) {
+				$myobj -> status = 3;
+				$status = "Rejected";
+				$subject = 'Rejected Order Report For ' . $facility_name;
+				$info = '<br> Note the order for  ' . $facility_name . ' Has been rejected by ' . $approve_name1 . ' ' . $approve_name2 . '.
+				<br>
+		  		Find the attached order, correct it
+				<br>';
+
+			}
+			//final approval send to supplier
+			if ($approved_admin == 1) {
+				$myobj -> status = 2;
+				$myobj -> approval_date = date('y-m-d');
+				$myobj -> approved_by = $this -> session -> userdata('user_id');
+				$status = "Approved";
+				$subject = 'Approved Order Report For ' . $facility_name;
+
+			}
+
+			$myobj -> save();
+			
 			$message = "<br>Please find the $status Order for  " . $facility_name . '
 		  <br>' . $info . $pdf_body;
 
@@ -744,7 +934,7 @@ class orders extends MY_Controller {
 			//Test for sms
 			//$this -> hcmp_functions -> order_update_sms($this -> session -> userdata('facility_id'),$status);
 			$this -> session -> set_flashdata('system_success_message', "Facility Order No $order_id has Been $status");
-			redirect("reports/order_listing/$order_listing");
+			redirect("reports/order_listing/county");
 
 		endif;
 
