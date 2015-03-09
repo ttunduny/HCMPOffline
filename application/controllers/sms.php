@@ -118,13 +118,13 @@ class sms extends MY_Controller {
 						$message = "Dear $facility_name user,\n you have not logged in to HCMP for the past $no_of_days days. The last time you logged in was $no_of_days days ago.\n Kindly log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 						$message = urlencode($message);
 						//appends the phone numbers of the technical team
-						$spam_sms = '254723722204+254720167245+254726416795+'.$phone;
+						$spam_sms = $phone;
 
 						$phone_numbers = explode("+", $spam_sms);
 
-					foreach ($phone_numbers as $key=>$user_no) {
-					 //file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
-					 }
+						foreach ($phone_numbers as $key => $user_no) {
+							file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+						}
 
 					endif;
 
@@ -132,7 +132,7 @@ class sms extends MY_Controller {
 				endforeach;
 				//start for the sub county section
 				(array_key_exists($district_name, $district_total)) ? : $district_total = array_merge($district_total, array($district_name => $count_district));
-				
+
 				//pick the user data
 				$user_data = Users::get_scp_details($district_id);
 				$name = $user_data[0]['fname'] . " " . $user_data[0]['lname'];
@@ -141,12 +141,12 @@ class sms extends MY_Controller {
 				$message = urlencode($message);
 
 				$phone_dpp = $this -> get_ddp_phone_numbers($district_id);
-				$spam_sms = '254723722204+254720167245+254726416795+254725227833+'.$phone_dpp;
+				$spam_sms = $phone_dpp;
 				$phone_numbers = explode("+", $spam_sms);
 
 				//sends out the sms
 				foreach ($phone_numbers as $key => $user_no) {
-					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 				}
 
 				//
@@ -155,33 +155,32 @@ class sms extends MY_Controller {
 				//end for each for the districts
 			endforeach;
 			//start for the sub county section
-			
+
 			//pick the county pharmacists details
 			$user_data = Users::get_cp_details($district_id);
 			$name = $user_data[0]['fname'] . " " . $user_data[0]['lname'];
 			//message to be sent out to the sub county guys
 			$message = "Dear $name,\n $count_county facilities in $county_name County have not accessed HCMP for more than 5 days.\n";
-			
-			foreach($district_total as $key=> $total):
-				$message .=" $key Sub County - $total facilities.\n";
-			
+
+			foreach ($district_total as $key => $total) :
+				$message .= " $key Sub County - $total facilities.\n";
+
 			endforeach;
-			
+
 			$message .= "Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
-			//echo "$message";exit;
 			$message = urlencode($message);
-			
+
 			$phone_cp = $this -> get_cp_phone_numbers(1);
-			$spam_sms = '254723722204+254720167245+254726416795+254725227833+';
+			$spam_sms = '254723722204+254720167245+254726416795+254725227833+' . $phone_cp;
 			$phone_numbers = explode("+", $spam_sms);
 
 			//sends out the sms
 			foreach ($phone_numbers as $key => $user_no) {
 				file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
-				echo "Success sent to ".$user_no.'<br>';
+				echo "Success sent to " . $user_no . '<br>';
 			}
-			
-			exit;
+
+			exit ;
 			//$count_county += $count_district;
 
 		endforeach;
