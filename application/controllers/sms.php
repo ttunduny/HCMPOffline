@@ -23,7 +23,25 @@ class sms extends MY_Controller {
 	public function send_email_test() {
 		$this -> hcmp_functions -> send_email();
 	}
-
+public function test_sms(){
+	
+       $phones='254726416795';
+       $message='test from system live server';
+$message=urlencode($message);
+   //$spam_sms='254726534272+254720167245';	
+   $spam_sms='254720167245+254726534272+'.$phones;
+//  $spam_sms='254726534272';
+ 	# code...
+ 	
+ $phone_numbers=explode("+", $spam_sms);
+	//echo '<pre>'; print_r($phone_numbers);echo '<pre>';
+	foreach ($phone_numbers as $key=>$user_no) {
+		file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+		echo "Success sent to ".$user_no.'<br>';
+	}
+	
+	//$this -> hcmp_functions -> send_sms($phones,$message);
+}
 	//Checks if there are potential expiries in the system
 	public function check_potential_expiries() {
 		$year = date("Y");
