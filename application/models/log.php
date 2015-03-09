@@ -36,6 +36,32 @@ class Log extends Doctrine_Record {
 		}
 		
 	}
+	public static function check_system_usage($facility_code){
+		
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT 
+		    f.facility_name AS 'Facility Name',
+		    f.facility_code AS 'Facility Code',
+		    c.county AS 'County',
+		    d.district AS 'Sub County',
+		    IFNULL(DATEDIFF(NOW(), MAX(l.end_time_of_event)),
+		            0) AS Days_From
+		FROM
+		    user u,
+		    log l,
+		    facilities f,
+		    districts d,
+		    counties c
+		WHERE
+		    u.id = l.user_id 
+		        AND u.facility = f.facility_code
+		        AND f.district =  d.id
+				AND d.county = c.id
+		        AND f.facility_code = $facility_code");
+				
+		return $query;
+		
+	}
 	
 	public static function update_log_out_action($user_id)
 	{

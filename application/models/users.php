@@ -80,9 +80,20 @@ class Users extends Doctrine_Record {
 	{
 		$query = Doctrine_Query::create() -> select("DISTINCT usertype_id, telephone,district, facility") -> from("users")->where("status='1' and  facility='$facility_code'");
 		$info = $query -> execute();
-		
 		return $info;
 	}
+	public static function get_scp_details($district){
+		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> 
+		fetchAll("SELECT 
+				    fname, lname
+				FROM
+				    user
+				WHERE
+				    district = $district and usertype_id='3'");
+		
+		return $query;
+	}
+
 	public static function get_user_emails($facility_code) 
 	{
 		$query = Doctrine_Query::create() -> select("*") -> from("users")->where("status='1' and  facility='$facility_code' AND email_recieve = 1");
@@ -232,8 +243,13 @@ FROM
 	//////get the dpp details 
 public static function get_dpp_details($distirct){
 	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("district=$distirct and usertype_id='3' ");
-		$level = $query -> execute();
-		return $level;
+	$level = $query -> execute();
+	return $level;
+}
+public static function get_cp_details($distirct){
+	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("district=$distirct and usertype_id='3' ");
+	$level = $query -> execute();
+	return $level;
 }
 public static function get_dpp_emails($distirct){
 	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("district = $distirct and usertype_id='3' and email_recieve = 1");
