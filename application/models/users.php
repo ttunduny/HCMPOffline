@@ -93,6 +93,17 @@ class Users extends Doctrine_Record {
 		
 		return $query;
 	}
+	public static function get_county_pharm_details($county_id){
+		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> 
+		fetchAll("SELECT 
+				    fname, lname
+				FROM
+				    user
+				WHERE
+				    county_id = $county_id and usertype_id='10'");
+		
+		return $query;
+	}
 
 	public static function get_user_emails($facility_code) 
 	{
@@ -246,8 +257,8 @@ public static function get_dpp_details($distirct){
 	$level = $query -> execute();
 	return $level;
 }
-public static function get_cp_details($distirct){
-	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("district=$distirct and usertype_id='3' ");
+public static function get_cp_details($county_id){
+	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("county_id=$county_id and usertype_id='10' ");
 	$level = $query -> execute();
 	return $level;
 }
