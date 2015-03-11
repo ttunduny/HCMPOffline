@@ -127,7 +127,7 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 									echo "0";
 								}?>" /></td>
 							<td><input class="form-control input-small amc" readonly="readonly" type="text" name="amc[<?php echo $i ;?>]" value="<?php echo $facility_order[$i]['historical'];?>" /></td>
-							<td><input style="background-color: #B2EFB2;" class="form-control input-small suggested" readonly="readonly" type="text" name="suggested[<?php echo $i ;?>]"  value="0"/></td>
+							<td><input style="background-color: #B2EFB2;" class="form-control input-small suggested" readonly="readonly" type="text" name="suggested[<?php echo $i ;?>]"  value=""/></td>
 							<td><input class="form-control input-small quantity" type="text" name="quantity[<?php echo $i ;?>]" value="<?php $qty=$facility_order[$i]['quantity_ordered'];
 							if($qty>0){echo $qty;} else echo 0;?>"/></td>
 							<td><input class="form-control input-small actual_quantity" readonly="readonly" type="text" name="actual_quantity[<?php echo $i ;?>]" value="0"/></td>

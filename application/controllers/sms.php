@@ -1415,7 +1415,7 @@ public function weekly_potential_expiries_report() {
 	}
 public function test_sms(){
 	
-	$phones='254726416795';
+	$phones='254723722204';
 	$message='test from system live server';
 	
 	$this -> hcmp_functions -> send_sms($phones,$message);
@@ -1841,28 +1841,27 @@ public function log_summary_weekly(){
 	        ->getCurrentConnection()
 	        ->fetchAll("SELECT *
 FROM (SELECT f.facility_name,f.facility_code,c.county,d.district,l.user_id, 
-if(l.issued=0 and l.ordered=0 and l.redistribute=0 and l.decommissioned=0 ,l.start_time_of_event,null)
+if(l.issued=0 and l.ordered=0 and l.redistribute=0 and l.decommissioned=0 ,max(l.start_time_of_event),null)
  as login_only,
-l.issued,if(l.issued=1 and l.redistribute=0 ,l.start_time_of_event,null) as issue_event,
-l.ordered,DateDiff(now(),if(l.issued=1 and l.redistribute=0 ,l.start_time_of_event,null)) as issue_d,
-if(l.ordered=1 ,l.start_time_of_event,null) as ordered_event,
-DateDiff(now(),if(l.ordered=1 ,l.start_time_of_event,null)) as ordered_d,
-l.redistribute,if(l.redistribute=1 ,l.start_time_of_event,null) as redistribute_event,
-DateDiff(now(),if(l.redistribute=1 ,l.start_time_of_event,null)) as redistribute_d,
-l.decommissioned,if(l.decommissioned=1 ,l.start_time_of_event,null) as decommissioned_event,
-DateDiff(now(),if(l.decommissioned=1 ,l.start_time_of_event,null)) as decommissioned_d,
-l.add_stock,if(l.add_stock=1 ,l.start_time_of_event,null) as receive_event,
-DateDiff(now(),if(l.add_stock=1 ,l.start_time_of_event,null)) as receive_event_d,
+l.issued,if(l.issued=1 and l.redistribute=0 ,max(l.start_time_of_event),null) as issue_event,
+l.ordered,DateDiff(now(),if(l.issued=1 and l.redistribute=0 ,max(l.start_time_of_event),null)) as issue_d,
+if(l.ordered=1 ,max(l.end_time_of_event),null) as ordered_event,
+DateDiff(now(),if(l.ordered=1 ,max(l.start_time_of_event),0)) as ordered_d,
+l.redistribute,if(l.redistribute=1 ,max(l.start_time_of_event),null) as redistribute_event,
+DateDiff(now(),if(l.redistribute=1 ,max(l.start_time_of_event),0)) as redistribute_d,
+l.decommissioned,if(l.decommissioned=1 ,max(l.start_time_of_event),null) as decommissioned_event,
+DateDiff(now(),if(l.decommissioned=1 ,max(l.start_time_of_event),0)) as decommissioned_d,
+l.add_stock,if(l.add_stock=1 ,max(l.start_time_of_event),null) as receive_event,
+DateDiff(now(),if(l.add_stock=1 ,max(l.start_time_of_event),0)) as receive_event_d,
 max(l.start_time_of_event) as date_event,
 DateDiff(now(),max(l.start_time_of_event)) as date_event_d
  FROM log l
 INNER JOIN user u ON l.user_id=u.id
-INNER JOIN facilities f ON u.facility=f.facility_code
+RIGHT JOIN facilities f ON u.facility=f.facility_code
 INNER JOIN districts d ON f.district=d.id
 INNER JOIN counties c ON d.county=c.id
 where  using_hcmp=1 group by l.issued,l.ordered,l.redistribute,l.decommissioned,f.facility_code) AS t
 group by issued,ordered,redistribute,decommissioned,facility_code
-
 ");
 						 
 						 $mfl=array();
@@ -1877,19 +1876,31 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 						 $temp=array();
 						 foreach ($unique_mfl as $key ) {
 						 	
-						 	array_push($temp,array('mfl'=>$key,
-							        'facility_name'=>0,
-							        'user_id'=>0,
-							        'login_only'=>0,
-							        'issued'=>0,
+						 	array_push($temp,array('facility_code'=>$key,
+							        'facility_name'=>'',
+							        'county'=>'',
+							        'district'=>'',
+							        'issued'=>'',
+							        'issue_event'=>0,
+							        'issue_d'=>0,
+							        'login_event'=>0,
 							        'ordered'=>0,
-							        'redistribute'=>0,
-							        'decommissioned'=>0,
-							        'date_event'=>0,
+							        'ordered_d'=>0,
+							        'ordered_event'=>'',
+							        'redistribute'=>'',
+							        'redistribute_event'=>'',
+							        'redistribute_d'=>0,
+							        'decommissioned'=>'',
+							        'decommissioned_event'=>'',
+							        'decommissioned_d'=>0,
+							        'receive_event'=>'',
+							        'receive_event_d'=>0,
+								    'date_event'=>'',
+								    'date_event_d'=>0
 							        ));
 							 
 						 }
-												 
+						//echo '<pre>';print_r($temp); echo '</pre>';exit;						 
 						 $multi_dimenetional = array();
 								foreach ($data  as $row) {
 								    $multi_dimenetional[$row['facility_name']][] = array( 'facility_name'=>$row['facility_name'],
@@ -1897,7 +1908,7 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 								    									'county'=>$row['county'],
 								    									'district'=>$row['district'],
 								    									  'issued'=>$row['issued'],
-								    									  'issue_event'=>$row['issue_event'],
+								    									  'issue_event'=>($row['issue_event']),
 								    									  'issue_d'=>$row['issue_d'],
 								    									  'login_event'=>$row['login_only'],
 								    									  'ordered'=>$row['ordered'],
@@ -1915,15 +1926,96 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 								    									  'date_event_d'=>$row['date_event_d']
 																	        );
 								}
-						// echo '<pre>';print_r(array_values($multi_dimenetional)); echo '</pre>';exit;
+						 //echo '<pre>';print_r(array_values($multi_dimenetional)); echo '</pre>';exit;
 						 $clean_array=array_values($multi_dimenetional);
 						
 							$new=call_user_func_array('array_merge_recursive', $multi_dimenetional);
 							//$new=call_user_func_array('array_merge_recursive', $new);
 							
 						// $this -> hcmp_functions -> create_excel($multi_dimenetional);
+						//echo '<pre>';print_r(array_values($clean_array));echo '</pre>';exit;
 						
-						foreach ($new as $value) {
+							  
+							  $temp2 = array();
+						foreach ($clean_array as $key => $value) {
+							//echo count($value).'<br>';
+							$issue_event=array();
+							$issue_days=array();
+							$login_event=array();
+							$ordered=array();
+							$ordered_days=array();
+							$ordered_event=array();
+							$redistribute_days=array();
+							$redistribute_event=array();
+							$decommission=array();
+							$decommission_event=array();
+							$decommission_days=array();
+							
+							$receive_event=array();
+							$receive_days=array();
+							$last_event=array();
+							$lastseen_days=array();
+							foreach ($value as $key_child => $value_child) {
+								
+								foreach ($temp as $newkey => $newvalue) {
+									if ($newvalue['facility_code']==$value_child['facility_code']) {
+										$facility_name=$value_child['facility_name'];
+										$facility_code=$value_child['facility_code'];
+										$county=$value_child['county'];
+										$district=$value_child['district'];
+										
+										$login_event[]=$value_child['login_only'];
+										$ordered[]=$value_child['ordered'];
+										
+										$issue_event[]=$value_child['issue_event'];
+										$issue_days[]=$value_child['issue_d'];
+										
+										$ordered_days[]=$value_child['ordered_d'];
+										$ordered_event[]=$value_child['ordered_event'];
+										$redistribute_days[]=$value_child['redistribute_d'];
+										$redistribute_event[]=$value_child['redistribute_event'];
+										$decommission[]=$value_child['decommissioned'];
+										$decommission_event[]=$value_child['decommissioned_event'];
+										
+										$decommission_days[]=$value_child['decommissioned_d'];
+										$receive_event[]=$value_child['receive_event'];
+										$receive_days[]=$value_child['receive_event_d'];
+										$last_event[]=$value_child['date_event'];
+										$lastseen_days[]=$value_child['date_event_d'];
+																		
+							 
+									}
+									
+								}
+							}
+							array_push($temp2,array('facility_code'=>$facility_code,
+							        'facility_name'=>$facility_name,
+							        'county'=>$county,
+							        'district'=>$district,
+							        'issued'=>'',
+							        'issue_event'=>max($issue_event),
+							        'issue_d'=>min(array_filter($issue_days)),
+							        'login_event'=>max($login_event),
+							        'ordered'=>0,
+							        'ordered_d'=>min(array_filter($ordered_days)),
+							        'ordered_event'=>max($ordered_event),
+							        'redistribute'=>'',
+							        'redistribute_event'=>max($redistribute_event),
+							        'redistribute_d'=>min(array_filter($redistribute_days)),
+							        'decommissioned'=>'',
+							        'decommissioned_event'=>max($decommission_event),
+							        'decommissioned_d'=>min(array_filter($decommission_days)),
+							        'receive_event'=>max($receive_event),
+							        'receive_event_d'=>min(array_filter($receive_days)),
+								    'date_event'=>max($last_event),
+								    'date_event_d'=>min($lastseen_days)
+							        ));
+
+							//echo '<pre>';print_r(min($lastseen_days));echo '</pre>';
+						}
+						//echo '<pre>';print_r($temp2);echo '</pre>';
+						//exit;
+						/*foreach ($new as $value) {
 							$mfl_code=$value['facility_code'];
 							
 							foreach($value as $k=>$v){
@@ -1934,7 +2026,7 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 								}
 							}
 							
-						}
+						}*/
 						//echo '<pre>';print_r(array_values($finalArray));echo '</pre>';exit;
 		$excel_data = array('doc_creator' => 'HCMP-Kenya', 'doc_title' => 'HCMP_Facility_Activity_Log_Summary ', 'file_name' => 'HCMP_Facility_Activity_Log_Summary ');
 		$row_data = array(); 
@@ -1942,24 +2034,24 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 		"Date Last Redistributed", "Days From last Redistributed", "Date Last ordered", "Days From Last order", "Date Last Decommissioned",
 		 "Days From Last Decommissioned", "Date From Last Received Order", "Days From Last Received Order","Date Last Seen", "Days From Last Seen");
 		$excel_data['column_data'] = $column_data;
-		foreach ($finalArray as $key => $value) :
+		foreach ($temp2 as $key => $value) :
 		array_push($row_data, 
 		array($value['facility_name'],
 		$value['facility_code'],
 		$value['county'],
 		$value['district'],
-		$value['issue_event'],
-		$value['issue_d'],
-		$value['redistribute_event'],
-		$value['redistribute_d'],
-		$value['ordered_event'],
-		$value['ordered_d'],
-		$value['decommissioned_event'],
-		$value['decommissioned_d'],
-		$value['receive_event'],
-		$value['receive_event_d'],
-		$value['date_event'],
-		$value['date_event_d']
+		(date('m-d-Y',strtotime($value['issue_event']))=='01-01-1970')? '' : date('m-d-Y',strtotime($value['issue_event'])),
+		($value['issue_d']==0)? '':$value['issue_d'],
+		(date('m-d-Y',strtotime($value['redistribute_event']))=='01-01-1970')? '' : date('m-d-Y',strtotime($value['redistribute_event'])),
+		($value['redistribute_d']=='')? '' :$value['redistribute_d'],
+		(date('m-d-Y',strtotime($value['ordered_event']))=='01-01-1970')? '' : date('m-d-Y',strtotime($value['ordered_event'])),
+		($value['ordered_d']=='')? '' :$value['ordered_d'] ,
+		(date('m-d-Y',strtotime($value['decommissioned_event']))=='01-01-1970')? '' : date('m-d-Y',strtotime($value['decommissioned_event'])),
+		($value['decommissioned_d']=='')? '':$value['decommissioned_d'],
+		(date('m-d-Y',strtotime($value['receive_event']))=='01-01-1970')? '' : date('m-d-Y',strtotime($value['receive_event'])),
+		($value['receive_event_d']=='')? '' :$value['receive_event_d'],
+		(date('m-d-Y',strtotime($value['date_event']))=='01-01-1970')? '' : date('m-d-Y',strtotime($value['date_event'])),
+		($value['date_event_d']=='')? '' :$value['date_event_d']
 		));
 		endforeach;
 		$excel_data['row_data'] = $row_data;

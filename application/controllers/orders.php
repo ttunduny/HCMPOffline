@@ -167,11 +167,13 @@ class orders extends MY_Controller {
 	}
 
 	public function facility_order($source = NULL) {
+		
 		header('Content-Type: text/html; charset=UTF-8');
-
 		//pick the facility code from the session as it is set
+		
 		$facility_code = $this -> session -> userdata('facility_id');
-
+		$amc_calc =$this->hcmp_functions->amc($county,$district,$facility_code);
+		//echo '<pre>'; print_r($amc_calc);echo '<pre>'; exit;
 		$items = ((isset($source)) && ($source = 2)) ? Facility_Transaction_Table::get_commodities_for_ordering_meds($facility_code) : Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
 		//echo '<pre>';print_r($items); echo '</pre>';
 		if (isset($_FILES['file']) && $_FILES['file']['size'] > 0) {
@@ -254,7 +256,12 @@ class orders extends MY_Controller {
 				//echo '<pre>';print_r($array_commodity[$id].'.'.$array_code[$id]); echo '</pre>';//exit;
 
 				//foreach($items as $key=> $data){
-				array_push($temp, array('sub_category_name' => $array_category[$id], 'commodity_name' => $array_commodity[$id], 'unit_size' => $array_pack[$id], 'unit_cost' => ($array_price[$id] == '') ? 0 : (float)$array_price[$id], 'commodity_code' => preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $array_code[$id]), 'commodity_id' => $data['commodity_id'], 'quantity_ordered' => ($array_order_qty[$id] == '') ? 0 : (int)$array_order_qty[$id], 'total_commodity_units' => 0, 'opening_balance' => 0, 'total_receipts' => 0, 'total_issues' => 0, 'comment' => '', 'closing_stock_' => 0, 'closing_stock' => 0, 'days_out_of_stock' => 0, 'date_added' => '', 'losses' => 0, 'status' => 0, 'adjustmentpve' => 0, 'adjustmentnve' => 0, 'historical' => 0));
+				array_push($temp, array('sub_category_name' => $array_category[$id], 'commodity_name' => $array_commodity[$id], 'unit_size' => 
+				$array_pack[$id], 'unit_cost' => ($array_price[$id] == '') ? 0 : (float)$array_price[$id], 
+				'commodity_code' => preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $array_code[$id]), 'commodity_id' => $data['commodity_id'], 
+				'quantity_ordered' => ($array_order_qty[$id] == '') ? 0 : (int)$array_order_qty[$id], 'total_commodity_units' => 0, 'opening_balance' => 0,
+				 'total_receipts' => 0, 'total_issues' => 0, 'comment' => '', 'closing_stock_' => 0, 'closing_stock' => 0, 'days_out_of_stock' => 0,
+				  'date_added' => '', 'losses' => 0, 'status' => 0, 'adjustmentpve' => 0, 'adjustmentnve' => 0, 'historical' => 0));
 				//unset($items[$key]);
 				/// }
 
@@ -320,6 +327,39 @@ class orders extends MY_Controller {
 			//unset($objPHPExcel);
 			$data['order_details'] = $data['facility_order'] = $main_array;
 		} else {
+			
+			//echo '<pre>';print_r($items); echo '</pre>';exit;
+			//create new array to hold pushed amc values
+			$new=array();
+			foreach ($items as $value) {
+				
+				  
+							$drud_id=$value['commodity_id'];
+							$historical=$value['historical'];
+							for ($i=0; $i <count($items) ; $i++) { 
+								if($drud_id==$amc_calc[$i]['commodity_id']){
+									
+									 $historical=$amc_calc[$i]['amc_packs'];
+									
+								}
+							}
+							
+								array_push($new, array('sub_category_name' => $value['sub_category_name'], 'commodity_name' => $value['commodity_name'], 'unit_size' => 
+				$value['unit_size'], 'unit_cost' => $value['unit_cost'], 
+				'commodity_code' => $value['commodity_code'], 'commodity_id' => $value['commodity_id'], 
+				'quantity_ordered' => $value['quantity_ordered'], 'total_commodity_units' => $value['total_commodity_units'], 'opening_balance' => $value['opening_balance'],
+				 'total_receipts' => $value['total_receipts'], 'total_issues' => $value['total_issues'], 'comment' => $value['comment'], 
+				 'closing_stock_' => $value['closing_stock_'], 'closing_stock' => $value['closing_stock'], 'days_out_of_stock' => $value['days_out_of_stock'],
+				  'date_added' => $value['date_added'], 'losses' => $value['losses'], 'status' => $value['status'], 'adjustmentpve' => $value['adjustmentpve'], 
+				  'adjustmentnve' => $value['adjustmentnve'], 'historical' => round($historical)));
+								
+								
+							
+							//echo '<pre>';print_r($value['historical']); echo '</pre>';
+						}
+			//echo '<pre>';print_r($new); echo '</pre>';
+			//exit;
+			$items=$new;
 			$data['order_details'] = $data['facility_order'] = $items;
 		}
 
@@ -368,13 +408,47 @@ class orders extends MY_Controller {
 
 	public function update_facility_order($order_id, $rejected = null, $option = null) {
 		$order_data = facility_orders::get_order_($order_id) -> toArray();
-		$data['content_view'] = "facility/facility_orders/update_facility_order_from_kemsa_v";
+		$data['content_view'] = "facility/facility_orders/update_order_facility_v";
 		$data['title'] = "Facility Update Order";
 		$data['banner_text'] = "Facility Update Order";
 		$data['rejected'] = ($rejected == 'rejected') ? 1 : 0;
 		$data['option_'] = ($option == 'readonly') ? 'readonly_' : 0;
 		$data['order_details'] = $order_data;
-		$data['facility_order'] = facility_order_details::get_order_details($order_id);
+		$items=facility_order_details::get_order_details($order_id);
+		//create new array to hold pushed amc values
+		$facility_code = $this -> session -> userdata('facility_id');
+		$amc_calc =$this->hcmp_functions->amc($county,$district,$facility_code);
+			$new=array();
+			foreach ($items as $value) {
+				
+				  
+							$drud_id=$value['commodity_id'];
+							$historical=$value['historical'];
+							for ($i=0; $i <count($items) ; $i++) { 
+								if($drud_id==$amc_calc[$i]['commodity_id']){
+									
+									 $historical=$amc_calc[$i]['amc_packs'];
+									
+								}
+							}
+							
+								array_push($new, array('sub_category_name' => $value['sub_category_name'], 'commodity_name' => $value['commodity_name'], 'unit_size' => 
+				$value['unit_size'], 'unit_cost' => $value['unit_cost'], 'scp_qty' => $value['scp_qty'], 'cty_qty' => $value['cty_qty'], 
+				'commodity_code' => $value['commodity_code'], 'commodity_id' => $value['commodity_id'], 
+				'quantity_ordered_pack' => $value['quantity_ordered_pack'], 'total_commodity_units' => $value['total_commodity_units'], 'opening_balance' => $value['opening_balance'],
+				 'total_receipts' => $value['total_receipts'], 'total_issues' => $value['total_issues'], 'comment' => $value['comment'], 
+				 'closing_stock_' => $value['closing_stock_'], 'closing_stock' => $value['closing_stock'], 'days_out_of_stock' => $value['days_out_of_stock'],
+				  'date_added' => $value['date_added'], 'losses' => $value['losses'], 'status' => $value['status'], 'adjustmentpve' => $value['adjustmentpve'], 
+				  'adjustmentnve' => $value['adjustmentnve'], 'historical' => round($historical)));
+								
+								
+							
+							
+						}
+						//echo '<pre>';print_r($items); echo '</pre>';exit;
+						$items=$new;
+		
+		$data['facility_order'] = $items;
 		$data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
 		$this -> load -> view('shared_files/template/template', $data);
 	}
@@ -552,14 +626,14 @@ class orders extends MY_Controller {
 				$subject = 'Order Pending Approval(Sub-County Pharmascist) Report For ' . $facility_name;
 
 				//$attach_file1 = './pdf/'.$file_name.'.pdf';
-				$attach_file2 = "./print_docs/excel/excel_files/" .$file_name.'.xls';
+				$attach_file = "./print_docs/excel/excel_files/" .$file_name.'.xls';
 
 				
-				$response = $this -> hcmp_functions -> send_order_submission_email($message, $subject, $attach_file2, null);
+				$response = $this -> hcmp_functions -> send_order_submission_email($message, $subject, $attach_file, null);
 
 				if ($response) {
 					delete_files($attach_file1);
-					unlink($attach_file2);
+					unlink($attach_file1);
 				} else {
 
 				}
@@ -570,7 +644,7 @@ class orders extends MY_Controller {
 
 			Log::log_user_action($user, $user_action);
 
-			$this -> hcmp_functions -> send_order_sms();
+			//$this -> hcmp_functions -> send_order_sms();
 
 			$this -> session -> set_flashdata('system_success_message', "Facility Order No $new_order_no has Been Saved");
 			//redirect("reports/order_listing/$order_listing");
