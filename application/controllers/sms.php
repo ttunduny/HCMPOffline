@@ -170,7 +170,7 @@ class sms extends MY_Controller {
 			$message = urlencode($message);
 
 			$phone_cp = $this -> get_cp_phone_numbers($county_id);
-			$spam_sms = '254723722204+254720167245+254726416795+254725227833+' . $phone_cp;
+			$spam_sms = $phone_cp;
 			$phone_numbers = explode("+", $spam_sms);
 
 			//sends out the sms
