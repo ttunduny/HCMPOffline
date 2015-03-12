@@ -15,7 +15,7 @@ class sms extends MY_Controller {
 
 	/*
 	 |--------------------------------------------------------------------------|
-	 | SMS	SECTION																	|
+	 | SMS	SECTION																|
 	 |--------------------------------------------------------------------------|
 	 */
 	//for testing puposes only
@@ -25,15 +25,24 @@ class sms extends MY_Controller {
 		$message = 'test from system live server';
 		$message = urlencode($message);
 
-		$spam_sms = '254723722204+254720167245+254726416795';
+		$spam_sms = '254723722204';
 
 		$phone_numbers = explode("+", $spam_sms);
 
 		foreach ($phone_numbers as $key => $user_no) {
 			file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
-			//echo "Success sent to " . $user_no . '<br>';
+			echo "Success sent to " . $user_no . '<br>';
 		}
 
+	}
+	public function test_email()
+	{
+		$message = "Test email form the server";
+		$subject = "Test Subject from the server";
+		$email_address = "collinsojenge@gmail.com";
+		
+		$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+		
 	}
 
 	//get dpp phone numbers
