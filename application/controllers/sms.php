@@ -149,10 +149,11 @@ class sms extends MY_Controller {
 				//loop through the each of the numbers of the users			
 				foreach($user_data as $data):
 					//pick the name
-					$name = $data['fname']." ".$data['lname'];
+					$name_sub_county = $data['fname']." ".$data['lname'];
 					//message to be sent out to the sub county guys
-					$message = "Dear $name, $district_name Sub County Pharmacist,\n $count_district facilities in $district_name Sub County have not accessed HCMP for more than 5 days.\n Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
+					$message = "Dear $name_sub_county, $district_name Sub County Pharmacist,\n $count_district facilities in $district_name Sub County have not accessed HCMP for more than 5 days.\n Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 					$message = urlencode($message);
+					
 					
 					$user_no = $data['telephone'];
 					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
@@ -164,17 +165,7 @@ class sms extends MY_Controller {
 			endforeach;
 			//start for the sub county section
 			//first make the message
-			$message = "Dear $name,\n $count_county facilities in $county_name County have not accessed HCMP for more than 5 days.\n";
 			
-			foreach ($district_total as $key => $total) {
-				if($total>0):
-					$message .= " $key Sub County - $total facilities.\n";
-				endif;
-
-			}
-
-			$message .= "Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
-			$message = urlencode($message);
 			
 			//then pick the names and details of the people receiving the texts
 			$user_data = Users::get_county_pharm_details($county_id);
@@ -182,9 +173,23 @@ class sms extends MY_Controller {
 			//loop through the each of the numbers of the users			
 			foreach($user_data as $data):
 				//pick the name
-				$name = $data['fname']." ".$data['lname'];
+				$name_county = $data['fname']." ".$data['lname'];
+				$message = "Dear $name_county,\n $count_county facilities in $county_name County have not accessed HCMP for more than 5 days.\n";
+			
+				foreach ($district_total as $key => $total) {
+					if($total>0):
+						$message .= " $key Sub County - $total facilities.\n";
+					endif;
+	
+				}
+	
+				$message .= "Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
+				$message = urlencode($message);
+				
 				$user_no = $data['telephone'];
+				
 				file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+			
 			endforeach;
 			
 		endforeach;
