@@ -508,12 +508,13 @@ class User extends MY_Controller {
 		$full_name= $fname .''.$lname; 
 		$county=$_POST['county_id'];
 		//reports
+		/*
 		$stocks=$_POST['stocks'];
 		$stocking_levels=$_POST['stocking_levels'];
 		$consumption=$_POST['consumption'];
 		$potential_exp=$_POST['potential_exp'];
 		$expiries=$_POST['expiries'];
-		
+		*/
 		switch ($identifier):
 			case 'moh':
 			
