@@ -2860,12 +2860,12 @@ class Reports extends MY_Controller {
 		$year = date('Y');
 		$month_ = date('M d');
 
-
 		$district = $this -> session -> userdata('district_id');
 		$county_id = $this -> session -> userdata('county_id');
 
 		$user = $this -> session -> userdata('user_indicator');
 		$graph_data_default = $series_data = $series_data_ = array();
+		
 		if ($user == "district") {
 			$district_name = districts::get_district_name($district) -> toArray();
 			$district_name_ = $district_name[0]['district'];
