@@ -85,22 +85,26 @@ class Users extends Doctrine_Record {
 	public static function get_scp_details($district){
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> 
 		fetchAll("SELECT 
-				    fname, lname
+				    fname, lname, telephone
 				FROM
 				    user
 				WHERE
-				    district = $district and usertype_id='3'");
+				    district = $district 
+				    AND usertype_id = '3'
+				    AND telephone <>0");
 		
 		return $query;
 	}
 	public static function get_county_pharm_details($county_id){
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> 
 		fetchAll("SELECT 
-				    fname, lname
-				FROM
-				    user
-				WHERE
-				    county_id = $county_id and usertype_id='10'");
+					    fname, lname, telephone
+					FROM
+					    user
+					WHERE
+					    county_id = $county_id 
+					    AND usertype_id = '10'
+					    AND telephone <>0");
 		
 		return $query;
 	}

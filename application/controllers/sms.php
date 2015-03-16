@@ -35,14 +35,14 @@ class sms extends MY_Controller {
 		}
 
 	}
-	public function test_email()
-	{
+
+	public function test_email() {
 		$message = "Test email form the server";
 		$subject = "Test Subject from the server";
 		$email_address = "collinsojenge@gmail.com";
-		
+
 		$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
-		
+
 	}
 
 	//get dpp phone numbers
@@ -93,7 +93,7 @@ class sms extends MY_Controller {
 			//pick the county nae and county ID accordingly
 			//counts the number of facilities not using the system
 			$count_county = 0;
-			
+
 			$county_id = $counties['county'];
 			$county_name = $counties['county_name'];
 			$district_total = array();
@@ -124,7 +124,7 @@ class sms extends MY_Controller {
 						$count_district++;
 						//get the phone numbers of the facility users
 						$phone = $this -> get_facility_phone_numbers($facility_code);
-						
+
 						$message = "Dear $facility_name user,\n you have not logged in to HCMP for the past $no_of_days days. The last time you logged in was $no_of_days days ago.\n Kindly log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 						$message = urlencode($message);
 						//appends the phone numbers of the technical team
@@ -145,53 +145,51 @@ class sms extends MY_Controller {
 
 				//pick the user data
 				$user_data = Users::get_scp_details($district_id);
-				
-				//loop through the each of the numbers of the users			
-				foreach($user_data as $data):
+
+				//loop through the each of the numbers of the users
+				foreach ($user_data as $data) :
 					//pick the name
-					$name_sub_county = $data['fname']." ".$data['lname'];
+					$name_sub_county = $data['fname'] . " " . $data['lname'];
 					//message to be sent out to the sub county guys
 					$message = "Dear $name_sub_county, $district_name Sub County Pharmacist,\n $count_district facilities in $district_name Sub County have not accessed HCMP for more than 5 days.\n Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 					$message = urlencode($message);
-					
-					
+
 					$user_no = $data['telephone'];
 					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 				endforeach;
-				
+
 				$count_county += $count_district;
 
 				//end for each for the districts
 			endforeach;
 			//start for the sub county section
 			//first make the message
-			
-			
+
 			//then pick the names and details of the people receiving the texts
 			$user_data = Users::get_county_pharm_details($county_id);
-			
-			//loop through the each of the numbers of the users			
-			foreach($user_data as $data):
+
+			//loop through the each of the numbers of the users
+			foreach ($user_data as $data) :
 				//pick the name
-				$name_county = $data['fname']." ".$data['lname'];
+				$name_county = $data['fname'] . " " . $data['lname'];
 				$message = "Dear $name_county,\n $count_county facilities in $county_name County have not accessed HCMP for more than 5 days.\n";
-			
+
 				foreach ($district_total as $key => $total) {
-					if($total>0):
+					if ($total > 0) :
 						$message .= " $key Sub County - $total facilities.\n";
 					endif;
-	
+
 				}
-	
+
 				$message .= "Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 				$message = urlencode($message);
-				
+
 				$user_no = $data['telephone'];
-				
+
 				file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
-			
+
 			endforeach;
-			
+
 		endforeach;
 	}
 
@@ -2040,32 +2038,32 @@ class sms extends MY_Controller {
 	}
 
 	public function log_summary_weekly() {
-
-		$data = $q = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT *
-FROM (SELECT f.facility_name,f.facility_code,c.county,d.district,l.user_id, 
-if(l.issued=0 and l.ordered=0 and l.redistribute=0 and l.decommissioned=0 ,l.start_time_of_event,null)
- as login_only,
-l.issued,if(l.issued=1 and l.redistribute=0 ,l.start_time_of_event,null) as issue_event,
-l.ordered,DateDiff(now(),if(l.issued=1 and l.redistribute=0 ,l.start_time_of_event,null)) as issue_d,
-if(l.ordered=1 ,l.start_time_of_event,null) as ordered_event,
-DateDiff(now(),if(l.ordered=1 ,l.start_time_of_event,null)) as ordered_d,
-l.redistribute,if(l.redistribute=1 ,l.start_time_of_event,null) as redistribute_event,
-DateDiff(now(),if(l.redistribute=1 ,l.start_time_of_event,null)) as redistribute_d,
-l.decommissioned,if(l.decommissioned=1 ,l.start_time_of_event,null) as decommissioned_event,
-DateDiff(now(),if(l.decommissioned=1 ,l.start_time_of_event,null)) as decommissioned_d,
-l.add_stock,if(l.add_stock=1 ,l.start_time_of_event,null) as receive_event,
-DateDiff(now(),if(l.add_stock=1 ,l.start_time_of_event,null)) as receive_event_d,
-max(l.start_time_of_event) as date_event,
-DateDiff(now(),max(l.start_time_of_event)) as date_event_d
- FROM log l
-INNER JOIN user u ON l.user_id=u.id
-INNER JOIN facilities f ON u.facility=f.facility_code
-INNER JOIN districts d ON f.district=d.id
-INNER JOIN counties c ON d.county=c.id
-where  using_hcmp=1 group by l.issued,l.ordered,l.redistribute,l.decommissioned,f.facility_code) AS t
-group by issued,ordered,redistribute,decommissioned,facility_code
-
-");
+		$time = date('M , d Y', mktime());
+		$data = $q = Doctrine_Manager::getInstance() -> getCurrentConnection() 
+		->fetchAll("SELECT *
+				FROM (SELECT f.facility_name,f.facility_code,c.county,d.district,l.user_id, 
+				if(l.issued=0 and l.ordered=0 and l.redistribute=0 and l.decommissioned=0 ,max(l.start_time_of_event),null)
+				 as login_only,
+				l.issued,if(l.issued=1 and l.redistribute=0 ,max(l.start_time_of_event),null) as issue_event,
+				l.ordered,DateDiff(now(),if(l.issued=1 and l.redistribute=0 ,max(l.start_time_of_event),null)) as issue_d,
+				if(l.ordered=1 ,max(l.end_time_of_event),null) as ordered_event,
+				DateDiff(now(),if(l.ordered=1 ,max(l.start_time_of_event),0)) as ordered_d,
+				l.redistribute,if(l.redistribute=1 ,max(l.start_time_of_event),null) as redistribute_event,
+				DateDiff(now(),if(l.redistribute=1 ,max(l.start_time_of_event),0)) as redistribute_d,
+				l.decommissioned,if(l.decommissioned=1 ,max(l.start_time_of_event),null) as decommissioned_event,
+				DateDiff(now(),if(l.decommissioned=1 ,max(l.start_time_of_event),0)) as decommissioned_d,
+				l.add_stock,if(l.add_stock=1 ,max(l.start_time_of_event),null) as receive_event,
+				DateDiff(now(),if(l.add_stock=1 ,max(l.start_time_of_event),0)) as receive_event_d,
+				max(l.start_time_of_event) as date_event,
+				DateDiff(now(),max(l.start_time_of_event)) as date_event_d
+				 FROM log l
+				INNER JOIN user u ON l.user_id=u.id
+				RIGHT JOIN facilities f ON u.facility=f.facility_code
+				INNER JOIN districts d ON f.district=d.id
+				INNER JOIN counties c ON d.county=c.id
+				where  using_hcmp=1 group by l.issued,l.ordered,l.redistribute,l.decommissioned,f.facility_code) AS t
+				group by issued,ordered,redistribute,decommissioned,facility_code
+		");
 
 		$mfl = array();
 
@@ -2075,49 +2073,84 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 
 		}
 		$unique_mfl = array_values(array_unique($mfl));
-		//echo '<pre>';print_r($data); echo '</pre>';exit;
 		$temp = array();
 		foreach ($unique_mfl as $key) {
 
-			array_push($temp, array('mfl' => $key, 'facility_name' => 0, 'user_id' => 0, 'login_only' => 0, 'issued' => 0, 'ordered' => 0, 'redistribute' => 0, 'decommissioned' => 0, 'date_event' => 0, ));
+			array_push($temp, array('facility_code' => $key, 'facility_name' => '', 'county' => '', 'district' => '', 'issued' => '', 'issue_event' => 0, 'issue_d' => 0, 'login_event' => 0, 'ordered' => 0, 'ordered_d' => 0, 'ordered_event' => '', 'redistribute' => '', 'redistribute_event' => '', 'redistribute_d' => 0, 'decommissioned' => '', 'decommissioned_event' => '', 'decommissioned_d' => 0, 'receive_event' => '', 'receive_event_d' => 0, 'date_event' => '', 'date_event_d' => 0));
 
 		}
-
 		$multi_dimenetional = array();
 		foreach ($data as $row) {
-			$multi_dimenetional[$row['facility_name']][] = array('facility_name' => $row['facility_name'], 'facility_code' => $row['facility_code'], 'county' => $row['county'], 'district' => $row['district'], 'issued' => $row['issued'], 'issue_event' => $row['issue_event'], 'issue_d' => $row['issue_d'], 'login_event' => $row['login_only'], 'ordered' => $row['ordered'], 'ordered_d' => $row['ordered_d'], 'ordered_event' => $row['ordered_event'], 'redistribute' => $row['redistribute'], 'redistribute_event' => $row['redistribute_event'], 'redistribute_d' => $row['redistribute_d'], 'decommissioned' => $row['decommissioned'], 'decommissioned_event' => $row['decommissioned_event'], 'decommissioned_d' => $row['decommissioned_d'], 'receive_event' => $row['receive_event'], 'receive_event_d' => $row['receive_event_d'], 'date_event' => $row['date_event'], 'date_event_d' => $row['date_event_d']);
+			$multi_dimenetional[$row['facility_name']][] = array('facility_name' => $row['facility_name'], 'facility_code' => $row['facility_code'], 'county' => $row['county'], 'district' => $row['district'], 'issued' => $row['issued'], 'issue_event' => ($row['issue_event']), 'issue_d' => $row['issue_d'], 'login_event' => $row['login_only'], 'ordered' => $row['ordered'], 'ordered_d' => $row['ordered_d'], 'ordered_event' => $row['ordered_event'], 'redistribute' => $row['redistribute'], 'redistribute_event' => $row['redistribute_event'], 'redistribute_d' => $row['redistribute_d'], 'decommissioned' => $row['decommissioned'], 'decommissioned_event' => $row['decommissioned_event'], 'decommissioned_d' => $row['decommissioned_d'], 'receive_event' => $row['receive_event'], 'receive_event_d' => $row['receive_event_d'], 'date_event' => $row['date_event'], 'date_event_d' => $row['date_event_d']);
 		}
-		// echo '<pre>';print_r(array_values($multi_dimenetional)); echo '</pre>';exit;
 		$clean_array = array_values($multi_dimenetional);
 
 		$new = call_user_func_array('array_merge_recursive', $multi_dimenetional);
-		//$new=call_user_func_array('array_merge_recursive', $new);
 
-		// $this -> hcmp_functions -> create_excel($multi_dimenetional);
+		$temp2 = array();
+		foreach ($clean_array as $key => $value) {
+			//echo count($value).'<br>';
+			$issue_event = array();
+			$issue_days = array();
+			$login_event = array();
+			$ordered = array();
+			$ordered_days = array();
+			$ordered_event = array();
+			$redistribute_days = array();
+			$redistribute_event = array();
+			$decommission = array();
+			$decommission_event = array();
+			$decommission_days = array();
 
-		foreach ($new as $value) {
-			$mfl_code = $value['facility_code'];
+			$receive_event = array();
+			$receive_days = array();
+			$last_event = array();
+			$lastseen_days = array();
+			foreach ($value as $key_child => $value_child) {
 
-			foreach ($value as $k => $v) {
-				// echo $k.'    '.$v;
-				if ($v != NULL) {
+				foreach ($temp as $newkey => $newvalue) {
+					if ($newvalue['facility_code'] == $value_child['facility_code']) {
+						$facility_name = $value_child['facility_name'];
+						$facility_code = $value_child['facility_code'];
+						$county = $value_child['county'];
+						$district = $value_child['district'];
 
-					$finalArray[$mfl_code][$k] = $v;
+						$login_event[] = $value_child['login_only'];
+						$ordered[] = $value_child['ordered'];
+
+						$issue_event[] = $value_child['issue_event'];
+						$issue_days[] = $value_child['issue_d'];
+
+						$ordered_days[] = $value_child['ordered_d'];
+						$ordered_event[] = $value_child['ordered_event'];
+						$redistribute_days[] = $value_child['redistribute_d'];
+						$redistribute_event[] = $value_child['redistribute_event'];
+						$decommission[] = $value_child['decommissioned'];
+						$decommission_event[] = $value_child['decommissioned_event'];
+
+						$decommission_days[] = $value_child['decommissioned_d'];
+						$receive_event[] = $value_child['receive_event'];
+						$receive_days[] = $value_child['receive_event_d'];
+						$last_event[] = $value_child['date_event'];
+						$lastseen_days[] = $value_child['date_event_d'];
+
+					}
+
 				}
 			}
-
+			array_push($temp2, array('facility_code' => $facility_code, 'facility_name' => $facility_name, 'county' => $county, 'district' => $district, 'issued' => '', 'issue_event' => max($issue_event), 'issue_d' => min(array_filter($issue_days)), 'login_event' => max($login_event), 'ordered' => 0, 'ordered_d' => min(array_filter($ordered_days)), 'ordered_event' => max($ordered_event), 'redistribute' => '', 'redistribute_event' => max($redistribute_event), 'redistribute_d' => min(array_filter($redistribute_days)), 'decommissioned' => '', 'decommissioned_event' => max($decommission_event), 'decommissioned_d' => min(array_filter($decommission_days)), 'receive_event' => max($receive_event), 'receive_event_d' => min(array_filter($receive_days)), 'date_event' => max($last_event), 'date_event_d' => min($lastseen_days)));
 		}
-		//echo '<pre>';print_r(array_values($finalArray));echo '</pre>';exit;
+
 		$excel_data = array('doc_creator' => 'HCMP-Kenya', 'doc_title' => 'HCMP_Facility_Activity_Log_Summary ', 'file_name' => 'HCMP_Facility_Activity_Log_Summary ');
 		$row_data = array();
 		$column_data = array("Facility Name", "Facility Code", "County", "Sub-County", "Date Last Issued", "Days from last issue", "Date Last Redistributed", "Days From last Redistributed", "Date Last ordered", "Days From Last order", "Date Last Decommissioned", "Days From Last Decommissioned", "Date From Last Received Order", "Days From Last Received Order", "Date Last Seen", "Days From Last Seen");
 		$excel_data['column_data'] = $column_data;
-		foreach ($finalArray as $key => $value) :
-			array_push($row_data, array($value['facility_name'], $value['facility_code'], $value['county'], $value['district'], $value['issue_event'], $value['issue_d'], $value['redistribute_event'], $value['redistribute_d'], $value['ordered_event'], $value['ordered_d'], $value['decommissioned_event'], $value['decommissioned_d'], $value['receive_event'], $value['receive_event_d'], $value['date_event'], $value['date_event_d']));
+		foreach ($temp2 as $key => $value) :
+			array_push($row_data, array($value['facility_name'], $value['facility_code'], $value['county'], $value['district'], (date('m-d-Y', strtotime($value['issue_event'])) == '01-01-1970') ? '' : date('m-d-Y', strtotime($value['issue_event'])), ($value['issue_d'] == 0) ? '' : $value['issue_d'], (date('m-d-Y', strtotime($value['redistribute_event'])) == '01-01-1970') ? '' : date('m-d-Y', strtotime($value['redistribute_event'])), ($value['redistribute_d'] == '') ? '' : $value['redistribute_d'], (date('m-d-Y', strtotime($value['ordered_event'])) == '01-01-1970') ? '' : date('m-d-Y', strtotime($value['ordered_event'])), ($value['ordered_d'] == '') ? '' : $value['ordered_d'], (date('m-d-Y', strtotime($value['decommissioned_event'])) == '01-01-1970') ? '' : date('m-d-Y', strtotime($value['decommissioned_event'])), ($value['decommissioned_d'] == '') ? '' : $value['decommissioned_d'], (date('m-d-Y', strtotime($value['receive_event'])) == '01-01-1970') ? '' : date('m-d-Y', strtotime($value['receive_event'])), ($value['receive_event_d'] == '') ? '' : $value['receive_event_d'], (date('m-d-Y', strtotime($value['date_event'])) == '01-01-1970') ? '' : date('m-d-Y', strtotime($value['date_event'])), ($value['date_event_d'] == '') ? '' : $value['date_event_d']));
 		endforeach;
 		$excel_data['row_data'] = $row_data;
 		$excel_data['report_type'] = 'Log Summary';
-
+		$time = date('m-d-Y', date());
 		$this -> hcmp_functions -> create_excel($excel_data);
 
 		$message = '';
@@ -2127,7 +2160,6 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 	padding: 12px;
 	text-align:center;
 }
-
 *{margin:0;padding:0}*{font-family:'Helvetica Neue',Helvetica,Helvetica,Arial,sans-serif}img{max-width:100%}.collapse{padding:0}body{-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:none;width:100%!important;height:100%}a{color:#2BA6CB}.btn{text-decoration:none;color:#FFF;background-color:#666;padding:10px 16px;font-weight:700;margin-right:10px;text-align:center;cursor:pointer;display:inline-block}p.callout{padding:15px;background-color:#ECF8FF;margin-bottom:15px}.callout a{font-weight:700;color:#2BA6CB}table.social{background-color:#ebebeb}.social .soc-btn{padding:3px 7px;font-size:12px;margin-bottom:10px;text-decoration:none;color:#FFF;font-weight:700;display:block;text-align:center}a.fb{background-color:#3B5998!important}a.tw{background-color:#1daced!important}a.gp{background-color:#DB4A39!important}a.ms{background-color:#000!important}.sidebar .soc-btn{display:block;width:100%}table.head-wrap{width:100%}.header.container table td.logo{padding:15px}.header.container table td.label{padding:15px 15px 15px 0}table.body-wrap{width:100%}table.footer-wrap{width:100%;clear:both!important}.footer-wrap .container td.content p{border-top:1px solid #d7d7d7;padding-top:15px;font-size:9px;font-weight:500}h1,h2,h3,h4,h5,h6{font-family:HelveticaNeue-Light,'Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,'Lucida Grande',sans-serif;line-height:1.1;margin-bottom:15px;color:#000}h1 small,h2 small,h3 small,h4 small,h5 small,h6 small{font-size:60%;color:#6f6f6f;line-height:0;text-transform:none}h1{font-weight:200;font-size:44px}h2{font-weight:200;font-size:37px}h3{font-weight:500;font-size:27px}h4{font-weight:500;font-size:23px}h5{font-weight:900;font-size:17px}h6{font-weight:900;font-size:14px;text-transform:uppercase;color:#444}.collapse{margin:0!important}p,ul{margin-bottom:10px;font-weight:400;font-size:14px;line-height:1.6}p.lead{font-size:17px}p.last{margin-bottom:0}ul li{margin-left:5px;list-style-position:inside}ul.sidebar{background:#ebebeb;display:block;list-style-type:none}ul.sidebar li{display:block;margin:0}ul.sidebar li a{text-decoration:none;color:#666;padding:10px 16px;cursor:pointer;border-bottom:1px solid #777;border-top:1px solid #FFF;display:block;margin:0}ul.sidebar li a.last{border-bottom-width:0}ul.sidebar li a h1,ul.sidebar li a h2,ul.sidebar li a h3,ul.sidebar li a h4,ul.sidebar li a h5,ul.sidebar li a h6,ul.sidebar li a p{margin-bottom:0!important}.container{display:block!important;max-width:100%!important;margin:0 auto!important;clear:both!important}.content{padding:15px;max-width:80%px;margin:0 auto;display:block}.content table{width:100%}.column{width:300px;float:left}.column tr td{padding:15px}.column-wrap{padding:0!important;margin:0 auto;max-width:600px!important}.column table{width:100%}.social .column{width:280px;min-width:279px;float:left}.clear{display:block;clear:both}@media only screen and (max-width:600px){a[class=btn]{display:block!important;margin-bottom:10px!important;background-image:none!important;margin-right:0!important}div[class=column]{width:auto!important;float:none!important}table.social div[class=column]{width:auto!important}}</style>";
 		$message .= '
 		<tr>
@@ -2140,20 +2172,13 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 	<tr>
 		<td></td>
 		<td class='container' bgcolor='#FFFFFF'>
-
 			<div class='content'>
 			<table>
 				<tr>
 					<td>
-						<h3>Hello,</h3>
-						<p class='lead'>Find attached a summary of Facility Activity Log.</p>
-						<p>$body</p>
-						<!-- Callout Panel -->
-						<p class='callout'>
-							<a href='health-cmp.or.ke'>Click here! &raquo;</a> to follow up. 
-						</p><!-- /Callout Panel -->					
-												
-						<!-- social & contact -->
+						
+						<p class='lead'>Find attached a summary of Facility Activity Log, as at $time</p>
+						
 						<table class='social' width='100%'>
 							<tr>
 								<td>
@@ -2166,13 +2191,7 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 									<!-- column 2 -->
 									<table align='left' class='column'>
 										<tr>
-											<td>				
-																			
-												<h5 class=''>Contact Info:</h5>												
-												<p>Phone: <strong>+254720167245</strong><br/>
-                Email: <strong><a href='emailto:hcmpkenya@gmail.com'>hcmpkenya@gmail.com</a></strong></p>
-                
-											</td>
+											
 										</tr>
 									</table><!-- /column 2 -->
 									
@@ -2191,51 +2210,12 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 		<td></td>
 	</tr>
 </table><!-- /BODY -->";
-
 		$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 		$subject = "Weekly Log Summary ";
 
-		$email_address = 'kelvinmwas@gmail.com';
+		$email_address = 'kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org';
 		$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
-		exit ;
-		/*echo "<table class='data-table'>
-		 <thead>
-		 <tr>
-		 <th ><b>Facility Name</b></th>
-		 <th ><b>Facility Code</b></th>
-		 <th ><b>County</b></th>
-		 <th ><b>Sub-County</b></th>
-		 <th ><b>Date Last Issued</b></th>
-		 <th ><b>Days from last issue</b></th>
-		 <th ><b>Date Last Redistributed</b></th>
-		 <th ><b>Days From last Redistributed</b></th>
-		 <th ><b>Date Last ordered</b></th>
-		 <th ><b>Days From Last order</b></th>
-		 <th ><b>Date Last Decommissioned</b></th>
-		 <th ><b>Days From Last Decommissioned</b></th>
-		 <th ><b>Date Last Seen</b></th>
-		 <th ><b>Days From Last Seen</b></th>
-		 </tr>
-		 </thead><tbody>";
-		 foreach ($finalArray as $key => $value) {
-
-		 echo '<tr><td>'.$value['facility_name'].'</td>';
-		 echo '<td>'.$value['facility_code'].'</td>';
-		 echo '<td>'.$value['county'].'</td>';
-		 echo '<td>'.$value['district'].'</td>';
-		 echo '<td>'.date('Y-m-d',strtotime($value['issue_event'])).'</td>';
-		 echo '<td>'.$value['issue_d'].'</td>';
-		 echo '<td>'.$value['redistribute_event'].'</td>';
-		 echo '<td>'.$value['redistribute_d'].'</td>';
-		 echo '<td>'.$value['ordered_event'].'</td>';
-		 echo '<td>'.$value['ordered_d'].'</td>';
-		 echo '<td>'.$value['decommissioned_event'].'</td>';
-		 echo '<td>'.$value['decommissioned_d'].'</td>';
-		 echo '<td>'.$value['date_event'].'</td>';
-		 echo '<td>'.$value['date_event_d'].'</td></tr>';
-		 }
-		 echo '</tbody></table>';*/
 	}
 
 }
