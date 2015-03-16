@@ -16,7 +16,7 @@ border: 0px ;
  <div class="container-fluid" style="width: 100%; margin: auto;">
 
 <?php $identifier = $this -> session -> userdata('user_indicator');
- $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/update_order_sub_county',$att); 
+ $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/update_order_facility',$att); 
  //echo "<pre>"; print_r($facility_order);echo "<pre>";exit;
 //?>
 <div class="row-fluid">
@@ -113,7 +113,7 @@ border: 0px ;
 				<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="adjustmentpve['.$i.']"'; ?> value="<?php echo $facility_order[$i]['adjustmentpve']?>" /></td>
 							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="losses['.$i.']"'; ?> value="<?php echo $facility_order[$i]['losses'] ?>" /></td>
 							
-							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="closing['.$i.']"'; ?> value="<?php echo $facility_order[$i]['closing_stock'];?>" /></td>
+							<td><input class="form-control input-small closing" readonly="readonly" type="text"<?php echo 'name="closing['.$i.']"'; ?> value="<?php echo $facility_order[$i]['closing_stock'];?>" /></td>
 							<td>
 								<input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="days['.$i.']"'; ?> 
 								value="<?php 
@@ -132,14 +132,14 @@ border: 0px ;
 								}?>" />
 								
 								</td>
-							<td><input class="form-control input-small" readonly="readonly" type="text" <?php echo 'name="amc['.$i.']"'; ?> value="<?php echo $facility_order[$i]['historical'];?>" /></td>
+							<td><input class="form-control input-small amc" readonly="readonly" type="text" <?php echo 'name="amc['.$i.']"'; ?> value="<?php echo $facility_order[$i]['historical'];?>" /></td>
 							<td><input style="background-color: #B2EFB2;" class="form-control input-small suggested" readonly="readonly" type="text" name="suggested[<?php echo $i;?>]" value=""/></td>
 							
 							
 							
 							<td><input style="background-color: #B2EFB2;" class="form-control input-small " readonly="readonly" type="text" name="cty_qty[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['cty_qty'];?>"/></td>
-							<td><input style="background-color:#B2EFB2 " class="form-control input-small quantity" type="text" readonly="readonly" name="scp_qty[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['scp_qty'];?>"/></td>
-							<td><input style="background-color: " class="form-control input-small" type="text" name="quantity[<?php echo $i;?>]"  value="<?php $qty=$facility_order[$i]['quantity_ordered_pack'];if($qty>0){echo $qty;} else echo 0;?>"/></td>
+							<td><input style="background-color:#B2EFB2 " class="form-control input-small" type="text" readonly="readonly" name="scp_qty[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['scp_qty'];?>"/></td>
+							<td><input style="background-color: " class="form-control input-small quantity" type="text" name="quantity[<?php echo $i;?>]"  value="<?php $qty=$facility_order[$i]['quantity_ordered_pack'];if($qty>0){echo $qty;} else echo 0;?>"/></td>
 							
 							<td><input class="form-control input-small actual_quantity" readonly="readonly" type="text" name="actual_quantity[<?php echo $i ;?>]" value="0"/></td>
 							<td><?php echo '<input type="text" class="form-control input-small cost" name="cost['.$i.']" value="0" readonly="yes"   />';?></td>
@@ -164,7 +164,7 @@ border: 0px ;
 <button type="button" class="add btn btn-sm btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Item</button></div>
 <?php else: ?>
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
-<button type="button" class="btn btn-success reject_fixed"><span class="glyphicon glyphicon-open"></span>Edit Order</button></div>
+<button type="button" class="btn btn-success test"><span class="glyphicon glyphicon-open"></span>Edit Order</button></div>
 <?php endif; endif?>
 </div>
 </form>  
@@ -236,6 +236,7 @@ $(document).ready(function() {
 	  $("#example" ).dataTable().fnAddData( [ 
   	 '<input type="hidden" class="commodity_name" id="commodity_name['+new_count+']" name="commodity_name['+new_count+']" value="'+$(".desc option:selected").text()+'" />'+
           '<input type="hidden" class="commodity_code" id="commodity_code['+new_count+']" name="commodity_code['+new_count+']" value="'+$('input:text[name=commodity_code]').val()+'" />'+
+          '<input type="hidden" class="facility_order_details_id" id="facility_order_details_id['+new_count+']" name="facility_order_details_id['+new_count+']" value="0" />'+
          '<input type="hidden" class="commodity_id" id="commodity_id['+new_count+']" name="commodity_id['+new_count+']" value="'+$(".desc option:selected").val()+'" />'+
          '<input type="hidden" class="total_commodity_units" id="total_commodity_units['+new_count+']" name="total_commodity_units['+new_count+']" value="'+$('input:hidden[name=total_commodity_units_]').val()+'" />'+ 
          '<input type="hidden" class="unit_cost" id="price['+new_count+']" name="price['+new_count+']" value="'+$('input:text[name=unit_cost]').val()+'" />'+
@@ -255,6 +256,8 @@ $(document).ready(function() {
 							'<input class="form-control input-small" type="text" name="days['+new_count+']" id="days['+new_count+']" value="0"   />',
 							'<input class="form-control input-small" type="text" name="amc['+new_count+']" id="amc['+new_count+']" value="0"   />',
 							'<input class="form-control input-small" type="text" value="0" name="suggested['+new_count+']" 	id="suggested['+new_count+']" readonly="yes"  />',
+							'<input class="form-control input-small" type="text" value="0" name="cty_qty['+new_count+']" 	id="cty_qty['+new_count+']" readonly="yes"  />',
+							'<input class="form-control input-small" type="text" value="0" name="scp_qty['+new_count+']" 	id="scp_qty['+new_count+']" readonly="yes"  />',
 							'<input class="form-control input-small quantity" type="text" name="quantity['+new_count+']" id="quantity['+new_count+']" value="0" />',
 							'<input class="form-control input-small actual_quantity" type="text" name="actual_quantity['+new_count+']" id="actual_quantity['+new_count+']" value="0" readonly="yes" />',
 							'<input class="form-control input-small cost" type="text" name="cost['+new_count+']" id="cost['+new_count+']" value="0" readonly="yes" />'
@@ -292,7 +295,9 @@ $(document).ready(function() {
 	
 	// set the order total here
 	calculate_totals();	
-	});// process all the order into a summary table for the user to confirm before placing the order bed_capacity workload
+	});
+	
+	// process all the order into a summary table for the user to confirm before placing the order bed_capacity workload
 	$('.test').on('click','', function (){
 	var table_data='<div class="row" style="padding-left:2em"><div class="col-md-6"><h4>Order Summary</h4></div></div>'+
     '<div class="row" style="padding-left:2em"><div class="col-md-6">Total Order Value (Ksh)</div><div class="col-md-6">'+number_format($("#total_order_value").val(), 2, '.', ',')+'</div></div>'+

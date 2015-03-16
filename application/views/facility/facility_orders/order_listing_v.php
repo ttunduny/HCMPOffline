@@ -67,6 +67,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 <section class="row-fluid">
 	<div class="col-lg-12" style="margin:1%;">
 		<div class="col-lg-1"><span class="badge badge-success">Please Note that</span></div>
+		<div class="col-lg-1"></div>
 		<div class="col-lg-5">
 			<span class="badge badge-info">No</span>
 			<span class="glyphicon glyphicon-arrow-left"></span>
@@ -148,6 +149,8 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			$link_excel=base_url('reports/create_excel_facility_order_template/'.$value['id'].'/'.$mfl);	
 			if ($identifier==='county') {
 				$link2=base_url('orders/order_last_phase/'.$value['id']);
+			}elseif($identifier==='district'){
+				$link2=base_url('orders/update_order_subc/'.$value['id']);
 			} else  {
 				$link2=base_url('orders/update_facility_order/'.$value['id']);	
 			}
@@ -168,8 +171,13 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
            <button  type="button" class="btn btn-xs btn-primary">
            <span class="glyphicon glyphicon-save"></span>Download Order excel</button></a>
            <a href='<?php echo $link2; ?>' ><button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-pencil"></span><?php echo $pending_button_text=($identifier==='district'||$identifier==='county')? "Approve Order": "Edit Order"; ?></button></a>
-           <a id="<?php echo $value['id']; ?>" href="#"class="delete"> 
+           <a id="<?php echo $value['id']; ?>" href="#"class="delete">
+           	
+           	<?php  if ($identifier !== 'facility' ||$identifier==='facility_admin') {
+				   
+			    ?> 
 		<button type="button" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove-circle"></span>Delete</button></a></td>
+		<?php } ?>
 		</tr>	
 		<?php
 			}
@@ -185,6 +193,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			$link=base_url('orders/get_facility_sorf/'.$value['id'].'/'.$mfl);
 			$link_excel=base_url('reports/create_excel_facility_order_template/'.$value['id'].'/'.$mfl);	
 			
+			
 			?>
 		<tr>
 			<td><?php echo $value['id']; ?></td>
@@ -199,9 +208,38 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
             <a href='<?php echo $link_excel; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
            <span class="glyphicon glyphicon-save"></span>Download Order excel</button></a>
-           <a href='<?php echo $link2; ?>' ><button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-pencil"></span><?php echo $pending_button_text=($identifier==='district'||$identifier==='county')? "Approve Order": "Edit Order"; ?></button></a>
-           <a id="<?php echo $value['id']; ?>" href="#"class="delete"> 
-		<button type="button" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove-circle"></span>Delete</button></a></td>
+           <?php 
+           		if ($identifier=='county') { 
+           			$link2=base_url('orders/order_last_phase/'.$value['id']."/");
+           			?>
+           			<a href='<?php echo $link2; ?>' >
+           	<button type="button" class="btn btn-xs btn-success">
+           	<span class="glyphicon glyphicon-pencil"></span>
+          	Approve Order
+           	</button>
+           	 <a id="<?php echo $value['id']; ?>" href="#"class="delete"> 
+		<button type="button" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove-circle"></span>Delete</button></a>
+           			</a>
+					   
+				  <?php } else if ($identifier=='district') {
+				  	$link2=base_url('orders/update_order_subc/'.$value['id']."/");
+				  	?>
+				  	
+				  	<a href='<?php echo $link2; ?>' >
+           	<button type="button" class="btn btn-xs btn-success">
+           	<span class="glyphicon glyphicon-pencil"></span>
+           	 	Edit Order 
+           	</button>
+           	</a>
+					   
+			<?php	   }
+				   
+           
+           
+            ?>
+           
+           
+          </td>
 		</tr>	
 		<?php
 			}
@@ -254,9 +292,9 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
            <button  type="button" class="btn btn-xs btn-primary">
            <span class="glyphicon glyphicon-save"></span>Download Order excel</button></a>
            
-           <a href='<?php echo $link3; ?>' target="_blank">
+          <!-- <a href='<?php echo $link2; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
-           <span class="glyphicon glyphicon-save"></span>Download Report</button></a>
+           <span class="glyphicon glyphicon-save"></span>Download Report</button></a>-->
             </td>
 		</tr>		
 			

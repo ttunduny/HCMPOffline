@@ -1836,7 +1836,7 @@ public function create_excel($excel_data=NUll,$report_type = NULL, $total_figure
 		//delete the attachment after sending to avoid clog up of pdf'ss
 	}
 public function log_summary_weekly(){
-	
+	    $time=date('M , d Y',mktime());
 		$data = $q = Doctrine_Manager::getInstance()
 	        ->getCurrentConnection()
 	        ->fetchAll("SELECT *
@@ -2056,6 +2056,7 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 		endforeach;
 		$excel_data['row_data'] = $row_data;
 		$excel_data['report_type']='Log Summary';
+		$time=date('m-d-Y',date());
 
 		$this -> hcmp_functions -> create_excel($excel_data);
 		
@@ -2084,15 +2085,9 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 			<table>
 				<tr>
 					<td>
-						<h3>Hello,</h3>
-						<p class='lead'>Find attached a summary of Facility Activity Log.</p>
-						<p>$body</p>
-						<!-- Callout Panel -->
-						<p class='callout'>
-							<a href='health-cmp.or.ke'>Click here! &raquo;</a> to follow up. 
-						</p><!-- /Callout Panel -->					
-												
-						<!-- social & contact -->
+						
+						<p class='lead'>Find attached a summary of Facility Activity Log, as at $time</p>
+						
 						<table class='social' width='100%'>
 							<tr>
 								<td>
@@ -2105,13 +2100,7 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 									<!-- column 2 -->
 									<table align='left' class='column'>
 										<tr>
-											<td>				
-																			
-												<h5 class=''>Contact Info:</h5>												
-												<p>Phone: <strong>+254720167245</strong><br/>
-                Email: <strong><a href='emailto:hcmpkenya@gmail.com'>hcmpkenya@gmail.com</a></strong></p>
-                
-											</td>
+											
 										</tr>
 									</table><!-- /column 2 -->
 									
@@ -2134,13 +2123,12 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						$subject = "Weekly Log Summary ";
 						
-						$email_address = 'kelvinmwas@gmail.com';
+						$email_address = 'kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org';
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 			
             
 			
-		exit;
-					/*echo "<table class='data-table'>
+							/*echo "<table class='data-table'>
 		<thead>
 		<tr>
 			<th ><b>Facility Name</b></th>
