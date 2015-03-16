@@ -25,7 +25,7 @@ class sms extends MY_Controller {
 		$message = 'test from system live server';
 		$message = urlencode($message);
 
-		$spam_sms = '254723722204';
+		$spam_sms = '254723722204+254720167245';
 
 		$phone_numbers = explode("+", $spam_sms);
 
