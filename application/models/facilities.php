@@ -237,26 +237,30 @@ class Facilities extends Doctrine_Record {
 		return $q;  
     
 	}
+
+
+
+
 	//gets the monitoring data for all the facilities using HCMP
 	public static function facility_monitoring($county_id, $district_id, $facility_code=null)
 	{
 		if(isset($facility_code)&&($facility_code>0)):
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				CALL facility_monitoring('facility','".$facility_code."');
+				CALL facility_monitoring('facility','$facility_code');
 			");
 			//return the monitoring data
-			//echo $data; exit;
+			//echo "<pre>";print_r($data) ;exit;
 			return $data;
 		
 		elseif(isset($district_id)&&!isset($facility_code)):
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				CALL facility_monitoring('district','".$district_id."');
+				CALL facility_monitoring('district',$district_id');
 			");
 			//return the monitoring data
 			return $data; 
 		else:
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				CALL facility_monitoring('county','".$county_id."');
+				CALL facility_monitoring('county','$county_id');
 			");
 			//return the monitoring data
 			return $data; 
@@ -264,6 +268,165 @@ class Facilities extends Doctrine_Record {
 		
 		
 	}
+
+
+	public static function facility_ordered($type, $county_id = NULL, $district_id = NULL, $facility_code=null)
+	{
+		switch ($type) {
+			case 'facility':
+			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+               CALL facility_orders('facility','".$facility_code."');
+             
+			");
+            foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days From Last Order'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
+			//return the monitoring data
+			break;
+		
+			case 'district':
+			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				CALL facility_orders('district','".$district_id."');
+			");
+
+			foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days From Last Order'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
+			//return the monitoring data
+			return $data;
+		
+			case 'county':
+			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		   CALL facility_orders('county','".$county_id."');
+              
+              ");
+
+			foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days From Last Order'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
+			
+			break;
+		}
+		//return the monitoring data
+			return $data;
+		
+		
+	}
+
+	public static function facility_issued($type, $county_id = NULL, $district_id = NULL, $facility_code=null)
+	{
+		switch ($type) {
+			case 'facility':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+             CALL facility_issues('facility','".$facility_code."');
+            
+             
+			");
+			//return the monitoring data
+			//echo '<pre>';print_r($data);echo "</pre>";die();
+				foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days from last issue'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
+				break;
+
+			case 'county':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		    CALL facility_issues('county','".$county_id."');
+              
+              ");
+				foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days from last issue'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
+		//return the monitoring data
+			break;	
+			case 'district':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				CALL facility_issues('district','".$district_id."');
+			");
+				//$data = sortrows($data,'RowNames')
+			//return the monitoring data
+				foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days from last issue'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
+			break;
+			default:
+				# code...
+				break;
+		}
+
+		//echo "<pre>";print_r($data);die;
+		return $data;
+		
+	}
+
+
+	 
+
+
+	public static function facility_loggins($type, $county_id = NULL, $district_id = NULL, $facility_code=null)
+	{
+		switch ($type) {
+			case 'facility':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+              CALL facility_loggins('facility','".$facility_code."');
+            
+             
+			");
+				foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days From Last Seen'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
+			//return the monitoring data
+			//echo '<pre>';print_r($data);echo "</pre>";die();
+				$data = sort($data,'descend');
+				break;
+
+			case 'county':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		    CALL facility_loggins('county','".$county_id."');
+              
+              ");
+				foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days From Last Seen'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
+		//return the monitoring data
+			break;	
+			case 'district':
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				CALL facility_loggins('district','".$district_id."');
+			");
+				foreach ($data as $key => $part) {
+				//echo '<pre>';print_r($data);echo "</pre>";die();
+               $sort[$key] = $part['Days From Last Seen'];
+             }
+              array_multisort($sort, SORT_DESC, $data);
+			//return the monitoring data
+			break;
+			default:
+				# code...
+				break;
+		}
+
+		//echo "<pre>";print_r($data);die;
+		return $data;
+		
+	}
+
 	//Used by facility_mapping function in reports controller
 	//Used to get the dates that facilities went online
 	public static function get_facilities_online_per_district($county_id)
@@ -556,15 +719,9 @@ return $q;
 	//Used to get the months facilities went online
 	//Limits to the last 3 months of activation
 	
-	public static function get_dates_facility_went_online($county_id, $district_id = null, $year)
+	public static function get_dates_facility_went_online($county_id)
 	{
-		
-		$addition = (isset($district_id)&& ($district_id>0)) ?"AND f.district = $district_id" : null;
-		$data = array();
-		$years = array('2015', '2014', '2013');
-		
-		foreach ($years as $year ) {
-			$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		SELECT DISTINCT
 		    DATE_FORMAT(`date_of_activation`, '%M %Y') AS date_when_facility_went_online,
 		    YEAR(`date_of_activation`) 
@@ -576,13 +733,8 @@ return $q;
 		        AND d.county = $county_id
 		        $addition
 		        AND UNIX_TIMESTAMP(`date_of_activation`) > 0
-		        AND YEAR(`date_of_activation`) = $year
 		ORDER BY `date_of_activation` desc
 		");
-		
-		$data[$year]=$q;
-		}
-		
 		
 		return $data;
 			
@@ -590,8 +742,6 @@ return $q;
 	
 	//used by facility mapping function
 	//used to get the distinct years facilities went online
-	
-	
 	//used when building data for the facilities that went online in a particular district in a particular county
 	public static function get_facilities_which_went_online_($district_id = null, $date_of_activation)
 	{
@@ -609,7 +759,7 @@ return $q;
 			and d.id = $district_id 
 			and DATE_FORMAT(  `date_of_activation` ,  '%M %Y' ) = '$date_of_activation' AND using_hcmp=1");
 			
-		return $q;		
+			return $q;
 	}
 public static function get_targetted_facilities($district_id = null)
 {
@@ -655,4 +805,20 @@ public static function get_facility_details_simple($facility_code){
 		");
 	return $mbegu;
 	}
+
+//get facility county and district4
+public static function get_facility_district_county_level($facility_code)
+{
+	// echo $facility_code;die;
+	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT d.district as district, c.county as county, f.type as type FROM
+		facilities f, districts d, counties c
+		WHERE f.facility_code = '$facility_code'
+		AND f.district = d.id
+		AND c.id = d.county");
+
+	return $q[0];
 }
+
+}
+

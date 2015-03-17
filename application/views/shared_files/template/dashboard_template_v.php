@@ -25,6 +25,8 @@
     <link href="<?php echo base_url().'assets/css/offline-language-english.css'?>" type="text/css" rel="stylesheet"/>
      <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
     <script src="<?php echo base_url().'assets/scripts/offline-simulate-ui.min.js'?>" type="text/javascript"></script>
+    <script src="<?php echo base_url().'assets/bower_components/alertifyjs/dist/js/alertify.js'?>" type="text/javascript"></script>
+    <link rel="stylesheet" href="<?php echo base_url().'assets/bower_components/alertifyjs/dist/css/alertify_bootstrap_3.css'?>" />
     <title>HCMP | <?php echo $title;?></title>
 
 <style>

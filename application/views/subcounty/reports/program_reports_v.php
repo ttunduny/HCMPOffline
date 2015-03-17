@@ -6,6 +6,20 @@
 	.page-header{
 		border:none;
 	}
+
+	#information-table th
+	{
+		text-align: center;
+		font-size: 120%;
+	}
+	#information-table td, th
+	{
+		padding: 5px;
+	}
+	a.btn
+	{
+		border-radius: 0;
+	}
 </style>
 <?php   $identifier = $this -> session -> userdata('user_indicator');
 		$countyname = $this -> session -> userdata('county_name');
@@ -112,82 +126,86 @@ HTML_DATA;
 			 endforeach;
 			endforeach;
 		?>
-<h1 class="page-header" style="margin: 0;font-size: 1.6em;"><?php echo $page_header; ?></h1>
 <div class="row container" style="width: 100%; margin: auto; background-color: white;">
 <div class="" style="background-color: white;">
 	<ul class='nav nav-tabs'>
       <li class="active"><a href="#Malaria" data-toggle="tab">Malaria</a></li>
-      <!--<li class=""><a href="#RH" data-toggle="tab">Reproductive Health</a></li>-->
+      <li class=""><a href="#RH" data-toggle="tab">Reproductive Health</a></li>
     </ul>
     <div id="myTabContent" class="tab-content">
  		<div  id="Malaria" class="tab-pane fade active in">
-	        <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="test1">
-			<thead>				
-				<tr>
-					<?php $user_indicator = $this -> session -> userdata('user_indicator');
-
-						switch ($user_indicator) {
-							case facility_admin:
-							case facility:
-					?>
-						<th>Drug Name</th>
-						<th>Order Unit Size</th>
-						<th>Order Unit Cost (Ksh)</th>
-						<th>Opening Balance (Units)</th>
-						<th>Total Receipts (Units)</th>
-					    <th>Total issues (Units)</th>
-					    <th>Adjustments(-ve) (Units)</th>
-					    <th>Adjustments(+ve) (Units)</th>
-					    <th>Losses (Units)</th>
-					    <th>No days out of stock</th>
-					    <th>Closing Stock(Units)</th>
-					<?php break;
-					default: ?>
-						<th>Facility Name</th>
-						<th>MFL Code</th>
-						<th>Prepared By</th>
-						<th>Action</th>
-					<?php 
-					break; } ?>
-				</tr>
-				
-			</thead>
-			<tbody>
-				<?php 
-				
-				echo $mal_report_data; 
-					
-				?>
-				
-			</tbody>
-			
-			</table> 
+				<?php
+					$user_indicator = $this->session->userdata('user_indicator');
+					$facility_listing = '';
+					switch ($user_indicator) {
+						case 'county':
+							$facility_listing .= '<table class = "col-md-12" id = "information-table">';
+							$facility_listing .= '<tbody><tr>
+							<td><select class = "form-control" name = "subcounties" id = "subcounties"><option value = "" selected = "selected">Select a Sub County</option>'.$sub_counties.'</select></td>
+							<td><select class = "form-control" name = "facilities" id = "facilities"><option value = "" selected = "selected">Select a Facility</option><optgroup id = "facility_listing"></optgroup></select></td>
+							<td><a href = "#" class = "btn btn-success" id = "filter"><i class = "glyphicon glyphicon-filter"></i> Filter</a></td>
+							<td><a href = "#" class = "btn btn-success pdf-download" data-facility = "" id = "mal-pdf-download" data-report-type = "malaria"><i class = "glyphicon glyphicon-save"></i> Download PDF</a></td>';
+							$facility_listing .= '</table>';
+							break;
+						case 'district':
+							$facility_listing .= '<table class = "col-md-12" id = "information-table">';
+							$facility_listing .= '<tbody><tr>
+							<td><select class = "form-control" name = "facilities" id = "facilities"><option value = "" selected = "selected">Select a Facility</option><optgroup id = "facility_listing">'.$mal_report_data.'</optgroup></select></td>
+							<td><a href = "#" class = "btn btn-success" id = "filter"><i class = "glyphicon glyphicon-filter"></i> Filter</a></td>
+							<td><a href = "#" class = "btn btn-success pdf-download" data-facility = "" id = "mal-pdf-download" data-report-type = "malaria"><i class = "glyphicon glyphicon-save"></i> Download PDF</a></td>';
+							$facility_listing .= '</table>';
+							
+							break;
 						
-		    
-      </div>
+						case 'facility':
+						case 'facility_admin':
+							$facility_listing .= '<center><a href = "#" class = "btn btn-success pdf-download" data-facility = "'.$fac_mfl.'" id = "mal-pdf-download" data-report-type = "malaria"><i class = "glyphicon glyphicon-save"></i> Download PDF</a></center>';
+							break;
+						default:
+							# code...
+							break;
+					}
+					echo $facility_listing;
+				?>
+				<div id = "table-holder">
+				</div>						
+		  </div>
      <div class="tab-pane fade" id="RH">
-        <table cellpadding="0" cellspacing="0" width="100%" border="0" class="row-fluid table table-bordered"  id="test2">
-		<thead>
-			<tr>
-				<th>Facility Name</th>
-				<th>MFL Code</th>
-				<th>Prepared By</th>
-				<th>Action</th>			
-			</tr>
-		</thead>
-		<tbody>
-			<?php 
-			
-			echo $RH_report_details; 
-			
-			?>
-
-		</tbody>
-		</table> 
-
-		
-		           	
-      </div>
+     	<?php
+			$user_indicator = $this->session->userdata('user_indicator');
+			$facility_listing = '';
+			switch ($user_indicator) {
+				case 'county':
+					$facility_listing .= '<table class = "col-md-12" id = "information-table">';
+					$facility_listing .= '<tbody><tr>
+					<td><select class = "form-control" name = "rh-subcounties" id = "rh-subcounties"><option value = "" selected = "selected">Select a Sub County</option>'.$sub_counties.'</select></td>
+					<td><select class = "form-control" name = "rh-facilities" id = "rh-facilities"><option value = "" selected = "selected">Select a Facility</option><optgroup id = "rh-facility_listing"></optgroup></select></td>
+					<td><a href = "#" class = "btn btn-success" id = "rh-filter"><i class = "glyphicon glyphicon-filter"></i> Filter</a></td>
+					<td><a href = "#" class = "btn btn-success pdf-download" data-facility = "" id = "rh-pdf-download" data-report-type = "rh"><i class = "glyphicon glyphicon-save"></i> Download PDF</a></td>';
+					$facility_listing .= '</table>';
+					break;
+				case 'district':
+					$facility_listing .= '<table class = "col-md-12" id = "information-table">';
+					$facility_listing .= '<tbody><tr>
+					<td><select class = "form-control" name = "rh-facilities" id = "rh-facilities"><option value = "" selected = "selected">Select a Facility</option><optgroup id = "facility_listing">'.$mal_report_data.'</optgroup></select></td>
+					<td><a href = "#" class = "btn btn-success" id = "rh-filter"><i class = "glyphicon glyphicon-filter"></i> Filter</a></td>
+					<td><a href = "#" class = "btn btn-success pdf-download" data-facility = "" id = "rh-pdf-download" data-report-type = "rh"><i class = "glyphicon glyphicon-save"></i> Download PDF</a></td>';
+					$facility_listing .= '</table>';
+					
+					break;
+				
+				case 'facility':
+				case 'facility_admin':
+					$facility_listing .= '<center><a href = "#" class = "btn btn-success pdf-download" data-facility = "'.$fac_mfl.'" id = "rh-pdf-download" data-report-type = "rh"><i class = "glyphicon glyphicon-save"></i> Download PDF</a></center>';
+					break;
+				default:
+					# code...
+					break;
+			}
+			echo $facility_listing;
+		?>
+		<div id = "rh-table-holder"></div>		           	
+     </div>
     </div>
  	</div>
   </div>
@@ -206,12 +224,7 @@ HTML_DATA;
 			      "oTableTools": {
                  "aButtons": [
 				"copy",
-				"print",
-				{
-					"sExtends":    "collection",
-					"sButtonText": 'Save',
-					"aButtons":    [ "csv", "xls", "pdf" ]
-				}
+				"print"
 			],
 
 			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
@@ -229,16 +242,137 @@ HTML_DATA;
 			      "oTableTools": {
                  "aButtons": [
 				"copy",
-				"print",
-				{
-					"sExtends":    "collection",
-					"sButtonText": 'Save',
-					"aButtons":    [ "csv", "xls", "pdf" ]
-				}
+				"print"
 			],
 
 			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
 		}
 		});
 	});
+</script>
+
+<script type="text/javascript">
+	user_indicator = '<?php echo $this->session->userdata("user_indicator"); ?>';
+	base_url = '<?php echo base_url(); ?>';
+	$(document).ready(function(){
+		switch(user_indicator)
+		{
+			case 'facility':
+			case 'facility_admin':
+				facility = '<?php echo $this->session->userdata("facility_id"); ?>';
+				table_url = base_url + 'divisional_reports/malaria_report/'+facility;
+				createtable(table_url, 'malaria');
+				table_url = base_url + 'divisional_reports/rh_report/'+facility;
+				createtable(table_url, 'rh');
+				break;
+			default:
+				break;
+		}
+	});
+	
+	$('#filter').click(function(){
+		facility = $('select[name="facilities"]').val();
+		if (facility != '') {
+			table_url = base_url + 'divisional_reports/malaria_report/'+facility;
+			createtable(table_url, 'malaria');
+		}
+		else
+		{
+			alert('You must choose a Facility to filter data');
+			$('select[name="facilities"]').focus();
+		}
+		
+		
+	});
+
+	$('#rh-filter').click(function(){
+		facility = $('#rh-facilities').val();
+		if (facility != '') {
+			table_url = base_url + 'divisional_reports/rh_report/'+facility;
+			createtable(table_url, 'rh');
+		}
+		else
+		{
+			alert('You must choose a Facility to filter data');
+			$('select[name="facilities"]').focus();
+		}
+	});
+
+	$('select[name = "subcounties"]').change(function(){
+		$('#table-holder').html('');
+		subcounty_id = $(this).val();
+		if (subcounty_id !== ''){
+			$.get(base_url + 'divisional_reports/createfacilitiessubcounty/'+subcounty_id +'/ajax', function(data){
+				$('#facility_listing').html(data);
+				$('#mal-pdf-download').attr('data-facility', '');
+			});
+		}
+		else
+		{
+			$('#mal-pdf-download').attr('data-facility', '');
+		}
+	});
+
+	$('#rh-subcounties').change(function(){
+		$('#rh-table-holder').html('');
+		subcounty_id = $(this).val();
+		if (subcounty_id !== ''){
+			$.get(base_url + 'divisional_reports/createfacilitiessubcounty/'+subcounty_id +'/ajax', function(data){
+				$('#rh-facility_listing').html(data);
+				$('#rh-pdf-download').attr('data-facility', '');
+			});
+		}
+		else
+		{
+			$('#rh-pdf-download').attr('data-facility', '');
+		}
+	});
+
+	$('select[name="facilities"]').change(function(){
+		facility = $(this).val();
+		if (facility !== '') {
+			$('#mal-pdf-download').attr('data-facility', facility);
+		}
+		else
+		{
+			$('#mal-pdf-download').attr('data-facility', '');
+		}
+	});
+
+	$('#rh-facilities').change(function(){
+		facility = $(this).val();
+		if (facility !== '') {
+			$('#rh-pdf-download').attr('data-facility', facility);
+		}
+		else
+		{
+			$('#rh-pdf-download').attr('data-facility', '')
+		}
+	});
+
+	$('.pdf-download').click(function(){
+		facility_id = $(this).attr('data-facility');
+		report_type = $(this).attr('data-report-type');
+		if (facility_id !== '') {
+			window.open(base_url + 'divisional_reports/pdfreport/' + report_type + '/' + facility_id, '_blank');
+		}
+		else
+		{
+			alert('Please select a Facility to Download PDF');
+		}
+	});
+	function createtable(table_url, type)
+	{
+		$('table-holder').html('');
+		$.get(table_url, function(data)
+		{
+			if (type === 'malaria') {
+				$('#table-holder').html(data);
+			}
+			else
+			{
+				$('#rh-table-holder').html(data);
+			}
+		});
+	}
 </script>

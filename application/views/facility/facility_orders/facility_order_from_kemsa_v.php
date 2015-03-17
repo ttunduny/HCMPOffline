@@ -1,4 +1,3 @@
-<?php //echo "This is the one";exit; ?>
 <style>
  	.input-small{
  		width: 55px !important;
@@ -210,7 +209,6 @@ $(document).ready(function() {
 	 	alert("Please select a commodity first");
 	 	return;
 	 }
-
 	// add the items here to the order form
 	  $("#example" ).dataTable().fnAddData( [ 
   	 '<input type="hidden" class="commodity_name" id="commodity_name['+new_count+']" name="commodity_name['+new_count+']" value="'+$(".desc option:selected").text()+'" />'+
@@ -301,7 +299,6 @@ $(document).ready(function() {
     +'<button type="button" class="btn btn-primary" id="save_dem_order" data-dismiss="modal">Save</button>');
 	});
       /************save the data here*******************/
-
 	$('#main-content').on('click','#save_dem_order',function() {
      var order_total=$('#total_order_value').val();
      var alert_message='';
@@ -327,7 +324,6 @@ $(document).ready(function() {
 	var order_total=0;
 	var balance=0
 	 $("input[name^=quantity]").each(function() {
-
 	 	if($(this).val()=='')
 	 	{ var total=0} 
 	 	else{ var total=$(this).val()
@@ -360,5 +356,4 @@ $(document).ready(function() {
 	}		
     
 });
-
 </script>

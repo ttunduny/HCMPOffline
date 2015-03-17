@@ -1,6 +1,8 @@
 *.class
 *.pyc
 *.pyo
+*.xls
+*.xlsx
 /nbproject/private/
 /pdf/
 /drug_commodity_map.sql
@@ -9,6 +11,8 @@
 
 
 
+
 application/config/database.php
 .htaccess
+
 system/libraries/Hcmp_functions.php

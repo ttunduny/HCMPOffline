@@ -19,7 +19,8 @@ if (!$this -> session -> userdata('user_id')) {
 	<link href="<?php echo base_url().'assets/css/dashboard.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/jquery-ui-1.10.4.custom.min.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
-	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
+  <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
+	<link href="<?php echo base_url().'assets/css/bootstrap-switch.css'?>" type="text/css" rel="stylesheet"/>
 	<link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
 	<link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
   <link rel="stylesheet" href="<?php echo base_url().'assets/bower_components/sweetalert/lib/sweet-alert.css'?>" />
@@ -142,7 +143,7 @@ foreach($menus as $menu){ $menu_id=(int)$menu['menu_id'];?>
               <ul class="dropdown-menu" >
                 <li><a style="background: whitesmoke;color: black !important" href="" data-toggle="modal" data-target="#changepassModal"><span class="glyphicon glyphicon-pencil" style="margin-right: 2%; "></span>Change password</a></li>               
                 <li><a style="background: whitesmoke;color: black !important" href="<?php echo site_url("user/logout");?>" ><span class="glyphicon glyphicon-off" style="margin-right: 2%;"></span>Log out</a></li>
-                <li ><a style="background: whitesmoke;color: black !important" href="javascript:void(0);" onclick="startIntro();" ><span class="glyphicon glyphicon-question-sign" style="margin-right: 2%;"></span>Help</a></li>               
+                <li ><a style="background: whitesmoke;color: black !important" href="mailto:hcmphelpdesk@googlegroups.com" onclick="startIntro();" ><span class="glyphicon glyphicon-question-sign" style="margin-right: 2%;"></span>Help</a></li>
               </ul>
             </li>
           </ul>
@@ -229,7 +230,8 @@ foreach($menus as $menu){ $menu_id=(int)$menu['menu_id'];?>
     </div> <!-- /container -->
    <div id="footer">
       <div class="container">
-        <p class="text-muted"> Government of Kenya &copy <?php echo date('Y');?>. All Rights Reserved</p>
+        <p class="text-muted"> Government of Kenya &copy <?php echo date('Y');?>. All Rights Reserved
+          <a href="mailto:hcmphelpdesk@googlegroups.com">Report Problem</a></p>
       </div>
     </div>
     
@@ -496,6 +498,7 @@ return i;
   <script src="<?php echo base_url().'assets/scripts/jquery.floatThead.min.js'?>" type="text/javascript"></script>	
   <!-- Placed at the end of the document so the pages load faster -->
   <script src="<?php echo base_url().'assets/scripts/hcmp_shared_functions.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/bootstrap-switch.js'?>" type="text/javascript"></script>
     <!--Datatables==========================  -->
   <script src="<?php echo base_url().'assets/datatable/jquery.dataTables.min.js'?>" type="text/javascript"></script>	
   <script src="<?php echo base_url().'assets/datatable/dataTables.bootstrap.js'?>" type="text/javascript"></script>
