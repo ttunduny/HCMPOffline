@@ -21,9 +21,12 @@ class sms extends MY_Controller {
 	//for testing puposes only
 	public function test_sms() {
 
+		$phones = '254720167245';
 		$message = 'test from system live server';
 		$message = urlencode($message);
-		$spam_sms = '254723722204+254720167245';
+
+		$spam_sms = '254723722204';
+
 		$phone_numbers = explode("+", $spam_sms);
 
 		foreach ($phone_numbers as $key => $user_no) {
@@ -31,15 +34,6 @@ class sms extends MY_Controller {
 			echo "Success sent to " . $user_no . '<br>';
 		}
 
-	}
-	public function test_email()
-	{
-		$message = "Test email form the server";
-		$subject = "Test Subject from the server";
-		$email_address = "collinsojenge@gmail.com";
-		
-		$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
-		
 	}
 
 	public function test_email() {
@@ -99,11 +93,7 @@ class sms extends MY_Controller {
 			//pick the county nae and county ID accordingly
 			//counts the number of facilities not using the system
 			$count_county = 0;
-<<<<<<< HEAD
-			
-=======
 
->>>>>>> 3155fb003fca89c73d1ad489daf301a7ec4aaa61
 			$county_id = $counties['county'];
 			$county_name = $counties['county_name'];
 			$district_total = array();
@@ -134,7 +124,7 @@ class sms extends MY_Controller {
 						$count_district++;
 						//get the phone numbers of the facility users
 						$phone = $this -> get_facility_phone_numbers($facility_code);
-						
+
 						$message = "Dear $facility_name user,\n you have not logged in to HCMP for the past $no_of_days days. The last time you logged in was $no_of_days days ago.\n Kindly log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 						$message = urlencode($message);
 						//appends the phone numbers of the technical team
@@ -155,22 +145,6 @@ class sms extends MY_Controller {
 
 				//pick the user data
 				$user_data = Users::get_scp_details($district_id);
-<<<<<<< HEAD
-				
-				//loop through the each of the numbers of the users			
-				foreach($user_data as $data):
-					//pick the name
-					$name_sub_county = $data['fname']." ".$data['lname'];
-					//message to be sent out to the sub county guys
-					$message = "Dear $name_sub_county, $district_name Sub County Pharmacist,\n $count_district facilities in $district_name Sub County have not accessed HCMP for more than 5 days.\n Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
-					$message = urlencode($message);
-					
-					
-					$user_no = $data['telephone'];
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
-				endforeach;
-				
-=======
 
 				//loop through the each of the numbers of the users
 				foreach ($user_data as $data) :
@@ -184,42 +158,12 @@ class sms extends MY_Controller {
 					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 				endforeach;
 
->>>>>>> 3155fb003fca89c73d1ad489daf301a7ec4aaa61
 				$count_county += $count_district;
 
 				//end for each for the districts
 			endforeach;
 			//start for the sub county section
 			//first make the message
-<<<<<<< HEAD
-			
-			
-			//then pick the names and details of the people receiving the texts
-			$user_data = Users::get_county_pharm_details($county_id);
-			
-			//loop through the each of the numbers of the users			
-			foreach($user_data as $data):
-				//pick the name
-				$name_county = $data['fname']." ".$data['lname'];
-				$message = "Dear $name_county,\n $count_county facilities in $county_name County have not accessed HCMP for more than 5 days.\n";
-			
-				foreach ($district_total as $key => $total) {
-					if($total>0):
-						$message .= " $key Sub County - $total facilities.\n";
-					endif;
-	
-				}
-	
-				$message .= "Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
-				$message = urlencode($message);
-				
-				$user_no = $data['telephone'];
-				
-				file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
-			
-			endforeach;
-			
-=======
 
 			//then pick the names and details of the people receiving the texts
 			$user_data = Users::get_county_pharm_details($county_id);
@@ -246,7 +190,6 @@ class sms extends MY_Controller {
 
 			endforeach;
 
->>>>>>> 3155fb003fca89c73d1ad489daf301a7ec4aaa61
 		endforeach;
 	}
 
