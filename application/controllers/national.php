@@ -390,6 +390,7 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "Expiries in $title $year"));
+			$graph_data = array_merge($graph_data, array("color" => "['#4b0082', '#6AF9C4']"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "KSH"));
 			$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
@@ -451,7 +452,8 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 
 	}
 
-	/*public function potential($county_id=null, $district_id=null,$facility_code=null,$graph_type=null,$interval=null)
+	public function potential($county_id=null, $district_id=null,$facility_code=null,$graph_type=null,$interval=null)
+
 	 {
 
 	 $and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
@@ -495,6 +497,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 	 $graph_type='spline';
 
 	 $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_1'));
+	 $graph_data = array_merge($graph_data, array("color" => "['#4b0082', '#6AF9C4']"));
 	 $graph_data=array_merge($graph_data,array("graph_title"=>"Stock Expiring $title in the Next $interval Months"));
 	 $graph_data=array_merge($graph_data,array("graph_type"=>$graph_type));
 	 $graph_data=array_merge($graph_data,array("graph_yaxis_title"=>"stock expiring in KSH"));
@@ -571,7 +574,8 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 	 $this->hcmp_functions->create_excel($excel_data);
 	 endif;
 
-	 }*/
+	 }
+
 	public function stock_level_mos($county_id = null, $district_id = null, $facility_code = null, $commodity_id = null, $graph_type = null) {
 		$district_id = ($district_id == "NULL") ? null : $district_id;
 		$graph_type = ($graph_type == "NULL") ? null : $graph_type;
@@ -606,7 +610,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 		else :
 			$title = "National";
 		endif;
-		// echo .$commodity_id ; exit;
+		
 		if ($graph_type != "excel") :
 			$commodity_array = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select 
 		    d.commodity_name as drug_name,
@@ -647,6 +651,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_mos'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "$title Stock Level in Months of Stock (MOS)"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
+			$graph_data = array_merge($graph_data, array("color" => "['#4b0082','#FFF263', '#6AF9C4']"));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "MOS"));
 			$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
 			$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
@@ -835,27 +840,7 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 						        $and_data
 						group by d.id $group_by
 			");
-			echo "select 
-					    d.commodity_name as drug_name,
-					    f_s.current_balance as total
-						from
-						    facilities f,
-						    districts d1,
-						    counties c,
-						    facility_stocks f_s,
-						    commodities d
-						        left join
-						    facility_monthly_stock f_m_s ON f_m_s.`commodity_id` = d.id
-						where
-						    f_s.facility_code = f.facility_code
-						        and f.district = d1.id
-						        and d1.county = c.id
-						        and f_s.commodity_id = d.id
-						        and f_m_s.facility_code = f.facility_code
-						        $and_data
-						group by d.id $group_by";
-						
-						exit;
+			
 			$category_data = array();
 			$series_data = $series_data_ = array();
 			$temp_array = $temp_array_ = array();
@@ -872,6 +857,7 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_mos'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "$title Stock Level"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
+			$graph_data = array_merge($graph_data, array("color" => "['#4b0082','#FFF263', '#6AF9C4']"));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "units"));
 			$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
 			$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
@@ -961,7 +947,7 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 			$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
 			$title = $facility_code_['facility_name'];
 		else :
-			$title = "Nationaly";
+			$title = "National";
 		endif;
 		if ($graph_type != "excel") :
 			// echo    .$to; exit;
@@ -992,6 +978,7 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_consuption'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "$title Consumption (Packs) $time"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
+			$graph_data = array_merge($graph_data, array("color" => "['#4b0082','#FFF263', '#6AF9C4']"));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Packs"));
 			$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
 			$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
@@ -1095,7 +1082,7 @@ order by c.county asc , d1.district asc
 				$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) : null;
 				$title = $facility_code_['facility_name'];
 			else :
-				$title = "Nationaly";
+				$title = "National";
 			endif;
 
 			foreach ($commodity_array as $data) :
@@ -1118,6 +1105,7 @@ order by c.county asc , d1.district asc
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_order'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "$year $title Order Cost"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
+			$graph_data = array_merge($graph_data, array("color" => "['#4b0082','#FFF263', '#6AF9C4']"));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Cost in KSH"));
 			$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
 			$graph_data = array_merge($graph_data, array("series_data" => array('Cost of Orders Made' => $series_data, 'Cost of Orders delivered' => $series_data_2)));

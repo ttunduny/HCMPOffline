@@ -40,8 +40,8 @@ class redistribution_data extends Doctrine_Record {
 	}
 
 		public static function get_all_active_drug_store($district_id,$option=null) {
-		$and=($option=='to-me')? " receive_facility_code=0":null;
-		$query = Doctrine_Query::create() -> select("*") -> from("redistribution_data") -> where("$and and district_id = '$district_id' and status=0");
+		$and=($option=='to-me')? " receive_facility_code=2":" source_facility_code=2";
+		$query = Doctrine_Query::create() -> select("*") -> from("redistribution_data") -> where("$and and status=0 and source_district_id = $district_id");
 		$redistribution_data = $query -> execute();
 		return $redistribution_data;
 	}

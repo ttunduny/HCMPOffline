@@ -27,54 +27,45 @@
 			} );
 		</script>
 <div id="dialog"></div>
-	<div class="alert alert-info" >
-  <b>Below is the project status in the county</b>
-</div>
+	<!--<div class="alert alert-info" >
+		  <b>Below is the project status in the county</b>
+		</div>-->
 	 <div id="temp"></div>
 	<?php echo @$data; ?>
-	<div style="padding-top: 25px;">
-		<!--<div class="filter" >
-<h5>
-	<select name="year" id="year_filter" style="width: 7.8em;">
-		<option value="0">Select Year</option>
-		<option value="2014">2014</option>
-		<option value="2013">2013</option>
-</select>
-	<select name="month" id="month_filter" >
-			<option value="0" selected="selected">Select month</option>
-			<option value="01">Jan</option>
-			<option value="02">Feb</option>
-			<option value="03">Mar</option>
-			<option value="04">Apr</option>
-			<option value="05">May</option>
-			<option value="06">Jun</option>
-			<option value="07">Jul</option>
-			<option value="08">Aug</option>
-			<option value="09">Sep</option>
-			<option value="10">Oct</option>
-			<option value="11">Nov</option>
-			<option value="12">Dec</option>
-		</select>
- 
-	<button class="btn btn-small btn-success" id="filter" name="filter" style="margin-left: 1em;"><span class="glyphicon glyphicon-filter">Filter</button> 
-	<button class="btn btn-small btn-success" id="download" name="download" style="margin-left: 1em;"><span class="glyphicon glyphicon-save">Download</button> 
-	
-	</h5>
-</div>-->
+	<hr/>
+	<!--Filter row for the system usage breakdown
+	<div class="filter row">
+		<form class="form-inline" role="form">
+			<select id="district_filter" class="form-control col-md-2">
+			<option selected="selected" value="NULL">Select Sub-county</option>
+			<?php
+			
+				foreach($district_data as $district_):
+						$district_id=$district_->id;
+						$district_name=$district_->district;	
+						echo "<option value='$district_id'>$district_name</option>";
+						//echo "<option value='$district_id'>$district_name</option>";
+				endforeach;
+			?>
+			</select>
+
+			<div class="col-md-3">
+			<button class="btn btn-sm btn-small btn-success filter"><span class="glyphicon glyphicon-filter"></span>Filter</button>
+			</div> 
+
+		</form>
+	</div>
 	<div>
-	<div id="container"  style="height:60%; width: 50%; margin: 0 auto; float: left">
-	</div>
-	<div id="container_monthly"  style="height:60%; width: 50%; margin: 0 auto;float: left"></div>	
-	</div>
-	<div id="log_data_graph"  style="height:60%; width: 50%; margin: 0 auto;float: left"></div>	
+		
+	</div> 
+	<div style="padding-top: 25px;">
+	<b>System Usage Breakdown</b>
+	<hr />
 	
-	<script>
-	<?php echo @$graph_data_daily;?>
-	<?php echo @$graph_data_monthly;?>
-	<?php echo @$graph_log;?>
-	</script>
+	<div id="facility_monitoring" >
 	</div>
 	
+	</div>
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -126,17 +117,11 @@
 
 <script>
 $(document).ready(function() {
-	//$(".ajax_call1").click( function (){
-		
-		//$('#myModal').modal({
- 		// show: true
-			//})
-			
-	//	var url_ = "reports/list_facilities/";
-	//	window.open(url+url_ ,'_blank'); 
-		
-   
-    //});
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+          $('.graph_content').html('');
+          
+          })
+	//ajax_request_replace_div_content('reports/monitoring',"#facility_monitoring");
 	$(".ajax_call2").click(function(){
 		var url = "<?php echo base_url().'reports/get_district_drill_down_detail'?>";
 		// this is the data from the function
@@ -163,18 +148,19 @@ $(document).ready(function() {
           }
         }); 
 	}
-	$("#filter").click(function(){
-		var url = "reports/get_sub_county_facility_mapping_data/"+$("#year_filter").val()+ "/"+$("#month_filter").val();
-        	ajax_request_replace_div_content(url,'#container');
-        	ajax_request_replace_div_content(url,'#log_data_graph');
-		
+	
+    $(".download").click(function(){
+    	var url_download = "<?php echo base_url().'reports/monitoring' ?>";
+		window.open(url_download ,'_blank'); 
+        	
           });
-	$("#download").click(function(){
-		var url_ = "reports/get_user_activities_excel/"+$("#year_filter").val()+
-				        "/"+$("#month_filter").val();
-		window.open(url+url_ ,'_blank'); 
-        			
+	$( "#district_filter" ).change(function() {
+  		$(".filter").click(function(){
+		var url = "reports/filter_monitoring/"+$("#district_filter").val();
+        	ajax_request_replace_div_content(url,'#facility_monitoring');
+        	return
           });
+	});
 		
 		
  	});

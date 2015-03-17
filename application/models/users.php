@@ -92,7 +92,7 @@ class Users extends Doctrine_Record {
 	}
 
 	public static function check_user_exist($email) {
-		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("email='$email' AND status IN(1,2)");
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("email='$email' AND status IN(1,2)") ;
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
 	}
@@ -225,7 +225,7 @@ FROM
         LEFT JOIN
     facilities f ON u.facility = f.facility_code
         LEFT JOIN
-    access_level a ON a.id = u.usertype_id WHERE f.using_hcmp=1
+    access_level a ON a.id = u.usertype_id 
 				");
 		return $query;
 	}
@@ -435,4 +435,12 @@ public static function get_county_details($county_id){
 		echo $update;
 	}
 	
+	public static function set_report_access(){
+		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+			SELECT MAX(id) FROM user
+			");
+
+		return $query;
+	}
+
 	}

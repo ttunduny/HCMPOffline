@@ -11,6 +11,7 @@ class Home extends MY_Controller
 		parent::__construct();
 		$this -> load -> helper(array('form', 'url'));
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
+		// echo "<pre>";print_r(Malaria_Data::get_facility_stock_data(13041));die;
 	}
 
   public function reset_(){
@@ -77,7 +78,8 @@ class Home extends MY_Controller
 			case 'rtk_manager':
 			case 'rtk_partner_admin':
 			case 'rtk_partner_super':
-			redirect('home_controller');
+			redirect('http://41.89.6.223/HCMP/user');
+			//redirect('http://192.168.133.23/HCMP/user');
 			break;
 			case 'super_admin':
 			$view = 'shared_files/template/dashboard_v';
@@ -108,6 +110,7 @@ class Home extends MY_Controller
     $graph_data=array();
 	$graph_data=array_merge($graph_data,array("graph_id"=>'container'));
 	$graph_data=array_merge($graph_data,array("graph_title"=>'Facility stock level'));
+	$graph_data = array_merge($graph_data, array("color" => "['#4b0082','#FFF263', '#6AF9C4']"));
 	$graph_data=array_merge($graph_data,array("graph_type"=>'bar'));
 	$graph_data=array_merge($graph_data,array("graph_yaxis_title"=>'Total stock level  (values in packs)'));
 	$graph_data=array_merge($graph_data,array("graph_categories"=>array()));
@@ -128,6 +131,7 @@ class Home extends MY_Controller
     $items_stocked_out_in_facility=count(facility_stocks::get_items_that_have_stock_out_in_facility($facility_code));
 	//get order information from the db
 	$facility_order_count_=facility_orders::get_facility_order_summary_count($facility_code);
+	//echo "<pre>";print_r($facility_order_count_);echo "<pre>";exit;
 	$facility_order_count=array();
      foreach($facility_order_count_ as $facility_order_count_){
      	$facility_order_count[$facility_order_count_['status']]=$facility_order_count_['total'];
@@ -157,5 +161,10 @@ class Home extends MY_Controller
 	'stocks_from_v1'=>$stocks_from_v1
 	);	
     }
-	
+	public function tester(){
+			$this->load->model('users');
+			$last_inserted = $this->users->set_report_access();
+			echo "<pre>This";print_r($last_inserted);echo "</pre>";exit;
+			//$this->Users::set_report_access();
+		}
 }

@@ -20,7 +20,7 @@ class Divisional_Reports extends MY_Controller
 	//used for both the subcounty and county level program reports
 	 public function program_reports()
 	 {
-
+	 	$malaria_report_data = '';
 	 	$user_indicator = $this -> session -> userdata('user_indicator');
 	 	switch ($user_indicator) 
 	 	{
@@ -31,21 +31,32 @@ class Divisional_Reports extends MY_Controller
 				$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
 				$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
 				$report_TB = tb_data::get_facility_report_details($facility_id);
+				$facility_details = Facilities::get_facility_name2($facility_id);
+				$facility_mfl = $facility_id;
+				$facility_name = $facility_details['facility_name'];
+
+				// $malaria_report_data = '<tr><td>'.$facility_name.'</td><td>'.$facility_mfl.'</td><td>HCMP</td><td><a href = "'.base_url().'divisional_reports/malaria_report" class = "btn btn-primary btn-sm">View Malaria Report</a></td></tr>';
+
 						
 				if ((!empty($report_RH))&&(!empty($report_malaria))&&(!empty($report_TB)))
 				{
-					$report_RH_report[$index] = $report_RH;
+				$report_RH_report[$index] = $report_RH;
 					$report_malaria_report[$index] = $report_malaria;
 					$report_tuberculosis_report[$index] = $report_TB;
 				
 				}else{
 					
 				}
-					
-				$data['page_header'] = "Divisional Reports";	
-				$data['title'] = "Facility Divisional Reports";
-				$data['banner_text'] = "Facility Divisional Reports";
+				$data['mal_report_data'] = $this->createmalariareport($facility_mfl);
+				$data['page_header'] = "Program Reports";	
+				$data['malaria'] = $report_malaria_report;
+				$data['RH'] = $report_RH_report;
+				$data['TB'] = $report_tuberculosis_report;
+				$data['title'] = "Facility Program Reports";
+				$data['banner_text'] = "Facility Program Reports";
+				$data['report_view'] = "subcounty/reports/program_reports_v";
 				$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+				$data['active_panel'] = "program_reports";
 				
 			break;
 			case district :
@@ -58,6 +69,10 @@ class Divisional_Reports extends MY_Controller
 					$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
 					$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
 					$report_TB = tb_data::get_facility_report_details($facility_id);
+					$facility_details = Facilities::get_facility_name2($facility_id);
+					$facility_mfl = $facility_id;
+					$facility_name = $facility_details['facility_name'];
+					$malaria_report_data .= '<tr><td>'.$facility_name.'</td><td>'.$facility_mfl.'</td><td>HCMP</td><td><a class = "btn btn-primary btn-sm" href = "'.base_url().'divisional_reports/malaria_report/'.$facility_mfl.'">View Malaria Report</a></td></tr>';
 					if ((!empty($report_RH))&&(!empty($report_malaria)))
 					{
 						$report_RH_report[$index] = $report_RH;
@@ -70,7 +85,7 @@ class Divisional_Reports extends MY_Controller
 					
 					$index++;
 				}
-			
+				$data['mal_report_data'] = $malaria_report_data;
 				$data['page_header'] = "Program Reports";
 				$data['title'] = "District Program Reports";
 				$data['banner_text'] = "District Program Reports";
@@ -87,6 +102,11 @@ class Divisional_Reports extends MY_Controller
 				$report_malaria = Malaria_Data::get_facility_report_details($facility_id);
 				$report_RH = RH_Drugs_Data::get_facility_report_details($facility_id) ;
 				$report_TB = tb_data::get_facility_report_details($facility_id);
+
+				$facility_details = Facilities::get_facility_name2($facility_id);
+				$facility_mfl = $facility_id;
+				$facility_name = $facility_details['facility_name'];
+				$malaria_report_data .= '<tr><td>'.$facility_name.'</td><td>'.$facility_mfl.'</td><td>HCMP</td><td><a class = "btn btn-primary btn-sm" href = "'.base_url().'divisional_reports/malaria_report/'.$facility_mfl.'"><i class = "glyphicon glyphicon-eye"></i> View Malaria Report</a></td></tr>';
 				if ((!empty($report_RH))&&(!empty($report_malaria)))
 				{
 					$report_RH_report[$index] = $report_RH;
@@ -99,13 +119,15 @@ class Divisional_Reports extends MY_Controller
 				
 				$index++;
 			 }
-			 $data['page_header'] = "County Program Reports";	
+			 $data['mal_report_data'] = $malaria_report_data;
+			 $data['page_header'] = "Program Reports";	
 			 $data['title'] = "County Program Reports";
 			 $data['banner_text'] = " County Program Reports";
 			 $data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
 			 
 		 break;
 		}
+		
  		$data['malaria'] = $report_malaria_report;
 		$data['RH'] = $report_RH_report;
 		$data['TB'] = $report_tuberculosis_report;
@@ -146,31 +168,33 @@ class Divisional_Reports extends MY_Controller
 		$this -> load -> view($view, $data);
 		
 	}
-	public function malaria_report()
+	public function malaria_report($facility = NULL)
 	{
 		//Used to pick the kemsa code and assign it to elements displayed on the report
+		$malariatable = '';
+		$user_indicator = $this->session->userdata('user_indicator');
+		switch ($user_indicator) {
+			case facility_admin :
+			case facility:
+				$facility = $this -> session -> userdata('facility_id');
+				break;
+			
+			default:
+				// echo "Nothing!!!";die;
+				break;
+		}
 		$malaria_name =  Malaria_Drugs::getName();
 		$malaria_array = array();
 		$counter = 0;
-		
-		foreach ($malaria_name as $drug)
-		{
-			$malaria_drugs = array();
-			$malaria_drugs = $drug;
-			$malaria_array[$counter] = $malaria_drugs;
-			$counter++;
-			
-		}
 		$user_id = $this -> session -> userdata('user_id');
 		$user_names = Users::get_user_names($user_id);
 		$data['user_data'] = Malaria_Data::getall($user_id);
 		$data['user_names'] = ($user_names[0]['fname']." ".$user_names[0]['lname']);
 
-
-		$data['malaria_data'] = $malaria_array;
+		$data['malaria_data'] = $this->createmalariareport($facility);
 		$data['drug_rows'] = Malaria_Drugs::getName();
 		
-		$facility = $this -> session -> userdata('facility_id');
+		
 		$facility_info = tb_data::get_facility_name($facility);
 		$data['facility_code'] = $facility;
 		$data['facility_name'] = ($facility_info['facility_name']);
@@ -329,6 +353,7 @@ $this->db->insert('tuberculosis_report_info',$data_);
 	public function RH_report()
 	{
 		//Used to pick the kemsa code and assign it to elements displayed on the report
+		$rhtable = '';
 		$facility = $this -> session -> userdata('facility_id');
 		$user_id = $this -> session -> userdata('user_id');
 		$facility_info = tb_data::get_facility_name($facility);
@@ -340,7 +365,32 @@ $this->db->insert('tuberculosis_report_info',$data_);
 		$data['facility_name'] = ($facility_info['facility_name']);
 		$data['facility_type_'] = ($facility_info['owner']);
 
+		$items = Facility_Transaction_Table::get_commodities_for_ordering_report($facility, 3);
+
+		if ($items) {
+			foreach ($items as $key => $value) {
+				$rhtable .= '<tr>';
+				$rhtable .= '<td>'.$value['commodity_name'].'</td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['unit_size'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['unit_cost'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['opening_balance'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['total_receipts'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['total_issues'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['adjustmentnve'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['adjustmentpve'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['losses'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['days_out_of_stock'].'" disabled></td>';
+				$rhtable .= '<td><input type = "text" class = "form-control" value = "'.$value['closing_stock'].'" disabled></td>';
+				$rhtable .= '</tr>';
+			}
+		}
+		else
+		{
+			$rhtable .= '<tr><td colspan = "11"><center>No Data Found...</center></td></tr>';
+		}
+
 		$data['content_view'] = "facility/facility_reports/facility_reports_RH_reports_v";
+		$data['rhdata'] = $rhtable;
 		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
 		$data['title'] = "RH Report";
 		$data['banner_text'] = "Facility RH Commodities Order";
@@ -699,5 +749,42 @@ $this->db->insert('tuberculosis_report_info',$data_);
 		$this -> load -> view('shared_files/template/template', $data);
 		
 	 }
+
+	public function createmalariareport($facility)
+	{
+		$malariatable = '';
+		$items = Facility_Transaction_Table::get_commodities_for_ordering_report($facility, 4);
+		if ($items) {
+			foreach ($items as $key => $value) {
+				$coloring = '';
+				$negative = '';
+				if($value['adjustmentnve'] < 0)
+				{
+					$coloring = 'style = "color: red"';
+					$number = explode('-', $value['adjustmentnve']);
+					$negative = $number[1];
+				}
+				else
+				{
+					$negative = $value['adjustmentnve'];
+				}
+				$malariatable .= '<tr>';
+				$malariatable .= '<td>'.$value['commodity_name'].'</td>';
+				$malariatable .= '<td>'.$value['unit_size'].'</td>';
+				$malariatable .= '<td>'.$value['unit_cost'].'</td>';
+				$malariatable .= '<td>'.$value['opening_balance'].'</td>';
+				$malariatable .= '<td>'.$value['total_receipts'].'</td>';
+				$malariatable .= '<td>'.$value['total_issues'].'</td>';
+				$malariatable .= '<td '.$coloring.'>'.$negative.'</td>';
+				$malariatable .= '<td>'.$value['adjustmentpve'].'</td>';
+				$malariatable .= '<td>'.$value['losses'].'</td>';
+				$malariatable .= '<td>'.$value['days_out_of_stock'].'</td>';
+				$malariatable .= '<td>'.$value['closing_stock'].'</td>';
+				$malariatable .= '</tr>';
+			}
+		}
+
+		return $malariatable;
+	}
 	
 }

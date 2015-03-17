@@ -154,7 +154,7 @@ class User extends MY_Controller {
 
 		//check if user exists and is activated
 
-		$myresult = Users::check_user_exist($email);
+		 $myresult = Users::check_user_exist($email);
 
 		//get user details
 		if (count($myresult) > 0) {
@@ -169,7 +169,7 @@ class User extends MY_Controller {
 			//check if user requested for a password recovery in last 3 days.
 
 			$check_code_request = Log_monitor::check_code_request($user_id);
-
+			
 			if (count($check_code_request) > 0) {
 				$data['user_email'] = $email_address;
 				$data['popup'] = "request_valid";
@@ -503,6 +503,12 @@ class User extends MY_Controller {
 		$user_type = $_POST['user_type'];
 		$full_name= $fname .''.$lname; 
 		$county=$_POST['county_id'];
+		//reports
+		$stocks=$_POST['stocks'];
+		$stocking_levels=$_POST['stocking_levels'];
+		$consumption=$_POST['consumption'];
+		$potential_exp=$_POST['potential_exp'];
+		$expiries=$_POST['expiries'];
 		
 		switch ($identifier):
 			case 'moh':
@@ -674,6 +680,7 @@ class User extends MY_Controller {
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
 
 				//exit;
+		//save report access
 
 		//save user
 				$savethis =  new Users();
@@ -752,14 +759,7 @@ endif;
 		
 		
 		//update user
-		 $q="UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
-									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county',
-									email_recieve ='$email_recieve_edit',
-									sms_recieve ='$sms_recieve_edit'
-                                  	WHERE `id`= '$user_id'";
-echo json_encode($q);
-                                  	exit;
-		
+				
 			$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
 			$update_user->execute("UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
 									district ='$district_name_edit',facility ='$facility_id_edit',status ='$status',county_id ='$county',
@@ -902,4 +902,10 @@ echo json_encode($q);
 			
 		}
 
+		public function tester(){
+			$this->load->model('users');
+			$last_inserted = $this ->users->set_report_access();
+			echo "<pre>This";print_r($last_inserted);echo "</pre>";exit;
+			//$this->Users::set_report_access();
+		}
 }

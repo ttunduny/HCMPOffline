@@ -1,11 +1,13 @@
-<style>
- 	.input-small{
- 		width: 60px !important;
- 	}
+<style type="text/css">
+.row div p,.row-fluid div p{
+	padding:10px;
 
-	.big{ width: 100px !important; }
+}
+.form-control {
+
+font-size: 12px !important;
+}
 </style>
-
 <div class="container" style="width: 96%; margin: auto;">
 	<span  class='label label-info'>To avoid adding items to your stock, leave the values as zero</span>
  <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('stock/add_more_stock_level_store_external',$att); ?>
@@ -50,6 +52,7 @@
 			}
 		echo "<tr>
 		<td>
+		<input type='hidden' name='id[]' class='source_of_item' value='$redistribution_data->id'>
 		<input type='hidden' name='source_of_item[]' class='source_of_item' value='$source_of_item'>
 		<input type='hidden' name='service_point[]' class='service_point' value='$mfl'>
 		<input type='hidden' name='total_commodity_units[]' class='total_commodity_units' value='$total_commodity_units'>
