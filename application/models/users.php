@@ -91,7 +91,8 @@ class Users extends Doctrine_Record {
 				WHERE
 				    district = $district 
 				    AND usertype_id = '3'
-				    AND telephone <>0");
+				    AND telephone <>0
+				    AND status = 1");
 		
 		return $query;
 	}
@@ -104,7 +105,8 @@ class Users extends Doctrine_Record {
 					WHERE
 					    county_id = $county_id 
 					    AND usertype_id = '10'
-					    AND telephone <>0");
+					    AND telephone <>0
+					    AND status = 1");
 		
 		return $query;
 	}
