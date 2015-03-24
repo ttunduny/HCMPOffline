@@ -301,7 +301,7 @@ class orders extends MY_Controller {
 		// hack to ensure that when you are ordering for a facility that is not using hcmp they have all the items
 		$checker = $this -> session -> userdata('facility_id') ? null : 1;
 		if (isset($_FILES['file']) && $_FILES['file']['size'] > 0) {
-			$more_data = $this -> kemsa_excel_order_uploader($_FILES["file"]["tmp_name"]);
+			$more_data = $this -> hcmp_functions -> kemsa_excel_order_uploader($_FILES["file"]["tmp_name"]);
 			$data['order_details'] = $data['facility_order'] = $more_data['row_data'];
 
 			$facility_data = Facilities::get_facility_name($more_data['facility_code']) -> toArray();
