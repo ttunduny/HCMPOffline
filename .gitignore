@@ -1,6 +1,8 @@
 *.class
 *.pyc
 *.pyo
+*.xls
+*.xlsx
 /nbproject/private/
 /pdf/
 /drug_commodity_map.sql
@@ -9,5 +11,15 @@
 
 
 
+
 application/config/database.php
 .htaccess
+
+print_docs/excel/excel_files/Karura Health Centre (Kiambu Rd)_facility_order_no_492_date_created_29-01-15.xls
+print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx
+print_docs/excel/excel_template/MEDS Customer Order Form.xls
+print_docs/excel/excel_template/MEDS Customer Order Form.xlsx
+
+
+system/libraries/Hcmp_functions.php
+

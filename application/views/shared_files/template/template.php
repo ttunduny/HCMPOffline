@@ -143,7 +143,7 @@ foreach($menus as $menu){ $menu_id=(int)$menu['menu_id'];?>
               <ul class="dropdown-menu" >
                 <li><a style="background: whitesmoke;color: black !important" href="" data-toggle="modal" data-target="#changepassModal"><span class="glyphicon glyphicon-pencil" style="margin-right: 2%; "></span>Change password</a></li>               
                 <li><a style="background: whitesmoke;color: black !important" href="<?php echo site_url("user/logout");?>" ><span class="glyphicon glyphicon-off" style="margin-right: 2%;"></span>Log out</a></li>
-                <li ><a style="background: whitesmoke;color: black !important" href="javascript:void(0);" onclick="startIntro();" ><span class="glyphicon glyphicon-question-sign" style="margin-right: 2%;"></span>Help</a></li>               
+                <li ><a style="background: whitesmoke;color: black !important" href="mailto:hcmphelpdesk@googlegroups.com" onclick="startIntro();" ><span class="glyphicon glyphicon-question-sign" style="margin-right: 2%;"></span>Help</a></li>
               </ul>
             </li>
           </ul>
@@ -230,7 +230,8 @@ foreach($menus as $menu){ $menu_id=(int)$menu['menu_id'];?>
     </div> <!-- /container -->
    <div id="footer">
       <div class="container">
-        <p class="text-muted"> Government of Kenya &copy <?php echo date('Y');?>. All Rights Reserved</p>
+        <p class="text-muted"> Government of Kenya &copy <?php echo date('Y');?>. All Rights Reserved
+          <a href="mailto:hcmphelpdesk@googlegroups.com">Report Problem</a></p>
       </div>
     </div>
     
