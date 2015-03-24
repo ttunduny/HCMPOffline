@@ -6,32 +6,6 @@ $district_id_active =  $this -> session -> userdata('district_id');
 $identifier = $this -> session -> userdata('user_indicator');
 
 ?>
-<style>
-	
-	.stat_item {
-		height: 52px;
-		padding: 2px 5px;
-		margin:0 1px 1px 1px;
-		color: #fff;
-		text-align: center;
-		font-size: 1em;
-		
-	}	
-	.stat_item:hover{
-	-webkit-transform: scale(1.005);
-	-moz-transform: scale(1.005);
-	margin-left: 2px;
-	-webkit-transition-duration: 50ms;
-	-webkit-transition-function: ease-out;
-	-moz-transition-duration: 50ms;
-	-moz-transition-function: ease-out;
-	box-shadow: 0 1px 3px 0.5px #000;
-}
-	.bold{
-		font-weight:800;
-	}
-</style>
-
 <div class="alert alert-info" style="width: 100%">
   <b>Below are the Stocking Levels in the County </b> :Select filter Options
 </div>

@@ -346,6 +346,7 @@ class Reports extends MY_Controller {
 		//get order information from the db
 		$facility_order_count_ = facility_orders::get_facility_order_summary_count($facility_code, $district_id, $county_id);
 		$facility_order_count = array();
+		//echo "<pre>";	print_r($facility_order_count_);exit;
 
 		foreach ($facility_order_count_ as $facility_order_count_) {
 			$facility_order_count[$facility_order_count_['status']] = $facility_order_count_['total'];
@@ -353,7 +354,8 @@ class Reports extends MY_Controller {
 
 		$data['order_counts'] = $facility_order_count;
 		$data['delivered'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "delivered");
-		$data['pending'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending");
+		$data['pending_all'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_all");
+		$data['pending_cty'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_cty");
 		$data['approved'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "approved");
 		$data['rejected'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "rejected");
 		$data['facilities'] = ($for == 'subcounty') ? Facilities::get_facilities_all_per_district($this -> session -> userdata('district_id'), 'set') : array();
@@ -2860,12 +2862,12 @@ class Reports extends MY_Controller {
 		$year = date('Y');
 		$month_ = date('M d');
 
-
 		$district = $this -> session -> userdata('district_id');
 		$county_id = $this -> session -> userdata('county_id');
 
 		$user = $this -> session -> userdata('user_indicator');
 		$graph_data_default = $series_data = $series_data_ = array();
+		
 		if ($user == "district") {
 			$district_name = districts::get_district_name($district) -> toArray();
 			$district_name_ = $district_name[0]['district'];
@@ -3018,13 +3020,14 @@ class Reports extends MY_Controller {
 		//get the district name		
 		$district_data = (isset($district_id) && ($district_id != 0)) ? districts::get_district_name($district_id) -> toArray() : null;
 		$district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " subcounty" : null;
+		
 		//getting the facility name
 		$facility_code_ = (isset($facility_code)&&($facility_code>0)) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
 		$facility_name = $facility_code_[0]['facility_name'];
 		
 		//getting the stock level data from the database
 		$stock_level = Facility_stocks::get_county_stock_level_tracer($county_id,$district_id,$facility_code,$option);
-		//echo "<pre>";print_r($stock_level);exit;
+		
 		//title for the graph or table
 		$title = '';
 		if(isset($facility_code) && isset($district_id)):
@@ -3042,14 +3045,50 @@ class Reports extends MY_Controller {
 		foreach ($stock_level as $data):
 			//for graph
 			$series_data = array_merge($series_data, array((int)$data['total']));
-			$series_data_ = array_merge($series_data_, array( array($data['district'], $data["facility_name"], $data["facility_code"], $data["commodity_name"], (int)$data['total'])));
-			$category_data = array_merge($category_data, array($data["commodity_name"]));
-			
+			//$series_data_ = array_merge($series_data_, array( array($data['district'], $data["facility_name"], $data["facility_code"], $data["commodity_name"], (int)$data['total'])));
 			$category_data = array_merge($category_data, array($data["commodity_name"]));
 			
 		endforeach;
+		
+		$graph_type = 'column';
+			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
+			$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level $commodity_name for $title as at $month_ $year"));
+			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
+			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Commodity Stock level in $option_title"));
+			$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
+			$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
+			//echo $category_data;
+			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
+			return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
+			/*
+		//build the graph here
+		$graph_type = 'bar';
+		$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
+		$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level for $title as at $month_ $year"));
+		$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
+		$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Commodity Stock level in $option"));
+		$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
+		$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
+		
+		echo "<pre>";print_r($graph_data);exit;
+		$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
+		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);*/
+		
+		//echo "<pre>";print_r($series_data);exit;
 		/*if($report = "excel"):
 		
+		 * 
+		 * $graph_type = 'column';
+			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
+			$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level $commodity_name for $title as at $month_ $year"));
+			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
+			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Commodity Stock level in $option_title"));
+			$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
+			$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
+			//echo $category_data;
+			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
+			return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
+		 * 
 		elseif($report=="table_data"):
 			
 			$graph_data = array_merge($graph_data, array("table_id" => 'dem_graph_'));
@@ -3062,18 +3101,7 @@ class Reports extends MY_Controller {
 			return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
 		
 		else:*/
-			//build the graph here
-			$graph_type = 'bar';
-			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
-			$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level for $title as at $month_ $year"));
-			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
-			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Commodity Stock level in $option"));
-			$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
-			$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
 			
-			//echo "<pre>";print_r($graph_data);exit;
-			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
-			return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 	//	endif;
 		
 		

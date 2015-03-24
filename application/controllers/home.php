@@ -131,6 +131,7 @@ class Home extends MY_Controller
     $items_stocked_out_in_facility=count(facility_stocks::get_items_that_have_stock_out_in_facility($facility_code));
 	//get order information from the db
 	$facility_order_count_=facility_orders::get_facility_order_summary_count($facility_code);
+	//echo "<pre>";print_r($facility_order_count_);echo "<pre>";exit;
 	$facility_order_count=array();
      foreach($facility_order_count_ as $facility_order_count_){
      	$facility_order_count[$facility_order_count_['status']]=$facility_order_count_['total'];

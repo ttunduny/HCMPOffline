@@ -2,26 +2,29 @@
  	.input-small{
  		width: 55px !important;
  	}
- 	.row div p{
+ 	.row-fluid div p{
 	padding:10px;
+}
+.table-bordered {
+border: 0px ;
 }
 .modal-dialog {
 		
 		width: 55%;
 	}
  </style>
- <?php  $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order',$att); 
- //echo "<pre>"; print_r($facility_order);echo "<pre>";exit;?>
- 
- <div class="container-fluid">
- <div style="width: 100%; margin: auto;">
+ <div class="container-fluid" style="width: 100%; margin: auto;">
 
-<div class="row">
+<?php $identifier = $this -> session -> userdata('user_indicator');
+ $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/update_order_facility',$att); 
+ //echo "<pre>"; print_r($facility_order);echo "<pre>";exit;
+//?>
+<div class="row-fluid">
 		<div class="col-md-8">
 			<div class="col-md-3">
-				<p class="bg-primary">
+				<p class="bg-info">
 			<span  class='' style="display: inline">
-				<strong>Fill the Order Quantity and Comment to complete order </strong>
+				<strong>Fill the Order Quantity to complete order </strong>
 			</p>
 			</div>
 			<div class="col-md-9">
@@ -42,21 +45,14 @@
 		</div>
 		
 	</div>
-
-
-<div class="row" style="padding-left: 1%;margin-bottom: 5px;">
-	
-<div class="">
-
-<input type="hidden" class="form-control" name="total_order_balance_value" 
-id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_rights; ?>"/>	
-<input name="facility_code" type="hidden" value="<?php echo isset($facility_code)? $facility_code :$this -> session -> userdata('facility_id'); ?>" />					
-</div>
-</div>
+<?php $order_number=$order_details[0]['id']; echo "<input type='hidden' name='order_number' value='$order_number'/>
+<input type='hidden' name='rejected' value='$rejected'/>
+<input type='hidden' name='rejected_admin' id='rejected_admin' value='0'/>
+<input type='hidden' name='approved_admin' id='approved_admin' value='0'/>"; ?>
 <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 <thead>
 <tr style="background-color: white">
-						 <!--<th>Category</th>-->
+						<!--<th>Category</th>-->
 						<th>Description</th>
 						<!--<th>Commodity&nbsp;Code</th>-->
 						<th>Order Unit Size</th>
@@ -68,56 +64,63 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 					    <th>Adj(+ve) (Units)</th>
 					    <th>Losses (Units)</th>
 					    <th>Closing Stock (Units)</th>
-					    <th>Closing Stock (Packs)</th>
 					    <th>No Days Out Of Stock</th>
-					    
 					    <th>AMC (Packs)</th>
 					    <th>Suggested Order Qty (Packs)</th>
-					    <th>Order Qty (Packs)</th>
+					    <th>Facility Order Qty (Packs)</th>
+					    <th>SCP Order Qty  (Packs)</th>
+					    <th>CP Order Qty  (Packs)</th>
+					    
 					    <th>Actual Order Qty (Units)</th>
 					    <th>Order Cost(Ksh)</th>	
-					    <!--<th>Comment</th>	-->			    
+					    <!--<th>Comment</th>	-->					    
 	</tr>
 </thead>
 <tbody>
-								<?php
-								 $count=0; $thr=true; 
-							$j=count($facility_order);
-								for($i=0;$i<$j;$i++){ ?>
+								<?php 
+								 $count=0; $thr=true;
+								$j=count($facility_order);
+								for($i=0;$i<$j;$i++){?>
 						<tr>
 							<!--<td><?php echo $facility_order[$i]['sub_category_name'];?></td>-->
-	
 							<?php 
 							      $price=$facility_order[$i]['unit_cost'];
 								  $price=str_replace(",", '',$price);
-									 
-					?>
-					<input class="commodity_code" type="hidden" name="commodity_code[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['commodity_code'];?>" />
-	<input class="total_commodity_units" type="hidden" name="total_commodity_units[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['total_commodity_units'];?>" />
-	<input class="commodity_id" type="hidden" name="commodity_id[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['commodity_id'];?>" />
-	<input class="commodity_name" type="hidden" name="commodity_name[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['commodity_name'];?>" />
-	<input class="price" type="hidden" name="price[<?php echo $i; ?>] " value="<?php echo $price;?>" />
-	<input class="unit_size" type="hidden" name="unit_size[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['unit_size'];?>" />
-	<input class="unit_cost" type="hidden" name="unit_cost[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['unit_cost'];?>" />
+							      echo 
+					 form_input(array('name' => 'facility_order_details_id['.$i.']', 'type'=>'hidden',
+					 'id' =>'test','value'=>$facility_order[$i]['id'])).
+					 form_input(array('name' => 'commodity_code['.$i.']', 'type'=>'hidden',
+					 'id' =>'test','value'=>$facility_order[$i]['commodity_code'],'class'=>'commodity_code')).
+					 form_input(array('name' => 'total_commodity_units['.$i.']', 'type'=>'hidden',
+					 'id' =>'test','value'=>$facility_order[$i]['total_commodity_units'],'class'=>'total_commodity_units')).
+					 form_input(array('name' => 'commodity_id['.$i.']', 'type'=>'hidden',
+					 'id' =>'test','value'=>$facility_order[$i]['commodity_id'],'class'=>'commodity_id')).
+					 form_input(array('name' => 'commodity_name['.$i.']', 'type'=>'hidden',
+					 'id' =>'test','value'=>$facility_order[$i]['commodity_name'],'class'=>'commodity_name')).
+					 form_input(array('name' => 'price['.$i.']', 'type'=>'hidden',
+					 'id' =>'test','value'=>$price,'class'=>'commodity_name')).
+					form_input(array('name' => 'unit_size['.$i.']', 'type'=>'hidden',
+					 'id' =>'test','value'=>$facility_order[$i]['unit_size'],'class'=>'unit_size')).
+					 form_input(array('name' => 'unit_cost['.$i.']', 'type'=>'hidden',
+					 'id' =>'test','value'=>$facility_order[$i]['unit_cost'],'class'=>'unit_cost'));?>
 							<td><?php echo $facility_order[$i]['commodity_name']?></td>
 							<!--<td><?php echo $facility_order[$i]['commodity_code'];?></td>-->
 							<td><?php echo $facility_order[$i]['unit_size']?> </td>
 							<td><?php echo $facility_order[$i]['unit_cost']; ?> </td>
-							<td><input class="form-control input-small" readonly="readonly" type="text" name="open[<?php echo $i ;?>]" value="<?php echo $facility_order[$i]['opening_balance'];?>" /></td>
-							<td><input class="form-control input-small" readonly="readonly" type="text" name="receipts[<?php echo $i ;?>]" value="<?php echo $facility_order[$i]['total_receipts'];?>" /></td>
-							<td><input class="form-control input-small" readonly="readonly" type="text" name="issues[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['total_issues'];?>" /></td>
-				<td><input  class="form-control input-small" readonly="readonly" type="text" name="adjustmentnve[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['adjustmentnve']?>" /></td>
-				<td><input class="form-control input-small" readonly="readonly" type="text" name="adjustmentpve[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['adjustmentpve']?>" /></td>
-							<td><input class="form-control input-small" readonly="readonly" type="text" name="losses[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['losses'] ?>" /></td>
+							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="open['.$i.']"'; ?>  value="<?php echo $facility_order[$i]['opening_balance'];?>" /></td>
+							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="receipts['.$i.']"'; ?>  value="<?php echo $facility_order[$i]['total_receipts'];?>" /></td>
+							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="issues['.$i.']"'; ?>  value="<?php echo $facility_order[$i]['total_issues'];?>" /></td>
+				<td><input  class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="adjustmentnve['.$i.']"'; ?> value="<?php echo $facility_order[$i]['adjustmentnve']?>" /></td>
+				<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="adjustmentpve['.$i.']"'; ?> value="<?php echo $facility_order[$i]['adjustmentpve']?>" /></td>
+							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="losses['.$i.']"'; ?> value="<?php echo $facility_order[$i]['losses'] ?>" /></td>
 							
-							<td><input class="form-control input-small closing" readonly="readonly" type="text" name="closing[<?php echo $i ;?>]"
-								 value="<?php echo ($facility_order[$i]['closing_stock']<0)? 0:$facility_order[$i]['closing_stock'] ;?>" /></td>
-								 <td><input class="form-control input-small closingpacks" readonly="readonly" type="text" name="closingpacks[<?php echo $i ;?>]"
-								 value="<?php echo ($facility_order[$i]['closing_stock_']<0)? 0:$facility_order[$i]['closing_stock_'] ;?>" /></td>
-								 <td><input class="form-control input-small" readonly="readonly" type="text"  name="days[<?php echo $i ;?>]"  value="<?php 
+							<td><input class="form-control input-small closing" readonly="readonly" type="text"<?php echo 'name="closing['.$i.']"'; ?> value="<?php echo $facility_order[$i]['closing_stock'];?>" /></td>
+							<td>
+								<input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="days['.$i.']"'; ?> 
+								value="<?php 
 								$closing_stock=$facility_order[$i]['closing_stock'];
-								
-								if ((int)$closing_stock <= 0) {
+								$days=$facility_order[$i]['historical'];
+								if ((int)$closing_stock <= 0 && (int)$days = 0) {
 								      $date_mod = $facility_order[$i]['date_modified'];
 									  
 										  $now = time(); 
@@ -127,28 +130,44 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 									
 								} else{
 									echo "0";
-								}?>" /></td>
-							<td><input class="form-control input-small amc" readonly="readonly" type="text" name="amc[<?php echo $i ;?>]" value="<?php echo $facility_order[$i]['historical'];?>" /></td>
-							<td><input style="background-color: #B2EFB2;" class="form-control input-small suggested" readonly="readonly" type="text" name="suggested[<?php echo $i ;?>]"  value=""/></td>
-							<td><input class="form-control input-small quantity" type="text" name="quantity[<?php echo $i ;?>]" value="<?php $qty=$facility_order[$i]['quantity_ordered'];
-							if($qty>0){echo $qty;} else echo 0;?>"/></td>
+								}?>" />
+								
+								</td>
+							<td><input class="form-control input-small amc" readonly="readonly" type="text" <?php echo 'name="amc['.$i.']"'; ?> value="<?php echo $facility_order[$i]['historical'];?>" /></td>
+							<td><input style="background-color: #B2EFB2;" class="form-control input-small suggested" readonly="readonly" type="text" name="suggested[<?php echo $i ;?>]" value=""/></td>
+							
+							<td><input style="background-color: #B2EFB2;" class="form-control input-small" readonly="readonly" type="text" name="facility_quantity[<?php echo $i;?>]"  value="<?php $qty=$facility_order[$i]['quantity_ordered_pack'];if($qty>0){echo $qty;} else echo 0;?>"/></td>
+							
+							<td><input style="background-color: #B2EFB2;" class="form-control input-small " readonly="readonly" type="text" name="cty_qty[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['scp_qty'];?>"/></td>
+							<td><input style="background-color: " class="form-control input-small quantity" type="text" name="quantity[<?php echo $i ;?>]"  value="<?php $qty=$facility_order[$i]['scp_qty'];if($qty>=0){echo $qty;} else {echo 0;}?>"/></td>
+							
 							<td><input class="form-control input-small actual_quantity" readonly="readonly" type="text" name="actual_quantity[<?php echo $i ;?>]" value="0"/></td>
 							<td><?php echo '<input type="text" class="form-control input-small cost" name="cost['.$i.']" value="0" readonly="yes"   />';?></td>
 							<!--<td><input class="form-control input-small" type="text" name="comment[<?php echo $i ;?>]" value="N/A" /></td>-->
-			       			</tr>						
-						<?php } $i=($i==0)? 0: $i=$i-1;
-						 echo form_close()."<script>var count=".$i."</script>"	?>
+			       			</tr>					
+						<?php } $i=$i-1; echo form_close()."<script>var count=".$i."</script>"	?>
 </tbody>
 </table>
 
 <hr />
 <div class="container-fluid">
 <div style="float: right;">
+<?php if($option_==='readonly_'):?>
+<a target="_blank" href="<?php echo base_url('reports/get_facility_sorf'.$order_number.'/'.$order_details[0]['facility_code']); ?>" >
+<button style="margin-left: 130px;" type="button" class="btn btn-primary">
+<span class="glyphicon glyphicon-save"></span>Download Order</button>
+</a>
+<?php else:?>
+<?php if($identifier==='county'):	?>
+<button type="button" class="reject btn btn-danger"><span class="glyphicon glyphicon-plus"></span>Reject Order</button>
+<button type="button" class="approve btn btn-success"><span class="glyphicon glyphicon-open"></span>Approve Order</button>
+<button type="button" class="add btn btn-sm btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Item</button></div>
+<?php else: ?>
 <button type="button" class="add btn btn-primary"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
-<button type="button" class="btn btn-success test"><span class="glyphicon glyphicon-open"></span>Save</button></div>
+<button type="button" class="btn btn-success reject_fixed"><span class="glyphicon glyphicon-open"></span>Edit Order</button></div>
+<?php endif; endif?>
 </div>
 </form>  
-</div>
 </div>
 <script>
 $(document).ready(function() {
@@ -212,10 +231,12 @@ $(document).ready(function() {
 	 	alert("Please select a commodity first");
 	 	return;
 	 }
+
 	// add the items here to the order form
 	  $("#example" ).dataTable().fnAddData( [ 
   	 '<input type="hidden" class="commodity_name" id="commodity_name['+new_count+']" name="commodity_name['+new_count+']" value="'+$(".desc option:selected").text()+'" />'+
           '<input type="hidden" class="commodity_code" id="commodity_code['+new_count+']" name="commodity_code['+new_count+']" value="'+$('input:text[name=commodity_code]').val()+'" />'+
+          '<input type="hidden" class="facility_order_details_id" id="facility_order_details_id['+new_count+']" name="facility_order_details_id['+new_count+']" value="0" />'+
          '<input type="hidden" class="commodity_id" id="commodity_id['+new_count+']" name="commodity_id['+new_count+']" value="'+$(".desc option:selected").val()+'" />'+
          '<input type="hidden" class="total_commodity_units" id="total_commodity_units['+new_count+']" name="total_commodity_units['+new_count+']" value="'+$('input:hidden[name=total_commodity_units_]').val()+'" />'+ 
          '<input type="hidden" class="unit_cost" id="price['+new_count+']" name="price['+new_count+']" value="'+$('input:text[name=unit_cost]').val()+'" />'+
@@ -232,10 +253,11 @@ $(document).ready(function() {
                             '<input class="form-control input-small" type="text" name="adjustmentpve['+new_count+']" id="adjustmentpve['+new_count+']"  value="0"   />' ,
 							'<input class="form-control input-small" type="text" name="losses['+new_count+']" id="losses['+new_count+']" value="0"   />' ,
 							'<input class="form-control input-small" type="text" name="closing['+new_count+']" id="closing['+new_count+']" value="0"   />',
-							'<input class="form-control input-small" type="text" name="closingpacks['+new_count+']" id="closingpacks['+new_count+']" value="0"   />',
 							'<input class="form-control input-small" type="text" name="days['+new_count+']" id="days['+new_count+']" value="0"   />',
 							'<input class="form-control input-small" type="text" name="amc['+new_count+']" id="amc['+new_count+']" value="0"   />',
 							'<input class="form-control input-small" type="text" value="0" name="suggested['+new_count+']" 	id="suggested['+new_count+']" readonly="yes"  />',
+							'<input class="form-control input-small" type="text" value="0" name="cty_qty['+new_count+']" 	id="cty_qty['+new_count+']" readonly="yes"  />',
+							'<input class="form-control input-small" type="text" value="0" name="scp_qty['+new_count+']" 	id="scp_qty['+new_count+']" readonly="yes"  />',
 							'<input class="form-control input-small quantity" type="text" name="quantity['+new_count+']" id="quantity['+new_count+']" value="0" />',
 							'<input class="form-control input-small actual_quantity" type="text" name="actual_quantity['+new_count+']" id="actual_quantity['+new_count+']" value="0" readonly="yes" />',
 							'<input class="form-control input-small cost" type="text" name="cost['+new_count+']" id="cost['+new_count+']" value="0" readonly="yes" />'
@@ -273,11 +295,12 @@ $(document).ready(function() {
 	
 	// set the order total here
 	calculate_totals();	
-	});// process all the order into a summary table for the user to confirm before placing the order bed_capacity workload
-	$('.test').on('click','', function (){
-		var today = $.datepicker.formatDate('d MM, y', new Date());
+	});
+	
+	// process all the order into a summary table for the user to confirm before placing the order bed_capacity workload
+	$('.approve').on('click','', function (){
 	var table_data='<div class="row" style="padding-left:2em"><div class="col-md-6"><h4>Order Summary</h4></div></div>'+
-    '<div class="row" style="padding-left:2em"><div class="col-md-6">Total Order Value (Ksh)</div><div class="col-md-6">'+number_format($("#total_order_value").val(), 2, '.', ',')+'</div><div class="col-md-12">Order made on - '+today+'</div></div>'+
+    '<div class="row" style="padding-left:2em"><div class="col-md-6">Total Order Value (Ksh)</div><div class="col-md-6">'+number_format($("#total_order_value").val(), 2, '.', ',')+'</div></div>'+
     '<table class="table table-hover table-bordered table-update">'+
 					"<thead><tr>"+
 					"<th>Description</th>"+
@@ -304,6 +327,7 @@ $(document).ready(function() {
     +'<button type="button" class="btn btn-primary" id="save_dem_order" data-dismiss="modal">Save</button>');
 	});
       /************save the data here*******************/
+
 	$('#main-content').on('click','#save_dem_order',function() {
      var order_total=$('#total_order_value').val();
      var alert_message='';
@@ -329,6 +353,7 @@ $(document).ready(function() {
 	var order_total=0;
 	var balance=0
 	 $("input[name^=quantity]").each(function() {
+
 	 	if($(this).val()=='')
 	 	{ var total=0} 
 	 	else{ var total=$(this).val()
@@ -351,14 +376,27 @@ $(document).ready(function() {
 	function calculate_suggested_value(month){
 		$("input[name^=suggested]").each(function() {
         var amc=parseInt($(this).closest("tr").find(".amc").val());
-	 	var closing_stock=parseInt($(this).closest("tr").find(".closingpacks").val());
+	 	var closing_stock=parseInt($(this).closest("tr").find(".closing").val());
         var suggested=0;       
         if(closing_stock<0) {closing_stock=0;}
         suggested=((amc*month)-closing_stock)+amc;
         if(suggested<0) {suggested=0;}
         $(this).val(suggested)
      });//check if order total is a NAN
-	}		
+	}	
+	$('.approve').on('click', function() {
+     $('#approved_admin').val(1);
+     save_the_order_form()
+     });
+     $('.reject').on('click', function() {
+     $('#rejected_admin').val(1);
+     save_the_order_form()
+     });
+     $('.reject_fixed').on('click', function() {
+     $('#rejected').val(1);
+     save_the_order_form()
+     });	
     
 });
+
 </script>
