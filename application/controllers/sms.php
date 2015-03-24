@@ -171,7 +171,13 @@ class sms extends MY_Controller {
 		}
 
 	}
-
+public function test_sms(){
+	
+	$phones='254726416795';
+	$message='test from system live server';
+	
+	$this -> hcmp_functions -> send_sms($phones,$message);
+}
 	//When stock is updated by a particular facility
 	public function send_stock_update_sms() {
 		$facility_code = $this -> session -> userdata('facility_id');
