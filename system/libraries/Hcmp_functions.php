@@ -139,22 +139,22 @@ public function get_county_email($county_id){
 }
 public function send_stock_decommission_email($message,$subject,$attach_file){
 	
-	   $facility_code=$this -> session -> userdata('facility_id');;
+	   $facility_code=$this -> session -> userdata('facility_id');
 	   
-	   $data=Users::getUsers($facility_code)->toArray();
+	  // $data=Users::getUsers($facility_code)->toArray();
 	   
-	   $email_address=$this->get_facility_email($facility_code);
+	   $email_address='kelvinmwas@gmail.com';
 	 
-	   $email_address .=$this->get_ddp_email($data[0]['district']);
+	   //$email_address .=$this->get_ddp_email($data[0]['district']);
         
-       $email_address .= $this->get_county_email($data[0]['district']);
+      // $email_address .= $this->get_county_email($data[0]['district']);
 	   $bcc_email ='kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org,
 		bwariari@clintonhealthaccess.org,
 		amwaura@clintonhealthaccess.org,
 		eongute@clintonhealthaccess.org,
 		rkihoto@clintonhealthaccess.org';
         
-	   $this->send_email(substr($email_address,0,-1),$message,$subject,$attach_file,$bcc_email);
+	   $this->send_email($email_address,$message,$subject,$attach_file);
 	   
 	 
 	}
@@ -173,11 +173,11 @@ public function send_order_submission_email($message,$subject,$attach_file){
 public function send_order_approval_email($message,$subject,$attach_file,$facility_code,$reject_order=null){
 	  
  $cc_email="";
- $bcc_email ='kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org,
-		bwariari@clintonhealthaccess.org,
-		amwaura@clintonhealthaccess.org,
-		eongute@clintonhealthaccess.org,
-		rkihoto@clintonhealthaccess.org';
+ //$bcc_email ='kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org,
+		//bwariari@clintonhealthaccess.org,
+		//amwaura@clintonhealthaccess.org,
+		//eongute@clintonhealthaccess.org,
+	//	rkihoto@clintonhealthaccess.org';
  $data=facilities::get_facility_name_($facility_code)->toArray();
  $data=$data[0];
 
@@ -185,12 +185,12 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 	  $email_address=$this->get_facility_email($facility_code);
 	  $cc_email .=$this->get_ddp_email($data['district']);	  
 	  else:		  
-
-		   $email_address='shamim.kuppuswamy@kemsa.co.ke,
-				jmunyu@kemsa.co.ke,
-				imugada@kemsa.co.ke,
-				laban.okune@kemsa.co.ke,
-				samuel.wataku@kemsa.co.ke,'; 
+			 $email_address='kelvinmwas@gmail.com';
+		  // $email_address='shamim.kuppuswamy@kemsa.co.ke,
+			//	jmunyu@kemsa.co.ke,
+				//imugada@kemsa.co.ke,
+				//laban.okune@kemsa.co.ke,
+				//samuel.wataku@kemsa.co.ke,'; 
 			
 	  $cc_email .=$this->get_ddp_email($data['district']);
 	  $cc_email .=$this->get_facility_email($facility_code);
@@ -199,45 +199,176 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 
   endif;
  
-		return $this->send_email(substr($email_address,0,-1),$message, $subject,$attach_file,$bcc_email,substr($cc_email,0,-1));
+		return $this->send_email($email_address,$message, $subject,$attach_file);
+	
+}
+public function send_order_sc_approval_email($message,$subject,$attach_file,$facility_code,$reject_order=null){
+	  
+ $cc_email="";
+ //$bcc_email ='kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org,
+		//bwariari@clintonhealthaccess.org,
+		//amwaura@clintonhealthaccess.org,
+		//eongute@clintonhealthaccess.org,
+	//	rkihoto@clintonhealthaccess.org';
+ $data=facilities::get_facility_name_($facility_code)->toArray();
+ $data=$data[0];
+
+  if($reject_order=="Rejected" || $reject_order=="Updated"):
+	  $email_address=$this->get_facility_email($facility_code);
+	  $cc_email .=$this->get_ddp_email($data['district']);	  
+	  else:		  
+			 $email_address='kelvinmwas@gmail.com';
+		  // $email_address='shamim.kuppuswamy@kemsa.co.ke,
+			//	jmunyu@kemsa.co.ke,
+				//imugada@kemsa.co.ke,
+				//laban.okune@kemsa.co.ke,
+				//samuel.wataku@kemsa.co.ke,'; 
+			
+	  $cc_email .=$this->get_ddp_email($data['district']);
+	  $cc_email .=$this->get_facility_email($facility_code);
+	  $cc_email .=$this->get_county_email($data['district']) ;
+
+
+  endif;
+ 
+		return $this->send_email($email_address,$message, $subject,$attach_file);
 	
 }
 public function send_order_delivery_email($message,$subject,$attach_file=null){
 
        $cc_email='';
       // echo 'test'; exit;
-	   $bcc_email ='kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org';
+      $email_address='kelvinmwas@gmail.com';
+	   //$bcc_email ='kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org';
 	   $facility_code=$this -> session -> userdata('facility_id');  
 	   $data=Users::getUsers($facility_code)->toArray();	   
 	   $cc_email .=$this->get_facility_email($facility_code);
 	   $cc_email .=$this->get_county_email($data[0]['district']) ;
 		
 		
-	return $this->send_email(substr($this->get_ddp_email($data[0]['district']),0,-1),$message,$subject,null,$bcc_email,substr($cc_email,0,-1));
+	return $this->send_email($email_address,$message,$subject,null);
 	
 }
 public function send_sms($phones,$message) {
 	
    $message=urlencode($message);
    //$spam_sms='254726534272+254720167245';	
-   $spam_sms='254720167245+254726534272+254726416795+254725227833+'.$phones;
+   $spam_sms='254720167245+254723722204+'.$phones;
 //  $spam_sms='254726534272';
  	# code...
  	
- 	$phone_numbers=explode("+", $spam_sms);
+ $phone_numbers=explode("+", $spam_sms);
+	//echo '<pre>'; print_r($phone_numbers);echo '<pre>';
+	foreach ($phone_numbers as $key=>$user_no) {
+		file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+		echo "Success sent to ".$user_no.'<br>';
+	}
 	
-	//foreach($phone_numbers as $key=>$user_no):
-  //  break;
-	//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
-		
-	//endforeach;
- 		
+	exit;
+	 		
 	}
 /*****************************************Email function for HCMP, all the deafult email addresses and email content have been set ***************/
 
 public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL)
 {
-	
+	$html_body ='';	
+			$html_body.='
+			<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HCMP Email</title>
+    <style type="text/css" media="screen">
+/* Force Hotmail to display emails at full width */
+.ExternalClass{display:block!important;width:100%}.ExternalClass,.ExternalClass p,.ExternalClass span,.ExternalClass font,.ExternalClass td,.ExternalClass div{line-height:100%}body,p,h1,h2,h3,h4,h5,h6{margin:0;padding:0}body,p,td{font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#333;line-height:1.5em}h1{font-size:24px;font-weight:400;line-height:24px}body,p{margin-bottom:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none}img{outline:none;text-decoration:none;-ms-interpolation-mode:bicubic}a img{border:none}.background{background-color:#333}table.background{margin:0;padding:0;width:100%!important}.block-img{display:block;line-height:0}a{color:#fff;text-decoration:none}a,a:link{color:#2A5DB0;text-decoration:underline}table td{border-collapse:collapse}td{vertical-align:top;text-align:left}.wrap{width:600px}.wrap-cell{padding-top:30px;padding-bottom:30px}.header-cell,.body-cell,.footer-cell{padding-left:20px;padding-right:20px}.header-cell{background-color:#eee;font-size:24px;color:#fff}.body-cell{background-color:#fff;padding-top:30px;padding-bottom:34px}.footer-cell{background-color:#eee;text-align:center;font-size:13px;padding-top:30px;padding-bottom:30px}.card{width:400px;margin:0 auto}.data-heading{text-align:right;padding:10px;background-color:#fff;font-weight:700}.data-value{text-align:left;padding:10px;background-color:#fff}.force-full-width{width:100%!important}</style>
+<style type="text/css" media="only screen and (max-width: 600px)">
+@media only screen and (max-width: 600px){bodyclass:background],table[class*=background],td[class*=background] {;background:#eee!important}table[class="card"]{width:auto!important}td[class="data-heading"],td[class="data-value"]{display:block!important}td[class="data-heading"]{text-align:left!important;padding:10px 10px 0}table[class="wrap"]{width:100%!important}td[class="wrap-cell"]{padding-top:0!important;padding-bottom:0!important}</style>'
+  ;	
+  $html_body.='</head>
+
+<body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" bgcolor="" class="background">
+  <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" class="background">
+    <tr>
+      <td align="center" valign="top" width="100%" class="background">
+        <center>
+          <table cellpadding="0" cellspacing="0" width="600" class="wrap">
+            <tr>
+              <td valign="top" class="wrap-cell" style="padding-top:30px; padding-bottom:30px;">
+                <table cellpadding="0" cellspacing="0" class="force-full-width">
+                                    </tr>
+                  <tr>
+                    <td valign="top" class="body-cell">
+
+                      <table cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+                        <tr>
+                          <td valign="top" style="padding-bottom:15px; background-color:#ffffff;">
+                            <h1>Health Commodities Management Platform</h1>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" style="padding-bottom:20px; background-color:#ffffff;">
+                            <b>Hey,</b><br>
+                            '.$message.'
+                            </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#ffffff">
+                              <tr>
+                                <td style="width:200px;background:#008000;">
+                                  <div><!--[if mso]>
+                                    <v:rect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="#" style="height:40px;v-text-anchor:middle;width:200px;" stroke="f" fillcolor="#008000">
+                                      <w:anchorlock/>
+                                      <center>
+                                    <![endif]-->
+                                        <a href="http://health-cmp.or.ke"
+                                  style="background-color:#008000;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:18px;line-height:40px;text-align:center;text-decoration:none;width:200px;-webkit-text-size-adjust:none;">Log in here to follow up.</a>
+                                    <!--[if mso]>
+                                      </center>
+                                    </v:rect>
+                                  <![endif]--></div>
+                                </td>
+                                <td width="360" style="background-color:#ffffff; font-size:0; line-height:0;">&nbsp;</td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="padding-top:20px;background-color:#ffffff;">
+                            Regards,<br>
+                            HCMP Team.
+                            
+							<h5>Contact Info:</h5>
+                            <p>Phone: +254720167245 OR +254723722204  </p>
+                            <p>Email: <a href="mailto:hcmptech@googlegroups.com">hcmptech@googlegroups.com</a></p>
+                            
+							<center>
+                              <p style="text-align:center;"><a href="#">Terms</a> | <a href="#">Privacy</a> | <a href="#">Unsubscribe</a></p>
+                            </center>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td valign="top" class="footer-cell">
+                      Health Commodities Management Platform<br>
+                      G.O.K '.date("Y").' All Rights Reserved
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </center>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>';
+
 	
 	//echo $email_address.'</br>'.$cc_email.'</br>'.$bcc_email;exit;	
 	$messages=$message;
@@ -252,11 +383,8 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
     $config['mailtype'] = 'html'; // or html
     $config['validation'] = TRUE; // bool whether to validate email or not  
 	$this->load->library('email', $config);
-    $mail_header='<html>
-				<style>
-#outlook a{padding:0}body{width:100%!important;min-width:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}.ExternalClass{width:100%}.ExternalClass,.ExternalClass div,.ExternalClass font,.ExternalClass p,.ExternalClass span,.ExternalClass td{line-height:100%}#backgroundTable{margin:0;padding:0;width:100%!important;line-height:100%!important}img{outline:0;text-decoration:none;-ms-interpolation-mode:bicubic;width:auto;max-width:100%;float:left;clear:both;display:block}center{width:100%;min-width:580px}a img{border:none}table{border-spacing:0;border-collapse:collapse}td{word-break:break-word;-webkit-hyphens:auto;-moz-hyphens:auto;hyphens:auto;border-collapse:collapse!important}table,td,tr{padding:0;vertical-align:top;text-align:left}hr{color:#d9d9d9;background-color:#d9d9d9;height:1px;border:none}table.body{height:100%;width:100%}table.container{width:580px;margin:0 auto;text-align:inherit}table.row{padding:0;width:100%;position:relative}table.container table.row{display:block}td.wrapper{padding:10px 20px 0 0;position:relative}table.column,table.columns{margin:0 auto}table.column td,table.columns td{padding:0 0 10px}table.column td.sub-column,table.column td.sub-columns,table.columns td.sub-column,table.columns td.sub-columns{padding-right:10px}td.sub-column,td.sub-columns{min-width:0}table.container td.last,table.row td.last{padding-right:0}table.one{width:30px}table.two{width:80px}table.three{width:130px}table.four{width:180px}table.five{width:230px}table.six{width:280px}table.seven{width:330px}table.eight{width:380px}table.nine{width:430px}table.ten{width:480px}table.eleven{width:530px}table.twelve{width:580px}table.one center{min-width:30px}table.two center{min-width:80px}table.three center{min-width:130px}table.four center{min-width:180px}table.five center{min-width:230px}table.six center{min-width:280px}table.seven center{min-width:330px}table.eight center{min-width:380px}table.nine center{min-width:430px}table.ten center{min-width:480px}table.eleven center{min-width:530px}table.twelve center{min-width:580px}table.one .panel center{min-width:10px}table.two .panel center{min-width:60px}table.three .panel center{min-width:110px}table.four .panel center{min-width:160px}table.five .panel center{min-width:210px}table.six .panel center{min-width:260px}table.seven .panel center{min-width:310px}table.eight .panel center{min-width:360px}table.nine .panel center{min-width:410px}table.ten .panel center{min-width:460px}table.eleven .panel center{min-width:510px}table.twelve .panel center{min-width:560px}.body .column td.one,.body .columns td.one{width:8.333333%}.body .column td.two,.body .columns td.two{width:16.666666%}.body .column td.three,.body .columns td.three{width:25%}.body .column td.four,.body .columns td.four{width:33.333333%}.body .column td.five,.body .columns td.five{width:41.666666%}.body .column td.six,.body .columns td.six{width:50%}.body .column td.seven,.body .columns td.seven{width:58.333333%}.body .column td.eight,.body .columns td.eight{width:66.666666%}.body .column td.nine,.body .columns td.nine{width:75%}.body .column td.ten,.body .columns td.ten{width:83.333333%}.body .column td.eleven,.body .columns td.eleven{width:91.666666%}.body .column td.twelve,.body .columns td.twelve{width:100%}td.offset-by-one{padding-left:50px}td.offset-by-two{padding-left:100px}td.offset-by-three{padding-left:150px}td.offset-by-four{padding-left:200px}td.offset-by-five{padding-left:250px}td.offset-by-six{padding-left:300px}td.offset-by-seven{padding-left:350px}td.offset-by-eight{padding-left:400px}td.offset-by-nine{padding-left:450px}td.offset-by-ten{padding-left:500px}td.offset-by-eleven{padding-left:550px}td.expander{visibility:hidden;width:0;padding:0!important}table.column .text-pad,table.columns .text-pad{padding-left:10px;padding-right:10px}table.column .left-text-pad,table.column .text-pad-left,table.columns .left-text-pad,table.columns .text-pad-left{padding-left:10px}table.column .right-text-pad,table.column .text-pad-right,table.columns .right-text-pad,table.columns .text-pad-right{padding-right:10px}.block-grid{width:100%;max-width:580px}.block-grid td{display:inline-block;padding:10px}.two-up td{width:270px}.three-up td{width:173px}.four-up td{width:125px}.five-up td{width:96px}.six-up td{width:76px}.seven-up td{width:62px}.eight-up td{width:52px}h1.center,h2.center,h3.center,h4.center,h5.center,h6.center,table.center,td.center{text-align:center}span.center{display:block;width:100%;text-align:center}img.center{margin:0 auto;float:none}.hide-for-desktop,.show-for-small{display:none}body,h1,h2,h3,h4,h5,h6,p,table.body,td{color:#222;font-family:Helvetica,Arial,sans-serif;font-weight:400;padding:0;margin:0;text-align:left;line-height:1.3}h1,h2,h3,h4,h5,h6{word-break:normal}h1{font-size:40px}h2{font-size:36px}h3{font-size:32px}h4{font-size:28px}h5{font-size:24px}h6{font-size:20px}body,p,table.body,td{font-size:14px;line-height:19px}p.lead,p.lede,p.leed{font-size:18px;line-height:21px}p{margin-bottom:10px}small{font-size:10px}a{color:#2ba6cb;text-decoration:none}a:active,a:hover{color:#2795b6!important}a:visited{color:#2ba6cb!important}h1 a,h2 a,h3 a,h4 a,h5 a,h6 a{color:#2ba6cb}h1 a:active,h1 a:visited,h2 a:active,h2 a:visited,h3 a:active,h3 a:visited,h4 a:active,h4 a:visited,h5 a:active,h5 a:visited,h6 a:active,h6 a:visited{color:#2ba6cb!important}.panel{background:#f2f2f2;border:1px solid #d9d9d9;padding:10px!important}.sub-grid table{width:100%}.sub-grid td.sub-columns{padding-bottom:0}table.button,table.large-button,table.medium-button,table.small-button,table.tiny-button{width:100%;overflow:hidden}table.button td,table.large-button td,table.medium-button td,table.small-button td,table.tiny-button td{display:block;width:auto!important;text-align:center;background:#2ba6cb;border:1px solid #2284a1;color:#fff;padding:8px 0}table.tiny-button td{padding:5px 0 4px}table.small-button td{padding:8px 0 7px}table.medium-button td{padding:12px 0 10px}table.large-button td{padding:21px 0 18px}table.button td a,table.large-button td a,table.medium-button td a,table.small-button td a,table.tiny-button td a{font-weight:700;text-decoration:none;font-family:Helvetica,Arial,sans-serif;color:#fff;font-size:16px}table.tiny-button td a{font-size:12px;font-weight:400}table.small-button td a{font-size:16px}table.medium-button td a{font-size:20px}table.large-button td a{font-size:24px}table.button:active td,table.button:hover td,table.button:visited td{background:#2795b6!important}table.button:active td a,table.button:hover td a,table.button:visited td a{color:#fff!important}table.button:hover td,table.large-button:hover td,table.medium-button:hover td,table.small-button:hover td,table.tiny-button:hover td{background:#2795b6!important}table.button td a:visited,table.button:active td a,table.button:hover td a,table.large-button td a:visited,table.large-button:active td a,table.large-button:hover td a,table.medium-button td a:visited,table.medium-button:active td a,table.medium-button:hover td a,table.small-button td a:visited,table.small-button:active td a,table.small-button:hover td a,table.tiny-button td a:visited,table.tiny-button:active td a,table.tiny-button:hover td a{color:#fff!important}table.secondary td{background:#e9e9e9;border-color:#d0d0d0;color:#555}table.secondary td a{color:#555}table.secondary:hover td{background:#d0d0d0!important;color:#555}table.secondary td a:visited,table.secondary:active td a,table.secondary:hover td a{color:#555!important}table.success td{background:#5da423;border-color:#457a1a}table.success:hover td{background:#457a1a!important}table.alert td{background:#c60f13;border-color:#970b0e}table.alert:hover td{background:#970b0e!important}table.radius td{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px}table.round td{-webkit-border-radius:500px;-moz-border-radius:500px;border-radius:500px}body.outlook p{display:inline!important}@media only screen and (max-width:600px){table[class=body] img{width:auto!important;height:auto!important}table[class=body] center{min-width:0!important}table[class=body] .container{width:95%!important}table[class=body] .row{width:100%!important;display:block!important}table[class=body] .wrapper{display:block!important;padding-right:0!important}table[class=body] .column,table[class=body] .columns{table-layout:fixed!important;float:none!important;width:100%!important;padding-right:0!important;padding-left:0!important;display:block!important}table[class=body] .wrapper.first .column,table[class=body] .wrapper.first .columns{display:table!important}table[class=body] table.column td,table[class=body] table.columns td{width:100%!important}table[class=body] .column td.one,table[class=body] .columns td.one{width:8.333333%!important}table[class=body] .column td.two,table[class=body] .columns td.two{width:16.666666%!important}table[class=body] .column td.three,table[class=body] .columns td.three{width:25%!important}table[class=body] .column td.four,table[class=body] .columns td.four{width:33.333333%!important}table[class=body] .column td.five,table[class=body] .columns td.five{width:41.666666%!important}table[class=body] .column td.six,table[class=body] .columns td.six{width:50%!important}table[class=body] .column td.seven,table[class=body] .columns td.seven{width:58.333333%!important}table[class=body] .column td.eight,table[class=body] .columns td.eight{width:66.666666%!important}table[class=body] .column td.nine,table[class=body] .columns td.nine{width:75%!important}table[class=body] .column td.ten,table[class=body] .columns td.ten{width:83.333333%!important}table[class=body] .column td.eleven,table[class=body] .columns td.eleven{width:91.666666%!important}table[class=body] .column td.twelve,table[class=body] .columns td.twelve{width:100%!important}table[class=body] td.offset-by-eight,table[class=body] td.offset-by-eleven,table[class=body] td.offset-by-five,table[class=body] td.offset-by-four,table[class=body] td.offset-by-nine,table[class=body] td.offset-by-one,table[class=body] td.offset-by-seven,table[class=body] td.offset-by-six,table[class=body] td.offset-by-ten,table[class=body] td.offset-by-three,table[class=body] td.offset-by-two{padding-left:0!important}table[class=body] table.columns td.expander{width:1px!important}table[class=body] .right-text-pad,table[class=body] .text-pad-right{padding-left:10px!important}table[class=body] .left-text-pad,table[class=body] .text-pad-left{padding-right:10px!important}table[class=body] .hide-for-small,table[class=body] .show-for-desktop{display:none!important}table[class=body] .hide-for-desktop,table[class=body] .show-for-small{display:inherit!important}}table.facebook td{background:#3b5998;border-color:#2d4473}table.facebook:hover td{background:#2d4473!important}table.twitter td{background:#00acee;border-color:#0087bb}table.twitter:hover td{background:#0087bb!important}table.google-plus td{background-color:#DB4A39;border-color:#C00}table.google-plus:hover td{background:#C00!important}.template-label{color:#000;font-weight:700;font-size:11px}.callout .wrapper{padding-bottom:20px}.callout .panel{background:#ECF8FF;border-color:#b9e5ff}.header{background:#F0F2F3}.footer .wrapper{background:#ebebeb}.footer h5{padding-bottom:10px}table.columns .text-pad{padding-left:10px;padding-right:10px}table.columns .left-text-pad{padding-left:10px}table.columns .right-text-pad{padding-right:10px}@media only screen and (max-width:600px){table[class=body] .right-text-pad{padding-left:10px!important}table[class=body] .left-text-pad{padding-right:10px!important}}
-  </style><body>';
-
+    
+//echo $html_body;exit;
 
         $this->email->initialize($config);
 		
@@ -280,7 +408,7 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
 		endif;
 			
   		$this->email->subject($subject);
- 		$this->email->message($mail_header.$message);
+ 		$this->email->message($html_body);
  
   if($this->email->send())
  {
@@ -369,11 +497,25 @@ if(count($excel_data)>0):
 endif;
 }
  public function clone_excel_order_template($order_id,$report_type,$file_name=null){
+ 	$user_indicator = $this -> session -> userdata('user_indicator');
+	if ($user_indicator=='county') {
+					 $col='cty_qty';
+					
+				}else if ($user_indicator=='district'){
+					 $col='scp_qty';
+					
+					
+				}else{
+					 $col='quantity_ordered_pack';
+					
+					
+				}
+				
     $inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xls';
     $facility_details = facility_orders::get_facility_order_details($order_id);
 	if(count($facility_details)==1):
 	$facility_stock_data_item = facility_order_details::get_order_details($order_id);
-
+   // echo "<pre>";print_r($facility_stock_data_item);echo "<pre>";exit;
     $file_name =isset($file_name) ? $file_name.'.xls' : time().'.xls';
 	
 	$excel2 = PHPExcel_IOFactory::createReader('Excel5');
@@ -398,9 +540,11 @@ for ($row = 17; $row <= $highestRow; $row++){
     $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);							  
    if(isset($rowData[0][2]) && $rowData[0][2]!=''){
    	foreach($facility_stock_data_item as $facility_stock_data_item_){
-   	if(in_array($rowData[0][2], $facility_stock_data_item_) && in_array($rowData[0][6], $facility_stock_data_item_)){
+   		
+   	if(in_array($rowData[0][2], $facility_stock_data_item_) ){
    	$key = array_search($rowData[0][2], $facility_stock_data_item_);
-	$excel2->getActiveSheet()->setCellValue("H$row", $facility_stock_data_item_['quantity_ordered_pack']);	
+		//echo "<pre>";print_r($facility_stock_data_item_);echo "<pre>";
+	$excel2->getActiveSheet()->setCellValue("H$row", $facility_stock_data_item_["$col"]);	
    	}	
    	} 	
    }
@@ -825,4 +969,65 @@ Facility Order No $order_id| KEMSA Order No $kemsa_order_no | Total ordered valu
 HTML_DATA;
 return array('table'=>$message,'date_ordered'=>$order_date,'date_received'=>$deliver_date,'order_total'=>$order_total,'actual_order_total'=>$actual_order_total,'lead_time'=>$date_diff,'facility_name'=>$facility_name);
  }
+
+public function amc($county= null,$district= null,$facility_code= null){
+		$district = ($district == "NULL") ? null : $district;
+		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
+		$county = ($county == "NULL") ? null : $county;
+		
+		if (isset($county)) {
+			
+			$get_amc = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("select commodity_name,commodity_id,avg(facility_issues.qty_issued) as totalunits,
+					(avg(facility_issues.qty_issued))/commodities.total_commodity_units as amc_packs,
+					commodities.total_commodity_units from facility_issues inner join commodities on facility_issues.commodity_id=commodities.id
+					inner join facilities on facility_issues.facility_code=facilities.facility_code inner join districts
+					on facilities.district=districts.id where districts.county= $county and s11_No IN('internal issue','(-ve Adj) Stock Deduction')
+					group by commodity_id");
+					
+			//echo '<pre>'; print_r($get_amc);echo '<pre>'; 
+			
+		}elseif(isset($district)){
+			
+			$get_amc = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("select commodity_name,commodity_id,avg(facility_issues.qty_issued) as totalunits,
+					(avg(facility_issues.qty_issued))/commodities.total_commodity_units as amc_packs,
+					commodities.total_commodity_units from facility_issues inner join commodities on facility_issues.commodity_id=commodities.id inner join facilities
+					on facility_issues.facility_code=facilities.facility_code where facilities.district=$district
+					and s11_No IN('internal issue','(-ve Adj) Stock Deduction') group by commodity_id");
+					
+			//echo '<pre>'; print_r($get_amc);echo '<pre>'; 
+			
+		}elseif(isset($facility_code)){
+			
+			$getdates = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT MIN(created_at) as EarliestDate,MAX(created_at) as LatestDate
+					FROM facility_issues WHERE facility_code=$facility_code");
+		
+		//echo '<pre>'; print_r($getdates);echo '<pre>'; exit;
+		$early=$getdates[0]['EarliestDate'];
+		$late=$getdates[0]['LatestDate'];
+		
+		$now = time(); 
+		$my_date = strtotime($early);
+		$datediff = ($now - $my_date)/(60*60*24);//in days
+		$datediff= round($datediff,1);
+		
+		
+		$get_amc = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("select commodity_id,sum(facility_issues.qty_issued) as units,(sum(facility_issues.qty_issued)*30/$datediff)/commodities.total_commodity_units as amc_packs,
+						commodities.total_commodity_units from facility_issues inner join commodities on facility_issues.commodity_id=commodities.id
+						where facility_code=$facility_code and s11_No IN('internal issue','(-ve Adj) Stock Deduction') group by commodity_id");
+					
+			//echo '<pre>'; print_r($get_amc);echo '<pre>'; exit;
+			return $get_amc ;	
+			
+		}else{
+			
+			echo "national";
+		}
+		
+			
+					
+	}
 }

@@ -64,14 +64,18 @@ border: 0px ;
 					    <th>Adj(+ve) (Units)</th>
 					    <th>Losses (Units)</th>
 					    <th>Closing Stock (Units)</th>
+					    <th>Closing Stock (Packs)</th>
 					    <th>No Days Out Of Stock</th>
 					    <th>AMC (Packs)</th>
 					    <th>Suggested Order Qty (Packs)</th>
-					    <th>CP Order Qty  (Packs)</th>
-					    <th>SCP Order Qty  (Packs)</th>
-					    <th>Facility Order Qty (Packs)</th>
 					    <th>Actual Order Qty (Units)</th>
-					    <th>Order Cost(Ksh)</th>	
+					    <th>Facility Order Qty (Packs)</th>
+					    
+					    <th>Order Cost(Ksh)</th>
+					    <th>SCP Order Qty  (Packs)</th>
+					    <th>CP Order Qty  (Packs)</th>
+					    
+					    	
 					    <!--<th>Comment</th>	-->					    
 	</tr>
 </thead>
@@ -114,6 +118,7 @@ border: 0px ;
 							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="losses['.$i.']"'; ?> value="<?php echo $facility_order[$i]['losses'] ?>" /></td>
 							
 							<td><input class="form-control input-small closing" readonly="readonly" type="text"<?php echo 'name="closing['.$i.']"'; ?> value="<?php echo $facility_order[$i]['closing_stock'];?>" /></td>
+							<td><input class="form-control input-small closingpacks" readonly="readonly" type="text"<?php echo 'name="closingpacks['.$i.']"'; ?> value="<?php echo $facility_order[$i]['closing_stock_'];?>" /></td>
 							<td>
 								<input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="days['.$i.']"'; ?> 
 								value="<?php 
@@ -134,15 +139,16 @@ border: 0px ;
 								</td>
 							<td><input class="form-control input-small amc" readonly="readonly" type="text" <?php echo 'name="amc['.$i.']"'; ?> value="<?php echo $facility_order[$i]['historical'];?>" /></td>
 							<td><input style="background-color: #B2EFB2;" class="form-control input-small suggested" readonly="readonly" type="text" name="suggested[<?php echo $i;?>]" value=""/></td>
-							
-							
-							
-							<td><input style="background-color: #B2EFB2;" class="form-control input-small " readonly="readonly" type="text" name="cty_qty[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['cty_qty'];?>"/></td>
-							<td><input style="background-color:#B2EFB2 " class="form-control input-small" type="text" readonly="readonly" name="scp_qty[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['scp_qty'];?>"/></td>
 							<td><input style="background-color: " class="form-control input-small quantity" type="text" name="quantity[<?php echo $i;?>]"  value="<?php $qty=$facility_order[$i]['quantity_ordered_pack'];if($qty>0){echo $qty;} else echo 0;?>"/></td>
-							
 							<td><input class="form-control input-small actual_quantity" readonly="readonly" type="text" name="actual_quantity[<?php echo $i ;?>]" value="0"/></td>
+							
+							
+							
 							<td><?php echo '<input type="text" class="form-control input-small cost" name="cost['.$i.']" value="0" readonly="yes"   />';?></td>
+							<td><input style="background-color:#B2EFB2 " class="form-control input-small" type="text" readonly="readonly" name="scp_qty[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['scp_qty'];?>"/></td>
+							<td><input style="background-color: #B2EFB2;" class="form-control input-small " readonly="readonly" type="text" name="cty_qty[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['cty_qty'];?>"/></td>
+							
+							
 							<!--<td><input class="form-control input-small" type="text" name="comment[<?php echo $i ;?>]" value="N/A" /></td>-->
 			       			</tr>					
 						<?php } $i=$i-1; echo form_close()."<script>var count=".$i."</script>"	?>
@@ -376,7 +382,7 @@ $(document).ready(function() {
 	function calculate_suggested_value(month){
 		$("input[name^=suggested]").each(function() {
         var amc=parseInt($(this).closest("tr").find(".amc").val());
-	 	var closing_stock=parseInt($(this).closest("tr").find(".closing").val());
+	 	var closing_stock=parseInt($(this).closest("tr").find(".closingpacks").val());
         var suggested=0;       
         if(closing_stock<0) {closing_stock=0;}
         suggested=((amc*month)-closing_stock)+amc;

@@ -164,9 +164,9 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			<td><?php echo $value['mwaka']; ?></td>
 			<td><?php echo number_format($value['order_total'], 2, '.', ','); ?></td>
 			<td>
-				<a href='<?php echo $link; ?>' target="_blank">
+			<!--	<a href='<?php echo $link; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
-           <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a>
+           <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a>-->
             <a href='<?php echo $link_excel; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
            <span class="glyphicon glyphicon-save"></span>Download Order excel</button></a>
@@ -202,9 +202,10 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			<td><?php echo $value['facility_code']; ?></td>
 			<td><?php echo $value['mwaka']; ?></td>
 			<td><?php echo number_format($value['order_total'], 2, '.', ','); ?></td>
-			<td><a href='<?php echo $link; ?>' target="_blank">
+			<td>
+				<!--<a href='<?php echo $link; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
-           <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a>
+           <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a>-->
             <a href='<?php echo $link_excel; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
            <span class="glyphicon glyphicon-save"></span>Download Order excel</button></a>
@@ -285,9 +286,9 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 		</tr>	
 		<?php
 			}else{?>
-			<a href='<?php echo $link; ?>' target="_blank">
+			<!--<a href='<?php echo $link; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
-           <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a>
+           <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a>-->
            <a href='<?php echo $link_excel; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
            <span class="glyphicon glyphicon-save"></span>Download Order excel</button></a>
@@ -322,16 +323,17 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			<td><?php echo $value['facility_code']; ?></td>
 			<td><?php echo $value['mwaka']; ?></td>
 			<td><?php echo number_format($value['order_total'], 2, '.', ','); ?></td>
-			<td><a href='<?php echo $link;?>' target="_blank">
+			<td>
+				<!--<a href='<?php echo $link;?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
-           <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a>
+           <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a>-->
            <a href='<?php echo  $link_excel; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
            <span class="glyphicon glyphicon-save"></span>Download Order excel</button></a>
            
            <a href='<?php echo $link3; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
-           <span class="glyphicon glyphicon-save"></span>Download Report</button></a></td>
+           <span class="glyphicon glyphicon-save"></span>Fill rate Report</button></a></td>
 		</tr>	
 		<?php
 			}
