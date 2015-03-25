@@ -11,13 +11,18 @@ Order Quantity = (Monthly Consumption * 4) - Closing Stock</span>
 //?>
 <div class="row" style="padding-left: 1%;">
 	<div class="col-md-2">
-	<b>*select ordering frequency</b> <select class="form-control" name="order_period" id="order_period" 
+		<b>Order Frequency</b><input  type="text" class="form-control input-large commodity_code" readonly="readonly" value="Quarterly" /> 
+	
+	<!--<b>*select ordering frequency</b> <select class="form-control" name="order_period" id="order_period" 
 	<?php  echo  ($option_==="readonly_")?  "disabled='true'" : null;?>>
  	<option>Quarterly</option>	
  	<option>Monthly</option>
- 	</select> 	
+ </select> 	-->
 	</div>
-	<div class="col-md-2">
+	<div class="col-md-8">
+		
+	</div>
+	<!--<div class="col-md-2">
      <b>*Order Form Number:</b> <input type="text" value="<?php echo $order_details[0]['order_no']; ?>" 
      class="form-control input_text" name="order_no" id="order_no" required="required"/>
 	</div>
@@ -28,17 +33,17 @@ Order Quantity = (Monthly Consumption * 4) - Closing Stock</span>
 <div class="col-md-2">
 	 <b>*Total OPD Visits & Revisits:</b><input value="<?php echo $order_details[0]['workload']; ?>" 
 	 type="text" class="form-control input_text" name="workload" id="workload" required="required"/>
-</div>
+</div>-->
 <div class="col-md-2">
 <b>Total Order Value</b>
 <input type="text" class="form-control" value="<?php echo $order_details[0]['order_total']; ?>" name="total_order_value" id="total_order_value" readonly="readonly"/>	
 <input type="hidden" id="actual_drawing_rights" name="actual_drawing_rights" value="<?php echo $order_details[0]['drawing_rights']; ?>" />				
 </div>
-<div class="col-md-2">
+<!--<div class="col-md-2">
 <b>Drawing Rights Balance :</b>
 <input type="text" class="form-control" name="total_order_balance_value" 
 id="total_order_balance_value" readonly="readonly" value="<?php echo ($order_details[0]['drawing_rights']-$order_details[0]['order_total'])?>" />						
-</div>
+</div>-->
 </div>
 <?php $order_number=$order_details[0]['id']; echo "<input type='hidden' name='order_number' value='$order_number'/>
 <input type='hidden' name='rejected' value='$rejected'/>
@@ -140,12 +145,12 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo ($order_det
 <?php endif; endif?>
 </div>
 </form>  
-</div>
+
 <script>
 $(document).ready(function() {
 	
 	var new_count =count+1;
-	var drawing_rights_balance=$('#actual_drawing_rights').val();
+	//var drawing_rights_balance=$('#actual_drawing_rights').val();
 var $table = $('#example');
 //float the headers
   $table.floatThead({ 
@@ -291,15 +296,15 @@ var $table = $('#example');
 
      function save_the_order_form(){
      var order_total=$('#total_order_value').val();
-     var workload=$('#workload').val();
-     var bed_capacity=$('#bed_capacity').val();
+     //var workload=$('#workload').val();
+     //var bed_capacity=$('#bed_capacity').val();
      var alert_message='';
      if (order_total==0) {alert_message+="<li>Sorry, cant submit an order value of zero</li>";}
-     if (workload=='') {alert_message+="<li>Indicate Total OPD Visits & Revisits</li>";}
-     if (bed_capacity=='') {alert_message+="<li>Indicate In-patient Bed Days</li>";}
+     //if (workload=='') {alert_message+="<li>Indicate Total OPD Visits & Revisits</li>";}
+     //if (bed_capacity=='') {alert_message+="<li>Indicate In-patient Bed Days</li>";}
      if(isNaN(alert_message)){
      //This event is fired immediately when the hide instance method has been called.
-    $('#workload').delay(500).queue(function (nxt){
+    $('#total_order_value').delay(500).queue(function (nxt){
     // Load up a new modal...
      dialog_box('fix this items before saving your order <ol>'+alert_message+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;',
      '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
@@ -307,9 +312,7 @@ var $table = $('#example');
     });
      }else{ // save the order here
          var table_data='<div class="row" style="padding-left:2em"><div class="col-md-6">Order Summary</div></div>'+
-    '<div class="row" style="padding-left:2em"><div class="col-md-6">Initial Drawing Rights (Ksh)</div><div class="col-md-6">'+number_format(drawing_rights_balance, 2, '.', ',')+'</div></div>'+
     '<div class="row" style="padding-left:2em"><div class="col-md-6">Total Order Value (Ksh)</div><div class="col-md-6">'+number_format($("#total_order_value").val(), 2, '.', ',')+'</div></div>'+
-    '<div class="row" style="padding-left:2em"><div class="col-md-6">Drawing Rights Balance(Ksh)</div><div class="col-md-6">'+number_format($("#total_order_balance_value").val(), 2, '.', ',')+'</div></div>'+
     '<table class="table table-hover table-bordered table-update">'+
                     "<thead><tr>"+
                     "<th>Description</th>"+
@@ -331,7 +334,7 @@ var $table = $('#example');
     dialog_box(table_data,'<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>'
     +'<button type="button" class="btn btn-primary" id="save_dem_order" data-dismiss="modal">Save</button>');
    $('#main-content').on('click','#save_dem_order',function() {
-    $('#workload').delay(500).queue(function (nxt){  	
+    $('#total_order_value').delay(500).queue(function (nxt){  	
     // Load up a new modal...
     var img='<img src="<?php echo base_url('assets/img/wait.gif') ?>"/>';
      dialog_box(img+'<h5 style="display: inline-block; font-weight:500;font-size: 18px;padding-left: 2%;"> Please wait as the order is being processed</h5>',
@@ -354,9 +357,9 @@ var $table = $('#example');
         order_total=(parseInt(total)*parseInt(unit_cost.replace(",", "")))+parseInt(order_total);    
      });//check if order total is a NAN
     //calculate the balances here
-      balance=parseInt(drawing_rights_balance)-order_total;
+      //balance=parseInt(drawing_rights_balance)-order_total;
      //set the balances here
-     $("#total_order_balance_value").val(balance)
+    // $("#total_order_balance_value").val(balance)
      $("#total_order_value").val(order_total);
 		
 	}

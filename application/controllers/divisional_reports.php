@@ -845,7 +845,7 @@ $this->db->insert('tuberculosis_report_info',$data_);
 	public function pdfreport($report_type, $facility_code)
 	{
 		$facility_information = $report_data = $heading = $report_title = $data = '';
-		$facility_name = Facilities::get_facility_name2($facility_code)['facility_name'];
+		$facility_name = Facilities::get_facility_name2($facility_code);
 		$facility_obj = Facilities::get_facility_district_county_level($facility_code);
 		$facility_information = '<table class = "data-table"><thead><tr><th>Facility Code</th><th>Facility Name</th><th>County</th><th>District</th><th>Type</th></tr></thead>
 		<tbody><tr><td>' . $facility_code .'</td><td>' .$facility_name .'</td><td>'.$facility_obj['county'].'</td><td>'.$facility_obj['district'].'</td><td>'.$facility_obj['type'].'</td></tr></tbody>';

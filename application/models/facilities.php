@@ -284,7 +284,6 @@ class Facilities extends Doctrine_Record {
              }
               array_multisort($sort, SORT_DESC, $data);
 			//return the monitoring data
-			//echo '<pre>';print_r($data);echo "</pre>";die();
 			break;
 		
 			case 'district':
