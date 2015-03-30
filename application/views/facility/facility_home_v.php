@@ -226,7 +226,7 @@
                $(".order-for-excel").on('click', function(e) {
                   e.preventDefault(); 
     var body_content='<?php  $att=array("name"=>'myform','id'=>'myform');
-    echo form_open_multipart('orders/facility_order',$att)?>'+
+    echo form_open_multipart('orders/facility_order#',$att)?>'+
 '<input type="file" name="file" id="file" required="required" class="form-control"><br>'+
 '<button class="upload">Upload</button>'+
 '</form>';

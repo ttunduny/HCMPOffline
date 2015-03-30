@@ -7,6 +7,9 @@ if (!defined('BASEPATH'))
 class orders extends MY_Controller {
 	function __construct() {
 		parent::__construct();
+		error_reporting(E_ALL);
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
 		$this -> load -> helper(array('form', 'url'));
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
 		
