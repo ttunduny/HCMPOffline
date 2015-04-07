@@ -3624,7 +3624,7 @@ class Reports extends MY_Controller {
 
 	//for breakdown monitoring of facility use of the tool
 	public function monitoring() {
-		//pick values form the session
+//pick values form the session
 		$facility_code = (!$this -> session -> userdata('facility_id')) ? null : $this -> session -> userdata('facility_id');
 		$district_id = (!$this -> session -> userdata('district_id')) ? null : $this -> session -> userdata('district_id');
 		$county_id = (!$this -> session -> userdata('county_id')) ? null : $this -> session -> userdata('county_id');
@@ -3636,26 +3636,27 @@ class Reports extends MY_Controller {
 
 		//get the monitoring data from the log tables
 		$facility_data = Facilities::facility_monitoring($county_id, $district_id, $facility_code);
-		echo "<pre>";print_r($facility_data);exit;
+		//echo "<pre>";print_r($facility_data);exit;
 		$row_data = array();
 
 		foreach ($facility_data as $facility) {
 
 			$date = (strtotime($facility['last_seen'])) ? date('j M, Y', strtotime($facility['last_seen'])) : "N/A";
-			array_push($row_data, array($facility['Facility Name'], $facility['Facility Code'], $facility['County'], $facility['Sub County'], date('j M, Y', strtotime($facility['Date Last Issued'])), $facility['Days from last issue'], 
+			array_push($row_data, array($facility['Facility Name'], 
+										$facility['Facility Code'], 
+										$facility['County'], 
 				date('j M, Y', strtotime($facility['Date Last Seen'])), $facility['Days From Last Seen']));
 		}
 
 		$excel_data = array();
 		$excel_data = array('doc_creator' => 'HCMP ', 'doc_title' => 'System Usage Breakdown ', 'file_name' => 'system usage breakdown');
 	    //$column_data = array("First Name", "Last Name", "date last seen", "# of days", "date last issued", "# of days", "Sub County", "facility name", "mfl");
-		$column_data = array("Facility Name", "Facility Code", "County", "Sub County", "Date Last Issued", "Days From Last Issue", "Date Last Seen", "Days From Last Seen");
+		$column_data = array("Facility Name", "Facility Code", "County", "Date Last Logged In", "Days From Last Log In");
 
 		$excel_data['column_data'] = $column_data;
 		$excel_data['row_data'] = $row_data;
 
 		$this -> hcmp_functions -> create_excel($excel_data);
-
 		
 	}
 
