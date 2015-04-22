@@ -859,5 +859,65 @@ Facility Order No $order_id| KEMSA Order No $kemsa_order_no | Total ordered valu
 HTML_DATA;
 return array('table'=>$message,'date_ordered'=>$order_date,'date_received'=>$deliver_date,'order_total'=>$order_total,'actual_order_total'=>$actual_order_total,'lead_time'=>$date_diff,'facility_name'=>$facility_name);
  }
+public function amc($county= null,$district= null,$facility_code= null){
+		$district = ($district == "NULL") ? null : $district;
+		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
+		$county = ($county == "NULL") ? null : $county;
+		
+		if (isset($county)) {
+			
+			$get_amc = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("select commodity_name,commodity_id,avg(facility_issues.qty_issued) as totalunits,
+					(avg(facility_issues.qty_issued))/commodities.total_commodity_units as amc_packs,
+					commodities.total_commodity_units from facility_issues inner join commodities on facility_issues.commodity_id=commodities.id
+					inner join facilities on facility_issues.facility_code=facilities.facility_code inner join districts
+					on facilities.district=districts.id where districts.county= $county and s11_No IN('internal issue','(-ve Adj) Stock Deduction')
+					group by commodity_id");
+					
+			//echo '<pre>'; print_r($get_amc);echo '<pre>'; 
+			
+		}elseif(isset($district)){
+			
+			$get_amc = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("select commodity_name,commodity_id,avg(facility_issues.qty_issued) as totalunits,
+					(avg(facility_issues.qty_issued))/commodities.total_commodity_units as amc_packs,
+					commodities.total_commodity_units from facility_issues inner join commodities on facility_issues.commodity_id=commodities.id inner join facilities
+					on facility_issues.facility_code=facilities.facility_code where facilities.district=$district
+					and s11_No IN('internal issue','(-ve Adj) Stock Deduction') group by commodity_id");
+					
+			//echo '<pre>'; print_r($get_amc);echo '<pre>'; 
+			
+		}elseif(isset($facility_code)){
+			
+			$getdates = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT MIN(created_at) as EarliestDate,MAX(created_at) as LatestDate
+					FROM facility_issues WHERE facility_code=$facility_code");
+		
+		//echo '<pre>'; print_r($getdates);echo '<pre>'; exit;
+		$early=$getdates[0]['EarliestDate'];
+		$late=$getdates[0]['LatestDate'];
+		
+		$now = time(); 
+		$my_date = strtotime($early);
+		$datediff = ($now - $my_date)/(60*60*24);//in days
+		$datediff= round($datediff,1);
+		
+		
+		$get_amc = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("select commodity_id,sum(facility_issues.qty_issued) as units,(sum(facility_issues.qty_issued)*30/$datediff)/commodities.total_commodity_units as amc_packs,
+						commodities.total_commodity_units from facility_issues inner join commodities on facility_issues.commodity_id=commodities.id
+						where facility_code=$facility_code and s11_No IN('internal issue','(-ve Adj) Stock Deduction') group by commodity_id");
+					
+			//echo '<pre>'; print_r($get_amc);echo '<pre>'; exit;
+			return $get_amc ;	
+			
+		}else{
+			
+			echo "national";
+		}
+		
+			
+					
+	}
 }
 

@@ -7,6 +7,7 @@ if (!defined('BASEPATH'))
 class orders extends MY_Controller {
 	function __construct() {
 		parent::__construct();
+ini_set('display_errors', 'On'); error_reporting(E_ALL);
 		$this -> load -> helper(array('form', 'url'));
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
 		
@@ -171,39 +172,41 @@ class orders extends MY_Controller {
 		
 		header('Content-Type: text/html; charset=UTF-8');
 		//pick the facility code from the session as it is set
-		
+	
 		$facility_code = $this -> session -> userdata('facility_id');
 		$amc_calc =$this->hcmp_functions->amc($county,$district,$facility_code);
+
 		//echo '<pre>'; print_r($amc_calc);echo '<pre>'; exit;
 		$items = ((isset($source)) && ($source = 2)) ? Facility_Transaction_Table::get_commodities_for_ordering_meds($facility_code) : Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
 		//echo '<pre>';print_r($items); echo '</pre>';
-		//echo 'string'; echo 'strung';exit;
+		
 		if (isset($_FILES['file']) && $_FILES['file']['size'] > 0) {
 			$ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
-			//echo $ext;
+			//echo $ext;exit;
+//echo $_FILES["file"]["tmp_name"];exit;
 			if ($ext == 'xls') {
 				$excel2 = PHPExcel_IOFactory::createReader('Excel5');
 			} else if ($ext == 'xlsx') {
 				$excel2 = PHPExcel_IOFactory::createReader('Excel2007');
 			} else {
-				die('Invalid file format given' . $_FILES['file']);
+		        	die('Invalid file format given' . $_FILES['file']);
 			}
 
-			$excel2 = $objPHPExcel = $excel2 -> load($_FILES["file"]["tmp_name"]);
+			 $excel2 = $objPHPExcel = $excel2 -> load($_FILES["file"]["tmp_name"]);
 			// Empty Sheet
 
-			$sheet = $objPHPExcel -> getSheet(0);
+                	$sheet = $objPHPExcel -> getSheet(0);
 			$highestRow = $sheet -> getHighestRow();
 
 			$highestColumn = $sheet -> getHighestColumn();
 			$temp = array();
 			if ($sheet -> getCell('H4') -> getValue() != '') {
-				$facility_code = $sheet -> getCell('H4') -> getValue();
+			echo	$facility_code = $sheet -> getCell('H4') -> getValue();exit;
 			} else {
 				$facility_code = $sheet -> getCell('J4') -> getValue();
 			}
 
-			$checker = $sheet -> getCell('E17') -> getValue();
+			 $checker = $sheet -> getCell('E17') -> getValue();
 
 			//  Loop through each row of the worksheet in turn
 			$array_code = array();
@@ -213,7 +216,7 @@ class orders extends MY_Controller {
 			$array_price = array();
 			$array_order_qty = array();
 			$array_order_val = array();
-			$array_index = array();
+
 			//$array_code=array();
 			for ($row = 17; $row <= $highestRow; $row++) {
 				//  Read a row of data into an array
