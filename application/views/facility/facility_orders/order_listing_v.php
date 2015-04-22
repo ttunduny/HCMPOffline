@@ -73,6 +73,9 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			<span class="glyphicon glyphicon-arrow-left"></span>
   	&nbsp; Indicates Order numbers for the mentioned category 
 		</div>
+		<div class="col-lg-5">
+			<button class="btn btn-success btn-xs floppy-save"><span class="glyphicon glyphicon-floppy-save"></span>Download KEMSA template</button>
+		</div>
 		
 	</div>
 	<div class="col-md-12" >
