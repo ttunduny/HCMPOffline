@@ -116,8 +116,8 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 								 value="<?php echo ($facility_order[$i]['closing_stock_']<0)? 0:$facility_order[$i]['closing_stock_'] ;?>" /></td>
 								 <td><input class="form-control input-small" readonly="readonly" type="text"  name="days[<?php echo $i ;?>]"  value="<?php 
 								$closing_stock=$facility_order[$i]['closing_stock'];
-								
-								if ((int)$closing_stock <= 0) {
+								$days=$facility_order[$i]['historical'];
+								if ((int)$closing_stock <= 0 && (int)$days = 0) {
 								      $date_mod = $facility_order[$i]['date_modified'];
 									  
 										  $now = time(); 

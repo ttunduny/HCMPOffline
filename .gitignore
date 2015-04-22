@@ -2,8 +2,6 @@ database.php
 *.class
 *.pyc
 *.pyo
-*.xls
-*.xlsx
 /nbproject/private/
 /pdf/
 /drug_commodity_map.sql
@@ -18,3 +16,5 @@ application/config/database.php
 MEDS Customer Order Form.xls
 MEDS Customer Order Form.xlsx
 
+system/libraries/Hcmp_functions.php
+*.xls

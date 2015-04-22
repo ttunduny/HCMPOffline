@@ -123,8 +123,9 @@ border: 0px ;
 								<input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="days['.$i.']"'; ?> 
 								value="<?php 
 								$closing_stock=$facility_order[$i]['closing_stock'];
+								$days=$facility_order[$i]['historical'];
 								
-								if ((int)$closing_stock <= 0) {
+								if ((int)$closing_stock <= 0 && (int)$days = 0) {
 								      $date_mod = $facility_order[$i]['date_modified'];
 									  
 										  $now = time(); 
