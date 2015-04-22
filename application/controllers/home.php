@@ -47,7 +47,7 @@ class Home extends MY_Controller
 		
 		
 		$this->session->set_flashdata('system_success_message', 'Facility Stock Details Have Been Reset');
-		redirect('Home');
+		redirect('home');
   }
 	public function index() {	
 		(!$this -> session -> userdata('user_id')) ? redirect('user'): null ;	
