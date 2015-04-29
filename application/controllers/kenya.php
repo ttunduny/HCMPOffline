@@ -16,10 +16,10 @@ class Kenya extends MY_Controller
     public function index() {
         $counties = $q = Doctrine_Manager::getInstance()
 	        ->getCurrentConnection()
-	        ->fetchAll("SELECT c.kenya_map_id as county_fusion_map_id,c.county,count(c.county) as facility_no FROM facilities f 
+	        ->fetchAll("SELECT c.kenya_map_id as county_fusion_map_id,c.county,count(c.county) as facility_no FROM facilities f ,user u
 						INNER JOIN districts d ON f.district=d.id
 						INNER JOIN counties c ON d.county=c.id
-						where using_hcmp =1 group by c.county");// change  !!!!!!!!!!!!!
+						where using_hcmp =1 and (u.usertype_id = 2) group by c.county ");// change  !!!!!!!!!!!!!
 	        
 	        //get facilities rolled out per county in Nos
 	        

@@ -3850,38 +3850,25 @@ class Reports extends MY_Controller {
 			$total_sent = round(($sent_units / $total_units), 1);
 			$total_received = round(($received_units / $total_units), 1);
 			///date_sent
+			//var_dump($facility_expiry_data['date_received']);echo '</br>';
 			if ($facility_expiry_data['date_received']=='') {
-				$date_received='N/A';
+				//print_r($facility_expiry_data['date_received']);
+				
+				$date_received = 'N/A';
+												
 			} else {
 			$date_received=	date('d M, Y', strtotime($facility_expiry_data['date_received']));
 			}
 			
 			//$date_received = strtotime($facility_expiry_data['date_received']) ? date('d M, Y', strtotime($facility_expiry_data['date_received'])) : "N/A";
 			$status = $facility_expiry_data['status'] == 0 ? "<span class='label label-danger'>Pending</span>" : ($facility_expiry_data['status'] == 1 ? "<span class='label label-success'>Received</span>" : null);
-			array_push($series_data, array(
-				$facility_expiry_data['commodity_name'], 
-				$facility_expiry_data['unit_size'], 
-				$facility_expiry_data['batch_no'], 
-				date('d M, Y', strtotime($facility_expiry_data['expiry_date'])), 
-				$facility_expiry_data['manufacturer'], 
-				$total_sent, $sent_units, 
-				date('d M, Y', strtotime($facility_expiry_data['date_sent'])), 
-				$facility_expiry_data['source_facility_name'] . " :" . 
-				$facility_expiry_data['source_facility_code'], 
-				$facility_expiry_data['source_district'], 
-				$facility_expiry_data['receiver_facility_name'] . " :" . 
-				$facility_expiry_data['receiver_facility_code'], 
-				$facility_expiry_data['receiver_district'], 
-				$total_received, 
-				$received_units, 
-				$date_received, $status));
-		endforeach;
+			array_push($series_data, array($facility_expiry_data['source_facility_name'] . " :" . $facility_expiry_data['source_facility_code'], $facility_expiry_data['receiver_facility_name'] . " :" . $facility_expiry_data['receiver_facility_code'], $facility_expiry_data['commodity_name'], $facility_expiry_data['source_district'], $facility_expiry_data['receiver_district'], $facility_expiry_data['unit_size'], $facility_expiry_data['batch_no'], date('d M, Y', strtotime($facility_expiry_data['expiry_date'])), $facility_expiry_data['manufacturer'], $total_sent, $sent_units, $total_received, $received_units, date('d M, Y', strtotime($facility_expiry_data['date_sent'])), $date_received, $status));
+		endforeach;//exit;
 		$total_expiry = number_format($total_expiry, 2, '.', ',');
 		// array_push($series_data, array("","","Total for the next $year months",$total_expiry,''));
 
-		$category_data = array( array( ));
+		$category_data = array( array("From", 'To', "Commodity Name", "District From", "District To", "Unit Size", 'Batch No', 'Expiry Date', 'Manufacturer', 'Quantity Sent(units)', 'Quantity Sent(packs)', 'Quantity Received (units)', 'Quantity Received (packs)', 'Date sent', 'Date Received', 'status'));
 
-		$category_data = array(array("Commodity","Unit Size",'Batch No','Expiry Date','Manufacturer','Quantity Sent(units)', 'Quantity Sent(packs)','Date sent',"Facility From","District From",'Facility To',"District To",'Quantity Received (units)', 'Quantity Received (packs)',  'Date Received','status'));
 		$graph_data = array_merge($graph_data, array("table_id" => 'dem_graph_1'));
 		$graph_data = array_merge($graph_data, array("table_header" => $category_data));
 		$graph_data = array_merge($graph_data, array("table_body" => $series_data));
