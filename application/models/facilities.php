@@ -739,6 +739,35 @@ return $q;
 			
 	}
 	
+
+		public static function get_dates_facility_went_online_cleaned($county_id)
+	{
+		$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT DISTINCT
+		    DATE_FORMAT(`date_of_activation`, '%M %Y') AS date_when_facility_went_online,
+		    YEAR(`date_of_activation`) 
+		FROM
+		    facilities f,
+		    districts d
+		WHERE
+		    f.district = d.id
+		        AND d.county = $county_id
+		        $addition
+		        AND UNIX_TIMESTAMP(`date_of_activation`) > 0
+		ORDER BY `date_of_activation` desc
+		");
+		$cleaned_data = array();
+		foreach ($data as $key => $value) {
+			$year = $value['YEAR(`date_of_activation`)'];
+			if($year = $value['YEAR(`date_of_activation`)'])
+			{
+				$cleaned_data[$year][] = $value['date_when_facility_went_online'];
+			}
+		}
+		
+		return $cleaned_data;
+			
+	}
 	//used by facility mapping function
 	//used to get the distinct years facilities went online
 	//used when building data for the facilities that went online in a particular district in a particular county
