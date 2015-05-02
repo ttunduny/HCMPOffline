@@ -117,11 +117,11 @@ class national extends MY_Controller {
 		else :
 			$excel_data = array('doc_creator' => "HCMP", 'doc_title' => "facilities rolled out $title", 'file_name' => "facilities rolled out $title");
 			$row_data = array();
-			$column_data = array("County", "Sub-County", "Facility Name", "Facility Code", "Facility Level");
+			$column_data = array("County", "Sub-County", "Facility Name", "Facility Code", "Facility Level","Type", "Date of Activation");
 			$excel_data['column_data'] = $column_data;
 
 			$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT 
-		    c.county, d.district as subcounty, f.facility_name,f.facility_code, f.`level`
+		    c.county, d.district as subcounty, f.facility_name,f.facility_code, f.`level`, f.type,f.date_of_activation
 		from
 		    facilities f,
 		    districts d,
@@ -135,7 +135,7 @@ class national extends MY_Controller {
 		        ");
 
 			foreach ($facility_stock_data as $facility_stock_data_item) :
-				array_push($row_data, array($facility_stock_data_item["county"], $facility_stock_data_item["subcounty"], $facility_stock_data_item["facility_name"], $facility_stock_data_item["facility_code"], $facility_stock_data_item["level"]));
+				array_push($row_data, array($facility_stock_data_item["county"], $facility_stock_data_item["subcounty"], $facility_stock_data_item["facility_name"], $facility_stock_data_item["facility_code"], $facility_stock_data_item["level"], $facility_stock_data_item["type"],$facility_stock_data_item["date_of_activation"]));
 			endforeach;
 			$excel_data['row_data'] = $row_data;
 
