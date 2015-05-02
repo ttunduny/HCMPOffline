@@ -192,7 +192,7 @@ echo $table; ?>
 								<td class="" ><?php echo $total_sent."($sent_units)"; ?></td>
 								<td class="" ><?php echo $total_received."($received_units)"; ?></td>
 								<td class="" ><?php echo date('d M, Y', strtotime($values['date_sent'])); ?></td>
-								<td class="" >N/A</td>
+								<td class="" ><?php echo $date_received; ?></td>
 								</tr>
 									<?php
 								} else {?>
@@ -262,7 +262,7 @@ echo $table; ?>
 								<td class="" ><?php echo $total_sent."($sent_units)"; ?></td>
 								<td class="" ><?php echo $total_received."($received_units)"; ?></td>
 								<td class="" ><?php echo date('d M, Y', strtotime($val['date_sent'])); ?></td>
-								<td class="" >N/A</td>
+								<td class="" ><?php echo $date_received; ?></td>
 								</tr>
 									<?php
 								} else {?>

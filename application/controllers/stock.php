@@ -189,9 +189,9 @@ class Stock extends MY_Controller {
 |4. save the data in the facility stock, facility transaction , issues table
 */
      public function set_up_facility_stock(){
-         $facility_code=$this -> session -> userdata('facility_id'); 
+        $facility_code=$this -> session -> userdata('facility_id'); 
         $data['title'] = "Set up facility stock";
-         $data['content_view'] = "facility/facility_stock_data/set_up_facility_stock_v";
+        $data['content_view'] = "facility/facility_stock_data/set_up_facility_stock_v";
         $data['banner_text'] = "Set up facility stock";
         $data['commodities']= commodities::set_facility_stock_data_amc($facility_code);
         $this -> load -> view("shared_files/template/template", $data);        
@@ -395,10 +395,11 @@ endif;
 			facility_stocks_temp::delete_facility_temp($commodity_id, $commodity_batch_no,$facility_code);
 			echo "SUCCESS DELETE BATCH NO: $commodity_batch_no";
  endif;
-}// finally add the stock here, the final step to the first step of new facilities getting on board
-    public function add_stock_level()
-{ // $facility_code=$this -> session -> userdata('news');  //security check 
-if($this->input->post('commodity_id')):
+}
+// finally add the stock here, the final step to the first step of new facilities getting on board
+    public function add_stock_level(){
+    	 
+		if($this->input->post('commodity_id')):
 	     $facility_code=$this -> session -> userdata('facility_id'); 
          $form_type=$this->input->post('form_type'); 
 	     $commodity_id=array_values($this->input->post('desc'));  //this rearranges the array such that the index starts at 0     
@@ -411,6 +412,7 @@ if($this->input->post('commodity_id')):
 	
          $count=count($commodity_id);
 		 $commodity_id_array=$data_array_facility_issues=$data_array_facility_transaction=array(); 
+		 
 
          //collect n set the data in the array
 		for($i=0;$i<$count;$i++):
@@ -435,8 +437,8 @@ if($this->input->post('commodity_id')):
 			//check	
 			$facility_has_commodity=facility_transaction_table::get_if_commodity_is_in_table($facility_code,$commodity_id[$i]);
      
-			$total_unit_count_=$total_unit_count[$i]*-1;
-	
+			$total_unit_count_=$total_unit_count[$i]*1;
+	//echo "<pre>";print_r($total_unit_count_) ;echo "<pre>";exit;
           if($facility_has_commodity>0 && $status==1): //update the opening balance for the transaction table 
 		   	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection();
 			$inserttransaction->execute("UPDATE `facility_transaction_table` SET `opening_balance` =`opening_balance`+$total_unit_count[$i],
