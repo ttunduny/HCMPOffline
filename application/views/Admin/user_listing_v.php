@@ -512,6 +512,7 @@
 									</div>
 									
 								</div>
+									<!--
 								<div class="row">
 									<div class=" col-md-6">
 										
@@ -528,6 +529,7 @@
 									</div>
 								</div>
 
+									-->
 								<div class="row" style="margin:auto" id="processing">
 									<div class=" col-md-12">
 										<div class="form-group">
