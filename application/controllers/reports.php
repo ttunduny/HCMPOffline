@@ -349,9 +349,8 @@ class Reports extends MY_Controller {
 		//echo "<pre>";	print_r($facility_order_count_);exit;
 
 		foreach ($facility_order_count_ as $facility_order_count_) {
-			$facility_order_count[$facility_order_count_['status']] = $facility_order_count_['total'];
+			$facility_order_count[$facility_order_count_['status']] = (int)$facility_order_count_['total'];
 		}
-
 		$data['order_counts'] = $facility_order_count;
 		$data['delivered'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "delivered");
 		$data['pending_all'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_all");

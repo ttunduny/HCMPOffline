@@ -13,12 +13,12 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 					</thead>
 					<tbody>';
 					
-		$rejected_orders='';
-		$pending_orders='';
-		$pending_all_count='';
-		$pending_cty_count='';
-		$approved_orders='';
-		$delivered_orders='';
+		(int)$rejected_orders='';
+		(int)$pending_orders='';
+		(int)$pending_all_count='';
+		(int)$pending_cty_count='';
+		(int)$approved_orders='';
+		(int)$delivered_orders='';
 		$pending_all_count=$order_counts['pending_all'];
 		$pending_cty_count=$order_counts['pending_cty'];
 		$approved_orders=$order_counts['approved'];
