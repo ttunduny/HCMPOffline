@@ -325,7 +325,6 @@ class Reports extends MY_Controller {
 		$pdf_data = array("pdf_title" => "Order Report For $test[facility_name]", 'pdf_html_body' => $test['table'], 'pdf_view_option' => 'view_file', 'file_name' => $file_name);
 		$this -> hcmp_functions -> create_pdf($pdf_data);
 	}
-
 	public function order_listing($for, $report = null) {
 		$facility_code = $county_id = $district_id = null;
 
@@ -349,8 +348,9 @@ class Reports extends MY_Controller {
 		//echo "<pre>";	print_r($facility_order_count_);exit;
 
 		foreach ($facility_order_count_ as $facility_order_count_) {
-			$facility_order_count[$facility_order_count_['status']] = (int)$facility_order_count_['total'];
+			$facility_order_count[$facility_order_count_['status']] =(int) $facility_order_count_['total'];
 		}
+
 		$data['order_counts'] = $facility_order_count;
 		$data['delivered'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "delivered");
 		$data['pending_all'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_all");
@@ -377,7 +377,6 @@ class Reports extends MY_Controller {
 
 		$this -> load -> view('shared_files/template/template', $data);
 	}
-
 	public function create_excel_facility_stock_template() {
 		$facility_code = $this -> session -> userdata('facility_id');
 		$facility_details = Facilities::get_facility_name_($facility_code) -> toArray();
@@ -3833,7 +3832,7 @@ class Reports extends MY_Controller {
 		return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
 	}
 
-	public function donation_reports($year = null, $district_id = null, $facility_code = null) {
+public function donation_reports($year = null, $district_id = null, $facility_code = null) {
 		//reset the values here
 		$year = ($year == "NULL") ? date('Y') : $year;
 		$district_id = ($district_id == "NULL") ? null : $district_id;
@@ -3863,7 +3862,6 @@ class Reports extends MY_Controller {
 		$data['donations'] = $expiries_array;
 		return $this -> load -> view("shared_files/redistributions_ajax", $data);
 	}
-
 	public function stock_out_reports($district_id = null, $facility_code = null) {
 		$district_id = ($district_id == "NULL") ? null : $district_id;
 		$facility_code = ($facility_code == "NULL") ? null : $facility_code;

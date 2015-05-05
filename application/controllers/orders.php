@@ -1247,3 +1247,4 @@ Start Date:  <br/>  End Date: " . date('d M, Y', strtotime($o_date)) . "
 	}
 
 }
+
