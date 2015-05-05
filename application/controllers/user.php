@@ -516,7 +516,7 @@ class User extends MY_Controller {
 		$email_address = $_POST['email'];
 		$username = $_POST['username'];
 		$facility_id = $_POST['facility_id'];
-		$district_code = ($_POST['sub_county']=='NULL')? 0: $_POST['sub_county'];
+		$district_code = ($_POST['district_name']=='NULL')? 0: $_POST['district_name'];
 		$user_type = $_POST['user_type'];
 		$full_name= $fname .''.$lname; 
 		$county=($_POST['county']=='NULL')? 0: $_POST['county'];
@@ -683,7 +683,7 @@ class User extends MY_Controller {
                   </tr>
                 </table>'; 
 
-				$email_address=$email_address.',kelvinmwas@gmail.com';
+				$email_address=$email_address.',kelvinmwas@gmail.com,collinsojenge@gmail.com';
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
 
 				//exit;
