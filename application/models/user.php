@@ -261,6 +261,32 @@ public function edit_user_password($id) {
     $q_2 = Doctrine_Manager::getInstance()->getCurrentConnection()->execute($sql);
     //$this->db->query($sql);    
 }
+public function get_last_login($user_id){
+			$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				SELECT MAX(end_time_of_event) as last
+				 FROM log
+				 WHERE user_id = 1331
+				 LIMIT 1 
+				");
+
+			foreach ($q as $time){
+			$date = $time['last'];
+			}
+			return $date;
+		}
+
+		public function get_last_order($user_id){
+			$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				SELECT MAX(order_date) as last_order
+				 FROM facility_orders
+				 WHERE ordered_by = $user_id
+				 LIMIT 1 
+				");
+			foreach ($q as $time){
+			$date = $time['last_order'];
+			}
+			return $date;
+		}
 
 
 

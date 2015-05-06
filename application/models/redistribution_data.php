@@ -66,6 +66,25 @@ class redistribution_data extends Doctrine_Record {
 
 	return $query;	
 	}
+
+	public function get_redistribution_excel (){
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+			SELECT c.commodity_name, r_d.quantity_sent, r_d.quantity_received, r_d.source_facility_code as source_facility , f.facility_name, d.district as source_district, temp6.county as source_county, temp3.facility_code as receiver_facility_code, temp3.facility_name as receiver_facility, temp4.district as receiver_district, temp1.county as receive_county
+
+FROM facilities f, commodities c, districts d, redistribution_data r_d
+
+left join facilities as temp3 on temp3.facility_code = r_d.receive_facility_code
+left join districts as temp4 on temp4.id = temp3.district
+left join counties as temp1 on temp1.id = temp4.county
+left join facilities as temp2 on temp2.facility_code = r_d.source_facility_code
+left join districts as temp5 on temp5.id = temp2.district
+left join counties as temp6 on temp6.id =temp5.county
+
+where r_d.commodity_id = c.id and r_d.source_facility_code = f.facility_code and f.district = d.id
+			");
+
+		return $q;
+	}
 	
 }
 ?>

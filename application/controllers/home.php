@@ -53,7 +53,18 @@ class Home extends MY_Controller
 		(!$this -> session -> userdata('user_id')) ? redirect('user'): null ;	
 
 		$identifier = $this -> session -> userdata('user_indicator');
-		
+		// get user_id
+		$user_id = $this-> session-> userdata('user_id');
+		//get last log in
+		$lastlogin = user::get_last_login($user_id);
+	    //pass data to view
+	    $data['lastlogin'] = date("l, jS F Y g:i a", strtotime($lastlogin));
+	    
+		//get last order
+		$lastorder = user::get_last_order($user_id);
+		//pass data to view
+		$data['lastorder'] = date("l, jS F Y ",strtotime($lastorder));
+		//exit;
         switch ($identifier):
 			case 'moh':
 			$view = 'shared_files/template/dashboard_template_v';	
