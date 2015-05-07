@@ -4,4 +4,4 @@
 
     });
 </script>
-<div style="/*border: 1px solid #036;*/ ;" id="dem_graph_"></div>
+<div style="height: 100%;width: 100% ;" id="dem_graph_"><?php echo $error; ?></div>

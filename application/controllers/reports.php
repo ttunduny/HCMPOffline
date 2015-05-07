@@ -2881,7 +2881,6 @@ class Reports extends MY_Controller {
 		//$final_graph_data = facility_stocks_temp::get_months_of_stock($district_id, $county_id, NULL, NULL, $report_type, $tracer);
 		//this is the new one
 		$final_graph_data = facility_stocks_temp::get_county_month_of_stock_default($district_id, $county_id);
-
 		$graph_type = 'bar';
 		$graph_data = array_merge($graph_data, array("graph_id" => 'default_graph_'));
 		$graph_data = array_merge($graph_data, array("graph_title" => "Months Of Stock For " . $title . ""));
@@ -2897,15 +2896,43 @@ class Reports extends MY_Controller {
 
 		$district_id = (!$this -> session -> userdata('district_id')) ? null : $this -> session -> userdata('district_id');
 		
+		
+			
+			if (count($final_graph_data)<=0) {
+				
+				$msg= ' <div class="" id="reports_display" style="min-height: 350px;" >
+            <div style="margin:auto; text-align: center">
+                
+                <h2>You have no Records, for the given filters</h2>
+                <h3>
+                  Please select filters above.
+                </h3>
+                
+                </div>
+            </div>
+            '; 
+				$data['error'] = $msg;
+				
+				
+				
+				
+				
+			} else {
+				
 		$data['graph_data_default'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
-		$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
+				
+				
+			}
+			
+			$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
 		$data['c_data'] = Commodities::get_all_2();
 		$data['tracer_items'] = Commodities::get_tracer_items();
 		$data['division_commodities'] = commodity_division_details::get_all_divisions();
 		$data['categories'] = commodity_sub_category::get_all_pharm();
 		$data['number_of_tracer_items'] = count(facility_stocks_temp::get_tracer_item_names());
-
+			
 		return $this -> load -> view("subcounty/ajax/county_stock_level_filter_v", $data);
+
 
 	}
 	//for the county and sub county interface.
@@ -3047,8 +3074,28 @@ class Reports extends MY_Controller {
 			$category_data = array_merge($category_data, array($data["commodity_name"]));
 			
 		endforeach;
-		
-		$graph_type = 'column';
+		if (count($stock_level)<=0) {
+				
+				$msg= ' <div class="" id="reports_display" style="min-height: 350px;" >
+            <div style="margin:auto; text-align: center">
+                
+                <h2>You have no Records, for the given filters</h2>
+                <h3>
+                  Please select filters above.
+                </h3>
+                
+                </div>
+            </div>
+            '; 
+				$data['error'] = $msg;
+				
+				
+				
+				
+				
+			} else {
+				
+			$graph_type = 'column';
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level $commodity_name for $title as at $month_ $year"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
@@ -3057,6 +3104,9 @@ class Reports extends MY_Controller {
 			$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
 			//echo $category_data;
 			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
+			}
+		
+			
 			return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 			/*
 		//build the graph here
@@ -3839,28 +3889,21 @@ public function donation_reports($year = null, $district_id = null, $facility_co
 		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
 		$county_id = $this -> session -> userdata('county_id');
 		$expiries_array = redistribution_data::get_redistribution_data($facility_code, $district_id, $county_id, $year);
-		//$graph_data = $series_data = array();
-		//echo "<pre>";print_r($expiries_array);echo "</pre>";exit;
-		//foreach ($expiries_array as $facility_expiry_data) :
-			//$total_units = $facility_expiry_data['total_commodity_units'];
-			//$sent_units = $facility_expiry_data['quantity_sent'];
-			//$received_units = $facility_expiry_data['quantity_received'];
-		//	$total_sent = round(($sent_units / $total_units), 1);
-			//$total_received = round(($received_units / $total_units), 1);
-			
-		//endforeach;//exit;
-		//$total_expiry = number_format($total_expiry, 2, '.', ',');
-		// array_push($series_data, array("","","Total for the next $year months",$total_expiry,''));
-
-		//$category_data = array( array("From", 'To', "Commodity Name", "District From", "District To", "Unit Size", 'Batch No', 'Expiry Date', 'Manufacturer', 'Quantity Sent(units)', 'Quantity Sent(packs)', 'Quantity Received (units)', 'Quantity Received (packs)', 'Date sent', 'Date Received', 'status'));
-
-		//$graph_data = array_merge($graph_data, array("table_id" => 'dem_graph_1'));
-		//$graph_data = array_merge($graph_data, array("table_header" => $category_data));
-		//$graph_data = array_merge($graph_data, array("table_body" => $series_data));
-
-		///$data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);
+		echo $redistribute_count = count(redistribution_data::get_redistribution_pending($facility_code, $district_id, $county_id, $year));exit;
+		
 		$data['donations'] = $expiries_array;
 		return $this -> load -> view("shared_files/redistributions_ajax", $data);
+	}
+
+public function donation_report_download($year = null, $county_id = null,$district_id = null, $facility_code = null) {
+		//reset the values here
+		$year = ($year == "NULL") ? date('Y') : $year;
+		$county_id = ($county_id == "NULL") ? null : $this -> session -> userdata('county_id');
+		$district_id = ($district_id == "NULL") ? null : $this -> session -> userdata('district_id');
+		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
+		$expiries_array = redistribution_data::get_redistribution_data($facility_code, $district_id, $county_id, $year);
+		
+		
 	}
 	public function stock_out_reports($district_id = null, $facility_code = null) {
 		$district_id = ($district_id == "NULL") ? null : $district_id;

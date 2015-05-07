@@ -74,7 +74,77 @@ echo $table; ?>
 	$('.dataTables_length label select').addClass('form-control');
 });
 </script>
-<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="margin-top: 1%;">
+	
+	  <div class="panel panel-danger">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Pending <?php echo '50'; ?>
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+      	<table id="pending" class="table table-hover table-bordered table-update" style="width: 100%">
+      		<thead style="background-color: white">
+							<tr style="">
+								<th>From</th>
+								<th>To </th>
+								<th>Commodity Name</th>
+								<th>Unit Size</th>
+								<th>Batch No</th>
+								<th>Expiry Date</th>
+								<th>Manufacturer</th>
+								<th>Quantity Sent Pack (Units)</th>
+								<!--<th>Quantity Received (Pack(Units))</th>-->
+								<th>Date Sent </th>
+								<!--<th>Date Received</th>-->
+
+							</tr>
+						</thead>
+						<tbody>
+							<?php 
+							foreach ($donations as $key => $values) {
+								//print_r( $value);
+								if ($values['status'] == 0 && $values['receiver_facility_name']!='') {
+									$total_units = $values['total_commodity_units'];
+									$sent_units = $values['quantity_sent'];
+									$received_units = $values['quantity_received'];
+									$total_sent = round(($sent_units / $total_units), 1);
+									$total_received = round(($received_units / $total_units), 1);
+									$date_received = strtotime($values['date_received']) ? date('d M, Y', strtotime($values['date_received'])) : "N/A";
+									?>
+								<tr class="" style="">
+								<td class="" ><?php echo $values['source_facility_name']; ?></td>
+								<td class="" ><?php echo $values['receiver_facility_name']; ?></td>
+								<td class="" ><?php echo $values['commodity_name']; ?></td>
+								<td class="" ><?php echo $values['unit_size']; ?></td>
+								<td class="" ><?php echo $values['batch_no']; ?></td>
+								<td class="" ><?php echo date('d M, Y', strtotime($values['expiry_date'])); ?></td>
+								<td class="" ><?php echo $values['manufacturer']; ?></td>
+								<td class="" ><?php echo number_format($total_sent).' ('. number_format($sent_units).') '; ?></td>
+								<!--<td class="" ><?php echo $total_received."($received_units)"; ?></td>-->
+								<td class="" ><?php echo date('d M, Y', strtotime($values['date_sent'])); ?></td>
+								<!--<td class="" ><?php echo $date_received; ?></td>-->
+								</tr>
+									<?php
+								} else {?>
+									
+									
+									
+								<?php }
+								
+							}
+							
+							?>
+							
+							
+						</tbody>
+      	</table>
+      </div>
+    </div>
+  </div>
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingOne">
       <h4 class="panel-title">
@@ -83,7 +153,7 @@ echo $table; ?>
         </a>
       </h4>
     </div>
-    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+    <div id="collapseOne" class="panel-collapse collapse " role="tabpanel" aria-labelledby="headingOne">
       <div class="panel-body">
       	<table id="delivered" class="row-fluid table table-hover table-bordered table-update">
       		<thead style="background-color: white">
@@ -122,8 +192,8 @@ echo $table; ?>
 								<td class="" ><?php echo $value['batch_no']; ?></td>
 								<td class="" ><?php echo date('d M, Y', strtotime($value['expiry_date'])); ?></td>
 								<td class="" ><?php echo $value['manufacturer']; ?></td>
-								<td class="" ><?php echo $total_sent."($sent_units)"; ?></td>
-								<td class="" ><?php echo $total_received."($received_units)"; ?></td>
+								<td class="" ><?php echo number_format($total_sent).' ('. number_format($sent_units).') '; ?></td>
+								<td class="" ><?php echo number_format($total_received).' ('. number_format($received_units).') '?></td>
 								<td class="" ><?php echo date('d M, Y', strtotime($value['date_sent'])); ?></td>
 								<td class="" ><?php echo $date_received; ?></td>
 								</tr>
@@ -142,81 +212,13 @@ echo $table; ?>
       </div>
     </div>
   </div>
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingTwo">
-      <h4 class="panel-title">
-        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-          Pending
-        </a>
-      </h4>
-    </div>
-    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-      <div class="panel-body">
-      	<table id="pending" class="table table-hover table-bordered table-update" style="width: 100%">
-      		<thead style="background-color: white">
-							<tr style="">
-								<th>From</th>
-								<th>To </th>
-								<th>Commodity Name</th>
-								<th>Unit Size</th>
-								<th>Batch No</th>
-								<th>Expiry Date</th>
-								<th>Manufacturer</th>
-								<th>Quantity Sent (Pack(Units))</th>
-								<th>Quantity Received (Pack(Units))</th>
-								<th>Date Sent </th>
-								<th>Date Received</th>
 
-							</tr>
-						</thead>
-						<tbody>
-							<?php 
-							foreach ($donations as $key => $values) {
-								//print_r( $value);
-								if ($values['status'] == 0 && $values['receiver_facility_name']!='') {
-									$total_units = $values['total_commodity_units'];
-									$sent_units = $values['quantity_sent'];
-									$received_units = $values['quantity_received'];
-									$total_sent = round(($sent_units / $total_units), 1);
-									$total_received = round(($received_units / $total_units), 1);
-									$date_received = strtotime($values['date_received']) ? date('d M, Y', strtotime($values['date_received'])) : "N/A";
-									?>
-								<tr class="" style="">
-								<td class="" ><?php echo $values['source_facility_name']; ?></td>
-								<td class="" ><?php echo $values['receiver_facility_name']; ?></td>
-								<td class="" ><?php echo $values['commodity_name']; ?></td>
-								<td class="" ><?php echo $values['unit_size']; ?></td>
-								<td class="" ><?php echo $values['batch_no']; ?></td>
-								<td class="" ><?php echo date('d M, Y', strtotime($values['expiry_date'])); ?></td>
-								<td class="" ><?php echo $values['manufacturer']; ?></td>
-								<td class="" ><?php echo $total_sent."($sent_units)"; ?></td>
-								<td class="" ><?php echo $total_received."($received_units)"; ?></td>
-								<td class="" ><?php echo date('d M, Y', strtotime($values['date_sent'])); ?></td>
-								<td class="" ><?php echo $date_received; ?></td>
-								</tr>
-									<?php
-								} else {?>
-									
-									
-									
-								<?php }
-								
-							}
-							
-							?>
-							
-							
-						</tbody>
-      	</table>
-      </div>
-    </div>
-  </div>
   
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingThree">
       <h4 class="panel-title">
         <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-          None HCMP Redistributions
+          Redistributions To Non-HCMP Facilities
         </a>
       </h4>
     </div>
@@ -232,10 +234,10 @@ echo $table; ?>
 								<th>Batch No</th>
 								<th>Expiry Date</th>
 								<th>Manufacturer</th>
-								<th>Quantity Sent (Pack(Units))</th>
-								<th>Quantity Received (Pack(Units))</th>
+								<th>Quantity Sent Pack (Units)</th>
+								<!--<th>Quantity Received (Pack(Units))</th>-->
 								<th>Date Sent </th>
-								<th>Date Received</th>
+								<!--<th>Date Received</th>-->
 
 							</tr>
 						</thead>
@@ -259,10 +261,10 @@ echo $table; ?>
 								<td class="" ><?php echo $val['batch_no']; ?></td>
 								<td class="" ><?php echo date('d M, Y', strtotime($val['expiry_date'])); ?></td>
 								<td class="" ><?php echo $val['manufacturer']; ?></td>
-								<td class="" ><?php echo $total_sent."($sent_units)"; ?></td>
-								<td class="" ><?php echo $total_received."($received_units)"; ?></td>
+								<td class="" ><?php echo number_format($total_sent).' ('. number_format($sent_units).') '; ?></td>
+								<!--<td class="" ><?php echo $total_received."($received_units)"; ?></td>-->
 								<td class="" ><?php echo date('d M, Y', strtotime($val['date_sent'])); ?></td>
-								<td class="" ><?php echo $date_received; ?></td>
+								<!--<td class="" ><?php echo $date_received; ?></td>-->
 								</tr>
 									<?php
 								} else {?>
