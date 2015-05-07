@@ -360,7 +360,7 @@
 								<div class=" col-md-6">
 									<label> Phone No </label>
 									<div class="form-group">
-										<input type="telephone" name="telephone_edit" required="required" id="telephone_edit" class="form-control " placeholder="telephone eg, 254" tabindex="5">
+										<input type="telephone" disabled="disabled" name="telephone_edit" required="required" id="telephone_edit" class="form-control " placeholder="telephone eg, 254" tabindex="5">
 									</div>
 								</div>
 								<div class="col-md-6">

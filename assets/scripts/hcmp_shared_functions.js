@@ -102,7 +102,7 @@ dateFormat: 'd My',
  /******************---------------END--------------------------**********************/
  /* HCMP calculate the actual stock value */
 function calculate_actual_stock(actual_units,pack_unit_option,user_input,target_total_units_field,input_object,option){
-	
+
   var user_input=parseInt(user_input);
 
   if (pack_unit_option == 'Pack_Size'){
