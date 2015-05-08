@@ -161,14 +161,14 @@ border-color: #e7e7e7;
 
 <div style="margin-left: 2%;margin-right: 2%;margin-top: 0%;" class="inner_wrapper"> 
  <div class="row" style="margin-top: 0%;">
-     <div class="col-md-4" style="margin-top: 6.5%;"> <!-- map -->
+     <div class="col-md-4" style="margin-top: 6.5%;max-height: 550px" > <!-- map -->
       <div class="panel panel-success">
             <div class="panel-heading">
                 <h3 class="panel-title" style="display:inline-block;">National Overview</h3>
             </div>
       <div class="panel-body">
       *Click on a County to View Data
-      <div id="map" style="width:400px; height: 600px;">
+      <div id="map" style="height: 400px;">
                    
                    <script>
 var map= new FusionMaps ("assets/FusionMaps/FCMap_KenyaCounty.swf","KenyaMap","100%","100%","0","0");
@@ -196,15 +196,28 @@ echo $maps; ?>
        <h3 class="panel-title" style="display:inline-block;"><div class="county-name" style="display:inline-block"></div>Facility Overview</h3>
        </div>
         <div class="panel-body">
-       
+       <input type="hidden" value="NULL" id="placeholder" />
           <div style="display:table-row" >
             <div style="display:table-cell">
-                <p style="font-size:120%;display: inline-block;"> <span class="glyphicon glyphicon-user"></span>#HCW Trained  &nbsp;
-                <div style="display: inline-block;" id="hcw_trained"></p></div></div>
+                <p style="font-size:120%;display: inline-block;"> 
+                <a class="excel_" id="hcwtrained"><span class="glyphicon glyphicon-user"></span>#HCW Trained  &nbsp;
+                <div style="display: inline-block;" id="hcw_trained">
+                	
+                </div>	
+                </div></a>
+                </p>
          <div style="display:table-cell;">&nbsp;&nbsp;&nbsp;&nbsp;</div>
             <div style="display:table-cell;">
-             <p style="font-size:120%;display: inline-block;"><span class="glyphicon glyphicon-calendar"></span>#Facilities Rolled Out  &nbsp;
-                 <div style="display: inline-block;" id="facilities_rolled_out"></div></p></div>   
+             <p style="font-size:120%;display: inline-block;"><span class="glyphicon glyphicon-calendar">
+             	<a class="excel_" id="rolledout">
+             		</span>#Facilities Rolled Out  &nbsp;
+                 <div style="display: inline-block;" id="facilities_rolled_out">
+                 	
+                 </div>
+             	</a>
+             
+                 </p>
+                 </div>   
           </div>
        </div>    
        </div>
@@ -469,6 +482,7 @@ echo $maps; ?>
       
     function run(data){
         var county_data=data.split('^');
+        $('#placeholder').val(county_data[0]);
         $('.county-name').html(county_data[1]+"&nbsp;County &nbsp;");
         ajax_request_replace_div_content('national/facility_over_view/'+county_data[0],"#facilities_rolled_out");
         ajax_request_replace_div_content('national/hcw/'+county_data[0],"#hcw_trained");
@@ -525,7 +539,27 @@ echo $maps; ?>
         $(div).html(msg);
         }
         });
-        }   
+        } 
+        $(".excel_").click(function(e) {
+        e.preventDefault();
+        
+        var county_id=$('#placeholder').val();
+       // alert(county_id);
+        var type=$(this).attr('id'); 
+        
+        var link='';
+        
+        if(type=='hcwtrained'){ 
+        link='national/hcw/'+county_id+'/NULL/NULL/excel';
+        }
+        
+        if(type=='rolledout'){
+        link='national/facility_over_view/'+county_id+'/NULL/NULL/excel';
+        }
+        
+       
+        window.open(url+link,'_parent'); 
+        });  
 </script>
 
 </html>
