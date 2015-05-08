@@ -3754,7 +3754,7 @@ class Reports extends MY_Controller {
 										$facility['Days From Last Decommissioned'], 
 										$date_order, 
 										$facility['Days From Last Received Order']));
-		//echo "<pre>";print_r($row_data);exit;
+		
 		}
 
 		$excel_data = array();
