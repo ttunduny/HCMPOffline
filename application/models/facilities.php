@@ -718,8 +718,29 @@ return $q;
 	//Used by facility_mapping function reports controller
 	//Used to get the months facilities went online
 	//Limits to the last 3 months of activation
+	public static function get_dates_facility_went_online($county_id, $district_id = null)
+	{
+		$addition = (isset($district_id)&& ($district_id>0)) ?"AND f.district = $district_id" : null;
+		
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT DISTINCT
+		    DATE_FORMAT(`date_of_activation`, '%M %Y') AS date_when_facility_went_online
+		FROM
+		    facilities f,
+		    districts d
+		WHERE
+		    f.district = d.id
+		        AND d.county = $county_id
+		        $addition
+		        AND UNIX_TIMESTAMP(`date_of_activation`) > 0
+		ORDER BY `date_of_activation` desc
+		");
+		return $q;
+			
+	}
 	
-	public static function get_dates_facility_went_online($county_id)
+
+		public static function get_dates_facility_went_online_cleaned($county_id)
 	{
 		$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		SELECT DISTINCT
@@ -735,11 +756,18 @@ return $q;
 		        AND UNIX_TIMESTAMP(`date_of_activation`) > 0
 		ORDER BY `date_of_activation` desc
 		");
+		$cleaned_data = array();
+		foreach ($data as $key => $value) {
+			$year = $value['YEAR(`date_of_activation`)'];
+			if($year = $value['YEAR(`date_of_activation`)'])
+			{
+				$cleaned_data[$year][] = $value['date_when_facility_went_online'];
+			}
+		}
 		
-		return $data;
+		return $cleaned_data;
 			
 	}
-	
 	//used by facility mapping function
 	//used to get the distinct years facilities went online
 	//used when building data for the facilities that went online in a particular district in a particular county
@@ -821,4 +849,5 @@ public static function get_facility_district_county_level($facility_code)
 }
 
 }
+
 

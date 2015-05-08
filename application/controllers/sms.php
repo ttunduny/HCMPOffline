@@ -88,7 +88,7 @@ class sms extends MY_Controller {
 	public function check_system_usage() {
 		//get the counties using HCMP
 		$counties = Facilities::get_counties_all_using_HCMP();
-
+		
 		foreach ($counties as $counties) :
 			//pick the county nae and county ID accordingly
 			//counts the number of facilities not using the system
@@ -99,6 +99,8 @@ class sms extends MY_Controller {
 			$district_total = array();
 			//Get all the districts in that  particular county
 			$districts = Facilities::get_all_using_HCMP($county_id);
+			
+			
 
 			foreach ($districts as $districts) :
 				$count_district = 0;
@@ -116,7 +118,7 @@ class sms extends MY_Controller {
 
 					//check the last time they logged in as a facility
 					$system_usage = Log::check_system_usage($facility_code);
-
+echo "<pre>"; print_r($facility_code);exit;
 					$no_of_days = $system_usage[0]['Days_From'];
 					//checks if the number of days is greater than five as that is the threshold
 					if ($no_of_days >= 5) :
