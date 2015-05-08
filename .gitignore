@@ -9,6 +9,9 @@
 
 
 
+
 application/config/database.php
 .htaccess
+
 system/libraries/Hcmp_functions.php
+*.xls

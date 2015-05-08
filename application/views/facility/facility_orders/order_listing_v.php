@@ -13,12 +13,12 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 					</thead>
 					<tbody>';
 					
-		$rejected_orders='';
-		$pending_orders='';
-		$pending_all_count='';
-		$pending_cty_count='';
-		$approved_orders='';
-		$delivered_orders='';
+		(int)$rejected_orders='';
+		(int)$pending_orders='';
+		(int)$pending_all_count='';
+		(int)$pending_cty_count='';
+		(int)$approved_orders='';
+		(int)$delivered_orders='';
 		$pending_all_count=$order_counts['pending_all'];
 		$pending_cty_count=$order_counts['pending_cty'];
 		$approved_orders=$order_counts['approved'];
@@ -72,6 +72,9 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			<span class="badge badge-info">No</span>
 			<span class="glyphicon glyphicon-arrow-left"></span>
   	&nbsp; Indicates Order numbers for the mentioned category 
+		</div>
+		<div class="col-lg-5">
+			<button class="btn btn-success btn-xs floppy-save"><span class="glyphicon glyphicon-floppy-save"></span>Download KEMSA template</button>
 		</div>
 		
 	</div>
@@ -164,9 +167,9 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			<td><?php echo $value['mwaka']; ?></td>
 			<td><?php echo number_format($value['order_total'], 2, '.', ','); ?></td>
 			<td>
-				<a href='<?php echo $link; ?>' target="_blank">
+			<!--	<a href='<?php echo $link; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
-           <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a>
+           <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a>-->
             <a href='<?php echo $link_excel; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
            <span class="glyphicon glyphicon-save"></span>Download Order excel</button></a>
@@ -202,9 +205,10 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			<td><?php echo $value['facility_code']; ?></td>
 			<td><?php echo $value['mwaka']; ?></td>
 			<td><?php echo number_format($value['order_total'], 2, '.', ','); ?></td>
-			<td><a href='<?php echo $link; ?>' target="_blank">
+			<td>
+				<!--<a href='<?php echo $link; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
-           <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a>
+           <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a>-->
             <a href='<?php echo $link_excel; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
            <span class="glyphicon glyphicon-save"></span>Download Order excel</button></a>
@@ -285,9 +289,9 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 		</tr>	
 		<?php
 			}else{?>
-			<a href='<?php echo $link; ?>' target="_blank">
+			<!--<a href='<?php echo $link; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
-           <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a>
+           <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a>-->
            <a href='<?php echo $link_excel; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
            <span class="glyphicon glyphicon-save"></span>Download Order excel</button></a>
@@ -322,16 +326,17 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			<td><?php echo $value['facility_code']; ?></td>
 			<td><?php echo $value['mwaka']; ?></td>
 			<td><?php echo number_format($value['order_total'], 2, '.', ','); ?></td>
-			<td><a href='<?php echo $link;?>' target="_blank">
+			<td>
+				<!--<a href='<?php echo $link;?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
-           <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a>
+           <span class="glyphicon glyphicon-save"></span>Download Order pdf</button></a>-->
            <a href='<?php echo  $link_excel; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
            <span class="glyphicon glyphicon-save"></span>Download Order excel</button></a>
            
            <a href='<?php echo $link3; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
-           <span class="glyphicon glyphicon-save"></span>Download Report</button></a></td>
+           <span class="glyphicon glyphicon-save"></span>Fill rate Report</button></a></td>
 		</tr>	
 		<?php
 			}
@@ -474,16 +479,17 @@ $(document).ready(function() {
     });
 		
 	});
-	$(".order-for-excel").on('click', function() {
-	var body_content='<?php  $att=array("name"=>'myform','id'=>'myform'); 
-	echo form_open_multipart('orders/facility_order_',$att)?>'+
+	
+	$(".order-for-excel").on('click', function(e) {
+                  e.preventDefault(); 
+    var body_content='<?php  $att=array("name"=>'myform','id'=>'myform');
+    echo form_open_multipart('orders/facility_order_',$att)?>'+
 '<input type="file" name="file" id="file" required="required" class="form-control"><br>'+
-'<input type="submit" name="submit"  value="Upload">'+
+'<button class="upload">Upload</button>'+
 '</form>';
    //hcmp custom message dialog
-    dialog_box(body_content,
-    ''); 		
-	});
+    dialog_box(body_content,'');        
+    });
 	$(".delete").on('click', function() {
 	id= $(this).attr("id");
 		 //hcmp custom message dialog

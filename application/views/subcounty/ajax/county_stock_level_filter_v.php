@@ -6,44 +6,36 @@ $district_id_active =  $this -> session -> userdata('district_id');
 $identifier = $this -> session -> userdata('user_indicator');
 
 ?>
-<style>
-	
-	.stat_item {
-		height: 52px;
-		padding: 2px 5px;
-		margin:0 1px 1px 1px;
-		color: #fff;
-		text-align: center;
-		font-size: 1em;
+<div class="container-fluid"> 
+	<div class="row">
+		<div class="col-md-5">
+			
+			<div class="alert alert-info" style="padding: 10">
+  				<b>Below are the Stocking Levels in the County </b> :Select filter Options
+			</div>
+		</div>
 		
-	}	
-	.stat_item:hover{
-	-webkit-transform: scale(1.005);
-	-moz-transform: scale(1.005);
-	margin-left: 2px;
-	-webkit-transition-duration: 50ms;
-	-webkit-transition-function: ease-out;
-	-moz-transition-duration: 50ms;
-	-moz-transition-function: ease-out;
-	box-shadow: 0 1px 3px 0.5px #000;
-}
-	.bold{
-		font-weight:800;
-	}
-</style>
-
-<div class="alert alert-info" style="width: 100%">
-  <b>Below are the Stocking Levels in the County </b> :Select filter Options
-</div>
-
-<ul class='nav nav-tabs'>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-12">
+			
+			<ul class='nav nav-tabs'>
 	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Commodities <?php echo " ($number_of_tracer_items)"; ?></a></li>
       <li class=""><a href="#division" data-toggle="tab">Program Commodities</a></li>
       <!--<li class=""><a href="#cat" data-toggle="tab">Categories</a></li>-->
    	  <li class=""><a href="#county" data-toggle="tab">Sub County Comparison</a></li>
+   	  <li class=""><a href="#stockouts" data-toggle="tab" onclick="stockouts_clicked()">Stock outs</a></li>
      <!--<li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>-->
 </ul>
-    <div id="myTabContent" class="tab-content">
+		</div>
+	</div>
+	
+	
+<div class="row">
+	
+	<div class="col-md-12">
+		<div id="myTabContent" class="tab-content">
     	<!-- div for tracer items-->
     	<div  id="tracer" class="tab-pane fade active in">
           	<br>
@@ -75,15 +67,15 @@ $identifier = $this -> session -> userdata('user_indicator');
 				</select>
 				<!--First the filter buttons-->
 				<div class="col-md-2">
-					<button style="margin-left:30px;" class="btn btn-sm btn-success tracer-filter"><span class="glyphicon glyphicon-filter"></span>Filter Graph</button> 
+					<button style="margin-left:30px;" class="btn btn-xs btn-success tracer-filter"><span class="glyphicon glyphicon-filter"></span>Filter Graph</button> 
 				</div>
 				<!-- seth's button -->
 				<div class="col-md-2">
-					<button style="margin-left:30px;" class="btn btn-sm btn-success tracer-filter-table"><span class="glyphicon glyphicon-th-list"></span>Filter Table</button> 
+					<button style="margin-left:30px;" class="btn btn-xs btn-success tracer-filter-table"><span class="glyphicon glyphicon-th-list"></span>Filter Table</button> 
 				</div>
 				<!--Download button-->
 				<div class="col-md-1">
-					<button style="margin-left:30px;" class="btn btn-sm btn-primary tracer-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
+					<button style="margin-left:30px;" class="btn btn-xs btn-primary tracer-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
 				</div>
 				
           	</form>
@@ -125,13 +117,13 @@ $identifier = $this -> session -> userdata('user_indicator');
 				<option value="mos">Months of stock</option>
 			</select>
 			<div class="col-md-1">
-				<button class="btn btn-sm btn-success division-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+				<button class="btn btn-xs btn-success division-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 			</div>
 			<div class="col-md-1">
-				<button class="btn btn-sm btn-success division-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
+				<button class="btn btn-xs btn-success division-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
 			</div>
 			<div class="col-md-2">
-			<button style="margin-left:30px;" class="btn btn-sm btn-primary division-filter-table"><span class="glyphicon glyphicon-th-list"></span>Results as Table</button> 
+			<button style="margin-left:30px;" class="btn btn-xs btn-primary division-filter-table"><span class="glyphicon glyphicon-th-list"></span>Results as Table</button> 
 			</div>
       </form>
       </div>
@@ -161,13 +153,13 @@ endforeach;
 -->
 </select>
 <div class="col-md-1">
-<button class="btn btn-sm btn-success county-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+<button class="btn btn-xs btn-success county-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div>
 <div class="col-md-1">
-<button class="btn btn-sm btn-success county-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
+<button class="btn btn-xs btn-success county-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
 </div>
 <div class="col-md-2">
-<button class="btn btn-sm btn-primary county-filter-table"><span class="glyphicon glyphicon-th-list"></span>Results as Table</button> 
+<button class="btn btn-xs btn-primary county-filter-table"><span class="glyphicon glyphicon-th-list"></span>Results as Table</button> 
 </div>
 </form>
 </div>
@@ -207,16 +199,44 @@ endforeach;
 <option value="mos">Months Of Stock</option>
 </select>
 <div class="col-md-1">
-<button class="btn btn-sm btn-success subcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+<button class="btn btn-xs btn-success subcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div>
 <div class="col-md-1">
-<button class="btn btn-sm btn-success subcounty-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
+<button class="btn btn-xs btn-success subcounty-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
 </div>
 </form>
 </div>
 </div>
+
+<div  id="stockouts" class="tab-pane fade in">
+	
+<br>
+
+<div class="graph_content" id="stockouts_graph"  ></div>
 </div>
-<div class="graph_content" id="default_graph_"  ></div>	
+
+</div>
+	</div>
+</div>
+
+ 
+ 
+ <div class="container">
+ 	<div class="row">
+ 		<div class="col-md-12">
+ 			
+ 		<div class="graph_content" id="default_graph_" style="height: 100%;width: 100% ;" >
+	<?php echo $error; ?>
+</div>	
+ 			
+ 		</div>
+ 	</div>
+ 	
+ 	
+ </div>
+ 
+ </div>   <!--end container fluid-->
+	
 
 	
 <script>
@@ -225,8 +245,12 @@ endforeach;
 <?php echo $default_graph; ?>
 });
 
+	function stockouts_clicked(){
+	$.get("reports/stock_out_reports", function(data){
+		$("#stockouts_graph").html(data);
+	});
+	};
 	$(document).ready(function() {
-
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           $('.graph_content').html('');
           

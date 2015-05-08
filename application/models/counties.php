@@ -169,4 +169,13 @@ $and_data");
 		 
 		   return $query;
 	}
+
+	public function get_subcounties_in_county($county_id)
+	{
+		$query = Doctrine_Query::create() -> select("id, district") -> from("districts")->where("county='$county_id'");
+		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		
+		
+		return $drugs;
+	}
 }

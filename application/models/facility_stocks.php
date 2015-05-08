@@ -823,16 +823,16 @@ FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDAT
 		//computation required by the user
 		switch ($option) :
 			case 'ksh' :
-				$computation = "ifnull((SUM(ROUND(fs.current_balance/ c.total_commodity_units)))*d.unit_cost ,0) AS total";
+				$computation = "((fs.current_balance/ c.total_commodity_units)*c.unit_cost) AS total";
 				break;
 			case 'units' :
-				$computation = "ifnull(CEIL(SUM(fs.current_balance)),0) AS total";
+				$computation = "fs.current_balance AS total";
 				break;
 			case 'packs' :
-				$computation = "ifnull(SUM(ROUND(fs.current_balance/c.total_commodity_units)),0) AS total";
+				$computation = "(fs.current_balance/c.total_commodity_units) AS total";
 				break;
 			default :
-				$computation = "ifnull(CEIL(SUM(fs.current_balance)),0) AS total";
+				$computation = "fs.current_balance AS total";
 				break;
 		endswitch;
 		
@@ -875,29 +875,7 @@ FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDAT
 					GROUP BY c.id $group_by
         
      ");
-    /* echo "SELECT 
-					    c.commodity_name,
-					    fs.current_balance as balance,
-					    fs.batch_no,
-					    fs.manufacture,
-					    fs.expiry_date,
-					    cts.county
-					    $columnar_data
-					FROM
-					    facility_stocks fs,
-					    commodities c,
-					    districts d,
-					    facilities f,
-					    counties cts
-					    
-					WHERE
-					    fs.commodity_id = c.id
-					        AND c.tracer_item = 1
-					        AND f.facility_code = fs.facility_code
-					        AND f.district = d.id
-					        AND d.county = cts.id
-					        $and_data
-					GROUP BY c.id $group_by";exit;*/
+ 
 		return $inserttransaction;
 	}
 

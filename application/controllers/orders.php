@@ -7,6 +7,9 @@ if (!defined('BASEPATH'))
 class orders extends MY_Controller {
 	function __construct() {
 		parent::__construct();
+		error_reporting(E_ALL);
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
 		$this -> load -> helper(array('form', 'url'));
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
 		
@@ -173,10 +176,11 @@ class orders extends MY_Controller {
 		//pick the facility code from the session as it is set
 		
 		$facility_code = $this -> session -> userdata('facility_id');
-		$amc_calc =$this->hcmp_functions->amc($county,$district,$facility_code);
+		$amc_calc =$this->amc($county,$district,$facility_code);
 		//echo '<pre>'; print_r($amc_calc);echo '<pre>'; exit;
 		$items = ((isset($source)) && ($source = 2)) ? Facility_Transaction_Table::get_commodities_for_ordering_meds($facility_code) : Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
 		//echo '<pre>';print_r($items); echo '</pre>';
+		//echo 'string'; echo 'strung';exit;
 		if (isset($_FILES['file']) && $_FILES['file']['size'] > 0) {
 			$ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
 			//echo $ext;
@@ -229,7 +233,7 @@ class orders extends MY_Controller {
 
 				}
 
-				//echo '<pre>';print_r($rowData); echo '</pre>';
+				
 				//count($rowData);
 				$code = preg_replace('/\s+/ ', '', $rowData[0][2]);
 				$code = str_replace('-', '', $code);
@@ -418,7 +422,7 @@ class orders extends MY_Controller {
 		$items=facility_order_details::get_order_details($order_id);
 		//create new array to hold pushed amc values
 		$facility_code = $this -> session -> userdata('facility_id');
-		$amc_calc =$this->hcmp_functions->amc($county,$district,$facility_code);
+		$amc_calc =$this->amc($county,$district,$facility_code);
 			$new=array();
 			foreach ($items as $value) {
 				
@@ -620,10 +624,10 @@ public function update_order_subc($order_id, $rejected = null, $option = null) {
 				$facility_name = $myobj -> facility_name;
 				// get the order form details here
 				//create the pdf here
-				$pdf_body = $this -> create_order_pdf_template($new_order_no);
+				//$pdf_body = $this -> create_order_pdf_template($new_order_no);
 				$file_name = $facility_name . '_facility_order_no_' . $new_order_no . "_date_created_" . date('d-m-y');
-				$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
-				$this -> hcmp_functions -> create_pdf($pdf_data);
+				//$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
+				//$this -> hcmp_functions -> create_pdf($pdf_data);
 				// create pdf
 				$this -> hcmp_functions -> clone_excel_order_template($new_order_no, 'save_file', $file_name);
 				//create excel
@@ -632,9 +636,23 @@ public function update_order_subc($order_id, $rejected = null, $option = null) {
 						<br>
 						Please find the Order Made by ' . $facility_name . ' attached.
 						<br>
+					     <table width="50%" style="text-align:center;" >
+							<thead>
+							<tr style="">
+						<th>Date Ordered</th>
+						<th>Order Value</th>
+								</tr>
+							</thead>
+							<tbody >
+							<tr>
+							<td style="text-align:center;">'.date('M , d Y').'</td>
+							<td style="text-align:center;" >'.number_format("$order_total",2).'</td>
+							</tr>
+							</tbody>
+							</table>
 						<br>
 						';
-				$subject = 'Order Pending Approval By Sub-County Pharmascist ' . $facility_name;
+				$subject = 'Order Pending Approval By Sub-County Pharmacist ' . $facility_name;
 
 				//$attach_file1 = './pdf/'.$file_name.'.pdf';
 				$attach_file = "./print_docs/excel/excel_files/" .$file_name.'.xls';
@@ -643,8 +661,8 @@ public function update_order_subc($order_id, $rejected = null, $option = null) {
   				$response = $this -> hcmp_functions -> send_email($email_address,$message, $subject,$attach_file);
 				
 				if ($response) {
-					delete_files($attach_file1);
-					unlink($attach_file1);
+					delete_files($attach_file);
+					//unlink($attach_file);
 				} else {
 
 				}
@@ -673,7 +691,7 @@ public function update_order_subc($order_id, $rejected = null, $option = null) {
 	public function update_order_facility() {
 		//security check
 		//$dump=$this -> input -> post();
-		//echo '<pre>';print_r($new); echo '</pre>';exit;
+		//echo '<pre>';print_r($dump); echo '</pre>';exit;
 		$user_indicator = $this -> session -> userdata('user_indicator');
 	    if ($this -> input -> post('commodity_id')) :
 			//just picks values from the view and assigns them to a variable
@@ -710,6 +728,8 @@ public function update_order_subc($order_id, $rejected = null, $option = null) {
 			//$user_id=$this->session->userdata('user_id');
 			$order_date = date('y-m-d');
 			$number_of_id = count($commodity_id);
+			$order_dates=facility_orders::get_order_($order_id);
+			//echo '<pre>';print_r($order_dates[0]['order_date']); echo '</pre>';exit;
 			$subject = $file_name = $title = $info = $attach_file = null;
 			for ($i = 0; $i < $number_of_id; $i++) {
 				
@@ -832,25 +852,69 @@ public function update_order_subc($order_id, $rejected = null, $option = null) {
 			if ($approved_admin == 1) {
 				
 				if ($user_indicator=='county') {
+					//get dates here 
 					$myobj -> status = 2;
+					$tabledata='<thead>
+							<tr style="">
+						<th>Date Ordered</th>
+						<th>Date Approved Sub-County</th>
+						<th>Date Approved County</th>
+						<th>Order Value</th>
+								</tr>
+							</thead>
+							<tbody >
+							<tr>
+							<td style="text-align:center;">'.date('M , d Y',strtotime($order_dates[0]['order_date'])).'</td>
+							<td style="text-align:center;">'.date('M , d Y',strtotime($order_dates[0]['approval_date'])).'</td>
+							<td style="text-align:center;">'.date('M , d Y').'</td>
+							<td style="text-align:center;" >'.number_format("$order_total",2).'</td>
+							</tr>
+							</tbody>';
+							$subject = 'Approved Order For ' . $facility_name;
+							$myobj -> approval_county = date('y-m-d');
 					
 				}else if ($user_indicator=='district'){
+					//get dates here 
 					$myobj -> status = 6;
-					
+					$tabledata='<thead>
+							<tr style="">
+						<th>Date Ordered</th>
+						<th>Date Approved Sub-County</th>
+						<th>Order Value</th>
+								</tr>
+							</thead>
+							<tbody >
+							<tr>
+							<td style="text-align:center;">'.date('M , d Y',strtotime($order_dates[0]['order_date'])).'</td>
+							<td style="text-align:center;">'.date('M , d Y').'</td>
+							<td style="text-align:center;" >'.number_format("$order_total",2).'</td>
+							</tr>
+							</tbody>';
+							$subject = 'Order Pending Approval By County Pharmacist ' . $facility_name;
+					$myobj -> approval_date = date('y-m-d');
 					
 				}
 				
-				$myobj -> approval_date = date('y-m-d');
+				
 				$myobj -> approved_by = $this -> session -> userdata('user_id');
 				$status = "Approved";
-				$subject = 'Approved Order Report For ' . $facility_name;
+				//$subject = 'Approved Order Report For ' . $facility_name;
 
 			}
 
 			$myobj -> save();
 			
-			$message = "<br>Please find the $status Order for  " . $facility_name . '
-		  <br>' . $info . $pdf_body;
+			
+		  $message = '
+						<br>
+						Please find the '. $status .' Order Made by ' . $facility_name . ' attached.
+						<br>
+					     <table width="75%" style="text-align:center;" >
+							'. $tabledata .'
+							</table>
+						<br>
+						';
+				
 
 			$response = $this -> hcmp_functions -> send_order_approval_email($message, $subject, $attach_file, $facility_code, $status);
 			if ($response) {
@@ -1121,5 +1185,66 @@ Start Date:  <br/>  End Date: " . date('d M, Y', strtotime($o_date)) . "
 		return $html_body . $html_body1;
 
 	}
+	public function amc($county= null,$district= null,$facility_code= null){
+		$district = ($district == "NULL") ? null : $district;
+		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
+		$county = ($county == "NULL") ? null : $county;
+		
+		if (isset($county)) {
+			
+			$get_amc = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("select commodity_name,commodity_id,avg(facility_issues.qty_issued) as totalunits,
+					(avg(facility_issues.qty_issued))/commodities.total_commodity_units as amc_packs,
+					commodities.total_commodity_units from facility_issues inner join commodities on facility_issues.commodity_id=commodities.id
+					inner join facilities on facility_issues.facility_code=facilities.facility_code inner join districts
+					on facilities.district=districts.id where districts.county= $county and s11_No IN('internal issue','(-ve Adj) Stock Deduction')
+					group by commodity_id");
+					
+			//echo '<pre>'; print_r($get_amc);echo '<pre>'; 
+			
+		}elseif(isset($district)){
+			
+			$get_amc = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("select commodity_name,commodity_id,avg(facility_issues.qty_issued) as totalunits,
+					(avg(facility_issues.qty_issued))/commodities.total_commodity_units as amc_packs,
+					commodities.total_commodity_units from facility_issues inner join commodities on facility_issues.commodity_id=commodities.id inner join facilities
+					on facility_issues.facility_code=facilities.facility_code where facilities.district=$district
+					and s11_No IN('internal issue','(-ve Adj) Stock Deduction') group by commodity_id");
+					
+			//echo '<pre>'; print_r($get_amc);echo '<pre>'; 
+			
+		}elseif(isset($facility_code)){
+			
+			$getdates = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT MIN(created_at) as EarliestDate,MAX(created_at) as LatestDate
+					FROM facility_issues WHERE facility_code=$facility_code");
+		
+		//echo '<pre>'; print_r($getdates);echo '<pre>'; exit;
+		$early=$getdates[0]['EarliestDate'];
+		$late=$getdates[0]['LatestDate'];
+		
+		$now = time(); 
+		$my_date = strtotime($early);
+		$datediff = ($now - $my_date)/(60*60*24);//in days
+		$datediff= round($datediff,1);
+		
+		
+		$get_amc = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("select commodity_id,sum(facility_issues.qty_issued) as units,(sum(facility_issues.qty_issued)*30/$datediff)/commodities.total_commodity_units as amc_packs,
+						commodities.total_commodity_units from facility_issues inner join commodities on facility_issues.commodity_id=commodities.id
+						where facility_code=$facility_code and s11_No IN('internal issue','(-ve Adj) Stock Deduction') group by commodity_id");
+					
+			//echo '<pre>'; print_r($get_amc);echo '<pre>'; exit;
+			return $get_amc ;	
+			
+		}else{
+			
+			echo "national";
+		}
+		
+			
+					
+	}
 
 }
+

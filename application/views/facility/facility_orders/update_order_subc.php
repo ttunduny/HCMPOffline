@@ -22,7 +22,7 @@ border: 0px ;
 <div class="row-fluid">
 		<div class="col-md-8">
 			<div class="col-md-3">
-				<p class="bg-info">
+				<p class="bg-primary">
 			<span  class='' style="display: inline">
 				<strong>Fill the Order Quantity to complete order </strong>
 			</p>
@@ -64,6 +64,7 @@ border: 0px ;
 					    <th>Adj(+ve) (Units)</th>
 					    <th>Losses (Units)</th>
 					    <th>Closing Stock (Units)</th>
+					    <th>Closing Stock (Packs)</th>
 					    <th>No Days Out Of Stock</th>
 					    <th>AMC (Packs)</th>
 					    <th>Suggested Order Qty (Packs)</th>
@@ -113,12 +114,16 @@ border: 0px ;
 							<td><input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="losses['.$i.']"'; ?> value="<?php echo $facility_order[$i]['losses'] ?>" /></td>
 							
 							<td><input class="form-control input-small closing" readonly="readonly" type="text"<?php echo 'name="closing['.$i.']"'; ?> value="<?php echo $facility_order[$i]['closing_stock'];?>" /></td>
+							<td><input class="form-control input-small closingpacks" readonly="readonly" type="text"<?php echo 'name="closingpacks['.$i.']"'; ?> 
+								
+								value="<?php $closing=$facility_order[$i]['closing_stock_'];if($closing < 0 || $closing==''){echo 0;} else {echo $closing;}?>" /></td>
 							<td>
 								<input class="form-control input-small" readonly="readonly" type="text"<?php echo 'name="days['.$i.']"'; ?> 
 								value="<?php 
 								$closing_stock=$facility_order[$i]['closing_stock'];
+								$days=$facility_order[$i]['historical'];
 								
-								if ((int)$closing_stock <= 0) {
+								if ((int)$closing_stock <= 0 && (int)$days = 0) {
 								      $date_mod = $facility_order[$i]['date_modified'];
 									  
 										  $now = time(); 
@@ -251,6 +256,7 @@ $(document).ready(function() {
                             '<input class="form-control input-small" type="text" name="adjustmentpve['+new_count+']" id="adjustmentpve['+new_count+']"  value="0"   />' ,
 							'<input class="form-control input-small" type="text" name="losses['+new_count+']" id="losses['+new_count+']" value="0"   />' ,
 							'<input class="form-control input-small" type="text" name="closing['+new_count+']" id="closing['+new_count+']" value="0"   />',
+							'<input class="form-control input-small" type="text" name="closingpacks['+new_count+']" id="closingpacks['+new_count+']" value="0"   />',
 							'<input class="form-control input-small" type="text" name="days['+new_count+']" id="days['+new_count+']" value="0"   />',
 							'<input class="form-control input-small" type="text" name="amc['+new_count+']" id="amc['+new_count+']" value="0"   />',
 							'<input class="form-control input-small" type="text" value="0" name="suggested['+new_count+']" 	id="suggested['+new_count+']" readonly="yes"  />',
@@ -373,7 +379,7 @@ $(document).ready(function() {
 	function calculate_suggested_value(month){
 		$("input[name^=suggested]").each(function() {
         var amc=parseInt($(this).closest("tr").find(".amc").val());
-	 	var closing_stock=parseInt($(this).closest("tr").find(".closing").val());
+	 	var closing_stock=parseInt($(this).closest("tr").find(".closingpacks").val());
         var suggested=0;       
         if(closing_stock<0) {closing_stock=0;}
         suggested=((amc*month)-closing_stock)+amc;

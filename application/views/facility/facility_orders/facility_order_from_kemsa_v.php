@@ -1,4 +1,3 @@
-<?php //echo "This is the one";exit; ?>
 <style>
  	.input-small{
  		width: 55px !important;
@@ -20,7 +19,7 @@
 <div class="row">
 		<div class="col-md-8">
 			<div class="col-md-3">
-				<p class="bg-info">
+				<p class="bg-primary">
 			<span  class='' style="display: inline">
 				<strong>Fill the Order Quantity and Comment to complete order </strong>
 			</p>
@@ -69,6 +68,7 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 					    <th>Adj(+ve) (Units)</th>
 					    <th>Losses (Units)</th>
 					    <th>Closing Stock (Units)</th>
+					    <th>Closing Stock (Packs)</th>
 					    <th>No Days Out Of Stock</th>
 					    
 					    <th>AMC (Packs)</th>
@@ -112,10 +112,12 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 							
 							<td><input class="form-control input-small closing" readonly="readonly" type="text" name="closing[<?php echo $i ;?>]"
 								 value="<?php echo ($facility_order[$i]['closing_stock']<0)? 0:$facility_order[$i]['closing_stock'] ;?>" /></td>
+								 <td><input class="form-control input-small closingpacks" readonly="readonly" type="text" name="closingpacks[<?php echo $i ;?>]"
+								 value="<?php echo ($facility_order[$i]['closing_stock_']<0)? 0:$facility_order[$i]['closing_stock_'] ;?>" /></td>
 								 <td><input class="form-control input-small" readonly="readonly" type="text"  name="days[<?php echo $i ;?>]"  value="<?php 
 								$closing_stock=$facility_order[$i]['closing_stock'];
-								
-								if ((int)$closing_stock <= 0) {
+								$days=$facility_order[$i]['historical'];
+								if ((int)$closing_stock <= 0 && (int)$days = 0) {
 								      $date_mod = $facility_order[$i]['date_modified'];
 									  
 										  $now = time(); 
@@ -210,7 +212,6 @@ $(document).ready(function() {
 	 	alert("Please select a commodity first");
 	 	return;
 	 }
-
 	// add the items here to the order form
 	  $("#example" ).dataTable().fnAddData( [ 
   	 '<input type="hidden" class="commodity_name" id="commodity_name['+new_count+']" name="commodity_name['+new_count+']" value="'+$(".desc option:selected").text()+'" />'+
@@ -231,6 +232,7 @@ $(document).ready(function() {
                             '<input class="form-control input-small" type="text" name="adjustmentpve['+new_count+']" id="adjustmentpve['+new_count+']"  value="0"   />' ,
 							'<input class="form-control input-small" type="text" name="losses['+new_count+']" id="losses['+new_count+']" value="0"   />' ,
 							'<input class="form-control input-small" type="text" name="closing['+new_count+']" id="closing['+new_count+']" value="0"   />',
+							'<input class="form-control input-small" type="text" name="closingpacks['+new_count+']" id="closingpacks['+new_count+']" value="0"   />',
 							'<input class="form-control input-small" type="text" name="days['+new_count+']" id="days['+new_count+']" value="0"   />',
 							'<input class="form-control input-small" type="text" name="amc['+new_count+']" id="amc['+new_count+']" value="0"   />',
 							'<input class="form-control input-small" type="text" value="0" name="suggested['+new_count+']" 	id="suggested['+new_count+']" readonly="yes"  />',
@@ -273,8 +275,9 @@ $(document).ready(function() {
 	calculate_totals();	
 	});// process all the order into a summary table for the user to confirm before placing the order bed_capacity workload
 	$('.test').on('click','', function (){
+		var today = $.datepicker.formatDate('d MM, y', new Date());
 	var table_data='<div class="row" style="padding-left:2em"><div class="col-md-6"><h4>Order Summary</h4></div></div>'+
-    '<div class="row" style="padding-left:2em"><div class="col-md-6">Total Order Value (Ksh)</div><div class="col-md-6">'+number_format($("#total_order_value").val(), 2, '.', ',')+'</div></div>'+
+    '<div class="row" style="padding-left:2em"><div class="col-md-6">Total Order Value (Ksh)</div><div class="col-md-6">'+number_format($("#total_order_value").val(), 2, '.', ',')+'</div><div class="col-md-12">Order made on - '+today+'</div></div>'+
     '<table class="table table-hover table-bordered table-update">'+
 					"<thead><tr>"+
 					"<th>Description</th>"+
@@ -301,7 +304,6 @@ $(document).ready(function() {
     +'<button type="button" class="btn btn-primary" id="save_dem_order" data-dismiss="modal">Save</button>');
 	});
       /************save the data here*******************/
-
 	$('#main-content').on('click','#save_dem_order',function() {
      var order_total=$('#total_order_value').val();
      var alert_message='';
@@ -327,7 +329,6 @@ $(document).ready(function() {
 	var order_total=0;
 	var balance=0
 	 $("input[name^=quantity]").each(function() {
-
 	 	if($(this).val()=='')
 	 	{ var total=0} 
 	 	else{ var total=$(this).val()
@@ -350,7 +351,7 @@ $(document).ready(function() {
 	function calculate_suggested_value(month){
 		$("input[name^=suggested]").each(function() {
         var amc=parseInt($(this).closest("tr").find(".amc").val());
-	 	var closing_stock=parseInt($(this).closest("tr").find(".closing").val());
+	 	var closing_stock=parseInt($(this).closest("tr").find(".closingpacks").val());
         var suggested=0;       
         if(closing_stock<0) {closing_stock=0;}
         suggested=((amc*month)-closing_stock)+amc;
@@ -360,5 +361,4 @@ $(document).ready(function() {
 	}		
     
 });
-
 </script>

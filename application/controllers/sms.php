@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Collins
- * 
+ *
  */
 ob_start();
 class sms extends MY_Controller {
@@ -15,127 +15,220 @@ class sms extends MY_Controller {
 
 	/*
 	 |--------------------------------------------------------------------------|
-	 | SMS	SECTION																	|
+	 | SMS	SECTION																|
 	 |--------------------------------------------------------------------------|
 	 */
+	//for testing puposes only
+	public function test_sms() {
 
-	//Test for sending emails
-	public function send_email_test() {
-		$this -> hcmp_functions -> send_email();
-	}
+		$phones = '254720167245';
+		$message = 'test from system live server';
+		$message = urlencode($message);
 
-	//Checks if there are potential expiries in the system
-	public function check_potential_expiries() {
-		$year = date("Y");
-		$potential_expiries = Facility_stocks::get_potential_expiries_sms();
-		$total_potential = count($potential_expiries);
+		$spam_sms = '254723722204';
 
-		if ($total_potential > 0) {
-			$total_facilitites = count($potential_expiries);
+		$phone_numbers = explode("+", $spam_sms);
 
-			$total_commodities = "";
-
-			foreach ($potential_expiries as $potential) {
-				$facility_code = $potential['facility_code'];
-				$data = Users::getUsers($facility_code) -> toArray();
-				//Filter the array to remove empty sections of the array
-				$data = array_filter($data);
-				if (!empty($data)) {
-					foreach ($data as $users) {
-						$user_type = $users['usertype_id'];
-
-						switch ($user_type) {
-							//Facility Admin
-							case 2 :
-								$message = $potential['total'] . " commodities will expire within 3 months. HCMP";
-								break;
-							//Sub County Head
-							case 3 :
-								$message = $total_facilitites . " facilities have commodities that will expire within 3 months. HCMP";
-								break;
-							//County Head
-							case 10 :
-								$message = "There are " . $total_potential . " potential expiries in the county. HCMP";
-								break;
-							//For test purposes only
-							case 5 :
-								$message = "Test SMS. HCMP";
-								break;
-						}
-
-						$phone = $this -> get_facility_phone_numbers($facility_code);
-						$phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
-						$this -> hcmp_functions -> send_sms(substr($phone, 0, -1), $message);
-					}
-				} else {
-					//DO Nothing
-					//Array is empty
-				}
-
-			}
-
-		} else {
-			//No Potential Expiries
-
+		foreach ($phone_numbers as $key => $user_no) {
+			file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+			echo "Success sent to " . $user_no . '<br>';
 		}
 
 	}
 
-	//Stock out SMSes
-	//will be called once a week by the system automatically
-	public function stock_out_sms() {
-		$stock_outs = Facility_stocks::get_stock_outs_sms();
-		$total_stock_outs = count($stock_outs);
-		if ($total_stock_outs > 0) {
-			$total_facilitites = count($stock_outs);
-			$total_commodities = "";
+	public function test_email() {
+		$message = "Test email form the server";
+		$subject = "Test Subject from the server";
+		$email_address = "collinsojenge@gmail.com";
 
-			foreach ($stock_outs as $stock_outs_) {
-				$facility_code = $stock_outs_['facility_code'];
-				$data = Users::getUsers($facility_code) -> toArray();
-				//Filter the array to remove empty sections of the array
-				$data = array_filter($data);
-				if (!empty($data)) {
-					$total_subcounties = count($data['']);
-					foreach ($data as $users) {
-						$user_type = $users['usertype_id'];
+		$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
-						switch ($user_type) {
-							//Facility Admin
-							case 2 :
-								$message = $stock_outs_['total'] . " commodities are out of stock.";
-								break;
-							//Sub County Head
-							case 3 :
-								$message = $total_facilitites . " facilities have a total number of " . $total_stock_outs . " stock outs.";
-								break;
-							//County Head
-							case 10 :
-								$message = "There are " . $total_stock_outs . " stock outs in the county";
-								break;
-							//For test purposes only
-							case 5 :
-								$message = "To Me";
-								break;
-						}
-
-						$phone = $this -> get_facility_phone_numbers($facility_code);
-						$phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
-						$this -> hcmp_functions -> send_sms(substr($phone, 0, -1), $message);
-					}
-				} else {
-					//DO Nothing
-					//Array is empty
-				}
-
-			}
-
-		} else {
-			//No Stock Outs
-
-		}
 	}
 
+	//get dpp phone numbers
+	public function get_ddp_phone_numbers($district_id) {
+		$data = Users::get_dpp_details($district_id);
+		$phone = "";
+
+		foreach ($data as $info) {
+			$telephone = preg_replace('(^0+)', "254", $info -> telephone);
+			$phone .= $telephone . '+';
+		}
+		return $phone;
+	}
+
+	//get the phone numbers for the county team
+	public function get_cp_phone_numbers($county_id) {
+		$data = Users::get_county_details($county_id);
+		$phone = "";
+
+		foreach ($data as $info) {
+			$telephone = preg_replace('(^0+)', "254", $info -> telephone);
+			$phone .= $telephone . '+';
+		}
+		return $phone;
+	}
+
+	//get facility users phone numbers
+	public function get_facility_phone_numbers($facility_code) {
+
+		$data = Users::get_user_info($facility_code);
+		$phone = "";
+		foreach ($data as $info) {
+
+			$telephone = preg_replace('(^0+)', "254", $info -> telephone);
+
+			$phone .= $telephone . '+';
+		}
+
+		return $phone;
+	}
+
+	//for sending system usage sms
+	public function check_system_usage() {
+		//get the counties using HCMP
+		$counties = Facilities::get_counties_all_using_HCMP();
+
+		foreach ($counties as $counties) :
+			//pick the county nae and county ID accordingly
+			//counts the number of facilities not using the system
+			$count_county = 0;
+
+			$county_id = $counties['county'];
+			$county_name = $counties['county_name'];
+			$district_total = array();
+			//Get all the districts in that  particular county
+			$districts = Facilities::get_all_using_HCMP($county_id);
+
+			foreach ($districts as $districts) :
+				$count_district = 0;
+				$district_id = $districts['district'];
+				$district_name = $districts['name'];
+
+				//echo "<pre>";print_r($district_name);exit;
+				$facilities = Facilities::getFacilities_for_email($district_id);
+
+				//loop through all the facilities in the particular sub county
+				foreach ($facilities as $facilities_) :
+					//facility name
+					$facility_name = $facilities_ -> facility_name;
+					$facility_code = $facilities_ -> facility_code;
+
+					//check the last time they logged in as a facility
+					$system_usage = Log::check_system_usage($facility_code);
+
+					$no_of_days = $system_usage[0]['Days_From'];
+					//checks if the number of days is greater than five as that is the threshold
+					if ($no_of_days >= 5) :
+						//counts the number of facilities who haven't logged in for more than 5 days
+						$count_district++;
+						//get the phone numbers of the facility users
+						$phone = $this -> get_facility_phone_numbers($facility_code);
+
+						$message = "Dear $facility_name user,\n you have not logged in to HCMP for the past $no_of_days days. The last time you logged in was $no_of_days days ago.\n Kindly log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
+						$message = urlencode($message);
+						//appends the phone numbers of the technical team
+						$spam_sms = $phone;
+
+						$phone_numbers = explode("+", $spam_sms);
+
+						foreach ($phone_numbers as $key => $user_no) {
+							file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+						}
+
+					endif;
+
+					//end for each for the facilites
+				endforeach;
+				//start for the sub county section
+				(array_key_exists($district_name, $district_total)) ? : $district_total = array_merge($district_total, array($district_name => $count_district));
+
+				//pick the user data
+				$user_data = Users::get_scp_details($district_id);
+
+				//loop through the each of the numbers of the users
+				foreach ($user_data as $data) :
+					//pick the name
+					$name_sub_county = $data['fname'] . " " . $data['lname'];
+					//message to be sent out to the sub county guys
+					$message = "Dear $name_sub_county, $district_name Sub County Pharmacist,\n $count_district facilities in $district_name Sub County have not accessed HCMP for more than 5 days.\n Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
+					$message = urlencode($message);
+
+					$user_no = $data['telephone'];
+					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+				endforeach;
+
+				$count_county += $count_district;
+
+				//end for each for the districts
+			endforeach;
+			//start for the sub county section
+			//first make the message
+
+			//then pick the names and details of the people receiving the texts
+			$user_data = Users::get_county_pharm_details($county_id);
+
+			//loop through the each of the numbers of the users
+			foreach ($user_data as $data) :
+				//pick the name
+				$name_county = $data['fname'] . " " . $data['lname'];
+				$message = "Dear $name_county,\n $count_county facilities in $county_name County have not accessed HCMP for more than 5 days.\n";
+
+				foreach ($district_total as $key => $total) {
+					if ($total > 0) :
+						$message .= " $key Sub County - $total facilities.\n";
+					endif;
+
+				}
+
+				$message .= "Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
+				$message = urlencode($message);
+
+				$user_no = $data['telephone'];
+
+				file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+
+			endforeach;
+
+		endforeach;
+	}
+
+	//for sending an sms when an order is approved
+	public function send_order_approval_sms($facility_code, $status) {
+
+		$message = ($status == 1) ? $facility_name . " order has been rejected. HCMP" : $facility_name . " order has been approved. HCMP";
+
+		$data = Users::getUsers($facility_code) -> toArray();
+		$phone = $this -> get_facility_phone_numbers($facility_code);
+		$phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
+
+		$spam_sms = '254723722204+254720167245+254726416795' . $phone;
+
+		$phone_numbers = explode("+", $spam_sms);
+
+		foreach ($phone_numbers as $key => $user_no) {
+			file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+		}
+
+	}
+
+	//Called when an order is rejected or approved bt the DPP
+	//Accepts two parameters $facility code and status of the order
+	/*public function send_order_approval_sms($facility_code, $status) {
+	 //$facility_code = $this -> session -> userdata('facility_id');
+	 $facility_name = Facilities::get_facility_name2($facility_code);
+	 $facility_name = $facility_name['facility_name'];
+	 $data = Users::getUsers($facility_code) -> toArray();
+
+	 $message = ($status == 1) ? $facility_name . "'s order has been rejected. HCMP" : $facility_name . "'s order has been approved. HCMP";
+
+	 $data = Users::getUsers($facility_code) -> toArray();
+	 $phone = $this -> get_facility_phone_numbers($facility_code);
+	 $phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
+
+	 $this -> send_sms(substr($phone, 0, -1), $message);
+
+	 }*/
 	//For Orders
 	//Called when an order is placed by a particular facility
 	public function send_order_sms() {
@@ -167,100 +260,262 @@ class sms extends MY_Controller {
 
 			$phone = $this -> get_facility_phone_numbers($facility_code);
 			$phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
-			$this -> hcmp_functions -> send_sms(substr($phone, 0, -1), $message);
-		}
+			//$this -> hcmp_functions -> send_sms(substr($phone, 0, -1), $message);
+			$spam_sms = '254723722204+254720167245+254726416795' . $phone;
 
-	}
+			$phone_numbers = explode("+", $spam_sms);
 
-	//When stock is updated by a particular facility
-	public function send_stock_update_sms() {
-		$facility_code = $this -> session -> userdata('facility_id');
-		$facility_name = Facilities::get_facility_name2($facility_code);
-		$facility_name = $facility_name['facility_name'];
-		$data = Users::getUsers($facility_code) -> toArray();
-
-		foreach ($data as $users) {
-			$user_type = $users['usertype_id'];
-
-			switch ($user_type) {
-				//Facility Admin
-				case 2 :
-					$message = "Stock has been updated for " . $facility_name;
-					break;
-				//Sub County Head
-				case 3 :
-					$message = $facility_name . " has updated its stock";
-					break;
-				//County Head
-				case 10 :
-					$message = "Stock has been updated for " . $facility_name;
-					break;
-				//For test purposes only
-				case 5 :
-					$message = "Stock has been updated for " . $facility_name;
-					break;
+			foreach ($phone_numbers as $key => $user_no) {
+				file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 			}
-
-			$phone = $this -> get_facility_phone_numbers($facility_code);
-			$phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
-			$this -> hcmp_functions -> send_sms(substr($phone, 0, -1), $message);
 		}
 
 	}
 
-	//Called when an order is rejected or approved bt the DPP
-	//Accepts two parameters $facility code and status of the order
-	public function send_order_approval_sms($facility_code, $status) {
-		//$facility_code = $this -> session -> userdata('facility_id');
-		$facility_name = Facilities::get_facility_name2($facility_code);
-		$facility_name = $facility_name['facility_name'];
+	//sends an sms when a redistribution is done by a facility
+	public function send_stock_donate_sms() {
+
+		$facility_name = $this -> session -> userdata('full_name');
+		$facility_code = $this -> session -> userdata('facility_id');
 		$data = Users::getUsers($facility_code) -> toArray();
-
-		$message = ($status == 1) ? $facility_name . "'s order has been rejected. HCMP" : $facility_name . "'s order has been approved. HCMP";
-
-		$data = Users::getUsers($facility_code) -> toArray();
-		$phone = $this -> get_facility_phone_numbers($facility_code);
-		$phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
-
-		$this -> send_sms(substr($phone, 0, -1), $message);
-
-	}
-
-	public function order_update_sms($facility_code, $status) {
-		//$facility_code = $this -> session -> userdata('facility_id');
-		$facility_name = Facilities::get_facility_name2($facility_code);
-		$facility_name = $facility_name['facility_name'];
-		$data = Users::getUsers($facility_code) -> toArray();
-		$message = $facility_name . " has updated its order";
 
 		$phone = $this -> get_facility_phone_numbers($facility_code);
 		$phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
-		$this -> hcmp_functions -> send_sms(substr($phone, 0, -1), $message);
+		$message = $facility_name . " have been donated commodities. HCMP";
+
+		//$this -> send_sms(substr($phone, 0, -1), $message);
 
 	}
 
-	public function send_stock_donate_sms($facility_code, $facility_code2) {
-		//Facility code the mfl code for the facility donating drugs
-		//Facility code 2 is for the facility recieving the commodities
-		$facility_name = Facilities::get_facility_name2($facility_code);
-		$facility_name = $facility_name['facility_name'];
-		$facility_name2 = Facilities::get_facility_name2($facility_code2);
-		$facility_name2 = $facility_name2['facility_name'];
-		$data = Users::getUsers($facility_code) -> toArray();
-		$data2 = Users::getUsers($facility_code) -> toArray();
+	/*public function send_stock_donate_sms($facility_code, $facility_code2) {
+	 //Facility code the mfl code for the facility donating drugs
+	 //Facility code 2 is for the facility recieving the commodities
+	 $facility_name = Facilities::get_facility_name2($facility_code);
+	 $facility_name = $facility_name['facility_name'];
+	 $facility_name2 = Facilities::get_facility_name2($facility_code2);
+	 $facility_name2 = $facility_name2['facility_name'];
+	 $data = Users::getUsers($facility_code) -> toArray();
+	 $data2 = Users::getUsers($facility_code) -> toArray();
 
-		$message = $facility_name . " has donated commodirties to " . $facility_name2;
+	 $message = $facility_name . " has donated commodirties to " . $facility_name2;
 
-		$phone = $this -> get_facility_phone_numbers($facility_code);
-		$phone .= $this -> get_facility_phone_numbers($facility_code2);
-		$phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
-		$phone .= $this -> get_ddp_phone_numbers($data2[0]['district']);
+	 $phone = $this -> get_facility_phone_numbers($facility_code);
+	 $phone .= $this -> get_facility_phone_numbers($facility_code2);
+	 $phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
+	 $phone .= $this -> get_ddp_phone_numbers($data2[0]['district']);
+	 $spam_sms = '254723722204+254720167245+254726416795+' . $phone;
 
-		$this -> hcmp_functions -> send_sms(substr($phone, 0, -1), $message);
+	 $phone_numbers = explode("+", $spam_sms);
 
-	}
+	 foreach ($phone_numbers as $key => $user_no)
+	 {
+	 file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+	 }
 
-	/*public function update_stock_out_table()
+	 //$this -> hcmp_functions -> send_sms(substr($phone, 0, -1), $message);
+
+	 }
+	 * /
+
+	 //sends a text when a stock update is done by a facility
+	 public function send_stock_update_sms() {
+	 $facility_name = $this -> session -> userdata('full_name');
+	 $facility_code = $this -> session -> userdata('facility_id'); ;
+	 $data = Users::getUsers($facility_code) -> toArray();
+
+	 $message = "Stock level for " . $facility_name . " have been updated. HCMP";
+
+	 $phone = $this -> get_facility_phone_numbers($facility_code);
+	 $phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
+
+	 $spam_sms = '254723722204+254720167245+254726416795' . $phone;
+
+	 $phone_numbers = explode("+", $spam_sms);
+
+	 foreach ($phone_numbers as $key => $user_no) {
+	 file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+	 }
+
+	 //$this -> send_sms(substr($phone, 0, -1), $message);
+
+	 }
+
+	 //Test for sending emails
+	 public function send_email_test() {
+	 $this -> hcmp_functions -> send_email();
+	 }
+
+	 //Checks if there are potential expiries in the system
+	 public function check_potential_expiries() {
+	 $year = date("Y");
+	 $potential_expiries = Facility_stocks::get_potential_expiries_sms();
+	 $total_potential = count($potential_expiries);
+
+	 if ($total_potential > 0) {
+	 $total_facilitites = count($potential_expiries);
+
+	 $total_commodities = "";
+
+	 foreach ($potential_expiries as $potential) {
+	 $facility_code = $potential['facility_code'];
+	 $data = Users::getUsers($facility_code) -> toArray();
+	 //Filter the array to remove empty sections of the array
+	 $data = array_filter($data);
+	 if (!empty($data)) {
+	 foreach ($data as $users) {
+	 $user_type = $users['usertype_id'];
+
+	 switch ($user_type) {
+	 //Facility Admin
+	 case 2 :
+	 $message = $potential['total'] . " commodities will expire within 3 months. HCMP";
+	 break;
+	 //Sub County Head
+	 case 3 :
+	 $message = $total_facilitites . " facilities have commodities that will expire within 3 months. HCMP";
+	 break;
+	 //County Head
+	 case 10 :
+	 $message = "There are " . $total_potential . " potential expiries in the county. HCMP";
+	 break;
+	 //For test purposes only
+	 case 5 :
+	 $message = "Test SMS. HCMP";
+	 break;
+	 }
+
+	 $phone = $this -> get_facility_phone_numbers($facility_code);
+	 $phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
+	 $this -> hcmp_functions -> send_sms(substr($phone, 0, -1), $message);
+	 }
+	 } else {
+	 //DO Nothing
+	 //Array is empty
+	 }
+
+	 }
+
+	 } else {
+	 //No Potential Expiries
+
+	 }
+
+	 }
+
+	 //Stock out SMSes
+	 //will be called once a week by the system automatically
+	 public function stock_out_sms() {
+	 $stock_outs = Facility_stocks::get_stock_outs_sms();
+	 $total_stock_outs = count($stock_outs);
+	 if ($total_stock_outs > 0) {
+	 $total_facilitites = count($stock_outs);
+	 $total_commodities = "";
+
+	 foreach ($stock_outs as $stock_outs_) {
+	 $facility_code = $stock_outs_['facility_code'];
+	 $data = Users::getUsers($facility_code) -> toArray();
+	 //Filter the array to remove empty sections of the array
+	 $data = array_filter($data);
+	 if (!empty($data)) {
+	 $total_subcounties = count($data['']);
+	 foreach ($data as $users) {
+	 $user_type = $users['usertype_id'];
+
+	 switch ($user_type) {
+	 //Facility Admin
+	 case 2 :
+	 $message = $stock_outs_['total'] . " commodities are out of stock.";
+	 break;
+	 //Sub County Head
+	 case 3 :
+	 $message = $total_facilitites . " facilities have a total number of " . $total_stock_outs . " stock outs.";
+	 break;
+	 //County Head
+	 case 10 :
+	 $message = "There are " . $total_stock_outs . " stock outs in the county";
+	 break;
+	 //For test purposes only
+	 case 5 :
+	 $message = "To Me";
+	 break;
+	 }
+
+	 $phone = $this -> get_facility_phone_numbers($facility_code);
+	 $phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
+	 $this -> hcmp_functions -> send_sms(substr($phone, 0, -1), $message);
+	 }
+	 } else {
+	 //DO Nothing
+	 //Array is empty
+	 }
+
+	 }
+
+	 } else {
+	 //No Stock Outs
+
+	 }
+	 }
+
+	 //When stock is updated by a particular facility
+	 public function send_stock_update_sms() {
+	 $facility_code = $this -> session -> userdata('facility_id');
+	 $facility_name = Facilities::get_facility_name2($facility_code);
+	 $facility_name = $facility_name['facility_name'];
+	 $data = Users::getUsers($facility_code) -> toArray();
+
+	 foreach ($data as $users) {
+	 $user_type = $users['usertype_id'];
+
+	 switch ($user_type) {
+	 //Facility Admin
+	 case 2 :
+	 $message = "Stock has been updated for " . $facility_name;
+	 break;
+	 //Sub County Head
+	 case 3 :
+	 $message = $facility_name . " has updated its stock";
+	 break;
+	 //County Head
+	 case 10 :
+	 $message = "Stock has been updated for " . $facility_name;
+	 break;
+	 //For test purposes only
+	 case 5 :
+	 $message = "Stock has been updated for " . $facility_name;
+	 break;
+	 }
+
+	 $phone = $this -> get_facility_phone_numbers($facility_code);
+	 $phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
+	 $this -> hcmp_functions -> send_sms(substr($phone, 0, -1), $message);
+	 }
+
+	 }
+
+	 public function order_update_sms($facility_code, $status) {
+	 //$facility_code = $this -> session -> userdata('facility_id');
+	 $facility_name = Facilities::get_facility_name2($facility_code);
+	 $facility_name = $facility_name['facility_name'];
+	 $data = Users::getUsers($facility_code) -> toArray();
+	 $message = $facility_name . " has updated its order";
+
+	 $phone = $this -> get_facility_phone_numbers($facility_code);
+	 $phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
+
+	 $spam_sms = '254720167245+254726534272+254726416795+254725227833+' . $phones;
+	 $phone_numbers = explode("+", $spam_sms);
+
+	 foreach ($phone_numbers as $key => $user_no) {
+	 file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+	 //echo "Success sent to ".$user_no.'<br>';
+	 }
+
+	 $this -> hcmp_functions -> send_sms(substr($phone, 0, -1), $message);
+
+	 }
+
+	 /*public function update_stock_out_table()
 	 {
 
 	 $in = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
@@ -293,22 +548,24 @@ class sms extends MY_Controller {
 		$data = Users::get_dpp_emails($district_id);
 		$user_email = "";
 		foreach ($data as $info) {
-			
+
 			$user_email .= $info -> email . ',';
 
 		}
 		return $user_email;
 	}
+
 	public function get_ddp_email_county($county_id) {
 		$data = Users::get_dpp_emails_county_level($county_id);
 		$user_email = "";
 		foreach ($data as $info) {
-			
+
 			$user_email .= $info -> email . ',';
 
 		}
 		return $user_email;
 	}
+
 	public function get_county_email($county_id) {
 		$data = Users::get_county_emails($county_id);
 		$user_email = "";
@@ -318,7 +575,8 @@ class sms extends MY_Controller {
 		}
 		return $user_email;
 	}
-//Getting the bcc emails 
+
+	//Getting the bcc emails
 	public function get_bcc_notifications() {
 		$bcc_emails = "collinsojenge@gmail.com,kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,
 						jhungu@clintonhealthaccess.org,gmacharia@clintonhealthacces.org,tngugi@clintonhealthaccess.org,
@@ -327,7 +585,7 @@ class sms extends MY_Controller {
 						raykiprono@gmail.com,margie.dora@gmail.com,amostum5@gmail.com,muirurisk@gmail.com,
 						valwacu@gmail.com,odiwuorybrian@gmail.com,mwakiojoy@gmail.com,emgitar@yahoo.com,ronohb@gmail.com,
 						kevgithuka@gmail.com,kiganyastephenthua@gmail.com,";
-		
+
 		return $bcc_emails;
 	}
 
@@ -336,7 +594,7 @@ class sms extends MY_Controller {
 		$data = Users::get_user_emails($facility_code);
 		$user_email = "";
 		foreach ($data as $info) {
-			
+
 			$user_email .= $info -> email . ',';
 
 		}
@@ -352,44 +610,36 @@ class sms extends MY_Controller {
 		$this -> send_email(substr($email_address, 0, -1), $message, $subject, $attach_file);
 
 	}
+
 	/*
 	 |--------------------------------------------------------------------------|
 	 | EMAIL DAILY/WEEKLY/MONTHLY REPORTS SECTION															|
 	 |--------------------------------------------------------------------------|
 	 */
-	 public function facility_overview_report()
-	 {
-	 	//get all the facilities rolled out
-	 	$facilities = Facilities::get_all_facilities_on_HCMP();
+	public function facility_overview_report() {
+		//get all the facilities rolled out
+		$facilities = Facilities::get_all_facilities_on_HCMP();
 		//Start buliding the excel file
 		$excel_data = array();
 		$excel_data = array('doc_creator' => 'HCMP', 'doc_title' => 'facility overview monthly report ', 'file_name' => 'facility overview monthly report');
 		$row_data = array();
 		//contains the columns in the excel sheet
-		$column_data = array("County","Sub County", "MFL","Facility Name","Level","Type","Owner","Date of Activation");
+		$column_data = array("County", "Sub County", "MFL", "Facility Name", "Level", "Type", "Owner", "Date of Activation");
 		$excel_data['column_data'] = $column_data;
-		//Loop through the data picked form the database and assign each row to the $row_data variable 
+		//Loop through the data picked form the database and assign each row to the $row_data variable
 		//$row_data is used to dump the data into rows for the excel
 		foreach ($facilities as $facilities) :
-			array_push($row_data, array($facilities["county"],
-										$facilities["sub_county"],
-										$facilities["facility_code"],
-										$facilities["facility_name"],
-										$facilities["level"],
-										$facilities["type"],
-										$facilities["owner"],
-										$facilities["date_of_activation"]));
+			array_push($row_data, array($facilities["county"], $facilities["sub_county"], $facilities["facility_code"], $facilities["facility_name"], $facilities["level"], $facilities["type"], $facilities["owner"], $facilities["date_of_activation"]));
 		endforeach;
 
-		
 		$excel_data['row_data'] = $row_data;
 		$excel_data['report_type'] = "download_file";
 		$excel_data['file_name'] = "Facility Overview Report";
-		
-		$excel_data['excel_title'] = "Facilities Rolled on HCMP as at".date("Js F Y");
+
+		$excel_data['excel_title'] = "Facilities Rolled on HCMP as at" . date("Js F Y");
 
 		$subject = "Facility Overview Report";
-		
+
 		$message = "Good Morning,</br>
 				<p>Find attached an excel sheet with the breakdown of facilities using HCMP
 				You may log onto health-cmp.or.ke to confirm.</p>
@@ -400,19 +650,18 @@ class sms extends MY_Controller {
 		//they have the same number of columns
 		$report_type = "ors_report";
 		//create the excel sheet here
-		$this-> create_excel($excel_data,$report_type);
-		exit;
+		$this -> create_excel($excel_data, $report_type);
+		exit ;
 		//where the excel sheet is stored before being attached
 		$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-		
+
 		//the email of the receipients
 		//$email_address = "collinsojenge@gmail.com";
 		//function for sending the actual email
 		//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
-		
-	 }
-	 
+	}
+
 	public function expiries_report() {
 		//Set the current year
 		$year = date("Y");
@@ -436,10 +685,10 @@ class sms extends MY_Controller {
 			$district_total = array();
 
 			foreach ($districts as $districts) {
-				
+
 				//Used to store the total cost of all expiries
 				$sub_county_expiries_total = 0;
-				
+
 				$district_id = $districts['district'];
 				$district_name = $districts['name'];
 				//get all facilities in that district
@@ -464,13 +713,13 @@ class sms extends MY_Controller {
 					$excel_data = array();
 					$excel_data = array('doc_creator' => $facility_name, 'doc_title' => 'facility expiries monthly report ', 'file_name' => 'facility weekly report');
 					$row_data = array();
-					
-					$column_data = array("Commodity Name","Unit Size", "Quantity (packs)","Quantity (units)","Unit Cost(KSH)","Total Expired(KSH)","Date of Expiry","Supplier","Date Added","Manufacturer","Facility Name","MFL Code","Sub County","County");
-					
+
+					$column_data = array("Commodity Name", "Unit Size", "Quantity (packs)", "Quantity (units)", "Unit Cost(KSH)", "Total Expired(KSH)", "Date of Expiry", "Supplier", "Date Added", "Manufacturer", "Facility Name", "MFL Code", "Sub County", "County");
+
 					$excel_data['column_data'] = $column_data;
 
 					foreach ($facility_expiries as $facility_expiries) :
-						array_push($row_data, array($facility_expiries["commodity_name"],$facility_expiries["unit_size"],$facility_expiries["packs"],$facility_expiries["units"],$facility_expiries["unit_cost"],$facility_expiries["total"],$facility_expiries["expiry_date"],$facility_expiries["source_name"],$facility_expiries["date_added"],$facility_expiries["manufacture"],$facility_expiries["facility_name"],$facility_expiries["facility_code"],$facility_expiries["subcounty"],$facility_expiries["county"]));
+						array_push($row_data, array($facility_expiries["commodity_name"], $facility_expiries["unit_size"], $facility_expiries["packs"], $facility_expiries["units"], $facility_expiries["unit_cost"], $facility_expiries["total"], $facility_expiries["expiry_date"], $facility_expiries["source_name"], $facility_expiries["date_added"], $facility_expiries["manufacture"], $facility_expiries["facility_name"], $facility_expiries["facility_code"], $facility_expiries["subcounty"], $facility_expiries["county"]));
 						$facility_potential_expiries_total = $facility_potential_expiries_total + $facility_expiries["total"];
 					endforeach;
 
@@ -480,12 +729,12 @@ class sms extends MY_Controller {
 						$excel_data['row_data'] = $row_data;
 						$excel_data['report_type'] = "download_file";
 						$excel_data['file_name'] = $facility_name . "_Expiries_Report";
-						$excel_data['excel_title'] = "Expiries Report for ".$facility_name." for the month of ".date("F Y");
+						$excel_data['excel_title'] = "Expiries Report for " . $facility_name . " for the month of " . date("F Y");
 
 						$subject = "Expiries: " . $facility_name;
-						
-						$message = "Dear ".$facility_name." facility,</br>
-								<p>Find attached an excel sheet with the ".$facility_name." breakdown of Expiries.
+
+						$message = "Dear " . $facility_name . " facility,</br>
+								<p>Find attached an excel sheet with the " . $facility_name . " breakdown of Expiries.
 								You may log onto health-cmp.or.ke to decommission them.</p>
 								<p>----</p>
 								<p>HCMP</p>
@@ -495,12 +744,12 @@ class sms extends MY_Controller {
 						//holds the total figure for the expiries
 						$total_figure = $facility_potential_expiries_total;
 						//excel is created by php excel here
-						$this-> create_excel($excel_data,$report_type,$total_figure);
+						$this -> create_excel($excel_data, $report_type, $total_figure);
 						//where the excel sheet is stored before being attached
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-						
+
 						//the email of the receipients
-						$email_address = $this->get_facility_email($facility_code);
+						$email_address = $this -> get_facility_email($facility_code);
 						//function for sending the actual email
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
@@ -514,13 +763,13 @@ class sms extends MY_Controller {
 				$excel_data = array();
 				$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'district expiries weekly report ', 'file_name' => 'district weekly report');
 				$row_data = array();
-				$column_data = array("Commodity Name","Unit Size", "Quantity (packs)","Quantity (units)","Unit Cost(KSH)","Total Expired(KSH)","Date of Expiry","Supplier","Date Added","Manufacturer","Facility Name","MFL Code","Sub County","County");
+				$column_data = array("Commodity Name", "Unit Size", "Quantity (packs)", "Quantity (units)", "Unit Cost(KSH)", "Total Expired(KSH)", "Date of Expiry", "Supplier", "Date Added", "Manufacturer", "Facility Name", "MFL Code", "Sub County", "County");
 				$excel_data['column_data'] = $column_data;
 
 				foreach ($facility_total as $facility_total_1) :
 					foreach ($facility_total_1 as $facility_total_2) :
 						foreach ($facility_total_2 as $facility_total1) :
-							array_push($row_data, array($facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["packs"],$facility_total1["units"],$facility_total1["unit_cost"],$facility_total1["total"],$facility_total1["expiry_date"],$facility_total1["source_name"],$facility_total1["date_added"],$facility_total1["manufacture"],$facility_total1["facility_name"],$facility_total1["facility_code"],$facility_total1["subcounty"],$facility_total1["county"]));
+							array_push($row_data, array($facility_total1["commodity_name"], $facility_total1["unit_size"], $facility_total1["packs"], $facility_total1["units"], $facility_total1["unit_cost"], $facility_total1["total"], $facility_total1["expiry_date"], $facility_total1["source_name"], $facility_total1["date_added"], $facility_total1["manufacture"], $facility_total1["facility_name"], $facility_total1["facility_code"], $facility_total1["subcounty"], $facility_total1["county"]));
 							$sub_county_expiries_total = $sub_county_expiries_total + $facility_total1["total"];
 						endforeach;
 					endforeach;
@@ -533,25 +782,25 @@ class sms extends MY_Controller {
 					$excel_data['row_data'] = $row_data;
 					$excel_data['report_type'] = "download_file";
 					$excel_data['file_name'] = $district_name . "_Weekly_District_Expiries_Report";
-					$excel_data['excel_title'] = "Expiries Report for ".$district_name." Sub County for the month of ".date("F Y");
-					
+					$excel_data['excel_title'] = "Expiries Report for " . $district_name . " Sub County for the month of " . date("F Y");
+
 					//tyoe of report created
 					$report_type = "expiries";
 					//holds the total cost
 					$total_figure = $sub_county_expiries_total;
 					//creates the excel sheet
-					$this-> create_excel($excel_data,$report_type,$total_figure);
+					$this -> create_excel($excel_data, $report_type, $total_figure);
 					//path of the excel sheet
 					$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 					//creating the email subject and message body
 					$subject = "Expiries: " . $district_name . " Sub County (Next 3 Months)";
-					$message = "Dear ".$district_name." Sub County,
-								<p>Find attached an excel sheet with the ".$district_name." Sub County breakdown of Expiries.
+					$message = "Dear " . $district_name . " Sub County,
+								<p>Find attached an excel sheet with the " . $district_name . " Sub County breakdown of Expiries.
 								You may log onto health-cmp.or.ke to decommission them.</p>
 								<p>----</p>
 								<p>HCMP</p>
 								<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-					
+
 					//email address to receive
 					$email_address = $this -> get_ddp_email($district_id);
 					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
@@ -563,7 +812,7 @@ class sms extends MY_Controller {
 			$excel_data = array();
 			$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'county expiries weekly report ', 'file_name' => 'district report');
 			$row_data = array();
-			$column_data = array("Commodity Name","Unit Size", "Quantity (packs)","Quantity (units)","Unit Cost(KSH)","Total Expired(KSH)","Date of Expiry","Supplier","Date Added","Manufacturer","Facility Name","MFL Code","Sub County","County");
+			$column_data = array("Commodity Name", "Unit Size", "Quantity (packs)", "Quantity (units)", "Unit Cost(KSH)", "Total Expired(KSH)", "Date of Expiry", "Supplier", "Date Added", "Manufacturer", "Facility Name", "MFL Code", "Sub County", "County");
 			$excel_data['column_data'] = $column_data;
 
 			foreach ($district_total as $facility_total_1) :
@@ -571,7 +820,7 @@ class sms extends MY_Controller {
 					foreach ($facility_total_2 as $facility_total_3) :
 						foreach ($facility_total_3 as $facility_total_4) :
 							foreach ($facility_total_4 as $facility_total1) :
-								array_push($row_data, array($facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["packs"],$facility_total1["units"],$facility_total1["unit_cost"],$facility_total1["total"],$facility_total1["expiry_date"],$facility_total1["source_name"],$facility_total1["date_added"],$facility_total1["manufacture"],$facility_total1["facility_name"],$facility_total1["facility_code"],$facility_total1["subcounty"],$facility_total1["county"]));
+								array_push($row_data, array($facility_total1["commodity_name"], $facility_total1["unit_size"], $facility_total1["packs"], $facility_total1["units"], $facility_total1["unit_cost"], $facility_total1["total"], $facility_total1["expiry_date"], $facility_total1["source_name"], $facility_total1["date_added"], $facility_total1["manufacture"], $facility_total1["facility_name"], $facility_total1["facility_code"], $facility_total1["subcounty"], $facility_total1["county"]));
 								$county_expiries_total = $county_expiries_total + $facility_total1["total"];
 							endforeach;
 						endforeach;
@@ -585,42 +834,43 @@ class sms extends MY_Controller {
 				$excel_data['row_data'] = $row_data;
 				$excel_data['report_type'] = "download_file";
 				$excel_data['file_name'] = $county_name . "_Weekly_County_Expiries_Report";
-				$excel_data['excel_title'] = "Expiries Report for ".$county_name." County for the month of ".date("F Y");
-					
+				$excel_data['excel_title'] = "Expiries Report for " . $county_name . " County for the month of " . date("F Y");
+
 				//create the excel here
 				$report_type = "expiries";
 				$total_figure = $county_expiries_total;
-				$this-> create_excel($excel_data,$report_type,$total_figure);
+				$this -> create_excel($excel_data, $report_type, $total_figure);
 				//Where the excel sheet will be saved before being attached
 				$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-				
+
 				//Start creating the email Subject and message body here
 				$subject = "Expiries: " . $county_name . " County (Next 3 Months)";
-				$message = "Dear ".$county_name." County,
-							<p>Find attached an excel sheet with the ".$county_name." County's breakdown of Expiries.
+				$message = "Dear " . $county_name . " County,
+							<p>Find attached an excel sheet with the " . $county_name . " County's breakdown of Expiries.
 							You may log onto health-cmp.or.ke to decommission them.</p>
 							<p>----</p>
 							<p>HCMP</p>
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-					
+
 				$email_address = $this -> get_ddp_email_county($county_id);
 				$bcc = $this -> get_bcc_notifications();
 				$cc = $this -> get_county_email($county_id);
-				
+
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc);
 			}
 
 		}
 
 	}
-public function weekly_potential_expiries_report() {
+
+	public function weekly_potential_expiries_report() {
 		//Set the current year
 		$year = date("Y");
 		$picurl = base_url() . 'assets/img/coat_of_arms-resized1.png';
 		//get the facilities in the district
 		//$counties = Facilities::get_Taita();
 		$counties = Facilities::get_counties_all_using_HCMP();
-		
+
 		foreach ($counties as $counties) {
 			//holds the data for the entire county
 			//once it is done executing for one county it is reset to zero
@@ -642,11 +892,11 @@ public function weekly_potential_expiries_report() {
 				//get all facilities in that district
 				$facilities = Facilities::getFacilities_for_email($district_id);
 				//holds all the data for all facilities in a particular district
-				
+
 				$facility_total = array();
-				
+
 				foreach ($facilities as $facilities_) :
-					
+
 					//holds the total value of expiries for that particular facility in that district
 					$facility_potential_expiries_total = 0;
 					//$facility_potential_expiries = array();
@@ -663,11 +913,11 @@ public function weekly_potential_expiries_report() {
 					$excel_data = array();
 					$excel_data = array('doc_creator' => $facility_name, 'doc_title' => 'facility potential expiries weekly report ', 'file_name' => 'facility weekly report');
 					$row_data = array();
-					$column_data = array("Commodity Name","Unit Size","Quantity (units)", "Quantity (packs)","Unit Cost(KSH)","Total Cost(KSH)","Date of Expiry","Supplier","Date Added","Manufacturer","Facility Name","MFL Code","Sub County","County");
+					$column_data = array("Commodity Name", "Unit Size", "Quantity (units)", "Quantity (packs)", "Unit Cost(KSH)", "Total Cost(KSH)", "Date of Expiry", "Supplier", "Date Added", "Manufacturer", "Facility Name", "MFL Code", "Sub County", "County");
 					$excel_data['column_data'] = $column_data;
 
 					foreach ($facility_potential_expiries as $facility_potential_expiries) :
-						array_push($row_data, array($facility_potential_expiries["commodity_name"],$facility_potential_expiries["unit_size"],$facility_potential_expiries["units"], $facility_potential_expiries["packs"],$facility_potential_expiries["unit_cost"],$facility_potential_expiries["total_ksh"],$facility_potential_expiries["expiry_date"],$facility_potential_expiries["source_name"],$facility_potential_expiries["date_added"],$facility_potential_expiries["manufacture"],$facility_potential_expiries["facility_name"],$facility_potential_expiries["facility_code"],$facility_potential_expiries["subcounty"],$facility_potential_expiries["county"]));
+						array_push($row_data, array($facility_potential_expiries["commodity_name"], $facility_potential_expiries["unit_size"], $facility_potential_expiries["units"], $facility_potential_expiries["packs"], $facility_potential_expiries["unit_cost"], $facility_potential_expiries["total_ksh"], $facility_potential_expiries["expiry_date"], $facility_potential_expiries["source_name"], $facility_potential_expiries["date_added"], $facility_potential_expiries["manufacture"], $facility_potential_expiries["facility_name"], $facility_potential_expiries["facility_code"], $facility_potential_expiries["subcounty"], $facility_potential_expiries["county"]));
 						$facility_potential_expiries_total += $facility_potential_expiries["total_ksh"];
 					endforeach;
 
@@ -677,12 +927,12 @@ public function weekly_potential_expiries_report() {
 						$excel_data['row_data'] = $row_data;
 						$excel_data['report_type'] = "download_file";
 						$excel_data['file_name'] = $facility_name . "_Potential_Expiries_Report";
-						$excel_data['excel_title'] = "Potential Expiries Report for ".$facility_name." as at ".date("jS F Y");
+						$excel_data['excel_title'] = "Potential Expiries Report for " . $facility_name . " as at " . date("jS F Y");
 
 						$subject = "Potential Expiries: " . $facility_name . " (Next 3 Months)";
-						
-						$message = "Dear ".$facility_name.",
-								<p>Find attached an excel sheet with the ".$facility_name." breakdown of the Potential Expiries.
+
+						$message = "Dear " . $facility_name . ",
+								<p>Find attached an excel sheet with the " . $facility_name . " breakdown of the Potential Expiries.
 								Kindly sensitize the need to re-distribute these short expiry commodities.</p>
 								<p>You may log onto health-cmp.or.ke for follow up.</p>
 								
@@ -691,16 +941,16 @@ public function weekly_potential_expiries_report() {
 								<p>HCMP</p>
 								
 								<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-					
+
 						$report_type = "potential_expiries";
-						$this ->create_excel($excel_data,$report_type);
-						
+						$this -> create_excel($excel_data, $report_type);
+
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-						
-						$email_address = $this->get_facility_email($facility_code);
-						
+
+						$email_address = $this -> get_facility_email($facility_code);
+
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
-						
+
 					}
 
 					//End foreach for facility
@@ -711,14 +961,14 @@ public function weekly_potential_expiries_report() {
 				$excel_data = array();
 				$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'district potential expiries weekly report ', 'file_name' => 'district weekly report');
 				$row_data = array();
-				$column_data = array("Commodity Name","Unit Size","Quantity (units)", "Quantity (packs)","Unit Cost(KSH)","Total Cost(KSH)","Date of Expiry","Supplier","Date Added","Manufacturer","Facility Name","MFL Code","Sub County","County");
+				$column_data = array("Commodity Name", "Unit Size", "Quantity (units)", "Quantity (packs)", "Unit Cost(KSH)", "Total Cost(KSH)", "Date of Expiry", "Supplier", "Date Added", "Manufacturer", "Facility Name", "MFL Code", "Sub County", "County");
 				$excel_data['column_data'] = $column_data;
 
 				foreach ($facility_total as $facility_total_1) :
 					foreach ($facility_total_1 as $facility_total_2) :
 						foreach ($facility_total_2 as $facility_total1) :
-							array_push($row_data, array($facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["units"], $facility_total1["packs"],$facility_total1["unit_cost"],$facility_total1["total_ksh"],$facility_total1["expiry_date"],$facility_total1["source_name"],$facility_total1["date_added"],$facility_total1["manufacture"],$facility_total1["facility_name"],$facility_total1["facility_code"],$facility_total1["subcounty"],$facility_total1["county"]));
-						
+							array_push($row_data, array($facility_total1["commodity_name"], $facility_total1["unit_size"], $facility_total1["units"], $facility_total1["packs"], $facility_total1["unit_cost"], $facility_total1["total_ksh"], $facility_total1["expiry_date"], $facility_total1["source_name"], $facility_total1["date_added"], $facility_total1["manufacture"], $facility_total1["facility_name"], $facility_total1["facility_code"], $facility_total1["subcounty"], $facility_total1["county"]));
+
 						endforeach;
 					endforeach;
 				endforeach;
@@ -730,17 +980,17 @@ public function weekly_potential_expiries_report() {
 					$excel_data['row_data'] = $row_data;
 					$excel_data['report_type'] = "download_file";
 					$excel_data['file_name'] = $district_name . "_Weekly_Sub_County_Potential_Expiries_Report";
-					$excel_data['excel_title'] = "Potential Expiries Report for ".$district_name." Sub County as at ".date("jS F Y");
-					
+					$excel_data['excel_title'] = "Potential Expiries Report for " . $district_name . " Sub County as at " . date("jS F Y");
+
 					//Create the excel file here
 					$report_type = "potential_expiries";
-					$this ->create_excel($excel_data,$report_type);
-					
+					$this -> create_excel($excel_data, $report_type);
+
 					$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 					$subject = "Potential Expiries: " . $district_name . " Sub County (Next 3 Months)";
-					
-					$message = "<p>Dear ".$district_name." Sub County,</p>
-								<p>Find attached an excel sheet with the ".$district_name." Sub County's breakdown of Potential Expiries.
+
+					$message = "<p>Dear " . $district_name . " Sub County,</p>
+								<p>Find attached an excel sheet with the " . $district_name . " Sub County's breakdown of Potential Expiries.
 								Kindly sensitize the need to re-distribute these short expiry commodities.</p>
 								<p>You may log onto health-cmp.or.ke for follow up.</p>
 								
@@ -749,10 +999,10 @@ public function weekly_potential_expiries_report() {
 								<p>HCMP</p>
 								
 								<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-				
+
 					$email_address = $this -> get_ddp_email($district_id);
 					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
-					
+
 				}
 
 			}
@@ -761,7 +1011,7 @@ public function weekly_potential_expiries_report() {
 			$excel_data = array();
 			$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'district potential expiries weekly report ', 'file_name' => 'district weekly report');
 			$row_data = array();
-			$column_data = array("Commodity Name","Unit Size","Quantity (units)", "Quantity (packs)","Unit Cost(KSH)","Total Cost(KSH)","Date of Expiry","Supplier","Date Added","Manufacturer","Facility Name","MFL Code","Sub County","County");
+			$column_data = array("Commodity Name", "Unit Size", "Quantity (units)", "Quantity (packs)", "Unit Cost(KSH)", "Total Cost(KSH)", "Date of Expiry", "Supplier", "Date Added", "Manufacturer", "Facility Name", "MFL Code", "Sub County", "County");
 			$excel_data['column_data'] = $column_data;
 
 			foreach ($district_total as $facility_total_1) :
@@ -769,8 +1019,8 @@ public function weekly_potential_expiries_report() {
 					foreach ($facility_total_2 as $facility_total_3) :
 						foreach ($facility_total_3 as $facility_total_4) :
 							foreach ($facility_total_4 as $facility_total1) :
-								array_push($row_data, array($facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["units"], $facility_total1["packs"],$facility_total1["unit_cost"],$facility_total1["total_ksh"],$facility_total1["expiry_date"],$facility_total1["source_name"],$facility_total1["date_added"],$facility_total1["manufacture"],$facility_total1["facility_name"],$facility_total1["facility_code"],$facility_total1["subcounty"],$facility_total1["county"]));
-						
+								array_push($row_data, array($facility_total1["commodity_name"], $facility_total1["unit_size"], $facility_total1["units"], $facility_total1["packs"], $facility_total1["unit_cost"], $facility_total1["total_ksh"], $facility_total1["expiry_date"], $facility_total1["source_name"], $facility_total1["date_added"], $facility_total1["manufacture"], $facility_total1["facility_name"], $facility_total1["facility_code"], $facility_total1["subcounty"], $facility_total1["county"]));
+
 							endforeach;
 						endforeach;
 					endforeach;
@@ -783,17 +1033,17 @@ public function weekly_potential_expiries_report() {
 				$excel_data['row_data'] = $row_data;
 				$excel_data['report_type'] = "download_file";
 				$excel_data['file_name'] = $county_name . "_Weekly_County_Potential_Expiries_Report";
-				$excel_data['excel_title'] = "Potential Expiries Report for ".$county_name." County as at ".date("jS F Y");
-				
+				$excel_data['excel_title'] = "Potential Expiries Report for " . $county_name . " County as at " . date("jS F Y");
+
 				//create the excel file
 				$report_type = "potential_expiries";
-				$this ->create_excel($excel_data,$report_type);
-				
+				$this -> create_excel($excel_data, $report_type);
+
 				$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 				$subject = "Potential Expiries: " . $county_name . " County (Next 3 Months)";
-				
-				$message = "<p>Dear ".$county_name." County,</p>
-							<p>Find attached an excel sheet with the ".$county_name." County's breakdown of Potential Expiries.
+
+				$message = "<p>Dear " . $county_name . " County,</p>
+							<p>Find attached an excel sheet with the " . $county_name . " County's breakdown of Potential Expiries.
 							Kindly sensitize the need to re-distribute these short expiry commodities.</p>
 							<p>You may log onto health-cmp.or.ke for follow up.</p>
 							
@@ -802,19 +1052,18 @@ public function weekly_potential_expiries_report() {
 							<p>HCMP</p>
 							
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-				
+
 				$email_address = $this -> get_ddp_email_county($county_id);
-				
+
 				$bcc = $this -> get_bcc_notifications();
 				$cc = $this -> get_county_email($county_id);
-				
-				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler,$bcc,$cc);				
+
+				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc);
 			}
 
 		}
 
 	}
-
 
 	public function weekly_stockouts_report() {
 		//Set the current year
@@ -834,7 +1083,7 @@ public function weekly_potential_expiries_report() {
 			//Get all the ddistricts in that  particular county
 			$districts = Facilities::get_all_using_HCMP($county_id);
 			//echo "<pre>";print_r($districts);exit;
-				
+
 			//holds the data for all the districts in a particular county
 			$district_total = array();
 
@@ -854,9 +1103,9 @@ public function weekly_potential_expiries_report() {
 					$facility_code = $facilities_ -> facility_code;
 					$facility_name = Facilities::get_facility_name2($facility_code);
 					$facility_name = $facility_name['facility_name'];
-					
+
 					$facility_potential_expiries = Facility_stocks::get_stock_outs_for_email($facility_code);
-					
+
 					//get potential expiries in that particular facility
 					//push the result into another array that will be used by the distrct
 					(array_key_exists($facility_name, $facility_total)) ? $facility_total[$facility_name] = array_merge($facility_total[$facility_name], array($facility_potential_expiries)) : $facility_total = array_merge($facility_total, array($facility_name => array($facility_potential_expiries)));
@@ -864,24 +1113,24 @@ public function weekly_potential_expiries_report() {
 					$excel_data = array();
 					$excel_data = array('doc_creator' => $facility_name, 'doc_title' => 'facility stokouts weekly report ', 'file_name' => 'facility weekly report');
 					$row_data = array();
-					$column_data = array("Commodity Name","Unit Size","Unit Cost(KSH)","Quantity Available (Units)","Quantity Available (Packs)","Supplier","Manufacturer","Facility Name","Subcounty","County");
+					$column_data = array("Commodity Name", "Unit Size", "Unit Cost(KSH)", "Quantity Available (Units)", "Quantity Available (Packs)", "Supplier", "Manufacturer", "Facility Name", "Subcounty", "County");
 					$excel_data['column_data'] = $column_data;
 
 					foreach ($facility_potential_expiries as $facility_potential_expiries) :
-						array_push($row_data, array($facility_potential_expiries["commodity_name"],$facility_potential_expiries["unit_size"],$facility_potential_expiries["unit_cost"],$facility_potential_expiries["current_balance"],$facility_potential_expiries["current_balance_packs"],$facility_potential_expiries["source_name"],$facility_potential_expiries["manufacture"],$facility_potential_expiries["facility_name"],$facility_potential_expiries["district"],$facility_potential_expiries["county"]));
+						array_push($row_data, array($facility_potential_expiries["commodity_name"], $facility_potential_expiries["unit_size"], $facility_potential_expiries["unit_cost"], $facility_potential_expiries["current_balance"], $facility_potential_expiries["current_balance_packs"], $facility_potential_expiries["source_name"], $facility_potential_expiries["manufacture"], $facility_potential_expiries["facility_name"], $facility_potential_expiries["district"], $facility_potential_expiries["county"]));
 						//$facility_potential_expiries_total = $facility_potential_expiries_total + $facility_potential_expiries[""]
 					endforeach;
 					if (empty($row_data)) {
 						//do nothing
 					} else {
-						
+
 						$excel_data['row_data'] = $row_data;
 						$excel_data['report_type'] = "download_file";
 						$excel_data['file_name'] = $facility_name . "_Stock_Outs_Report";
-						$excel_data['excel_title'] = "Stock Outs Report for ".$facility_name." as at ".date("jS F Y");
-						
-						$message = "<p>Dear ".$facility_name.",</p>
-								<p>Find attached an excel sheet with the ".$facility_name." breakdown of commodities with Low Stock Levels.
+						$excel_data['excel_title'] = "Stock Outs Report for " . $facility_name . " as at " . date("jS F Y");
+
+						$message = "<p>Dear " . $facility_name . ",</p>
+								<p>Find attached an excel sheet with the " . $facility_name . " breakdown of commodities with Low Stock Levels.
 								You may log onto health-cmp.or.ke for follow up.</p>
 								
 								<p>----</p>
@@ -889,19 +1138,19 @@ public function weekly_potential_expiries_report() {
 								<p>HCMP</p>
 								
 								<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-				
+
 						//Create the excel here
 						$report_type = "stockouts";
-						$this ->create_excel($excel_data,$report_type);
+						$this -> create_excel($excel_data, $report_type);
 						//For Mac
 						//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						//For Windows
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						$subject = "Stock Outs Report: " . $facility_name;
-						
+
 						$email_address = $this -> get_facility_email($facility_code);
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
-						
+
 					}
 
 					//End foreach for facility
@@ -912,14 +1161,14 @@ public function weekly_potential_expiries_report() {
 				$excel_data = array();
 				$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'district stock outs weekly report ', 'file_name' => 'district weekly report');
 				$row_data = array();
-				$column_data = array("Commodity Name","Unit Size","Unit Cost(KSH)","Quantity Available (Units)","Quantity Available (Packs)","Supplier","Manufacturer","Facility Name","Subcounty","County");
+				$column_data = array("Commodity Name", "Unit Size", "Unit Cost(KSH)", "Quantity Available (Units)", "Quantity Available (Packs)", "Supplier", "Manufacturer", "Facility Name", "Subcounty", "County");
 				$excel_data['column_data'] = $column_data;
 
 				foreach ($facility_total as $facility_total_1) :
 					foreach ($facility_total_1 as $facility_total_2) :
 						foreach ($facility_total_2 as $facility_total1) :
-							array_push($row_data, array($facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["unit_cost"],$facility_total1["current_balance"],$facility_total1["current_balance_packs"],$facility_total1["source_name"],$facility_total1["manufacture"],$facility_total1["facility_name"],$facility_total1["district"],$facility_total1["county"]));
-							
+							array_push($row_data, array($facility_total1["commodity_name"], $facility_total1["unit_size"], $facility_total1["unit_cost"], $facility_total1["current_balance"], $facility_total1["current_balance_packs"], $facility_total1["source_name"], $facility_total1["manufacture"], $facility_total1["facility_name"], $facility_total1["district"], $facility_total1["county"]));
+
 						endforeach;
 					endforeach;
 				endforeach;
@@ -929,19 +1178,19 @@ public function weekly_potential_expiries_report() {
 					$excel_data['row_data'] = $row_data;
 					$excel_data['report_type'] = "download_file";
 					$excel_data['file_name'] = $district_name . "_Weekly_Sub_County_Stock_Outs_Report";
-					$excel_data['excel_title'] = "Stock Outs Report for ".$district_name." Sub County as at ".date("jS F Y");
-						
+					$excel_data['excel_title'] = "Stock Outs Report for " . $district_name . " Sub County as at " . date("jS F Y");
+
 					$report_type = "stockouts";
-					$this ->create_excel($excel_data,$report_type);
+					$this -> create_excel($excel_data, $report_type);
 					//For Mac
 					//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 					//For Windows
 					$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-					
+
 					$subject = "Stock Outs: " . $district_name . " Sub County";
-					
-					$message = "Dear ".$district_name." Sub County,
-								<p>Find attached an excel sheet with the ".$district_name." Sub County breakdown of Stock Outs in the Sub County.
+
+					$message = "Dear " . $district_name . " Sub County,
+								<p>Find attached an excel sheet with the " . $district_name . " Sub County breakdown of Stock Outs in the Sub County.
 								You may log onto health-cmp.or.ke for follow up.</p>
 								
 								<p>----</p>
@@ -949,7 +1198,7 @@ public function weekly_potential_expiries_report() {
 								<p>HCMP</p>
 								
 								<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-				
+
 					$email_address = $this -> get_ddp_email($district_id);
 					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
@@ -961,7 +1210,7 @@ public function weekly_potential_expiries_report() {
 			$excel_data = array();
 			$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'county stock outs weekly report ', 'file_name' => 'district weekly report');
 			$row_data = array();
-			$column_data = array("Commodity Name","Unit Size","Unit Cost(KSH)","Quantity Available (Units)","Quantity Available (Packs)","Supplier","Manufacturer","Facility Name","Subcounty","County");
+			$column_data = array("Commodity Name", "Unit Size", "Unit Cost(KSH)", "Quantity Available (Units)", "Quantity Available (Packs)", "Supplier", "Manufacturer", "Facility Name", "Subcounty", "County");
 			$excel_data['column_data'] = $column_data;
 
 			foreach ($district_total as $facility_total_1) :
@@ -969,8 +1218,8 @@ public function weekly_potential_expiries_report() {
 					foreach ($facility_total_2 as $facility_total_3) :
 						foreach ($facility_total_3 as $facility_total_4) :
 							foreach ($facility_total_4 as $facility_total1) :
-								array_push($row_data, array($facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["unit_cost"],$facility_total1["current_balance"],$facility_total1["current_balance_packs"],$facility_total1["source_name"],$facility_total1["manufacture"],$facility_total1["facility_name"],$facility_total1["district"],$facility_total1["county"]));
-							
+								array_push($row_data, array($facility_total1["commodity_name"], $facility_total1["unit_size"], $facility_total1["unit_cost"], $facility_total1["current_balance"], $facility_total1["current_balance_packs"], $facility_total1["source_name"], $facility_total1["manufacture"], $facility_total1["facility_name"], $facility_total1["district"], $facility_total1["county"]));
+
 							endforeach;
 						endforeach;
 					endforeach;
@@ -982,19 +1231,19 @@ public function weekly_potential_expiries_report() {
 				$excel_data['row_data'] = $row_data;
 				$excel_data['report_type'] = "download_file";
 				$excel_data['file_name'] = $county_name . "_Weekly_County_Stock_Outs_Report";
-				$excel_data['excel_title'] = "Stock Outs Report for ".$county_name." County as at ".date("jS F Y");
-					
+				$excel_data['excel_title'] = "Stock Outs Report for " . $county_name . " County as at " . date("jS F Y");
+
 				$report_type = "stockouts";
-				$this ->create_excel($excel_data,$report_type);
+				$this -> create_excel($excel_data, $report_type);
 				//For Mac
 				//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 				//For Windows
 				$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-					
+
 				$subject = "Stock Outs: " . $county_name . " County";
-				
-				$message = "Dear ".$county_name." County,
-							<p>Find attached an excel sheet with the ".$county_name." County breakdown of Stock Outs in the county.
+
+				$message = "Dear " . $county_name . " County,
+							<p>Find attached an excel sheet with the " . $county_name . " County breakdown of Stock Outs in the county.
 							You may log onto health-cmp.or.ke for follow up.</p>
 							
 							<p>----</p>
@@ -1002,19 +1251,19 @@ public function weekly_potential_expiries_report() {
 							<p>HCMP</p>
 							
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-				
+
 				$email_address = $this -> get_ddp_email_county($county_id);
 				$bcc = $this -> get_bcc_notifications();
 				$cc = $this -> get_county_email($county_id);
-					
-				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler,$bcc,$cc);
-				
+
+				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc);
+
 			}
 
 		}
 
 	}
-	
+
 	//Consumption Report
 	public function consumption_report() {
 		//Set the current year
@@ -1062,11 +1311,11 @@ public function weekly_potential_expiries_report() {
 					$excel_data = array();
 					$excel_data = array('doc_creator' => $facility_name, 'doc_title' => 'facility consumption report ', 'file_name' => 'facility consumption report');
 					$row_data = array();
-					$column_data = array("Commodity Name","Unit Size","Quantity (units)", "Quantity (packs)","Unit Cost(KSH)","Total Cost(KSH)","Supplier","Facility Name","MFL Code","Sub County","County");
+					$column_data = array("Commodity Name", "Unit Size", "Quantity (units)", "Quantity (packs)", "Unit Cost(KSH)", "Total Cost(KSH)", "Supplier", "Facility Name", "MFL Code", "Sub County", "County");
 					$excel_data['column_data'] = $column_data;
 
 					foreach ($facility_consumption as $facility_consumption) :
-						array_push($row_data, array($facility_consumption["commodity_name"],$facility_consumption["unit_size"],$facility_consumption["total_units"], $facility_consumption["total_packs"],$facility_consumption["unit_cost"],$facility_consumption["total_cost"],$facility_consumption["source_name"],$facility_consumption["facility_name"],$facility_consumption["facility_code"],$facility_consumption["district"],$facility_consumption["county"]));
+						array_push($row_data, array($facility_consumption["commodity_name"], $facility_consumption["unit_size"], $facility_consumption["total_units"], $facility_consumption["total_packs"], $facility_consumption["unit_cost"], $facility_consumption["total_cost"], $facility_consumption["source_name"], $facility_consumption["facility_name"], $facility_consumption["facility_code"], $facility_consumption["district"], $facility_consumption["county"]));
 						$facility_potential_expiries_total += $facility_consumption["total_cost"];
 					endforeach;
 
@@ -1076,12 +1325,12 @@ public function weekly_potential_expiries_report() {
 						$excel_data['row_data'] = $row_data;
 						$excel_data['report_type'] = "download_file";
 						$excel_data['file_name'] = $facility_name . "_Consumption_Report";
-						$excel_data['excel_title'] = "Consumption Report for ".$facility_name." for the month of ".date("F Y");
+						$excel_data['excel_title'] = "Consumption Report for " . $facility_name . " for the month of " . date("F Y");
 
 						$subject = "Consumption: " . $facility_name;
-						
-						$message = "Dear ".$facility_name.",
-								<p>Find attached an excel sheet with the ".$facility_name." breakdown of the Consumption.
+
+						$message = "Dear " . $facility_name . ",
+								<p>Find attached an excel sheet with the " . $facility_name . " breakdown of the Consumption.
 								</p>
 								<p>You may log onto health-cmp.or.ke for follow up.</p>
 								
@@ -1090,12 +1339,12 @@ public function weekly_potential_expiries_report() {
 								<p>HCMP</p>
 								
 								<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-				
+
 						$report_type = "consumption";
-						$this ->create_excel($excel_data,$report_type);
+						$this -> create_excel($excel_data, $report_type);
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-						
-						$email_address = $this->get_facility_email($facility_code);
+
+						$email_address = $this -> get_facility_email($facility_code);
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
 					}
@@ -1108,14 +1357,14 @@ public function weekly_potential_expiries_report() {
 				$excel_data = array();
 				$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'sub county consumption report ', 'file_name' => 'sub county consumption report');
 				$row_data = array();
-				$column_data = array("Commodity Name","Unit Size","Quantity (units)", "Quantity (packs)","Unit Cost(KSH)","Total Cost(KSH)","Supplier","Facility Name","MFL Code","Sub County","County");
+				$column_data = array("Commodity Name", "Unit Size", "Quantity (units)", "Quantity (packs)", "Unit Cost(KSH)", "Total Cost(KSH)", "Supplier", "Facility Name", "MFL Code", "Sub County", "County");
 				$excel_data['column_data'] = $column_data;
 
 				foreach ($facility_total as $facility_total_1) :
 					foreach ($facility_total_1 as $facility_total_2) :
 						foreach ($facility_total_2 as $facility_total1) :
-							array_push($row_data, array($facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["total_units"], $facility_total1["total_packs"],$facility_total1["unit_cost"],$facility_total1["total_cost"],$facility_total1["source_name"],$facility_total1["facility_name"],$facility_total1["facility_code"],$facility_total1["district"],$facility_total1["county"]));
-						
+							array_push($row_data, array($facility_total1["commodity_name"], $facility_total1["unit_size"], $facility_total1["total_units"], $facility_total1["total_packs"], $facility_total1["unit_cost"], $facility_total1["total_cost"], $facility_total1["source_name"], $facility_total1["facility_name"], $facility_total1["facility_code"], $facility_total1["district"], $facility_total1["county"]));
+
 						endforeach;
 					endforeach;
 				endforeach;
@@ -1127,18 +1376,18 @@ public function weekly_potential_expiries_report() {
 					$excel_data['row_data'] = $row_data;
 					$excel_data['report_type'] = "download_file";
 					$excel_data['file_name'] = $district_name . "_Weekly_Sub_County_Consumption_Report";
-					$excel_data['excel_title'] = "Consumption Report for ".$district_name." Sub County for the month of ".date("F Y");
-					
+					$excel_data['excel_title'] = "Consumption Report for " . $district_name . " Sub County for the month of " . date("F Y");
+
 					//Create the excel file here
 					$report_type = "consumption";
-					$this ->create_excel($excel_data,$report_type);
+					$this -> create_excel($excel_data, $report_type);
 					//exit;
-					
+
 					$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 					$subject = "Consumption: " . $district_name . " Sub County";
-					
-					$message = "<p>Dear ".$district_name." Sub County,</p>
-								<p>Find attached an excel sheet with the ".$district_name." Sub County's breakdown of Consumption.
+
+					$message = "<p>Dear " . $district_name . " Sub County,</p>
+								<p>Find attached an excel sheet with the " . $district_name . " Sub County's breakdown of Consumption.
 								</p>
 								<p>You may log onto health-cmp.or.ke for follow up.</p>
 								
@@ -1147,7 +1396,7 @@ public function weekly_potential_expiries_report() {
 								<p>HCMP</p>
 								
 								<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-				
+
 					$email_address = $this -> get_ddp_email($district_id);
 					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 				}
@@ -1158,7 +1407,7 @@ public function weekly_potential_expiries_report() {
 			$excel_data = array();
 			$excel_data = array('doc_creator' => $county_name, 'doc_title' => 'county consumption report ', 'file_name' => 'county consumption report');
 			$row_data = array();
-			$column_data = array("Commodity Name","Unit Size","Quantity (units)", "Quantity (packs)","Unit Cost(KSH)","Total Cost(KSH)","Supplier","Facility Name","MFL Code","Sub County","County");
+			$column_data = array("Commodity Name", "Unit Size", "Quantity (units)", "Quantity (packs)", "Unit Cost(KSH)", "Total Cost(KSH)", "Supplier", "Facility Name", "MFL Code", "Sub County", "County");
 			$excel_data['column_data'] = $column_data;
 
 			foreach ($district_total as $facility_total_1) :
@@ -1166,8 +1415,8 @@ public function weekly_potential_expiries_report() {
 					foreach ($facility_total_2 as $facility_total_3) :
 						foreach ($facility_total_3 as $facility_total_4) :
 							foreach ($facility_total_4 as $facility_total1) :
-								array_push($row_data, array($facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["total_units"], $facility_total1["total_packs"],$facility_total1["unit_cost"],$facility_total1["total_cost"],$facility_total1["source_name"],$facility_total1["facility_name"],$facility_total1["facility_code"],$facility_total1["district"],$facility_total1["county"]));
-						
+								array_push($row_data, array($facility_total1["commodity_name"], $facility_total1["unit_size"], $facility_total1["total_units"], $facility_total1["total_packs"], $facility_total1["unit_cost"], $facility_total1["total_cost"], $facility_total1["source_name"], $facility_total1["facility_name"], $facility_total1["facility_code"], $facility_total1["district"], $facility_total1["county"]));
+
 							endforeach;
 						endforeach;
 					endforeach;
@@ -1180,17 +1429,17 @@ public function weekly_potential_expiries_report() {
 				$excel_data['row_data'] = $row_data;
 				$excel_data['report_type'] = "download_file";
 				$excel_data['file_name'] = $county_name . "_County_Consumption_Report";
-				$excel_data['excel_title'] = "Consumption Report for ".$county_name." County for the month of ".date("F Y");
-				
+				$excel_data['excel_title'] = "Consumption Report for " . $county_name . " County for the month of " . date("F Y");
+
 				//create the excel file
 				$report_type = "consumption";
-				$this ->create_excel($excel_data,$report_type);
-				
+				$this -> create_excel($excel_data, $report_type);
+
 				$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 				$subject = "Consumption: " . $county_name . " County";
 				//exit;
-				$message = "<p>Dear ".$county_name." County,</p>
-							<p>Find attached an excel sheet with the ".$county_name." County's breakdown of Consumption.
+				$message = "<p>Dear " . $county_name . " County,</p>
+							<p>Find attached an excel sheet with the " . $county_name . " County's breakdown of Consumption.
 							</p>
 							<p>You may log onto health-cmp.or.ke for follow up.</p>
 							
@@ -1199,18 +1448,18 @@ public function weekly_potential_expiries_report() {
 							<p>HCMP</p>
 							
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-				
+
 				$email_address = $this -> get_ddp_email_county($county_id);
 				$bcc = $this -> get_bcc_notifications();
 				$cc = $this -> get_county_email($county_id);
-				
+
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc);
 			}
 
 		}
 
 	}
-	
+
 	//Stock Levels Report
 	public function stock_levels_report() {
 		//Set the current year
@@ -1250,7 +1499,7 @@ public function weekly_potential_expiries_report() {
 					$facility_name = $facility_name['facility_name'];
 
 					//get the stocking levels in that particular facility
-					
+
 					$facility_consumption = facility_issues::get_consumption_report_facility($facility_code);
 
 					//push the result into another array that will be used by the distrct
@@ -1259,11 +1508,11 @@ public function weekly_potential_expiries_report() {
 					$excel_data = array();
 					$excel_data = array('doc_creator' => $facility_name, 'doc_title' => 'facility stock level report ', 'file_name' => 'facility stock level report');
 					$row_data = array();
-					$column_data = array("Commodity Name","Unit Size","Quantity (units)", "Quantity (packs)","Unit Cost(KSH)","Total Cost(KSH)","Supplier","Facility Name","MFL Code","Sub County","County");
+					$column_data = array("Commodity Name", "Unit Size", "Quantity (units)", "Quantity (packs)", "Unit Cost(KSH)", "Total Cost(KSH)", "Supplier", "Facility Name", "MFL Code", "Sub County", "County");
 					$excel_data['column_data'] = $column_data;
 
 					foreach ($facility_consumption as $facility_consumption) :
-						array_push($row_data, array($facility_consumption["commodity_name"],$facility_consumption["unit_size"],$facility_consumption["total_units"], $facility_consumption["total_packs"],$facility_consumption["unit_cost"],$facility_consumption["total_cost"],$facility_consumption["source_name"],$facility_consumption["facility_name"],$facility_consumption["facility_code"],$facility_consumption["district"],$facility_consumption["county"]));
+						array_push($row_data, array($facility_consumption["commodity_name"], $facility_consumption["unit_size"], $facility_consumption["total_units"], $facility_consumption["total_packs"], $facility_consumption["unit_cost"], $facility_consumption["total_cost"], $facility_consumption["source_name"], $facility_consumption["facility_name"], $facility_consumption["facility_code"], $facility_consumption["district"], $facility_consumption["county"]));
 						$facility_potential_expiries_total += $facility_consumption["total_cost"];
 					endforeach;
 
@@ -1273,12 +1522,12 @@ public function weekly_potential_expiries_report() {
 						$excel_data['row_data'] = $row_data;
 						$excel_data['report_type'] = "download_file";
 						$excel_data['file_name'] = $facility_name . "_Stock_Level_Report";
-						$excel_data['excel_title'] = "Stock Levels Report for ".$facility_name." for the month as at ".date("jS F Y");
+						$excel_data['excel_title'] = "Stock Levels Report for " . $facility_name . " for the month as at " . date("jS F Y");
 
 						$subject = "Stock Levels: " . $facility_name;
-						
-						$message = "Dear ".$facility_name.",
-								<p>Find attached an excel sheet with the ".$facility_name." breakdown of Stock Levels.
+
+						$message = "Dear " . $facility_name . ",
+								<p>Find attached an excel sheet with the " . $facility_name . " breakdown of Stock Levels.
 								</p>
 								<p>You may log onto health-cmp.or.ke for follow up.</p>
 								
@@ -1287,11 +1536,11 @@ public function weekly_potential_expiries_report() {
 								<p>HCMP</p>
 								
 								<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-				
+
 						$report_type = "stock_level";
-						$this ->create_excel($excel_data,$report_type);
+						$this -> create_excel($excel_data, $report_type);
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-						
+
 						//$email_address = $this->get_facility_email($facility_code);
 						//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
@@ -1305,14 +1554,14 @@ public function weekly_potential_expiries_report() {
 				$excel_data = array();
 				$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'sub county stock level report ', 'file_name' => 'sub county stock level report');
 				$row_data = array();
-				$column_data = array("Commodity Name","Unit Size","Quantity (units)", "Quantity (packs)","Unit Cost(KSH)","Total Cost(KSH)","Supplier","Facility Name","MFL Code","Sub County","County");
+				$column_data = array("Commodity Name", "Unit Size", "Quantity (units)", "Quantity (packs)", "Unit Cost(KSH)", "Total Cost(KSH)", "Supplier", "Facility Name", "MFL Code", "Sub County", "County");
 				$excel_data['column_data'] = $column_data;
 
 				foreach ($facility_total as $facility_total_1) :
 					foreach ($facility_total_1 as $facility_total_2) :
 						foreach ($facility_total_2 as $facility_total1) :
-							array_push($row_data, array($facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["total_units"], $facility_total1["total_packs"],$facility_total1["unit_cost"],$facility_total1["total_cost"],$facility_total1["source_name"],$facility_total1["facility_name"],$facility_total1["facility_code"],$facility_total1["district"],$facility_total1["county"]));
-						
+							array_push($row_data, array($facility_total1["commodity_name"], $facility_total1["unit_size"], $facility_total1["total_units"], $facility_total1["total_packs"], $facility_total1["unit_cost"], $facility_total1["total_cost"], $facility_total1["source_name"], $facility_total1["facility_name"], $facility_total1["facility_code"], $facility_total1["district"], $facility_total1["county"]));
+
 						endforeach;
 					endforeach;
 				endforeach;
@@ -1324,18 +1573,18 @@ public function weekly_potential_expiries_report() {
 					$excel_data['row_data'] = $row_data;
 					$excel_data['report_type'] = "download_file";
 					$excel_data['file_name'] = $district_name . "_Sub_County_Stock_Level_Report";
-					$excel_data['excel_title'] = "Stock Levels Report for ".$district_name." Sub County as at ".date("jS F Y");
-					
+					$excel_data['excel_title'] = "Stock Levels Report for " . $district_name . " Sub County as at " . date("jS F Y");
+
 					//Create the excel file here
 					$report_type = "stock_level";
-					$this ->create_excel($excel_data,$report_type);
+					$this -> create_excel($excel_data, $report_type);
 					//exit;
-					
+
 					$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 					$subject = "Stock Levels: " . $district_name . " Sub County";
-					
-					$message = "<p>Dear ".$district_name." Sub County,</p>
-								<p>Find attached an excel sheet with the ".$district_name." Sub County's breakdown of Stock Levels.
+
+					$message = "<p>Dear " . $district_name . " Sub County,</p>
+								<p>Find attached an excel sheet with the " . $district_name . " Sub County's breakdown of Stock Levels.
 								</p>
 								<p>You may log onto health-cmp.or.ke for follow up.</p>
 								
@@ -1344,7 +1593,7 @@ public function weekly_potential_expiries_report() {
 								<p>HCMP</p>
 								
 								<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-				
+
 					//$email_address = $this -> get_ddp_email($district_id);
 					//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 				}
@@ -1355,7 +1604,7 @@ public function weekly_potential_expiries_report() {
 			$excel_data = array();
 			$excel_data = array('doc_creator' => $county_name, 'doc_title' => 'county stock levels report ', 'file_name' => 'county stock levels report');
 			$row_data = array();
-			$column_data = array("Commodity Name","Unit Size","Quantity (units)", "Quantity (packs)","Unit Cost(KSH)","Total Cost(KSH)","Supplier","Facility Name","MFL Code","Sub County","County");
+			$column_data = array("Commodity Name", "Unit Size", "Quantity (units)", "Quantity (packs)", "Unit Cost(KSH)", "Total Cost(KSH)", "Supplier", "Facility Name", "MFL Code", "Sub County", "County");
 			$excel_data['column_data'] = $column_data;
 
 			foreach ($district_total as $facility_total_1) :
@@ -1363,8 +1612,8 @@ public function weekly_potential_expiries_report() {
 					foreach ($facility_total_2 as $facility_total_3) :
 						foreach ($facility_total_3 as $facility_total_4) :
 							foreach ($facility_total_4 as $facility_total1) :
-								array_push($row_data, array($facility_total1["commodity_name"],$facility_total1["unit_size"],$facility_total1["total_units"], $facility_total1["total_packs"],$facility_total1["unit_cost"],$facility_total1["total_cost"],$facility_total1["source_name"],$facility_total1["facility_name"],$facility_total1["facility_code"],$facility_total1["district"],$facility_total1["county"]));
-						
+								array_push($row_data, array($facility_total1["commodity_name"], $facility_total1["unit_size"], $facility_total1["total_units"], $facility_total1["total_packs"], $facility_total1["unit_cost"], $facility_total1["total_cost"], $facility_total1["source_name"], $facility_total1["facility_name"], $facility_total1["facility_code"], $facility_total1["district"], $facility_total1["county"]));
+
 							endforeach;
 						endforeach;
 					endforeach;
@@ -1377,17 +1626,17 @@ public function weekly_potential_expiries_report() {
 				$excel_data['row_data'] = $row_data;
 				$excel_data['report_type'] = "download_file";
 				$excel_data['file_name'] = $county_name . "_County_Stock_Level_Report";
-				$excel_data['excel_title'] = "Stock Level Report for ".$county_name." County as at ".date("jS F Y");
-				
+				$excel_data['excel_title'] = "Stock Level Report for " . $county_name . " County as at " . date("jS F Y");
+
 				//create the excel file
 				$report_type = "stock_level";
-				$this ->create_excel($excel_data,$report_type);
-				
+				$this -> create_excel($excel_data, $report_type);
+
 				$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 				$subject = "Stock Level: " . $county_name . " County";
 				//exit;
-				$message = "<p>Dear ".$county_name." County,</p>
-							<p>Find attached an excel sheet with the ".$county_name." County's breakdown of Stock Level.
+				$message = "<p>Dear " . $county_name . " County,</p>
+							<p>Find attached an excel sheet with the " . $county_name . " County's breakdown of Stock Level.
 							</p>
 							<p>You may log onto health-cmp.or.ke for follow up.</p>
 							
@@ -1396,52 +1645,42 @@ public function weekly_potential_expiries_report() {
 							<p>HCMP</p>
 							
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-				
+
 				//$email_address = $this -> get_county_email($county_id);
 				//$email_address = "smutheu@clintonhealthaccess.org,kelvinmwas@gmail.com,collinsojenge@gmail.com";
 				$bcc = $this -> get_bcc_notifications();
-				if ($county_id == 1):
+				if ($county_id == 1) :
 					$cc_email = $this -> get_bcc_notifications();
-					//$cc_email = "";
-				else:
+				//$cc_email = "";
+				else :
 					$cc_email = "";
 				endif;
 
-			$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc_email);
+				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc_email);
 			}
 
 		}
 
 	}
-public function test_sms(){
-	
-	$phones='254723722204';
-	$message='test from system live server';
-	
-	$this -> hcmp_functions -> send_sms($phones,$message);
-}
-	
-/*CHAI REPORTS for ORS AND ZINC FOR THE ENTIRE COUNTRY*/
-public function ors_zinc_report() {
+
+	/*CHAI REPORTS for ORS AND ZINC FOR THE ENTIRE COUNTRY*/
+	public function ors_zinc_report() {
 		//Set the current year
 		$year = date("Y");
 		$county_total = array();
 		$excel_data = array();
-		$excel_data = array('doc_creator' =>"HCMP", 'doc_title' => ' stock level report ', 'file_name' => 'stock level report');
+		$excel_data = array('doc_creator' => "HCMP", 'doc_title' => ' stock level report ', 'file_name' => 'stock level report');
 		$row_data = array();
-		$column_data = array("County","Sub-County","Facility Code", 
-							"Facility Name","Commodity Name","Unit Size","Unit Cost(KES)",
-							"Supplier","Manufacturer","Batch Number","Expiry Date",
-							"Stock at Hand (units)","Stock at Hand (packs)","AMC (units)","AMC (packs)","Stock at Hand MOS(packs)");
+		$column_data = array("County", "Sub-County", "Facility Code", "Facility Name", "Commodity Name", "Unit Size", "Unit Cost(KES)", "Supplier", "Manufacturer", "Batch Number", "Expiry Date", "Stock at Hand (units)", "Stock at Hand (packs)", "AMC (units)", "AMC (packs)", "Stock at Hand MOS(packs)");
 		$excel_data['column_data'] = $column_data;
 		//the commodities variable will hold the values for the three commodities ie ORS and Zinc
-		$commodities = array(51,267,36);
-		foreach ($commodities as $commodities):
+		$commodities = array(51, 267, 36);
+		foreach ($commodities as $commodities) :
 			$commodity_stock_level = array();
 			//holds the data for the entire county
 			//once it is done executing for one commodity it will reset to zero
 			$commodity_total = array();
-			
+
 			//pick the commodity names and details
 			//$commodity_name = Commodities::get_commodity_name($commodities);
 			//get the stock level for that commodity
@@ -1449,79 +1688,58 @@ public function ors_zinc_report() {
 			//echo "<pre>";print_r($commodity_stock_level);exit;
 			//Start buliding the excel file
 			foreach ($commodity_stock_level as $commodity_stock_level) :
-				array_push($row_data, 
-							array($commodity_stock_level["county"],
-							$commodity_stock_level["subcounty"],
-							$commodity_stock_level["facility_code"], 
-							$commodity_stock_level["facility_name"],
-							$commodity_stock_level["commodity_name"],
-							$commodity_stock_level["unit_size"],
-							$commodity_stock_level["unit_cost"],
-							$commodity_stock_level["supplier"],
-							$commodity_stock_level["manufacture"],
-							$commodity_stock_level["batch_no"],
-							$commodity_stock_level["expiry_date"],
-							$commodity_stock_level["balance_units"],
-							$commodity_stock_level["balance_packs"],
-							$commodity_stock_level["amc_units"],
-							$commodity_stock_level["amc"],
-							$commodity_stock_level["mos"]));
-				
+				array_push($row_data, array($commodity_stock_level["county"], $commodity_stock_level["subcounty"], $commodity_stock_level["facility_code"], $commodity_stock_level["facility_name"], $commodity_stock_level["commodity_name"], $commodity_stock_level["unit_size"], $commodity_stock_level["unit_cost"], $commodity_stock_level["supplier"], $commodity_stock_level["manufacture"], $commodity_stock_level["batch_no"], $commodity_stock_level["expiry_date"], $commodity_stock_level["balance_units"], $commodity_stock_level["balance_packs"], $commodity_stock_level["amc_units"], $commodity_stock_level["amc"], $commodity_stock_level["mos"]));
+
 			endforeach;
-			
+
 			//Switch statement to build on the remaining part of the message body
 			//get the number of facilities stocked out on a specific commodity
 			$no_of_stock_outs = Facility_stocks::facilities_stocked_specific_commodity($commodities);
-			
+
 			//get the number of facilities reporting on a specific commodity
 			$no_of_facilities_reporting = Facility_stocks::facilities_reporting_on_a_specific_commodity($commodities);
 			//get the number of batches expiring within 3 months
 			$no_of_batches = Facility_stocks::batches_expiring_specific_commodities($commodities);
 			//echo "<pre>";print_r($no_of_stock_outs);exit;
-	
-			switch($commodities):
-				case 51:
-					$message_body .= "<p>Number of Facilities Reporting on ORS Satchets (100):". $no_of_facilities_reporting."</p>";
-					$message_body .= "<p>Number of Facilities Stocked out on ORS Satchets (100): ".$no_of_stock_outs."</p>";
-					$message_body .= "<p>Number of ORS (100) Batches expiring in the next 3 months: ".$no_of_batches."</p>";
+
+			switch($commodities) :
+				case 51 :
+					$message_body .= "<p>Number of Facilities Reporting on ORS Satchets (100):" . $no_of_facilities_reporting . "</p>";
+					$message_body .= "<p>Number of Facilities Stocked out on ORS Satchets (100): " . $no_of_stock_outs . "</p>";
+					$message_body .= "<p>Number of ORS (100) Batches expiring in the next 3 months: " . $no_of_batches . "</p>";
 					break;
-				case 267:
-					$message_body .= "<p>Number of Facilities Reporting on ORS Satchets (50):". $no_of_facilities_reporting."</p>";
-					$message_body .= "<p>Number of Facilities Stocked out on ORS Satchets (50): ".$no_of_stock_outs."</p>";
-					$message_body .= "<p>Number of ORS (50) Batches expiring in the next 3 months:  ".$no_of_batches."</p>";
+				case 267 :
+					$message_body .= "<p>Number of Facilities Reporting on ORS Satchets (50):" . $no_of_facilities_reporting . "</p>";
+					$message_body .= "<p>Number of Facilities Stocked out on ORS Satchets (50): " . $no_of_stock_outs . "</p>";
+					$message_body .= "<p>Number of ORS (50) Batches expiring in the next 3 months:  " . $no_of_batches . "</p>";
 					break;
-				case 36:
-					$message_body .= "<p>Number of Facilities Reporting on Zinc Sulphate 20mg:". $no_of_facilities_reporting."</p>";
-					$message_body .= "<p>Number of Facilities Stocked out on Zinc Sulphate 20mg:".$no_of_stock_outs."</p>";
-					$message_body .= "<p>Number of Zinc Sulphate Batches expiring in the next 3 months:".$no_of_batches."</p>";
+				case 36 :
+					$message_body .= "<p>Number of Facilities Reporting on Zinc Sulphate 20mg:" . $no_of_facilities_reporting . "</p>";
+					$message_body .= "<p>Number of Facilities Stocked out on Zinc Sulphate 20mg:" . $no_of_stock_outs . "</p>";
+					$message_body .= "<p>Number of Zinc Sulphate Batches expiring in the next 3 months:" . $no_of_batches . "</p>";
 					break;
-				
-					
-					
 			endswitch;
-			
-			//array_push($county_total,array($row_data));				
-	endforeach;
-			
-	
-	$excel_data['row_data'] = $row_data;
-	$excel_data['report_type'] = "download_file";
-	$excel_data['file_name'] = "Stock_Level_Report";
-	$excel_data['excel_title'] = "Stock Level Report for Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality (100) & (50) as at ".date("jS F Y");
-	
-	//Start the email section of the report
-	//Get the number of facilities using HCMP
-	$no_of_facilities = Facilities::get_all_on_HCMP();
-	
-	
-	$subject = "Daily Stock Level Report: Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality ";
-				
-	$message = "Good Morning,
+
+			//array_push($county_total,array($row_data));
+		endforeach;
+
+		$excel_data['row_data'] = $row_data;
+		$excel_data['report_type'] = "download_file";
+		$excel_data['file_name'] = "Stock_Level_Report";
+		$excel_data['excel_title'] = "Stock Level Report for Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality (100) & (50) as at " . date("jS F Y");
+
+		//Start the email section of the report
+		//Get the number of facilities using HCMP
+		$no_of_facilities = Facilities::get_all_on_HCMP();
+
+		$subject = "Daily Stock Level Report: Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality ";
+
+		$message = "Good Morning,
 				<p>Find attached an excel sheet with a Stock Level Report for 
-				Zinc Sulphate 20mg and ORS sachet (for 500ml) low osmolality (100 & 50) as at ".date("jS F Y")."</p>";
-	$message .="<p>Number of facilities using HCMP: ".$no_of_facilities."</p>";
-	$message .= $message_body;
-	$message .="
+				Zinc Sulphate 20mg and ORS sachet (for 500ml) low osmolality (100 & 50) as at " . date("jS F Y") . "</p>";
+		$message .= "<p>Number of facilities using HCMP: " . $no_of_facilities . "</p>";
+		$message .= $message_body;
+		$message .= "
 				
 				
 				<p>You may log onto health-cmp.or.ke for follow up.</p>
@@ -1531,219 +1749,202 @@ public function ors_zinc_report() {
 				<p>HCMP</p>
 				
 				<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-	//echo $message;exit;	
-	$report_type = "ors_report";
-	$this ->create_excel($excel_data,$report_type);
-	
-	//path for windows
-	$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-	
-	//path for Mac
-	//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-	$email_address = "smutheu@clintonhealthaccess.org,bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org,rkihoto@clintonhealthaccess.org";
-	$bcc = "collinsojneg@gmail.com,kelvinmwas@gmail.com,nmaingi@strathmore.edu";
-	
-	$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler,$bcc);
+		//echo $message;exit;
+		$report_type = "ors_report";
+		$this -> create_excel($excel_data, $report_type);
+
+		//path for windows
+		$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+
+		//path for Mac
+		//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+		$email_address = "smutheu@clintonhealthaccess.org,bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org,rkihoto@clintonhealthaccess.org";
+		$bcc = "collinsojneg@gmail.com,kelvinmwas@gmail.com,nmaingi@strathmore.edu";
+
+		$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc);
 
 	}
 
-public function create_excel_ors($excel_data=NUll,$report_type = NULL, $total_figure =  NULL) 
-{
-	$styleArray = array('font' => array('bold' => true),'alignment'=>array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER));
-	$styleArray2 = array('font' => array('bold' => true));
- 	//$objWorksheet1 = $objPHPExcel->createSheet();
-	//$objWorksheet1->setTitle('Another sheet'); 
-    //check if the excel data has been set if not exit the excel generation   
-	if(count($excel_data)>0):
-		
-		$objPHPExcel = new PHPExcel();
-		$objPHPExcel -> getProperties() -> setCreator("HCMP");
-		$objPHPExcel -> getProperties() -> setLastModifiedBy($excel_data['doc_creator']);
-		$objPHPExcel -> getProperties() -> setTitle($excel_data['doc_title']);
-		$objPHPExcel -> getProperties() -> setSubject($excel_data['doc_title']);
-		$objPHPExcel -> getProperties() -> setDescription("");
+	public function create_excel_ors($excel_data = NUll, $report_type = NULL, $total_figure = NULL) {
+		$styleArray = array('font' => array('bold' => true), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER));
+		$styleArray2 = array('font' => array('bold' => true));
+		//$objWorksheet1 = $objPHPExcel->createSheet();
+		//$objWorksheet1->setTitle('Another sheet');
+		//check if the excel data has been set if not exit the excel generation
+		if (count($excel_data) > 0) :
 
-		$objPHPExcel -> setActiveSheetIndex(0);
-		$objPHPExcel->getActiveSheet()->mergeCells('A1:H1');
-		$objPHPExcel->getActiveSheet()->setCellValue('A1', $excel_data['excel_title']);
-		$objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray($styleArray);
-		
-		$rowExec = 2;
-		$column = 0;
-		//Looping through the cells
-		
-		foreach ($excel_data['column_data'] as $column_data) 
-		{
-			$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $column_data);
-			$objPHPExcel -> getActiveSheet() -> getColumnDimension(PHPExcel_Cell::stringFromColumnIndex($column)) -> setAutoSize(true);
-			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($column, $rowExec)->getFont()->setBold(true);
-			$column++;
-		}		
-		
-		$rowExec = 3;
-				
-		foreach ($excel_data['row_data'] as $row_data) 
-		{
+			$objPHPExcel = new PHPExcel();
+			$objPHPExcel -> getProperties() -> setCreator("HCMP");
+			$objPHPExcel -> getProperties() -> setLastModifiedBy($excel_data['doc_creator']);
+			$objPHPExcel -> getProperties() -> setTitle($excel_data['doc_title']);
+			$objPHPExcel -> getProperties() -> setSubject($excel_data['doc_title']);
+			$objPHPExcel -> getProperties() -> setDescription("");
+
+			$objPHPExcel -> setActiveSheetIndex(0);
+			$objPHPExcel -> getActiveSheet() -> mergeCells('A1:H1');
+			$objPHPExcel -> getActiveSheet() -> setCellValue('A1', $excel_data['excel_title']);
+			$objPHPExcel -> getActiveSheet() -> getStyle('A1') -> applyFromArray($styleArray);
+
+			$rowExec = 2;
 			$column = 0;
-	        foreach($row_data as $cell)
-	        {
-	        	//Looping through the cells per facility
-				$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $cell);
-				$column++;	
+			//Looping through the cells
+
+			foreach ($excel_data['column_data'] as $column_data) {
+				$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $column_data);
+				$objPHPExcel -> getActiveSheet() -> getColumnDimension(PHPExcel_Cell::stringFromColumnIndex($column)) -> setAutoSize(true);
+				$objPHPExcel -> getActiveSheet() -> getStyleByColumnAndRow($column, $rowExec) -> getFont() -> setBold(true);
+				$column++;
 			}
-        	
-        	$rowExec++;
-		}
 
-		$objPHPExcel -> getActiveSheet() -> setTitle('Simple');
-		//echo date('H:i:s') . " Write to Excel2007 format\n";
-		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+			$rowExec = 3;
 
-    	// We'll be outputting an excel file
-		if(isset($excel_data['report_type']))
-		{
-			///Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files
-			$objWriter->save("./print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
-			//$objWriter->save("/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
-			//exit;
-	   	} else{
-	   		// We'll be outputting an excel file
-			header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-	        header("Cache-Control: no-store, no-cache, must-revalidate");
-	        header("Cache-Control: post-check=0, pre-check=0", false);
-	        header("Pragma: no-cache");
-			// It will be called file.xls
-			header("Content-Disposition: attachment; filename=".$excel_data['file_name'].'.xls');
-			// Write file to the browser
-	        $objWriter -> save('php://output');
-	       $objPHPExcel -> disconnectWorksheets();
-	       unset($objPHPExcel);
-	   }
-		
-	endif;
-}
- 
+			foreach ($excel_data['row_data'] as $row_data) {
+				$column = 0;
+				foreach ($row_data as $cell) {
+					//Looping through the cells per facility
+					$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $cell);
+					$column++;
+				}
 
-public function create_excel($excel_data=NUll,$report_type = NULL, $total_figure =  NULL) 
-{
-	$styleArray = array('font' => array('bold' => true),'alignment'=>array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER));
-	$styleArray2 = array('font' => array('bold' => true));
-	
- 	//check if the excel data has been set if not exit the excel generation   
- 	//$objWorksheet1 = $objPHPExcel->createSheet();
-	//$objWorksheet1->setTitle('Another sheet'); 
-     
-	if(count($excel_data)>0):
-		
-		$objPHPExcel = new PHPExcel();
-		$objPHPExcel -> getProperties() -> setCreator("HCMP");
-		$objPHPExcel -> getProperties() -> setLastModifiedBy($excel_data['doc_creator']);
-		$objPHPExcel -> getProperties() -> setTitle($excel_data['doc_title']);
-		$objPHPExcel -> getProperties() -> setSubject($excel_data['doc_title']);
-		$objPHPExcel -> getProperties() -> setDescription("");
+				$rowExec++;
+			}
 
-		$objPHPExcel -> setActiveSheetIndex(0);
-		
-		if($report_type=="expiries"):
-			$objPHPExcel->getActiveSheet()->mergeCells('A1:N1');
-			$objPHPExcel->getActiveSheet()->setCellValue('A1', $excel_data['excel_title']);
-			$objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray($styleArray);
-			$cell_count = count($excel_data["row_data"]);
-			$cell_count2 = $cell_count + 2;
-			$cell_count3 = $cell_count + 3;
-			$objPHPExcel->getActiveSheet()->setCellValue('F'.$cell_count3, "=SUM(F3:F".$cell_count2.")");
-			$objPHPExcel->getActiveSheet()->setCellValue('A'.$cell_count3, "Total Cost of Expiries");
-			$objPHPExcel->getActiveSheet()->getStyle('A'.$cell_count3)->applyFromArray($styleArray2);
-			$objPHPExcel->getActiveSheet()->getStyle('F'.$cell_count3)->applyFromArray($styleArray2);
-		
-		elseif($report_type=="ors_report"):
-			$objPHPExcel->getActiveSheet()->mergeCells('A1:H1');
-			$objPHPExcel->getActiveSheet()->setCellValue('A1', $excel_data['excel_title']);
-			$objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray($styleArray);
-			
-		elseif($report_type=="potential_expiries"):
-			$objPHPExcel->getActiveSheet()->mergeCells('A1:N1');
-			$objPHPExcel->getActiveSheet()->setCellValue('A1', $excel_data['excel_title']);
-			$objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray($styleArray);
-			
-		elseif($report_type=="stockouts"):
-			$objPHPExcel->getActiveSheet()->mergeCells('A1:J1');
-			$objPHPExcel->getActiveSheet()->setCellValue('A1', $excel_data['excel_title']);
-			$objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray($styleArray);
-			
-		elseif($report_type=="order_costs"):
-			$objPHPExcel->getActiveSheet()->mergeCells('A1:J1');
-			$objPHPExcel->getActiveSheet()->setCellValue('A1', $excel_data['excel_title']);
-			$objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray($styleArray);
-		elseif($report_type=="consumption"):
-			$objPHPExcel->getActiveSheet()->mergeCells('A1:K1');
-			$objPHPExcel->getActiveSheet()->setCellValue('A1', $excel_data['excel_title']);
-			$objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray($styleArray);
-		elseif($report_type=="stock_level"):
-			$objPHPExcel->getActiveSheet()->mergeCells('A1:G1');
-			$objPHPExcel->getActiveSheet()->setCellValue('A1', $excel_data['excel_title']);
-			$objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray($styleArray);
-		
+			$objPHPExcel -> getActiveSheet() -> setTitle('Simple');
+			//echo date('H:i:s') . " Write to Excel2007 format\n";
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+
+			// We'll be outputting an excel file
+			if (isset($excel_data['report_type'])) {
+				///Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files
+				$objWriter -> save("./print_docs/excel/excel_files/" . $excel_data['file_name'] . '.xls');
+				//$objWriter->save("/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
+				//exit;
+			} else {
+				// We'll be outputting an excel file
+				header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+				header("Cache-Control: no-store, no-cache, must-revalidate");
+				header("Cache-Control: post-check=0, pre-check=0", false);
+				header("Pragma: no-cache");
+				// It will be called file.xls
+				header("Content-Disposition: attachment; filename=" . $excel_data['file_name'] . '.xls');
+				// Write file to the browser
+				$objWriter -> save('php://output');
+				$objPHPExcel -> disconnectWorksheets();
+				unset($objPHPExcel);
+			}
+
 		endif;
-		
-		$rowExec = 2;
-		$column = 0;
-		//Looping through the cells
-		
-		foreach ($excel_data['column_data'] as $column_data) 
-		{
-			$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $column_data);
-			$objPHPExcel -> getActiveSheet() -> getColumnDimension(PHPExcel_Cell::stringFromColumnIndex($column)) -> setAutoSize(true);
-			//$objPHPExcel->getActiveSheet()->getStyle($column, $rowExec)->getFont()->setBold(true);
-			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($column, $rowExec)->getFont()->setBold(true);
-			$column++;
-		}		
-		
-		$rowExec = 3;
-				
-		foreach ($excel_data['row_data'] as $row_data) 
-		{
+	}
+
+	public function create_excel($excel_data = NUll, $report_type = NULL, $total_figure = NULL) {
+		$styleArray = array('font' => array('bold' => true), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER));
+		$styleArray2 = array('font' => array('bold' => true));
+
+		//check if the excel data has been set if not exit the excel generation
+		//$objWorksheet1 = $objPHPExcel->createSheet();
+		//$objWorksheet1->setTitle('Another sheet');
+
+		if (count($excel_data) > 0) :
+
+			$objPHPExcel = new PHPExcel();
+			$objPHPExcel -> getProperties() -> setCreator("HCMP");
+			$objPHPExcel -> getProperties() -> setLastModifiedBy($excel_data['doc_creator']);
+			$objPHPExcel -> getProperties() -> setTitle($excel_data['doc_title']);
+			$objPHPExcel -> getProperties() -> setSubject($excel_data['doc_title']);
+			$objPHPExcel -> getProperties() -> setDescription("");
+
+			$objPHPExcel -> setActiveSheetIndex(0);
+
+			if ($report_type == "expiries") :
+				$objPHPExcel -> getActiveSheet() -> mergeCells('A1:N1');
+				$objPHPExcel -> getActiveSheet() -> setCellValue('A1', $excel_data['excel_title']);
+				$objPHPExcel -> getActiveSheet() -> getStyle('A1') -> applyFromArray($styleArray);
+				$cell_count = count($excel_data["row_data"]);
+				$cell_count2 = $cell_count + 2;
+				$cell_count3 = $cell_count + 3;
+				$objPHPExcel -> getActiveSheet() -> setCellValue('F' . $cell_count3, "=SUM(F3:F" . $cell_count2 . ")");
+				$objPHPExcel -> getActiveSheet() -> setCellValue('A' . $cell_count3, "Total Cost of Expiries");
+				$objPHPExcel -> getActiveSheet() -> getStyle('A' . $cell_count3) -> applyFromArray($styleArray2);
+				$objPHPExcel -> getActiveSheet() -> getStyle('F' . $cell_count3) -> applyFromArray($styleArray2);
+			elseif ($report_type == "ors_report") :
+				$objPHPExcel -> getActiveSheet() -> mergeCells('A1:H1');
+				$objPHPExcel -> getActiveSheet() -> setCellValue('A1', $excel_data['excel_title']);
+				$objPHPExcel -> getActiveSheet() -> getStyle('A1') -> applyFromArray($styleArray);
+			elseif ($report_type == "potential_expiries") :
+				$objPHPExcel -> getActiveSheet() -> mergeCells('A1:N1');
+				$objPHPExcel -> getActiveSheet() -> setCellValue('A1', $excel_data['excel_title']);
+				$objPHPExcel -> getActiveSheet() -> getStyle('A1') -> applyFromArray($styleArray);
+			elseif ($report_type == "stockouts") :
+				$objPHPExcel -> getActiveSheet() -> mergeCells('A1:J1');
+				$objPHPExcel -> getActiveSheet() -> setCellValue('A1', $excel_data['excel_title']);
+				$objPHPExcel -> getActiveSheet() -> getStyle('A1') -> applyFromArray($styleArray);
+			elseif ($report_type == "order_costs") :
+				$objPHPExcel -> getActiveSheet() -> mergeCells('A1:J1');
+				$objPHPExcel -> getActiveSheet() -> setCellValue('A1', $excel_data['excel_title']);
+				$objPHPExcel -> getActiveSheet() -> getStyle('A1') -> applyFromArray($styleArray);
+			elseif ($report_type == "consumption") :
+				$objPHPExcel -> getActiveSheet() -> mergeCells('A1:K1');
+				$objPHPExcel -> getActiveSheet() -> setCellValue('A1', $excel_data['excel_title']);
+				$objPHPExcel -> getActiveSheet() -> getStyle('A1') -> applyFromArray($styleArray);
+			elseif ($report_type == "stock_level") :
+				$objPHPExcel -> getActiveSheet() -> mergeCells('A1:G1');
+				$objPHPExcel -> getActiveSheet() -> setCellValue('A1', $excel_data['excel_title']);
+				$objPHPExcel -> getActiveSheet() -> getStyle('A1') -> applyFromArray($styleArray);
+
+			endif;
+
+			$rowExec = 2;
 			$column = 0;
-	        foreach($row_data as $cell)
-	        {
-	        	//Looping through the cells per facility
-				$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $cell);
-				$column++;	
+			//Looping through the cells
+
+			foreach ($excel_data['column_data'] as $column_data) {
+				$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $column_data);
+				$objPHPExcel -> getActiveSheet() -> getColumnDimension(PHPExcel_Cell::stringFromColumnIndex($column)) -> setAutoSize(true);
+				//$objPHPExcel->getActiveSheet()->getStyle($column, $rowExec)->getFont()->setBold(true);
+				$objPHPExcel -> getActiveSheet() -> getStyleByColumnAndRow($column, $rowExec) -> getFont() -> setBold(true);
+				$column++;
 			}
-        	
-        	$rowExec++;
-		}
 
-		$objPHPExcel -> getActiveSheet() -> setTitle('Simple');
-		//echo date('H:i:s') . " Write to Excel2007 format\n";
-		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+			$rowExec = 3;
 
-    	// We'll be outputting an excel file
-		if(isset($excel_data['report_type']))
-		{
-			//For Windows				
-			$objWriter->save("./print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
-			//For Mac
-			//$objWriter->save("/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
-			//exit;
-	   	} else{
-	   		// We'll be outputting an excel file
-			header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-	        header("Cache-Control: no-store, no-cache, must-revalidate");
-	        header("Cache-Control: post-check=0, pre-check=0", false);
-	        header("Pragma: no-cache");
-			// It will be called file.xls
-			header("Content-Disposition: attachment; filename=".$excel_data['file_name'].'.xls');
-			// Write file to the browser
-	        $objWriter -> save('php://output');
-	       $objPHPExcel -> disconnectWorksheets();
-	       unset($objPHPExcel);
-	   }
-		
-	endif;
-}
- 
+			foreach ($excel_data['row_data'] as $row_data) {
+				$column = 0;
+				foreach ($row_data as $cell) {
+					//Looping through the cells per facility
+					$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $cell);
+					$column++;
+				}
 
+				$rowExec++;
+			}
+
+			$objPHPExcel -> getActiveSheet() -> setTitle('Simple');
+			//echo date('H:i:s') . " Write to Excel2007 format\n";
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+
+			// We'll be outputting an excel file
+			if (isset($excel_data['report_type'])) {
+				//For Windows
+				$objWriter -> save("./print_docs/excel/excel_files/" . $excel_data['file_name'] . '.xls');
+				//For Mac
+				//$objWriter->save("/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
+				//exit;
+			} else {
+				// We'll be outputting an excel file
+				header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+				header("Cache-Control: no-store, no-cache, must-revalidate");
+				header("Cache-Control: post-check=0, pre-check=0", false);
+				header("Pragma: no-cache");
+				// It will be called file.xls
+				header("Content-Disposition: attachment; filename=" . $excel_data['file_name'] . '.xls');
+				// Write file to the browser
+				$objWriter -> save('php://output');
+				$objPHPExcel -> disconnectWorksheets();
+				unset($objPHPExcel);
+			}
+
+		endif;
+	}
 
 	public function create_pdf($pdf_data = NULL, $district_id = NULL, $html_body = NULL) {
 		//echo $district_id;
@@ -1835,8 +2036,9 @@ public function create_excel($excel_data=NUll,$report_type = NULL, $total_figure
 		unlink($file);
 		//delete the attachment after sending to avoid clog up of pdf'ss
 	}
+
 public function log_summary_weekly(){
-	    $time=date('M , d Y',mktime());
+	    $time=date('M , d Y');
 		$data = $q = Doctrine_Manager::getInstance()
 	        ->getCurrentConnection()
 	        ->fetchAll("SELECT *
@@ -2027,8 +2229,8 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 							}
 							
 						}*/
-						//echo '<pre>';print_r(array_values($finalArray));echo '</pre>';exit;
-		$excel_data = array('doc_creator' => 'HCMP-Kenya', 'doc_title' => 'HCMP_Facility_Activity_Log_Summary ', 'file_name' => 'HCMP_Facility_Activity_Log_Summary ');
+						//echo '<pre>';print_r(array_values($temp2));echo '</pre>';exit;
+		$excel_data = array('doc_creator' => 'HCMP-Kenya', 'doc_title' => 'HCMP_Facility_Activity_Log_Summary ', 'file_name' => 'HCMP_Facility_Activity_Log_Summary_as_at_'.$time);
 		$row_data = array(); 
 		$column_data = array("Facility Name", "Facility Code", "County","Sub-County", "Date Last Issued", "Days from last issue",
 		"Date Last Redistributed", "Days From last Redistributed", "Date Last ordered", "Days From Last order", "Date Last Decommissioned",
@@ -2040,23 +2242,23 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 		$value['facility_code'],
 		$value['county'],
 		$value['district'],
-		(date('m-d-Y',strtotime($value['issue_event']))=='01-01-1970')? '' : date('m-d-Y',strtotime($value['issue_event'])),
+		(date('m-d-Y',strtotime($value['issue_event']))=='01-01-1970')? '' : $value['issue_event'],
 		($value['issue_d']==0)? '':$value['issue_d'],
-		(date('m-d-Y',strtotime($value['redistribute_event']))=='01-01-1970')? '' : date('m-d-Y',strtotime($value['redistribute_event'])),
+		(date('m-d-Y',strtotime($value['redistribute_event']))=='01-01-1970')? '' : $value['redistribute_event'],
 		($value['redistribute_d']=='')? '' :$value['redistribute_d'],
-		(date('m-d-Y',strtotime($value['ordered_event']))=='01-01-1970')? '' : date('m-d-Y',strtotime($value['ordered_event'])),
+		(date('m-d-Y',strtotime($value['ordered_event']))=='01-01-1970')? '' : $value['ordered_event'],
 		($value['ordered_d']=='')? '' :$value['ordered_d'] ,
-		(date('m-d-Y',strtotime($value['decommissioned_event']))=='01-01-1970')? '' : date('m-d-Y',strtotime($value['decommissioned_event'])),
+		(date('m-d-Y',strtotime($value['decommissioned_event']))=='01-01-1970')? '' : $value['decommissioned_event'],
 		($value['decommissioned_d']=='')? '':$value['decommissioned_d'],
-		(date('m-d-Y',strtotime($value['receive_event']))=='01-01-1970')? '' : date('m-d-Y',strtotime($value['receive_event'])),
+		(date('m-d-Y',strtotime($value['receive_event']))=='01-01-1970')? '' : $value['receive_event'],
 		($value['receive_event_d']=='')? '' :$value['receive_event_d'],
-		(date('m-d-Y',strtotime($value['date_event']))=='01-01-1970')? '' : date('m-d-Y',strtotime($value['date_event'])),
+		(date('m-d-Y',strtotime($value['date_event']))=='01-01-1970')? '' : $value['date_event'],
 		($value['date_event_d']=='')? '' :$value['date_event_d']
 		));
 		endforeach;
 		$excel_data['row_data'] = $row_data;
 		$excel_data['report_type']='Log Summary';
-		$time=date('m-d-Y',date());
+		
 
 		$this -> hcmp_functions -> create_excel($excel_data);
 		
@@ -2121,9 +2323,9 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 </table><!-- /BODY -->";	
 
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-						$subject = "Weekly Log Summary ";
+						$subject = "Weekly Log Summary as at ".$time;
 						
-						$email_address = 'kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org';
+						$email_address = 'kelvinmwas@gmail.com';
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 			
             
@@ -2166,6 +2368,7 @@ group by issued,ordered,redistribute,decommissioned,facility_code
        }
        echo '</tbody></table>';*/
        }
-       
-       
+
+	
+
 }

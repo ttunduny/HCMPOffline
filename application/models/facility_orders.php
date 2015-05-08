@@ -8,6 +8,7 @@ class facility_orders extends Doctrine_Record {
 		        $this->hasColumn('id', 'int');
 				$this->hasColumn('order_date', 'date');
 				$this->hasColumn('approval_date', 'date');
+				$this->hasColumn('approval_county', 'date');
 				$this->hasColumn('dispatch_date', 'date');
 				$this->hasColumn('deliver_date', 'date');
 				$this->hasColumn('dispatch_update_date', 'date');

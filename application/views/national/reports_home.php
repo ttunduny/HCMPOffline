@@ -530,8 +530,8 @@ $("input:radio[name=commodity_s]").click(function() {
       			if(commodity_type=='Tracer'){ 
 	        		link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/NULL/excel';
 	        	}
-	        	if(commodity_type=='comodity'){ 
-	        		link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/NULL/excel';
+	        	if(commodity_type=='Specify'){ 
+	        		link='national/stock_level_mos/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel';
 	        	}
 	        	if(commodity_type=='All'){ 
 	        		var commodity_id=$('#commodity').val();

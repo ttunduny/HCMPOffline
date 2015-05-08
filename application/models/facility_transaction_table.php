@@ -50,8 +50,8 @@ class facility_transaction_table extends Doctrine_Record {
 	return $commodities;		}
 
     public static function get_commodities_for_ordering($facility_code,$for_a_facility=null){
-    	if(isset($for_a_facility)): // hack to ensure that when you are ordering for a facility that is not using hcmp they have all the items
-    $items=Commodities::get_all_from_supllier(1);
+    		// hack to ensure that when you are ordering for a facility that is not using hcmp they have all the items
+    	if(isset($for_a_facility)):  $items=Commodities::get_all_from_supllier(1);
 	$temp=array();
 	foreach ($items as $data){
 	array_push($temp,array('sub_category_name'=>$data['sub_category_name'],'commodity_name'=>$data['commodity_name']
