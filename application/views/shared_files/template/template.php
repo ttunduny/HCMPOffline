@@ -91,10 +91,11 @@ border-radius:0;
 background-color: white;
 border-color: #e7e7e7;
 }
-.modal-content,.form-control
+.modal-content,.form-control,.btn
 {
   border-radius: 0 !important;
 }
+
 
 
 </style>

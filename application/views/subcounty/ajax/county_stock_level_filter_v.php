@@ -6,11 +6,21 @@ $district_id_active =  $this -> session -> userdata('district_id');
 $identifier = $this -> session -> userdata('user_indicator');
 
 ?>
-<div class="alert alert-info" style="width: 100%">
-  <b>Below are the Stocking Levels in the County </b> :Select filter Options
-</div>
-
-<ul class='nav nav-tabs'>
+<div class="container-fluid"> 
+	<div class="row">
+		<div class="col-md-5">
+			
+			<div class="alert alert-info" style="padding: 10">
+  				<b>Below are the Stocking Levels in the County </b> :Select filter Options
+			</div>
+		</div>
+		
+	</div>
+	
+	<div class="row">
+		<div class="col-md-12">
+			
+			<ul class='nav nav-tabs'>
 	  <li class="active"><a href="#tracer" data-toggle="tab">Tracer Commodities <?php echo " ($number_of_tracer_items)"; ?></a></li>
       <li class=""><a href="#division" data-toggle="tab">Program Commodities</a></li>
       <!--<li class=""><a href="#cat" data-toggle="tab">Categories</a></li>-->
@@ -18,7 +28,14 @@ $identifier = $this -> session -> userdata('user_indicator');
    	  <li class=""><a href="#stockouts" data-toggle="tab" onclick="stockouts_clicked()">Stock outs</a></li>
      <!--<li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>-->
 </ul>
-    <div id="myTabContent" class="tab-content">
+		</div>
+	</div>
+	
+	
+<div class="row">
+	
+	<div class="col-md-12">
+		<div id="myTabContent" class="tab-content">
     	<!-- div for tracer items-->
     	<div  id="tracer" class="tab-pane fade active in">
           	<br>
@@ -50,15 +67,15 @@ $identifier = $this -> session -> userdata('user_indicator');
 				</select>
 				<!--First the filter buttons-->
 				<div class="col-md-2">
-					<button style="margin-left:30px;" class="btn btn-sm btn-success tracer-filter"><span class="glyphicon glyphicon-filter"></span>Filter Graph</button> 
+					<button style="margin-left:30px;" class="btn btn-xs btn-success tracer-filter"><span class="glyphicon glyphicon-filter"></span>Filter Graph</button> 
 				</div>
 				<!-- seth's button -->
 				<div class="col-md-2">
-					<button style="margin-left:30px;" class="btn btn-sm btn-success tracer-filter-table"><span class="glyphicon glyphicon-th-list"></span>Filter Table</button> 
+					<button style="margin-left:30px;" class="btn btn-xs btn-success tracer-filter-table"><span class="glyphicon glyphicon-th-list"></span>Filter Table</button> 
 				</div>
 				<!--Download button-->
 				<div class="col-md-1">
-					<button style="margin-left:30px;" class="btn btn-sm btn-primary tracer-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
+					<button style="margin-left:30px;" class="btn btn-xs btn-primary tracer-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
 				</div>
 				
           	</form>
@@ -100,13 +117,13 @@ $identifier = $this -> session -> userdata('user_indicator');
 				<option value="mos">Months of stock</option>
 			</select>
 			<div class="col-md-1">
-				<button class="btn btn-sm btn-success division-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+				<button class="btn btn-xs btn-success division-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 			</div>
 			<div class="col-md-1">
-				<button class="btn btn-sm btn-success division-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
+				<button class="btn btn-xs btn-success division-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
 			</div>
 			<div class="col-md-2">
-			<button style="margin-left:30px;" class="btn btn-sm btn-primary division-filter-table"><span class="glyphicon glyphicon-th-list"></span>Results as Table</button> 
+			<button style="margin-left:30px;" class="btn btn-xs btn-primary division-filter-table"><span class="glyphicon glyphicon-th-list"></span>Results as Table</button> 
 			</div>
       </form>
       </div>
@@ -136,13 +153,13 @@ endforeach;
 -->
 </select>
 <div class="col-md-1">
-<button class="btn btn-sm btn-success county-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+<button class="btn btn-xs btn-success county-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div>
 <div class="col-md-1">
-<button class="btn btn-sm btn-success county-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
+<button class="btn btn-xs btn-success county-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
 </div>
 <div class="col-md-2">
-<button class="btn btn-sm btn-primary county-filter-table"><span class="glyphicon glyphicon-th-list"></span>Results as Table</button> 
+<button class="btn btn-xs btn-primary county-filter-table"><span class="glyphicon glyphicon-th-list"></span>Results as Table</button> 
 </div>
 </form>
 </div>
@@ -182,10 +199,10 @@ endforeach;
 <option value="mos">Months Of Stock</option>
 </select>
 <div class="col-md-1">
-<button class="btn btn-sm btn-success subcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+<button class="btn btn-xs btn-success subcounty-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
 </div>
 <div class="col-md-1">
-<button class="btn btn-sm btn-success subcounty-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
+<button class="btn btn-xs btn-success subcounty-download"><span class="glyphicon glyphicon-save"></span>Download</button> 
 </div>
 </form>
 </div>
@@ -194,31 +211,32 @@ endforeach;
 <div  id="stockouts" class="tab-pane fade in">
 	
 <br>
-<!-- <form class="form-inline" role="form">
 
-	<select id="district_filter" class="form-control col-md-2">
-<option selected="selected" value="NULL">Select Sub-county</option>
-<?php
-foreach($district_data as $district_):
-		$district_id=$district_->id;
-		$district_name=$district_->district;	
-		echo "<option value='$district_id'>$district_name</option>";
-endforeach;
-?>
-</select> 
-<select id="facility_filter" class="form-control col-md-2">
-<option value="NULL">Select facility</option>
-</select>	
-<div class="col-md-1">
-<button class="btn btn-sm btn-success filter" id="filter" name="filter">
-<span class="glyphicon glyphicon-filter"></span>Filter</button> 
-</div> 
-</form> -->
 <div class="graph_content" id="stockouts_graph"  ></div>
 </div>
 
 </div>
-<div class="graph_content" id="default_graph_"  ></div>	
+	</div>
+</div>
+
+ 
+ 
+ <div class="container">
+ 	<div class="row">
+ 		<div class="col-md-12">
+ 			
+ 		<div class="graph_content" id="default_graph_" style="height: 100%;width: 100% ;" >
+	<?php echo $error; ?>
+</div>	
+ 			
+ 		</div>
+ 	</div>
+ 	
+ 	
+ </div>
+ 
+ </div>   <!--end container fluid-->
+	
 
 	
 <script>

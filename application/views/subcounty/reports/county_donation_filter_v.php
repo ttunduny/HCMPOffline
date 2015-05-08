@@ -1,57 +1,69 @@
-<!--<h1 class="page-header" style="margin: 0;font-size: 1.6em;">Commodity Redistribution</h1>-->
-<div class="alert alert-info">
-  <b>Below are the Commodity Redistribution trends in the County</b>:Select filter Options
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="alert alert-info">
+ 		 		<b>Below are the Commodity Redistribution trends in the County</b>:Select filter Options
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="row">
+		<div class="col-md-12">
+		
+		</div>
+	</div>
+	
 </div>
-<ul class='nav nav-tabs'>
-      <li class="active"><a href="#county" data-toggle="tab">County View</a></li>
-      <li class=""><a href="#subcounty" data-toggle="tab">Sub County View</a></li>
-</ul>
+
+
 <div id="myTabContent" class="tab-content">
 	       <div  id="county" class="tab-pane fade active in">
        	<br>
-<div class="filter row">
-<form class="form-inline" role="form">
-<select id="county_year_expired" class="form-control col-md-2">
-	<option value="NULL" selected="selected">Select year</option>
-	<?php for($i=2014; $i<=date('Y'); $i++): echo "<option value='$i'>$i</option>"; endfor;  ?>
-</select>
-<div class="col-md-1">
-<button class="btn btn-sm btn-success filter" id="county-filter" name="filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
-</div> 
-</form>
+		<div class="filter row">
+			<form class="form-inline" role="form">
+				<select id="county_year_expired" class="form-control col-md-2">
+					<option value="NULL" selected="selected">Select year</option>
+					<?php for($i=2014; $i<=date('Y'); $i++): echo "<option value='$i'>$i</option>"; endfor;  ?>
+				</select>
+		<div class="col-md-2">
+			<button class="btn btn-sm btn-success" id="county-filter" name="filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+		</div> 
+			</form>
+		</div>
 </div>
-</div>
-<div  id="subcounty" class="tab-pane fade in">
+<div  id="subcounty" class="tab-pane fade in" >
        	<br>
-<div class="filter row">
-<form class="form-inline" role="form">
-<select id="year_expired" class="form-control col-md-2">
-	<option value="NULL" selected="selected">Select year</option>
-	<?php for($i=2014; $i<=date('Y'); $i++): echo "<option value='$i'>$i</option>"; endfor;  ?>
-</select>
-	<select id="district_filter" class="form-control col-md-2">
-<option selected="selected" value="NULL">Select Sub-county</option>
-<?php
-foreach($district_data as $district_):
-		$district_id=$district_->id;
-		$district_name=$district_->district;	
-		echo "<option value='$district_id'>$district_name</option>";
-endforeach;
-?>
-</select> 
-<select id="facility_filter" class="form-control col-md-2">
-<option value="NULL">Select facility</option>
-</select>	
-<div class="col-md-2">
-<button class="btn btn-sm btn-success filter" id="filter" name="filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
-</div> 
-</form>
+			<div class="filter row">
+			<form class="form-inline" role="form">
+			<select id="year_expired" class="form-control col-md-2">
+				<option value="NULL" selected="selected">Select year</option>
+				<?php for($i=2014; $i<=date('Y'); $i++): echo "<option value='$i'>$i</option>"; endfor;  ?>
+			</select>
+				<select id="district_filter" class="form-control col-md-2" style="margin-left: 1%;">
+			<option selected="selected" value="NULL">Select Sub-county</option>
+			<?php
+			foreach($district_data as $district_):
+					$district_id=$district_->id;
+					$district_name=$district_->district;	
+					echo "<option value='$district_id'>$district_name</option>";
+			endforeach;
+			?>
+			</select> 
+			<select id="facility_filter" class="form-control col-md-2">
+			<option value="NULL">Select facility</option>
+			</select>	
+			<div class="col-md-2">
+			<button class="btn btn-sm btn-success" id="filter" name="filter"><span class="glyphicon glyphicon-filter"></span>Filter</button> 
+			</div> 
+			</form>
+			</div>
 </div>
 </div>
-</div>
-<div class="graph_content">	
+
 <div class="graph_content" id="dem_graph_"  ></div>
-</div>
+
 <script>
 
 $(window).load(function(){

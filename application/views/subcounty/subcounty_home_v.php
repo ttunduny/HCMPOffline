@@ -9,6 +9,7 @@ $identifier = $this -> session -> userdata('user_indicator');
 			break;
 			 endswitch;
 ?>
+
 <div class="container-fluid" style="margin-top: 1%;">
       <div class="row row-offcanvas row-offcanvas-right" id="sidebar" >
       	<p class="pull-left visible-xs">
@@ -101,7 +102,7 @@ $identifier = $this -> session -> userdata('user_indicator');
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 " style="padding:0;border-radius: 0;margin-top: -2% ">
  <h1 class="page-header" style="margin-top: 2.4%;font-size: 1.6em;"></h1>
 <div class="">
-<div style="height: 100%;" id="notification"></div>
+<div style="" id="notification"></div>
 </div>
 </div>
     </div>
@@ -177,7 +178,18 @@ $('.page-header').html('System Usage');
 ajax_request_replace_div_content('reports/facility_mapping',"#notification");
 });
 
-//
+$("#download_redistributions").button().click(function(e) {
+        e.preventDefault(); 
+        var from =$("#county_from").val();
+        var to =$("#county_to").val();
+        
+        if(from==''){from="NULL";   }
+        if(to==''){to="NULL";}
+
+  		var url_ = "reports/"+
+       $("#tracer_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#tracer_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/csv_data"; 
+         window.open(url+url_ ,'_blank');   
+          }); 
      
 });
 </script>
