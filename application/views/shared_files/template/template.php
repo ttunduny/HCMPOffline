@@ -311,6 +311,56 @@ $(document).ready(function(){
 
 
 
+<div class="modal fade" id="myOrders" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-transfer"></span> Last Order Placed</h4>
+      </div>
+      <div class="modal-body" style="font-size:16px;">
+        <?php echo "<strong>Order Date :</strong> ".$lastorder."<br>";
+        echo "<strong>Order Number :</strong> ".$order_no."<br>";
+        echo "<strong>Commodity Name :</strong> ".$commodity_name."<br>";
+        echo "<strong>Quantity Ordered (Packs) :</strong> ".$quantity_ordered_pack."<br>";
+        echo "<strong>Quantity Ordered (Units) :</strong> ".$quantity_ordered_unit."<br>";
+        echo "<strong>Order Total :</strong> ".number_format($order_total,2)."<br>";
+        ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myIssues" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-share-alt"></span> Last Commodity Issued</h4>
+      </div>
+      <div class="modal-body" style="font-size:16px;">
+        <?php 
+        if($qty_issued<0){
+          $qty_issued = $qty_issued * -1;
+        }
+        echo "<strong>Issued Date :</strong> ".$last_issue."<br>";
+        echo "<strong>Commodity Name :</strong> ".$commodity_name."<br>";
+        echo "<strong>Quantity Issued :</strong> ".$qty_issued."<br>";
+        echo "<strong>Commodity Issued To :</strong> ".$issued_to."<br>";
+        ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
     <script type="text/javascript">
     
     /*

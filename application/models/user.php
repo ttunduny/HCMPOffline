@@ -277,15 +277,50 @@ public function get_last_login($user_id){
 
 		public function get_last_order($user_id){
 			$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				SELECT MAX(order_date) as last_order
-				 FROM facility_orders
-				 WHERE ordered_by = $user_id
-				 LIMIT 1 
+				SELECT f_o.order_no, MAX(f_o.order_date) as last_order, temp2.commodity_name, temp1.quantity_ordered_pack, temp1.quantity_ordered_unit, f_o.order_total
+
+				FROM facility_orders f_o
+				Left Join facility_order_details as temp1 on temp1.order_number_id = f_o.order_no
+				left join commodities as temp2 on temp2.id = temp1.commodity_id
+				WHERE ordered_by =  $user_id
+				LIMIT 1
 				");
+			$date = array();
+			if($q){
+
 			foreach ($q as $time){
-			$date = $time['last_order'];
+			$date['last_order'] = $time['last_order'];
+			$date['order_no'] = $time['order_no'];
+			$date['commodity_name'] = $time['commodity_name'];
+			$date['quantity_ordered_pack'] = $time['quantity_ordered_pack'];
+			$date['quantity_ordered_unit'] = $time['quantity_ordered_unit'];
+			$date['order_total'] = $time['order_total'];
+			}
+
 			}
 			return $date;
+		}
+
+		public function get_last_issue ($user_id){
+			$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+				SELECT Max(f_i.date_issued) as last_issue,f_i.issued_to,c.commodity_name, f_i.qty_issued
+
+				From facility_issues f_i, commodities c
+
+				Where issued_by = $user_id 
+
+				and c.id = f_i.commodity_id
+				");
+
+			if($q){
+				foreach ($q as $value) {
+					$data['last_issue'] = $value['last_issue'];
+					$data['issued_to'] = $value['issued_to'];
+					$data['commodity_name'] = $value['commodity_name'];
+					$data['qty_issued'] = $value['qty_issued'];
+				}
+			}
+			return $data;
 		}
 
 

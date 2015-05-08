@@ -63,7 +63,29 @@ class Home extends MY_Controller
 		//get last order
 		$lastorder = user::get_last_order($user_id);
 		//pass data to view
-		$data['lastorder'] = date("l, jS F Y ",strtotime($lastorder));
+		if(!empty($lastorder)){
+		 $data['lastorder'] = date("l, jS F Y ",strtotime($lastorder['last_order']));
+		 $data['order_no'] = $lastorder['order_no'];
+		$data['commodity_name'] = $lastorder['commodity_name'];
+		$data['quantity_ordered_pack'] = $lastorder['quantity_ordered_pack'];
+		$data['quantity_ordered_unit'] = $lastorder['quantity_ordered_unit'];
+		$data['order_total'] = $lastorder['order_total'];
+		}
+		else{
+		 $data['no_order'] = "N/A";
+		}
+
+		$lastissue = user::get_last_issue($user_id);
+
+		if(!empty($lastissue)){
+		 $data['last_issue'] = date("l, jS F Y ",strtotime($lastissue['last_issue']));
+		$data['commodity_name'] = $lastissue['commodity_name'];
+		$data['qty_issued'] = $lastissue['qty_issued'];
+		$data['issued_to'] = $lastissue['issued_to'];
+		}
+		else{
+		 $data['no_issue'] = "N/A";
+		}
 		//exit;
         switch ($identifier):
 			case 'moh':
