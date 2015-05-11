@@ -181,8 +181,8 @@
     </div>
 	</div>
    <div class="col-md-8">
-   <div class="well" >
-     <p style="font-size:13px; text-align:center;"><span class="glyphicon glyphicon-log-in"></span> <strong>Last Login:</strong> <?php echo $lastlogin; ?> |
+   <div class="custom-well" >
+     <p style="font-size:11px; text-align:center;"><span class="glyphicon glyphicon-log-in"></span> <strong>Last Login:</strong> <?php echo $lastlogin; ?> |
    <span class="glyphicon glyphicon-transfer"></span> <strong>Last Order:</strong> <?php 
    if(isset($no_order)){
     echo $no_order;
