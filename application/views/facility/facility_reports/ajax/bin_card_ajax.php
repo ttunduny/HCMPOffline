@@ -49,12 +49,53 @@ border: 1px solid #FFF !important;
                 </a>
       </div>-->
  <div style="min-height: 400px; background:#edc1d8">
-  <img style="align-content: center;margin-left: 46%; border:0 none;" src="<?php echo base_url();?>assets/img/coat_of_arms-resized1.png" class="img-responsive " alt="Responsive image">
-        <div id="" style="text-align: center; ">
+ 	<div class="row" style="padding: 12px 12px 16px 12px;">
+ 		<div class="col-md-1">
+ 			 			  <img style="align-content: center;margin-left: 46%; border:0 none;" src="<?php echo base_url();?>assets/img/coat_of_arms-resized1.png" class="img-responsive " alt="Responsive image">
+
+ 		</div>
+ 		<div class="col-md-4" style="text-align: center; ">
+			<div id="" style="text-align: left; " class="">
           <span style="font-size: 0.95em;font-weight: bold; ">Ministry of Health</span><br />
           <span style="font-size: 0.9em;">Health Commodities Management Platform (HCMP)</span> </br>
           <span style="font-size: 0.9em;">Bin Card For <strong><?php echo $commodity_name ;?></strong></span>
         </div>
+ 		</div>
+ 		<div class="col-md-3"></div>
+ 		<div class="col-md-4">
+ 			<div class="row">
+ 				<div class="col-md-5">
+ 				<strong>Records Between :</strong>	
+ 				</div>
+ 				<div class="col-md-7">
+ 					<?php echo date('d M,Y',strtotime($from)).'<strong>  To </strong>  '.date('d M,Y',strtotime($to)) ;?>
+ 				</div>
+ 			</div>
+ 			<div class="row">
+ 				<div class="col-md-5">
+ 					<strong>Batches Available :</strong>
+ 					
+ 				</div>
+ 				<div class="col-md-7">
+ 					<?php echo $distinct_batch;?>
+ 				</div>
+ 			</div>
+ 			<div class="row">
+ 				<div class="col-md-5">
+ 					<strong>Total Records :</strong>
+ 					
+ 				</div>
+ 				<div class="col-md-7">
+ 					<?php echo $count_records ;?>
+ 				</div>
+ 			</div>
+ 		</div>
+ 	</div>
+ 	
+ 	<div class="row">
+ 		
+ 	</div>
+       
     <table  class="row-fluid table table-bordered table-update"  id="example" style="text-transform:capitalize">
   <thead>
   <tr>
@@ -154,7 +195,13 @@ border: 1px solid #FFF !important;
                <?php
               } ?>
               <td><?php echo   $qty_issued_text;?> </td>
-              <td><?php echo  $closing_bal;?> </td>
+              <td><?php   if ($closing_bal<0) {
+                  		echo $closing_bal*-1;
+              				}else {
+						echo $closing_bal;  
+							  }
+							
+							;?> </td>
               <td><?php echo $s_point; ?> </td>
               <td><?php echo $bin['fname'].' '.$bin['lname'];?> </td>
             </tr>

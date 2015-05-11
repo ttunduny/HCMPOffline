@@ -627,9 +627,12 @@ class Reports extends MY_Controller {
 		$data['to'] = $to;
 		$data['facility_code'] = $this -> session -> userdata('facility_id');
 		$data_ = Facility_issues::get_bin_card($facility_code, $commodity_id, $from, $to);
-		//echo "<pre>";print_r($data_);exit;
+		$distinct =count(Facility_issues::get_distinct_batch($facility_code, $commodity_id, $from, $to));
+		//echo "<pre>";print_r($distinct);exit;
 		$data['bin_card'] = $data_;
-		$count_records = count($data);
+		$count_records = count($data_);
+		$data['count_records'] = $count_records;
+		$data['distinct_batch'] = $distinct;
 
 		if ($count_records <= 0) {
 
