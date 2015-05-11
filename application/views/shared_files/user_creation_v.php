@@ -12,6 +12,12 @@
 	#addModal .modal-dialog {
 		width: 54%;
 	}
+	.borderless{
+		border-radius: 0px;	
+	}
+	.form-group{
+		margin-bottom: 10px;
+	}
 </style>
 <div class="container-fluid">
 	<div class="page_content">
@@ -66,9 +72,8 @@
 					<table  class="table table-hover table-bordered table-update" id="datatable"  >
 						<thead style="background-color: white">
 							<tr>
-								<th>First name</th>
-								<th>Last name</th>
-								<th>Email </th>
+								<th>Names</th>
+								<th>Username </th>
 								<th>Phone No</th>
 								<th>Sub-County</th>
 								<th>Health Facility</th>
@@ -85,8 +90,8 @@
 							foreach ($listing as $list ) {
 							?>
 							<tr class="edit_tr" >
-								<td class="fname" ><?php echo $list['fname']; ?></td>
-								<td class="lname"><?php echo $list['lname']; ?>	</td>
+								<td class="fname" ><?php echo ucfirst($list['fname'])." ".ucfirst($list['lname']);?></td>
+								<!-- <td class="lname"><?php echo $list['lname']; ?>	</td> -->
 								<td class="email" data-attr="<?php echo $list['user_id']; ?>"><?php echo $list['email'];?></td>
 								<td class="phone"><?php echo $list['telephone']; ?></td>
 								<td class="district" data-attr="<?php echo $list['district_id']; ?>"><?php echo $list['district']; ?></td>
@@ -119,7 +124,7 @@
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="myform">
 	<div class="modal-dialog editable" >
 		<div class="modal-content">
-			<div class="modal-header" style="padding-bottom:2px;background: #27ae60;color: white">
+			<div class="modal-header" style="">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 					&times;
 				</button>
@@ -133,70 +138,67 @@
 				</div>
 
 			</div>
-			<div class="modal-body" style="padding-top:0">
+			<div class="modal-body" style="padding:0">
 				<div class="row" style="margin:auto">
 					<div class="col-md-12 ">
+					<center>
 						<form role="form">
 
-							<fieldset>
+							<fieldset class = "col-md-12">
+							<center>
+							<!--
 								<legend style="font-size:1.5em">
-									User details
+									Add User
 								</legend>
-								<div class="row" >
+								-->
 
-									<div class="col-md-6">
-										<div class="form-group">
-											<input type="text" required="required" name="first_name" id="first_name" class="form-control " placeholder="First Name" >
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<input type="text" name="last_name" required="required" id="last_name" class="form-control " placeholder="Last Name" >
-										</div>
-									</div>
+								<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">First Name</span>
+									<input type="text" required="required" name="first_name" id="first_name" class="form-control " placeholder="Enter First Name" >
 								</div>
 
-								<div class="row">
-									<div class=" col-md-6">
-										<div class="form-group">
-											<input type="telephone" name="telephone" required="required" id="telephone" class="form-control " placeholder="telephone eg, 254" tabindex="5">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<input type="email" name="email" id="email" required="required" class="form-control " placeholder="email@domain.com" tabindex="6">
-										</div>
-									</div>
+								<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">Last Name</span>
+									<input type="text" name="last_name" required="required" id="last_name" class="form-control " placeholder="Last Name" >
 								</div>
-								<div class="row">
-									<div class=" col-md-6">
-										<div class="form-group">
-											<input type="email" name="username" id="username" required="required" class="form-control " placeholder="email@domain.com" tabindex="5" readonly>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div id="err" style="padding: 6px;">
-											
-										</div>
-									</div>
+
+								<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">Phone Number</span>
+									<input type="telephone" name="telephone" required="required" id="telephone" class="form-control " placeholder="Enter Phone Number eg, 254" tabindex="5">
 								</div>
-							</fieldset>
-							<fieldset>
-								<legend style="font-size:1.5em">
-									Other details
-								</legend>
-								<div class="row" >
+
+								<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">Email</span>
+									<input type="email" name="email" id="email" required="required" class="form-control " placeholder="email@domain.com" tabindex="6">
+								</div>
+
+								<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">User Name</span>
+									<input type="email" name="username" id="username" required="required" class="form-control " placeholder="email@domain.com" tabindex="5" readonly>
+								</div>
+
+								<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">User Type</span>
+									<select class="form-control " id="user_type" name="user_type" required="required">
+												<option value='NULL'>Select User type</option>
+												<?php
+												foreach ($user_types as $user_types) :
+													$id = $user_types ['id'];
+													$type_name = $user_types ['level'];
+													echo "<option value='$id'>$type_name</option>";
+												endforeach;
+												?>
+									</select>
+								</div>
 									<?php
 
 									$identifier = $this -> session -> userdata('user_indicator');
 
 									if ($identifier=='district') {
 									?>
-
-									<div class="col-md-6">
-										<div class="form-group">
-
-											<select class="form-control " id="facility_id" required="required">
+									<div class="input-group form-group u_mgt">
+										<span class="input-group-addon sponsor">Facility Name</span>
+										<select class="form-control " id="facility_id" required="required">
 												<option value='NULL'>Select Facility</option>
 
 												<?php
@@ -207,74 +209,41 @@
 												endforeach;
 												?>
 											</select>
-
-										</div>
 									</div>
-									<div class="row" style="margin:auto">
-										<div class=" col-md-6">
-											<div class="form-group">
-												<select class="form-control " id="user_type" name="user_type" required="required">
-													<option value='NULL'>Select User type</option>
-													<?php
-													foreach ($user_types as $user_types) :
-														$id = $user_types ['id'];
-														$type_name = $user_types ['level'];
-														echo "<option value='$id'>$type_name</option>";
-													endforeach;
-													?>
-												</select>
-											</div>
-										</div>
-										<div class="col-md-6">
 
-										</div>
-									</div>
 
 									<?php }elseif ($identifier=='county') { ?>
-									<div class="col-md-6">
-										<div class="form-group">
+									<div class="input-group form-group u_mgt">
+										<span class="input-group-addon sponsor">Subcounty Name</span>
+										<select class="form-control " id="district_name" required="required">
+											<option value=''>Select Sub-County</option>
 
-											<select class="form-control " id="district_name" required="required">
-												<option value=''>Select Sub-County</option>
-
-												<?php
-												foreach ($district_data as $district_) :
-													$district_id = $district_ ['id'];
-													$district_name = $district_ ['district'];
-													echo "<option value='$district_id'>$district_name</option>";
-												endforeach;
-												?>
-											</select>
-
-										</div>
+											<?php
+											foreach ($district_data as $district_) :
+												$district_id = $district_ ['id'];
+												$district_name = $district_ ['district'];
+												echo "<option value='$district_id'>$district_name</option>";
+											endforeach;
+											?>
+										</select>
 									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<select class="form-control " id="facility_id" required="required">
+
+									<div class="input-group form-group u_mgt">
+										<span class="input-group-addon sponsor">Facility Name</span>
+										<select class="form-control " id="facility_id" required="required">
 												<option value="">Select Facility</option>
 												
-											</select>
-										</div>
+										</select>
+
 									</div>
-								</div>
-								<div class="row" >
-									<div class=" col-md-6">
-										<div class="form-group">
-											<select class="form-control " id="user_type" name="user_type" required="required">
-											</select>
-										</div>
-									</div>
-									<div class="col-md-6">
-									</div>
-								</div>
+
 								<?php }elseif ($identifier=='facility_admin') {
 									//code if facility admin
 									
 								?>
-								<div class="row" style="margin:auto">
-										<div class=" col-md-6">
-											<div class="form-group">
-												<select class="form-control " id="user_type" name="user_type" required="required">
+								<div class="input-group form-group u_mgt">
+										<span class="input-group-addon sponsor">User Type</span>
+										<select class="form-control " id="user_type" name="user_type" required="required">
 													<option value=''>Select User type</option>
 													<?php
 													foreach ($user_types as $user_type) :
@@ -283,28 +252,17 @@
 														echo "<option value='$display_id'>$name</option>";
 													endforeach;
 													?>
-												</select>
-											</div>
-										</div>
-										<div class="col-md-6">
-
-										</div>
-									</div>
-								<?php }?>
-								<div class="row">
-									<div class="col-md-6">
-									
-										</div>
-										<div class="col-md-6">
-									
-										</div>
+										</select>
 								</div>
+								<?php }?>
 								<div class="row" style="margin:auto" id="processing">
 									<div class=" col-md-12">
 										<div class="form-group">
 										</div>
 									</div>
 								</div>
+								</center>
+
 							</fieldset>
 
 						</form>
@@ -312,11 +270,11 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-default" data-dismiss="modal">
+				<button class="btn btn-default borderless" data-dismiss="modal">
 					Close
 				</button>
 				
-				<button class="btn btn-primary" id="create_new">
+				<button class="btn btn-primary borderless" id="create_new">
 					Save changes
 				</button>
 			</div>
@@ -325,78 +283,61 @@
 </div><!-- end Modal new user -->
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog" style="width:60%">
 		<div class="modal-content editable">
-			<div class="modal-header" style="padding-bottom:2px;background: #27ae60;color: white">
+			<div class="modal-header" style="">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 					&times;
 				</button>
 				<h4 class="modal-title" id="myModalLabel" style="text-align: center;line-height: 1">Edit User</h4>
 			</div>
-			<div class="modal-body" style="padding-top:0">
+			<div class="modal-body" style="">
 				<div id="contents">
-
+				<center>
 					<form role="form">
 
-						<h4>User details</h4>
-						
-							<div class="row" >
+							<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">First Name</span>
+									<input type="text" required="required" name="fname_edit" id="fname_edit" class="form-control " placeholder="First Name" >
+							</div>
 
-								<div class="col-md-6">
-									<label> First Name </label>
-									<div class="form-group">
-										<input type="text" required="required" name="fname_edit" id="fname_edit" class="form-control " placeholder="First Name" >
-									</div>
-								</div>
-								<div class="col-md-6">
-									<label> Last Name </label>
-									<div class="form-group">
+							<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">Last Name</span>
 										<input type="text" name="lname_edit" required="required" id="lname_edit" class="form-control " placeholder="Last Name" >
-									</div>
-								</div>
 							</div>
 
-							<div class="row">
-								<div class=" col-md-6">
-									<label> Phone No </label>
-									<div class="form-group">
-										<input type="telephone" name="telephone_edit" required="required" id="telephone_edit" class="form-control " placeholder="telephone eg, 254" tabindex="5">
-									</div>
-								</div>
-								<div class="col-md-6">
-									<label> Email </label>
-									<div class="form-group">
-										<input type="email" data-id="" name="email_edit" id="email_edit" required="required" class="form-control " placeholder="email@domain.com" tabindex="6">
-									</div>
-								</div>
+							<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">Phone No</span>
+										<input type="telephone" disabled="disabled" name="telephone_edit" required="required" id="telephone_edit" class="form-control " placeholder="telephone eg, 254" tabindex="5">
 							</div>
-							<div class="row">
-								<div class=" col-md-6">
-									<label> User Name </label>
-									<div class="form-group">
+
+							<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">Email</span>
+										<input type="email" data-id="" name="email_edit" id="email_edit" required="required" class="form-control " placeholder="email@domain.com" tabindex="6">
+							</div>
+
+							<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">User Name</span>
 										<input type="email" name="username_edit" id="username_edit" required="required" class="form-control " placeholder="email@domain.com" tabindex="5" readonly>
+							</div>
+
+							<div class="col-md-6">
+									<div class="err" style="padding: 6px;">
+										
 									</div>
-								</div>
-								<div class="col-md-6">
-										<div class="err" style="padding: 6px;">
-											
-										</div>
-								</div>
 							</div>
 						
-						<h4>Other details</h4>
-								<div class="row" >
+						<!-- <h4>Other details</h4> -->
 									<?php
 
 									$identifier = $this -> session -> userdata('user_indicator');
 									if ($identifier=='district') {
 									?>
 
-									<div class="col-md-6">
-										
-										<div class="form-group">
+									<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">Facility Name</span>
 
-											<select class="form-control " id="facility_id_edit_district" required="required">
+									<select class="form-control " id="facility_id_edit_district" required="required">
 												<option value=''>Select Facility</option>
 
 												<?php
@@ -408,20 +349,24 @@
 												?>
 											</select>
 
-										</div>
 									</div>
-									<div class="row" style="margin:auto">
-										<div class=" col-md-6">
-											
-											<div class="form-group">
-												<select class="form-control " id="user_type_edit_district" name="user_type_edit_district" required="required">
+
+									<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">User Type</span>
+									<select class="form-control " id="user_type_edit_district" name="user_type_edit_district" required="required">
 													
 													
-												</select>
+									</select>
+									</div>
+
+									<div class="input-group form-group u_mgt">
 												<input type="hidden" name="district_name_edit" class="" id="district_name_edit" >
-											</div>
-										</div>
-										<div class="col-md-6">
+									
+									</div>
+
+									<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">Activation Status</span>
+									<div class="col-md-6">
 									<div class="onoffswitch">
 									    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
 									    <label class="onoffswitch-label" for="myonoffswitch">
@@ -429,16 +374,21 @@
 									        <div class="onoffswitch-switch"></div>
 									    </label>
 									</div>
-										</div>
+									</div>
 									</div>
 
 									<?php }elseif ($identifier=='county') { ?>
-										
-									<div class="col-md-6">
-										
-										<div class="form-group">
-							
-											<select class="form-control " id="district_name_edit" required="required">
+
+									<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">User Type</span>
+										<select class="form-control " id="user_type_edit_district" name="user_type_edit_district" required="required">
+													
+										</select>
+									</div>
+
+									<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">District Name</span>
+									<select class="form-control " id="district_name_edit" required="required">
 												<option value=''>Select Sub-County</option>
 												<?php
 												foreach ($district_data as $district) :
@@ -448,25 +398,18 @@
 												endforeach;
 												?>
 											</select>
+									</div>
 
-										</div>
+									<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">Facility Name</span>
+										<select class="form-control " id="facility_id_edit" required="required">
+													
+										</select>		
 									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<select class="form-control " id="facility_id_edit" required="required">
-												
-											</select>
-										</div>
-									</div>
-								</div>
-								<div class="row" >
-									<div class=" col-md-6">
-										<div class="form-group">
-											<select class="form-control " id="user_type_edit_district" name="user_type_edit_district" required="required">
-												
-											</select>
-										</div>
-									</div>
+
+
+									<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">Activation Status</span>
 									<div class="col-md-6">
 									<div class="onoffswitch">
 									    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" >
@@ -476,15 +419,15 @@
 									    </label>
 									</div>
 									</div>
-								</div>
+									</div>
 
 								<?php }elseif ($identifier=='facility_admin') {
 									//code if facility admin
 									
 								?>
-								<div class="row" style="margin:auto">
-										<div class=" col-md-6">
-											<div class="form-group">
+
+								<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">User Type</span>
 												<select class="form-control " id="user_type_edit_district" name="user_type_edit_district" required="required">
 													<option value=''>Select User type</option>
 													<?php
@@ -495,37 +438,32 @@
 													endforeach;
 													?>
 												</select>
-											</div>
-										</div>
+									</div>
+
+									<div class="input-group form-group u_mgt">
+									<span class="input-group-addon sponsor">Status</span>
+									</div>
 										<div class="col-md-6">
-											<div class="onoffswitch">
+										<div class="onoffswitch">
 									    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" >
 									    <label class="onoffswitch-label" for="myonoffswitch">
 									        <div  class="onoffswitch-inner"></div>
 									        <div  class="onoffswitch-switch"></div>
 									    </label>
-									</div>
 										</div>
-									</div>
+										</div>
 								<?php }?>
-								<div class="row" style="margin:auto" id="process">
-									<div class=" col-md-12">
-										<div class="form-group">
-
-										</div>
-									</div>
-
-								</div>
 
 							</form>
+							</center>
 
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">
+				<button type="button" class="btn btn-default borderless" data-dismiss="modal">
 					Close
 				</button>
-				<button type="button" class="btn btn-primary edit_user">
+				<button type="button" class="btn btn-primary edit_user borderless">
 					Save changes
 				</button>
 			</div>

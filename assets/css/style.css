@@ -442,3 +442,14 @@ input:focus { border: 1px dotted black; }
 input.error { border: 1px dotted red; }
 form.gray * { color: gray; }
 
+/*edit user modal additional styling*/
+.input-group .input-group-addon {
+	border-radius: 0;
+	background-color: #f4f4f4;
+	}
+.sponsor{
+	width: 40%!important;
+}
+.u_mgt{
+	width: 90%;
+}

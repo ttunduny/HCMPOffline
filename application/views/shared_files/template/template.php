@@ -199,8 +199,11 @@ foreach($menus as $menu){ $menu_id=(int)$menu['menu_id'];?>
       		<span style="margin-left:2%;">  <?php echo $this -> session -> userdata('banner_name')." | ". $banner_text;?> </span>
       		 	
      		</div>
-      		<div class="col-md-4">     			
+        <center>
+      		<div class="col-md-4">  
+          <span><?php echo $this-> session -> userdata('facility_count'); ?>  </span>			
       		</div>
+          </center>
       		<div class="col-md-4"  style="text-align: right;">
       			<?php  echo date('l, jS F Y'); ?>
              <span id="clock" style="font-size:0.85em; " ></span>

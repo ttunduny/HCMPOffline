@@ -68,17 +68,23 @@ class User extends MY_Controller {
             $district_name = districts::get_district_name_($district_id);
 			$county_name = Counties::get_county_name($county_id);
             $banner_name = $county_name['county']." County".", ".$district_name['district']." Sub-county ";
+            $facility_no = Facilities::get_district_facilities($district_id);
+            $facility_count = "Total Facilities Using HCMP in ".$district_name['district']." Subcounty: ".count($facility_no);
+
             elseif ($user_indicator  == 'county') : 
 				           
             //get county name
             $county_name = Counties::get_county_name($county_id);
             $banner_name = $county_name['county']." County";
+            $facility_no = Counties::get_facilities_in_county($county_id);
+            $facility_count = "Total Facilities Using HCMP in ".$county_name['county']." County: ".count($facility_no);
             elseif ($user_indicator  == 'facility' || $user_indicator == 'facility_admin') :
              //get facility name
             $facility_name = Facilities::get_facility_name2($facility_id);
 			$district_name = districts::get_district_name_($district_id);
 			$county_name = Counties::get_county_name($county_id);
             $banner_name = $county_name['county']." County, ".$district_name['district']." Sub-county, ".$facility_name['facility_name'];
+            $facility_count = NULL;
             endif;
    
 			$session_data = array('county_id' => $county_id,'partner_id' => $partner_id, 'phone_no' => $phone,
@@ -86,7 +92,7 @@ class User extends MY_Controller {
 			'fname' => $fname, 'lname' => $lname, 'facility_id' => $facility_id,
 			'district_id' => $district_id, 'user_type_id' => 
 			$access_typeid,'full_name' => $fullname,
-			'banner_name'=>$banner_name);
+			'banner_name'=>$banner_name,'facility_count'=>$facility_count);
 
 			$this -> session -> set_userdata($session_data);
 			
@@ -508,12 +514,13 @@ class User extends MY_Controller {
 		$full_name= $fname .''.$lname; 
 		$county=$_POST['county_id'];
 		//reports
+		/*
 		$stocks=$_POST['stocks'];
 		$stocking_levels=$_POST['stocking_levels'];
 		$consumption=$_POST['consumption'];
 		$potential_exp=$_POST['potential_exp'];
 		$expiries=$_POST['expiries'];
-		
+		*/
 		switch ($identifier):
 			case 'moh':
 			
