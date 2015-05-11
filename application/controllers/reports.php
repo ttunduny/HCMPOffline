@@ -3889,19 +3889,37 @@ public function donation_reports($year = null, $district_id = null, $facility_co
 		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
 		$county_id = $this -> session -> userdata('county_id');
 		$expiries_array = redistribution_data::get_redistribution_data($facility_code, $district_id, $county_id, $year);
-		echo $redistribute_count = count(redistribution_data::get_redistribution_pending($facility_code, $district_id, $county_id, $year));exit;
 		
 		$data['donations'] = $expiries_array;
+		$data['year'] = $year;
+		$data['redistribute_count'] = count(redistribution_data::get_redistribution_pending($facility_code, $district_id, $county_id, $year));
 		return $this -> load -> view("shared_files/redistributions_ajax", $data);
 	}
 
 public function donation_report_download($year = null, $county_id = null,$district_id = null, $facility_code = null) {
 		//reset the values here
 		$year = ($year == "NULL") ? date('Y') : $year;
-		$county_id = ($county_id == "NULL") ? null : $this -> session -> userdata('county_id');
+		$county_id = $this -> session -> userdata('county_id');
+		$banner = $this -> session -> userdata('banner_name');
+		$pieces = explode(",", $banner);
+		//echo "<pre>";var_dump($pieces[0]);echo "</pre>";exit;
 		$district_id = ($district_id == "NULL") ? null : $this -> session -> userdata('district_id');
 		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
-		$expiries_array = redistribution_data::get_redistribution_data($facility_code, $district_id, $county_id, $year);
+		$redistribute_array = redistribution_data::get_redistribution_data($facility_code, $district_id, $county_id, $year);
+		 //echo "<pre>";print_r($redistribute_array);echo "</pre>";exit;
+		$excel_data = array('doc_creator' => $county_id, 'doc_title' => 'Redistribution Summary ', 'file_name' => 'Redistribution Summary For '.$pieces[0].' by '.$pieces[1].' '.'('.$year.')');
+		$row_data = array();
+		$column_data = array("From", "To", "Commodity Name", "Unit Size", "Batch No", "Expiry Date", "Manufacturer", "Quantity Sent", "Quantity Received",
+		 "Date Sent", "Date Received");
+		$excel_data['column_data'] = $column_data;
+		foreach ($redistribute_array as $column) :
+			array_push($row_data, array($column["source_facility_name"], $column["receiver_facility_name"], $column["commodity_name"], 
+			$column["unit_size"], $column["batch_no"], $column["expiry_date"], $column["manufacturer"],$column["quantity_sent"],$column["quantity_received"]
+			,$column["date_sent"]	,$column["date_received"]));
+		endforeach;
+		$excel_data['row_data'] = $row_data;
+
+		$this -> hcmp_functions -> create_excel($excel_data);
 		
 		
 	}
