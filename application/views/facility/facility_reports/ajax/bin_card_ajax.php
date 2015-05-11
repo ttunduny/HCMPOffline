@@ -82,6 +82,15 @@ border: 1px solid #FFF !important;
  			</div>
  			<div class="row">
  				<div class="col-md-5">
+ 					<strong>Total Available bal (Units) :</strong>
+ 					
+ 				</div>
+ 				<div class="col-md-7">
+ 					<?php echo $available_bal ;?>
+ 				</div>
+ 			</div>
+ 			<div class="row">
+ 				<div class="col-md-5">
  					<strong>Total Records :</strong>
  					
  				</div>
