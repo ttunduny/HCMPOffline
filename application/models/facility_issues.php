@@ -115,6 +115,24 @@ BETWEEN '$convertfrom' AND '$convertto' ORDER BY f.created_at ASC");
 
 			return $transaction;	
 	}
+	public static function get_distinct_batch($facility_code,$commodity_id,$from,$to){
+
+		$convertfrom=date('Y-m-d',strtotime($from ));
+		$convertto=date('Y-m-d',strtotime($to ));
+
+	$transaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+	-> fetchAll("SELECT DISTINCT f.batch_no
+FROM facility_issues f
+INNER JOIN user u on f.issued_by = u.id
+INNER JOIN commodities c on c.id = f.commodity_id
+WHERE f.facility_code = $facility_code AND f.status = 1 
+AND f.commodity_id = $commodity_id AND f.date_issued 
+BETWEEN '$convertfrom' AND '$convertto' ORDER BY f.created_at ASC"); 
+		
+
+
+			return $transaction;	
+	}
 	public static function get_active_facilities_in_district($district)
 	{
 	 	$query = Doctrine_Manager::getInstance()->getCurrentConnection()

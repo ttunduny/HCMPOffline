@@ -61,6 +61,7 @@ class facility_stocks_temp extends Doctrine_Record {
 		$and_data .=(isset($district_id)&&($district_id>0))?" AND d1.id = '$district_id'" : null;
 		$and_data =isset( $and_data) ?  $and_data : null;
 		
+		
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() 
 			    ->fetchAll("
 					  SELECT 

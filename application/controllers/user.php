@@ -146,11 +146,22 @@ class User extends MY_Controller {
 	public function logout() {
 
 		Log::update_log_out_action($this -> session -> userdata('user_id'));
-
 		$this -> session -> sess_destroy(); session_destroy();
+		$this -> clearBrowserCache();
+		
 		$data['title'] = "Login";
 		$this -> load -> view("shared_files/login_pages/login_v", $data);
 	}
+	function clearBrowserCache() {
+		 
+    header ("Expires: ".gmdate("D, d M Y H:i:s", time())." GMT");  
+	header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");  
+	header ("Cache-Control: no-cache, must-revalidate");  
+	header ("Pragma: no-cache");
+	clearstatcache();
+	 
+		} 
+
 
 	public function forgot_password() {
 
@@ -502,6 +513,8 @@ class User extends MY_Controller {
 	public function addnew_user(){
 
 		$identifier = $this -> session -> userdata('user_indicator');
+		
+		//var_dump($this->input->post());
 
 		$fname = $_POST['first_name'];
 		$lname = $_POST['last_name'];
@@ -512,15 +525,11 @@ class User extends MY_Controller {
 		$district_code = ($_POST['district_name']=='NULL')? 0: $_POST['district_name'];
 		$user_type = $_POST['user_type'];
 		$full_name= $fname .''.$lname; 
-		$county=$_POST['county_id'];
-		//reports
-		/*
-		$stocks=$_POST['stocks'];
-		$stocking_levels=$_POST['stocking_levels'];
-		$consumption=$_POST['consumption'];
-		$potential_exp=$_POST['potential_exp'];
-		$expiries=$_POST['expiries'];
-		*/
+		$county=($_POST['county']=='NULL')? 0: $_POST['county'];
+		//Generate a activation code
+		$range = microtime(true);
+		$activation = rand(0, $range);
+						
 		switch ($identifier):
 			case 'moh':
 			
@@ -532,55 +541,46 @@ class User extends MY_Controller {
 
 			break;
 			case 'district':
-				
+			
 			$district_code=$this -> session -> userdata('district_id');
 			$county=$this -> session -> userdata('county_id');
 			
 			break;
 			case 'super_admin':
-				
+			$county=($_POST['county_id']=='NULL')? 0: $_POST['county_id'];	
 			case 'county':
 			$county=$this -> session -> userdata('county_id');
 			
 			break;	
         endswitch;
 		     if($email_address!=''):
-		switch ($user_type):
-			case 10:
-				$county=$_POST['county_id'];
+		
 				$savethis =  new Users();
 				$savethis -> fname = $fname;
 				$savethis -> lname = $lname;
 				$savethis -> email = $email_address;
 				$savethis -> username = $username;
-				$savethis -> password = "123456";
-				$savethis -> activation = $save_activation_code ;
+				$savethis -> password = md5($activation);
+				$savethis -> activation = md5($activation) ;
 				$savethis -> usertype_id = $user_type;
 				$savethis -> telephone = $telephone;
 				$savethis -> district = $district_code;
 				$savethis -> facility = $facility_id;
-				$savethis -> status = 1;
+				$savethis -> status = 0;
 				$savethis -> county_id = $county;
-				$savethis -> save(); exit;
-			break;
-
-        endswitch;
-
-		//Generate a activation code
+				$savethis -> save(); 
+			
 		
-				$range = microtime(true);
-				$activation = rand(0, $range);
-				//encrypt code to be saved
-				$save_activation_code = $activation;
-
-				$save_activation_code = $activation;
-			$result=base_url().'assets/img/coat_of_arms-resized1.png';
-
-			$phone=$telephone;
-			$message='Hi, your activation code is '.$activation;
-			$this -> hcmp_functions -> send_sms($phones,$message);
+		
+				
+			//$phones=$telephone;
+			$message='Your activation code is : '.$activation;
+			
+			$message=urlencode($message);
+    		//echo '<pre>'; print_r($phone_numbers);echo '<pre>';exit;
+		file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$telephone&text=$message");
+		
 		//Send registered user email with password and validation link
-		//
 		
 	    $full_name = $fname.' '.$lname;
 		$link = base_url().'user/activation/'.$activation;
@@ -605,10 +605,6 @@ class User extends MY_Controller {
 
                         <table class="twelve columns">
                           <tr>
-                            <td class="six sub-columns">
-                              <img src="'.$result.'">
-                              <h6 style="margin:15 0 0 10;">HCMP</h6>
-                            </td>
                             <td class="six sub-columns last" style="text-align:right; vertical-align:middle;">
                               <span class="template-label"></span>
                             </td>
@@ -636,41 +632,32 @@ class User extends MY_Controller {
                       <table class="twelve columns">
                         <tr>
                           <td>
-                          Hi ' .  $full_name . ', </br>
-		<p>
+                         <p>
 		Your HCMP Account - ' . $email_address . ' -  was recently created.</br>
 		Before your account can be activated , you must complete one of the following steps to complete your registration.</br></p> 
 	
+		<p><strong>
+		Step 1. </strong> </br>
 		<p>
-		Step 1. Follow the link below
+		Follow the link below
 		<p>
-		<p>
-		You will only need to visit this URL once to activate your account.</br></p> 
+		You will only need to visit this URL once to activate your account.</br></p></br> 
 		
 		<table class="twelve columns">
                         <tr>
                           <td class="panel">
-                            <p><strong style="font-size:14px;">' . $link . '</strong> <a href="#"></a></p>
+                          <a href="' . $link . '"
+                                  style="background-color:#4566A9;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:18px;line-height:40px;text-align:center;text-decoration:none;width:200px;-webkit-text-size-adjust:none;">Activate here.</a>
                           </td>
                           <td class="expander"></td>
                         </tr>
-                      </table>
-         <p>
-		Step 2. You have received an activation code via sms.Use the code to activate you account on the site.
-		<p>           
-					  <table class="twelve columns">
-                        <tr>
-                          <td class="panel">
-                            <p><strong style="font-size:14px;">' . $site_url. '</strong> <a href="#"></a></p>
-                          </td>
-                          <td class="expander"></td>
-                        </tr>
-                      </table>
-		</p>
+                      </table></br>
+         <p></br><strong>
+		Step 2.</strong></br>
 		<p>
-		Please note - you must complete one of the two steps to become a registered member.</br></p>
-		
-								  
+		You have received an activation code via sms.Use the code to activate you account on the site.</p> 
+		</br>
+						  
                           </td>
                           <td class="expander"></td>
                         </tr>
@@ -687,27 +674,14 @@ class User extends MY_Controller {
                   </tr>
                 </table>'; 
 
-				
-				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL);
+				$email_address=$email_address.',kelvinmwas@gmail.com';
+				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL,$full_name);
 
 				//exit;
 		//save report access
 
 		//save user
-				$savethis =  new Users();
-				$savethis -> fname = $fname;
-				$savethis -> lname = $lname;
-				$savethis -> email = $email_address;
-				$savethis -> username = $username;
-				$savethis -> password = md5(123456);
-				$savethis -> activation = $save_activation_code ;
-				$savethis -> usertype_id = $user_type;
-				$savethis -> telephone = $telephone;
-				$savethis -> district = $district_code;
-				$savethis -> facility = $facility_id;
-				$savethis -> status = 0;
-				$savethis -> county_id = $county;
-				$savethis -> save();
+				
 endif;
 
 
@@ -782,7 +756,7 @@ endif;
 		public function activation($myurl){
 			
 			$myurl=$this->uri->segment(3);
-			$cipher= $myurl;
+			$cipher= md5($myurl);
 						
 			//query to find match 
 			Users::check_activation($cipher);

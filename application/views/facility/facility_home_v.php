@@ -1,4 +1,4 @@
-<div class="container" style="width: 96%; margin: auto;">
+  <div class="container" style="width: 96%; margin: auto;">
 <div class="row">
         <?php if($facility_dashboard_notifications['stocks_from_v1']>0): ?>
         <div style="height:auto; margin-bottom: 2px" class="warn message col-md-4" id="">        
@@ -21,7 +21,7 @@
       	<input type="hidden" id="stocklevel" value="<?php echo $facility_dashboard_notifications['facility_stock_count'] ?>" readonly/>
     <?php if($facility_dashboard_notifications['facility_donations_pending']>0): ?>
       	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
-        <h5>Inter Facility Donation</h5> 
+        <h5>Donations</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/pending') ?>"><span class="badge"><?php 
 				echo $facility_dashboard_notifications['facility_donations_pending'];?></span> Items have been donated and are pending receipt</a> 
@@ -30,7 +30,7 @@
 		  <?php endif; //donations_pending?>
 		      <?php if($facility_dashboard_notifications['facility_donations']>0): ?>
       	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
-        <h5>Inter Facility Donation</h5> 
+        <h5>Donations</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/to-me') ?>"><span class="badge"><?php 
 				echo $facility_dashboard_notifications['facility_donations'];?></span> Items have been donated to you</a> 
@@ -79,13 +79,13 @@
 			</p> 
         </div>
         <?php endif; // items_stocked_out_in_facility?>
-        <?php if(array_key_exists('pending', $facility_dashboard_notifications['facility_order_count']) 
-        && @$facility_dashboard_notifications['facility_order_count']['pending']>0): ?>
+        <?php if(array_key_exists('pending_all', $facility_dashboard_notifications['facility_order_count']) 
+        && @$facility_dashboard_notifications['facility_order_count']['pending_all']>0): ?>
       	<div style="height:auto; margin-bottom: 2px" class="warn message ">      	
-        	<h5>Orders Pending Approval by District Pharmacist</h5> 
+        	<h5>Orders Pending Approval by Sub-county/County Pharmacist</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('reports/order_listing/facility') ?>"><span class="badge"><?php 
-			echo $facility_dashboard_notifications['facility_order_count']['pending'] ?></span>Order(s) Pending.</a> 
+			echo $facility_dashboard_notifications['facility_order_count']['pending_all'] ?></span>Order(s) Pending.</a> 
 			</p>
         </div>
         <?php endif; //pending
@@ -126,11 +126,11 @@
         </div>
         
         <div style="height:auto; margin-bottom: 2px;color: #428bca !important;" class="distribute message " id="distribute_tab">
-            <h5>Redistribute Commodities to...</h5>
+            <h5>Redistribute Commodities</h5>
         </div>
          <div style="height:auto; margin-bottom: 2px" class="" id="distribute_hide">
          	<a href="<?php echo base_url('issues/index/external'); ?>"><h5>Other Facilities</h5></a>	 
-           <a href="<?php echo base_url('issues/index/district_store'); ?>"><h5>District Store</h5></a>  
+          <a href="<?php echo base_url('issues/index/district_store'); ?>"><h5>District Store</h5></a>
         
         </div>
           
@@ -243,7 +243,7 @@
                $(".order-for-excel").on('click', function(e) {
                   e.preventDefault(); 
     var body_content='<?php  $att=array("name"=>'myform','id'=>'myform');
-    echo form_open_multipart('orders/facility_order',$att)?>'+
+    echo form_open_multipart('orders/facility_order#',$att)?>'+
 '<input type="file" name="file" id="file" required="required" class="form-control"><br>'+
 '<button class="upload">Upload</button>'+
 '</form>';

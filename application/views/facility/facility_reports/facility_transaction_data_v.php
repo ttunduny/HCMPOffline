@@ -6,7 +6,7 @@
 <div class="container" style="width: 96%; margin: auto;">
     
     <div class="row">
-		<div class="col-md-6"><p class="bg-info"><span class="">The Last Stock Update was as at : <?php
+		<div class="col-md-6" style="text-transform: capitalize;"><p class="bg-info"><span class="">The Last Stock Update was as at : <?php
     echo date('j M, Y',strtotime($last_issued_data['last_seen'])). ", $last_issued_data[days_] day(s) ago, $last_issued_data[fname] 
     $last_issued_data[lname]" ?></span></p></div>
 		
@@ -17,44 +17,65 @@
  <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
 		<tr>
-                        <th>Category</th>
+                        
                         <th>Commodity&nbsp;Name</th>
                         <th>Commodity&nbsp;Code</th>
                         <th>Unit&nbsp;Size</th>
-                        <th>Opening&nbsp;Balance (units)</th>
-                        <th>Total&nbsp;Receipts (units)</th>
-                        <th>Total&nbsp;issues (units)</th>
-                        <th>Adjustments(-ve) (units)</th>
-                        <th>Adjustments(+ve) (units)</th>
-                        <th>Losses (units)</th>
-                        <th>Days out of stock (units)</th>   
-                        <th>Closing Stock (units)</th>
+                        <th>Opening&nbsp;Bal(Units)</th>
+                        <th>Total&nbsp;Receipts(Units)</th>
+                        <th>Total&nbsp;Issues(Units)</th>
+                        <th>Adj(-ve)(Units)</th>
+                        <th>Adj(+ve)(Units)</th>
+                        <th>Losses(Units)</th>
+                        <th>Closing Bal(Units)</th>
+                        <th>Days Out Of Stock</th>   
+                        
 		</tr>
 	</thead>
 	<tbody>
 <?php 
-    foreach($facility_stock_data as $facility_stock_data):
-		foreach($facility_stock_data->commodity_detail as $item):
-		foreach($item->sub_category_data as $sub_category):
-		endforeach;	
-	   $closing=($facility_stock_data->closing_stock<0)	?0 : $facility_stock_data->closing_stock;
-		echo "<tr>
-		<td>$sub_category->sub_category_name</td>
-		<td>$item->commodity_name</td>
-		<td>$item->commodity_code</td>
-		<td>$item->unit_size</td>
-		<td>$facility_stock_data->opening_balance</td>
-		<td>$facility_stock_data->total_receipts</td>
-		<td>$facility_stock_data->total_issues</td>
-		<td>$facility_stock_data->adjustmentnve</td>
-		<td>$facility_stock_data->adjustmentpve</td>
-		<td>$facility_stock_data->losses</td>
-		<td>$facility_stock_data->days_out_of_stock</td>
-		<td>$closing</td>
+
+foreach ($facility_stock_data as $facility_stock_data) {
+	foreach ($facility_stock_data->commodity_detail as $item) {
+		$closing_stock=$facility_stock_data->closing_stock;
+		foreach ($item->sub_category_data as $sub_category) {
+	
+}?>
+	<tr>
+		<td> <?php echo $item->commodity_name ; ?> </td>
+		<td><?php echo $item->commodity_code ; ?></td>
+		<td><?php echo $item->unit_size ; ?></td>
+		<td><?php echo $facility_stock_data->opening_balance; ?></td>
+		<td><?php echo $facility_stock_data->total_receipts; ?></td>
+		<td><?php echo $facility_stock_data->total_issues; ?></td>
+		<td><?php echo $facility_stock_data->adjustmentnve; ?></td>
+		<td><?php echo $facility_stock_data->adjustmentpve; ?></td>
+		<td><?php echo $facility_stock_data->losses; ?></td>
+		
+		<td><?php  echo $closing_stock; ?></td>
+		<td><?php 
+		      
+								
+								if ((int)$closing_stock <= 0) {
+								      $date_mod = $facility_stock_data->date_modified;
+									  
+										  $now = time(); 
+									      $my_date = strtotime($date_mod);
+									       $datediff = $now - $my_date;
+									     
+										 echo '<label style="color:red;">'.floor($datediff/(60*60*24)).'</label>';
+									
+								} else{
+									echo "0";
+								}
+		 ?>
+		 </td>
 		</tr>
-		";
-		endforeach;
-	endforeach;
+	<?php		
+}
+}
+
+    
  ?>
 </tbody>
 </table> 

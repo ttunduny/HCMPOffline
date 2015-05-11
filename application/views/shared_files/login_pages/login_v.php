@@ -63,15 +63,6 @@
 				}
 			}, 50);
 		</script>
-
-		<!-- script for popover on helpdesk link-->
-		<script type="text/javascript">
-				$(document).ready(function(){
-				    $('[data-toggle="tooltip"]').tooltip({
-				        placement : 'top'
-				    });
-				});
-		</script>
 	</head>
 	<body data-spy="scroll" data-target=".subnav" data-offset="50" screen_capture_injected="true" style="padding: 0;">
 		<div class="navbar  navbar-static-top" id="top-panel">
@@ -128,10 +119,11 @@
 
 			<div class="row">
 				<div class="col-md-3">
-					<span><h5>Experiencing any challenges?
-						<br /><br />
-						Send an email to <strong>hcmphelpdesk@googlegroups.com</strong></h5> </span> 
-						
+				 <span>
+				 	<h5>Experiencing any challenges?<br />
+						Send an email to: hcmphelpdesk@googlegroups.com</h5> 
+						</span> 
+						<img src="<?php echo base_url('assets/img/healpdesk.jpg')?>" height="140" width="200" />
 						
 
 				</div>
@@ -158,11 +150,7 @@
 
 									<a class="" style="margin-left: 2%;" href="<?php echo base_url().'user/forgot_password'?>" id="modalbox">Can't access your account ?</a>
 									<a class="" style="margin-left: 2%;" href="<?php echo base_url().'user/sms_activate'?>" id="modalbox">Activate my Account?</a>
-									<a class="" style="margin-left: 2%;" href="#" id="modalbox"
-
-
-data-toggle="tooltip" data-original-title="Experiencing any challenges? Send an Email to hcmphelpdesk@googlegroups.com"
-									>Report problems</a>
+									<a class="" style="margin-left: 2%;" href="mailto:hcmphelpdesk@googlegroups.com" id="modalbox">Report problems</a>
 
 								</div>
 

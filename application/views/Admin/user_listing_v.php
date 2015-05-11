@@ -109,7 +109,7 @@
 								<?php } ?> 
 								</td>
 								<td>
-								<button class="btn btn-primary btn-xs edit " data-toggle="modal" data-target="#editModal" id="<?php echo $list['user_id']; ?>" data-target="#">
+								<button class="btn btn-primary btn-xs edit " data-toggle="modal" data-target="#addModal" id="<?php echo $list['user_id']; ?>" data-target="#">
 									<span class="glyphicon glyphicon-edit"></span>Edit
 								</button></td>
 

@@ -7,8 +7,12 @@ if (!defined('BASEPATH'))
 class orders extends MY_Controller {
 	function __construct() {
 		parent::__construct();
+		error_reporting(E_ALL);
+		ini_set('display_errors', TRUE);
+		ini_set('display_startup_errors', TRUE);
 		$this -> load -> helper(array('form', 'url'));
 		$this -> load -> library(array('hcmp_functions', 'form_validation'));
+
 	}
 
 	public function order_listing($level, $facility_code = null) {
@@ -167,15 +171,19 @@ class orders extends MY_Controller {
 	}
 
 	public function facility_order($source = NULL) {
+
 		header('Content-Type: text/html; charset=UTF-8');
-
 		//pick the facility code from the session as it is set
-		$facility_code = $this -> session -> userdata('facility_id');
 
+		$facility_code = $this -> session -> userdata('facility_id');
+		$amc_calc = $this -> amc($county, $district, $facility_code);
+		//echo '<pre>'; print_r($amc_calc);echo '<pre>'; exit;
 		$items = ((isset($source)) && ($source = 2)) ? Facility_Transaction_Table::get_commodities_for_ordering_meds($facility_code) : Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
-		//checks to see whether the order is being uploaded via excel
+		//echo '<pre>';print_r($items); echo '</pre>';
+		//echo 'string'; echo 'strung';exit;
 		if (isset($_FILES['file']) && $_FILES['file']['size'] > 0) {
 			$ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
+			//echo $ext;
 			if ($ext == 'xls') {
 				$excel2 = PHPExcel_IOFactory::createReader('Excel5');
 			} else if ($ext == 'xlsx') {
@@ -225,6 +233,7 @@ class orders extends MY_Controller {
 
 				}
 
+				//count($rowData);
 				$code = preg_replace('/\s+/ ', '', $rowData[0][2]);
 				$code = str_replace('-', '', $code);
 				$array_index[] = $rowData[0][1] - 1;
@@ -236,14 +245,28 @@ class orders extends MY_Controller {
 				$array_order_val[] = $rowData[0][8];
 				$array_pack[] = $rowData[0][5];
 
-			}
+				//if(isset($rowData[0][2]) && $rowData[0][2]!='Product Code'){
+				//echo '<pre>';print_r($rowData[0][7]); echo '</pre>';
+				//foreach($items as $key=> $data){
+				//echo '<pre>';print_r($rowData); echo '</pre>';
 
+				//}
+				//}
+
+			}//exit;
+
+			//echo '<pre>';print_r($array_price); echo '</pre>';exit;
 			foreach ($array_order_qty as $id => $key) {
+				//echo '<pre>';print_r($array_commodity[$id].'.'.$array_code[$id]); echo '</pre>';//exit;
 
+				//foreach($items as $key=> $data){
 				array_push($temp, array('sub_category_name' => $array_category[$id], 'commodity_name' => $array_commodity[$id], 'unit_size' => $array_pack[$id], 'unit_cost' => ($array_price[$id] == '') ? 0 : (float)$array_price[$id], 'commodity_code' => preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $array_code[$id]), 'commodity_id' => $data['commodity_id'], 'quantity_ordered' => ($array_order_qty[$id] == '') ? 0 : (int)$array_order_qty[$id], 'total_commodity_units' => 0, 'opening_balance' => 0, 'total_receipts' => 0, 'total_issues' => 0, 'comment' => '', 'closing_stock_' => 0, 'closing_stock' => 0, 'days_out_of_stock' => 0, 'date_added' => '', 'losses' => 0, 'status' => 0, 'adjustmentpve' => 0, 'adjustmentnve' => 0, 'historical' => 0));
+				//unset($items[$key]);
+				/// }
 
-			}
+			}//exit;
 			foreach ($temp as $key => $value) {
+				//echo '<pre>';print_r($value['commodity_code']); echo '</pre>';
 				if ($value['commodity_code'] == "" || $value['quantity_ordered'] == 0) {
 					unset($temp[$key]);
 				}
@@ -255,10 +278,12 @@ class orders extends MY_Controller {
 			foreach ($temp as $keys) {
 
 				$kemsa = $keys['commodity_code'];
+				//echo strlen($kemsa).'-';
 				$kemsa = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $kemsa);
 				$unit_cost = $keys['unit_cost'];
-				$get_id = Commodities::get_id($kemsa, $unit_cost);
+				//$kemsa = preg_replace('/\s+/', '', $kemsa);
 
+				$get_id = Commodities::get_id($kemsa, $unit_cost);
 
 				$array_codes[] = $kemsa;
 				$main_array[] = $keys;
@@ -279,10 +304,27 @@ class orders extends MY_Controller {
 
 			}
 			$data['order_details'] = $data['facility_order'] = $main_array;
-		} 	
-		//when the order is not via excel
-		else 
-		{
+		} else {
+
+			//create new array to hold pushed amc values
+			$new = array();
+			foreach ($items as $value) {
+
+				$drud_id = $value['commodity_id'];
+				$historical = $value['historical'];
+				for ($i = 0; $i < count($items); $i++) {
+					if ($drud_id == $amc_calc[$i]['commodity_id']) {
+
+						$historical = $amc_calc[$i]['amc_packs'];
+
+					}
+				}
+
+				array_push($new, array('sub_category_name' => $value['sub_category_name'], 'commodity_name' => $value['commodity_name'], 'unit_size' => $value['unit_size'], 'unit_cost' => $value['unit_cost'], 'commodity_code' => $value['commodity_code'], 'commodity_id' => $value['commodity_id'], 'quantity_ordered' => $value['quantity_ordered'], 'total_commodity_units' => $value['total_commodity_units'], 'opening_balance' => $value['opening_balance'], 'total_receipts' => $value['total_receipts'], 'total_issues' => $value['total_issues'], 'comment' => $value['comment'], 'closing_stock_' => $value['closing_stock_'], 'closing_stock' => $value['closing_stock'], 'days_out_of_stock' => $value['days_out_of_stock'], 'date_added' => $value['date_added'], 'losses' => $value['losses'], 'status' => $value['status'], 'adjustmentpve' => $value['adjustmentpve'], 'adjustmentnve' => $value['adjustmentnve'], 'historical' => round($historical)));
+
+			}
+			
+			$items = $new;
 			$data['order_details'] = $data['facility_order'] = $items;
 		}
 
@@ -330,9 +372,58 @@ class orders extends MY_Controller {
 
 	public function update_facility_order($order_id, $rejected = null, $option = null) {
 		$order_data = facility_orders::get_order_($order_id) -> toArray();
-		$data['content_view'] = "facility/facility_orders/update_facility_order_from_kemsa_v";
+		$data['content_view'] = "facility/facility_orders/update_order_facility_v";
 		$data['title'] = "Facility Update Order";
 		$data['banner_text'] = "Facility Update Order";
+		$data['rejected'] = ($rejected == 'rejected') ? 1 : 0;
+		$data['option_'] = ($option == 'readonly') ? 'readonly_' : 0;
+		$data['order_details'] = $order_data;
+		$items = facility_order_details::get_order_details($order_id);
+		//create new array to hold pushed amc values
+		$facility_code = $this -> session -> userdata('facility_id');
+		$amc_calc = $this -> amc($county, $district, $facility_code);
+		$new = array();
+		foreach ($items as $value) {
+
+			$drud_id = $value['commodity_id'];
+			$historical = $value['historical'];
+			for ($i = 0; $i < count($items); $i++) {
+				if ($drud_id == $amc_calc[$i]['commodity_id']) {
+
+					$historical = $amc_calc[$i]['amc_packs'];
+
+				}
+			}
+
+			array_push($new, array('id' => $value['id'], 'sub_category_name' => $value['sub_category_name'], 'commodity_name' => $value['commodity_name'], 'unit_size' => $value['unit_size'], 'unit_cost' => $value['unit_cost'], 'scp_qty' => $value['scp_qty'], 'cty_qty' => $value['cty_qty'], 'commodity_code' => $value['commodity_code'], 'commodity_id' => $value['commodity_id'], 'quantity_ordered_pack' => $value['quantity_ordered_pack'], 'total_commodity_units' => $value['total_commodity_units'], 'opening_balance' => $value['opening_balance'], 'total_receipts' => $value['total_receipts'], 'total_issues' => $value['total_issues'], 'comment' => $value['comment'], 'closing_stock_' => $value['closing_stock_'], 'closing_stock' => $value['closing_stock'], 'days_out_of_stock' => $value['days_out_of_stock'], 'date_added' => $value['date_added'], 'losses' => $value['losses'], 'status' => $value['status'], 'adjustmentpve' => $value['adjustmentpve'], 'adjustmentnve' => $value['adjustmentnve'], 'historical' => round($historical)));
+
+		}
+		//echo '<pre>';print_r($new); echo '</pre>';exit;
+		$items = $new;
+
+		$data['facility_order'] = $items;
+		$data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
+		$this -> load -> view('shared_files/template/template', $data);
+	}
+
+	public function update_order_subc($order_id, $rejected = null, $option = null) {
+		$order_data = facility_orders::get_order_($order_id) -> toArray();
+		$data['content_view'] = "facility/facility_orders/update_order_subc";
+		$data['title'] = "Approve Order";
+		$data['banner_text'] = "Approve Order";
+		$data['rejected'] = ($rejected == 'rejected') ? 1 : 0;
+		$data['option_'] = ($option == 'readonly') ? 'readonly_' : 0;
+		$data['order_details'] = $order_data;
+		$data['facility_order'] = facility_order_details::get_order_details($order_id);
+		$data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
+		$this -> load -> view('shared_files/template/template', $data);
+	}
+
+	public function order_last_phase($order_id, $rejected = null, $option = null) {
+		$order_data = facility_orders::get_order_($order_id) -> toArray();
+		$data['content_view'] = "facility/facility_orders/update_order_kemsa_lastphase";
+		$data['title'] = "Approve Order";
+		$data['banner_text'] = "Approve Order";
 		$data['rejected'] = ($rejected == 'rejected') ? 1 : 0;
 		$data['option_'] = ($option == 'readonly') ? 'readonly_' : 0;
 		$data['order_details'] = $order_data;
@@ -378,8 +469,8 @@ class orders extends MY_Controller {
 				$facility_name = $myobj -> facility_name;
 				// get the order form details here
 				//create the pdf here
-				//echo "Its ait this far";
-				//exit ;
+				echo "Its ait this far";
+				exit ;
 				$pdf_body = $this -> create_order_pdf_template($new_order_no);
 				$file_name = $facility_name . '_facility_order_no_' . $new_order_no . "_date_created_" . date('d-m-y');
 				$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
@@ -448,101 +539,80 @@ class orders extends MY_Controller {
 			$comment = $this -> input -> post('comment');
 			$s_quantity = $this -> input -> post('suggested');
 			$amc = $this -> input -> post('amc');
-			//$workload = $this -> input -> post('workload');
+			$workload = $this -> input -> post('workload');
 			//order table details
-			//$bed_capacity = $this -> input -> post('bed_capacity');
-			//$drawing_rights = $this -> input -> post('drawing_rights');
+			$bed_capacity = '0';
+			$drawing_rights = '0';
+			;
 			$order_total = $this -> input -> post('total_order_value');
-			
-			//new order ni is generated by php randomly
-			$order_no = rand(99999, 999999999999);
-			//$order_no = $this -> input -> post('order_no');
+			$order_no = '0';
 			$facility_code = $this -> input -> post('facility_code');
 			$user_id = $this -> session -> userdata('user_id');
 			$order_date = date('y-m-d');
 			$number_of_id = count($commodity_id);
-			
-			//loop through the order dumping the amounts in an array
+
 			for ($i = 0; $i < $number_of_id; $i++) {
 				if ($i == 0) {
-					$order_details = array('order_total' => $order_total, 
-											'order_no' => $order_no, 
-											'order_date' => $order_date, 
-											'facility_code' => $facility_code, 
-											'ordered_by' => $user_id);
+					$order_details = array("workload" => $workload, 'bed_capacity' => $bed_capacity, 'order_total' => $order_total, 'order_no' => $order_no, 'order_date' => $order_date, 'facility_code' => $facility_code, 'ordered_by' => $user_id, 'drawing_rights' => $drawing_rights);
 					$this -> db -> insert('facility_orders', $order_details);
 					$new_order_no = $this -> db -> insert_id();
 				}
-				$temp_array = array("commodity_id" => (int)$commodity_id[$i], 
-									'quantity_ordered_pack' => (int)$quantity_ordered_pack[$i], 
-									'quantity_ordered_unit' => (int)$quantity_ordered_units[$i], 
-									'quantity_recieved' => 0, 
-									'price' => $price[$i], 
-									'o_balance' => $o_balance[$i], 
-									't_receipts' => $t_receipts[$i], 
-									't_issues' => $t_issues[$i], 
-									'adjustpve' => $adjustpve[$i], 
-									'adjustnve' => $adjustnve[$i], 
-									'losses' => $losses[$i], 
-									'days' => $days[$i], 
-									'c_stock' => $c_stock[$i], 
-									'comment' => $comment[$i], 
-									's_quantity' => $s_quantity[$i], 
-									'amc' => $amc[0], 
-									'order_number_id' => $new_order_no);
+				$temp_array = array("commodity_id" => (int)$commodity_id[$i], 'quantity_ordered_pack' => (int)$quantity_ordered_pack[$i], 'quantity_ordered_unit' => (int)$quantity_ordered_units[$i], 'quantity_recieved' => 0, 'price' => $price[$i], 'o_balance' => $o_balance[$i], 't_receipts' => $t_receipts[$i], 't_issues' => $t_issues[$i], 'adjustpve' => $adjustpve[$i], 'adjustnve' => $adjustnve[$i], 'losses' => $losses[$i], 'days' => $days[$i], 'c_stock' => $c_stock[$i], 'comment' => $comment[$i], 's_quantity' => $s_quantity[$i], 'amc' => $amc[$i], 'order_number_id' => $new_order_no);
 				//create the array to push to the db
 				array_push($data_array, $temp_array);
 
-			}
-			
-			// insert the data here
+			}// insert the data here
+			//echo "<pre>";print_r($data_array);echo "</pre>";exit;
+			//exit;
 			$this -> db -> insert_batch('facility_order_details', $data_array);
-			
 			if ($this -> session -> userdata('user_indicator') == 'district') :
 				$order_listing = 'subcounty';
 			elseif ($this -> session -> userdata('user_indicator') == 'county') :
 				$order_listing = 'county';
 			else :
-				//for facility level
 				$myobj = Doctrine::getTable('Facilities') -> findOneByfacility_code($facility_code);
-				
 				$facility_name = $myobj -> facility_name;
 				// get the order form details here
 				//create the pdf here
-				$pdf_body = $this -> create_order_pdf_template($new_order_no);
+				//$pdf_body = $this -> create_order_pdf_template($new_order_no);
 				$file_name = $facility_name . '_facility_order_no_' . $new_order_no . "_date_created_" . date('d-m-y');
-				
-				$pdf_data = array("pdf_title" => "Order Report For $facility_name", 
-								'pdf_html_body' => $pdf_body, 
-								'pdf_view_option' => 'save_file', 
-								'file_name' => $file_name);
-				//create pdf
-				$this -> hcmp_functions -> create_pdf($pdf_data);
-				
+				//$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
+				//$this -> hcmp_functions -> create_pdf($pdf_data);
+				// create pdf
 				$this -> hcmp_functions -> clone_excel_order_template($new_order_no, 'save_file', $file_name);
 				//create excel
 				$order_listing = 'facility';
-				$message_1 = '
+				$message = '
 						<br>
-						Please find the Order Made by ' . $facility_name . ' below for approval.
+						Please find the Order Made by ' . $facility_name . ' attached.
 						<br>
-						You may log in to the HCMP system to approve it.<a href="http://health-cmp.or.ke/" target="_blank">Click here</a>
-						<br>
-						<br>
+					     <table width="50%" style="text-align:center;" >
+							<thead>
+							<tr style="">
+						<th>Date Ordered</th>
+						<th>Order Value</th>
+								</tr>
+							</thead>
+							<tbody >
+							<tr>
+							<td style="text-align:center;">' . date('M , d Y') . '</td>
+							<td style="text-align:center;" >' . number_format("$order_total", 2) . '</td>
+							</tr>
+							</tbody>
+							</table>
 						<br>
 						';
-				$subject = 'Pending Approval Order Report For ' . $facility_name;
+				$subject = 'Order Pending Approval By Sub-County Pharmacist ' . $facility_name;
 
-				$attach_file1 = './pdf/' . $file_name . '.pdf';
-				$attach_file2 = "./print_docs/excel/excel_files/" . $file_name . '.xls';
+				//$attach_file1 = './pdf/'.$file_name.'.pdf';
+				$attach_file = "./print_docs/excel/excel_files/" . $file_name . '.xls';
 
-				$message = $message_1 . $pdf_body;
-
-				$response = $this -> hcmp_functions -> send_order_submission_email($message, $subject, $attach_file1 . "(more)" . $attach_file2, null);
+				$email_address = "kelvinmwas@gmail.com";
+				$response = $this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file);
 
 				if ($response) {
-					delete_files($attach_file1);
-					unlink($attach_file2);
+					delete_files($attach_file);
+					//unlink($attach_file);
 				} else {
 
 				}
@@ -553,7 +623,7 @@ class orders extends MY_Controller {
 
 			Log::log_user_action($user, $user_action);
 
-			$this -> hcmp_functions -> send_order_sms();
+			//$this -> hcmp_functions -> send_order_sms();
 
 			$this -> session -> set_flashdata('system_success_message', "Facility Order No $new_order_no has Been Saved");
 			//redirect("reports/order_listing/$order_listing");
@@ -568,8 +638,11 @@ class orders extends MY_Controller {
 
 	}
 
-	public function update_facility_new_order() {
+	public function update_order_facility() {
 		//security check
+		//$dump=$this -> input -> post();
+		//echo '<pre>';print_r($dump); echo '</pre>';exit;
+		$user_indicator = $this -> session -> userdata('user_indicator');
 		if ($this -> input -> post('commodity_id')) :
 			//just picks values from the view and assigns them to a variable
 			$this -> load -> database();
@@ -583,7 +656,7 @@ class orders extends MY_Controller {
 			$order_id = $this -> input -> post('order_number');
 			$facility_order_details_id = $this -> input -> post('facility_order_details_id');
 			$quantity_ordered_unit = $this -> input -> post('actual_quantity');
-			(int)$price = $this -> input -> post('unit_cost');
+			(int)$price = $this -> input -> post('price');
 			$o_balance = $this -> input -> post('open');
 			$t_receipts = $this -> input -> post('receipts');
 			$t_issues = $this -> input -> post('issues');
@@ -592,28 +665,45 @@ class orders extends MY_Controller {
 			$losses = $this -> input -> post('losses');
 			$days = $this -> input -> post('days');
 			$c_stock = $this -> input -> post('closing');
-			$comment = $this -> input -> post('comment');
+			//$comment = array('N/A','N/A','N/A');
 			$s_quantity = $this -> input -> post('suggested');
 			(int)$amc = $this -> input -> post('amc');
-			//$workload = $this -> input -> post('workload');
+			$workload = '0';
 			//order table details
-			//$bed_capacity = $this -> input -> post('bed_capacity');
-			//$drawing_rights = $this -> input -> post('drawing_rights');
+			$bed_capacity = '0';
+			$drawing_rights = '0';
 			$order_total = $this -> input -> post('total_order_value');
-			$order_no = $this -> input -> post('order_no');
+			$order_no = '0';
 			//$facility_code=$this -> session -> userdata('facility_id');
 			//$user_id=$this->session->userdata('user_id');
 			$order_date = date('y-m-d');
 			$number_of_id = count($commodity_id);
+			$order_dates = facility_orders::get_order_($order_id);
+			//echo '<pre>';print_r($order_dates[0]['order_date']); echo '</pre>';exit;
 			$subject = $file_name = $title = $info = $attach_file = null;
 			for ($i = 0; $i < $number_of_id; $i++) {
 
-				$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() 
-				-> execute("INSERT INTO facility_order_details (  `id`,
+				if ($user_indicator == 'county') {
+					$column_packs = 'cty_qty_packs';
+					$column_units = 'cty_qty_units';
+					$user_ind = 'county';
+				} else if ($user_indicator == 'district') {
+					$column_packs = 'scp_qty_packs';
+					$column_units = 'scp_qty_units';
+					$user_ind = 'subcounty';
+
+				} else {
+					$column_packs = 'quantity_ordered_pack';
+					$column_units = 'quantity_ordered_unit';
+					$user_ind = 'subcounty';
+
+				}
+
+				$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("INSERT INTO facility_order_details ( `id`,
 					`order_number_id`,
 					`commodity_id`,
-					`quantity_ordered_pack`,
-					`quantity_ordered_unit`,
+					`$column_packs`,
+					`$column_units`,
 					`price`,
 					`o_balance`,
 					`t_receipts`,
@@ -644,8 +734,8 @@ class orders extends MY_Controller {
 					)
 					ON DUPLICATE KEY UPDATE
 					`commodity_id`=$commodity_id[$i],
-					`quantity_ordered_pack`=$quantity_ordered_pack[$i],
-					`quantity_ordered_unit`=$quantity_ordered_unit[$i],
+					`$column_packs`=$quantity_ordered_pack[$i],
+					`$column_units`=$quantity_ordered_unit[$i],
 					`price`=$price[$i],
 					`o_balance`=$o_balance[$i],
 					`t_receipts`=$t_receipts[$i],
@@ -661,36 +751,31 @@ class orders extends MY_Controller {
 
 			}//insert the data here
 
-			$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> 
-					execute("UPDATE `facility_orders` 
-								SET 
-								    `order_total` = $order_total,
-								    `order_total` = $order_total
-								WHERE
-								    `facility_orders`.`id` = $order_id;");
+			$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("UPDATE `facility_orders` SET `order_total` = $order_total,`order_no` = $order_no
+						,`workload` = $workload ,`bed_capacity` = $bed_capacity WHERE `facility_orders`.`id` = $order_id;");
 
 			$myobj = Doctrine::getTable('facility_orders') -> find($order_id);
-			//$myobj -> workload = $workload;
-			//$myobj -> bed_capacity = $bed_capacity;
-			//$myobj -> order_no = $order_no;
+			$myobj -> workload = $workload;
+			$myobj -> bed_capacity = $bed_capacity;
+			$myobj -> order_no = $order_no;
 			$myobj -> order_total = $order_total;
 			$facility_code = $myobj -> facility_code;
 
 			$myobj1 = Doctrine::getTable('Facilities') -> findOneByfacility_code($facility_code);
 			$facility_name = $myobj1 -> facility_name;
-			$pdf_body = $this -> create_order_pdf_template($order_id);
+			//$pdf_body = $this -> create_order_pdf_template($order_id);
 
 			$file_name = $facility_name . '_facility_order_no_' . $order_id . "_date_created_" . date('d-m-y');
 
-			$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
+			//$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
 
-			$this -> hcmp_functions -> create_pdf($pdf_data);
+			//$this -> hcmp_functions -> create_pdf($pdf_data);
 			// create pdf
 			$this -> hcmp_functions -> clone_excel_order_template($order_id, 'save_file', $file_name);
 			//create excel
 
-			$attach_file1 = './pdf/' . $file_name . '.pdf';
-			$attach_file2 = "./print_docs/excel/excel_files/" . $file_name . '.xls';
+			//$attach_file1 = './pdf/' . $file_name . '.pdf';
+			$attach_file = "./print_docs/excel/excel_files/" . $file_name . '.xls';
 			//echo $attach_file;
 
 			//exit;
@@ -700,7 +785,7 @@ class orders extends MY_Controller {
 				$status = "Updated";
 				$subject = 'Updated Order Report Pending Approval For ' . $facility_name;
 
-				$attach_file = './pdf/' . $file_name . '.pdf';
+				//$attach_file = './pdf/' . $file_name . '.pdf';
 			}
 			if ($rejected_admin == 1) {
 				$myobj -> status = 3;
@@ -712,38 +797,81 @@ class orders extends MY_Controller {
 				<br>';
 
 			}
+			//final approval send to supplier
 			if ($approved_admin == 1) {
-				$myobj -> status = 2;
-				$myobj -> approval_date = date('y-m-d');
+
+				if ($user_indicator == 'county') {
+					//get dates here
+					$myobj -> status = 2;
+					$tabledata = '<thead>
+							<tr style="">
+						<th>Date Ordered</th>
+						<th>Date Approved Sub-County</th>
+						<th>Date Approved County</th>
+						<th>Order Value</th>
+								</tr>
+							</thead>
+							<tbody >
+							<tr>
+							<td style="text-align:center;">' . date('M , d Y', strtotime($order_dates[0]['order_date'])) . '</td>
+							<td style="text-align:center;">' . date('M , d Y', strtotime($order_dates[0]['approval_date'])) . '</td>
+							<td style="text-align:center;">' . date('M , d Y') . '</td>
+							<td style="text-align:center;" >' . number_format("$order_total", 2) . '</td>
+							</tr>
+							</tbody>';
+					$subject = 'Approved Order For ' . $facility_name;
+					$myobj -> approval_county = date('y-m-d');
+
+				} else if ($user_indicator == 'district') {
+					//get dates here
+					$myobj -> status = 6;
+					$tabledata = '<thead>
+							<tr style="">
+						<th>Date Ordered</th>
+						<th>Date Approved Sub-County</th>
+						<th>Order Value</th>
+								</tr>
+							</thead>
+							<tbody >
+							<tr>
+							<td style="text-align:center;">' . date('M , d Y', strtotime($order_dates[0]['order_date'])) . '</td>
+							<td style="text-align:center;">' . date('M , d Y') . '</td>
+							<td style="text-align:center;" >' . number_format("$order_total", 2) . '</td>
+							</tr>
+							</tbody>';
+					$subject = 'Order Pending Approval By County Pharmacist ' . $facility_name;
+					$myobj -> approval_date = date('y-m-d');
+
+				}
+
 				$myobj -> approved_by = $this -> session -> userdata('user_id');
 				$status = "Approved";
-				$subject = 'Approved Order Report For ' . $facility_name;
+				//$subject = 'Approved Order Report For ' . $facility_name;
 
 			}
 
 			$myobj -> save();
-			if ($this -> session -> userdata('user_indicator') == 'district') :
-				$order_listing = 'subcounty';
-			elseif ($this -> session -> userdata('user_indicator') == 'county') :
-				$order_listing = 'county';
-			else :
-				$order_listing = 'facility';
-			endif;
 
-			$message = "<br>Please find the $status Order for  " . $facility_name . '
-		  <br>' . $info . $pdf_body;
+			$message = '
+						<br>
+						Please find the ' . $status . ' Order Made by ' . $facility_name . ' attached.
+						<br>
+					     <table width="75%" style="text-align:center;" >
+							' . $tabledata . '
+							</table>
+						<br>
+						';
 
-			$response = $this -> hcmp_functions -> send_order_approval_email($message, $subject, $attach_file1 . "(more)" . $attach_file2, $facility_code, $status);
+			$response = $this -> hcmp_functions -> send_order_approval_email($message, $subject, $attach_file, $facility_code, $status);
 			if ($response) {
-				delete_files($attach_file1);
-				delete_files($attach_file2);
+				delete_files($attach_file);
 			} else {
 
 			}
 			//Test for sms
 			//$this -> hcmp_functions -> order_update_sms($this -> session -> userdata('facility_id'),$status);
 			$this -> session -> set_flashdata('system_success_message', "Facility Order No $order_id has Been $status");
-			redirect("reports/order_listing/$order_listing");
+			redirect("reports/order_listing/$user_ind");
 
 		endif;
 
@@ -818,41 +946,40 @@ class orders extends MY_Controller {
 	}
 
 	public function create_order_pdf_template($order_no) {
-		//gets the details from the order table and returns them as an object
 		$from_order_table = facility_orders::get_order_($order_no);
 		//get the order data here
-		$from_order_details_table = Doctrine_Manager::getInstance() -> getCurrentConnection() -> 
-		fetchAll("SELECT 
-				    a.sub_category_name,
-				    b.commodity_name,
-				    b.commodity_code,
-				    b.unit_size,
-				    b.unit_cost,
-				    c.quantity_ordered_pack,
-				    c.quantity_ordered_unit,
-				    c.price,
-				    c.quantity_recieved,
-				    c.o_balance,
-				    c.t_receipts,
-				    c.t_issues,
-				    c.adjustnve,
-				    c.adjustpve,
-				    c.losses,
-				    c.days,
-				    c.comment,
-				    c.c_stock,
-				    c.s_quantity
-				    
-				FROM
-				    commodity_sub_category a,
-				    commodities b,
-				    facility_order_details c
-				WHERE
-				    c.order_number_id = $order_no
-				        AND b.id = c.commodity_id
-				        AND a.id = b.commodity_sub_category_id
-				group by b.id
-				ORDER BY a.id ASC , b.commodity_name ASC  ");
+		$from_order_details_table = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT 
+
+    a.sub_category_name,
+    b.commodity_name,
+    b.commodity_code,
+    b.unit_size,
+    b.unit_cost,
+    c.quantity_ordered_pack,
+    c.quantity_ordered_unit,
+    c.price,
+    c.quantity_recieved,
+    c.o_balance,
+    c.t_receipts,
+    c.t_issues,
+    c.adjustnve,
+    c.adjustpve,
+    c.losses,
+    c.days,
+    c.comment,
+    c.c_stock,
+    c.s_quantity
+    
+FROM
+    commodity_sub_category a,
+    commodities b,
+    facility_order_details c
+WHERE
+    c.order_number_id = $order_no
+        AND b.id = c.commodity_id
+        AND a.id = b.commodity_sub_category_id
+group by b.id
+ORDER BY a.id ASC , b.commodity_name ASC  ");
 		// get the order details here
 		$from_order_details_table_count = count($from_order_details_table);
 		foreach ($from_order_table as $order) {
@@ -899,6 +1026,7 @@ class orders extends MY_Controller {
 <tr>
 <td>MFL No: $mfl</td> 
 <td>Health Facility Name:<br/> $facility_name</td>
+<td>Total OPD Visits & Revisits: $o_workload </td>
 <td>Level:</td>
 <td>Dispensary</td>
 <td>Health Centre</td>
@@ -979,6 +1107,10 @@ Start Date:  <br/>  End Date: " . date('d M, Y', strtotime($o_date)) . "
 		  <div style="float:right; width: 40%;"> Total Order Value:</div>
 		  <div style="float:right; width: 40%;" >KSH ' . number_format($order_total, 2, '.', ',') . '</div> </div></td></tr>
 		  <tr style="background-color: 	#FFFFFF;"  > 
+		  <td colspan="4" ><div>
+		  <div style="float: left" > Drawing Rights Available Balance:</div>
+		  <div style="float: right" >KSH		' . number_format($bal, 2, '.', ',') . '</div> </td></tr>
+		  <tr><td>FACILITY TEL NO:</td><td colspan="3">FACILITY EMAIL:</td>
 		  </tr>
 		  <tr><td >Prepared by (Name/Designation) ' . $creator_name1 . ' ' . $creator_name2 . '
 		  <br/>
@@ -997,49 +1129,60 @@ Start Date:  <br/>  End Date: " . date('d M, Y', strtotime($o_date)) . "
 		return $html_body . $html_body1;
 
 	}
-	/*********KEMSA UPLOADER**********/
-	public function kemsa_excel_order_uploader($inputFileName) {
-		// $inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx';
-		if (isset($inputFileName)) :
-			$item_details = Commodities::get_all_from_supllier(1);
-			//$inputFileType = PHPExcel_IOFactory::identify($inputFileName);
-			//$excel2 = PHPExcel_IOFactory::createReader($inputFileType);
-			$ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
-			if ($ext == 'xls') {
-				$excel2 = PHPExcel_IOFactory::createReader('Excel5');
-			} else if ($ext == 'xlsx') {
-				$excel2 = PHPExcel_IOFactory::createReader('Excel2007');
-			} else {
-				die('Invalid file format given' . $_FILES['file']);
-			}
-			//exit;
-			$excel2 = $objPHPExcel = $excel2 -> load($inputFileName);
-			// Empty Sheet
 
-			$sheet = $objPHPExcel -> getSheet(0);
-			$highestRow = $sheet -> getHighestRow();
+	public function amc($county = null, $district = null, $facility_code = null) {
+		$district = ($district == "NULL") ? null : $district;
+		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
+		$county = ($county == "NULL") ? null : $county;
 
-			$highestColumn = $sheet -> getHighestColumn();
-			$temp = array();
-			$facility_code = $sheet -> getCell('H4') -> getValue();
+		if (isset($county)) {
 
-			//  Loop through each row of the worksheet in turn
-			for ($row = 1; $row <= $highestRow; $row++) {
-				//  Read a row of data into an array
-				$rowData = $sheet -> rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
-				if (isset($rowData[0][2]) && $rowData[0][2] != 'Product Code') {
-					foreach ($item_details as $key => $data) {
-						if (in_array($rowData[0][2], $data)) {
-							array_push($temp, array('sub_category_name' => $data['sub_category_name'], 'commodity_name' => $data['commodity_name'], 'unit_size' => $data['unit_size'], 'unit_cost' => $data['unit_cost'], 'commodity_code' => $data['commodity_code'], 'commodity_id' => $data['commodity_id'], 'total_commodity_units' => $data['total_commodity_units'], 'opening_balance' => 0, 'total_receipts' => 0, 'total_issues' => 0, 'quantity_ordered' => $rowData[0][7], 'comment' => '', 'closing_stock_' => 0, 'closing_stock' => 0, 'days_out_of_stock' => 0, 'date_added' => '', 'losses' => 0, 'status' => 0, 'adjustmentpve' => 0, 'adjustmentnve' => 0, 'historical' => 0));
-							unset($item_details[$key]);
-						}
-					}
-				}
-			}
-			unset($objPHPExcel);
-			return ( array('row_data' => $temp, 'facility_code' => $facility_code));
-		endif;
+			$get_amc = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select commodity_name,commodity_id,avg(facility_issues.qty_issued) as totalunits,
+					(avg(facility_issues.qty_issued))/commodities.total_commodity_units as amc_packs,
+					commodities.total_commodity_units from facility_issues inner join commodities on facility_issues.commodity_id=commodities.id
+					inner join facilities on facility_issues.facility_code=facilities.facility_code inner join districts
+					on facilities.district=districts.id where districts.county= $county and s11_No IN('internal issue','(-ve Adj) Stock Deduction')
+					group by commodity_id");
+
+			//echo '<pre>'; print_r($get_amc);echo '<pre>';
+
+		} elseif (isset($district)) {
+
+			$get_amc = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select commodity_name,commodity_id,avg(facility_issues.qty_issued) as totalunits,
+					(avg(facility_issues.qty_issued))/commodities.total_commodity_units as amc_packs,
+					commodities.total_commodity_units from facility_issues inner join commodities on facility_issues.commodity_id=commodities.id inner join facilities
+					on facility_issues.facility_code=facilities.facility_code where facilities.district=$district
+					and s11_No IN('internal issue','(-ve Adj) Stock Deduction') group by commodity_id");
+
+			//echo '<pre>'; print_r($get_amc);echo '<pre>';
+
+		} elseif (isset($facility_code)) {
+
+			$getdates = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT MIN(created_at) as EarliestDate,MAX(created_at) as LatestDate
+					FROM facility_issues WHERE facility_code=$facility_code");
+
+			//echo '<pre>'; print_r($getdates);echo '<pre>'; exit;
+			$early = $getdates[0]['EarliestDate'];
+			$late = $getdates[0]['LatestDate'];
+
+			$now = time();
+			$my_date = strtotime($early);
+			$datediff = ($now - $my_date) / (60 * 60 * 24);
+			//in days
+			$datediff = round($datediff, 1);
+
+			$get_amc = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select commodity_id,sum(facility_issues.qty_issued) as units,(sum(facility_issues.qty_issued)*30/$datediff)/commodities.total_commodity_units as amc_packs,
+						commodities.total_commodity_units from facility_issues inner join commodities on facility_issues.commodity_id=commodities.id
+						where facility_code=$facility_code and s11_No IN('internal issue','(-ve Adj) Stock Deduction') group by commodity_id");
+
+			//echo '<pre>'; print_r($get_amc);echo '<pre>'; exit;
+			return $get_amc;
+
+		} else {
+
+			echo "national";
+		}
+
 	}
-
 
 }

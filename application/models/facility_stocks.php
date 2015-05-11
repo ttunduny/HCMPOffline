@@ -32,6 +32,12 @@ class Facility_stocks extends Doctrine_Record {
 		return $commodities;
 	}//save the data on to the table
 
+	public static function get_all_facility($facility_code,$commodity_id) {
+		
+		$commodities = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll(" SELECT sum(current_balance) as current_bal FROM facility_stocks where facility_code=$facility_code 
+		and commodity_id=$commodity_id and status=1 ");
+		return $commodities;
+	}
 	public static function get_all() {
 		$query = Doctrine_Query::create() -> select("*") -> from("facility_stocks");
 		$commodities = $query -> execute();
