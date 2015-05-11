@@ -117,7 +117,7 @@ class sms extends MY_Controller {
 
 					//check the last time they logged in as a facility
 					$system_usage = Log::check_system_usage($facility_code);
-echo "<pre>"; print_r($facility_code);exit;
+					
 					$no_of_days = $system_usage[0]['Days_From'];
 					//checks if the number of days is greater than five as that is the threshold
 					if ($no_of_days >= 5) :
@@ -146,7 +146,7 @@ echo "<pre>"; print_r($facility_code);exit;
 
 				//pick the user data
 				$user_data = Users::get_scp_details($district_id);
-
+				
 				//loop through the each of the numbers of the users
 				foreach ($user_data as $data) :
 					//pick the name
@@ -154,7 +154,7 @@ echo "<pre>"; print_r($facility_code);exit;
 					//message to be sent out to the sub county guys
 					$message = "Dear $name_sub_county, $district_name Sub County Pharmacist,\n $count_district facilities in $district_name Sub County have not accessed HCMP for more than 5 days.\n Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 					$message = urlencode($message);
-
+					
 					$user_no = $data['telephone'];
 					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 				endforeach;
@@ -168,7 +168,7 @@ echo "<pre>"; print_r($facility_code);exit;
 
 			//then pick the names and details of the people receiving the texts
 			$user_data = Users::get_county_pharm_details($county_id);
-
+			//echo "<pre>";print_r($user_data);exit;
 			//loop through the each of the numbers of the users
 			foreach ($user_data as $data) :
 				//pick the name

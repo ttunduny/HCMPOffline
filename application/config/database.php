@@ -49,7 +49,7 @@ $active_group = 'default';
 $active_record = TRUE;
 
 
-$db['default']['hostname'] = '192.168.133.55';
+$db['default']['hostname'] = '192.168.133.22';
 $db['default']['username'] = 'root';
 $db['default']['password'] = 'hplab';
 $db['default']['database'] = 'hcmp_test';

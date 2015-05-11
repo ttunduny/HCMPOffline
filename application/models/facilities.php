@@ -254,7 +254,7 @@ class Facilities extends Doctrine_Record {
 		
 		elseif(isset($district_id)&&!isset($facility_code)):
 			$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-				CALL facility_monitoring('district',$district_id');
+				CALL facility_monitoring('district','$district_id');
 			");
 			//return the monitoring data
 			return $data; 
