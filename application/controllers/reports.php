@@ -1079,6 +1079,7 @@ class Reports extends MY_Controller {
 		$district_names = "<thead><tr><th>Sub County Roll Outs</th>";
 		$sub_county_names = "<thead><tr><th>Sub County</th>";
 		$monthly_district_names = $district_names;
+		
 		$monthly_sub_county_names = $sub_county_names;
 		//Total number of facilities in the district
 		$district_total = array();
@@ -1106,10 +1107,10 @@ class Reports extends MY_Controller {
 		}
 		//get the months and dates the facilities rolled out on HCMP
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online_cleaned($county_id);
-		// echo "<pre>";print_r($get_dates_facility_went_online);die;
 		$accordion = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">';
 		$counter = 0;
 		foreach ($get_dates_facility_went_online as $key => $value) {
+			
 			$counter++;
 			$accordion .= '<div class="panel panel-default">';
 			$accordion .= '<div class="panel-heading" role="tab" id="heading_' . $counter . '">';
@@ -1121,7 +1122,9 @@ class Reports extends MY_Controller {
 			$accordion .= $monthly_district_names;
 			$accordion .= '<th>Total</th></thead>';
 			foreach ($value as $k => $v) {
-				$accordion .= '<tr><td>' . $v . '</td>';
+				//explode $v so that only the month is displayed
+				$month = explode(" ", $v);
+				$accordion .= '<tr><td>' . $month[0] . '</td>';
 				$monthly_total = 0;
 				foreach ($district_data as $district_detail) {
 					$district_id = $district_detail -> id;
