@@ -596,7 +596,7 @@ class issues extends MY_Controller {
 			$clone_datepicker_normal_limit_today = array_values($this -> input -> post('clone_datepicker_normal_limit_today'));
 			$total_units = array_values($this -> input -> post('total_units'));
 			$total_items = count($facility_stock_id);
-			print_r($total_units);
+			//print_r($total_units);
 			for ($i = 0; $i < $total_items; $i++) ://compute the actual stock
 				$total_items_issues = ($commodity_unit_of_issue[$i] == 'Pack_Size') ? $quantity_issued[$i] * $total_units[$i] : $quantity_issued[$i];
 				//prepare the issues data
@@ -617,9 +617,7 @@ class issues extends MY_Controller {
 
 			endfor;
 
-			//$user = $this -> session -> userdata('user_id');
-			//$user_action = "issue";
-			//Log::log_user_action($user, $user_action);
+			//updates the log tables with the action
 			$user = $this -> session -> userdata('user_id');
 			$user_action = "issued";
 			//updates the log table accordingly based on the action carried out by the user involved
