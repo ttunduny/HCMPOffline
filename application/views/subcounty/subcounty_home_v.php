@@ -178,18 +178,7 @@ $('.page-header').html('System Usage');
 ajax_request_replace_div_content('reports/facility_mapping',"#notification");
 });
 
-$("#download_redistributions").button().click(function(e) {
-        e.preventDefault(); 
-        var from =$("#county_from").val();
-        var to =$("#county_to").val();
-        
-        if(from==''){from="NULL";   }
-        if(to==''){to="NULL";}
 
-  		var url_ = "reports/"+
-       $("#tracer_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#tracer_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/csv_data"; 
-         window.open(url+url_ ,'_blank');   
-          }); 
      
 });
 </script>

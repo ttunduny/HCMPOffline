@@ -1,86 +1,12 @@
-<?php if(isset($stats_data)){ echo $stats_data;}
-echo $table; ?>
-<script>
-    $(document).ready(function() {
-	//datatables settings 
-	$('#delivered').dataTable( {
-	   "sDom": "T lfrtip",
-	     "sScrollY": "310px",
-	     "sScrollX": "100%",
-                    "sPaginationType": "bootstrap",
-                    "oLanguage": {
-                        "sLengthMenu": "_MENU_ Records per page",
-                        "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
-                    },
-			      "oTableTools": {
-                 "aButtons": [
-				"copy",
-				"print",
-				{
-					"sExtends":    "collection",
-					"sButtonText": 'Save',
-					"aButtons":    [ "csv", "xls", "pdf" ]
-				}
-			],
 
-			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
-		}
-	} );
-	$('#pending').dataTable( {
-	   "sDom": "T lfrtip",
-	     
-                    "sPaginationType": "bootstrap",
-                    "oLanguage": {
-                        "sLengthMenu": "_MENU_ Records per page",
-                        "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
-                    },
-			      "oTableTools": {
-                 "aButtons": [
-				"copy",
-				"print",
-				{
-					"sExtends":    "collection",
-					"sButtonText": 'Save',
-					"aButtons":    [ "csv", "xls", "pdf" ]
-				}
-			],
 
-			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
-		}
-	} );
-	$('#districtstore').dataTable( {
-	   "sDom": "T lfrtip",
-	     
-                    "sPaginationType": "bootstrap",
-                    "oLanguage": {
-                        "sLengthMenu": "_MENU_ Records per page",
-                        "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
-                    },
-			      "oTableTools": {
-                 "aButtons": [
-				"copy",
-				"print",
-				{
-					"sExtends":    "collection",
-					"sButtonText": 'Save',
-					"aButtons":    [ "csv", "xls", "pdf" ]
-				}
-			],
-
-			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
-		}
-	} );
-	$('.dataTables_filter label input').addClass('form-control');
-	$('.dataTables_length label select').addClass('form-control');
-});
-</script>
-<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="margin-top: 1%;">
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"  style="margin-top: 1%;">
 	
 	  <div class="panel panel-danger">
     <div class="panel-heading" role="tab" id="headingTwo">
       <h4 class="panel-title">
         <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-          Pending <?php echo '50'; ?>
+          Pending <?php echo $redistribute_count; ?> for <?php echo $year; ?>
         </a>
       </h4>
     </div>
@@ -145,11 +71,12 @@ echo $table; ?>
       </div>
     </div>
   </div>
+  
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingOne">
       <h4 class="panel-title">
         <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Delivered
+          Delivered for <?php echo $year; ?>
         </a>
       </h4>
     </div>
@@ -218,7 +145,7 @@ echo $table; ?>
     <div class="panel-heading" role="tab" id="headingThree">
       <h4 class="panel-title">
         <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-          Redistributions To Non-HCMP Facilities
+          Redistributions To Non-HCMP Facilities for <?php echo $year; ?>
         </a>
       </h4>
     </div>
@@ -285,3 +212,37 @@ echo $table; ?>
   </div>
   
 </div>
+
+<script>
+    $(document).ready(function() {
+	//datatables settings 
+	
+	
+	$('#pending,#districtstore,#delivered').dataTable( {
+	   "sDom": "T lfrtip",
+	     
+                    "sPaginationType": "bootstrap",
+                    "oLanguage": {
+                        "sLengthMenu": "_MENU_ Records per page",
+                        "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
+                    },
+			      "oTableTools": {
+                 "aButtons": [
+				"copy",
+				"print",
+				{
+					"sExtends":    "collection",
+					"sButtonText": 'Save',
+					"aButtons":    [ "csv", "xls", "pdf" ]
+				}
+			],
+
+			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
+		}
+	} );
+	
+	
+	$('.dataTables_filter label input').addClass('form-control');
+	$('.dataTables_length label select').addClass('form-control');
+});
+</script>
