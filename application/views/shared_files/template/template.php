@@ -21,26 +21,25 @@ if (!$this -> session -> userdata('user_id')) {
     <link rel="icon" href="<?php echo base_url().'assets/img/coat_of_arms.png'?>" type="image/x-icon" />
     <link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
     <link href="<?php echo base_url().'assets/css/select2.css'?>" type="text/css" rel="stylesheet"/> 
-	<link href="<?php echo base_url().'assets/css/normalize.css'?>" type="text/css" rel="stylesheet"/>
-	<link href="<?php echo base_url().'assets/css/dashboard.css'?>" type="text/css" rel="stylesheet"/>
-	<link href="<?php echo base_url().'assets/css/jquery-ui-1.10.4.custom.min.css'?>" type="text/css" rel="stylesheet"/>
-	<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
+  <link href="<?php echo base_url().'assets/css/normalize.css'?>" type="text/css" rel="stylesheet"/>
+  <link href="<?php echo base_url().'assets/css/dashboard.css'?>" type="text/css" rel="stylesheet"/>
+  <link href="<?php echo base_url().'assets/css/jquery-ui-1.10.4.custom.min.css'?>" type="text/css" rel="stylesheet"/>
+  <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
   <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
-	<link href="<?php echo base_url().'assets/css/bootstrap-switch.css'?>" type="text/css" rel="stylesheet"/>
-	<link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
-	<link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
+  <link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
+  <link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
   <link rel="stylesheet" href="<?php echo base_url().'assets/bower_components/sweetalert/lib/sweet-alert.css'?>" />
   <link rel="stylesheet" href="<?php echo base_url().'assets/bower_components/alertifyjs/dist/css/alertify_bootstrap_3.css'?>" />
     <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
-	<link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
-	<link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
-	<script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
+  <link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
+  <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
+  <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/select2.js'?>" type="text/javascript"></script>
-	<script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/bower_components/sweetalert/lib/sweet-alert.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/bower_components/alertifyjs/dist/js/alertify.js'?>" type="text/javascript"></script>
   <link href="<?php echo base_url().'assets/bower_components/intro.js/introjs.css'?>" type="text/css" rel="stylesheet"/>
-	<!-- <link href="<?php echo base_url().'assets/metro-bootstrap/docs/font-awesome.css'?>" type="text/css" rel="stylesheet"/>
+  <!-- <link href="<?php echo base_url().'assets/metro-bootstrap/docs/font-awesome.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/metro-bootstrap/css/metro-bootstrap.css'?>" type="text/css" rel="stylesheet"/>
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -99,6 +98,8 @@ border-color: #e7e7e7;
 
 
 </style>
+
+
   </head>  
   <body screen_capture_injected="true" onload="set_interval()" onmouseover="reset_interval()" onclick="reset_interval()">
     <!-- Fixed navbar -->
@@ -205,8 +206,11 @@ foreach($menus as $menu){ $menu_id=(int)$menu['menu_id'];?>
       		<span style="margin-left:2%;">  <?php echo $this -> session -> userdata('banner_name')." | ". $banner_text;?> </span>
       		 	
      		</div>
-      		<div class="col-md-4">     			
+        <center>
+      		<div class="col-md-4">  
+          <span><?php echo $this-> session -> userdata('facility_count'); ?>  </span>			
       		</div>
+          </center>
       		<div class="col-md-4"  style="text-align: right;">
       			<?php  echo date('l, jS F Y'); ?>
              <span id="clock" style="font-size:0.85em; " ></span>
@@ -235,13 +239,22 @@ foreach($menus as $menu){ $menu_id=(int)$menu['menu_id'];?>
 <!-- /.modal -->   
     <?php $this -> load -> view($content_view);?>
     </div> <!-- /container -->
+    <!-- script for popover on helpdesk link-->
+<script type="text/javascript">
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').popover({
+        placement : 'top'
+    });
+});
+</script>
    <div id="footer">
       <div class="container">
         <p class="text-muted"> Government of Kenya &copy <?php echo date('Y');?>. All Rights Reserved
-          <a href="mailto:hcmphelpdesk@googlegroups.com">Report Problem</a></p>
+          <a data-toggle="popover" title="Experiencing any challenges?  Send an Email to hcmphelpdesk@googlegroups.com" data-content=" Send an Email to hcmphelpdesk@googlegroups.com">Report problems</a>
+          </p>
       </div>
     </div>
-    
+  
     <!-- Modal -->
 <div class="modal fade" id="changepassModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog" style="width: 35%;">
@@ -305,6 +318,59 @@ foreach($menus as $menu){ $menu_id=(int)$menu['menu_id'];?>
     </div>
   </div>
 </div>
+
+
+
+<div class="modal fade" id="myOrders" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-transfer"></span> Last Order Placed</h4>
+      </div>
+      <div class="modal-body" style="font-size:16px;">
+        <?php echo "<strong>Order Date :</strong> ".$lastorder."<br>";
+        echo "<strong>Order Number :</strong> ".$order_no."<br>";
+        echo "<strong>Commodity Name :</strong> ".$commodity_name."<br>";
+        echo "<strong>Quantity Ordered (Packs) :</strong> ".$quantity_ordered_pack."<br>";
+        echo "<strong>Quantity Ordered (Units) :</strong> ".$quantity_ordered_unit."<br>";
+        echo "<strong>Order Total :</strong> ".number_format($order_total,2)."<br>";
+        ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myIssues" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-share-alt"></span> Last Commodity Issued</h4>
+      </div>
+      <div class="modal-body" style="font-size:16px;">
+        <?php 
+        if($qty_issued<0){
+          $qty_issued = $qty_issued * -1;
+        }
+        echo "<strong>Issued Date :</strong> ".$last_issue."<br>";
+        echo "<strong>Commodity Name :</strong> ".$commodity_name."<br>";
+        echo "<strong>Quantity Issued :</strong> ".$qty_issued."<br>";
+        echo "<strong>Commodity Issued To :</strong> ".$issued_to."<br>";
+        ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
     <script type="text/javascript">
     
     /*

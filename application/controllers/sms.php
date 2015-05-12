@@ -1992,6 +1992,56 @@ class sms extends MY_Controller {
 		endif;
 	}
 
+		public function send_redistribution_excel(){
+		//get redistribution data
+		$commodities = redistribution_data::get_redistribution_excel();
+		// $this->load->model("redistribution_data");
+		//$commodities = $this->redistribution_data->get_redistribution_excel();
+
+		//start building the excel sheet
+		$excel_data = array();
+		$excel_data = array('doc_creator'=>'HCMP','doc_title'=>'Commodity Redistribution Report','file_name'=>'Commodity Redistribution Report');
+
+		$row_data = array();
+		$column_data = array('commodity_name','quantity_sent','quantity_received','source_facility','facility_name','source_district','source_county','receiver_facility_code','receiver_facility','receiver_district' ,'receive_county');
+		$excel_data['column_data'] = $column_data;
+
+		foreach ($commodities as $commodity):
+			array_push($row_data, array($commodity['commodity_name'],$commodity['quantity_sent'],$commodity['quantity_received'],$commodity['source_facility'],$commodity['facility_name'],
+				$commodity['source_district'],$commodity['source_county'],$commodity['receiver_facility_code'],$commodity['receiver_facility'],$commodity['receiver_district'],$commodity['receive_county']));
+		endforeach;
+
+		$excel_data['row_data'] = $row_data;
+		$excel_data['report_type'] = 'download_file';
+		$excel_data['file_name'] = 'Commodity Redistribution Report '. date('d M Y') ;
+		$excel_data['excel_title'] = 'Commodity Redistribution Report on HCMP as at' . date("d M Y");
+		$date = date("d M Y");
+
+		$subject = "Commodity Redistribution Report";
+
+		$message = "Good Morning,</br>
+				<p>Find attached an excel sheet with the Commodity Redistributions as at $date</p>
+				<p>----</p>
+				<p>This email was automatically generated
+				<p>HCMP</p>. Please do not respond to this email address or it will be ignored.</p>";
+		//used the same report type as for ORS
+		//they have the same number of columns
+		$report_type = "ors_report";
+		//create the excel sheet here
+		$this -> create_excel($excel_data);
+		
+		//where the excel sheet is stored before being attached
+		$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name']. ".xls";
+		//echo $handler;
+		
+
+		//the email of the receipients//collinsojenge
+		 $email_address = "nimzy.maina@gmail.com";
+		//function for sending the actual email
+		$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+
+}
+
 	function email_sender($report_name) {
 
 		//setting the connection variables

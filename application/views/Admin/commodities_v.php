@@ -51,7 +51,7 @@
 		    $("#order-for-excel").on('click', function(e) {
     e.preventDefault(); 
     var body_content='<?php  $att=array("name"=>'myform','id'=>'myform'); 
-    echo form_open_multipart('stock/upload_new_list',$att)?>'+
+    echo form_open_multipart('stock/upload_new_list_custom',$att)?>'+
 '<input type="file" name="file" id="file" required="required" class="form-control"><br>'+
 '<button type="submit" name="submit"  value="Upload">Upload</button>'+
 '</form>';

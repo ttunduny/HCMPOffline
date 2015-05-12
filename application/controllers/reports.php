@@ -3564,6 +3564,7 @@ class Reports extends MY_Controller {
 
 		$consumption_data = Facility_stocks::get_county_consumption_level_new($facility_code, $district_id, $county_id, $category_id, $commodity_id, $option, $from, $to, $report_type, $tracer);
 
+		//echo $consumption_data;exit;//seth
 		foreach ($consumption_data as $data) :
 			if ($report_type == "table_data") :
 				if ($commodity_id > 0) :
@@ -3605,6 +3606,49 @@ class Reports extends MY_Controller {
 
 		//echo "<pre>";print_r($data['county_dashboard_notifications']); exit;
 		return $this -> load -> view("subcounty/ajax/county_consumption_data_filter_v", $data);
+	}
+
+	public function tracer_report(){//seth
+		//THIS REPORT IS CURRENTLY STATIC UNTIL AN INTERFACE IS MADE
+
+		// $t_report = Facility_stocks::get_tracer_items_report_new($facility_code, $district_id, $county_id, $category_id, $commodity_id, $option, $from, $to, $report_type, $tracer);
+		$county_name = counties::get_county_name(1);
+		$t_report = Facility_stocks::get_tracer_items_report_new(NULL, NULL, 1,NULL, NULL, NULL, 1427839200, 1430344800, NULL, 1,"packs");//can add 'mos' for months of stock
+
+		$stock_lvl = Facility_stocks::get_county_stock_level_tracer(1,NULL,NULL,"ksh");//county id only
+
+		$excel_data = array('doc_creator' => 'HCMP Kenya', 'doc_title' => 'Tracer Commodity Report For $county_name[\'county_name\']', 'file_name' => 'Nairobi County Tracer Commodity Monthly Report');
+		$row_data = array();
+		$column_data = array("KEMSA Code", "Proprietary Drug Name", "Unit Of Issue", "Consumption (AMC) in Packs", "Current Stock Level in Packs");
+		$excel_data['column_data'] = $column_data;
+
+		// echo "<pre>";print_r($stock_lvl);echo "</pre>";exit;
+
+		$chopped_down = array();
+		foreach ($t_report as $chunk) {
+			foreach ($stock_lvl as $chunket) {
+				if ($chunk['commodity_id'] == $chunket['commodity_id'] ) {
+					$chopped_down[] = array(
+					'commodity_code' => $chunk['commodity_code'],
+					'commodity_name' => $chunket['commodity_name'],
+					'issue_unit' => $chunk['unit_size'],
+					'consumption' => $chunk['total'],
+					'stock_total' => $chunket['total']
+					 );//end of chopped down array assignments
+				}//end of if
+				
+			}//stock level foreach
+		}//tracer report foreach
+
+		foreach ($chopped_down as $spliced) :
+			array_push($row_data, array($spliced["commodity_code"], $spliced["commodity_name"], $spliced["issue_unit"], $spliced["consumption"], $spliced["stock_total"]));
+		endforeach;
+
+		$excel_data['row_data'] = $row_data;
+
+		// echo "<pre>";print_r($chopped_down);echo "</pre>";exit;
+
+		$this -> hcmp_functions -> create_excel($excel_data);
 	}
 
 	public function consumption_stats_graph($commodity_id = null, $category_id = null, $district_id = null, $facility_code = null, $option = null, $from = null, $to = null, $report_type = null) {
@@ -4171,6 +4215,166 @@ public function donation_report_download($year = null, $county_id = null,$distri
 		$this -> load -> view("shared_files/template/template", $data);
 
 	}
+
+	public function generate_reports($requested_report = NULL){
+		switch ($requested_report) {
+			case 'order_count':
+				$this->order_count();
+				break;
+			case 'orders_generated' :
+			$this->orders_generated();
+				break;
+			default:
+				# code...
+				break;
+		}
+	}
+
+	public function orders_generated($district_id=NULL){//seth
+		// $generated = generated_reports::county_order_reports_general(2014,'September');
+		// echo "I WORK";exit;
+		
+		$generated = Generated_reports::county_order_reports_by_year(NULL,NULL,'months');
+		$dist_details = array();
+		$dist_totals = array();
+		$census = count($generated);
+		if ($census>1) {
+		for ($i=0; $i < $census; $i++) { 
+			$dist_details['names'][] = $generated[$i]['district_name'];
+			$dist_details['ids'][] = $generated[$i]['district_id'];
+			$dist_details['months'][] = $generated[$i]['month_of_order'];
+			$dist_totals['totals'][]= $generated[$i]['order_totals'];
+			$dist_totals['ids'][]= $generated[$i]['district_id'];
+		}
+		}//end of if
+		// echo "<pre>";print_r($generated);echo "</pre>";exit;
+
+		//$dist_details = implode(",", $dist_details);
+		//$dist_totals = implode(",", $dist_totals);
+		$months = array("January","February","March","April","May","June","July","August","September","October","November","December");
+		$digested_details=array();
+		$details_count=count($dist_details);
+		for ($i=0; $i < $details_count; $i++) { 
+			$digested_details[]['district_id'] = $generated[$i]['district_id'];
+			$digested_details[]["year"] = $generated[$i]["year_of_order"];
+			$digested_details[]["month"] = $generated[$i]["month_of_order"];
+		}
+		//THIS REPORT IS CURRENTLY STATIC UNTIL AN INTERFACE IS MADE
+
+		$excel_data = array('doc_creator' => 'HCMP Kenya', 'doc_title' => 'Tracer Commodity Report For $county_name[\'county_name\']', 'file_name' => 'Nairobi County Tracer Commodity Monthly Report');
+
+		$row_data = array();
+
+		// DEFAULT COLUMN HEADERS:// 
+		//$column_data = array("KEMSA Code", "Proprietary Drug Name", "Unit Of Issue", "Consumption (AMC) in Packs", "Current Stock Level in Packs");
+		//MINE BELOW//
+		$fillet_mignon = "Year".','. "Month of Order Placement".','. $dist_names;
+		// $column_data = explode(',', $fillet_mignon);//converts string to array
+
+		$column_data = array("District","Year","Month of Order Placement","Order Cost");
+		// $column_data = array($fillet_mignonet);
+		// echo "<pre>";print_r($column_data);echo "</pre>";exit;
+		$excel_data['column_data'] = $column_data;
+
+
+		// echo "<pre>";print_r($stock_lvl);echo "</pre>";exit;
+
+		$chopped_down = array();
+		$dist_totals_array = explode(',', $dist_totals);//converts string to array
+
+		// echo "<pre>";print_r($generated);echo "</pre>";exit;
+		foreach ($generated as $spliced) :
+			array_push($row_data,array(
+					$spliced["district_name"], 
+					$spliced["year_of_order"], 
+					$spliced["month_of_order"], 
+					$spliced["order_totals"]
+					)
+			);//row data array
+		endforeach;
+
+		// echo "<pre>";print_r($row_data);echo "</pre>";exit;
+		$excel_data['row_data'] = $row_data;
+
+		// echo "<pre>";print_r($chopped_down);echo "</pre>";exit;
+
+		$this -> hcmp_functions -> create_excel($excel_data);
+
+		// $generated = generated_reports::county_order_reports_count($district_id);
+
+		echo "<pre>";print_r($generated);echo "</pre>";exit;
+	}
+
+	public function order_count($district_id=NULL){//seth
+		// $generated = generated_reports::county_order_reports_general(2014,'September');
+		// echo "I WORK";exit;
+		
+		$generated = Generated_reports::county_order_reports_count();
+		$dist_details = array();
+		$dist_totals = array();
+		$census = count($generated);
+		// echo "<pre>";print_r($generated);echo "</pre>";exit;
+
+		//$dist_details = implode(",", $dist_details);
+		//$dist_totals = implode(",", $dist_totals);
+		$months = array("January","February","March","April","May","June","July","August","September","October","November","December");
+		$digested_details=array();
+		$details_count=count($dist_details);
+		for ($i=0; $i < $details_count; $i++) { 
+			$digested_details[]['district_id'] = $generated[$i]['district_id'];
+			$digested_details[]["year"] = $generated[$i]["year_of_order"];
+			$digested_details[]["month"] = $generated[$i]["month_of_order"];
+		}
+		//THIS REPORT IS CURRENTLY STATIC UNTIL AN INTERFACE IS MADE
+
+		$excel_data = array('doc_creator' => 'HCMP Kenya', 'doc_title' => 'Generated Orders for HCMP', 'file_name' => 'Generated Orders');
+		$row_data = array();
+
+		// DEFAULT COLUMN HEADERS:// 
+		//$column_data = array("KEMSA Code", "Proprietary Drug Name", "Unit Of Issue", "Consumption (AMC) in Packs", "Current Stock Level in Packs");
+		//MINE BELOW//
+		$fillet_mignon = "Year".','. "Month of Order Placement".','. $dist_names;
+		// $column_data = explode(',', $fillet_mignon);//converts string to array
+
+		$column_data = array("District","Year","Order Count");
+		// $column_data = array($fillet_mignonet);
+		// echo "<pre>";print_r($column_data);echo "</pre>";exit;
+		$excel_data['column_data'] = $column_data;
+
+
+		// echo "<pre>";print_r($stock_lvl);echo "</pre>";exit;
+
+		$chopped_down = array();
+		$dist_totals_array = explode(',', $dist_totals);//converts string to array
+
+		// echo "<pre>";print_r($generated);echo "</pre>";exit;
+		foreach ($generated as $spliced) :
+			array_push($row_data,array(
+					$spliced["district_name"], 
+					$spliced["year_of_order"], 
+					$spliced["order_count"]
+					)
+			);//row data array
+		endforeach;
+
+		// echo "<pre>";print_r($row_data);echo "</pre>";exit;
+		$excel_data['row_data'] = $row_data;
+
+		// echo "<pre>";print_r($chopped_down);echo "</pre>";exit;
+
+		$this -> hcmp_functions -> create_excel($excel_data);
+
+		// $generated = generated_reports::county_order_reports_count($district_id);
+
+		echo "<pre>";print_r($generated);echo "</pre>";exit;
+	}
+
+	public function tester(){
+		$id = $this->session->userdata('county_id');
+		$sth = Counties::get_facilities_in_county($id);
+		echo "<pre>";print_r($sth);echo "</pre>";exit;
+	}
+
 
 }
 ?>
