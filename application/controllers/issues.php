@@ -148,27 +148,13 @@ class issues extends MY_Controller {
 			for ($i = 0; $i < $total_items; $i++) ://compute the actual stock
 
 				$total_items_issues = ($commodity_unit_of_issue[$i] == 'Pack_Size') ? $quantity_issued[$i] * $total_units[$i] : $quantity_issued[$i];
-
-				//prepare the issues data
-				// $facility_name = isset($service_point[$i]) ? Facilities::get_facility_name2($service_point[$i]) : null;
-				// $facility_name = isset($facility_name) ? $facility_name['facility_name'] : 'N/A';
 				$mydata = array('facility_code' => $facility_code, 's11_No' => '(-ve Adj) Stock Deduction', 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])), 'qty_issued' => $total_items_issues, 'issued_to' => "inter-facility donation:" . $facility_name, 'balance_as_of' => $commodity_balance_before[$i], 'date_issued' => date('y-m-d', strtotime($clone_datepicker_normal_limit_today[$i])), 'issued_by' => $this -> session -> userdata('user_id'));
 
 				$mydata_2 = array('manufacturer' => $manufacture[$i],'source_district_id'=> $district_id, 'source_facility_code' => $facility_code, 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])), 'quantity_sent' => $total_items_issues, 'receive_facility_code' => $service_point[$i], 'facility_stock_ref_id' => $facility_stock_id[$i], 'date_sent' => date('y-m-d'), 'sender_id' => $this -> session -> userdata('user_id'));
 				// update the issues table
 				array_push($data_array_issues_table, $mydata);
 				array_push($data_array_redistribution_table, $mydata_2);
-				// reduce the stock levels
-				//var_dump($mydata);exit;
-				// $a = Doctrine_Manager::getInstance() -> getCurrentConnection();
-				// $a -> execute("UPDATE `facility_stocks` SET `current_balance` = `current_balance`+$total_items_issues where id='$facility_stock_id[$i]'");
-				//update the transaction table here
-			// 	$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection();
-			// 	$inserttransaction -> execute("UPDATE `facility_transaction_table` SET `total_issues` = `total_issues`+$total_items_issues,
-			// `closing_stock`=`closing_stock`-$total_items_issues
-  			//WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");
-
-				$existence = drug_store_issues::check_internal_transaction_existence($commodity_id[$i],$destined_district[$i]);
+			$existence = drug_store_issues::check_internal_transaction_existence($commodity_id[$i],$destined_district[$i]);
 				$store_existence = drug_store_issues::check_drug_existence($commodity_id[$i],$district_id);
 					// echo "<pre>"; print_r($existence);echo "</pre>";;exit;
 				if ($existence[0]['present'] >= 0) {
@@ -190,13 +176,9 @@ class issues extends MY_Controller {
 
 					array_push($new_transaction_entry, $new_entry_details);
 					$data = $this->db->insert_batch('drug_store_internal_transaction_table',$new_transaction_entry);
-					// echo $data;exit;
-				}//end of existence update/entry if
-
-			// echo $update_totals;exit;
-			
-					// echo "<pre>"; print_r($existence);echo "</pre>";;exit;
-				if ($store_existence[0]['present'] >= 1) {
+					
+				}
+	if ($store_existence[0]['present'] >= 1) {
 					$update_totals = Doctrine_Manager::getInstance() -> getCurrentConnection();
 					$update_totals -> execute("UPDATE `drug_store_totals` SET `total_balance` = `total_balance`-$total_items_issues
 		            WHERE `commodity_id`= '$commodity_id[$i]' and district_id='$district_id';");
@@ -211,14 +193,18 @@ class issues extends MY_Controller {
 
 					array_push($new_drug_store_entry, $new_entry_details);
 					$data = $this->db->insert_batch('drug_store_totals',$new_drug_store_entry);
-					// echo $data;exit;
 				}
 
 			endfor;
 
 			$user = $this -> session -> userdata('user_id');
 			$user_action = "redistribute";
-			Log::log_user_action($user, $user_action);
+			//updates the log table accordingly based on the action carried out by the user involved
+			$update = Doctrine_Manager::getInstance()->getCurrentConnection();
+			$update -> execute("update log set $user_action = 1  
+			where `user_id`= $user 
+			AND action = 'Logged In' 
+			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");
 			
 			// $this -> db -> insert_batch('facility_issues', $data_array_issues_table);
 			// $this -> db -> insert_batch('redistribution_data', $data_array_redistribution_table);
@@ -374,8 +360,13 @@ class issues extends MY_Controller {
 
 		endfor;
 				$user = $this -> session -> userdata('user_id');
-				 $user_action = "redistribute";
-				 Log::log_user_action($user, $user_action);
+				$user_action = "redistribute";
+				//updates the log table accordingly based on the action carried out by the user involved
+				$update = Doctrine_Manager::getInstance()->getCurrentConnection();
+				$update -> execute("update log set $user_action = 1  
+				where `user_id`= $user 
+				AND action = 'Logged In' 
+				and UNIX_TIMESTAMP( `end_time_of_event`) = 0");
 		         $this->db->insert_batch('facility_issues', $data_array_issues_table); 
 				 $this->db->insert_batch('redistribution_data', $data_array_redistribution_table); 
 		         $this->session->set_flashdata('system_success_message', "You have issued $total_items item(s)");
@@ -467,7 +458,12 @@ class issues extends MY_Controller {
 
 			$user = $this -> session -> userdata('user_id');
 			$user_action = "redistribute";
-			Log::log_user_action($user, $user_action);
+			//updates the log table accordingly based on the action carried out by the user involved
+			$update = Doctrine_Manager::getInstance()->getCurrentConnection();
+			$update -> execute("update log set $user_action = 1  
+			where `user_id`= $user 
+			AND action = 'Logged In' 
+			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");
 			
 			// $this -> db -> insert_batch('facility_issues', $data_array_issues_table);
 			$this -> db -> insert_batch('redistribution_data', $data_array_redistribution_table);
@@ -549,7 +545,12 @@ class issues extends MY_Controller {
 
 			$user = $this -> session -> userdata('user_id');
 			$user_action = "redistribute";
-			Log::log_user_action($user, $user_action);
+			//updates the log table accordingly based on the action carried out by the user involved
+			$update = Doctrine_Manager::getInstance()->getCurrentConnection();
+			$update -> execute("update log set $user_action = 1  
+			where `user_id`= $user 
+			AND action = 'Logged In' 
+			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");
 			
 			$this -> db -> insert_batch('facility_issues', $data_array_issues_table);
 			$this -> db -> insert_batch('redistribution_data', $data_array_redistribution_table);
@@ -619,6 +620,14 @@ class issues extends MY_Controller {
 			//$user = $this -> session -> userdata('user_id');
 			//$user_action = "issue";
 			//Log::log_user_action($user, $user_action);
+			$user = $this -> session -> userdata('user_id');
+			$user_action = "issued";
+			//updates the log table accordingly based on the action carried out by the user involved
+			$update = Doctrine_Manager::getInstance()->getCurrentConnection();
+			$update -> execute("update log set $user_action = 1  
+			where `user_id`= $user 
+			AND action = 'Logged In' 
+			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");
 			$this -> session -> set_flashdata('system_success_message', "You have issued $total_items item(s)");
 			redirect(home);
 		endif;
@@ -646,7 +655,10 @@ class issues extends MY_Controller {
 			//var_dump($total_units);exit;
 			$data_array_issues_table = array();
 			$data_array_redistribution_table = array();
-			for ($i = 0; $i < $total_items; $i++) ://compute the actual stock
+			
+			//loops through the data collected from the forms first
+			for ($i = 0; $i < $total_items; $i++) :
+				//compute the actual stock
 
 				$total_items_issues = ($commodity_unit_of_issue[$i] == 'Pack_Size') ? $quantity_issued[$i] * $total_units[$i] : $quantity_issued[$i];
 
@@ -669,9 +681,19 @@ class issues extends MY_Controller {
 			`closing_stock`=`closing_stock`-$total_items_issues
             WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");
 			endfor;
+			
 			$user = $this -> session -> userdata('user_id');
 			$user_action = "redistribute";
-			Log::log_user_action($user, $user_action);
+			//updates the log table accordingly based on the action carried out by the user involved
+			$update = Doctrine_Manager::getInstance()->getCurrentConnection();
+			$update -> execute("update log set $user_action = 1  
+			where `user_id`= $user 
+			AND action = 'Logged In' 
+			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");
+			
+			$send_sms = $this->hcmp_functions ->system_texts($user_action);
+			
+			
 			
 			$this -> db -> insert_batch('facility_issues', $data_array_issues_table);
 			$this -> db -> insert_batch('redistribution_data', $data_array_redistribution_table);

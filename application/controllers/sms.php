@@ -87,7 +87,7 @@ class sms extends MY_Controller {
 	public function check_system_usage() {
 		//get the counties using HCMP
 		$counties = Facilities::get_counties_all_using_HCMP();
-		
+		//echo "<pre>";print_r($counties);exit;
 		foreach ($counties as $counties) :
 			//pick the county nae and county ID accordingly
 			//counts the number of facilities not using the system
@@ -99,8 +99,6 @@ class sms extends MY_Controller {
 			//Get all the districts in that  particular county
 			$districts = Facilities::get_all_using_HCMP($county_id);
 			
-			
-
 			foreach ($districts as $districts) :
 				$count_district = 0;
 				$district_id = $districts['district'];

@@ -506,6 +506,14 @@ class orders extends MY_Controller {
 				}
 
 			endif;
+			$user = $this -> session -> userdata('user_id');
+			$user_action = "ordered";
+			//updates the log table accordingly based on the action carried out by the user involved
+			$update = Doctrine_Manager::getInstance()->getCurrentConnection();
+			$update -> execute("update log set $user_action = 1  
+			where `user_id`= $user 
+			AND action = 'Logged In' 
+			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");
 			// $user = $this -> session -> userdata('user_id');
 			// $user_action = "order";
 
@@ -619,10 +627,15 @@ class orders extends MY_Controller {
 				}
 
 			endif;
+			//updates the log tables with the action
 			$user = $this -> session -> userdata('user_id');
-			$user_action = "order";
-
-			Log::log_user_action($user, $user_action);
+			$user_action = "ordered";
+			//updates the log table accordingly based on the action carried out by the user involved
+			$update = Doctrine_Manager::getInstance()->getCurrentConnection();
+			$update -> execute("update log set $user_action = 1  
+			where `user_id`= $user 
+			AND action = 'Logged In' 
+			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");
 
 			//$this -> hcmp_functions -> send_order_sms();
 
