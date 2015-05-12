@@ -68,7 +68,7 @@ class User extends MY_Controller {
             $district_name = districts::get_district_name_($district_id);
 			$county_name = Counties::get_county_name($county_id);
             $banner_name = $county_name['county']." County".", ".$district_name['district']." Sub-county ";
-            $facility_no = Facilities::get_district_facilities($district_id);
+            $facility_no = Facilities::get_district_facilities_using_hcmp($district_id);
             $facility_count = "Total Facilities Using HCMP in ".$district_name['district']." Subcounty: ".count($facility_no);
 
             elseif ($user_indicator  == 'county') : 

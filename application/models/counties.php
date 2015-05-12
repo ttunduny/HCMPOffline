@@ -180,11 +180,11 @@ $and_data");
 	}
 
 	public function get_facilities_in_county($county_id = NULL){//Seth
-		$filter = isset($county_id)? "WHERE d.county = $county_id" :NULL ;
+		$filter = isset($county_id)? "AND d.county = $county_id" :NULL ;
 		$query=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		SELECT f.id,f.facility_code,f.district,d.district,d.county,d.id AS district_id 
 		FROM facilities f LEFT JOIN districts d
-		ON d.id = f.district $filter
+		ON d.id = f.district WHERE f.using_hcmp=1 $filter
 					");
 	
 		return $query;

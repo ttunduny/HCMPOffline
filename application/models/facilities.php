@@ -154,6 +154,14 @@ class Facilities extends Doctrine_Record {
 			WHERE district =$district");
 		return $q;	
 	}
+
+	public static function get_district_facilities_using_hcmp($district)
+	{
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT (facility_code)
+			FROM  `facilities` 
+			WHERE district =$district AND using_hcmp = 1");
+		return $q;	
+	}
 	// getting facilities which are using the system
 	public static function get_facilities_which_are_online($county_id)
 	{
