@@ -11,8 +11,8 @@
 	}
  </style>
  <?php  $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order',$att); 
- //echo "<pre>"; print_r($facility_order);echo "<pre>";exit;?>
  
+ ?>
  <div class="container-fluid">
  <div style="width: 100%; margin: auto;">
 
