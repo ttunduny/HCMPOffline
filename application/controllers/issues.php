@@ -689,7 +689,7 @@ class issues extends MY_Controller {
 			AND action = 'Logged In' 
 			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");
 			
-			$send_sms = $this->hcmp_functions ->system_texts($user_action);
+			$send_sms = $this->hcmp_functions ->send_system_text($user_action);
 			
 			
 			

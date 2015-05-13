@@ -49,10 +49,10 @@ $active_group = 'default';
 $active_record = TRUE;
 
 
-$db['default']['hostname'] = '192.168.133.22';
+$db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'root';
-$db['default']['password'] = 'hplab';
-$db['default']['database'] = 'hcmp_test';
+$db['default']['password'] = '';
+$db['default']['database'] = 'hcmp_rtk';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;

@@ -14,6 +14,156 @@ class Hcmp_functions extends MY_Controller {
 		$this -> load -> library(array('PHPExcel/PHPExcel','mpdf/mpdf'));
 
 	}
+		//responsible for sending system wide smses to the users for various actions
+		public function send_system_text($action)
+		{
+			switch($action):
+				case "redistribute";
+				
+				//Facility Section of the message
+				
+				//pick the details from the session
+				$facility_name = $this -> session -> userdata('full_name');
+	   			$facility_code=$this -> session -> userdata('facility_id');;
+	   			
+	   			//pick the phone numbers for that facility
+	   			$data = Users::getUsers($facility_code)->toArray();
+				
+				//get facility phone numbers
+				$facility_phone = $this -> get_facility_phone_numbers($facility_code);
+				//facility message
+				$facility_message = "Dear $facility_name user, \n commodities have been redistributed to another facility. \n Log in to health-cmp.or.ke to follow up. HCMP";
+				//url encode the message
+				$message = urlencode($facility_message);
+				
+				//clean the phone numbers
+				$phone_numbers = explode("+", $facility_phone);
+				//send the message here
+				foreach ($phone_numbers as $key => $user_no) 
+				{
+					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//echo "Sent to ".$user_no;
+					
+				}
+				/*End the facility Section of the functions*/
+				
+				/*Start the Sub County Section of the Message*/
+				//pick the user data
+				$user_data = Users::get_scp_details($data[0]['district']);
+				
+				//loop through the each of the numbers of the users
+				foreach ($user_data as $data) :
+					//pick the name
+					$name_sub_county = $data['fname'] . " " . $data['lname'];
+					//message to be sent out to the sub county guys
+					$message = "Dear $name_sub_county, $district_name Sub County Pharmacist,\n $facility_name has redistributed commodities from its Store.\n Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
+					$message = urlencode($message);
+					
+					$user_no = $data['telephone'];
+					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+				endforeach;
+
+				break;
+				
+				//texts sent when an order is sent
+				case "ordered";
+				
+				//Facility Section of the message
+				
+				//pick the details from the session
+				$facility_name = $this -> session -> userdata('full_name');
+	   			$facility_code=$this -> session -> userdata('facility_id');;
+	   			
+	   			//pick the phone numbers for that facility
+	   			$data = Users::getUsers($facility_code)->toArray();
+				
+				//get facility phone numbers
+				$facility_phone = $this -> get_facility_phone_numbers($facility_code);
+				//facility message
+				$facility_message = "Dear $facility_name user, \n an order has been placed. \n Log in to health-cmp.or.ke to follow up. HCMP";
+				//url encode the message
+				$message = urlencode($facility_message);
+				
+				//clean the phone numbers
+				$phone_numbers = explode("+", $facility_phone);
+				//send the message here
+				foreach ($phone_numbers as $key => $user_no) 
+				{
+					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//echo "Sent to ".$user_no;
+					
+				}
+				/*End the facility Section of the functions*/
+				
+				/*Start the Sub County Section of the Message*/
+				//pick the user data
+				$user_data = Users::get_scp_details($data[0]['district']);
+				
+				//loop through the each of the numbers of the users
+				foreach ($user_data as $data) :
+					//pick the name
+					$name_sub_county = $data['fname'] . " " . $data['lname'];
+					//message to be sent out to the sub county guys
+					$message = "Dear $name_sub_county, $district_name Sub County Pharmacist,\n $facility_name has placed an order.\n Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
+					$message = urlencode($message);
+					
+					$user_no = $data['telephone'];
+					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+				endforeach;
+				break;
+				
+				case "decommissioned";
+				
+				//Facility Section of the message
+				
+				//pick the details from the session
+				$facility_name = $this -> session -> userdata('full_name');
+	   			$facility_code=$this -> session -> userdata('facility_id');;
+	   			
+	   			//pick the phone numbers for that facility
+	   			$data = Users::getUsers($facility_code)->toArray();
+				
+				//get facility phone numbers
+				$facility_phone = $this -> get_facility_phone_numbers($facility_code);
+				//facility message
+				$facility_message = "Dear $facility_name user, \n commodities have been decommissioned from the Store.\n Log in to health-cmp.or.ke to follow up. HCMP";
+				//url encode the message
+				$message = urlencode($facility_message);
+				
+				//clean the phone numbers
+				$phone_numbers = explode("+", $facility_phone);
+				//send the message here
+				foreach ($phone_numbers as $key => $user_no) 
+				{
+					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//echo "Sent to ".$user_no;
+					
+				}
+				/*End the facility Section of the functions*/
+				
+				/*Start the Sub County Section of the Message*/
+				//pick the user data
+				$user_data = Users::get_scp_details($data[0]['district']);
+				
+				//loop through the each of the numbers of the users
+				foreach ($user_data as $data) :
+					//pick the name
+					$name_sub_county = $data['fname'] . " " . $data['lname'];
+					//message to be sent out to the sub county guys
+					$message = "Dear $name_sub_county, $district_name Sub County Pharmacist,\n $facility_name has decommissioned commodities from its store.\n Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
+					$message = urlencode($message);
+					
+					$user_no = $data['telephone'];
+					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+				endforeach;
+				break;
+				
+				
+			endswitch;
+				
+			
+			
+		}
 public function send_stock_update_sms(){
        $facility_name = $this -> session -> userdata('full_name');
 	   $facility_code=$this -> session -> userdata('facility_id');;
@@ -264,7 +414,7 @@ echo '<pre>'; print_r($phone_numbers);echo '<pre>';
 		echo "Success sent to ".$user_no.'<br>';
 	}
 	
-	exit;
+	//exit;
 	 		
 	}
 /*****************************************Email function for HCMP, all the deafult email addresses and email content have been set ***************/
