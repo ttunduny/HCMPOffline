@@ -139,7 +139,7 @@ border-color: #e7e7e7;
         <div class="collapse navbar-collapse navbar-right">
           <ul class="nav navbar-nav navbar-right">
             <li class="active"><a href="<?php echo base_url().'national';?>">Home</a></li>
-            <li class=""><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>
+            <!--<li class=""><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>-->
             <li class=""><a href="<?php echo base_url().'national/search';?>">Search</a></li>
             <li class="dropdown" style="background: #144d6e; color: white;">
      		<a href="#" class="dropdown-toggle" style="color:white" data-toggle="dropdown" role="button" aria-expanded="false">Log In <span class="caret"></span></a>
