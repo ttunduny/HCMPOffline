@@ -15,8 +15,9 @@
       	<table id="pending" class="table table-hover table-bordered table-update" style="width: 100%">
       		<thead style="background-color: white">
 							<tr style="">
-								<th>From</th>
-								<th>To </th>
+								<th>Facility From (Sub County)</th>
+								<th>Receiver Facility </th>
+								<th>Receiver Sub County</th>
 								<th>Commodity Name</th>
 								<th>Unit Size</th>
 								<th>Batch No</th>
@@ -33,7 +34,7 @@
 							<?php 
 							foreach ($donations as $key => $values) {
 								//print_r( $value);
-								if ($values['status'] == 0 && $values['receiver_facility_name']!='') {
+								if ($values['status'] == 0) {
 									$total_units = $values['total_commodity_units'];
 									$sent_units = $values['quantity_sent'];
 									$received_units = $values['quantity_received'];
@@ -42,8 +43,9 @@
 									$date_received = strtotime($values['date_received']) ? date('d M, Y', strtotime($values['date_received'])) : "N/A";
 									?>
 								<tr class="" style="">
-								<td class="" ><?php echo $values['source_facility_name']; ?></td>
+								<td class="" ><?php echo $values['source_facility_name'].' ('.$values['source_district'].')'; ?></td>
 								<td class="" ><?php echo $values['receiver_facility_name']; ?></td>
+								<td class="" ><?php echo $values['receiver_district']=="" ? $values['source_district'] :$values['receiver_district']; ?></td>
 								<td class="" ><?php echo $values['commodity_name']; ?></td>
 								<td class="" ><?php echo $values['unit_size']; ?></td>
 								<td class="" ><?php echo $values['batch_no']; ?></td>
@@ -85,8 +87,8 @@
       	<table id="delivered" class="row-fluid table table-hover table-bordered table-update">
       		<thead style="background-color: white">
 							<tr style="">
-								<th>From</th>
-								<th>To </th>
+								<th>Facility From (Sub County)</th>
+								<th>Receiver Facility (Sub County)</th>
 								<th>Commodity Name</th>
 								<th>Unit Size</th>
 								<th>Batch No</th>
@@ -103,7 +105,7 @@
 							<?php 
 							foreach ($donations as $key => $value) {
 								//print_r( $value);
-								if ($value['status'] == 1) {
+								if ($value['status'] == 1 ) {
 									$total_units = $value['total_commodity_units'];
 									$sent_units = $value['quantity_sent'];
 									$received_units = $value['quantity_received'];
@@ -112,8 +114,8 @@
 									$date_received = strtotime($value['date_received']) ? date('d M, Y', strtotime($value['date_received'])) : "N/A";
 									?>
 								<tr class="" style="">
-								<td class="" ><?php echo $value['source_facility_name']; ?></td>
-								<td class="" ><?php echo $value['receiver_facility_name']; ?></td>
+								<td class="" ><?php echo $value['source_facility_name'].' ('.$value['source_district'].')'; ?></td>
+								<td class="" ><?php echo $value['receiver_facility_name'].' ('.$value['receiver_district'].')'; ?></td>
 								<td class="" ><?php echo $value['commodity_name']; ?></td>
 								<td class="" ><?php echo $value['unit_size']; ?></td>
 								<td class="" ><?php echo $value['batch_no']; ?></td>
@@ -154,8 +156,8 @@
       	<table id="districtstore" class="table table-hover table-bordered table-update" style="width: 100%">
       		<thead style="background-color: white">
 							<tr style="">
-								<th>From</th>
-								<th>To </th>
+								<th>Facility From (Sub County)</th>
+								<th>Receiver Facility (Sub County)</th>
 								<th>Commodity Name</th>
 								<th>Unit Size</th>
 								<th>Batch No</th>
@@ -172,7 +174,7 @@
 							<?php 
 							foreach ($donations as $key => $val) {
 								//print_r( $value);
-								if ($val['status'] == 0 && $val['receiver_facility_name']=='') {
+								if ($val['receiver_facility_code']=='2') {
 									$total_units = $val['total_commodity_units'];
 									$sent_units = $val['quantity_sent'];
 									$received_units = $val['quantity_received'];
@@ -181,7 +183,7 @@
 									$date_received = strtotime($val['date_received']) ? date('d M, Y', strtotime($val['date_received'])) : "N/A";
 									?>
 								<tr class="" style="">
-								<td class="" ><?php echo $val['source_facility_name']; ?></td>
+								<td class="" ><?php echo $val['source_facility_name'].' ('.$val['source_district'].')'; ?></td>
 								<td class="" >District Store</td>
 								<td class="" ><?php echo $val['commodity_name']; ?></td>
 								<td class="" ><?php echo $val['unit_size']; ?></td>
