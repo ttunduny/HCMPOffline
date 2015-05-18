@@ -3186,7 +3186,7 @@ class Reports extends MY_Controller {
 		$data['county_dashboard_notifications'] = array('items_stocked_out_in_facility' => $items_stocked_out_in_facility, 'facility_order_count' => $facility_order_count, 'potential_expiries' => $potential_expiries, 'actual_expiries' => $actual_expiries, 'facility_donations' => $facility_donations, 'facility_roll_out_status' => $facility_roll_out_status);
 		return $this -> load -> view("subcounty/ajax/county_notification_v", $data);
 	}
-	//for breakdown monitoring of facility use of the tool
+	//creates the report for the system usage breakdown.
 	public function monitoring() {
 		//pick values form the session
 		$facility_code = (!$this -> session -> userdata('facility_id')) ? null : $this -> session -> userdata('facility_id');
@@ -3200,13 +3200,15 @@ class Reports extends MY_Controller {
 		$facility_data = Facilities::facility_monitoring($county_id, $district_id, $facility_code);
 		
 		$row_data = array();
-		foreach ($facility_data as $facility) {
+		foreach ($facility_data as $facility) :
+			
 			$issue_date = ($facility['Date Last Issued']!=0) ? date('j M, Y', strtotime($facility['Date Last Issued'])) : "N/A";
 			$last_seen = ($facility['Date Last Seen']!=0) ? date('j M, Y', strtotime($facility['Date Last Seen'])) : "N/A";
 			$redistribution = ($facility['Date Last Redistributed']!=0) ? date('j M, Y', strtotime($facility['Date Last Redistributed'])) : "N/A";
 			$order_date = ($facility['Date Last Ordered']!=0) ? date('j M, Y', strtotime($facility['Date Last Ordered'])) : "N/A";
 			$decommission_date = ($facility['Date Last Decommissioned']!=0) ? date('j M, Y', strtotime($facility['Date Last Decommissioned'])) : "N/A";
 			$date_order = ($facility['Date Last Received Order']!=0) ? date('j M, Y', strtotime($facility['Date Last Received Order'])) : "N/A";
+			
 			array_push($row_data, array($facility['Facility Name'], 
 										$facility['Facility Code'], 
 										$facility['County'], 
@@ -3224,7 +3226,8 @@ class Reports extends MY_Controller {
 										$date_order, 
 										$facility['Days From Last Received Order']));
 		
-		}
+		endforeach;
+		
 		$excel_data = array();
 		$excel_data = array('doc_creator' => 'HCMP ', 'doc_title' => 'System Usage Breakdown ', 'file_name' => 'system usage breakdown');
 		//$column_data = array("First Name", "Last Name", "date last seen", "# of days", "date last issued", "# of days", "Sub County", "facility name", "mfl");
