@@ -71,16 +71,6 @@ $district_id_active =  $this -> session -> userdata('district_id');
  </style>
  <div class="row-fluid" style="margin-bottom: 5px">
 			
-    <?php if($county_dashboard_notifications['facility_donations']>0): ?>
- 		 <a href="<?php echo base_url('reports/county_donation/')?>">
- 					<div class="color_e stat_item <?php echo $class; ?>">
-						<span class="bold"><?php 
-				echo $county_dashboard_notifications['facility_donations'];?></span>
-                  	 <br/>
-                  	 <span id="">Items have been donated</span>
-                            
-                   </div></a>
-		  <?php endif; // Potential Expiries?>
          <?php if($county_dashboard_notifications['actual_expiries']>0): ?>
          	
          	<a href="<?php echo base_url('reports/county_expiries/')?>">
@@ -93,6 +83,18 @@ $district_id_active =  $this -> session -> userdata('district_id');
                    </div></a>
       
          <?php endif; // Actual Expiries?>
+         <?php if($county_dashboard_notifications['items_stocked_out_in_facility']>0): ?>
+         	
+         	<a href="<?php echo base_url('reports/stock_out/')?>">
+ 					<div class="color_e stat_item <?php echo $class; ?>">
+						<span class="bold"><?php 
+				echo $county_dashboard_notifications['items_stocked_out_in_facility'];?></span>
+                  	<br/>
+                  	 <span id="">Facilities have stock outs</span>
+                            
+                   </div></a>
+         	
+        <?php endif; // items_stocked_out_in_facility?>
           <?php if($county_dashboard_notifications['potential_expiries']>0): ?>
           	
           	<a href="<?php echo base_url('reports/county_expiries/')?>">
@@ -106,18 +108,6 @@ $district_id_active =  $this -> session -> userdata('district_id');
           	
       	
 		  <?php endif; // Potential Expiries?>
-         <?php if($county_dashboard_notifications['items_stocked_out_in_facility']>0): ?>
-         	
-         	<a href="<?php echo base_url('reports/stock_out/')?>">
- 					<div class="color_e stat_item <?php echo $class; ?>">
-						<span class="bold"><?php 
-				echo $county_dashboard_notifications['items_stocked_out_in_facility'];?></span>
-                  	<br/>
-                  	 <span id="">Facilities have stock outs</span>
-                            
-                   </div></a>
-         	
-        <?php endif; // items_stocked_out_in_facility?>
         <?php if(array_key_exists('pending', $county_dashboard_notifications['facility_order_count']) 
         && @$county_dashboard_notifications['facility_order_count']['pending']>0): ?>
         
@@ -130,22 +120,8 @@ $district_id_active =  $this -> session -> userdata('district_id');
                             
                    </div></a>
       	
-        <?php endif; //pending
-         if(array_key_exists('rejected', $county_dashboard_notifications['facility_order_count']) 
-         && @$county_dashboard_notifications['facility_order_count']['rejected']>0): ?>
-         
-         <a href="<?php echo $link ?>">
- 					<div class="color_e stat_item <?php echo $class; ?>">
-						<span class="bold"><?php 
-				echo $county_dashboard_notifications['facility_order_count']['rejected'];?></span>
-                  	<br/>
-                  	 <span id="">Order(s) rejected</span>
-                            
-                   </div></a>
-         
-        
-        <?php endif; //rejected
-        if(array_key_exists('approved', $county_dashboard_notifications['facility_order_count'])
+        <?php endif; //pending?>
+        <?php if(array_key_exists('approved', $county_dashboard_notifications['facility_order_count'])
 		 && @$county_dashboard_notifications['facility_order_count']['approved']>0): ?>
 		 
 		  <a href="<?php echo $link ?>">
@@ -158,6 +134,30 @@ $district_id_active =  $this -> session -> userdata('district_id');
                    </div></a>
 		 
          <?php endif; //approved?>
+        <?php if(array_key_exists('rejected', $county_dashboard_notifications['facility_order_count']) 
+         && @$county_dashboard_notifications['facility_order_count']['rejected']>0): ?>
+         
+         <a href="<?php echo $link ?>">
+ 					<div class="color_e stat_item <?php echo $class; ?>">
+						<span class="bold"><?php 
+				echo $county_dashboard_notifications['facility_order_count']['rejected'];?></span>
+                  	<br/>
+                  	 <span id="">Order(s) rejected</span>
+                            
+                   </div></a>
+         
+        
+        <?php endif; //rejected?>
+    <?php if($county_dashboard_notifications['facility_donations']>0): ?>
+ 		 <a href="<?php echo base_url('reports/county_donation/')?>">
+ 					<div class="color_e stat_item <?php echo $class; ?>">
+						<span class="bold"><?php 
+				echo $county_dashboard_notifications['facility_donations'];?></span>
+                  	 <br/>
+                  	 <span id="">Items have been donated</span>
+                            
+                   </div></a>
+		  <?php endif; // Donated Items?>
            
 </div>
 <div class="alert alert-info" style="width: 100%">

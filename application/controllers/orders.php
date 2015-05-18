@@ -174,39 +174,40 @@ class orders extends MY_Controller {
 
 		header('Content-Type: text/html; charset=UTF-8');
 		//pick the facility code from the session as it is set
-
 		$facility_code = $this -> session -> userdata('facility_id');
+
 		$amc_calc = $this -> amc($county, $district, $facility_code);
 		//echo '<pre>'; print_r($amc_calc);echo '<pre>'; exit;
 		$items = ((isset($source)) && ($source = 2)) ? Facility_Transaction_Table::get_commodities_for_ordering_meds($facility_code) : Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
 		//echo '<pre>';print_r($items); echo '</pre>';
-		//echo 'string'; echo 'strung';exit;
+		
 		if (isset($_FILES['file']) && $_FILES['file']['size'] > 0) {
 			$ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
-			//echo $ext;
+			//echo $ext;exit;
+//echo $_FILES["file"]["tmp_name"];exit;
 			if ($ext == 'xls') {
 				$excel2 = PHPExcel_IOFactory::createReader('Excel5');
 			} else if ($ext == 'xlsx') {
 				$excel2 = PHPExcel_IOFactory::createReader('Excel2007');
 			} else {
-				die('Invalid file format given' . $_FILES['file']);
+		        	die('Invalid file format given' . $_FILES['file']);
 			}
 
-			$excel2 = $objPHPExcel = $excel2 -> load($_FILES["file"]["tmp_name"]);
+			 $excel2 = $objPHPExcel = $excel2 -> load($_FILES["file"]["tmp_name"]);
 			// Empty Sheet
 
-			$sheet = $objPHPExcel -> getSheet(0);
+                	$sheet = $objPHPExcel -> getSheet(0);
 			$highestRow = $sheet -> getHighestRow();
 
 			$highestColumn = $sheet -> getHighestColumn();
 			$temp = array();
 			if ($sheet -> getCell('H4') -> getValue() != '') {
-				$facility_code = $sheet -> getCell('H4') -> getValue();
+			echo	$facility_code = $sheet -> getCell('H4') -> getValue();exit;
 			} else {
 				$facility_code = $sheet -> getCell('J4') -> getValue();
 			}
 
-			$checker = $sheet -> getCell('E17') -> getValue();
+			 $checker = $sheet -> getCell('E17') -> getValue();
 
 			//  Loop through each row of the worksheet in turn
 			$array_code = array();
@@ -216,7 +217,7 @@ class orders extends MY_Controller {
 			$array_price = array();
 			$array_order_qty = array();
 			$array_order_val = array();
-			$array_index = array();
+
 			//$array_code=array();
 			for ($row = 17; $row <= $highestRow; $row++) {
 				//  Read a row of data into an array
@@ -245,28 +246,16 @@ class orders extends MY_Controller {
 				$array_order_val[] = $rowData[0][8];
 				$array_pack[] = $rowData[0][5];
 
-				//if(isset($rowData[0][2]) && $rowData[0][2]!='Product Code'){
-				//echo '<pre>';print_r($rowData[0][7]); echo '</pre>';
-				//foreach($items as $key=> $data){
-				//echo '<pre>';print_r($rowData); echo '</pre>';
 
-				//}
-				//}
+			}
 
-			}//exit;
-
-			//echo '<pre>';print_r($array_price); echo '</pre>';exit;
 			foreach ($array_order_qty as $id => $key) {
-				//echo '<pre>';print_r($array_commodity[$id].'.'.$array_code[$id]); echo '</pre>';//exit;
 
-				//foreach($items as $key=> $data){
 				array_push($temp, array('sub_category_name' => $array_category[$id], 'commodity_name' => $array_commodity[$id], 'unit_size' => $array_pack[$id], 'unit_cost' => ($array_price[$id] == '') ? 0 : (float)$array_price[$id], 'commodity_code' => preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $array_code[$id]), 'commodity_id' => $data['commodity_id'], 'quantity_ordered' => ($array_order_qty[$id] == '') ? 0 : (int)$array_order_qty[$id], 'total_commodity_units' => 0, 'opening_balance' => 0, 'total_receipts' => 0, 'total_issues' => 0, 'comment' => '', 'closing_stock_' => 0, 'closing_stock' => 0, 'days_out_of_stock' => 0, 'date_added' => '', 'losses' => 0, 'status' => 0, 'adjustmentpve' => 0, 'adjustmentnve' => 0, 'historical' => 0));
-				//unset($items[$key]);
-				/// }
 
-			}//exit;
+			}
 			foreach ($temp as $key => $value) {
-				//echo '<pre>';print_r($value['commodity_code']); echo '</pre>';
+				
 				if ($value['commodity_code'] == "" || $value['quantity_ordered'] == 0) {
 					unset($temp[$key]);
 				}
@@ -278,10 +267,10 @@ class orders extends MY_Controller {
 			foreach ($temp as $keys) {
 
 				$kemsa = $keys['commodity_code'];
-				//echo strlen($kemsa).'-';
+				
 				$kemsa = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $kemsa);
 				$unit_cost = $keys['unit_cost'];
-				//$kemsa = preg_replace('/\s+/', '', $kemsa);
+				
 
 				$get_id = Commodities::get_id($kemsa, $unit_cost);
 
@@ -469,8 +458,8 @@ class orders extends MY_Controller {
 				$facility_name = $myobj -> facility_name;
 				// get the order form details here
 				//create the pdf here
-				echo "Its ait this far";
-				exit ;
+				//echo "Its ait this far";
+				//exit ;
 				$pdf_body = $this -> create_order_pdf_template($new_order_no);
 				$file_name = $facility_name . '_facility_order_no_' . $new_order_no . "_date_created_" . date('d-m-y');
 				$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
@@ -505,16 +494,18 @@ class orders extends MY_Controller {
 				}
 
 			endif;
-			// $user = $this -> session -> userdata('user_id');
-			// $user_action = "order";
-
-			// 	Log::log_user_action($user, $user_action);
-
-			// $this -> hcmp_functions -> send_order_sms();
+			$user = $this -> session -> userdata('user_id');
+			$user_action = "ordered";
+			//updates the log table accordingly based on the action carried out by the user involved
+			$update = Doctrine_Manager::getInstance()->getCurrentConnection();
+			$update -> execute("update log set $user_action = 1  
+			where `user_id`= $user 
+			AND action = 'Logged In' 
+			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");
+			
 
 			$this -> session -> set_flashdata('system_success_message', "Facility Meds Order has Been Saved");
 			redirect("home");
-		// redirect("reports/order_listing/$order_listing");
 		endif;
 	}//facility meds order terminado
 
@@ -561,9 +552,7 @@ class orders extends MY_Controller {
 				//create the array to push to the db
 				array_push($data_array, $temp_array);
 
-			}// insert the data here
-			//echo "<pre>";print_r($data_array);echo "</pre>";exit;
-			//exit;
+			}
 			$this -> db -> insert_batch('facility_order_details', $data_array);
 			if ($this -> session -> userdata('user_indicator') == 'district') :
 				$order_listing = 'subcounty';
@@ -618,10 +607,15 @@ class orders extends MY_Controller {
 				}
 
 			endif;
+			//updates the log tables with the action
 			$user = $this -> session -> userdata('user_id');
-			$user_action = "order";
-
-			Log::log_user_action($user, $user_action);
+			$user_action = "ordered";
+			//updates the log table accordingly based on the action carried out by the user involved
+			$update = Doctrine_Manager::getInstance()->getCurrentConnection();
+			$update -> execute("update log set $user_action = 1  
+			where `user_id`= $user 
+			AND action = 'Logged In' 
+			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");
 
 			//$this -> hcmp_functions -> send_order_sms();
 

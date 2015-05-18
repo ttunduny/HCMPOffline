@@ -153,7 +153,7 @@
             <h5>Place an Order</h5>
         </div>
          <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
-            <a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>MEDS online</h5></a>
+            <!--<a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>MEDS online</h5></a>-->
             <a href="<?php echo base_url('reports/facility_transaction_data/1'); ?>"><h5>KEMSA online</h5></a>
             <a href="" class="order-for-excel"><h5>KEMSA via excel</h5></a>
             
@@ -181,9 +181,26 @@
     </div>
 	</div>
    <div class="col-md-8">
+   <div class="custom-well" >
+     <p style="font-size:11px; text-align:center;"><span class="glyphicon glyphicon-log-in"></span> <strong>Last Login:</strong> <?php echo $lastlogin; ?> |
+   <span class="glyphicon glyphicon-transfer"></span> <strong>Last Order:</strong> <?php 
+   if(isset($no_order)){
+    echo $no_order;
+    } else{
+      echo '<a href="#myOrders" data-toggle="modal" data-target="#myOrders">'.$lastorder.'</a>';
+    }
+    ?> | <span class="glyphicon glyphicon-share-alt"></span> <strong>Last Issue:</strong> <?php 
+   if(isset($no_issue)){
+    echo $no_issue;
+    } else{
+      echo '<a href="#myOrders" data-toggle="modal" data-target="#myIssues">'.$last_issue.'</a>';
+    }
+    ?>
+          </p>
+   </div>
     <div class="panel panel-success">
       <div class="panel-heading">
-        <h3 class="panel-title">Graph <span class="glyphicon glyphicon-stats" style=""></span><span class="glyphicon glyphicon-align-left" style="margin-left: 1%"></span></h3>
+        <h3 class="panel-title">Graphs <span class="glyphicon glyphicon-stats" style=""></span><span class="glyphicon glyphicon-align-left" style="margin-left: 1%"></span></h3>
       </div>
       <div class="panel-body" style="overflow-y: auto">
         <div style="/*border: 1px solid #036;*/ ;" id="container"></div>

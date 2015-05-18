@@ -101,11 +101,13 @@ class Log extends Doctrine_Record {
 			break;
 			
 			endswitch;
+			
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->execute("
 			update log set $action  
 			where `user_id`= $user_id 
 			AND action = 'Logged In' 
 			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");	
+		
 		 
 	}
 	public static function get_log_data($facility_code = null,$district_id = null,$county_id = null, $year = null, $month = null)

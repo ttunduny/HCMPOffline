@@ -660,6 +660,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 				$category_data = array_merge($category_data, array($data["drug_name"]));
 			endforeach;
 
+			// echo "<pre>";print_r($commodity_array);echo "</pre>";exit;
 			$graph_type = 'bar';
 
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_mos'));
@@ -693,6 +694,7 @@ INNER JOIN counties ct ON  sc.county=ct.id
 $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 		
 		");
+
 		
 		echo'<table><tr>
 					<th>County</th>

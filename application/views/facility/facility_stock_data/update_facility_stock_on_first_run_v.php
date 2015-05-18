@@ -159,13 +159,7 @@
 		   <!--   <button type="button" class="importing btn btn-sm btn-success">-->
     <div style="float: right">
         <?php if(!isset($import)): ?>
-        <!--<a href="<?php echo base_url('reports/create_excel_facility_stock_template') ?>" >
-       <!-- <button type="button" class="btn btn-primary">
-            <span class="glyphicon glyphicon-save"></span>download excel template
-        </button> </a>
-        <button type="button" class="btn btn-success update-via-excel">
-            <span class="glyphicon glyphicon-open"></span>upload
-        </button>-->
+    
         <button type="button" class="save btn btn-sm btn-success">
             <span class="glyphicon glyphicon-open"></span>Save
         </button>

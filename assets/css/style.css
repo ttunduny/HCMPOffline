@@ -442,3 +442,25 @@ input:focus { border: 1px dotted black; }
 input.error { border: 1px dotted red; }
 form.gray * { color: gray; }
 
+/*edit user modal additional styling*/
+.input-group .input-group-addon {
+	border-radius: 0;
+	background-color: #f4f4f4;
+	}
+.sponsor{
+	width: 40%!important;
+}
+.u_mgt{
+	width: 90%;
+}
+
+/*facility user notifications*/
+.custom-well{
+	min-height: 20px;
+	padding: 12px;
+	margin-bottom: 20px;
+	background-color: #d9edf7;
+	border: 1px solid #e3e3e3;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+}
