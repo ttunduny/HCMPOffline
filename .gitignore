@@ -15,6 +15,4 @@ application/config/database.php
 .htaccess
 MEDS Customer Order Form.xls
 MEDS Customer Order Form.xlsx
-
-system/libraries/Hcmp_functions.php
 *.xls
