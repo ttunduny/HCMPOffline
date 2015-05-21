@@ -375,6 +375,8 @@ class Stock extends MY_Controller {
 			where `user_id`= $user 
 			AND action = 'Logged In' 
 			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");
+			//send a text message to the facility admin and sub county pharmacist
+			$this-> hcmp_functions -> send_system_texts($user_action);
 			$this -> db -> insert_batch('facility_issues', $data_array_facility_issues);
 			//delete the record from the db
 			facility_stocks_temp::delete_facility_temp(null, null, $facility_code);

@@ -3211,8 +3211,8 @@ class Reports extends MY_Controller {
 			
 			array_push($row_data, array($facility['Facility Name'], 
 										$facility['Facility Code'], 
+										$facility['Sub-County'],
 										$facility['County'], 
-										$facility['Sub-County'], 
 										$last_seen, 
 										$facility['Days From Last Seen'], 
 										$issue_date, 
@@ -3230,8 +3230,7 @@ class Reports extends MY_Controller {
 		
 		$excel_data = array();
 		$excel_data = array('doc_creator' => 'HCMP ', 'doc_title' => 'System Usage Breakdown ', 'file_name' => 'system usage breakdown');
-		//$column_data = array("First Name", "Last Name", "date last seen", "# of days", "date last issued", "# of days", "Sub County", "facility name", "mfl");
-		$column_data = array("Facility Name", "Facility Code", "County", "Sub County", "Date Last Logged In", "Days From Last Log In", "Date Last Issued", "Days From Last Issue", "Date Last Redistributed", "Days From Last Redistribution", "Date Last Ordered", "Days From Last Order", "Date Last Decommissioned", "Days From Last Decommission", "Date Last Received Order", "Days From Last Received Order");
+		$column_data = array("Facility Name", "Facility Code", "Sub County", "County",  "Date Last Logged In", "Days From Last Log In", "Date Last Issued", "Days From Last Issue", "Date Last Redistributed", "Days From Last Redistribution", "Date Last Ordered", "Days From Last Order", "Date Last Decommissioned", "Days From Last Decommission", "Date Last Received Order", "Days From Last Received Order");
 		$excel_data['column_data'] = $column_data;
 		$excel_data['row_data'] = $row_data;
 		$this -> hcmp_functions -> create_excel($excel_data);
