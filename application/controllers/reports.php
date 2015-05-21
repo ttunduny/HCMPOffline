@@ -3411,7 +3411,7 @@ class Reports extends MY_Controller {
 		///$data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);
 		$data['donations'] = $expiries_array;
 		$data['year'] = $year;
-		$data['redistribute_count'] = count(redistribution_data::get_redistribution_pending($facility_code, $district_id, $county_id, $year));
+		$data['redistribute_count'] = count(redistribution_data::get_redistribution_pending($facility_code, $district_id, $county_id, $year))+1;
 		return $this -> load -> view("shared_files/redistributions_ajax", $data);
 	}
 public function donation_report_download($year = null, $county_id = null,$district_id = null, $facility_code = null) {
@@ -3427,11 +3427,11 @@ public function donation_report_download($year = null, $county_id = null,$distri
 		 //echo "<pre>";print_r($redistribute_array);echo "</pre>";exit;
 		$excel_data = array('doc_creator' => $county_id, 'doc_title' => 'Redistribution Summary ', 'file_name' => 'Redistribution Summary For '.$pieces[0].' by '.$pieces[1].' '.'('.$year.')');
 		$row_data = array();
-		$column_data = array("From", "To", "Commodity Name", "Unit Size", "Batch No", "Expiry Date", "Manufacturer", "Quantity Sent", "Quantity Received",
+		$column_data = array("Facility From", "Facility To", "Subcounty To" ,"Commodity Name", "Unit Size", "Batch No", "Expiry Date", "Manufacturer", "Quantity Sent", "Quantity Received",
 		 "Date Sent", "Date Received");
 		$excel_data['column_data'] = $column_data;
 		foreach ($redistribute_array as $column) :
-			array_push($row_data, array($column["source_facility_name"], $column["receiver_facility_name"], $column["commodity_name"], 
+			array_push($row_data, array($column["source_facility_name"], $column["receiver_facility_name"],$column['receiver_district']=="" ? $column['source_district'] :$column['receiver_district'], $column["commodity_name"], 
 			$column["unit_size"], $column["batch_no"], $column["expiry_date"], $column["manufacturer"],$column["quantity_sent"],$column["quantity_received"]
 			,$column["date_sent"]	,$column["date_received"]));
 		endforeach;

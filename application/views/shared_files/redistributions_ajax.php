@@ -16,7 +16,8 @@
       		<thead style="background-color: white">
 							<tr style="">
 								<th>Facility From (Sub County)</th>
-								<th>Receiver Facility (Sub County)</th>
+								<th>Receiver Facility </th>
+								<th>Receiver Sub County</th>
 								<th>Commodity Name</th>
 								<th>Unit Size</th>
 								<th>Batch No</th>
@@ -43,7 +44,8 @@
 									?>
 								<tr class="" style="">
 								<td class="" ><?php echo $values['source_facility_name'].' ('.$values['source_district'].')'; ?></td>
-								<td class="" ><?php echo $values['receiver_facility_name'].' ('.$values['receiver_district'].')'; ?></td>
+								<td class="" ><?php echo $values['receiver_facility_name']; ?></td>
+								<td class="" ><?php echo $values['receiver_district']=="" ? $values['source_district'] :$values['receiver_district']; ?></td>
 								<td class="" ><?php echo $values['commodity_name']; ?></td>
 								<td class="" ><?php echo $values['unit_size']; ?></td>
 								<td class="" ><?php echo $values['batch_no']; ?></td>
@@ -172,7 +174,7 @@
 							<?php 
 							foreach ($donations as $key => $val) {
 								//print_r( $value);
-								if ($val['receiver_facility_code']==2) {
+								if ($val['receiver_facility_code']=='2') {
 									$total_units = $val['total_commodity_units'];
 									$sent_units = $val['quantity_sent'];
 									$received_units = $val['quantity_received'];
