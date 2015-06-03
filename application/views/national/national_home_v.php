@@ -34,14 +34,19 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand " href="<?php echo base_url().'kenya';?>" >HCMP</a>
+          
+         <a href="<?php echo base_url().'kenya';?>">
+         	
+         	<img class="navbar-brand" style="padding:0;" src="<?php echo base_url();?>assets/img/coat_of_arms_dash.png" class="img-responsive " alt="Responsive image" id="" >
+         </a>
+            
+          
 
         </div>
         
-        <div class="navbar-header" >
+        <div class="navbar-brand" >
   
-            <a href="<?php echo base_url().'national';?>">   
-            <img style="display:inline-block;"  src="<?php echo base_url();?>assets/img/coat_of_arms_dash.png" class="img-responsive " alt="Responsive image" id="logo" ></a>
+            <a  href="<?php echo base_url().'kenya';?>" >Health Commodities Management Platform.</a>
             
         </div>
         
@@ -69,13 +74,22 @@
 
 		<div class="container-fluid">
 
-			<div class=" row-fluid">
+			<div class=" row-fluid" style="margin-bottom: 12px;">
+				
+				
 
-				<div class=" tile col-xs-12 col-md-3 col-lg-3">
-					<input type="hidden" value="NULL" id="placeholder" />
+				<div class=" tile col-xs-12 col-md-3 col-lg-3" id="coverage-map">
+					
+					<div class="row-fluid">
+						<input type="hidden" value="NULL" id="placeholder" />
 					<div class=" col-lg-12"  style="max-height: 480px;">
 					<div class="tile-header">
-						National Over view
+						National Coverage
+					</div>
+					<div class="row-fluid" style="height: 60px;">
+						<div class="col-md-1" >
+						</div>
+						<div class="col-md-8"><strong>Click County to View Data</strong> </div>
 					</div>
 					<div id="map" style="height: 400px;"></div>
 					<script>
@@ -87,10 +101,16 @@
 
 					</script>
 
-				</div>
-				<div class="col-lg-12">
-					sdadasd
-				</div>
+					</div>
+					</div>
+					<div class="row-fluid" style="height: 60px;">
+						<div class="col-md-1" >
+							<div id="map-key"></div>
+						</div>
+						<div class="col-md-8"><strong>Using HCMP</strong> </div>
+					</div>
+					
+				
 
 				</div>
 
@@ -133,7 +153,7 @@
 						<div class="three wide column">
 							<div class="statistic">
 								<div class="value">
-									57%
+									#
 								</div>
 								<div class="label">
 									Avg order fill rate
@@ -191,7 +211,7 @@
 
 			</div>
 			
-			<div class="row-fluid">
+			<div class="row-fluid" style="max-height: 430px;margin-top: 4%;">
 
 				<div class="tile col-xs-12 col-md-6 col-lg-6">
 					<div class="tile-header">Cost of Orders</div>
@@ -203,7 +223,13 @@
 				<div class="tile col-xs-12 col-md-6 col-lg-6">
 					<div class="tile-header" >Order Lead Time</div>
 					
-					<div id="" class="tile_size"></div> <!--- orders -->
+					<div id="" class="tile_size">
+						<div id="lead_infor" style="padding-top: 20px;">
+         
+
+
+      				 </div>
+					</div> <!--- orders -->
 					
 				</div>
 
@@ -211,12 +237,12 @@
 
 		</div>
 
-		<footer class="footer">
+		<footer class="footer" style="margin-top: 2%;">
 
 			<div class="container footer-text">
 
 				<div class="row">
-
+					<p class="text-muted" style="text-align: center;"> Government of Kenya &copy <?php echo date('Y');?>. All Rights Reserved</p>
 				</div>
 
 			</div>
