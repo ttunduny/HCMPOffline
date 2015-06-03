@@ -417,12 +417,12 @@ var url="<?php echo base_url(); ?>
         }
        function ajax_request_replace_div_content(function_url,div){
         var function_url =url+function_url;
-        var loading_icon=url+"assets/img/Preloader_1.gif";
+        var loading_icon=url+"assets/img/Preloader_3.gif";
         $.ajax({
         type: "POST",
         url: function_url,
         beforeSend: function() {
-        $(div).html("<img style='margin-top:30%;margin-left:50%;' src="+loading_icon+">");
+        $(div).html("<img style='margin-top:20%;margin-left:50%;' src="+loading_icon+">");
         },
         success: function(msg) {
         $(div).html(msg);
