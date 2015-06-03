@@ -75,7 +75,7 @@
 			</div>
 
 			<div class="pull-right" style="top: 0">
-				<a href="<?php echo base_url('national') ?>">
+				<a href="<?php echo base_url('kenya') ?>">
 				<button class="btn btn-success ">
 					<span class="glyphicon glyphicon-dashboard"></span> Dashboard
 				</button></a>
