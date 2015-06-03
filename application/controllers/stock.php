@@ -43,7 +43,7 @@ class Stock extends MY_Controller {
 
 		$old_facility_stock = facility_stocks::import_stock_from_v1($facility_code);
 		$old_facility_issues = facility_stocks::import_issues_from_v1($facility_code);
-		$old_facility_orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select 
+		$old_facility_orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select
         *
         from
         kemsa2.ordertbl
@@ -84,12 +84,12 @@ class Stock extends MY_Controller {
 			foreach ($old_facility_orders as $old_facility_orders) {
 				$order_status = $old_facility_orders["orderStatus"];
 				$name = $old_facility_orders["reciever_name"];
-				$new_order_id = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll('select 
+				$new_order_id = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll('select
         *
         from
         hcmp_rtk.facility_order_status
         where facility_order_status.status_desc like "%' . $order_status . '%"');
-				$new_name_id = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll('select 
+				$new_name_id = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll('select
         *
         from
         kemsa2.user
@@ -99,7 +99,7 @@ class Stock extends MY_Controller {
 				$this -> db -> insert('facility_orders', $temp);
 				$new_order_no = $this -> db -> insert_id();
 
-				$order_details_match = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select 
+				$order_details_match = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select
          *
         from
          kemsa2.orderdetails
@@ -160,17 +160,17 @@ class Stock extends MY_Controller {
 					$q -> execute();
 				} else if ($count == 0) {
 					$insert = Doctrine_Manager::getInstance() -> getCurrentConnection();
-					$insert -> execute("INSERT INTO facility_monthly_stock 
-        (`facility_code`, `commodity_id`, `consumption_level`, `total_units`, `selected_option`) 
+					$insert -> execute("INSERT INTO facility_monthly_stock
+        (`facility_code`, `commodity_id`, `consumption_level`, `total_units`, `selected_option`)
         VALUES ('$facility_code', $commodity_id,'$consumption_level', $total_units,'$selected_option')");
 
 					$user = $this -> session -> userdata('user_id');
 					$user_action = "add_stock";
 					//updates the log table accordingly based on the action carried out by the user involved
 					$update = Doctrine_Manager::getInstance() -> getCurrentConnection();
-					$update -> execute("update log set $user_action = 1  
-			where `user_id`= $user 
-			AND action = 'Logged In' 
+					$update -> execute("update log set $user_action = 1
+			where `user_id`= $user
+			AND action = 'Logged In'
 			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");
 				}
 
@@ -367,21 +367,23 @@ class Stock extends MY_Controller {
 				endif;
 			endfor;
 			//updates the log table accordingly based on the action carried out by the user involved
-			
+
 			$user = $this -> session -> userdata('user_id');
 			$user_action = "add_stock";
 			$update = Doctrine_Manager::getInstance()->getCurrentConnection();
-			$update -> execute("update log set $user_action = 1  
-			where `user_id`= $user 
-			AND action = 'Logged In' 
+			$update -> execute("update log set $user_action = 1
+			where `user_id`= $user
+			AND action = 'Logged In'
 			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");
+			//send a text message to the facility admin and sub county pharmacist
+			$this-> hcmp_functions -> send_system_text($user_action);
 			$this -> db -> insert_batch('facility_issues', $data_array_facility_issues);
 			//delete the record from the db
 			facility_stocks_temp::delete_facility_temp(null, null, $facility_code);
 			//set the notifications
 			//$this->hcmp_functions->send_stock_update_sms();
 			$updateCase = Doctrine_Manager::getInstance() -> getCurrentConnection();
-			$updateCase -> execute("UPDATE facility_stocks SET 
+			$updateCase -> execute("UPDATE facility_stocks SET
         manufacture=CONCAT(UCASE(SUBSTRING(`manufacture`, 1, 1)),LOWER(SUBSTRING(`manufacture`, 2)))");
 			//
 			$this -> session -> set_flashdata('system_success_message', "Stock Levels Have Been Updated");
@@ -589,11 +591,11 @@ class Stock extends MY_Controller {
 			$this -> db -> insert_batch('facility_issues', $facility_issues_array);
 			/*step one move all the closing stock of existing stock to be the new opening balance and compute the total items from kemsa***/
 			$get_delivered_items = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select f_t_t.`closing_stock`,ifnull(f_s.`current_balance`,0) as current_balance ,f_s.commodity_id
-from facility_transaction_table f_t_t 
-left join  facility_stocks f_s on f_s.facility_code= f_t_t.facility_code 
-and f_s.commodity_id=f_t_t.commodity_id and f_s.date_added='$date_of_entry'  
+from facility_transaction_table f_t_t
+left join  facility_stocks f_s on f_s.facility_code= f_t_t.facility_code
+and f_s.commodity_id=f_t_t.commodity_id and f_s.date_added='$date_of_entry'
 and f_s.status=1
-where  f_t_t.facility_code=$facility_code and f_t_t.status=1   
+where  f_t_t.facility_code=$facility_code and f_t_t.status=1
 group by f_s.commodity_id");
 			$step_1_size = count($get_delivered_items);
 			/******************* step two get items that the facility does not have the in the transaction table ideally pushed items**/
@@ -602,7 +604,7 @@ FROM facility_stocks f_s
 WHERE f_s.current_balance >0
 AND f_s.status =  '1'
 AND f_s.facility_code ='$facility_code'
-AND f_s.commodity_id NOT 
+AND f_s.commodity_id NOT
 IN (SELECT commodity_id
 FROM facility_transaction_table
 WHERE facility_code ='$facility_code'
@@ -698,7 +700,7 @@ GROUP BY f_s.commodity_id");
 		if (count($decom) > 0) :
 			$body = '';
 			$body .= "<style> table {
-    border-collapse: collapse; 
+    border-collapse: collapse;
 }td,th{
 	padding: 12px;
 	text-align:center;
@@ -708,9 +710,9 @@ GROUP BY f_s.commodity_id");
 
 			$body .= "<table class='' style='background-color: #ECF8FF;' >
 <tr>
-<td>MFL No: <strong>$facility_code</strong> </td> 
+<td>MFL No: <strong>$facility_code</strong> </td>
 <td>Health Facility Name: <strong>$facility_name</strong></td>
-<td>County: <strong>$county_name</strong></td> 
+<td>County: <strong>$county_name</strong></td>
 <td>Subcounty: <strong>$disto_name</strong></td>
 </tr>
 </table>" . '
@@ -719,13 +721,13 @@ GROUP BY f_s.commodity_id");
 			<tr><th><strong>Source</strong></th>
 			<th><strong>Description</strong></th>
 			<th><strong>Commodity Code</strong></th>
-			
+
 			<th><strong>Unit Cost(Ksh)</strong></th>
 			<th><strong>Batch Affected</strong></th>
 			<th><strong>Manufacturer</strong></th>
 			<th><strong>Expiry Date</strong></th>
 			<th><strong>Expiry Days</strong></th>
-			<th><strong>Expired(Pack Size)</strong></th>	
+			<th><strong>Expired(Pack Size)</strong></th>
 			<th><strong>Expired(Unit Size)</strong></th>
 			<th><strong>Cost of Expired (Ksh)</strong></th>
 </tr> </thead><tbody>';
@@ -762,15 +764,15 @@ GROUP BY f_s.commodity_id");
 					$body .= '<tr style="font-size:12px;padding:4px"><td>' . $source . '</td>
 							<td>' . $commodity_name . '</td>
 							<td>' . $commodity_code . '</td>
-							
+
 							<td>' . $unit_cost . '(' . $unit_size . ')' . '</td>
 							<td>' . $batch . '</td>
 							<td>' . $mau . '</td>
 							<td>' . $newdate . '</td>
-							<td>' . $date_diff . '</td>	
-							<td>' . $current_balance_pack . '</td>						
+							<td>' . $date_diff . '</td>
+							<td>' . $current_balance_pack . '</td>
 							<td>' . $current_balance . '</td>
-							<td>' . number_format($cost, 2, '.', ',') . '</td>	
+							<td>' . number_format($cost, 2, '.', ',') . '</td>
 							</tr>';
 				endif;
 			}
@@ -796,43 +798,43 @@ GROUP BY f_s.commodity_id");
 						<p>$body</p>
 						<!-- Callout Panel -->
 						<p class='callout'>
-							<a href='health-cmp.or.ke'>Click here! &raquo;</a> to follow up. 
-						</p><!-- /Callout Panel -->					
-												
+							<a href='health-cmp.or.ke'>Click here! &raquo;</a> to follow up.
+						</p><!-- /Callout Panel -->
+
 						<!-- social & contact -->
 						<table class='social' width='100%'>
 							<tr>
 								<td>
-									
+
 									<!-- column 1 -->
 									<table align='left' class='column'>
-										
-									</table><!-- /column 1 -->	
-									
+
+									</table><!-- /column 1 -->
+
 									<!-- column 2 -->
 									<table align='left' class='column'>
 										<tr>
-											<td>				
-																			
-												<h5 class=''>Contact Info:</h5>												
+											<td>
+
+												<h5 class=''>Contact Info:</h5>
 												<p>Phone: <strong>+254720167245</strong><br/>
                 Email: <strong><a href='emailto:hcmpkenya@gmail.com'>hcmpkenya@gmail.com</a></strong></p>
-                
+
 											</td>
 										</tr>
 									</table><!-- /column 2 -->
-									
-									<span class='clear'></span>	
-									
+
+									<span class='clear'></span>
+
 								</td>
 							</tr>
 						</table><!-- /social & contact -->
-						
+
 					</td>
 				</tr>
 			</table>
 			</div><!-- /content -->
-									
+
 		</td>
 		<td></td>
 	</tr>
@@ -850,9 +852,9 @@ GROUP BY f_s.commodity_id");
 			$user_action = "decommissioned";
 			//updates the log table accordingly based on the action carried out by the user involved
 			$update = Doctrine_Manager::getInstance()->getCurrentConnection();
-			$update -> execute("update log set $user_action = 1  
-			where `user_id`= $user 
-			AND action = 'Logged In' 
+			$update -> execute("update log set $user_action = 1
+			where `user_id`= $user
+			AND action = 'Logged In'
 			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");
 		endif;
 		redirect('reports/facility_stock_data');
@@ -880,8 +882,8 @@ GROUP BY f_s.commodity_id");
 					//check the total stock balance of the commodity
 					$facility_stock = facility_stocks::get_facility_commodity_total($facility_code, $commodity_id[$key]);
 					$commodity_balance = ($commodity_balance_units[$key] * -1);
-					$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("update facility_transaction_table t 
-		 set  t. `closing_stock`=`closing_stock`-$commodity_balance_units[$key],`adjustmentnve`=$commodity_balance 
+					$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("update facility_transaction_table t
+		 set  t. `closing_stock`=`closing_stock`-$commodity_balance_units[$key],`adjustmentnve`=$commodity_balance
 		 where t.facility_code='$facility_code' and t.commodity_id=$commodity_id[$key] and t.status=1");
 					// prepare the data to save
 					$commodity_balance = ($commodity_balance_units[$key] * -1);
@@ -1072,3 +1074,4 @@ GROUP BY f_s.commodity_id");
 
 }
 ?>
+
