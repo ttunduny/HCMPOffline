@@ -223,7 +223,7 @@ endforeach;
  
  <div class="container">
  	<div class="row">
- 		<div class="col-md-12">
+ 		<div class="col-md-11">
  			
  		<div class="graph_content" id="default_graph_" style="height: 100%;width: 100% ;" >
 	<?php echo $error; ?>

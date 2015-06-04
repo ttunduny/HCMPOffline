@@ -102,7 +102,7 @@ $identifier = $this -> session -> userdata('user_indicator');
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 " style="padding:0;border-radius: 0;margin-top: -2% ">
  <h1 class="page-header" style="margin-top: 2.4%;font-size: 1.6em;"></h1>
 <div class="">
-<div style="" id="notification"></div>
+<div style="height:100%;width:100%;margin: 0 auto;" id="notification"></div>
 </div>
 </div>
     </div>
