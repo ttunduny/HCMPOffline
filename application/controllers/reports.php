@@ -2869,7 +2869,7 @@ class Reports extends MY_Controller {
 			else :
 				array_push($category_data, array("Commodity Name", "Facility Name", "Sub-county Name", "stocks worth in $option_title "));
 			endif;
-			$graph_data = array_merge($graph_data, array("table_id" => 'dem_graph_'));
+			$graph_data = array_merge($graph_data, array("table_id" => 'default_graph_'));
 			$graph_data = array_merge($graph_data, array("table_header" => $category_data));
 			$graph_data = array_merge($graph_data, array("table_body" => $series_data));
 			$data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);
@@ -2887,7 +2887,7 @@ class Reports extends MY_Controller {
 		 $this -> hcmp_functions -> create_excel($excel_data);*/
 		else :
 			$graph_type = 'bar';
-			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
+			$graph_data = array_merge($graph_data, array("graph_id" => 'default_graph_'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level $commodity_name $title $month_ $year"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Commodity Stock level in Month of Stock"));
@@ -2980,7 +2980,7 @@ class Reports extends MY_Controller {
 			$this -> hcmp_functions -> create_excel($excel_data);
 		else :
 			$graph_type = 'column';
-			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
+			$graph_data = array_merge($graph_data, array("graph_id" => 'default_graph_'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level $commodity_name $title $month_ $year"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Commodity Stock level in $option_new"));
