@@ -1673,7 +1673,7 @@ class sms extends MY_Controller {
 		$excel_data = array();
 		$excel_data = array('doc_creator' => "HCMP", 'doc_title' => ' stock level report ', 'file_name' => 'stock level report');
 		$row_data = array();
-		$column_data = array("County", "Sub-County", "Facility Code", "Facility Name", "Commodity Name", "Unit Size", "Unit Cost(KES)", "Supplier", "Manufacturer", "Batch Number", "Expiry Date", "Stock at Hand (units)", "Stock at Hand (packs)", "AMC (units)", "AMC (packs)", "Stock at Hand MOS(packs)");
+		$column_data = array("County", "Sub-County", "Facility Code", "Facility Name", "Commodity Name", "Unit Size", "Unit Cost(KES)", "Supplier", "Manufacturer", "Batch Number", "Expiry Date", "Stock at Hand (units)", "Stock at Hand (packs)", "AMC (units)", "AMC (packs)", "Stock at Hand MOS(packs)","Date Last Issued","Days From Last Issue");
 		$excel_data['column_data'] = $column_data;
 		//the commodities variable will hold the values for the three commodities ie ORS and Zinc
 		$commodities = array(51, 267, 36,456);
@@ -1688,8 +1688,14 @@ class sms extends MY_Controller {
 			//echo "<pre>";print_r($commodity_stock_level);exit;
 			//Start buliding the excel file
 			foreach ($commodity_stock_level as $commodity_stock_level) :
-				array_push($row_data, array($commodity_stock_level["county"], $commodity_stock_level["subcounty"], $commodity_stock_level["facility_code"], $commodity_stock_level["facility_name"], $commodity_stock_level["commodity_name"], $commodity_stock_level["unit_size"], $commodity_stock_level["unit_cost"], $commodity_stock_level["supplier"], $commodity_stock_level["manufacture"], $commodity_stock_level["batch_no"], $commodity_stock_level["expiry_date"], $commodity_stock_level["balance_units"], $commodity_stock_level["balance_packs"], $commodity_stock_level["amc_units"], $commodity_stock_level["amc"], $commodity_stock_level["mos"]));
-
+				//pick the facility code from the data
+				$facility_code = $commodity_stock_level["facility_code"];
+				//get the last date of issue from the database
+				$date_last_issue = Facilities::get_last_issue($facility_code);
+				//ensure that if the date is null change the message
+				$date_of_last_issue = ($date_last_issue[0]['Date Last Issued']!=0) ? date('j M, Y', strtotime($date_last_issue[0]['Date Last Issued'])) : "No Data Found";
+				array_push($row_data, array($commodity_stock_level["county"], $commodity_stock_level["subcounty"], $commodity_stock_level["facility_code"], $commodity_stock_level["facility_name"], $commodity_stock_level["commodity_name"], $commodity_stock_level["unit_size"], $commodity_stock_level["unit_cost"], $commodity_stock_level["supplier"], $commodity_stock_level["manufacture"], $commodity_stock_level["batch_no"], $commodity_stock_level["expiry_date"], $commodity_stock_level["balance_units"], $commodity_stock_level["balance_packs"], $commodity_stock_level["amc_units"], $commodity_stock_level["amc"], $commodity_stock_level["mos"],$date_of_last_issue,$date_last_issue[0]["Days From Last Issue"]));
+					
 			endforeach;
 
 			//Switch statement to build on the remaining part of the message body
@@ -1736,16 +1742,13 @@ class sms extends MY_Controller {
 		//Get the number of facilities using HCMP
 		$no_of_facilities = Facilities::get_all_on_HCMP();
 
-		$subject = "Daily Stock Level Report: Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality ";
+		$subject = "Stock Level Report: Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality ";
 
-		$message = "Good Morning,
-				<p>Find attached an excel sheet with a Stock Level Report for 
+		$message = "<p>Find attached an excel sheet with a Stock Level Report for 
 				Zinc Sulphate 20mg, ORS sachet (for 500ml) low osmolality (100 & 50) and ORS 4 Satchets & Zinc 10 Tablets 20 Mg as at " . date("jS F Y") . "</p>";
 		$message .= "<p>Number of facilities using HCMP: " . $no_of_facilities . "</p>";
 		$message .= $message_body;
 		$message .= "
-				
-				
 				<p>You may log onto health-cmp.or.ke for follow up.</p>
 				
 				<p>----</p>
@@ -1753,10 +1756,9 @@ class sms extends MY_Controller {
 				<p>HCMP</p>
 				
 				<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-		//echo $message;exit;
 		$report_type = "ors_report";
 		$this -> create_excel($excel_data, $report_type);
-		//exit;
+		
 
 		//path for windows
 		$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
