@@ -218,9 +218,13 @@
 <script>
     $(document).ready(function() {
 	//datatables settings 
-	
-	
-	$('#pending,#districtstore,#delivered').dataTable( {
+	//'#pending,#districtstore,#delivered'//tables being assigned data table properties
+	assign_dtb_properties('#pending');
+	assign_dtb_properties('#districtstore');
+	assign_dtb_properties('#delivered');
+
+	function assign_dtb_properties(designated_table_id){
+	$(designated_table_id).dataTable( {
 	   "sDom": "T lfrtip",
 	     
                     "sPaginationType": "bootstrap",
@@ -246,5 +250,6 @@
 	
 	$('.dataTables_filter label input').addClass('form-control');
 	$('.dataTables_length label select').addClass('form-control');
+}//end of assign properties function
 });
 </script>
