@@ -134,7 +134,7 @@ class Users extends Doctrine_Record {
 
 	public static function reset_password($user_id, $new_password_confirm) {
 
-		//$new_password_confirm;
+		//echo $user_id;
 		$salt = '#*seCrEt!@-*%';
 		$value = md5($salt . $new_password_confirm);
 
@@ -417,7 +417,7 @@ public static function get_county_emails($county_id){
 		
 	}
 	public static function check_user_exist_activate($email) {
-		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("email='$email' AND status=0");
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("email='$email' AND status=1");
 		$result = $query -> execute();
 		return $result;
 	}
