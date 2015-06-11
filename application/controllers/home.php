@@ -93,9 +93,32 @@ class Home extends MY_Controller
 			break;
 			case 'facility_admin':
 			case 'facility':
+				//check if password is default
+				$username = $this -> session -> userdata('user_email');
+				$reply = User::getPass($username);
+				$user_data = $reply -> toArray();
+				
+				 $token = $user_data["password"];
+				 $default='123456';
+		
+				$salt = '#*seCrEt!@-*%';
+		
+				$password=( md5($salt . $default));	
+			
+			if ($token=="$password") {
+				
+				//$data['content_view'] = "shared_files/activation";
+				//$this -> session -> set_flashdata('system_success_message', "This is a security measure.Please Change Your Password to Proceed.");
+				$view = 'shared_files/enforce_change';
+				
+				//$this -> load -> view('shared_files/activation');
+				
+			} else {
 			$view = 'shared_files/template/template';
 		    $data['content_view'] = "facility/facility_home_v";	
 			$data['facility_dashboard_notifications']=$this->get_facility_dashboard_notifications_graph_data();
+			}
+			
 			break;
 			case 'district':
 			$data['content_view'] = "subcounty/subcounty_home_v";	

@@ -45,6 +45,15 @@ class User extends Doctrine_Record {
 		
 		
 	}
+	public static function getPass($username) {
+		
+		$query = Doctrine_Query::create() -> select("*") -> from("User") -> where("username = '$username'");
+
+		$x = $query -> execute();
+		return $x[0];
+		
+		
+	}
 	public static function getsome($id) {
 		$query = Doctrine_Query::create() -> select("fname") -> from("user")->where("id='$id' ");
 		$level = $query -> execute();

@@ -528,8 +528,13 @@ class User extends MY_Controller {
 		$county=($_POST['county']=='NULL')? 0: $_POST['county'];
 		//Generate a activation code
 		$range = microtime(true);
+		
 		$activation = rand(0, $range);
-						
+		$default='123456';
+		
+		$salt = '#*seCrEt!@-*%';
+		
+		$password=( md5($salt . $default));				
 		switch ($identifier):
 			case 'moh':
 			
@@ -560,13 +565,13 @@ class User extends MY_Controller {
 				$savethis -> lname = $lname;
 				$savethis -> email = $email_address;
 				$savethis -> username = $username;
-				$savethis -> password = md5($activation);
+				$savethis -> password = md5($password);
 				$savethis -> activation = md5($activation) ;
 				$savethis -> usertype_id = $user_type;
 				$savethis -> telephone = $telephone;
 				$savethis -> district = $district_code;
 				$savethis -> facility = $facility_id;
-				$savethis -> status = 0;
+				$savethis -> status = 1;
 				$savethis -> county_id = $county;
 				$savethis -> save(); 
 			
@@ -574,7 +579,7 @@ class User extends MY_Controller {
 		
 				
 			//$phones=$telephone;
-			$message='Your activation code is : '.$activation;
+			$message='Your default password code is : '.$default.'Please visit health-cmp.or.ke to change it and access the system.';
 			
 			$message=urlencode($message);
     		//echo '<pre>'; print_r($phone_numbers);echo '<pre>';exit;
@@ -583,11 +588,11 @@ class User extends MY_Controller {
 		//Send registered user email with password and validation link
 		
 	    $full_name = $fname.' '.$lname;
-		$link = base_url().'user/activation/'.$activation;
+		$link = 'health-cmp.or.ke';
 		$site_url=base_url();
 		$sms_code=$activation;
 		
-		$subject = "Account Activation";
+		$subject = "Account Creation";
 				 $message = '
 		<table class="body">
 		<tr>
@@ -628,36 +633,25 @@ class User extends MY_Controller {
                 <table class="row">
                   <tr>
                     <td class="wrapper last">
+                    
+					<table class="twelve columns">
+                        <tr>
+                          <td class="panel">
+                          <a href="' . $link . '"
+                                  style="background-color:#ffffff;color:#4566A9;display:inline-block;font-family:sans-serif;font-size:18px;line-height:40px;text-align:center;text-decoration:none;width:200px;-webkit-text-size-adjust:none;">Welcome to HCMP.</a>
+                          </td>
+                          <td class="expander"></td>
+                        </tr>
+                      </table></br></br>
 
                       <table class="twelve columns">
                         <tr>
                           <td>
                          <p>
 		Your HCMP Account - ' . $email_address . ' -  was recently created.</br>
-		Before your account can be activated , you must complete one of the following steps to complete your registration.</br></p> 
-	
-		<p><strong>
-		Step 1. </strong> </br>
-		<p>
-		Follow the link below
-		<p>
-		You will only need to visit this URL once to activate your account.</br></p></br> 
 		
-		<table class="twelve columns">
-                        <tr>
-                          <td class="panel">
-                          <a href="' . $link . '"
-                                  style="background-color:#4566A9;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:18px;line-height:40px;text-align:center;text-decoration:none;width:200px;-webkit-text-size-adjust:none;">Activate here.</a>
-                          </td>
-                          <td class="expander"></td>
-                        </tr>
-                      </table></br>
-         <p></br><strong>
-		Step 2.</strong></br>
-		<p>
-		You have received an activation code via sms.Use the code to activate you account on the site.</p> 
-		</br>
-						  
+		
+		
                           </td>
                           <td class="expander"></td>
                         </tr>
@@ -790,7 +784,31 @@ endif;
 			$new_password_confirm=$password ;
 			
 			Users::reset_password($user_id, $new_password_confirm);
+			$this -> session -> sess_destroy(); session_destroy();
 			
+			
+		}
+		public function change_default(){
+			
+			$email = $_POST['username'];
+			$password = $_POST['new_password'];
+
+			$myurl=$this->uri->segment(3);
+
+			//confirm user exists and is inactive
+			
+			$data=Users::check_user_exist_activate($email);
+			foreach ($data as $key => $value) {					
+				
+				$user_id=$value->id;
+			}
+			
+			$new_password_confirm=$password ;
+			
+			Users::reset_password($user_id, $new_password_confirm);
+			$this -> session -> sess_destroy(); session_destroy();
+			$data['title'] = "Login";
+			$this -> load -> view("shared_files/login_pages/login_v", $data);
 			
 		}
 
