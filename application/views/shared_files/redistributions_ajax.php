@@ -215,36 +215,30 @@
   
 </div>
 
-<script>
-    $(document).ready(function() {
-	//datatables settings 
-	
-	
-	$('#pending,#districtstore,#delivered').dataTable( {
-	   "sDom": "T lfrtip",
-	     
-                    "sPaginationType": "bootstrap",
-                    "oLanguage": {
-                        "sLengthMenu": "_MENU_ Records per page",
-                        "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
-                    },
-			      "oTableTools": {
-                 "aButtons": [
-				"copy",
-				"print",
-				{
-					"sExtends":    "collection",
-					"sButtonText": 'Save',
-					"aButtons":    [ "csv", "xls", "pdf" ]
-				}
-			],
+<script>    $(document).ready(function() {	//datatables settings 	//'#pending,#districtstore,#delivered'//tables being assigned data table properties	
+	assign_dtb_properties('#pending');	
+	assign_dtb_properties('#districtstore');	
+	assign_dtb_properties('#delivered');
 
-			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
-		}
-	} );
-	
-	
-	$('.dataTables_filter label input').addClass('form-control');
-	$('.dataTables_length label select').addClass('form-control');
-});
+	function assign_dtb_properties(designated_table_id){
+		$(designated_table_id).dataTable( {	   "sDom": "T lfrtip",
+			                         "sPaginationType": "bootstrap",
+		                    "oLanguage": {                        
+		                    	"sLengthMenu": "_MENU_ Records per page",                        
+		                    	"sInfo": "Showing _START_ to _END_ of _TOTAL_ records",                    
+		                    },			      
+		                    "oTableTools": {                 
+		                    	"aButtons": [
+		                    					"copy",				
+		                    					"print",				
+		                    					{					
+		                    						"sExtends":    "collection",					
+		                    						"sButtonText": 'Save',					
+		                    						"aButtons":    [ "csv", "xls", "pdf" ]
+		                    										}			],
+			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"		
+		}	} );			
+		$('.dataTables_filter label input').addClass('form-control');	
+			$('.dataTables_length label select').addClass('form-control');}//end of assign properties function
+		});
 </script>
