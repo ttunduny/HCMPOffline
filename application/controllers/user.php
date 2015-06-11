@@ -530,11 +530,13 @@ class User extends MY_Controller {
 		$range = microtime(true);
 		
 		$activation = rand(0, $range);
+		//default password is already set.
 		$default='123456';
+		//removed this as the model already hashes the password at the other end
+		//$salt = '#*seCrEt!@-*%';
 		
-		$salt = '#*seCrEt!@-*%';
-		
-		$password=( md5($salt . $default));				
+		//$password=( md5($salt . $default));	
+
 		switch ($identifier):
 			case 'moh':
 			
@@ -565,7 +567,7 @@ class User extends MY_Controller {
 				$savethis -> lname = $lname;
 				$savethis -> email = $email_address;
 				$savethis -> username = $username;
-				$savethis -> password = md5($password);
+				$savethis -> password = $default;
 				$savethis -> activation = md5($activation) ;
 				$savethis -> usertype_id = $user_type;
 				$savethis -> telephone = $telephone;
@@ -579,7 +581,7 @@ class User extends MY_Controller {
 		
 				
 			//$phones=$telephone;
-			$message='Your default password code is : '.$default.'Please visit health-cmp.or.ke to change it and access the system.';
+			$message="Dear $fname $lname, your default password is : $default. \nVisit health-cmp.or.ke to change it and access the system.";
 			
 			$message=urlencode($message);
     		//echo '<pre>'; print_r($phone_numbers);echo '<pre>';exit;
