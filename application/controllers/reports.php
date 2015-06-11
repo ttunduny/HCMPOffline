@@ -3202,12 +3202,13 @@ class Reports extends MY_Controller {
 		$row_data = array();
 		foreach ($facility_data as $facility) :
 			
-			$issue_date = ($facility['Date Last Issued']!=0) ? date('j M, Y', strtotime($facility['Date Last Issued'])) : "N/A";
-			$last_seen = ($facility['Date Last Seen']!=0) ? date('j M, Y', strtotime($facility['Date Last Seen'])) : "N/A";
-			$redistribution = ($facility['Date Last Redistributed']!=0) ? date('j M, Y', strtotime($facility['Date Last Redistributed'])) : "N/A";
-			$order_date = ($facility['Date Last Ordered']!=0) ? date('j M, Y', strtotime($facility['Date Last Ordered'])) : "N/A";
-			$decommission_date = ($facility['Date Last Decommissioned']!=0) ? date('j M, Y', strtotime($facility['Date Last Decommissioned'])) : "N/A";
-			$date_order = ($facility['Date Last Received Order']!=0) ? date('j M, Y', strtotime($facility['Date Last Received Order'])) : "N/A";
+			$issue_date = ($facility['Date Last Issued']!=0) ? date('j M, Y', strtotime($facility['Date Last Issued'])) : "No Data Available";
+			$last_seen = ($facility['Date Last Seen']!=0) ? date('j M, Y', strtotime($facility['Date Last Seen'])) : "No Data Available";
+			$redistribution = ($facility['Date Last Redistributed']!=0) ? date('j M, Y', strtotime($facility['Date Last Redistributed'])) : "No Data Available";
+			$order_date = ($facility['Date Last Ordered']!=0) ? date('j M, Y', strtotime($facility['Date Last Ordered'])) : "No Data Available";
+			$decommission_date = ($facility['Date Last Decommissioned']!=0) ? date('j M, Y', strtotime($facility['Date Last Decommissioned'])) : "No Data Available";
+			$date_order = ($facility['Date Last Received Order']!=0) ? date('j M, Y', strtotime($facility['Date Last Received Order'])) : "No Data Available
+			";
 			
 			array_push($row_data, array($facility['Facility Name'], 
 										$facility['Facility Code'], 
