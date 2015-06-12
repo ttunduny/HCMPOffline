@@ -7,7 +7,7 @@
 			<th>Facility Name</th>
 			<th>Owner</th>
 			<th>Type</th>
-			<th>Level</th>
+			<th>Level   </th>
 			<th>Date of Activation</th>
 			<th>Contact Person</th>
 			<th>Telephone</th>
@@ -18,7 +18,7 @@
 <?php 
     foreach($facility_list as $facilities):
     	$activation_date = ($facilities['date_of_activation']!=0) ? date('j M, Y', strtotime($facilities['date_of_activation'])) : "Inactive";
-    	$telephone = ($facilities['cellphone']>0) ? $facilities['cellphone'] : "No Data Available";
+    	$telephone = ($facilities['cellphone']>0) ? "+254".$facilities['cellphone'] : "No Data Available";
 		$contactperson = ($facilities['contactperson']!=null) ? $facilities['contactperson'] : "No Data Available";
 			echo  "<tr>
 						<td>".$facilities['district']."</td>
