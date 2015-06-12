@@ -83,6 +83,17 @@ class Reports extends MY_Controller {
 		$data['commodity_list'] = commodity_sub_category::get_all();
 		$this -> load -> view('shared_files/template/template', $data);
 	}
+	// get the facility listing here
+	public function facility_listing() {
+		//get the county id from the session
+		$county_id = $this -> session -> userdata('county_id');
+		$data['title'] = "Facility Listing";
+		$data['banner_text'] = "Facility Listing";
+		//picks the list of facilities
+		$data['facility_list'] = facilities::get_detailed_listing($county_id);
+		$data['content_view'] = "shared_files/facilities/facility_listing";
+		$this -> load -> view('shared_files/template/template', $data);
+	}
 	public function force_file_download() {
 		$this -> hcmp_functions -> download_file($this -> input -> get('url'));
 	}
