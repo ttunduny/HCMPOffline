@@ -78,6 +78,7 @@ class User extends MY_Controller {
             $banner_name = $county_name['county']." County";
             $facility_no = Counties::get_facilities_in_county($county_id);
             $facility_count = "Total Facilities Using HCMP in ".$county_name['county']." County: ".count($facility_no);
+            
             elseif ($user_indicator  == 'facility' || $user_indicator == 'facility_admin') :
              //get facility name
             $facility_name = Facilities::get_facility_name2($facility_id);
