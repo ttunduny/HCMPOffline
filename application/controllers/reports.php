@@ -3041,9 +3041,18 @@ class Reports extends MY_Controller {
 		$default_consumption_graph_ = array_merge($default_consumption_graph_, array("graph_yaxis_title" => "$axis"));
 		$default_consumption_graph_ = array_merge($default_consumption_graph_, array("graph_categories" => $category_data));
 		$default_consumption_graph_ = array_merge($default_consumption_graph_, array("series_data" => array('Consumption' => $series_data)));
+		$check_count=count($series_data);
+		
 		$data = array();
 		$data = array();
-		$def_cons = $this -> hcmp_functions -> create_high_chart_graph($default_consumption_graph_);
+		
+		if ($check_count <= 0) {
+			$def_cons= ' $("#graph_content_").html("<b>You have no Records, for this period please try using the filters</b>!");
+						 $("#graph_content_").removeAttr( "style" );
+						 $("#graph_content_").css({"height": "200px", "font-size": "200%","font-align": "center","margin-top": "4%"}); ';
+		}else {
+			$def_cons = $this -> hcmp_functions -> create_high_chart_graph($default_consumption_graph_);
+		}
 		$data['default_consumption_graph'] = $def_cons;
 		$county_id = $this -> session -> userdata('county_id');
 		$data['district_data'] = districts::getDistrict($county_id);
