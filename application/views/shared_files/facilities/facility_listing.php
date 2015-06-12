@@ -7,10 +7,8 @@
 			<th>Facility Name</th>
 			<th>Owner</th>
 			<th>Type</th>
-			<th>Level   </th>
 			<th>Date of Activation</th>
-			<th>Contact Person</th>
-			<th>Telephone</th>
+			
 
 		</tr>
 	</thead>
@@ -26,10 +24,8 @@
 						<td>".$facilities['facility_name']."</td>
 						<td>".$facilities['owner']."</td>
 						<td>".$facilities['type']."</td>
-						<td>".$facilities['level']."</td>
 						<td>".$activation_date."</td>
-						<td>".$contactperson."</td>
-						<td>".$telephone."</td>
+						
 					</tr>";
 		
 	endforeach;
