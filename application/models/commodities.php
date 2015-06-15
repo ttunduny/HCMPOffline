@@ -143,7 +143,7 @@ return $inserttransaction;
 	}
 
 	public static function get_id($kemsa,$unit_cost){
-		
+		//echo "SELECT * FROM commodities WHERE commodity_code='$kemsa' AND unit_cost =$unit_cost;";echo '<pre>';
 	$getdata = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll("SELECT * FROM commodities WHERE commodity_code='$kemsa' AND unit_cost =$unit_cost;"); 
               
