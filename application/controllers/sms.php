@@ -1270,7 +1270,7 @@ class sms extends MY_Controller {
 	public function consumption_report() {
 		//Set the current year
 		$year = date("Y");
-		$picurl = base_url() . 'assets/img/coat_of_arms-resized1.png';
+		//$picurl = base_url() . 'assets/img/coat_of_arms-resized1.png';
 		//get the facilities in the district
 		$counties = Facilities::get_counties_all_using_HCMP();
 
@@ -1466,7 +1466,7 @@ class sms extends MY_Controller {
 	public function stock_levels_report() {
 		//Set the current year
 		$year = date("Y");
-		$picurl = base_url() . 'assets/img/coat_of_arms-resized1.png';
+		//$picurl = base_url() . 'assets/img/coat_of_arms-resized1.png';
 		//get the facilities in the district
 		$counties = Facilities::get_counties_all_using_HCMP();
 

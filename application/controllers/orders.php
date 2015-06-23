@@ -292,7 +292,7 @@ class orders extends MY_Controller {
 //exit;
 			$array_combined = array();
 			$id_count = count($main_array);
-	//		echo '<pre>'; print_r($weka);echo '<pre>'; exit;
+			//echo '<pre>'; print_r($weka);echo '<pre>'; exit;
 
 			for ($i = 0; $i <= $id_count; $i++) {
 				$main_array[$i]['commodity_id'] = $array_id[$i];
@@ -323,7 +323,7 @@ class orders extends MY_Controller {
 			$items = $new;
 			$data['order_details'] = $data['facility_order'] = $items;
 		}
-		//	echo '<pre>'; print_r($main_array);echo '<pre>'; exit;
+//echo '<pre>'; print_r($main_array);echo '<pre>'; exit;
 		$facility_code = $this -> session -> userdata('facility_id');
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
 		$data['content_view'] = ((isset($source)) && ($source = 2)) ? "facility/facility_orders/facility_order_meds" : "facility/facility_orders/facility_order_from_kemsa_v";

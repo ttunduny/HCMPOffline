@@ -12,6 +12,58 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 						</tr>
 					</thead>
 					<tbody>';
+					$theader2='<table width="100%" border="0" class="row-fluid table table-hover table-bordered"  id="example2">
+					<thead style="font-weight:800 ">
+						<tr style="background-color: white"> 
+							<td>HCMP Order No</td>
+							<td>Sub- County</td>
+							<td>Health Facility</td>
+							<td>MFL</td>
+							<td>Date Ordered</td>
+							<td>Order Value(Ksh)</td>
+							<td>Action</td>
+						</tr>
+					</thead>
+					<tbody>';
+					$theader3='<table width="100%" border="0" class="row-fluid table table-hover table-bordered"  id="example3">
+					<thead style="font-weight:800 ">
+						<tr style="background-color: white"> 
+							<td>HCMP Order No</td>
+							<td>Sub- County</td>
+							<td>Health Facility</td>
+							<td>MFL</td>
+							<td>Date Ordered</td>
+							<td>Order Value(Ksh)</td>
+							<td>Action</td>
+						</tr>
+					</thead>
+					<tbody>';
+					$theader4='<table width="100%" border="0" class="row-fluid table table-hover table-bordered"  id="example4">
+					<thead style="font-weight:800 ">
+						<tr style="background-color: white"> 
+							<td>HCMP Order No</td>
+							<td>Sub- County</td>
+							<td>Health Facility</td>
+							<td>MFL</td>
+							<td>Date Ordered</td>
+							<td>Order Value(Ksh)</td>
+							<td>Action</td>
+						</tr>
+					</thead>
+					<tbody>';
+					$theader5='<table width="100%" border="0" class="row-fluid table table-hover table-bordered"  id="example5">
+					<thead style="font-weight:800 ">
+						<tr style="background-color: white"> 
+							<td>HCMP Order No</td>
+							<td>Sub- County</td>
+							<td>Health Facility</td>
+							<td>MFL</td>
+							<td>Date Ordered</td>
+							<td>Order Value(Ksh)</td>
+							<td>Action</td>
+						</tr>
+					</thead>
+					<tbody>';
 					
 		(int)$rejected_orders='';
 		(int)$pending_orders='';
@@ -144,7 +196,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="a">
     	<?php
-    	echo $theader;
+    	echo $theader2;
 	//echo "<pre>";	print_r($pending_all);
 		foreach ($pending_all as $key => $value) {
 			
@@ -190,7 +242,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
     </div>
     <div role="tabpanel" class="tab-pane" id="b">
     	<?php
-    	echo $theader;
+    	echo $theader3;
 	//echo "<pre>";	print_r($pending_cty);
 		foreach ($pending_cty as $key => $value) {
 			$link=base_url('orders/get_facility_sorf/'.$value['id'].'/'.$mfl);
@@ -261,7 +313,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
   <div role="tabpanel" class="tab-pane" id="pending_delivery">
   	
   	<?php
-    	echo $theader;
+    	echo $theader4;
 		foreach ($approved as $key => $value) {
 			$link=base_url('orders/get_facility_sorf/'.$value['id'].'/'.$mfl); 
 			$link_excel=base_url('reports/create_excel_facility_order_template/'.$value['id'].'/'.$mfl);
@@ -311,7 +363,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
   <div role="tabpanel" class="tab-pane" id="delivered">
   	<?php
   			
-    	echo $theader;
+    	echo $theader5;
 		foreach ($delivered as $key => $value) {
 			$mfl=$value['facility_name'];
 			$link=base_url('orders/get_facility_sorf/'.$value['id'].'/'.$mfl);	
@@ -356,100 +408,36 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 <script>
 /* Table initialisation */
 $(document).ready(function() {
-	/*
-	 	//datatables settings 
-	$("#test1").dataTable( {
-	     "sDom": "T lfrtip",
-	     "sScrollY": "377px",
-	     
-                  "bJQueryUI": true,
-                    "oLanguage": {
-                        "sLengthMenu": "_MENU_ Records per page"
-                    },
-			      "oTableTools": {
-			      	"sSwfPath": "<?php echo base_url('assets/datatable/media/swf/copy_csv_xls_pdf.swf'); ?>",
-                 "aButtons": [
-				"copy",
-				"print",
-				{
-					"sExtends":    "collection",
-					"sButtonText": 'Save',
-					"aButtons":    [ "csv", "xls", "pdf" ]
-				}
-			],
-		
-		},
-		
-	} );
-		$("#test2").dataTable( {
-	     "sDom": "T lfrtip",
-	     "sScrollY": "377px",
-                  "bJQueryUI": true,
-                    "oLanguage": {
-                        "sLengthMenu": "_MENU_ Records per page"
-                    },
-			      "oTableTools": {
-			      	"sSwfPath": "<?php echo base_url('assets/datatable/media/swf/copy_csv_xls_pdf.swf'); ?>",
-                 "aButtons": [
-				"copy",
-				"print",
-				{
-					"sExtends":    "collection",
-					"sButtonText": 'Save',
-					"aButtons":    [ "csv", "xls", "pdf" ]
-				}
-			],
-		
-		},
-		
-	} );
-		$("#test3").dataTable( {
-	     "sDom": "T lfrtip",
-	     "sScrollY": "377px",
-                  "bJQueryUI": true,
-                    "oLanguage": {
-                        "sLengthMenu": "_MENU_ Records per page"
-                    },
-			      "oTableTools": {
-			      	"sSwfPath": "<?php echo base_url('assets/datatable/media/swf/copy_csv_xls_pdf.swf'); ?>",
-                 "aButtons": [
-				"copy",
-				"print",
-				{
-					"sExtends":    "collection",
-					"sButtonText": 'Save',
-					"aButtons":    [ "csv", "xls", "pdf" ]
-				}
-			],
-		
-		},
-		
-	} );
-		$("#test4").dataTable( {
-	     "sDom": "T lfrtip",
-	     "sScrollY": "377px",
-                  "bJQueryUI": true,
-                    "oLanguage": {
-                        "sLengthMenu": "_MENU_ Records per page"
-                    },
-			      "oTableTools": {
-			      	"sSwfPath": "<?php echo base_url('assets/datatable/media/swf/copy_csv_xls_pdf.swf'); ?>",
-                 "aButtons": [
-				"copy",
-				"print",
-				{
-					"sExtends":    "collection",
-					"sButtonText": 'Save',
-					"aButtons":    [ "csv", "xls", "pdf" ]
-				}
-			],
-		
-		},
-		
-	} );
+	   	//datatables settings 	//'#pending,#districtstore,#delivered'//tables being assigned data table properties	
+	assign_dtb_properties('#example');	
+	assign_dtb_properties('#example2');	
+	assign_dtb_properties('#example3');
+	assign_dtb_properties('#example4');
+	assign_dtb_properties('#example5');
 
-	$('.dataTables_filter label input').addClass('form-control');
-	$('.dataTables_length label select').addClass('form-control');*/
+	function assign_dtb_properties(designated_table_id){
+		$(designated_table_id).dataTable( {	   "sDom": "T lfrtip",
+			                         "sPaginationType": "bootstrap",
+		                    "oLanguage": {                        
+		                    	"sLengthMenu": "_MENU_ Records per page",                        
+		                    	"sInfo": "Showing _START_ to _END_ of _TOTAL_ records",                    
+		                    },			      
+		                    "oTableTools": {                 
+		                    	"aButtons": [
+		                    					"copy",				
+		                    					"print",				
+		                    					{					
+		                    						"sExtends":    "collection",					
+		                    						"sButtonText": 'Save',					
+		                    						"aButtons":    [ "csv", "xls", "pdf" ]
+		                    										}			],
+			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"		
+		}	} );			
+		$('.dataTables_filter label input').addClass('form-control');	
+			$('.dataTables_length label select').addClass('form-control');}//end of assign properties function
+			
+	
+
 	$(function () {
     $('#myTab a:first').tab('show')
   })
