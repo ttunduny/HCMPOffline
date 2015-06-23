@@ -842,7 +842,7 @@ GROUP BY f_s.commodity_id");
 
 			$file_name = 'Facility_Expired_Commodities_' . $facility_name . "_" . $facility_code . "_" . $date;
 			$pdf_data = array("pdf_title" => "Facility Expired Commodities For $facility_name", 'pdf_html_body' => $body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
-			$this -> hcmp_functions -> create_pdf($pdf_data);
+			$this -> hcmp_functions -> create_pdf($pdf_data);exit;
 			if ($this -> hcmp_functions -> send_stock_decommission_email($html_body, 'Decommission Report For ' . $facility_name, './pdf/' . $file_name . '.pdf')) {
 				delete_files('./pdf/' . $file_name . '.pdf');
 				$this -> session -> set_flashdata('system_success_message', 'Stocks Have Been Decommissioned');

@@ -21,7 +21,7 @@ class sms extends MY_Controller {
 	//for testing puposes only
 	public function test_sms() {
 
-		$phones = '254720167245';
+		$phones = '254723722204';
 		$message = 'test from system live server';
 		$message = urlencode($message);
 
@@ -31,7 +31,7 @@ class sms extends MY_Controller {
 
 		foreach ($phone_numbers as $key => $user_no) {
 			file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
-			echo "Success sent to " . $user_no . '<br>';
+			//echo "Success sent to " . $user_no . '<br>';
 		}
 
 	}
