@@ -3449,12 +3449,13 @@ public function donation_report_download($year = null, $county_id = null,$distri
 		$excel_data = array('doc_creator' => $county_id, 'doc_title' => 'Redistribution Summary ', 'file_name' => 'Redistribution Summary For '.$pieces[0].' by '.$pieces[1].' '.'('.$year.')');
 		$row_data = array();
 		$column_data = array("Facility From", "Facility To", "Subcounty To" ,"Commodity Name", "Unit Size", "Batch No", "Expiry Date", "Manufacturer", "Quantity Sent", "Quantity Received",
-		 "Date Sent", "Date Received");
+		 "Date Sent", "Date Received","Status");
 		$excel_data['column_data'] = $column_data;
 		foreach ($redistribute_array as $column) :
 			array_push($row_data, array($column["source_facility_name"], $column["receiver_facility_name"],$column['receiver_district']=="" ? $column['source_district'] :$column['receiver_district'], $column["commodity_name"], 
 			$column["unit_size"], $column["batch_no"], $column["expiry_date"], $column["manufacturer"],$column["quantity_sent"],$column["quantity_received"]
-			,$column["date_sent"]	,$column["date_received"]));
+			,$column["date_sent"]	,$column["date_received"],$column["status"]==1 ?'Delivered' :$column["status"]==2 ?'Non HCMP' :'Pending' ));
+			($facility['Date Last Ordered']!=0) ? date('j M, Y', strtotime($facility['Date Last Ordered'])) : "No Data Available";
 		endforeach;
 		$excel_data['row_data'] = $row_data;
 		$this -> hcmp_functions -> create_excel($excel_data);
