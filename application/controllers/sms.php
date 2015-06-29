@@ -194,9 +194,105 @@ class sms extends MY_Controller {
 
 		endforeach;
 	}
+//for sending system usage sms only for sub county and facility users
+    /**
+     *
+     */
+    public function sub_county_sms() {
+        //get the counties using HCMP
+        $counties = Facilities::get_counties_all_using_HCMP();
 
+        foreach ($counties as $counties) :
+            //pick the county nae and county ID accordingly
+            //counts the number of facilities not using the system
+            $count_county = 0;
+
+            $county_id = $counties['county'];
+            $county_name = $counties['county_name'];
+            $district_total = array();
+            //Get all the districts in that  particular county
+            $districts = Facilities::get_all_using_HCMP($county_id);
+
+
+
+            foreach ($districts as $districts) :
+                $count_district = 0;
+                $facility_names = array();
+                $district_id = $districts['district'];
+                $district_name = $districts['name'];
+
+                //echo "<pre>";print_r($district_name);exit;
+                $facilities = Facilities::getFacilities_for_email($district_id);
+
+                //loop through all the facilities in the particular sub county
+                foreach ($facilities as $facilities_) :
+                    //facility name
+                    $facility_name = $facilities_ -> facility_name;
+                    $facility_code = $facilities_ -> facility_code;
+
+                    //check the last time they logged in as a facility
+                    $system_usage = Log::check_system_usage($facility_code);
+
+                    $no_of_days = $system_usage[0]['Days_From'];
+                    //checks if the number of days is greater than five as that is the threshold
+                    if ($no_of_days >= 5) :
+                        //counts the number of facilities who haven't logged in for more than 5 days
+                        $count_district++;
+
+                        //create an array t hold the names of the facilities
+
+                        //get the phone numbers of the facility users
+                        $phone = $this -> get_facility_phone_numbers($facility_code);
+
+                        $message = "Dear $facility_name user,\n you have not logged in to HCMP for the past $no_of_days days. The last time you logged in was $no_of_days days ago.\n Kindly log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
+                        $message = urlencode($message);
+                        //appends the phone numbers of the technical team
+                        $spam_sms = $phone;
+
+                        $phone_numbers = explode("+", $spam_sms);
+                        (array_key_exists($district_name, $facility_names)) ? : $facility_names = array_merge($facility_names, array($district_name => $facility_name));
+
+                        foreach ($phone_numbers as $key => $user_no) {
+                            file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+                        }
+
+                    endif;
+                    echo "<pre>  ";print_r($facility_names);exit;
+                    //(array_key_exists($district_name, $district_total)) ? : $district_total = array_merge($district_total, array($district_name => $count_district));
+
+                    //end for each for the facilites
+                endforeach;
+                //start for the sub county section
+                (array_key_exists($district_name, $district_total)) ? : $district_total = array_merge($district_total, array($district_name => $count_district));
+
+                //pick the user data
+                $user_data = Users::get_scp_details($district_id);
+
+                //loop through the each of the numbers of the users
+                foreach ($user_data as $data) :
+                    //pick the name
+                    $name_sub_county = $data['fname'] . " " . $data['lname'];
+                    //message to be sent out to the sub county guys
+                    $message = "Dear $name_sub_county, $district_name Sub County Pharmacist,\n $count_district facilities in $district_name Sub County have not accessed HCMP for more than 5 days.\n Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
+                    $message = urlencode($message);
+
+                    $user_no = $data['telephone'];
+                    file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+                endforeach;
+
+                $count_county += $count_district;
+
+                //end for each for the sub counties
+            endforeach;
+
+
+        endforeach;
+    }
 	//for sending an sms when an order is approved
 	public function send_order_approval_sms($facility_code, $status) {
+        //get the facility_name
+        $name = Facilities::get_facility_name($facility_code);
+        $facility_name = $name[0]['facility_name'];
 
 		$message = ($status == 1) ? $facility_name . " order has been rejected. HCMP" : $facility_name . " order has been approved. HCMP";
 
@@ -2049,31 +2145,30 @@ public function log_summary_weekly(){
 		$data = $q = Doctrine_Manager::getInstance()
 	        ->getCurrentConnection()
 	        ->fetchAll("SELECT *
-FROM (SELECT f.facility_name,f.facility_code,c.county,d.district,l.user_id, 
-if(l.issued=0 and l.ordered=0 and l.redistribute=0 and l.decommissioned=0 ,max(l.start_time_of_event),null)
- as login_only,
-l.issued,if(l.issued=1 and l.redistribute=0 ,max(l.start_time_of_event),null) as issue_event,
-l.ordered,DateDiff(now(),if(l.issued=1 and l.redistribute=0 ,max(l.start_time_of_event),null)) as issue_d,
-if(l.ordered=1 ,max(l.end_time_of_event),null) as ordered_event,
-DateDiff(now(),if(l.ordered=1 ,max(l.start_time_of_event),0)) as ordered_d,
-l.redistribute,if(l.redistribute=1 ,max(l.start_time_of_event),null) as redistribute_event,
-DateDiff(now(),if(l.redistribute=1 ,max(l.start_time_of_event),0)) as redistribute_d,
-l.decommissioned,if(l.decommissioned=1 ,max(l.start_time_of_event),null) as decommissioned_event,
-DateDiff(now(),if(l.decommissioned=1 ,max(l.start_time_of_event),0)) as decommissioned_d,
-l.add_stock,if(l.add_stock=1 ,max(l.start_time_of_event),null) as receive_event,
-DateDiff(now(),if(l.add_stock=1 ,max(l.start_time_of_event),0)) as receive_event_d,
-max(l.start_time_of_event) as date_event,
-DateDiff(now(),max(l.start_time_of_event)) as date_event_d
- FROM log l
-INNER JOIN user u ON l.user_id=u.id
-RIGHT JOIN facilities f ON u.facility=f.facility_code
-INNER JOIN districts d ON f.district=d.id
-INNER JOIN counties c ON d.county=c.id
-where  using_hcmp=1 group by l.issued,l.ordered,l.redistribute,l.decommissioned,f.facility_code) AS t
-group by issued,ordered,redistribute,decommissioned,facility_code
-");
-						 
-						 $mfl=array();
+                            FROM (SELECT f.facility_name,f.facility_code,c.county,d.district,l.user_id,
+                            if(l.issued=0 and l.ordered=0 and l.redistribute=0 and l.decommissioned=0 ,max(l.start_time_of_event),null)
+                             as login_only,
+                            l.issued,if(l.issued=1 and l.redistribute=0 ,max(l.start_time_of_event),null) as issue_event,
+                            l.ordered,DateDiff(now(),if(l.issued=1 and l.redistribute=0 ,max(l.start_time_of_event),null)) as issue_d,
+                            if(l.ordered=1 ,max(l.end_time_of_event),null) as ordered_event,
+                            DateDiff(now(),if(l.ordered=1 ,max(l.start_time_of_event),0)) as ordered_d,
+                            l.redistribute,if(l.redistribute=1 ,max(l.start_time_of_event),null) as redistribute_event,
+                            DateDiff(now(),if(l.redistribute=1 ,max(l.start_time_of_event),0)) as redistribute_d,
+                            l.decommissioned,if(l.decommissioned=1 ,max(l.start_time_of_event),null) as decommissioned_event,
+                            DateDiff(now(),if(l.decommissioned=1 ,max(l.start_time_of_event),0)) as decommissioned_d,
+                            l.add_stock,if(l.add_stock=1 ,max(l.start_time_of_event),null) as receive_event,
+                            DateDiff(now(),if(l.add_stock=1 ,max(l.start_time_of_event),0)) as receive_event_d,
+                            max(l.start_time_of_event) as date_event,
+                            DateDiff(now(),max(l.start_time_of_event)) as date_event_d
+                             FROM log l
+                            INNER JOIN user u ON l.user_id=u.id
+                            RIGHT JOIN facilities f ON u.facility=f.facility_code
+                            INNER JOIN districts d ON f.district=d.id
+                            INNER JOIN counties c ON d.county=c.id
+                            where  using_hcmp=1 group by l.issued,l.ordered,l.redistribute,l.decommissioned,f.facility_code) AS t
+                            group by issued,ordered,redistribute,decommissioned,facility_code
+                            ");
+    $mfl=array();
 						 
 				foreach ($data as $key) {
 						
@@ -2249,21 +2344,24 @@ group by issued,ordered,redistribute,decommissioned,facility_code
 		$value['facility_code'],
 		$value['county'],
 		$value['district'],
-		(date('m-d-Y',strtotime($value['issue_event']))=='01-01-1970')? '' : $value['issue_event'],
-		($value['issue_d']==0)? '':$value['issue_d'],
-		(date('m-d-Y',strtotime($value['redistribute_event']))=='01-01-1970')? '' : $value['redistribute_event'],
-		($value['redistribute_d']=='')? '' :$value['redistribute_d'],
-		(date('m-d-Y',strtotime($value['ordered_event']))=='01-01-1970')? '' : $value['ordered_event'],
-		($value['ordered_d']=='')? '' :$value['ordered_d'] ,
-		(date('m-d-Y',strtotime($value['decommissioned_event']))=='01-01-1970')? '' : $value['decommissioned_event'],
-		($value['decommissioned_d']=='')? '':$value['decommissioned_d'],
-		(date('m-d-Y',strtotime($value['receive_event']))=='01-01-1970')? '' : $value['receive_event'],
-		($value['receive_event_d']=='')? '' :$value['receive_event_d'],
-		(date('m-d-Y',strtotime($value['date_event']))=='01-01-1970')? '' : $value['date_event'],
-		($value['date_event_d']=='')? '' :$value['date_event_d']
+		(date('m-d-Y',strtotime($value['issue_event']))=='01-01-1970')? 'No Data Available' : $value['issue_event'],
+		($value['issue_d']==0)? 'No Data Available':$value['issue_d'],
+		(date('m-d-Y',strtotime($value['redistribute_event']))=='01-01-1970')? 'No Data Available' : $value['redistribute_event'],
+		($value['redistribute_d']=='')? 'No Data Available' :$value['redistribute_d'],
+		(date('m-d-Y',strtotime($value['ordered_event']))=='01-01-1970')? 'No Data Available' : $value['ordered_event'],
+		($value['ordered_d']=='')? 'No Data Available' :$value['ordered_d'] ,
+		(date('m-d-Y',strtotime($value['decommissioned_event']))=='01-01-1970')? 'No Data Available' : $value['decommissioned_event'],
+		($value['decommissioned_d']=='')? 'No Data Available':$value['decommissioned_d'],
+		(date('m-d-Y',strtotime($value['receive_event']))=='01-01-1970')? 'No Data Available' : $value['receive_event'],
+		($value['receive_event_d']=='')? 'No Data Available' :$value['receive_event_d'],
+		(date('m-d-Y',strtotime($value['date_event']))=='01-01-1970')? 'No Data Available' : $value['date_event'],
+		($value['date_event_d']=='')? 'No Data Available' :$value['date_event_d']
 		));
 		endforeach;
 		$excel_data['row_data'] = $row_data;
+       /* echo "<pre>";
+    print_r($excel_data['row_data']);
+    exit;*/
 		$excel_data['report_type']='Log Summary';
 		
 
