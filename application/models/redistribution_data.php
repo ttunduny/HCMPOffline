@@ -66,6 +66,54 @@ class redistribution_data extends Doctrine_Record {
 
 	return $query;	
 	}
+    public static function get_redistribution_data_ors_zinc($commodities){
+        $query=Doctrine_Manager::getInstance()->getCurrentConnection()
+            ->fetchAll("SELECT
+                            temp1.fname AS sender_name_fname,
+                            temp1.lname AS sender_name_lname,
+                            temp2.fname AS receiver_name_fname,
+                            temp2.lname AS receiver_name_lname,
+                            r_d.`source_facility_code`,
+                            f.facility_name AS source_facility_name,
+                            d.district AS source_district,
+                            temp3.facility_name AS receiver_facility_name,
+                            temp3.facility_code AS receiver_facility_code,
+                            temp4.district AS receiver_district,
+                            c.`id`,
+                            c.commodity_name,
+                            c.commodity_code,
+                            c.unit_size,
+                            c.unit_cost,
+                            c.total_commodity_units,
+                            r_d.`quantity_sent`,
+                            r_d.`quantity_received`,
+                            r_d.`manufacturer`,
+                            r_d.`batch_no`,
+                            r_d.`expiry_date`,
+                            r_d.`status`,
+                            r_d.`date_sent`,
+                            r_d.`date_received`
+                        FROM
+                            facilities f,
+                            commodities c,
+                            districts d,
+                            redistribution_data r_d
+                                LEFT JOIN
+                            user AS temp1 ON temp1.id = r_d.`sender_id`
+                                LEFT JOIN
+                            user AS temp2 ON temp2.id = r_d.`receiver_id`
+                                LEFT JOIN
+                            facilities AS temp3 ON temp3.facility_code = r_d.`receive_facility_code`
+                                LEFT JOIN
+                            districts AS temp4 ON temp4.id = temp3.district
+                        WHERE
+                            r_d.commodity_id = c.id AND c.id = 51
+                                AND r_d.`source_facility_code` = f.facility_code
+                                AND f.district = d.id
+                                            ");
+
+        return $query;
+    }
 	public static function get_redistribution_pending($facility_code,$district_id,$county_id,$year){
 	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND d.id = '$district_id'" : null;
 	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;

@@ -3329,8 +3329,8 @@ class Reports extends MY_Controller {
 		$county_id = $this -> session -> userdata('county_id');
 		$data['district_data'] = districts::getDistrict($county_id);
 		$data['title'] = $data['banner_text'] = "Donations";
-		$data['content_view'] = "facility/facility_reports/reports_v";
-		$data['report_view'] = "subcounty/reports/county_donation_filter_v";
+        $data['content_view'] = "facility/facility_reports/reports_v";
+		//$data['report_view'] = "subcounty/reports/county_donation_filter_v";
 		if ($this -> input -> is_ajax_request()) :
 			return $this -> load -> view("subcounty/reports/county_donation_filter_v", $data);
 		else :
@@ -3414,22 +3414,6 @@ class Reports extends MY_Controller {
 		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
 		$county_id = $this -> session -> userdata('county_id');
 		$expiries_array = redistribution_data::get_redistribution_data($facility_code, $district_id, $county_id, $year);
-		//$graph_data = $series_data = array();
-		//echo "<pre>";print_r($expiries_array);echo "</pre>";exit;
-		//foreach ($expiries_array as $facility_expiry_data) :
-		//$total_units = $facility_expiry_data['total_commodity_units'];
-		//$sent_units = $facility_expiry_data['quantity_sent'];
-		//$received_units = $facility_expiry_data['quantity_received'];
-		//	$total_sent = round(($sent_units / $total_units), 1);
-		//$total_received = round(($received_units / $total_units), 1);
-		//endforeach;//exit;
-		//$total_expiry = number_format($total_expiry, 2, '.', ',');
-		// array_push($series_data, array("","","Total for the next $year months",$total_expiry,''));
-		//$category_data = array( array("From", 'To', "Commodity Name", "District From", "District To", "Unit Size", 'Batch No', 'Expiry Date', 'Manufacturer', 'Quantity Sent(units)', 'Quantity Sent(packs)', 'Quantity Received (units)', 'Quantity Received (packs)', 'Date sent', 'Date Received', 'status'));
-		//$graph_data = array_merge($graph_data, array("table_id" => 'dem_graph_1'));
-		//$graph_data = array_merge($graph_data, array("table_header" => $category_data));
-		//$graph_data = array_merge($graph_data, array("table_body" => $series_data));
-		///$data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);
 		$data['donations'] = $expiries_array;
 		$data['year'] = $year;
 		$data['redistribute_count'] = count(redistribution_data::get_redistribution_pending($facility_code, $district_id, $county_id, $year))+1;
