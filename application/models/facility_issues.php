@@ -96,6 +96,49 @@ class facility_issues extends Doctrine_Record {
     return $consumption; 
 	   
    }
+
+    //The function gets the consumption for the email consumption report
+    public static function get_consumption_report_ors_zinc($commodities)
+    {
+        $date_ = date("Y");
+        $consumption = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+   	  SELECT
+            cms.commodity_name,
+            cms.total_commodity_units AS unit_size,
+            cms.unit_cost,
+            fs.batch_no,
+            cs.source_name,
+            f.facility_name,
+            f.facility_code,
+            di.district,
+            c.county,
+            MONTHNAME(fs.date_issued) AS month,
+            fs.qty_issued AS total_units,
+            (fs.qty_issued * cms.unit_cost) AS total_cost,
+            CEIL(fs.qty_issued / cms.total_commodity_units) AS total_packs
+        FROM
+            facility_issues fs,
+            commodities cms,
+            facilities f,
+            districts di,
+            commodity_source cs,
+            counties c
+        WHERE
+            cms.id = $commodities
+                AND fs.facility_code = f.facility_code
+                AND fs.qty_issued > 0
+                AND f.district = di.id
+                AND di.county = c.id
+                AND cs.id = cms.commodity_source_id
+                AND fs.status = '1'
+                AND DATE_FORMAT(fs.date_issued, '%Y') = '$date_'
+                AND cms.id = fs.commodity_id
+        GROUP BY fs.batch_no , cms.id , f.facility_code
+        ORDER BY c.county ASC , di.district ASC");
+
+        return $consumption;
+
+    }
 	public static function get_bin_card($facility_code,$commodity_id,$from,$to){
 
 		$convertfrom=date('Y-m-d',strtotime($from ));

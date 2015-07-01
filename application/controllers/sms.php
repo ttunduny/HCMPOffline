@@ -1790,7 +1790,8 @@ class sms extends MY_Controller {
 				$date_last_issue = Facilities::get_last_issue($facility_code);
 				//ensure that if the date is null change the message
 				$date_of_last_issue = ($date_last_issue[0]['Date Last Issued']!=0) ? date('j M, Y', strtotime($date_last_issue[0]['Date Last Issued'])) : "No Data Found";
-				array_push($row_data, array($commodity_stock_level["county"], $commodity_stock_level["subcounty"], $commodity_stock_level["facility_code"], $commodity_stock_level["facility_name"], $commodity_stock_level["commodity_name"], $commodity_stock_level["unit_size"], $commodity_stock_level["unit_cost"], $commodity_stock_level["supplier"], $commodity_stock_level["manufacture"], $commodity_stock_level["batch_no"], $commodity_stock_level["expiry_date"], $commodity_stock_level["balance_units"], $commodity_stock_level["balance_packs"], $commodity_stock_level["amc_units"], $commodity_stock_level["amc"], $commodity_stock_level["mos"],$date_of_last_issue,$date_last_issue[0]["Days From Last Issue"]));
+				$days_since_last_issue = ($date_last_issue[0]['Days From Last Issue']!=0) ? $date_last_issue[0]['Days From Last Issue'] : 0;
+                array_push($row_data, array($commodity_stock_level["county"], $commodity_stock_level["subcounty"], $commodity_stock_level["facility_code"], $commodity_stock_level["facility_name"], $commodity_stock_level["commodity_name"], $commodity_stock_level["unit_size"], $commodity_stock_level["unit_cost"], $commodity_stock_level["supplier"], $commodity_stock_level["manufacture"], $commodity_stock_level["batch_no"], $commodity_stock_level["expiry_date"], $commodity_stock_level["balance_units"], $commodity_stock_level["balance_packs"], $commodity_stock_level["amc_units"], $commodity_stock_level["amc"], $commodity_stock_level["mos"],$date_of_last_issue,$days_since_last_issue));
 					
 			endforeach;
 
@@ -1854,6 +1855,7 @@ class sms extends MY_Controller {
 				<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 		$report_type = "ors_report";
 		$this -> create_excel($excel_data, $report_type);
+       // exit;
 		
 
 		//path for windows
@@ -1867,6 +1869,218 @@ class sms extends MY_Controller {
 		$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc);
 
 	}
+    public function ors_zinc_redistribution_report() {
+        //Set the current year
+        $year = date("Y");
+        $county_total = array();
+        $excel_data = array();
+        $column_data = array();
+        $excel_data = array('doc_creator' => "HCMP", 'doc_title' => 'ors zinc redistribution report ', 'file_name' => 'ors zinc redistribution report');
+        $row_data = array();
+
+        $column_data = array("Sender Name", "Receiver Name", "Source Facility Code", "Source Facility Name","Source Sub County","Receiver Facility Name","Receiver Facility Code","Receiver Sub County", "Commodity Name","Commodity Code", "Unit Size", "Unit Cost(KES)","Quantity Sent(Units)","Quantity Sent(Packs)","Quantity Received(Units)","Quantity Received(Packs)","Manufacturer","Batch Number", "Expiry Date","Status","Date Sent","HCMP Supported Facility","Date Received");
+        $excel_data['column_data'] = $column_data;
+        //the commodities variable will hold the values for the three commodities ie ORS and Zinc
+        $commodities = array(51, 267, 36,456);
+        foreach ($commodities as $commodities) :
+            $commodity_stock_level = array();
+            //holds the data for the entire county
+            //once it is done executing for one commodity it will reset to zero
+            $commodity_total = array();
+            //pick the commodity names and details
+            //get the redistribution report for the specified commodities
+            $commodity_redistribution = redistribution_data::get_redistribution_data_ors_zinc($commodities);
+
+            //Start building the excel file
+            foreach ($commodity_redistribution as $commodity_redistribution) :
+
+                //format the names for the receiver and sender accordingly
+                $sender = $commodity_redistribution["sender_name_fname"]." ".$commodity_redistribution["sender_name_lname"];
+                $receiver = $commodity_redistribution["receiver_name_fname"]." ".$commodity_redistribution["receiver_name_lname"];
+
+                //then get the quantity of the commodities in packs
+                $total_commodity_units = "";
+                $total_commodity_units = Commodities::get_commodity_unit($commodities);
+                $total_commodity_units = $total_commodity_units[0]['total_commodity_units'];
+
+                //get the quantity received in packs
+                $quantity_sent_packs = $commodity_redistribution["quantity_sent"]/$total_commodity_units;
+                $quantity_received_packs = $commodity_redistribution["quantity_received"]/$total_commodity_units;
+
+                //now let us set the the status
+                $status = "";
+                $status = ($commodity_redistribution["status"]!=0)?"Received" : "Not Received";
+
+                //check if the facility is supported facility
+                $active = "";
+                $active = Facilities::check_active_facility($commodity_redistribution["receiver_facility_code"]);
+                $active = $active[0]["HCMP Supported"];
+
+                //format the date received
+                $date_received = "";
+                $date_received = ($commodity_redistribution["date_received"] !=0)?$commodity_redistribution["date_received"]:"Not Received";
+
+                //echo "<pre>";print_r($date_received);exit;
+                //pick the facility code from the data
+
+                /*$facility_code = $commodity_redistribution["facility_code"];
+                //get the last date of issue from the database
+                $date_last_issue = Facilities::get_last_redistribution($facility_code);
+                //ensure that if the date is null change the message
+                $date_of_last_issue = ($date_last_issue[0]['Date Last Redistributed']!=0) ? date('j M, Y', strtotime($date_last_issue[0]['Date Last Redistributed'])) : "No Data Found";
+                $days_since_last_issue = ($date_last_issue[0]['Days From Last Redistribution']!=0) ? $date_last_issue[0]['Days From Last Redistribution'] : 0;
+                */
+               //"Date Sent","HCMP Supported Facility","Date Received");
+
+                //push the result from the array into row data that will be dumped into the excel file
+                array_push($row_data, array($sender,$receiver, $commodity_redistribution["source_facility_code"],
+                    $commodity_redistribution["source_facility_name"],
+                    $commodity_redistribution["source_district"],
+                    $commodity_redistribution["receiver_facility_name"],
+                    $commodity_redistribution["receiver_facility_code"],
+                    $commodity_redistribution["receiver_district"],
+                    $commodity_redistribution["commodity_name"],
+                    $commodity_redistribution["commodity_code"],
+                    $commodity_redistribution["unit_size"],
+                    $commodity_redistribution["unit_cost"],
+                    $commodity_redistribution["quantity_sent"],
+                    $quantity_sent_packs,
+                    $commodity_redistribution["quantity_received"],
+                    $quantity_received_packs,
+                    $commodity_redistribution["manufacturer"],
+                    $commodity_redistribution["batch_no"],
+                    $commodity_redistribution["expiry_date"],
+                    $status,
+                    $commodity_redistribution["date_sent"],
+                    $active,
+                    $date_received));
+
+                //echo "<pre>";print_r($row_data);exit;
+
+            endforeach;
+
+
+
+
+        endforeach;
+
+        $excel_data['row_data'] = $row_data;
+        $excel_data['report_type'] = "download_file";
+        $excel_data['file_name'] = "Zinc ORS Redistribution Report";
+        $excel_data['excel_title'] = "Redistribution Report for Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality (100) & (50) for the year " . date("Y");
+
+        //Start the email section of the report
+        //Get the number of facilities using HCMP
+        $no_of_facilities = Facilities::get_all_on_HCMP();
+
+        $subject = "Redistribution Report: Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality ";
+
+        $message = "<p>Find attached an excel sheet with a Redistribution Report for
+				Zinc Sulphate 20mg, ORS sachet (for 500ml) low osmolality (100 & 50) and ORS 4 Satchets & Zinc 10 Tablets 20 Mg as at " . date("jS F Y") . "</p>";
+        $message .= "<p>Number of facilities using HCMP: " . $no_of_facilities . "</p>";
+        $message .= $message_body;
+        $message .= "
+				<p>You may log onto health-cmp.or.ke for follow up.</p>
+
+				<p>----</p>
+
+				<p>HCMP</p>
+
+				<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
+        $report_type = "ors_report";
+        $this -> create_excel($excel_data, $report_type);
+        //exit;
+
+
+        //path for windows
+        $handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+
+        //path for Mac
+        //$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+        $email_address = "smutheu@clintonhealthaccess.org,jaynerawz@gmail.com";
+        $bcc = "collinsojenge@gmail.com,kelvinmwas@gmail.com";
+
+        $this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc);
+
+    }
+    public function ors_zinc_consumption_report() {
+        //Set the current year
+        $year = date("Y");
+        $county_total = array();
+        $excel_data = array();
+        $excel_data = array('doc_creator' => "HCMP", 'doc_title' => ' consumption report ', 'file_name' => 'stock level report');
+        $row_data = array();
+
+        $column_data = array("County", "Sub-County", "Facility Code", "Facility Name", "Commodity Name", "Unit Cost(KES)", "Supplier","Batch Number", "Quantity Consumed (Packs)", "Quantity Consumed (Units)", "Date Last Issued","Days From Last Issue");
+        $excel_data['column_data'] = $column_data;
+        //the commodities variable will hold the values for the three commodities ie ORS and Zinc
+        $commodities = array(51, 267, 36,456);
+        foreach ($commodities as $commodities) :
+            $commodity_stock_level = array();
+            //holds the data for the entire county
+            //once it is done executing for one commodity it will reset to zero
+            $commodity_total = array();
+            //pick the commodity names and details
+            //get the consumption for that commodity
+            $commodity_consumption = facility_issues::get_consumption_report_ors_zinc($commodities);
+
+            //Start building the excel file
+            foreach ($commodity_consumption as $commodity_consumption) :
+                //pick the facility code from the data
+                $facility_code = $commodity_consumption["facility_code"];
+
+                //get the last date of issue from the database
+                $date_last_issue = Facilities::get_last_issue($facility_code);
+                //ensure that if the date is null change the message
+                $date_of_last_issue = ($date_last_issue[0]['Date Last Issued']!=0) ? date('j M, Y', strtotime($date_last_issue[0]['Date Last Issued'])) : "No Data Found";
+                $days_since_last_issue = ($date_last_issue[0]['Days From Last Issue']!=0) ? $date_last_issue[0]['Days From Last Issue'] : 0;
+
+                array_push($row_data, array($commodity_consumption["county"], $commodity_consumption["district"], $commodity_consumption["facility_code"], $commodity_consumption["facility_name"], $commodity_consumption["commodity_name"],$commodity_consumption["unit_cost"], $commodity_consumption["source_name"], $commodity_consumption["batch_no"], $commodity_consumption["total_packs"], $commodity_consumption["total_units"],$date_of_last_issue,$days_since_last_issue));
+
+            endforeach;
+
+
+        endforeach;
+
+        $excel_data['row_data'] = $row_data;
+        $excel_data['report_type'] = "download_file";
+        $excel_data['file_name'] = "Consumption Report For Zinc & ORS";
+        $excel_data['excel_title'] = "Consumption Report for Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality (100) & (50) as at " . date("jS F Y");
+
+        //Start the email section of the report
+        //Get the number of facilities using HCMP
+        $no_of_facilities = Facilities::get_all_on_HCMP();
+
+        $subject = "Consumption Report: Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality ";
+
+        $message = "<p>Find attached an excel sheet with a Consumption Report for
+				Zinc Sulphate 20mg, ORS sachet (for 500ml) low osmolality (100 & 50) and ORS 4 Satchets & Zinc 10 Tablets 20 Mg as at " . date("jS F Y") . "</p>";
+        $message .= "<p>Number of facilities using HCMP: " . $no_of_facilities . "</p>";
+        $message .= $message_body;
+        $message .= "
+				<p>You may log onto health-cmp.or.ke for follow up.</p>
+
+				<p>----</p>
+
+				<p>HCMP</p>
+
+				<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
+        $report_type = "ors_report";
+        $this -> create_excel($excel_data, $report_type);
+        //exit;
+
+
+        //path for windows
+        $handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+
+        //path for Mac
+        //$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
+        $email_address = "smutheu@clintonhealthaccess.org,jaynerawz@gmail.com";
+        $bcc = "collinsojenge@gmail.com,kelvinmwas@gmail.com";
+
+        $this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc);
+
+    }
 
 	public function create_excel_ors($excel_data = NUll, $report_type = NULL, $total_figure = NULL) {
 		$styleArray = array('font' => array('bold' => true), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER));
@@ -2142,31 +2356,47 @@ class sms extends MY_Controller {
 
 public function log_summary_weekly(){
 	    $time=date('M , d Y');
-		$data = $q = Doctrine_Manager::getInstance()
-	        ->getCurrentConnection()
-	        ->fetchAll("SELECT *
-                            FROM (SELECT f.facility_name,f.facility_code,c.county,d.district,l.user_id,
-                            if(l.issued=0 and l.ordered=0 and l.redistribute=0 and l.decommissioned=0 ,max(l.start_time_of_event),null)
-                             as login_only,
-                            l.issued,if(l.issued=1 and l.redistribute=0 ,max(l.start_time_of_event),null) as issue_event,
-                            l.ordered,DateDiff(now(),if(l.issued=1 and l.redistribute=0 ,max(l.start_time_of_event),null)) as issue_d,
-                            if(l.ordered=1 ,max(l.end_time_of_event),null) as ordered_event,
-                            DateDiff(now(),if(l.ordered=1 ,max(l.start_time_of_event),0)) as ordered_d,
-                            l.redistribute,if(l.redistribute=1 ,max(l.start_time_of_event),null) as redistribute_event,
-                            DateDiff(now(),if(l.redistribute=1 ,max(l.start_time_of_event),0)) as redistribute_d,
-                            l.decommissioned,if(l.decommissioned=1 ,max(l.start_time_of_event),null) as decommissioned_event,
-                            DateDiff(now(),if(l.decommissioned=1 ,max(l.start_time_of_event),0)) as decommissioned_d,
-                            l.add_stock,if(l.add_stock=1 ,max(l.start_time_of_event),null) as receive_event,
-                            DateDiff(now(),if(l.add_stock=1 ,max(l.start_time_of_event),0)) as receive_event_d,
-                            max(l.start_time_of_event) as date_event,
-                            DateDiff(now(),max(l.start_time_of_event)) as date_event_d
-                             FROM log l
-                            INNER JOIN user u ON l.user_id=u.id
-                            RIGHT JOIN facilities f ON u.facility=f.facility_code
-                            INNER JOIN districts d ON f.district=d.id
-                            INNER JOIN counties c ON d.county=c.id
-                            where  using_hcmp=1 group by l.issued,l.ordered,l.redistribute,l.decommissioned,f.facility_code) AS t
-                            group by issued,ordered,redistribute,decommissioned,facility_code
+		$data = $q = Doctrine_Manager::getInstance()->getCurrentConnection()
+	        ->fetchAll("SELECT
+                                *
+                            FROM
+                                (SELECT
+                                    f.facility_name,
+                                        f.facility_code,
+                                        c.county,
+                                        d.district,
+                                        l.user_id,
+                                        IF(l.issued = 0 AND l.ordered = 0
+                                            AND l.redistribute = 0
+                                            AND l.decommissioned = 0, MAX(l.start_time_of_event), NULL) AS login_only,
+                                        l.issued,
+                                        IF(l.issued = 1 AND l.redistribute = 0, MAX(l.start_time_of_event), NULL) AS issue_event,
+                                        l.ordered,
+                                        DATEDIFF(NOW(), IF(l.issued = 1 AND l.redistribute = 0, MAX(l.start_time_of_event), NULL)) AS issue_d,
+                                        IF(l.ordered = 1, MAX(l.end_time_of_event), NULL) AS ordered_event,
+                                        DATEDIFF(NOW(), IF(l.ordered = 1, MAX(l.start_time_of_event), 0)) AS ordered_d,
+                                        l.redistribute,
+                                        IF(l.redistribute = 1, MAX(l.start_time_of_event), NULL) AS redistribute_event,
+                                        DATEDIFF(NOW(), IF(l.redistribute = 1, MAX(l.start_time_of_event), 0)) AS redistribute_d,
+                                        l.decommissioned,
+                                        IF(l.decommissioned = 1, MAX(l.start_time_of_event), NULL) AS decommissioned_event,
+                                        DATEDIFF(NOW(), IF(l.decommissioned = 1, MAX(l.start_time_of_event), 0)) AS decommissioned_d,
+                                        l.add_stock,
+                                        IF(l.add_stock = 1, MAX(l.start_time_of_event), NULL) AS receive_event,
+                                        DATEDIFF(NOW(), IF(l.add_stock = 1, MAX(l.start_time_of_event), 0)) AS receive_event_d,
+                                        MAX(l.start_time_of_event) AS date_event,
+                                        DATEDIFF(NOW(), MAX(l.start_time_of_event)) AS date_event_d
+                                FROM
+                                    log l
+                                INNER JOIN user u ON l.user_id = u.id
+                                RIGHT JOIN facilities f ON u.facility = f.facility_code
+                                INNER JOIN districts d ON f.district = d.id
+                                INNER JOIN counties c ON d.county = c.id
+                                WHERE
+                                   f.using_hcmp = 1 and c.id = 14
+                                GROUP BY l.issued , l.ordered , l.redistribute , l.decommissioned , f.facility_code) AS t
+                            GROUP BY issued , ordered , redistribute , decommissioned , facility_code
+
                             ");
     $mfl=array();
 						 
@@ -2234,12 +2464,7 @@ public function log_summary_weekly(){
 						 $clean_array=array_values($multi_dimenetional);
 						
 							$new=call_user_func_array('array_merge_recursive', $multi_dimenetional);
-							//$new=call_user_func_array('array_merge_recursive', $new);
-							
-						// $this -> hcmp_functions -> create_excel($multi_dimenetional);
-						//echo '<pre>';print_r(array_values($clean_array));echo '</pre>';exit;
-						
-							  
+
 							  $temp2 = array();
 						foreach ($clean_array as $key => $value) {
 							//echo count($value).'<br>';
@@ -2267,7 +2492,7 @@ public function log_summary_weekly(){
 										$facility_code=$value_child['facility_code'];
 										$county=$value_child['county'];
 										$district=$value_child['district'];
-										
+
 										$login_event[]=$value_child['login_only'];
 										$ordered[]=$value_child['ordered'];
 										
@@ -2315,23 +2540,9 @@ public function log_summary_weekly(){
 								    'date_event_d'=>min($lastseen_days)
 							        ));
 
-							//echo '<pre>';print_r(min($lastseen_days));echo '</pre>';
 						}
-						//echo '<pre>';print_r($temp2);echo '</pre>';
-						//exit;
-						/*foreach ($new as $value) {
-							$mfl_code=$value['facility_code'];
-							
-							foreach($value as $k=>$v){
-								// echo $k.'    '.$v;
-								if($v!=NULL){
-									
-									$finalArray[$mfl_code][$k]=$v;
-								}
-							}
-							
-						}*/
-						//echo '<pre>';print_r(array_values($temp2));echo '</pre>';exit;
+
+
 		$excel_data = array('doc_creator' => 'HCMP-Kenya', 'doc_title' => 'HCMP_Facility_Activity_Log_Summary ', 'file_name' => 'HCMP_Facility_Activity_Log_Summary_as_at_'.$time);
 		$row_data = array(); 
 		$column_data = array("Facility Name", "Facility Code", "County","Sub-County", "Date Last Issued", "Days from last issue",
@@ -2359,9 +2570,7 @@ public function log_summary_weekly(){
 		));
 		endforeach;
 		$excel_data['row_data'] = $row_data;
-       /* echo "<pre>";
-    print_r($excel_data['row_data']);
-    exit;*/
+    echo "<pre>";print_r($excel_data['row_data']);exit;
 		$excel_data['report_type']='Log Summary';
 		
 
@@ -2430,7 +2639,7 @@ public function log_summary_weekly(){
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						$subject = "Weekly Log Summary as at ".$time;
 						
-						$email_address = 'kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,jaynerawz@gmail.com,collinsojenge@gmail.com';
+						$email_address = 'collinsojenge@gmail.com';
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 			
             
@@ -2477,3 +2686,4 @@ public function log_summary_weekly(){
 	
 
 }
+
