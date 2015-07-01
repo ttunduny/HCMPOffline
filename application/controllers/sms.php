@@ -2430,7 +2430,7 @@ public function log_summary_weekly(){
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						$subject = "Weekly Log Summary as at ".$time;
 						
-						$email_address = 'kelvinmwas@gmail.com';
+						$email_address = 'kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,jaynerawz@gmail.com,collinsojenge@gmail.com';
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 			
             
