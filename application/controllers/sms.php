@@ -2393,11 +2393,10 @@ public function log_summary_weekly(){
                                 INNER JOIN districts d ON f.district = d.id
                                 INNER JOIN counties c ON d.county = c.id
                                 WHERE
-                                   f.using_hcmp = 1 and c.id = 14
+                                    using_hcmp = 1
                                 GROUP BY l.issued , l.ordered , l.redistribute , l.decommissioned , f.facility_code) AS t
                             GROUP BY issued , ordered , redistribute , decommissioned , facility_code
-
-                            ");
+                                                        ");
     $mfl=array();
 						 
 				foreach ($data as $key) {
@@ -2638,8 +2637,9 @@ public function log_summary_weekly(){
 
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						$subject = "Weekly Log Summary as at ".$time;
-						
-						$email_address = 'collinsojenge@gmail.com';
+
+                        $email_address = "smutheu@clintonhealthaccess.org,jaynerawz@gmail.com,collinsojenge@gmail.com,kelvinmwas@gmail.com";
+                        //$bcc = "";
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 			
             
