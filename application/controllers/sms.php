@@ -2570,7 +2570,7 @@ public function log_summary_weekly(){
 		));
 		endforeach;
 		$excel_data['row_data'] = $row_data;
-    echo "<pre>";print_r($excel_data['row_data']);exit;
+    //echo "<pre>";print_r($excel_data['row_data']);exit;
 		$excel_data['report_type']='Log Summary';
 		
 
