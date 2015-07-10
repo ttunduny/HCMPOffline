@@ -9,22 +9,21 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
 
-		<link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/>
-		<link href="<?php echo base_url().'assets/css/offline-theme-default.css'?>" type="text/css" rel="stylesheet"/>
-		<link href="<?php echo base_url().'assets/css/styles.css'?>" type="text/css" rel="stylesheet"/>
-		<link href="<?php echo base_url().'assets/css/select2.css'?>" type="text/css" rel="stylesheet"/>
-		<link href="<?php echo base_url().'assets/css/offline-language-english.css'?>" type="text/css" rel="stylesheet"/>
 		<link rel="icon" href="<?php echo base_url().'assets/img/coat_of_arms.png'?>" type="image/x-icon" />
-		<link href="<?php echo base_url().'assets/metro-bootstrap/docs/font-awesome.css'?>" type="text/css" rel="stylesheet"/>
-		<link href="<?php echo base_url().'assets/metro-bootstrap/css/metro-bootstrap.css'?>" type="text/css" rel="stylesheet"/>
-		<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
-		<link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
-		<link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
-		<link href="<?php echo base_url().'assets/css/normalize.css'?>" type="text/css" rel="stylesheet"/>
-		<script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
-		<script src="<?php echo base_url().'assets/scripts/jquery-1.8.0.js'?>" type="text/javascript"></script>
-		<script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
-		<script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
+    <link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
+    <link href="<?php echo base_url().'assets/css/select2.css'?>" type="text/css" rel="stylesheet"/> 
+  <link href="<?php echo base_url().'assets/css/jquery-ui-1.10.4.custom.min.css'?>" type="text/css" rel="stylesheet"/>
+  <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
+  <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
+  <link href="<?php echo base_url().'assets/css/font-awesome.min.css'?>" type="text/css" rel="stylesheet"/>
+  <link rel="stylesheet" href="<?php echo base_url().'assets/css/pace-theme-flash.css'?>" />
+  <link rel="stylesheet" href="<?php echo base_url().'assets/bower_components/sweetalert/lib/sweet-alert.css'?>" />
+  <link rel="stylesheet" href="<?php echo base_url().'assets/bower_components/alertifyjs/dist/css/alertify_bootstrap_3.css'?>" />
+    <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
+     <script src="<?php echo base_url().'assets/scripts/select2.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/bower_components/sweetalert/lib/sweet-alert.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/bower_components/alertifyjs/dist/js/alertify.js'?>" type="text/javascript"></script>
 		<!--<script src="<?php echo base_url().'assets/scripts/alert.js'?>" type="text/javascript"></script>
 		<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 		<!--[if lt IE 9]>
@@ -38,6 +37,24 @@
 				border-radius: 0 !important;
 			}
 		</style>
+		<?php 
+		$myurl=$this->uri->segment(2);
+					      
+							if ($myurl == 'change_default') { ?>
+								
+								<script>
+									$(document).ready(function() {
+											alertify.set({ delay: 10000 });
+											alertify.success("Your account is now secure.Please login to proceed.", null);
+		
+										});
+										
+								</script>
+							
+						 
+							
+						<?php	}
+ 						?>
 		<script>
 			paceOptions = {
 				ajax : false, // disabled

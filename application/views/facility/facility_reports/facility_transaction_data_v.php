@@ -13,7 +13,13 @@
 	</div>
 	
     
-	<?php echo form_open('orders/facility_order'); ?>
+	<?php
+	if ($source == "KEMSA") {
+	 echo form_open('orders/facility_order/1'); 
+	}elseif ($source == "MEDS") {
+	 echo form_open('orders/facility_order/2'); 
+	}
+	 ?>
  <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
 		<tr>
@@ -82,8 +88,13 @@ foreach ($facility_stock_data as $facility_stock_data) {
 <hr />
 <div class="container-fluid">
 <div style="float: right">
-<button class="btn btn-success" type="submit"><span class="glyphicon glyphicon-open"></span>Proceed to Order from KEMSA</button></div>
-
+<?php
+	if ($source == "KEMSA") {
+	echo '<button class="btn btn-success" type="submit"><span class="glyphicon glyphicon-open"></span>Proceed to Order from KEMSA</button></div>';
+	}elseif ($source == "MEDS") {
+	echo '<button class="btn btn-success" type="submit"><span class="glyphicon glyphicon-open"></span>Proceed to Order from MEDS</button></div>';
+	}
+	 ?>
 <?php echo form_close();?>
 </div>
 </div>

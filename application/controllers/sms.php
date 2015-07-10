@@ -21,7 +21,7 @@ class sms extends MY_Controller {
 	//for testing puposes only
 	public function test_sms() {
 
-		$phones = '254720167245';
+		$phones = '254723722204';
 		$message = 'test from system live server';
 		$message = urlencode($message);
 
@@ -31,7 +31,7 @@ class sms extends MY_Controller {
 
 		foreach ($phone_numbers as $key => $user_no) {
 			file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
-			echo "Success sent to " . $user_no . '<br>';
+			//echo "Success sent to " . $user_no . '<br>';
 		}
 
 	}
@@ -1270,7 +1270,7 @@ class sms extends MY_Controller {
 	public function consumption_report() {
 		//Set the current year
 		$year = date("Y");
-		$picurl = base_url() . 'assets/img/coat_of_arms-resized1.png';
+		//$picurl = base_url() . 'assets/img/coat_of_arms-resized1.png';
 		//get the facilities in the district
 		$counties = Facilities::get_counties_all_using_HCMP();
 
@@ -1466,7 +1466,7 @@ class sms extends MY_Controller {
 	public function stock_levels_report() {
 		//Set the current year
 		$year = date("Y");
-		$picurl = base_url() . 'assets/img/coat_of_arms-resized1.png';
+		//$picurl = base_url() . 'assets/img/coat_of_arms-resized1.png';
 		//get the facilities in the district
 		$counties = Facilities::get_counties_all_using_HCMP();
 
@@ -1673,25 +1673,29 @@ class sms extends MY_Controller {
 		$excel_data = array();
 		$excel_data = array('doc_creator' => "HCMP", 'doc_title' => ' stock level report ', 'file_name' => 'stock level report');
 		$row_data = array();
-		$column_data = array("County", "Sub-County", "Facility Code", "Facility Name", "Commodity Name", "Unit Size", "Unit Cost(KES)", "Supplier", "Manufacturer", "Batch Number", "Expiry Date", "Stock at Hand (units)", "Stock at Hand (packs)", "AMC (units)", "AMC (packs)", "Stock at Hand MOS(packs)");
+		$column_data = array("County", "Sub-County", "Facility Code", "Facility Name", "Commodity Name", "Unit Size", "Unit Cost(KES)", "Supplier", "Manufacturer", "Batch Number", "Expiry Date", "Stock at Hand (units)", "Stock at Hand (packs)", "AMC (units)", "AMC (packs)", "Stock at Hand MOS(packs)","Date Last Issued","Days From Last Issue");
 		$excel_data['column_data'] = $column_data;
 		//the commodities variable will hold the values for the three commodities ie ORS and Zinc
-		$commodities = array(51, 267, 36);
+		$commodities = array(51, 267, 36,456);
 		foreach ($commodities as $commodities) :
 			$commodity_stock_level = array();
 			//holds the data for the entire county
 			//once it is done executing for one commodity it will reset to zero
 			$commodity_total = array();
-
 			//pick the commodity names and details
-			//$commodity_name = Commodities::get_commodity_name($commodities);
 			//get the stock level for that commodity
 			$commodity_stock_level = Facility_stocks::get_commodity_stock_level($commodities);
 			//echo "<pre>";print_r($commodity_stock_level);exit;
 			//Start buliding the excel file
 			foreach ($commodity_stock_level as $commodity_stock_level) :
-				array_push($row_data, array($commodity_stock_level["county"], $commodity_stock_level["subcounty"], $commodity_stock_level["facility_code"], $commodity_stock_level["facility_name"], $commodity_stock_level["commodity_name"], $commodity_stock_level["unit_size"], $commodity_stock_level["unit_cost"], $commodity_stock_level["supplier"], $commodity_stock_level["manufacture"], $commodity_stock_level["batch_no"], $commodity_stock_level["expiry_date"], $commodity_stock_level["balance_units"], $commodity_stock_level["balance_packs"], $commodity_stock_level["amc_units"], $commodity_stock_level["amc"], $commodity_stock_level["mos"]));
-
+				//pick the facility code from the data
+				$facility_code = $commodity_stock_level["facility_code"];
+				//get the last date of issue from the database
+				$date_last_issue = Facilities::get_last_issue($facility_code);
+				//ensure that if the date is null change the message
+				$date_of_last_issue = ($date_last_issue[0]['Date Last Issued']!=0) ? date('j M, Y', strtotime($date_last_issue[0]['Date Last Issued'])) : "No Data Found";
+				array_push($row_data, array($commodity_stock_level["county"], $commodity_stock_level["subcounty"], $commodity_stock_level["facility_code"], $commodity_stock_level["facility_name"], $commodity_stock_level["commodity_name"], $commodity_stock_level["unit_size"], $commodity_stock_level["unit_cost"], $commodity_stock_level["supplier"], $commodity_stock_level["manufacture"], $commodity_stock_level["batch_no"], $commodity_stock_level["expiry_date"], $commodity_stock_level["balance_units"], $commodity_stock_level["balance_packs"], $commodity_stock_level["amc_units"], $commodity_stock_level["amc"], $commodity_stock_level["mos"],$date_of_last_issue,$date_last_issue[0]["Days From Last Issue"]));
+					
 			endforeach;
 
 			//Switch statement to build on the remaining part of the message body
@@ -1702,8 +1706,7 @@ class sms extends MY_Controller {
 			$no_of_facilities_reporting = Facility_stocks::facilities_reporting_on_a_specific_commodity($commodities);
 			//get the number of batches expiring within 3 months
 			$no_of_batches = Facility_stocks::batches_expiring_specific_commodities($commodities);
-			//echo "<pre>";print_r($no_of_stock_outs);exit;
-
+	
 			switch($commodities) :
 				case 51 :
 					$message_body .= "<p>Number of Facilities Reporting on ORS Satchets (100):" . $no_of_facilities_reporting . "</p>";
@@ -1716,13 +1719,18 @@ class sms extends MY_Controller {
 					$message_body .= "<p>Number of ORS (50) Batches expiring in the next 3 months:  " . $no_of_batches . "</p>";
 					break;
 				case 36 :
-					$message_body .= "<p>Number of Facilities Reporting on Zinc Sulphate 20mg:" . $no_of_facilities_reporting . "</p>";
-					$message_body .= "<p>Number of Facilities Stocked out on Zinc Sulphate 20mg:" . $no_of_stock_outs . "</p>";
-					$message_body .= "<p>Number of Zinc Sulphate Batches expiring in the next 3 months:" . $no_of_batches . "</p>";
+					$message_body .= "<p>Number of Facilities Reporting on Zinc Sulphate 20mg: " . $no_of_facilities_reporting . "</p>";
+					$message_body .= "<p>Number of Facilities Stocked out on Zinc Sulphate 20mg: " . $no_of_stock_outs . "</p>";
+					$message_body .= "<p>Number of Zinc Sulphate Batches expiring in the next 3 months: " . $no_of_batches . "</p>";
+					break;
+				case 456 :
+					$message_body .= "<p>Number of Facilities Reporting on ORS 4 Satchets & Zinc 10 Tablets 20 Mg: " . $no_of_facilities_reporting . "</p>";
+					$message_body .= "<p>Number of Facilities Stocked out on ORS 4 Satchets & Zinc 10 Tablets 20 Mg: " . $no_of_stock_outs . "</p>";
+					$message_body .= "<p>Number of ORS 4 Satchets & Zinc 10 Tablets 20 Mg Batches expiring in the next 3 months: " . $no_of_batches . "</p>";
 					break;
 			endswitch;
 
-			//array_push($county_total,array($row_data));
+			
 		endforeach;
 
 		$excel_data['row_data'] = $row_data;
@@ -1734,16 +1742,13 @@ class sms extends MY_Controller {
 		//Get the number of facilities using HCMP
 		$no_of_facilities = Facilities::get_all_on_HCMP();
 
-		$subject = "Daily Stock Level Report: Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality ";
+		$subject = "Stock Level Report: Zinc sulphate Tablets  20mg and ORS sachet (for 500ml) low osmolality ";
 
-		$message = "Good Morning,
-				<p>Find attached an excel sheet with a Stock Level Report for 
-				Zinc Sulphate 20mg and ORS sachet (for 500ml) low osmolality (100 & 50) as at " . date("jS F Y") . "</p>";
+		$message = "<p>Find attached an excel sheet with a Stock Level Report for 
+				Zinc Sulphate 20mg, ORS sachet (for 500ml) low osmolality (100 & 50) and ORS 4 Satchets & Zinc 10 Tablets 20 Mg as at " . date("jS F Y") . "</p>";
 		$message .= "<p>Number of facilities using HCMP: " . $no_of_facilities . "</p>";
 		$message .= $message_body;
 		$message .= "
-				
-				
 				<p>You may log onto health-cmp.or.ke for follow up.</p>
 				
 				<p>----</p>
@@ -1751,9 +1756,9 @@ class sms extends MY_Controller {
 				<p>HCMP</p>
 				
 				<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
-		//echo $message;exit;
 		$report_type = "ors_report";
 		$this -> create_excel($excel_data, $report_type);
+		
 
 		//path for windows
 		$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";

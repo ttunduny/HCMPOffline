@@ -154,9 +154,9 @@ echo form_open('stock/update_facility_stock_from_kemsa_order', $att);
         <td><input class='form-control input-small' type='text' name='qty_unit[$new_count]' value='$order_details[quantity_ordered_unit]' readonly='yes'/></td>
         <td><input class='form-control input-small' type='text' name='price_bought[$new_count]' value='$order_details[unit_cost]' readonly='yes'/></td>
         <td><input class='form-control input-small' type='text' name='total_cost[$new_count]' value='$cost' readonly='yes'/></td>
-        <td><input class='form-control input-small batch_no' type='text' name='batch_no[$new_count]' value='$order_details[batch_no]' required='required'/></td>
-        <td><input class='form-control input-small manu' type='text' name='manu[$new_count]' value='$order_details[maun]' required='required'/></td>
-        <td><input class='form-control input-small clone_datepicker' type='text' name='expiry_date[$new_count]' 
+        <td><input class='form-control input-small batch_no' type='text' name='batch_no[$new_count]' value='KEMSA' required='required'/></td>
+        <td><input class='form-control input-small manu' type='text' name='manu[$new_count]' value='KEMSA' required='required'/></td>
+        <td><input class='form-control input-small clone_datepicker' value='30 Jun15' type='text' name='expiry_date[$new_count]' 
         value='$expiry_date' required='required' /></td>
         <td><input class='form-control input-small quantity' type='text' name='quantity[$new_count]'
          value='$order_details[quantity_recieved]' required='required' /></td>

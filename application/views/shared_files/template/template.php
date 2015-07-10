@@ -207,7 +207,7 @@ foreach($menus as $menu){ $menu_id=(int)$menu['menu_id'];?>
       		 	
      		</div>
         <center>
-      		<div class="col-md-4">  
+      		<div class="col-md-4"style="font-weight:bold;">  
           <span><?php echo $this-> session -> userdata('facility_count'); ?>  </span>			
       		</div>
           </center>

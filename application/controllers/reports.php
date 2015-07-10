@@ -80,7 +80,18 @@ class Reports extends MY_Controller {
 		$data['title'] = "Commodity Listing";
 		$data['banner_text'] = "Commodity Listing";
 		$data['content_view'] = "shared_files/commodities/commodity_list_v";
-		$data['commodity_list'] = commodity_sub_category::get_all();
+		$data['commodity_list'] = commodities::get_all_with_suppliers();
+		$this -> load -> view('shared_files/template/template', $data);
+	}
+	// get the facility listing here
+	public function facility_listing() {
+		//get the county id from the session
+		$county_id = $this -> session -> userdata('county_id');
+		$data['title'] = "Facility Listing";
+		$data['banner_text'] = "Facility Listing";
+		//picks the list of facilities
+		$data['facility_list'] = facilities::get_detailed_listing($county_id);
+		$data['content_view'] = "shared_files/facilities/facility_listing";
 		$this -> load -> view('shared_files/template/template', $data);
 	}
 	public function force_file_download() {
@@ -251,13 +262,15 @@ class Reports extends MY_Controller {
 	 $this -> hcmp_functions ->  download_file(assets/manual/HCMPV2_User_Guide);
 	 }*/
 	// get the facility transaction data for ordering or quick analysis
-	public function facility_transaction_data() {
+	public function facility_transaction_data($source=NULL) {
+		$source = isset($source)? $source:'KEMSA';//KEMSA by default
 		$facility_code = $this -> session -> userdata('facility_id');
 		$data['facility_stock_data'] = facility_transaction_table::get_all($facility_code);
 		$data['last_issued_data'] = facility_issues::get_last_time_facility_issued($facility_code);
 		$data['title'] = "Facility Stock Summary";
 		$data['content_view'] = "facility/facility_reports/facility_transaction_data_v";
 		$data['banner_text'] = "Facility Stock Summary";
+		$data['source'] = $source;
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 	///////GET THE ITEMS A FACILITY HAS STOCKED OUT ON
@@ -3072,9 +3085,18 @@ class Reports extends MY_Controller {
 		$default_consumption_graph_ = array_merge($default_consumption_graph_, array("graph_yaxis_title" => "$axis"));
 		$default_consumption_graph_ = array_merge($default_consumption_graph_, array("graph_categories" => $category_data));
 		$default_consumption_graph_ = array_merge($default_consumption_graph_, array("series_data" => array('Consumption' => $series_data)));
+		$check_count=count($series_data);
+		
 		$data = array();
 		$data = array();
-		$def_cons = $this -> hcmp_functions -> create_high_chart_graph($default_consumption_graph_);
+		
+		if ($check_count <= 0) {
+			$def_cons= ' $("#graph_content_").html("<b>You have no Records, for this period please try using the filters</b>!");
+						 $("#graph_content_").removeAttr( "style" );
+						 $("#graph_content_").css({"height": "200px", "font-size": "200%","font-align": "center","margin-top": "4%"}); ';
+		}else {
+			$def_cons = $this -> hcmp_functions -> create_high_chart_graph($default_consumption_graph_);
+		}
 		$data['default_consumption_graph'] = $def_cons;
 		$county_id = $this -> session -> userdata('county_id');
 		$data['district_data'] = districts::getDistrict($county_id);
@@ -3233,12 +3255,13 @@ class Reports extends MY_Controller {
 		$row_data = array();
 		foreach ($facility_data as $facility) :
 			
-			$issue_date = ($facility['Date Last Issued']!=0) ? date('j M, Y', strtotime($facility['Date Last Issued'])) : "N/A";
-			$last_seen = ($facility['Date Last Seen']!=0) ? date('j M, Y', strtotime($facility['Date Last Seen'])) : "N/A";
-			$redistribution = ($facility['Date Last Redistributed']!=0) ? date('j M, Y', strtotime($facility['Date Last Redistributed'])) : "N/A";
-			$order_date = ($facility['Date Last Ordered']!=0) ? date('j M, Y', strtotime($facility['Date Last Ordered'])) : "N/A";
-			$decommission_date = ($facility['Date Last Decommissioned']!=0) ? date('j M, Y', strtotime($facility['Date Last Decommissioned'])) : "N/A";
-			$date_order = ($facility['Date Last Received Order']!=0) ? date('j M, Y', strtotime($facility['Date Last Received Order'])) : "N/A";
+			$issue_date = ($facility['Date Last Issued']!=0) ? date('j M, Y', strtotime($facility['Date Last Issued'])) : "No Data Available";
+			$last_seen = ($facility['Date Last Seen']!=0) ? date('j M, Y', strtotime($facility['Date Last Seen'])) : "No Data Available";
+			$redistribution = ($facility['Date Last Redistributed']!=0) ? date('j M, Y', strtotime($facility['Date Last Redistributed'])) : "No Data Available";
+			$order_date = ($facility['Date Last Ordered']!=0) ? date('j M, Y', strtotime($facility['Date Last Ordered'])) : "No Data Available";
+			$decommission_date = ($facility['Date Last Decommissioned']!=0) ? date('j M, Y', strtotime($facility['Date Last Decommissioned'])) : "No Data Available";
+			$date_order = ($facility['Date Last Received Order']!=0) ? date('j M, Y', strtotime($facility['Date Last Received Order'])) : "No Data Available
+			";
 			
 			array_push($row_data, array($facility['Facility Name'], 
 										$facility['Facility Code'], 
@@ -3459,12 +3482,13 @@ public function donation_report_download($year = null, $county_id = null,$distri
 		$excel_data = array('doc_creator' => $county_id, 'doc_title' => 'Redistribution Summary ', 'file_name' => 'Redistribution Summary For '.$pieces[0].' by '.$pieces[1].' '.'('.$year.')');
 		$row_data = array();
 		$column_data = array("Facility From", "Facility To", "Subcounty To" ,"Commodity Name", "Unit Size", "Batch No", "Expiry Date", "Manufacturer", "Quantity Sent", "Quantity Received",
-		 "Date Sent", "Date Received");
+		 "Date Sent", "Date Received","Status");
 		$excel_data['column_data'] = $column_data;
 		foreach ($redistribute_array as $column) :
 			array_push($row_data, array($column["source_facility_name"], $column["receiver_facility_name"],$column['receiver_district']=="" ? $column['source_district'] :$column['receiver_district'], $column["commodity_name"], 
 			$column["unit_size"], $column["batch_no"], $column["expiry_date"], $column["manufacturer"],$column["quantity_sent"],$column["quantity_received"]
-			,$column["date_sent"]	,$column["date_received"]));
+			,$column["date_sent"]	,$column["date_received"],$column["status"]==1 ?'Delivered' :$column["status"]==2 ?'Non HCMP' :'Pending' ));
+			($facility['Date Last Ordered']!=0) ? date('j M, Y', strtotime($facility['Date Last Ordered'])) : "No Data Available";
 		endforeach;
 		$excel_data['row_data'] = $row_data;
 		$this -> hcmp_functions -> create_excel($excel_data);

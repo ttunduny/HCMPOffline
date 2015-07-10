@@ -1,4 +1,4 @@
-<?php //echo "This is the one";exit; ?>
+<?php //echo "<pre>"; print_r($facility_commodity_list); echo "</pre>";exit;?>
 <style>
  	.input-small{
  		width: 55px !important;

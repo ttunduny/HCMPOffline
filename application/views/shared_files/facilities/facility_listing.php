@@ -1,28 +1,32 @@
-<?php //echo "<pre>"; print_r($commodity_list);echo "</pre>";exit;?>
 <div class="container" style="width: 96%; margin: auto;">
  <table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
 		<tr>
-			<th>Category</th>
-			<th>Commodity Name</th>
-			<th>Commodity Code</th>
-			<th>Unit Size</th>
-			<th>Unit Cost(2014)</th>
-			<th>Supplier</th>
+			<th>Sub County</th>
+			<th>MFL</th>
+			<th>Facility Name</th>
+			<th>Owner</th>
+			<th>Type</th>
+			<th>Date of Activation</th>
+			
+
 		</tr>
 	</thead>
 	<tbody>
 <?php 
-    foreach($commodity_list as $commodity_list):
-	
-			echo "<tr>
-					<td>".$commodity_list['commodity_sub_category']."</td>
-					<td>".$commodity_list['commodity_name']."</td>
-					<td>".$commodity_list['commodity_code']."</td>
-					<td>".$commodity_list['unit_size']."</td>
-					<td>".$commodity_list['unit_cost']."</td>
-					<td>".$commodity_list['commodity_source']."</td>
-			      </tr>";
+    foreach($facility_list as $facilities):
+    	$activation_date = ($facilities['date_of_activation']!=0) ? date('j M, Y', strtotime($facilities['date_of_activation'])) : "Inactive";
+    	$telephone = ($facilities['cellphone']>0) ? "+254".$facilities['cellphone'] : "No Data Available";
+		$contactperson = ($facilities['contactperson']!=null) ? $facilities['contactperson'] : "No Data Available";
+			echo  "<tr>
+						<td>".$facilities['district']."</td>
+						<td>".$facilities['facility_code']."</td>
+						<td>".$facilities['facility_name']."</td>
+						<td>".$facilities['owner']."</td>
+						<td>".$facilities['type']."</td>
+						<td>".$activation_date."</td>
+						
+					</tr>";
 		
 	endforeach;
  ?>

@@ -98,7 +98,7 @@ class orders extends MY_Controller {
 	}
 
 	//Facility Transaction Data when MEDS option is selected
-	public function facility_order_meds() {
+	public function facility_order_meds() {//karsan
 		$facility_code = $this -> session -> userdata('facility_id');
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
 
@@ -171,14 +171,13 @@ class orders extends MY_Controller {
 	}
 
 	public function facility_order($source = NULL) {
-
 		header('Content-Type: text/html; charset=UTF-8');
 		//pick the facility code from the session as it is set
 		$facility_code = $this -> session -> userdata('facility_id');
 
 		$amc_calc = $this -> amc($county, $district, $facility_code);
 		//echo '<pre>'; print_r($amc_calc);echo '<pre>'; exit;
-		$items = ((isset($source)) && ($source = 2)) ? Facility_Transaction_Table::get_commodities_for_ordering_meds($facility_code) : Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
+		$items = ((isset($source)) && ($source == 2)) ? Facility_Transaction_Table::get_commodities_for_ordering_meds($facility_code,$source) : Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
 		//echo '<pre>';print_r($items); echo '</pre>';
 		
 		if (isset($_FILES['file']) && $_FILES['file']['size'] > 0) {
@@ -202,7 +201,7 @@ class orders extends MY_Controller {
 			$highestColumn = $sheet -> getHighestColumn();
 			$temp = array();
 			if ($sheet -> getCell('H4') -> getValue() != '') {
-			echo	$facility_code = $sheet -> getCell('H4') -> getValue();exit;
+				$facility_code = $sheet -> getCell('H4') -> getValue();
 			} else {
 				$facility_code = $sheet -> getCell('J4') -> getValue();
 			}
@@ -264,30 +263,37 @@ class orders extends MY_Controller {
 			$array_id = array();
 			$array_codes = array();
 			$main_array = array();
+			$weka = array();
+			$k = 0; 
 			foreach ($temp as $keys) {
 
 				$kemsa = $keys['commodity_code'];
 				
 				$kemsa = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $kemsa);
-				$unit_cost = $keys['unit_cost'];
+				
+				$unit_cost = (int)$keys['unit_cost'];
+				//echo $unit_cost.'-'.$k++;echo '<pre>';
 				
 
 				$get_id = Commodities::get_id($kemsa, $unit_cost);
-
+				//print_r( $get_id.$k++);echo '<pre>';
+				$weka[] = $get_id;
 				$array_codes[] = $kemsa;
 				$main_array[] = $keys;
 				foreach ($get_id as $key2) {
 					$array_id[] = $key2['id'];
 					$array_total_units[] = $key2['total_commodity_units'];
+					//echo '<pre>'; print_r($key2.'-'.$k++);echo '<pre>'; 
 
 				}
 
 			}
-
+//exit;
 			$array_combined = array();
 			$id_count = count($main_array);
+			//echo '<pre>'; print_r($weka);echo '<pre>'; exit;
 
-			for ($i = 0; $i < $id_count; $i++) {
+			for ($i = 0; $i <= $id_count; $i++) {
 				$main_array[$i]['commodity_id'] = $array_id[$i];
 				$main_array[$i]['total_commodity_units'] = $array_total_units[$i];
 
@@ -316,14 +322,14 @@ class orders extends MY_Controller {
 			$items = $new;
 			$data['order_details'] = $data['facility_order'] = $items;
 		}
-
+//echo '<pre>'; print_r($main_array);echo '<pre>'; exit;
 		$facility_code = $this -> session -> userdata('facility_id');
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
 		$data['content_view'] = ((isset($source)) && ($source = 2)) ? "facility/facility_orders/facility_order_meds" : "facility/facility_orders/facility_order_from_kemsa_v";
 		$data['title'] = "Facility New Order";
 		$data['banner_text'] = "Facility New Order";
 		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];
-		$data['facility_commodity_list'] = ((isset($source)) && ($source = 2)) ? Commodities::get_meds_commodities_not_in_facility($facility_code) : Commodities::get_commodities_not_in_facility($facility_code);
+		$data['facility_commodity_list'] = ((isset($source)) && ($source = 2)) ? Commodities::get_meds_commodities_not_in_facility($facility_code,$source) : Commodities::get_commodities_not_in_facility($facility_code);
 
 		$this -> load -> view('shared_files/template/template', $data);
 	}
