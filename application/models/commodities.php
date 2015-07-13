@@ -184,13 +184,11 @@ return $inserttransaction;
     c.unit_size as unit_size,
     c.unit_cost as unit_cost, 
     c_s_c.sub_category_name,
-    c.commodity_source_id,
-    cs.source_name
+    c.commodity_source_id
     FROM commodities c ,commodity_sub_category c_s_c,commodity_source cs
     WHERE c.commodity_code NOT IN 
     (SELECT distinct commodity_id FROM facility_transaction_table WHERE facility_code = $facility_code) 
     AND c.commodity_source_id = $source
-    AND c.commodity_source_id = cs.id
     ORDER BY `c`.`commodity_name` ASC
               "); 
               
