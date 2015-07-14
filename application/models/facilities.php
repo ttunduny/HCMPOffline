@@ -52,6 +52,21 @@ class Facilities extends Doctrine_Record {
 		
 		return $facilities;
 	}
+    public static function check_active_facility($facility)
+    {
+        $active = Doctrine_Manager::getInstance()->getCurrentConnection()
+            ->fetchAll("SELECT
+                            (CASE
+                                WHEN using_hcmp = 1 THEN 'Yes'
+                                WHEN using_hcmp = 0 THEN 'No'
+                            END) AS 'HCMP Supported'
+                        FROM
+                            facilities
+                        WHERE
+                            facility_code = $facility");
+
+        return $active;
+    }
 	//get the number of facilities using HCMP in the country
 	public static function get_all_on_HCMP()
 	{
@@ -310,31 +325,32 @@ class Facilities extends Doctrine_Record {
 		
 		$data = Doctrine_Manager::getInstance()->getCurrentConnection()
 		->fetchAll("SELECT 
-					    (CASE
-					        WHEN l.issued = 1 THEN MAX(l.end_time_of_event)
-					        WHEN l.issued = 0 THEN 0
-					    END) AS 'Date Last Issued',
-					    (CASE
-					        WHEN
-					            l.issued = 1
-					        THEN
-					            IFNULL(DATEDIFF(NOW(), MAX(l.end_time_of_event)),
-					                    0)
-					        WHEN l.issued = 0 THEN 0
-					    END) AS 'Days From Last Issue'
-					FROM
-					    log l
-					        INNER JOIN
-					    user u ON l.user_id = u.id
-					        RIGHT JOIN
-					    facilities f ON u.facility = f.facility_code
-					        JOIN
-					    districts d ON d.id = f.district
-					        JOIN
-					    counties c ON c.id = d.county
-					WHERE
-					    f.using_hcmp = 1
-					        AND f.facility_code = $facility_code");
+                        (CASE
+                            WHEN l.issued = 1 THEN MAX(l.end_time_of_event)
+                            WHEN l.issued = 0 THEN 0
+                        END) AS 'Date Last Issued',
+                        (CASE
+                            WHEN
+                                l.issued = 1
+                            THEN
+                                IFNULL(DATEDIFF(NOW(), MAX(l.end_time_of_event)),
+                                        0)
+                            WHEN l.issued = 0 THEN 0
+                        END) AS 'Days From Last Issue'
+                    FROM
+                        log l,
+                        user u,
+                        facilities f,
+                        districts d,
+                        counties c
+                    WHERE
+                        l.issued = 1 AND f.using_hcmp = 1
+                            AND f.facility_code = $facility_code
+                            AND l.user_id = u.id
+                            AND u.facility = f.facility_code
+                            AND f.district = d.id
+                            AND d.county = c.id
+                                        ");
 			//return the monitoring data
 		
 			return $data;
@@ -342,6 +358,44 @@ class Facilities extends Doctrine_Record {
 		
 		
 	}
+    public static function get_last_redistribution($facility_code)
+    {
+
+        $data = Doctrine_Manager::getInstance()->getCurrentConnection()
+            ->fetchAll("SELECT
+                        (CASE
+                            WHEN l.redistribute = 1 THEN MAX(l.end_time_of_event)
+                            WHEN l.redistribute = 0 THEN 0
+                        END) AS 'Date Last Redistributed',
+                        (CASE
+                            WHEN
+                                l.issued = 1
+                            THEN
+                                IFNULL(DATEDIFF(NOW(), MAX(l.end_time_of_event)),
+                                        0)
+                            WHEN l.issued = 0 THEN 0
+                        END) AS 'Days From Last Redistribution'
+                    FROM
+                        log l,
+                        user u,
+                        facilities f,
+                        districts d,
+                        counties c
+                    WHERE
+                        l.redistribute = 1 AND f.using_hcmp = 1
+                            AND f.facility_code = $facility_code
+                            AND l.user_id = u.id
+                            AND u.facility = f.facility_code
+                            AND f.district = d.id
+                            AND d.county = c.id
+                                        ");
+        //return the monitoring data
+
+        return $data;
+
+
+
+    }
 
 	public static function facility_ordered($type, $county_id = NULL, $district_id = NULL, $facility_code=null)
 	{

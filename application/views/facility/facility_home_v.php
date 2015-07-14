@@ -181,7 +181,7 @@
     </div>
 	</div>
    <div class="col-md-8">
-   <div class="custom-well" >
+  <!-- <div class="custom-well" >
      <p style="font-size:11px; text-align:center;"><span class="glyphicon glyphicon-log-in"></span> <strong>Last Login:</strong> <?php echo $lastlogin; ?> |
    <span class="glyphicon glyphicon-transfer"></span> <strong>Last Order:</strong> <?php 
    if(isset($no_order)){
@@ -197,7 +197,7 @@
     }
     ?>
           </p>
-   </div>
+   </div>-->
     <div class="panel panel-success">
       <div class="panel-heading">
         <h3 class="panel-title">Graphs <span class="glyphicon glyphicon-stats" style=""></span><span class="glyphicon glyphicon-align-left" style="margin-left: 1%"></span></h3>

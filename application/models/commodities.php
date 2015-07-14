@@ -80,6 +80,19 @@ class Commodities extends Doctrine_Record {
 		/*Karsan*/
 	}
 
+    //get the total commodity units of a specific commodity
+    public static function get_commodity_unit($commodity_id)
+    {
+        $units = Doctrine_Manager::getInstance()->getCurrentConnection()
+            ->fetchAll("SELECT
+                            total_commodity_units
+                        FROM
+                            commodities
+                        WHERE
+                            id = $commodity_id");
+        return $units;
+    }
+    
 	public static function getAll_json() {
 		$query = Doctrine_Query::create() -> select("*") -> from("commodities")->where("status=1");
 		$commodities = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
