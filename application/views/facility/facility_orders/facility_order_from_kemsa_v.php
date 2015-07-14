@@ -1,3 +1,4 @@
+<?php //echo "<pre>";print_r($facility_order);echo "</pre>";exit; ?>
 <style>
  	.input-small{
  		width: 55px !important;
@@ -10,7 +11,7 @@
 		width: 55%;
 	}
  </style>
- <?php  $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order',$att); 
+ <?php  $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order/1',$att); 
  
  ?>
  <div class="container-fluid">

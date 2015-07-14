@@ -19,7 +19,7 @@
 	</div>
 
 
-<?php  $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order',$att); //?>
+<?php  $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order/2',$att); //?>
 <div class="row" style="padding-left: 1%;margin-bottom: 5px;">
 	<div class="col-md-3">
 		

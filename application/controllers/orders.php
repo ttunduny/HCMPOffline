@@ -265,6 +265,8 @@ class orders extends MY_Controller {
 			$main_array = array();
 			$weka = array();
 			$k = 0; 
+
+			// echo "<pre>";print_r($temp);echo "</pre>";exit;
 			foreach ($temp as $keys) {
 
 				$kemsa = $keys['commodity_code'];
@@ -291,9 +293,9 @@ class orders extends MY_Controller {
 //exit;
 			$array_combined = array();
 			$id_count = count($main_array);
-			//echo '<pre>'; print_r($weka);echo '<pre>'; exit;
+			// echo '<pre>'; print_r($id_count);echo '<pre>'; exit;
 
-			for ($i = 0; $i <= $id_count; $i++) {
+			for ($i = 1; $i < $id_count; $i++) {
 				$main_array[$i]['commodity_id'] = $array_id[$i];
 				$main_array[$i]['total_commodity_units'] = $array_total_units[$i];
 
@@ -322,14 +324,18 @@ class orders extends MY_Controller {
 			$items = $new;
 			$data['order_details'] = $data['facility_order'] = $items;
 		}
-//echo '<pre>'; print_r($main_array);echo '<pre>'; exit;
+
+		// $data['facility_order'] = $items;
+		//echo '<pre>'; print_r($data['facility_order']);echo '<pre>'; exit;
 		$facility_code = $this -> session -> userdata('facility_id');
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
-		$data['content_view'] = ((isset($source)) && ($source = 2)) ? "facility/facility_orders/facility_order_meds" : "facility/facility_orders/facility_order_from_kemsa_v";
+		$data['content_view'] = ($source == 2) ? "facility/facility_orders/facility_order_meds" : "facility/facility_orders/facility_order_from_kemsa_v";
 		$data['title'] = "Facility New Order";
 		$data['banner_text'] = "Facility New Order";
 		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];
-		$data['facility_commodity_list'] = ((isset($source)) && ($source = 2)) ? Commodities::get_meds_commodities_not_in_facility($facility_code,$source) : Commodities::get_commodities_not_in_facility($facility_code);
+		$data['facility_commodity_list'] = ($source == 2) ? Commodities::get_meds_commodities_not_in_facility($facility_code,$source) : Commodities::get_commodities_not_in_facility($facility_code);
+
+		//echo '<pre>'; print_r($data['facility_commodity_list']);echo '<pre>'; exit;
 
 		$this -> load -> view('shared_files/template/template', $data);
 	}
@@ -401,7 +407,7 @@ class orders extends MY_Controller {
 		$this -> load -> view('shared_files/template/template', $data);
 	}
 
-	public function update_order_subc($order_id, $rejected = null, $option = null) {
+	public function update_order_subc($order_id, $rejected = null, $option = null) {//karsan
 		$order_data = facility_orders::get_order_($order_id) -> toArray();
 		$data['content_view'] = "facility/facility_orders/update_order_subc";
 		$data['title'] = "Approve Order";
@@ -409,8 +415,16 @@ class orders extends MY_Controller {
 		$data['rejected'] = ($rejected == 'rejected') ? 1 : 0;
 		$data['option_'] = ($option == 'readonly') ? 'readonly_' : 0;
 		$data['order_details'] = $order_data;
+		if (($order_data[0]['source'] == 1) || ($order_data[0]['source'] == 0)) {
+		 $commodity_list = Commodities::get_all_from_supllier(1);
+		}elseif ($order_data[0]['source'] == 2) {
+		 $commodity_list = Commodities::get_all_from_meds(2);
+		}
+		// echo "<pre>";print_r($order_data);echo "</pre>";exit;
 		$data['facility_order'] = facility_order_details::get_order_details($order_id);
-		$data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
+		$data['facility_commodity_list'] = $commodity_list;
+		// echo "<pre>";print_r($data['facility_commodity_list']);echo "</pre>";exit;
+
 		$this -> load -> view('shared_files/template/template', $data);
 	}
 
@@ -423,7 +437,15 @@ class orders extends MY_Controller {
 		$data['option_'] = ($option == 'readonly') ? 'readonly_' : 0;
 		$data['order_details'] = $order_data;
 		$data['facility_order'] = facility_order_details::get_order_details($order_id);
-		$data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
+		if ($order_data[0]['source'] == 1) {
+		$commodity_list = Commodities::get_all_from_supllier(1);
+		}elseif ($order_data[0]['source'] == 2) {
+		$commodity_list = Commodities::get_all_from_meds(2);
+		}else{
+		$commodity_list = Commodities::get_all_from_supllier(1);
+		}
+		$data['facility_commodity_list'] = $commodity_list;
+		// echo "<pre>";print_r($commodity_list);echo "</pre>";exit;
 		$this -> load -> view('shared_files/template/template', $data);
 	}
 
@@ -515,8 +537,10 @@ class orders extends MY_Controller {
 		endif;
 	}//facility meds order terminado
 
-	public function facility_new_order() {
+	public function facility_new_order($source = NULL) {//karsan
 		//security check
+		// echo "<pre>";print_r($this->input->post()); echo "</pre>";exit;
+		$commodity_source = ((isset($source)))? $source : 1;//KEMSA by default
 		if ($this -> input -> post('commodity_id')) :
 			$this -> load -> database();
 			$data_array = array();
@@ -540,7 +564,7 @@ class orders extends MY_Controller {
 			//order table details
 			$bed_capacity = '0';
 			$drawing_rights = '0';
-			;
+			
 			$order_total = $this -> input -> post('total_order_value');
 			$order_no = '0';
 			$facility_code = $this -> input -> post('facility_code');
@@ -548,9 +572,10 @@ class orders extends MY_Controller {
 			$order_date = date('y-m-d');
 			$number_of_id = count($commodity_id);
 
+			// echo "<pre>";print_r($commodity_id); echo "</pre>";exit;
 			for ($i = 0; $i < $number_of_id; $i++) {
 				if ($i == 0) {
-					$order_details = array("workload" => $workload, 'bed_capacity' => $bed_capacity, 'order_total' => $order_total, 'order_no' => $order_no, 'order_date' => $order_date, 'facility_code' => $facility_code, 'ordered_by' => $user_id, 'drawing_rights' => $drawing_rights);
+					$order_details = array("workload" => $workload, 'bed_capacity' => $bed_capacity, 'order_total' => $order_total, 'order_no' => $order_no, 'order_date' => $order_date, 'facility_code' => $facility_code, 'ordered_by' => $user_id, 'drawing_rights' => $drawing_rights,'source' => $commodity_source);
 					$this -> db -> insert('facility_orders', $order_details);
 					$new_order_no = $this -> db -> insert_id();
 				}
@@ -559,7 +584,11 @@ class orders extends MY_Controller {
 				array_push($data_array, $temp_array);
 
 			}
-			$this -> db -> insert_batch('facility_order_details', $data_array);
+			// echo "<pre>";print_r($data_array); echo "</pre>";exit;
+			$result = $this -> db -> insert_batch('facility_order_details', $data_array);
+			if ($result){
+				// echo "I WORK ".$result;exit;
+			};
 			if ($this -> session -> userdata('user_indicator') == 'district') :
 				$order_listing = 'subcounty';
 			elseif ($this -> session -> userdata('user_indicator') == 'county') :
@@ -602,7 +631,8 @@ class orders extends MY_Controller {
 				//$attach_file1 = './pdf/'.$file_name.'.pdf';
 				$attach_file = "./print_docs/excel/excel_files/" . $file_name . '.xls';
 
-				$email_address = "kelvinmwas@gmail.com";
+				// $email_address = "kelvinmwas@gmail.com";//FOREFATHER
+				$email_address = "karsanrichard@gmail.com";
 				$response = $this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file);
 
 				if ($response) {
@@ -638,7 +668,7 @@ class orders extends MY_Controller {
 
 	}
 
-	public function update_order_facility() {
+	public function update_order_facility($source = NULL) {
 		//security check
 		//$dump=$this -> input -> post();
 		//echo '<pre>';print_r($dump); echo '</pre>';exit;
@@ -714,7 +744,8 @@ class orders extends MY_Controller {
 					`comment`,
 					`c_stock`,
 					`amc`,
-					`adjustnve`)
+					`adjustnve`,
+					`source`)
 					VALUES ($facility_order_details_id[$i],
 					$order_id,
 					$commodity_id[$i],
@@ -730,7 +761,8 @@ class orders extends MY_Controller {
 					'$comment[$i]',
 					$c_stock[$i],
 					$amc[$i],
-					$adjustnve[$i]
+					$adjustnve[$i],
+					$source
 					)
 					ON DUPLICATE KEY UPDATE
 					`commodity_id`=$commodity_id[$i],

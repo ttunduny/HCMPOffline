@@ -112,7 +112,7 @@ class Commodities extends Doctrine_Record {
         return $commodities;   
     }
 	
-public static function get_all_from_supllier($supplier_id) {
+public static function get_all_from_supllier($supplier_id = NULL) {
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as commodity_id, c.total_commodity_units,
               c.unit_size,c.unit_cost ,c_s.source_name, c_s_c.sub_category_name
@@ -124,13 +124,16 @@ public static function get_all_from_supllier($supplier_id) {
 return $inserttransaction;
 	}
 
-	public static function get_all_from_meds() {
+	public static function get_all_from_meds($supplier_id = NULL) {
 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-    ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as commodity_id,
-              c.unit_pack,c.unit_price ,c_s.source_name, c_s_c.sub_category_name
-               FROM meds_commodities c,commodity_sub_category c_s_c, commodity_source c_s
-               WHERE c.sub_category_id = c_s_c.id
-               order by c_s_c.id asc,c.commodity_name asc "); 
+    ->fetchAll("SELECT c.commodity_name, 
+				c.commodity_code, 
+				c.id as commodity_id, 
+				c.total_commodity_units,
+                c.unit_size,c.unit_cost ,c_s.source_name
+               FROM commodities c, commodity_source c_s
+               WHERE c.commodity_source_id= $supplier_id
+               ORDER BY c.commodity_name asc "); 
 return $inserttransaction;
 	}
 
@@ -183,14 +186,11 @@ return $inserttransaction;
 	c.commodity_code, c.id as commodity_id,
     c.unit_size as unit_size,
     c.unit_cost as unit_cost, 
-    c_s_c.sub_category_name,
-    c.commodity_source_id,
-    cs.source_name
-    FROM commodities c ,commodity_sub_category c_s_c,commodity_source cs
+    c.commodity_source_id
+    FROM commodities c ,commodity_source cs
     WHERE c.commodity_code NOT IN 
     (SELECT distinct commodity_id FROM facility_transaction_table WHERE facility_code = $facility_code) 
     AND c.commodity_source_id = $source
-    AND c.commodity_source_id = cs.id
     ORDER BY `c`.`commodity_name` ASC
               "); 
               
