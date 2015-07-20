@@ -179,7 +179,7 @@ class MY_Exceptions extends CI_Exceptions
 			ob_start();
 
 			// This will include the custom error file.
-			require APPPATH . 'errors/error_php_custom.php';
+			require FCPATH . APPPATH . 'errors/error_php_custom.php';
 
 			// Display the contents of the output buffer
 			echo ob_get_clean();

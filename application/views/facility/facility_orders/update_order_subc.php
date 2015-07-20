@@ -1,4 +1,4 @@
-<?php echo "<pre>";print_r($facility_order);echo "</pre>";exit; ?>
+<?php //echo "<pre>";print_r($facility_order);echo "</pre>";exit; ?>
 <style>
  	.input-small{
  		width: 55px !important;

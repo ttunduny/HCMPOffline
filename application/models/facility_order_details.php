@@ -62,7 +62,7 @@ class facility_order_details extends Doctrine_Record {
 /*
 //BEFORE I PERFORMED THE ABOVE DRAMA - Karsan
 		echo "select
-`a`.`sub_category_name` AS `sub_category_name`,
+ $sub_cat_name
 `b`.`commodity_name` AS `commodity_name`,
 `b`.`commodity_code` AS `commodity_code`,
 `b`.total_commodity_units,
@@ -92,12 +92,13 @@ ceiling((`c`.`c_stock` / `b`.`total_commodity_units`)) AS `closing_stock_`,
 `c`.`adjustpve` AS `adjustmentpve`,
 `c`.`adjustnve` AS `adjustmentnve`,
 `c`.`amc` AS `historical` 
-from  `commodities` `b`,`commodity_sub_category` `a` ,`facility_order_details` `c`
+from  `commodities` `b`, $sub_cat_table `facility_order_details` `c`
 where `b`.`id` = `c`.`commodity_id`
 and `c`.`status` = '1' 
-and `a`.`id` = `b`.`commodity_sub_category_id` 
-and c.order_number_id=$order_id  order by $group_by ";exit;
+$sub_cat_and
+and c.order_number_id=$order_id $group_by ";exit;
 */
+
 $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 ->fetchAll("select
  $sub_cat_name
@@ -134,7 +135,9 @@ from  `commodities` `b`, $sub_cat_table `facility_order_details` `c`
 where `b`.`id` = `c`.`commodity_id`
 and `c`.`status` = '1' 
 $sub_cat_and
-and c.order_number_id=$order_id $group_by ");
+and c.order_number_id=$order_id $group_by 
+ORDER BY `c`.`quantity_ordered_pack`DESC
+");
         return $inserttransaction ;
 		
 	 

@@ -138,5 +138,85 @@ class Admin extends MY_Controller {
 			$update_user->execute("UPDATE `user` SET status = '$status' WHERE `id`= '$user_id'");
 			echo $update_user." success";
 	}
+
+	public function update_stock_prices(){
+	$inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xls';
+	
+	// echo 'Loading file ',pathinfo($inputFileName,PATHINFO_BASENAME),' using IOFactory to identify the format<br />';
+	$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
+
+
+	$commodities = commodities::get_all_2();
+	$system_commodity_details = array();
+	$excel_commodity_details = array();
+	$ate_hwat = array();
+	$temp = array();
+	$keys_na_si_alishia = array();
+
+	// echo "<pre>";print_r($commodities);echo "</pre>";exit;
+
+	foreach ($commodities as $commodity) {
+		$system_commodity_details[] = array(
+			'id'=> $commodity['id'],
+			'commodity_code'=> $commodity['commodity_code'],
+			'commodity_name'=> $commodity['commodity_name']
+			);
+	}//end of foreach
+
+
+	$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+	$sheet = $objPHPExcel->getSheet(0); 
+	$highestRow = $sheet->getHighestRow(); 
+    $highestColumn = $sheet->getHighestColumn();
+
+	// echo "<pre>";print_r($sheetData);echo "</pre>";exit;
+
+	for ($row=17; $row < $highestRow; $row++) { 
+	$rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE); 
+	$excel_commodity_details[] = array(
+		'commodity_name' => $rowData[0][3], 
+		'price' => $rowData[0][6],
+		'commodity_code' => $rowData[0][2]
+		);
+	}
+	// echo "<pre>";print_r($excel_commodity_details);echo "</pre>";exit;
+
+	// echo "<pre>";print_r($system_commodity_details);echo "</pre>";exit;
+	
+	$synthesised = array();
+	$unsynthesised = array();
+	foreach ($excel_commodity_details as $excels) {
+		foreach ($system_commodity_details as $systems) {
+			if ($excels['commodity_name'] == $systems['commodity_name']){
+				$synthesised[] = array(
+					'id' => $systems['id'], 
+					'commodity_name' => $excels['name'], 
+					'new_unit_price' => $excels['price'],
+					'commodity_code'=> $excels['commodity_code']
+					);
+			}
+		}
+
+	}//end of foreach
+
+	// echo "<pre>";print_r($synthesised);echo "</pre>";exit;
+
+	$counter = 0;
+	foreach ($synthesised as $synthesis) {
+		if (isset($synthesis['commodity_code']) && $synthesis['commodity_code'] != '') {
+		$details = array(
+			'commodity_code' => $synthesis['commodity_code'], 
+			);
+		$this->db->where('commodity_name',$synthesis['commodity_name']);
+		$result=$this->db->update('commodities',$details);
+		$counter = $counter + 1;
+		echo "<pre>Commodity: ".$synthesis['id']."  ".$synthesis['commodity_name']." Price: ".$synthesis['new_unit_price']." updated successfully</pre>";
+		}
+	}
+	$handler = array('unit_cost' => 0);
+	$this->db->where('unit_cost','N/A');
+	$result=$this->db->update('commodities',$handler);
+	echo "Total Queries: ".$counter;
+	}//end of function
 	
 }
