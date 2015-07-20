@@ -178,7 +178,6 @@ class orders extends MY_Controller {
 		$amc_calc = $this -> amc($county, $district, $facility_code);
 		//echo '<pre>'; print_r($amc_calc);echo '<pre>'; exit;
 		$items = ((isset($source)) && ($source == 2)) ? Facility_Transaction_Table::get_commodities_for_ordering_meds($facility_code,$source) : Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
-		//echo '<pre>';print_r($items); echo '</pre>';
 		
 		if (isset($_FILES['file']) && $_FILES['file']['size'] > 0) {
 			$ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);

@@ -166,7 +166,9 @@ $(document).ready(function() {
         //hcmp custom message dialog
     dialog_box(body_content,'<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'+
         '<button type="button" class="btn btn-primary add_item"><span class="glyphicon glyphicon-plus"></span>Add</button>');
+
     });
+	
     // add item modal box
     $(document.body).on("change", ".desc", function (){
     var data = $('option:selected', this).attr('special_data');  
