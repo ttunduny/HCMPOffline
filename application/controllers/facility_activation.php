@@ -48,7 +48,7 @@ class Facility_activation extends MY_Controller
 		// $data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
 		$data['active_panel'] = 'system_usage';
 		// $data['report_view'] = "shared_files/Facility_activation_v";
-		$data['content_view'] = "shared_files/Facility_activation_v";
+		$data['content_view'] = "shared_files/facility_activation_v";
 		$this -> load -> view($template, $data);
 
 	}
