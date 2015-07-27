@@ -19,6 +19,34 @@
 		margin-bottom: 10px;
 	}
 </style>
+
+ <script>
+ function alertify_exec(user_id){
+ 	if (user_id != '') {
+    	// message = "The Password for User ID: "+user_id+" <?php echo ucfirst($fname).' '.ucfirst($lname); ?> has been reset to : 123456";
+    	message = "The password for <?php echo $username; ?> has been reset to : 123456";
+
+    	alertify.set({ delay: 10000 });
+    	alertify.success(message, null);
+ 	}else{
+ 		message = "No action has been taken";
+
+    	alertify.set({ delay: 10000 });
+    	alertify.success(message, null);
+ 	}
+ 	
+ }
+ </script>
+
+<?php 
+// $pwd_reset = 1;
+	if (isset($pwd_reset) && $pwd_reset == 1) {
+		// echo $reset_user_id;exit;
+		echo "
+		<script>alertify_exec(".$reset_user_id.");</script>
+		";
+	}
+ ?>
 <div class="container-fluid">
 	<div class="page_content">
 		<div class="" style="width:65%;margin:auto;">
@@ -79,8 +107,8 @@
 								<th>Health Facility</th>
 								<th>User Type</th>
 								<th>Status (Checked means Active)</th>
+								<th>Password</th>
 								<th>Action</th>
-
 							</tr>
 						</thead>
 
@@ -104,10 +132,19 @@
 								<input type="checkbox" name="status-checkbox" id="status_switch_change" data-attr="<?php echo $list['user_id']; ?>" class="small-status-switch" style="border-radius:0px!important;">
 								<?php } ?> 
 								<td>
+									<!-- <div class="btn btn-primary btn-xs" id="reset_pwd"  data-attr="<?php echo $list['user_id']; ?>">
+									<span class="glyphicon glyphicon-edit"></span>Reset Password
+									</div> -->
+									<a href="<?php echo base_url().'user/reset_pass_to_default/'.$list['user_id']; ?>" class="btn btn-primary btn-xs" name="reset_pwd" class="reset_pwd" id="reset_pwd" data-attr="<?php echo $list['user_id']; ?>">
+									<span class="glyphicon glyphicon-edit"></span>Reset Password
+									 </a>	 
+								</td>
+
+								<td>
 								<button class="btn btn-primary btn-xs edit " data-toggle="modal" data-target="#myModal" id="<?php echo $list['user_id']; ?>" data-target="#">
 									<span class="glyphicon glyphicon-edit"></span>Edit
-								</button></td>
-
+								</button>
+								</td>
 							</tr>
 							<?php } ?>
 						</tbody>
@@ -500,6 +537,11 @@
 	  	$('div.dataTables_filter input').addClass('form-control search');
 	  	$('div.dataTables_length select').addClass('form-control');
 		
+
+		$(".dataTables_paginate").click(function(e){
+			initialize_checkboxes();
+		});
+
 		//populate facilities to drop down depending on district selected
 		$("#district_name").change(function() {
 			var option_value=$(this).val();
@@ -683,8 +725,35 @@ $('#email').keyup(function() {
     return false;
   });
 
-    
-    
+    // $("#reset_pwd").on('click',function() {//karsan
+    $('#reset_pwd').click(function(){
+    	var user_id = $(this).attr('data-attr');
+    	var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";
+    	var message = "The Password for User: "+user_id+" has been reset to : 123456";
+    	// alert(user_id);return
+
+    	$.ajax({
+    		type:"POST",
+    		data:{
+    			'user_id' : user_id
+    		},
+    		url:"<?php echo base_url()."user/reset_pass_to_default";?>",
+    		beforeSend: function() {
+            var message = confirm("Are you sure you want to proceed?");
+		        if (message){
+		            return true;
+		        } else {
+		            return false;
+		        }
+           
+          },
+          success: function(msg){
+ 			 // alert("Tumefika hapa");return;
+ 			 
+            }
+
+    	});
+    });
     
     
    
@@ -804,6 +873,28 @@ $("#create_new").click(function() {
 				oTable.fnFilter('deactivated');
 			})
 	
+	function initialize_checkboxes(){
+	$('input[name="status-checkbox"]').change(function(e){
+		// e.prevenDefault();
+      value = $(this).attr('checked');//member id
+      user_id = $(this).attr("data-attr");//member id
+      if ($(this).prop('checked') == false){
+        // alert($(this).prop("checked"));
+        // console.log(user_id);
+        change_status(user_id,0,"unchecked");
+        // $('input[name="status-checkbox"]').prop('checked', false);
+      
+      } else{
+        // alert("checked");
+        // console.log(user_id);
+        // alert($(this).prop("checked"));
+        change_status(user_id,1,"checked");
+        // $('input[name="status-checkbox"]').prop('checked', true);
+      };
+      
+      // console.log(value);
+   });	
+	}//end of initialize checkboxes
 			
 	$('input[name="status-checkbox"]').change(function(e){
 		// e.prevenDefault();
@@ -823,8 +914,8 @@ $("#create_new").click(function() {
         // $('input[name="status-checkbox"]').prop('checked', true);
       };
       
-      console.log(value);
-   });
+      // console.log(value);
+   });	
 
     function change_status(user_id,stati,checked){//seth
       // alert(checked);return;
