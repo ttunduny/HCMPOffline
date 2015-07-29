@@ -643,7 +643,7 @@ class orders extends MY_Controller {
 					$result = $this -> hcmp_functions -> clone_excel_order_template($new_order_no, 'save_file', $file_name);
 					// echo "<pre>"; print_r($file_name);echo "</pre>";
 				}
-				$excel_order_value = $this-> hcmp_functions -> get_excel_order_total($file_name);//karsan
+				$excel_order_value = $this-> get_excel_order_total($file_name);//karsan
 				//update_order_total_to_excel_total hack
 				$update_order_total_to_excel_total= Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("
 					UPDATE `facility_orders` SET `order_total`= $excel_order_value WHERE `id`= $new_order_no
@@ -712,6 +712,24 @@ class orders extends MY_Controller {
 	}
 
 	 
+	 public function get_excel_order_total($filename = NULL){
+	 	// echo $filename;
+ 	$filename =isset($filename) ? $filename.'.xls' : time().'.xls';
+	$inputFileName ="print_docs/excel/excel_files/".$filename;
+	$excel2 = PHPExcel_IOFactory::createReader('Excel5');
+    $excel2=$objPHPExcel= $excel2->load($inputFileName); // Empty Sheet
+    
+    $sheet = $objPHPExcel->getSheet(0); 
+    $highestRow = $sheet->getHighestRow(); 
+	
+    $highestColumn = $sheet->getHighestColumn();
+	$value = $sheet->getCell( 'J409' )->getCalculatedValue();
+	
+    $excel2->setActiveSheetIndex(0);
+
+    return $value;
+ 	}
+
 
 	public function upd() {
 		$this -> hcmp_functions -> send_sms();
