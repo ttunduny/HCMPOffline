@@ -67,7 +67,7 @@ $identifier = $this -> session -> userdata('user_indicator');
                         </h4>
                     </div>
                 </div>
-                <div class="panel panel-default">
+                <!-- <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseEight" id="system_usage"><span class="glyphicon glyphicon-signal">
@@ -75,6 +75,27 @@ $identifier = $this -> session -> userdata('user_indicator');
                         </h4>
                     </div>
                     
+                </div> -->
+                <!--Stocking Levels-->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" id="system_usage"><span class="glyphicon glyphicon-signal">
+                            </span>System Usage</a>
+                        </h4></a>
+                        </h4>
+                    </div>
+                   <div id="collapseTwo" class="panel-collapse collapse <?php echo $active_panel=='stocking_levels'? 'in': null; ?>">
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        <a href="<?php echo base_url("facility_activation/facility_dash") ?>">Activate Facilities</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div> 
                 </div>
                 <!--To be removed once the redesign is done
                 <div class="panel panel-default">
@@ -102,7 +123,7 @@ $identifier = $this -> session -> userdata('user_indicator');
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 " style="padding:0;border-radius: 0;margin-top: -2% ">
  <h1 class="page-header" style="margin-top: 2.4%;font-size: 1.6em;"></h1>
 <div class="">
-<div style="" id="notification"></div>
+<div style="height:100%;width:100%;margin: 0 auto;" id="notification"></div>
 </div>
 </div>
     </div>

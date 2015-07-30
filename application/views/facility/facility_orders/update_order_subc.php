@@ -1,3 +1,4 @@
+<?php //echo "<pre>";print_r($facility_order);echo "</pre>";exit; ?>
 <style>
  	.input-small{
  		width: 55px !important;
@@ -15,8 +16,16 @@ border: 0px ;
  </style>
  <div class="container-fluid" style="width: 100%; margin: auto;">
 
-<?php $identifier = $this -> session -> userdata('user_indicator');
- $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/update_order_facility',$att); 
+<?php 
+	$identifier = $this -> session -> userdata('user_indicator');
+	if (($order_details[0]['source'] == 1) || ($order_details[0]['source'] == 0)) {
+		$commodity_source = "KEMSA";
+		$commodity_source_id = 1;
+	}elseif ($order_details[0]['source'] == 2) {
+		$commodity_source = "MEDS";
+		$commodity_source_id = 2;
+	}
+	$att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/update_order_facility/'.$commodity_source_id,$att); 
  //echo "<pre>"; print_r($facility_order);echo "<pre>";exit;
 //?>
 <div class="row-fluid">
@@ -52,7 +61,7 @@ border: 0px ;
 <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 <thead>
 <tr style="background-color: white">
-						<!--<th>Category</th>-->
+						<!-- <th>Source</th> -->
 						<th>Description</th>
 						<!--<th>Commodity&nbsp;Code</th>-->
 						<th>Order Unit Size</th>
@@ -102,7 +111,8 @@ border: 0px ;
 					 'id' =>'test','value'=>$facility_order[$i]['unit_size'],'class'=>'unit_size')).
 					 form_input(array('name' => 'unit_cost['.$i.']', 'type'=>'hidden',
 					 'id' =>'test','value'=>$facility_order[$i]['unit_cost'],'class'=>'unit_cost'));?>
-							<td><?php echo $facility_order[$i]['commodity_name']?></td>
+					 		<!-- <td><?php echo $commodity_source; ?></td> --><!--COMMODITY sOURCE cOLUMN-->
+							<td><?php echo $facility_order[$i]['commodity_name'];?></td>
 							<!--<td><?php echo $facility_order[$i]['commodity_code'];?></td>-->
 							<td><?php echo $facility_order[$i]['unit_size']?> </td>
 							<td><?php echo $facility_order[$i]['unit_cost']; ?> </td>

@@ -66,13 +66,13 @@ class Users extends Doctrine_Record {
 
 	public static function getuserby_id($id) {
 		$query = Doctrine_Query::create() -> select("fname") -> from("users") -> where("id='$id' ");
-		$level = $query -> execute();
+		$level = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $level;
 	}
 
 
 	public static function get_user_names($id) {
-		$query = Doctrine_Query::create() -> select("fname, lname") -> from("users") -> where("id='$id'");
+		$query = Doctrine_Query::create() -> select("fname, lname,username") -> from("users") -> where("id='$id'");
 		$names = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $names;
 	}

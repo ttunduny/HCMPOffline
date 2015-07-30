@@ -1,3 +1,4 @@
+<?php //echo "<pre>";print_r($facility_order);echo "</pre>";exit; ?>
 <style>
  	.input-small{
  		width: 55px !important;
@@ -16,7 +17,15 @@ border: 0px ;
  <div class="container-fluid" style="width: 100%; margin: auto;">
 
 <?php $identifier = $this -> session -> userdata('user_indicator');
- $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/update_order_facility',$att); 
+	if (($order_details[0]['source'] == 1) || ($order_details[0]['source'] == 0)) {
+		$commodity_source = "KEMSA";
+		$commodity_source_id = 1;
+	}elseif ($order_details[0]['source'] == 2) {
+		$commodity_source = "MEDS";
+		$commodity_source_id = 2;
+	}
+
+ $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/update_order_facility/'.$commodity_source_id,$att); 
  //echo "<pre>"; print_r($facility_order);echo "<pre>";exit;
 //?>
 <div class="row-fluid">

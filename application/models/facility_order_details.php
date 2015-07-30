@@ -47,17 +47,22 @@ class facility_order_details extends Doctrine_Record {
 		return TRUE;
 	}
 	
-	public static function get_order_details($order_id,$fill_rate=false){
+	public static function get_order_details($order_id,$fill_rate=false,$source = NULL){
 		if($fill_rate){
 		$group_by="fill_rate ASC,`a`.`id` ASC"; 
 		$fill_rate_compute="ROUND( (`c`.`quantity_ordered_pack`/`c`.`quantity_recieved_pack`) *100 ) AS fill_rate,";
 		}else{
-		$group_by='a.id asc,b.commodity_name asc';
+		// $group_by='a.id asc,b.commodity_name asc';
 		$fill_rate_compute=null;
 		}
-$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-->fetchAll("select
-`a`.`sub_category_name` AS `sub_category_name`,
+		$sub_cat_name = ((isset($source)) && ($source == 2)) ? "`a`.`sub_category_name` AS `sub_category_name`," :NULL;
+		$sub_cat_table = ((isset($source)) && ($source == 2)) ? "`commodity_sub_category` `a` ," :NULL;
+		$sub_cat_and = ((isset($source)) && ($source == 2)) ? "and `a`.`id` = `b`.`commodity_sub_category_id` " :NULL;
+		$group_by = ((isset($source)) && ($source == 2)) ? "order by a.id asc,b.commodity_name asc" :NULL;
+/*
+//BEFORE I PERFORMED THE ABOVE DRAMA - Karsan
+		echo "select
+ $sub_cat_name
 `b`.`commodity_name` AS `commodity_name`,
 `b`.`commodity_code` AS `commodity_code`,
 `b`.total_commodity_units,
@@ -87,11 +92,52 @@ ceiling((`c`.`c_stock` / `b`.`total_commodity_units`)) AS `closing_stock_`,
 `c`.`adjustpve` AS `adjustmentpve`,
 `c`.`adjustnve` AS `adjustmentnve`,
 `c`.`amc` AS `historical` 
-from  `commodities` `b`,`commodity_sub_category` `a` ,`facility_order_details` `c`
+from  `commodities` `b`, $sub_cat_table `facility_order_details` `c`
 where `b`.`id` = `c`.`commodity_id`
 and `c`.`status` = '1' 
-and `a`.`id` = `b`.`commodity_sub_category_id` 
-and c.order_number_id=$order_id  order by $group_by ");
+$sub_cat_and
+and c.order_number_id=$order_id $group_by ";exit;
+*/
+
+$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("select
+ $sub_cat_name
+`b`.`commodity_name` AS `commodity_name`,
+`b`.`commodity_code` AS `commodity_code`,
+`b`.total_commodity_units,
+`b`.`unit_size` AS `unit_size`,
+$fill_rate_compute
+`c`.`id`,
+`c`.`price` AS `unit_cost`,
+`c`.`commodity_id` AS `commodity_id`,
+`c`.`quantity_ordered_pack`,
+`c`.`quantity_ordered_unit`,
+`c`.`quantity_recieved_pack` as quantity_recieved,
+`c`.`quantity_recieved_unit`,
+`c`.`expiry_date`,
+`c`.`batch_no`,
+`c`.`scp_qty_packs` AS scp_qty,
+`c`.`cty_qty_packs` AS cty_qty,
+`c`.`maun`,
+`c`.`o_balance` AS `opening_balance`,
+`c`.`t_receipts` AS `total_receipts`,
+`c`.`t_issues` AS `total_issues`,
+`c`.`comment` AS `comment`,
+ceiling((`c`.`c_stock` / `b`.`total_commodity_units`)) AS `closing_stock_`,
+`c`.`c_stock` AS `closing_stock`,
+`c`.`days` AS `days_out_of_stock`,
+`c`.`losses` AS `losses`,
+`c`.`status` AS `status`,
+`c`.`adjustpve` AS `adjustmentpve`,
+`c`.`adjustnve` AS `adjustmentnve`,
+`c`.`amc` AS `historical` 
+from  `commodities` `b`, $sub_cat_table `facility_order_details` `c`
+where `b`.`id` = `c`.`commodity_id`
+and `c`.`status` = '1' 
+$sub_cat_and
+and c.order_number_id=$order_id $group_by 
+ORDER BY `c`.`quantity_ordered_pack`DESC
+");
         return $inserttransaction ;
 		
 	 

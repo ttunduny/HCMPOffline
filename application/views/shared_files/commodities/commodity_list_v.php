@@ -1,3 +1,4 @@
+<?php //echo "<pre>"; print_r($commodity_list);echo "</pre>";exit;?>
 <div class="container" style="width: 96%; margin: auto;">
  <table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
@@ -7,19 +8,21 @@
 			<th>Commodity Code</th>
 			<th>Unit Size</th>
 			<th>Unit Cost(2014)</th>
+			<th>Supplier</th>
 		</tr>
 	</thead>
 	<tbody>
 <?php 
     foreach($commodity_list as $commodity_list):
 	
-		foreach($commodity_list->commodities_for_this_category as $item):
-			echo  "<tr><td>$commodity_list->sub_category_name</td>
-			       <td>$item->commodity_name</td>
-			       <td>$item->commodity_code</td>
-			       <td>$item->unit_size</td>
-			       <td>$item->unit_cost</td></tr>";
-			endforeach;
+			echo "<tr>
+					<td>".$commodity_list['commodity_sub_category']."</td>
+					<td>".$commodity_list['commodity_name']."</td>
+					<td>".$commodity_list['commodity_code']."</td>
+					<td>".$commodity_list['unit_size']."</td>
+					<td>".$commodity_list['unit_cost']."</td>
+					<td>".$commodity_list['commodity_source']."</td>
+			      </tr>";
 		
 	endforeach;
  ?>

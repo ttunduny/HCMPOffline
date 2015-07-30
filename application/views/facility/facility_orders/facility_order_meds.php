@@ -1,4 +1,4 @@
-<?php //echo "This is the one";exit; ?>
+<?php //echo "<pre>"; print_r($facility_commodity_list); echo "</pre>";exit;?>
 <style>
  	.input-small{
  		width: 55px !important;
@@ -19,7 +19,7 @@
 	</div>
 
 
-<?php  $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order',$att); //?>
+<?php  $att=array("name"=>'myform','id'=>'myform'); echo form_open('orders/facility_new_order/2',$att); //?>
 <div class="row" style="padding-left: 1%;margin-bottom: 5px;">
 	<div class="col-md-3">
 		
@@ -166,7 +166,9 @@ $(document).ready(function() {
         //hcmp custom message dialog
     dialog_box(body_content,'<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'+
         '<button type="button" class="btn btn-primary add_item"><span class="glyphicon glyphicon-plus"></span>Add</button>');
+
     });
+	
     // add item modal box
     $(document.body).on("change", ".desc", function (){
     var data = $('option:selected', this).attr('special_data');  

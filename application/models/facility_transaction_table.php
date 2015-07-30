@@ -110,15 +110,16 @@ order by `a`.`sub_category_name` desc");
 		
 	 }
 
-	 public static function get_commodities_for_ordering_meds($facility_code){
+	 public static function get_commodities_for_ordering_meds($facility_code,$source){
 	 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 		->fetchAll("SELECT 
 					    `c`.`facility_code` AS `facility_code`,
 					    `a`.`sub_category_name` AS `sub_category_name`,
 					    `b`.`commodity_name` AS `commodity_name`,
-					    `b`.`unit_pack` AS `unit_size`,
-					    `b`.`unit_price` AS `unit_cost`,
+					    `b`.`unit_size` AS `unit_size`,
+					    `b`.`unit_cost` AS `unit_cost`,
 					    `b`.`commodity_code` AS `commodity_code`,
+					    `d`.`source_name` AS `source_name`,
 					    `b`.`id` AS `commodity_id`,
 					    `c`.`opening_balance` AS `opening_balance`,
 					    `c`.`total_receipts` AS `total_receipts`,
@@ -133,8 +134,9 @@ order by `a`.`sub_category_name` desc");
 					    `c`.`adjustmentpve` AS `adjustmentpve`,
 					    `c`.`adjustmentnve` AS `adjustmentnve`
 					FROM
-					    `meds_commodities` `b`,
-					    `meds_sub_category` `a`,
+					    `commodity_sub_category` `a`,
+					    `commodities` `b`,
+					    `commodity_source` `d`,
 					    `facility_transaction_table` `c`
 					        LEFT JOIN
 					    `facility_monthly_stock` `h` ON (h.`facility_code` = $facility_code
@@ -142,8 +144,10 @@ order by `a`.`sub_category_name` desc");
 					WHERE
 					    (`b`.`commodity_code` = `c`.`commodity_id`
 					        AND `c`.`status` = '1'
-					        AND `a`.`id` = `b`.`sub_category_id`
-					        AND c.`facility_code` = $facility_code)
+					        AND `a`.`id` = `b`.`commodity_sub_category_id`
+					        AND c.`facility_code` = $facility_code
+					        AND b.`commodity_source_id`= $source
+					        AND d.`id` = b.`commodity_source_id` )
 					GROUP BY `c`.`facility_code` , `c`.`commodity_id`
 					ORDER BY `a`.`sub_category_name` DESC");
 		     return $inserttransaction ;

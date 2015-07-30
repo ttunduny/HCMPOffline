@@ -80,7 +80,7 @@ class Reports extends MY_Controller {
 		$data['title'] = "Commodity Listing";
 		$data['banner_text'] = "Commodity Listing";
 		$data['content_view'] = "shared_files/commodities/commodity_list_v";
-		$data['commodity_list'] = commodity_sub_category::get_all();
+		$data['commodity_list'] = commodities::get_all_with_suppliers();
 		$this -> load -> view('shared_files/template/template', $data);
 	}
 	// get the facility listing here
@@ -262,13 +262,15 @@ class Reports extends MY_Controller {
 	 $this -> hcmp_functions ->  download_file(assets/manual/HCMPV2_User_Guide);
 	 }*/
 	// get the facility transaction data for ordering or quick analysis
-	public function facility_transaction_data() {
+	public function facility_transaction_data($source=NULL) {
+		$source = isset($source)? $source:'KEMSA';//KEMSA by default
 		$facility_code = $this -> session -> userdata('facility_id');
 		$data['facility_stock_data'] = facility_transaction_table::get_all($facility_code);
 		$data['last_issued_data'] = facility_issues::get_last_time_facility_issued($facility_code);
 		$data['title'] = "Facility Stock Summary";
 		$data['content_view'] = "facility/facility_reports/facility_transaction_data_v";
 		$data['banner_text'] = "Facility Stock Summary";
+		$data['source'] = $source;
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 	///////GET THE ITEMS A FACILITY HAS STOCKED OUT ON
@@ -320,6 +322,7 @@ class Reports extends MY_Controller {
 		$data['order_counts'] = $facility_order_count;
 		$data['delivered'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "delivered");
 		$data['pending_all'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_all");
+		// echo "<pre>";	print_r($data['pending_all']);exit;
 		$data['pending_cty'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_cty");
 		$data['approved'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "approved");
 		$data['rejected'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "rejected");
@@ -841,6 +844,7 @@ class Reports extends MY_Controller {
 	}
 	//The new Facility Mapping function
 	public function facility_mapping() {
+		redirect('home/under_maintenance');
 		//get the current year and date
 		$year = date("Y");
 		$month = date("m");
@@ -2591,7 +2595,7 @@ class Reports extends MY_Controller {
 			$graph_data['series_data']['Month of Stock'] = array_merge($graph_data['series_data']['Month of Stock'], array((int)$final_graph_data_['total']));
 		endforeach;
 		$district_id = (!$this -> session -> userdata('district_id')) ? null : $this -> session -> userdata('district_id');
-		$data['graph_data_default'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
+		$data['graph_data_default'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);//karsan
 		$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
 		$data['c_data'] = Commodities::get_all_2();
 		$data['tracer_items'] = Commodities::get_tracer_items();
@@ -2631,7 +2635,7 @@ class Reports extends MY_Controller {
 	}
 	//for the county and subcounty interface
 	//stock levels graph option for tracer commodities
-	public function get_county_stock_levels_tracer($facility_code = null, $district_id = null, $option = null, $report) {
+	public function get_county_stock_levels_tracer($facility_code = null, $district_id = null, $option = null, $report_type = null) {
 		//set the date and time
 		$year = date('Y');
 		$month_ = date('M d');
@@ -2669,8 +2673,24 @@ class Reports extends MY_Controller {
 			//$series_data_ = array_merge($series_data_, array( array($data['district'], $data["facility_name"], $data["facility_code"], $data["commodity_name"], (int)$data['total'])));
 			$category_data = array_merge($category_data, array($data["commodity_name"]));
 		endforeach;
-		$graph_type = 'column';
-		$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
+		
+
+		if ($report_type == "table_data") :
+			// echo "<pre>";print_r($series_data);echo "</pre>";
+			// echo "<pre>";print_r($category_data);echo "</pre>";exit;
+			/*
+			$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level $commodity_name for $title as at $month_ $year"));
+			$category_data = array( array("Commodity Name", "Stock Level"));
+			$graph_data = array_merge($graph_data, array("table_id" => 'graph_default'));
+			$graph_data = array_merge($graph_data, array("table_header" => $category_data));
+			$graph_data = array_merge($graph_data, array("table_body" => $series_data));
+			$data = array();
+			$data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);
+			$data['table_id'] = "graph_default";
+			return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
+			*/
+			$graph_type = 'column';
+		$graph_data = array_merge($graph_data, array("graph_id" => 'default_graph_'));
 		$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level $commodity_name for $title as at $month_ $year"));
 		$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
 		$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Commodity Stock level in $option_title"));
@@ -2678,7 +2698,22 @@ class Reports extends MY_Controller {
 		$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
 		//echo $category_data;
 		$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
-		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
+		// echo "<pre>";print_r($data['high_graph']);echo "</pre>";exit;
+		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);//karsan
+		else :
+			$graph_type = 'column';
+		$graph_data = array_merge($graph_data, array("graph_id" => 'default_graph_'));
+		$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level $commodity_name for $title as at $month_ $year"));
+		$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
+		$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Commodity Stock level in $option_title"));
+		$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
+		$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
+		//echo $category_data;
+		$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
+		// echo "<pre>";print_r($data['high_graph']);echo "</pre>";exit;
+		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);//karsan
+		endif;
+
 		/*
 		 //build the graph here
 		 $graph_type = 'bar';
@@ -2849,7 +2884,7 @@ class Reports extends MY_Controller {
 			else :
 				array_push($category_data, array("Commodity Name", "Facility Name", "Sub-county Name", "stocks worth in $option_title "));
 			endif;
-			$graph_data = array_merge($graph_data, array("table_id" => 'dem_graph_'));
+			$graph_data = array_merge($graph_data, array("table_id" => 'default_graph_'));
 			$graph_data = array_merge($graph_data, array("table_header" => $category_data));
 			$graph_data = array_merge($graph_data, array("table_body" => $series_data));
 			$data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);
@@ -2867,7 +2902,7 @@ class Reports extends MY_Controller {
 		 $this -> hcmp_functions -> create_excel($excel_data);*/
 		else :
 			$graph_type = 'bar';
-			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
+			$graph_data = array_merge($graph_data, array("graph_id" => 'default_graph_'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level $commodity_name $title $month_ $year"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Commodity Stock level in Month of Stock"));
@@ -2960,7 +2995,7 @@ class Reports extends MY_Controller {
 			$this -> hcmp_functions -> create_excel($excel_data);
 		else :
 			$graph_type = 'column';
-			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
+			$graph_data = array_merge($graph_data, array("graph_id" => 'default_graph_'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level $commodity_name $title $month_ $year"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Commodity Stock level in $option_new"));
