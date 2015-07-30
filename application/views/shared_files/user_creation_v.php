@@ -107,7 +107,7 @@
 								<th>Health Facility</th>
 								<th>User Type</th>
 								<th>Status (Checked means Active)</th>
-								<th>Password</th>
+								<!-- <th>Password</th> -->
 								<th>Action</th>
 							</tr>
 						</thead>
