@@ -135,9 +135,9 @@
 									<!-- <div class="btn btn-primary btn-xs" id="reset_pwd"  data-attr="<?php echo $list['user_id']; ?>">
 									<span class="glyphicon glyphicon-edit"></span>Reset Password
 									</div> -->
-									<a href="<?php echo base_url().'user/reset_pass_to_default/'.$list['user_id']; ?>" class="btn btn-primary btn-xs" name="reset_pwd" class="reset_pwd" id="reset_pwd" data-attr="<?php echo $list['user_id']; ?>">
+									<!-- <a href="<?php echo base_url().'user/reset_pass_to_default/'.$list['user_id']; ?>" class="btn btn-primary btn-xs" name="reset_pwd" class="reset_pwd" id="reset_pwd" data-attr="<?php echo $list['user_id']; ?>">
 									<span class="glyphicon glyphicon-edit"></span>Reset Password
-									 </a>	 
+									 </a> -->	 
 								</td>
 
 								<td>
@@ -739,7 +739,7 @@ $('#email').keyup(function() {
     		},
     		url:"<?php echo base_url()."user/reset_pass_to_default";?>",
     		beforeSend: function() {
-            var message = confirm("Are you sure you want to proceed?");
+            var message = confirm("This will reset the selected user's credentials to the default which is 123456. Are you sure you want to proceed?");
 		        if (message){
 		            return true;
 		        } else {
