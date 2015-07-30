@@ -131,14 +131,14 @@
 								<?php }else{ ?>
 								<input type="checkbox" name="status-checkbox" id="status_switch_change" data-attr="<?php echo $list['user_id']; ?>" class="small-status-switch" style="border-radius:0px!important;">
 								<?php } ?> 
-								<td>
-									<!-- <div class="btn btn-primary btn-xs" id="reset_pwd"  data-attr="<?php echo $list['user_id']; ?>">
+								<!--<td>
+									 <div class="btn btn-primary btn-xs" id="reset_pwd"  data-attr="<?php echo $list['user_id']; ?>">
 									<span class="glyphicon glyphicon-edit"></span>Reset Password
 									</div> -->
 									<!-- <a href="<?php echo base_url().'user/reset_pass_to_default/'.$list['user_id']; ?>" class="btn btn-primary btn-xs" name="reset_pwd" class="reset_pwd" id="reset_pwd" data-attr="<?php echo $list['user_id']; ?>">
 									<span class="glyphicon glyphicon-edit"></span>Reset Password
-									 </a> -->	 
-								</td>
+									 </a>	 
+								</td> -->
 
 								<td>
 								<button class="btn btn-primary btn-xs edit " data-toggle="modal" data-target="#myModal" id="<?php echo $list['user_id']; ?>" data-target="#">
