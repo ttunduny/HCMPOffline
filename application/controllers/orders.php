@@ -294,7 +294,7 @@ class orders extends MY_Controller {
 			$id_count = count($main_array);
 			//echo '<pre>'; print_r($weka);echo '<pre>'; exit;
 
-			for ($i = 0; $i <= $id_count; $i++) {
+			for ($i = 1; $i < $id_count; $i++) {
 				$main_array[$i]['commodity_id'] = $array_id[$i];
 				$main_array[$i]['total_commodity_units'] = $array_total_units[$i];
 
