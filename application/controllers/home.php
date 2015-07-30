@@ -217,9 +217,27 @@ class Home extends MY_Controller
 	);	
     }
 	public function tester(){
-			$this->load->model('users');
-			$last_inserted = $this->users->set_report_access();
-			echo "<pre>This";print_r($last_inserted);echo "</pre>";exit;
+			// $this->load->model('users');
+		$view = 'shared_files/template/template';
+		$data['content_view'] = "shared_files/under_maintenance";
+		$this -> load -> view($view, $data);
+
+			// $last_inserted = $this->users->set_report_access();
+			// echo "<pre>This";print_r($last_inserted);echo "</pre>";exit;
 			//$this->Users::set_report_access();
 		}
+
+	public function under_maintenance(){
+		$data['title'] = "Under Maintenance";
+			$data['banner_text'] = "System Use Statistics";
+			$data['report_view'] = "shared_files/under_maintenance";
+			// $data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v" : "shared_files/report_templates/side_bar_v";
+			// $data['content_view'] = "facility/facility_reports/reports_v";
+			$data['active_panel'] = (!$this -> session -> userdata('facility_id')) ? "system_usage" : "system_usage";
+			// $data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
+			
+		$view = 'shared_files/template/template';
+		$data['content_view'] = "shared_files/under_maintenance";
+		$this -> load -> view($view, $data);
+	}
 }
