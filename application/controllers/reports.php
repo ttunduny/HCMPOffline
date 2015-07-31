@@ -273,6 +273,20 @@ class Reports extends MY_Controller {
 		$data['source'] = $source;
 		$this -> load -> view("shared_files/template/template", $data);
 	}
+
+	public function facility_transaction_data_other($source=NULL) {
+
+		$source = isset($source)? $source:'KEMSA';//KEMSA by default
+		$facility_code = $this -> session -> userdata('facility_id');	
+		$district = $this -> session -> userdata('district_id');	
+		$other_facilities = facilities::get_facilities_online_per_district_other($district,$facility_code);			
+		$data['title'] = "Submit Other Facility Report";
+		$data['content_view'] = "facility/facility_reports/facility_transaction_data_v_other";
+		$data['banner_text'] = "Submit Other Facility Report";
+		$data['source'] = $source;
+		$data['facilities'] = $other_facilities;
+		$this -> load -> view("shared_files/template/template", $data);
+	}
 	///////GET THE ITEMS A FACILITY HAS STOCKED OUT ON
 	public function facility_stocked_out_items() {
 		$facility_code = $this -> session -> userdata('facility_id');

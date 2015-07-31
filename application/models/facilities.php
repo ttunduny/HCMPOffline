@@ -581,6 +581,29 @@ class Facilities extends Doctrine_Record {
 		return $q;	
 	
 	}
+
+	public static function get_facilities_online_per_district_other($district_id,$mfl)
+	{
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		SELECT 
+		    distinct
+		    f.facility_name,
+		    f.type,
+		    f.facility_code,
+		    f.level,
+		    f.owner,
+		    DATE_FORMAT(`date_of_activation`, '%d %b %y') AS date
+		FROM
+		    facilities f
+		WHERE
+		    f.facility_code !='$mfl' AND f.using_hcmp = 1	
+		    AND f.district = '$district_id'	       
+		    AND UNIX_TIMESTAMP(f.`date_of_activation`) > 0
+		ORDER BY f.facility_name ASC");
+		
+		return $q;	
+	
+	}
 public static function get_facilities_all_per_district($county_id,$option=null){
 	$new=isset($option)  ? "and f.facility_code not in (select f.facility_code from facilities f, districts d 
 where f.district=d.id and d.id=$county_id and using_hcmp=1)" : null;

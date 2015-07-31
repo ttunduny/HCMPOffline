@@ -47,7 +47,7 @@
 
 <input type="hidden" class="form-control" name="total_order_balance_value" 
 id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_rights; ?>"/>	
-<input name="facility_code" type="hidden" value="<?php echo isset($facility_code)? $facility_code :$this -> session -> userdata('facility_id'); ?>" />					
+<input name="facility_code" id="facility_code" type="hidden" value="<?php echo isset($facility_code)? $facility_code :$this -> session -> userdata('facility_id'); ?>" />					
 </div>
 </div>
 <table width="100%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
@@ -149,6 +149,10 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 </div>
 <script>
 $(document).ready(function() {
+	var banner_name = '<?php echo $banner_name; ?>';
+	var facility_code = '<?php echo $facility_code; ?>';
+	$('#template_banner_name').html(banner_name);
+	$('#facility_code').html(facility_code);
 	var new_count =count+1;
 	var drawing_rights_balance=$('#actual_drawing_rights').val();
 	//auto compute the values

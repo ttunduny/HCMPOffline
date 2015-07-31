@@ -170,10 +170,23 @@ class orders extends MY_Controller {
 		echo $list;
 	}
 
-	public function facility_order($source = NULL) {
+	public function facility_order($source = NULL,$facility_code=null) {
+		// $a_session = $this->session->all_userdata();
+		// echo "<pre>";
+		// print_r($a_session);die;
 		header('Content-Type: text/html; charset=UTF-8');
 		//pick the facility code from the session as it is set
-		$facility_code = $this -> session -> userdata('facility_id');
+		if($facility_code==0){
+			$facility_code = $this -> session -> userdata('facility_id');
+		}
+		$county_id = $this -> session -> userdata('county_id');
+		$district_id = $this -> session -> userdata('district_id');
+
+		$district_name = districts::get_district_name_($district_id);
+		$county_name = Counties::get_county_name($county_id);
+		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
+        $facility_name = $facility_data[0]['facility_name'];		
+        $banner_name = $county_name['county']." County".", ".$district_name['district']." Sub-county, ".$facility_name;
 
 		$amc_calc = $this -> amc($county, $district, $facility_code);
 		//echo '<pre>'; print_r($amc_calc);echo '<pre>'; exit;
@@ -326,15 +339,19 @@ class orders extends MY_Controller {
 
 		// $data['facility_order'] = $items;
 		//echo '<pre>'; print_r($data['facility_order']);echo '<pre>'; exit;
-		$facility_code = $this -> session -> userdata('facility_id');
-		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
+		// $facility_code = $this -> session -> userdata('facility_id');
+		// $facility_name = $this -> session -> userdata('banner_name');
+		// echo $facility_name;die;
+		
 		$data['content_view'] = ($source == 2) ? "facility/facility_orders/facility_order_meds" : "facility/facility_orders/facility_order_from_kemsa_v";
 		$data['title'] = "Facility New Order";
 		$data['banner_text'] = "Facility New Order";
+		$data['banner_name'] = $banner_name;
+		$data['facility_code'] = $facility_code;
 		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];
 		$data['facility_commodity_list'] = ($source == 2) ? Commodities::get_meds_commodities_not_in_facility($facility_code,$source) : Commodities::get_commodities_not_in_facility($facility_code);
 
-		//echo '<pre>'; print_r($data['facility_commodity_list']);echo '<pre>'; exit;
+		
 
 		$this -> load -> view('shared_files/template/template', $data);
 	}
