@@ -564,7 +564,8 @@ class orders extends MY_Controller {
 			$bed_capacity = '0';
 			$drawing_rights = '0';
 			
-			$order_total = $this -> input -> post('total_order_value');
+			// $order_total = $this -> input -> post('total_order_value');
+			$order_total =0;
 			$order_no = '0';
 			$facility_code = $this -> input -> post('facility_code');
 			$user_id = $this -> session -> userdata('user_id');
@@ -659,7 +660,7 @@ class orders extends MY_Controller {
 							</thead>
 							<tbody >
 							<tr>
-							<td style="text-align:center;">' . date('M , d Y') . '</td>
+							<td style="text-align:center;">' . date('M , d Y') . '</td>							
 							<td style="text-align:center;" >' . number_format("$order_total", 2) . '</td>
 							</tr>
 							</tbody>
@@ -712,6 +713,7 @@ class orders extends MY_Controller {
 		//security check
 		//$dump=$this -> input -> post();
 		//echo '<pre>';print_r($dump); echo '</pre>';exit;
+		ini_set('max_input_vars', -1);
 		$user_indicator = $this -> session -> userdata('user_indicator');
 		if ($this -> input -> post('commodity_id')) :
 			//just picks values from the view and assigns them to a variable
@@ -768,7 +770,58 @@ class orders extends MY_Controller {
 					$user_ind = 'subcounty';
 
 				}
-
+				// $sql = "INSERT INTO facility_order_details ( `id`,
+				// 	`order_number_id`,
+				// 	`commodity_id`,
+				// 	`$column_packs`,
+				// 	`$column_units`,
+				// 	`price`,
+				// 	`o_balance`,
+				// 	`t_receipts`,
+				// 	`t_issues`,
+				// 	`adjustpve`,
+				// 	`losses`,
+				// 	`days`,
+				// 	`comment`,
+				// 	`c_stock`,
+				// 	`amc`,
+				// 	`adjustnve`,
+				// 	`source`)
+				// 	VALUES ('$facility_order_details_id[$i]',
+				// 	'$order_id',
+				// 	'$commodity_id[$i]',
+				// 	'$quantity_ordered_pack[$i]',
+				// 	'$quantity_ordered_unit[$i]',
+				// 	'$price[$i]',
+				// 	'$o_balance[$i]',
+				// 	'$t_receipts[$i]',
+				// 	'$t_issues[$i]',
+				// 	'$adjustpve[$i]',
+				// 	'$losses[$i]',
+				// 	'$days[$i]',
+				// 	'$comment[$i]',
+				// 	'$c_stock[$i]',
+				// 	'$amc[$i]',
+				// 	'$adjustnve[$i]',
+				// 	'$source'
+				// 	)
+				// 	ON DUPLICATE KEY UPDATE
+				// 	`commodity_id`='$commodity_id[$i]',
+				// 	`$column_packs`='$quantity_ordered_pack[$i]',
+				// 	`$column_units`='$quantity_ordered_unit[$i]',
+				// 	`price`='$price[$i]',
+				// 	`o_balance`='$o_balance[$i]',
+				// 	`t_receipts`='$t_receipts[$i]',
+				// 	`t_issues`='$t_issues[$i]',
+				// 	`adjustpve`='$adjustpve[$i]',
+				// 	`adjustnve`='$adjustnve[$i]',
+				// 	`losses`='$losses[$i]',
+				// 	`days`='$days[$i]',
+				// 	`c_stock`='$c_stock[$i]',
+				// 	`comment`='$comment[$i]',
+				// 	`amc`='$amc[$i]',
+				// 	`order_number_id`='$order_id'";
+				// echo "$sql<br/>";
 				$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("INSERT INTO facility_order_details ( `id`,
 					`order_number_id`,
 					`commodity_id`,
@@ -822,7 +875,7 @@ class orders extends MY_Controller {
 					`order_number_id`=$order_id;");
 
 			}//insert the data here
-
+			die;
 			$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("UPDATE `facility_orders` SET `order_total` = $order_total,`order_no` = $order_no
 						,`workload` = $workload ,`bed_capacity` = $bed_capacity WHERE `facility_orders`.`id` = $order_id;");
 
