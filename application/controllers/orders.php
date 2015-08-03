@@ -176,17 +176,16 @@ class orders extends MY_Controller {
 		// print_r($a_session);die;
 		header('Content-Type: text/html; charset=UTF-8');
 		//pick the facility code from the session as it is set
+		//Proxy denotes a to whether one is submitting for another faciity; 0 is defaut, 1 is if one is indeed subitting for another
+		$proxy = 0;
 		if($facility_code==0){
 			$facility_code = $this -> session -> userdata('facility_id');
+		}else{
+			$proxy =1;
 		}
-		$county_id = $this -> session -> userdata('county_id');
-		$district_id = $this -> session -> userdata('district_id');
-
-		$district_name = districts::get_district_name_($district_id);
-		$county_name = Counties::get_county_name($county_id);
+		
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
-        $facility_name = $facility_data[0]['facility_name'];		
-        $banner_name = $county_name['county']." County".", ".$district_name['district']." Sub-county, ".$facility_name;
+        $facility_name = $facility_data[0]['facility_name'];		        
 
 		$amc_calc = $this -> amc($county, $district, $facility_code);
 		//echo '<pre>'; print_r($amc_calc);echo '<pre>'; exit;
@@ -346,8 +345,9 @@ class orders extends MY_Controller {
 		$data['content_view'] = ($source == 2) ? "facility/facility_orders/facility_order_meds" : "facility/facility_orders/facility_order_from_kemsa_v";
 		$data['title'] = "Facility New Order";
 		$data['banner_text'] = "Facility New Order";
-		$data['banner_name'] = $banner_name;
+		$data['proxy'] = $proxy;
 		$data['facility_code'] = $facility_code;
+		$data['facility_name'] = $facility_name;
 		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];
 		$data['facility_commodity_list'] = ($source == 2) ? Commodities::get_meds_commodities_not_in_facility($facility_code,$source) : Commodities::get_commodities_not_in_facility($facility_code);
 

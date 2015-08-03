@@ -39,7 +39,11 @@
 		
 		
 	</div>
-
+<?php if($proxy==1){?>
+	<div class="row" style="padding-left:1%;padding-top:3px;margin-bottom: 1px;margin-top:1px;margin-left: 1px;height:30px;font-size:12px;background-color:green;color:#fff;width:65%">	
+	Submitting Order for: <strong> <?php echo $facility_name;?>	</strong></div></div>
+<?php }
+?>
 
 <div class="row" style="padding-left: 1%;margin-bottom: 5px;">
 	
@@ -149,9 +153,8 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 </div>
 <script>
 $(document).ready(function() {
-	var banner_name = '<?php echo $banner_name; ?>';
 	var facility_code = '<?php echo $facility_code; ?>';
-	$('#template_banner_name').html(banner_name);
+	
 	$('#facility_code').html(facility_code);
 	var new_count =count+1;
 	var drawing_rights_balance=$('#actual_drawing_rights').val();
