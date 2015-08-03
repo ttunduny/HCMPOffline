@@ -466,7 +466,7 @@ class Stock extends MY_Controller {
 		// echo "<pre>";print_r($this->input->post());echo "</pre>";
 		//random change for pushmentation
 		if ($this -> input -> post('facility_stock_id')) :
-			$district_id = $this -> session -> userdata('district_id');
+			$district_id = $this -> session -> userdata('district_id');			
 			$commodity_id = array_values($this -> input -> post('commodity_id'));
 			$id = array_values($this -> input -> post('id'));
 			$expiry_date = array_values($this -> input -> post('clone_datepicker'));
@@ -494,16 +494,16 @@ class Stock extends MY_Controller {
 					// echo "ELSE RUNNING";exit;
 					// TOTALs UPDATING
 					$existence = drug_store_issues::check_drug_existence($commodity_id[$i], $district_id);
-					echo "<pre>";
-					print_r($existence[0]['present']);
-					echo "</pre>";
+					// echo "<pre>";
+					// print_r($existence[0]['present']);
+					// echo "</pre>";die;
 
 					if ($existence[0]['present'] > 0) {
 						echo $commodity_id[$i];
 						// echo "Update RUNNING";
 						$update_totals = Doctrine_Manager::getInstance() -> getCurrentConnection();
-						$update_totals -> execute("UPDATE `drug_store_totals` SET `total_balance` = `total_balance`+$total_unit_count[$i]
-                    WHERE `commodity_id`= '$commodity_id[$i]' and `district_id`=$district_id");
+						$update_totals -> execute("UPDATE `drug_store_totals` SET `total_balance` = `total_balance`+'$total_unit_count[$i]'
+                    WHERE `commodity_id`= '$commodity_id[$i]' and `district_id`='$district_id'");
 
 						// echo "UPDATE `drug_store_totals` SET `total_balance` = `total_balance`+$total_unit_count[$i]
 						// WHERE `commodity_id`= '$commodity_id[$i]' and district_id=$district_id";
@@ -519,7 +519,8 @@ class Stock extends MY_Controller {
 
 					// echo $clone_datepicker[$i];exit;
 					$new_store_issue_entry = array();
-					$mydata = array('facility_code' => $service_point[$i], 'district_id' => $district_id[$i], 'commodity_id' => $commodity_id[$i], 's11_No' => '(+ve Adj) Stock Addition', 'batch_no' => $batch_no[$i], 'expiry_date' => date('y-m-d', strtotime(str_replace(",", " ", $expiry_date[$i]))), 'balance_as_of' => $total_unit_count[$i], 'adjustmentpve' => 0, 'adjustmentnve' => 0, 'qty_issued' => $total_unit_count[$i], 'date_issued' => $date_issued[$i], 'created_at' => NULL, 'issued_by' => $this -> session -> userdata('user_id'), 'status' => 1);
+					$mydata = array('facility_code' => $service_point[$i], 'district_id' => $district_id, 'commodity_id' => $commodity_id[$i], 's11_No' => '(+ve Adj) Stock Addition', 'batch_no' => $batch_no[$i], 'expiry_date' => date('y-m-d', strtotime(str_replace(",", " ", $expiry_date[$i]))), 'balance_as_of' => $total_unit_count[$i], 'adjustmentpve' => 0, 'adjustmentnve' => 0, 'qty_issued' => $total_unit_count[$i], 'date_issued' => $date_issued[$i], 'created_at' => NULL, 'issued_by' => $this -> session -> userdata('user_id'), 'status' => 1);
+					// $mydata = array('facility_code' => $service_point[$i], 'district_id' => $district_id[$i], 'commodity_id' => $commodity_id[$i], 's11_No' => '(+ve Adj) Stock Addition', 'batch_no' => $batch_no[$i], 'expiry_date' => date('y-m-d', strtotime(str_replace(",", " ", $expiry_date[$i]))), 'balance_as_of' => $total_unit_count[$i], 'adjustmentpve' => 0, 'adjustmentnve' => 0, 'qty_issued' => $total_unit_count[$i], 'date_issued' => $date_issued[$i], 'created_at' => NULL, 'issued_by' => $this -> session -> userdata('user_id'), 'status' => 1);
 
 					array_push($new_store_issue_entry, $mydata);
 
