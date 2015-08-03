@@ -659,11 +659,17 @@ class orders extends MY_Controller {
 					echo "I WORK";exit;
 				}else{
 					$result = $this -> hcmp_functions -> clone_excel_order_template($new_order_no, 'save_file', $file_name);
-					// echo "<pre>"; print_r($new_order_no);echo "</pre>";exit;
+					// echo "<pre>"; print_r($file_name);echo "</pre>";
 				}
-				
+				$excel_order_value = $this-> get_excel_order_total($file_name);//karsan
+				//update_order_total_to_excel_total hack
+				$update_order_total_to_excel_total= Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("
+					UPDATE `facility_orders` SET `order_total`= $excel_order_value WHERE `id`= $new_order_no
+					");
+
 				//create excel
 				$order_listing = 'facility';
+
 				$message = '
 						<br>
 						Please find the Order Made by ' . $facility_name . ' attached.
@@ -677,13 +683,15 @@ class orders extends MY_Controller {
 							</thead>
 							<tbody >
 							<tr>
-							<td style="text-align:center;">' . date('M , d Y') . '</td>							
-							<td style="text-align:center;" >' . number_format("$order_total", 2) . '</td>
+							<td style="text-align:center;">' . date('M , d Y') . '</td>
+							<td style="text-align:center;" >' . number_format("$excel_order_value", 2) . '</td>
 							</tr>
 							</tbody>
 							</table>
 						<br>
 						';
+
+
 				$subject = 'Order Pending Approval By Sub-County Pharmacist ' . $facility_name;
 
 				//$attach_file1 = './pdf/'.$file_name.'.pdf';
@@ -720,6 +728,26 @@ class orders extends MY_Controller {
 		endif;
 
 	}
+
+	 
+	 public function get_excel_order_total($filename = NULL){
+	 	// echo $filename;
+ 	$filename =isset($filename) ? $filename.'.xls' : time().'.xls';
+	$inputFileName ="print_docs/excel/excel_files/".$filename;
+	$excel2 = PHPExcel_IOFactory::createReader('Excel5');
+    $excel2=$objPHPExcel= $excel2->load($inputFileName); // Empty Sheet
+    
+    $sheet = $objPHPExcel->getSheet(0); 
+    $highestRow = $sheet->getHighestRow(); 
+	
+    $highestColumn = $sheet->getHighestColumn();
+	$value = $sheet->getCell( 'J409' )->getCalculatedValue();
+	
+    $excel2->setActiveSheetIndex(0);
+
+    return $value;
+ 	}
+
 
 	public function upd() {
 		$this -> hcmp_functions -> send_sms();
@@ -919,7 +947,7 @@ class orders extends MY_Controller {
 			//echo $attach_file;
 
 			//exit;
-			$order_total = $order_total*1.00;
+			
 			if ($rejected == 1) {
 				$myobj -> status = 1;
 				$status = "Updated";

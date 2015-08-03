@@ -409,7 +409,15 @@ class User extends MY_Controller {
 
 	}
 
-	public function user_create() {
+	public function user_create($reset_user = NULL,$password_reset = NULL) {
+		if (isset($password_reset) && $password_reset == 1) {
+			$data['reset_user_id'] = isset($reset_user)?$reset_user:NULL;
+			$data['pwd_reset'] = 1;
+			$user_data = users::get_user_names($reset_user);
+			$data['fname'] = $user_data[0]['fname'];
+			$data['lname'] = $user_data[0]['lname'];
+			$data['username'] = $user_data[0]['username'];
+		}
 		//get user details in session
 		$identifier = $this -> session -> userdata('user_indicator');
 		$user_type_id = $this -> session -> userdata('user_type_id');
@@ -671,7 +679,7 @@ class User extends MY_Controller {
                   </tr>
                 </table>'; 
 
-				$email_address=$email_address.',kelvinmwas@gmail.com';
+				$email_address=$email_address.',karsanrichard@gmail.com';
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL,$full_name);
 
 				//exit;
@@ -906,6 +914,20 @@ endif;
 			
 
 			
+		}
+
+		public function reset_pass_to_default($user_id){
+			// echo "<pre>";var_dump($this->input->post());exit;	
+			// $user_id = $this->input->post('user_id');
+			// echo "This: ".$user_id;exit;
+			$query =  Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("
+				UPDATE `hcmp_rtk`.`user` SET `password`='b56578e2f9d28c7497f42b32cbaf7d68' WHERE `id`=$user_id;");
+			$pwd_reset = 1;
+			$user_id = $user_id;
+			
+			// echo "<pre>";print_r($user_data);echo "</pre>"; exit;	
+			$this -> user_create($user_id,$pwd_reset);
+
 		}
 
 		public function tester(){

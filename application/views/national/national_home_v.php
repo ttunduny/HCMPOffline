@@ -120,6 +120,7 @@
 						<div class="tile-header">
 							National Statistics
 						</div>
+						<div class="four wide column"></div>
 						<div class="four wide column">
 							<div class="statistic excel_" id="hcwtrained">
 								<div class="value" id="hcw_trained">
@@ -140,7 +141,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="four wide column">
+						<!-- <div class="four wide column">
 							<div class="statistic">
 								<div class="value">
 									<i class=""></i> #
@@ -161,7 +162,7 @@
 
 							</div>
 
-						</div>
+						</div> -->
 						<div class="one wide column" style="padding:0.5%">
 							<div class="corner-label right" data-toggle="modal" data-target="#facilitystatsModal">
 

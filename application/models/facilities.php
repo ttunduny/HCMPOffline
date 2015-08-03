@@ -8,9 +8,11 @@ class Facilities extends Doctrine_Record {
 		$this -> hasColumn('partner', 'int',11);
 		$this -> hasColumn('owner', 'varchar',30);
 		$this -> hasColumn('level', 'varchar',30);
-		$this->hasColumn('drawing_rights','text');
-		$this->hasColumn('using_hcmp','int');//
-		$this->hasColumn('date_of_activation','date');
+		$this -> hasColumn('drawing_rights','text');
+		$this -> hasColumn('using_hcmp','int');
+		$this -> hasColumn('date_of_activation','date');
+		$this -> hasColumn('contactperson','varchar',50);
+		$this -> hasColumn('cellphone','int',15);
 	}
 
 	public function setUp() {
@@ -136,7 +138,21 @@ class Facilities extends Doctrine_Record {
 	    $and_data .= " AND using_hcmp = 1 ";
 		
 	   	$query = Doctrine_Query::create() ->select("*") ->from("facilities f, districts d")->where("f.district = d.id $and_data")->OrderBy("facility_name asc");
-		$drugs = $query -> execute();
+		// $drugs = $query -> execute();
+		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		return $drugs;
+	}
+
+	public static function get_facilities_per_county($county_id = null, $district_id = null)
+	{
+		$and_data =(isset($county_id)&& ($county_id>0)) ?" AND d.county = $county_id" : null;
+	    $and_data .=(isset($district_id)&& ($district_id>0)) ?" AND f.district = $district_id" : null;
+
+	    // $and_data .= " AND using_hcmp = 1 ";
+		
+	   	$query = Doctrine_Query::create() ->select("*") ->from("facilities f, districts d")->where("f.district = d.id $and_data")->OrderBy("facility_name asc");
+		// $drugs = $query -> execute();
+		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $drugs;
 	}
 	
@@ -734,14 +750,15 @@ AND f.owner like '%$owner_type%'
 return $q;
 }
 
-public static function get_facility_details($category){
-		$district = $category;
+public static function get_facility_details($district = NULL,$county = NULL){
+		$district = isset($district)? "AND d.id= $district": NULL;
+		$county = isset($county)? "AND d.county = $county": NULL;
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-SELECT DISTINCT f.id, f.facility_code, f.facility_name, f.district, f.owner, c.county, d.district as district_name
+SELECT DISTINCT f.id, f.facility_code, f.facility_name, f.district, f.owner, c.county, d.district as district_name,f.using_hcmp
 FROM facilities f, districts d, counties c
 WHERE f.district = d.id
 AND d.county=c.id
-AND d.id= $district");
+$district $county");
 return $q;
 }
 ////////////////////////////////////////////////
