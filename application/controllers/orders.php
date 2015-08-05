@@ -431,6 +431,7 @@ class orders extends MY_Controller {
 		$data['rejected'] = ($rejected == 'rejected') ? 1 : 0;
 		$data['option_'] = ($option == 'readonly') ? 'readonly_' : 0;
 		$data['order_details'] = $order_data;
+		// echo "<pre>";print_r($order_data);exit;
 		if (($order_data[0]['source'] == 1) || ($order_data[0]['source'] == 0)) {
 		 $commodity_list = Commodities::get_all_from_supllier(1);
 		}elseif ($order_data[0]['source'] == 2) {
@@ -677,8 +678,8 @@ class orders extends MY_Controller {
 							</thead>
 							<tbody >
 							<tr>
-							<td style="text-align:center;">' . date('M , d Y') . '</td>							
-							<td style="text-align:center;" >' . number_format("$order_total", 2) . '</td>
+							<td style="text-align:center;">' . date('M , d Y') . '</td>
+							<td style="text-align:center;" > Ksh ' . number_format("$excel_order_value", 2) . '</td>
 							</tr>
 							</tbody>
 							</table>
@@ -691,7 +692,7 @@ class orders extends MY_Controller {
 
 				// $email_address = "kelvinmwas@gmail.com";//FOREFATHER
 				$email_address = "karsanrichard@gmail.com";
-				$response = $this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file);
+				// $response = $this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file);
 
 				if ($response) {
 					delete_files($attach_file);
@@ -958,7 +959,7 @@ class orders extends MY_Controller {
 							<td style="text-align:center;">' . date('M , d Y', strtotime($order_dates[0]['order_date'])) . '</td>
 							<td style="text-align:center;">' . date('M , d Y', strtotime($order_dates[0]['approval_date'])) . '</td>
 							<td style="text-align:center;">' . date('M , d Y') . '</td>
-							<td style="text-align:center;" >' . number_format("$order_total", 2) . '</td>
+							<td style="text-align:center;" >Ksh ' . number_format("$order_total", 2) . '</td>
 							</tr>
 							</tbody>';
 					$subject = 'Approved Order For ' . $facility_name;
@@ -978,7 +979,7 @@ class orders extends MY_Controller {
 							<tr>
 							<td style="text-align:center;">' . date('M , d Y', strtotime($order_dates[0]['order_date'])) . '</td>
 							<td style="text-align:center;">' . date('M , d Y') . '</td>
-							<td style="text-align:center;" >' . number_format("$order_total", 2) . '</td>
+							<td style="text-align:center;" >Ksh ' . number_format("$order_total", 2) . '</td>
 							</tr>
 							</tbody>';
 					$subject = 'Order Pending Approval By County Pharmacist ' . $facility_name;

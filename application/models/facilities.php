@@ -303,8 +303,102 @@ class Facilities extends Doctrine_Record {
     
 	}
 
+	public function get_facility_data_specific($report_type = NULL,$criteria = NULL,$county_id = NULL,$district_id = NULL,$facility_code = NULL){
+		/*
+		@author karsan AS AT 2015-08-04
+		*/
+		// $col_title = "days_from_last_login";
+		if (isset($report_type)) {
+		$addition = NULL;
+			if ($report_type == 'last_issued') {
+				$addition .= "AND l.issued = 1";
+				// $addition = "AND l.issued = 1 AND l.add_stock = 0 AND l.ordered = 0 AND l.decommissioned = 0 AND l.redistribute = 0";
+				// $col_title = "days_from_last_issue";
+			}elseif ($report_type == 'last_ordered') {
+				$addition .= "AND l.ordered = 1";
+				// $addition = "AND l.ordered = 1 AND l.issued = 0 AND l.add_stock = 0 AND l.decommissioned = 0 AND l.redistribute = 0";
+				// $col_title = "days_from_last_ordered";
+			}elseif ($report_type == 'last_decommissioned') {
+				$addition .= "AND l.decommissioned = 1";
+				// $addition = "AND l.decommissioned = 1 AND l.issued = 0 AND l.ordered = 0 AND l.add_stock = 0 AND l.redistribute = 0";
+				// $col_title = "days_from_last_ordered";
+			}elseif ($report_type == 'last_redistributed') {
+				$addition .= "AND l.redistribute = 1";
+				// $addition = "AND l.redistribute = 1 AND l.issued = 0 AND l.ordered = 0 AND l.decommissioned = 0 AND l.add_stock = 0";
+				$col_title = "days_from_last_redistributed";
+			}elseif ($report_type == 'last_added_stock') {
+				$addition .= "AND l.add_stock = 1";
+				// $addition = "AND l.add_stock = 1 AND l.issued = 0 AND l.ordered = 0 AND l.decommissioned = 0 AND l.redistribute = 0";
+				// $col_title = "days_from_last_stock_addition";
+			}
+		}
+		// echo "<pre>SELECT 
+		// 	    u.id,
+		// 	    u.username,
+		// 	    d.district,
+		// 	    c.county,
+		// 	    f.facility_name,
+		// 	    f.facility_code AS facility_code,
+		// 	    c.county,
+		// 	    d.district,
+		// 	    d.id AS district_id,
+		// 	    c.id AS county_id,
+		// 	    l.action,
+		// 	    l.end_time_of_event AS last_seen,
+		// 	    l.issued,
+		// 	    l.ordered,
+		// 	    l.decommissioned,
+		// 	    l.redistribute,
+		// 	    l.add_stock,
+		// 	    DATEDIFF(NOW(), l.end_time_of_event) AS difference_in_days
+		// 	FROM
+		// 	    facilities f,
+		// 	    districts d,
+		// 	    counties c,
+		// 	    user u,
+		// 	    log l
+		// 	WHERE
+		// 	    f.district = d.id AND d.county = c.id
+		// 	        AND u.facility = f.facility_code
+		// 	        AND u.id = l.user_id
+		// 	        $addition </pre>";
 
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll(
+			"
+			SELECT 
+			    u.id,
+			    u.username,
+			    d.district,
+			    c.county,
+			    f.facility_name,
+			    f.facility_code AS facility_code,
+			    c.county,
+			    d.district,
+			    d.id AS district_id,
+			    c.id AS county_id,
+			    l.action,
+			    l.end_time_of_event AS last_seen,
+			    l.issued,
+			    l.ordered,
+			    l.decommissioned,
+			    l.redistribute,
+			    l.add_stock,
+			    DATEDIFF(NOW(), l.end_time_of_event) AS difference_in_days
+			FROM
+			    facilities f,
+			    districts d,
+			    counties c,
+			    user u,
+			    log l
+			WHERE
+			    f.district = d.id AND d.county = c.id
+			        AND u.facility = f.facility_code
+			        AND u.id = l.user_id
+			        $addition
+			");
 
+		return $query;
+	}//get facility data specific
 
 	//gets the monitoring data for all the facilities using HCMP
 	public static function facility_monitoring($county_id, $district_id, $facility_code=null)

@@ -2,6 +2,7 @@
 $theader='<table width="100%" border="0" class="row-fluid table table-hover table-bordered"  id="example">
 					<thead style="font-weight:800 ">
 						<tr style="background-color: white"> 
+							<td>Actual Date</td>
 							<td>HCMP Order No</td>
 							<td>Sub- County</td>
 							<td>Health Facility</td>
@@ -15,6 +16,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 					$theader2='<table width="100%" border="0" class="row-fluid table table-hover table-bordered"  id="example2">
 					<thead style="font-weight:800 ">
 						<tr style="background-color: white"> 
+							<td>Actual Date</td>
 							<td>HCMP Order No</td>
 							<td>Sub- County</td>
 							<td>Health Facility</td>
@@ -28,6 +30,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 					$theader3='<table width="100%" border="0" class="row-fluid table table-hover table-bordered"  id="example3">
 					<thead style="font-weight:800 ">
 						<tr style="background-color: white"> 
+							<td>Actual Date</td>
 							<td>HCMP Order No</td>
 							<td>Sub- County</td>
 							<td>Health Facility</td>
@@ -41,6 +44,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 					$theader4='<table width="100%" border="0" class="row-fluid table table-hover table-bordered"  id="example4">
 					<thead style="font-weight:800 ">
 						<tr style="background-color: white"> 
+							<td>Actual Date</td>
 							<td>HCMP Order No</td>
 							<td>Sub- County</td>
 							<td>Health Facility</td>
@@ -54,6 +58,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 					$theader5='<table width="100%" border="0" class="row-fluid table table-hover table-bordered"  id="example5">
 					<thead style="font-weight:800 ">
 						<tr style="background-color: white"> 
+							<td>Actual Date</td>
 							<td>HCMP Order No</td>
 							<td>Sub- County</td>
 							<td>Health Facility</td>
@@ -197,7 +202,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
     <div role="tabpanel" class="tab-pane active" id="a">
     	<?php
     	echo $theader2;
-	//echo "<pre>";	print_r($pending_all);
+	// echo "<pre>";	print_r($pending_all);
 		foreach ($pending_all as $key => $value) {
 			
 			$link=base_url('orders/get_facility_sorf/'.$value['id'].'/'.$mfl);
@@ -212,6 +217,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			?>
 			
 		<tr>
+			<td><?php echo $value['order_date']; ?></td>
 			<td><?php echo $value['id']; ?></td>
 			<td><?php echo $value['district']; ?></td>
 			<td><?php echo $value['facility_name']; ?></td>
@@ -251,6 +257,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			
 			?>
 		<tr>
+			<td><?php echo $value['order_date']; ?></td>
 			<td><?php echo $value['id']; ?></td>
 			<td><?php echo $value['district']; ?></td>
 			<td><?php echo $value['facility_name']; ?></td>
@@ -322,6 +329,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			
 			?>
 		<tr>
+			<td><?php echo $value['order_date']; ?></td>
 			<td><?php echo $value['id']; ?></td>
 			<td><?php echo $value['district']; ?></td>
 			<td><?php echo $value['facility_name']; ?></td>
@@ -372,6 +380,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			$link3=base_url().'reports/download_order_delivery/'.$value['id'];
 			?>
 		<tr>
+			<td><?php echo $value['order_date']; ?></td>
 			<td><?php echo $value['id']; ?></td>
 			<td><?php echo $value['district']; ?></td>
 			<td><?php echo $value['facility_name']; ?></td>
