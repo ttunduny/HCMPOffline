@@ -3408,42 +3408,20 @@ class Reports extends MY_Controller {
 		// $last_added_stock_time = NULL;
 
 
-		// echo "<pre>";print_r($final_array);echo "</pre>";exit;
+		echo "<pre>";print_r($final_array);echo "</pre>";exit;
 
 		// echo "<pre>";print_r($last_issued);echo "</pre>";exit;
 		$row_data = array();
 		$counter = 0;
 		foreach ($final_array as $facility) :
 			echo key($final_array);
-			echo $counter;
+			echo "<pre>".$counter;
 			$counter = $counter + 1 ;
-			$issue_date = ($facility['Date Last Issued']!=0) ? date('j M, Y', strtotime($facility['Date Last Issued'])) : "No Data Available";
-			$last_seen = ($facility['Date Last Seen']!=0) ? date('j M, Y', strtotime($facility['Date Last Seen'])) : "No Data Available";
-			$redistribution = ($facility['Date Last Redistributed']!=0) ? date('j M, Y', strtotime($facility['Date Last Redistributed'])) : "No Data Available";
-			$order_date = ($facility['Date Last Ordered']!=0) ? date('j M, Y', strtotime($facility['Date Last Ordered'])) : "No Data Available";
-			$decommission_date = ($facility['Date Last Decommissioned']!=0) ? date('j M, Y', strtotime($facility['Date Last Decommissioned'])) : "No Data Available";
-			$date_order = ($facility['Date Last Received Order']!=0) ? date('j M, Y', strtotime($facility['Date Last Received Order'])) : "No Data Available";
-				
-			array_push($row_data, array($facility['Facility Name'], 
-										$facility['Facility Code'], 
-										$facility['Sub-County'],
-										$facility['County'], 
-										$last_seen, 
-										$facility['Days From Last Seen'], 
-										$issue_date, 
-										$facility['Days From Last Issue'], 
-										$redistribution, 
-										$facility['Days From Last Redistributed'], 
-										$order_date, 
-										$facility['Days From Last Order'], 
-										$decommission_date, 
-										$facility['Days From Last Decommissioned'], 
-										$date_order, 
-										$facility['Days From Last Received Order']));
+			
 
 		endforeach;
 		
-		echo "<pre> $counter";print_r($row_data);echo "</pre>";exit;
+		echo "<pre>";print_r($row_data);echo "</pre>";exit;
 		$excel_data = array();
 		$excel_data = array('doc_creator' => 'HCMP ', 'doc_title' => 'System Usage Breakdown ', 'file_name' => 'system usage breakdown');
 		$column_data = array(
