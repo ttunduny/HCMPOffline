@@ -86,7 +86,7 @@ $identifier = $this -> session -> userdata('user_indicator');
                         </h4>
                     </div>
                    <div id="collapseTwo" class="panel-collapse collapse <?php echo $active_panel=='stocking_levels'? 'in': null; ?>">
-                        <!-- <div class="panel-body">
+                         <div class="panel-body">
                             <table class="table">
                                 <tr>
                                     <td>
@@ -94,7 +94,7 @@ $identifier = $this -> session -> userdata('user_indicator');
                                     </td>
                                 </tr>
                             </table>
-                        </div> -->
+                        </div>J0
                     </div> 
                 </div>
                 <!--To be removed once the redesign is done
