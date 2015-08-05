@@ -844,7 +844,7 @@ class Reports extends MY_Controller {
 	}
 	//The new Facility Mapping function
 	public function facility_mapping() {
-		redirect('home/under_maintenance');
+		// redirect('home/under_maintenance');
 		//get the current year and date
 		$year = date("Y");
 		$month = date("m");
@@ -861,7 +861,9 @@ class Reports extends MY_Controller {
 		$county_name = Counties::get_county_name($county_id);
 		$county_name = $county_name['county'];
 		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
+		// echo "<pre>";print_r($data['get_facility_data']);echo "</pre>";exit;
 		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
+		// echo "<pre>";print_r($get_dates_facility_went_online);echo "</pre>";exit;
 		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
 		// Graph data of last issued
 		if ($this -> session -> userdata('user_indicator') != 'facility') {
@@ -3242,7 +3244,7 @@ class Reports extends MY_Controller {
 		return $this -> load -> view("subcounty/ajax/county_notification_v", $data);
 	}
 	//creates the report for the system usage breakdown.
-	public function monitoring() {
+	public function monitoring() {//being authored by Karsan as at 2015-08-04
 		//pick values form the session
 		$facility_code = (!$this -> session -> userdata('facility_id')) ? null : $this -> session -> userdata('facility_id');
 		$district_id = (!$this -> session -> userdata('district_id')) ? null : $this -> session -> userdata('district_id');
@@ -3252,19 +3254,176 @@ class Reports extends MY_Controller {
 		//the old query that causes too many locks on the mysql tables
 		//$facility_data=Facilities::get_facilities_monitoring_data( $facility_code,$district_id,$county_id,$identifier);
 		//get the monitoring data from the log tables
-		$facility_data = Facilities::facility_monitoring($county_id, $district_id, $facility_code);
-		
+		// $facility_data = Facilities::facility_monitoring($county_id, $district_id, $facility_code);
+		// $facility_data_new = Facilities::new_facility_monitoring_function($county_id, $district_id, $facility_code,'all');
+		// get_facility_data_specific($report_type = NULL,$criteria = NULL,$county_id = NULL,$district_id = NULL,$facility_code = NULL)
+
+		$last_seen = Facilities::get_facility_data_specific();
+		$last_issued = Facilities::get_facility_data_specific('last_issued');
+		$last_ordered = Facilities::get_facility_data_specific('last_ordered');
+		$decommissioned = Facilities::get_facility_data_specific('last_decommissioned');
+		$redistributed = Facilities::get_facility_data_specific('last_redistributed');
+		$added_stock = Facilities::get_facility_data_specific('last_added_stock');
+
+		// echo "<pre>";print_r($last_seen);echo "</pre>";
+		// echo "<pre>";print_r($last_issued);echo "</pre>";
+		// echo "<pre>";print_r($last_ordered);echo "</pre>";
+		// echo "<pre>";print_r($decommissioned);echo "</pre>";
+		// echo "<pre>";print_r($redistributed);echo "</pre>";
+		// echo "<pre>";print_r($added_stock);echo "</pre>";
+		// exit;
+
+		$final_array = array();
+
+		foreach ($last_seen as $l_issued) { 
+		$final_array[] = array(
+			'Facility Name' => $l_issued['facility_name'], 
+			'Facility Code' => $l_issued['facility_code'],
+			'County' => $l_issued['county'],
+			'Sub-County' => $l_issued['district']
+			);
+		}//last issued foreach
+
+		$final_array = array_unique($final_array,SORT_REGULAR);
+		// $final_array = array_map("unserialize", array_unique(array_map("serialize", $final_array)));
+		// echo "<pre>";print_r($final_array);echo "</pre>";exit;
+		$final_array_count = count($final_array);
+		$last_seen_count = count($last_seen);
+		$last_issued_count = count($last_issued);
+		$final_array_count = count($final_array);
+		$last_ordered_count = count($last_ordered);
+		$decommissioned_count = count($decommissioned);
+		$redistributed_count = count($redistributed);
+		$added_stock_count = count($added_stock);
+
+		// echo "<pre>" . $final_array_count."</pre>";
+		// echo "<pre>" . $last_seen_count."</pre>";
+		// echo "<pre>" . $last_issued_count."</pre>";
+		// echo "<pre>" . $final_array_count."</pre>";
+		// echo "<pre>" . $last_ordered_count."</pre>";
+		// echo "<pre>" . $decommissioned_count."</pre>";
+		// echo "<pre>" . $redistributed_count."</pre>";
+		// echo "<pre>" . $added_stock_count."</pre>";
+		// exit;
+
+		$last_seen_time = NULL;
+		$last_issued_time = NULL;
+		$last_order_time = NULL;
+		$last_deccommissioned_time = NULL;
+		$last_redistributed_time = NULL;
+		$last_added_stock_time = NULL;
+
+		for ($j=0; $j < $last_seen_count; $j++) { 
+			for ($i=0; $i < $final_array_count; $i++) { 
+				if ($final_array[$i]['Facility Code'] == $last_seen[$j]['facility_code']){
+					// echo "<pre>".$last_ordered[$j]['last_seen']."	".$last_ordered[$j]['facility_code'];
+					if ($last_seen[$j]['last_seen'] > $last_seen_time) {
+						$last_seen_time = $last_seen[$j]['last_seen'];
+						$days_last_seen = $last_seen[$j]['difference_in_days'];
+						// echo "<pre>".$last_order_time;
+					}
+		        	$final_array[$i]['Date Last Seen'] = $last_seen_time;
+		        	$final_array[$i]['Days From Last Seen'] = $days_last_seen;
+		        	// $final_array[$i]['Days From Last Seen'] = abs($last_seen_time - $now);
+		        }//end of facility code if
+			}//end of final_array checker
+		}//last ordered foreach
+
+		for ($j=0; $j < $last_seen_count; $j++) { 
+			for ($i=0; $i < $final_array_count; $i++) { 
+				if ($final_array[$i]['Facility Code'] == $last_issued[$j]['facility_code']){
+					// echo "<pre>".$last_ordered[$j]['last_seen']."	".$last_ordered[$j]['facility_code'];
+					if ($last_issued[$j]['last_seen'] > $last_issued_time) {
+						$last_issued_time = $last_issued[$j]['last_seen'];
+						$days_last_issued = $last_issued[$j]['difference_in_days'];
+						// echo "<pre>".$last_order_time;
+					}
+		        	$final_array[$i]['Date Last Issued'] = $last_issued_time;
+		        	$final_array[$i]['Days From Last Issue'] = $days_last_issued;
+		        }//end of facility code if
+			}//end of final_array checker
+		}//last ordered foreach
+
+		for ($j=0; $j < $last_seen_count; $j++) { 
+			for ($i=0; $i < $final_array_count; $i++) { 
+				if ($final_array[$i]['Facility Code'] == $last_ordered[$j]['facility_code']){
+					// echo "<pre>".$last_ordered[$j]['last_seen']."	".$last_ordered[$j]['facility_code'];
+					if ($last_ordered[$j]['last_seen'] > $last_order_time) {
+						$last_order_time = $last_ordered[$j]['last_seen'];
+						$days_last_ordered = $last_ordered[$j]['difference_in_days'];
+						// echo "<pre>".$last_order_time;
+					}
+		        	$final_array[$i]['Date Last Ordered'] = $last_order_time;
+		        	$final_array[$i]['Days From Last Order'] = $days_last_ordered;
+		        }//end of facility code if
+			}//end of final_array checker
+		}//last ordered foreach
+
+		for ($j=0; $j < $last_seen_count; $j++) { 
+			for ($i=0; $i < $final_array_count; $i++) { 
+				if ($final_array[$i]['Facility Code'] == $decommissioned[$j]['facility_code']){
+		        	if ($decommissioned[$j]['last_seen'] > $last_deccommissioned_time) {
+						$last_deccommissioned_time = $decommissioned[$j]['last_seen'];
+						$days_last_decommissioned = $decommissioned[$j]['difference_in_days'];
+						// echo "<pre>".$last_order_time;
+					}
+		        	$final_array[$i]['Date Last Decommissioned'] = $last_deccommissioned_time;
+		        	$final_array[$i]['Days From Last Decommissioned'] = $days_last_decommissioned;
+		        }//end of facility code if
+			}//end of final_array checker
+		}//last ordered foreach
+
+		for ($j=0; $j < $last_seen_count; $j++) { 
+			for ($i=0; $i < $final_array_count; $i++) { 
+				if ($final_array[$i]['Facility Code'] == $redistributed[$j]['facility_code']){
+		        	if ($redistributed[$j]['last_seen'] > $last_redistributed_time) {
+						$last_redistributed_time = $redistributed[$j]['last_seen'];
+						$days_last_redistributed = $redistributed[$j]['difference_in_days'];
+						// echo "<pre>".$last_order_time;
+					}
+		        	$final_array[$i]['Date Last Redistributed'] = $last_redistributed_time;
+		        	$final_array[$i]['Days From Last Redistributed'] = $days_last_redistributed;
+		        }//end of facility code if
+			}//end of final_array checker
+		}//last ordered foreach
+
+		for ($j=0; $j < $last_seen_count; $j++) { 
+			for ($i=0; $i < $final_array_count; $i++) { 
+				if ($final_array[$i]['Facility Code'] == $added_stock[$j]['facility_code']){
+		        	if ($added_stock[$j]['last_seen'] > $last_added_stock_time) {
+						$last_added_stock_time = $added_stock[$j]['last_seen'];
+						$days_last_added_stock = $added_stock[$j]['difference_in_days'];
+						// echo "<pre>".$last_order_time;
+					}
+		        	$final_array[$i]['Date Last Received Order'] = $last_added_stock_time;
+		        	$final_array[$i]['Days From Last Received Order'] = $days_last_added_stock;
+		        }//end of facility code if 
+			}//end of final_array checker
+		}//last ordered foreach
+
+		// echo $last_order_time;
+		// exit;
+		// $last_deccommissioned_time = NULL;
+		// $last_redistributed_time = NULL;
+		// $last_added_stock_time = NULL;
+
+
+		// echo "<pre>";print_r($final_array);echo "</pre>";exit;
+
+		// echo "<pre>";print_r($last_issued);echo "</pre>";exit;
 		$row_data = array();
-		foreach ($facility_data as $facility) :
-			
+		$counter = 0;
+		foreach ($final_array as $facility) :
+			echo key($final_array);
+			echo $counter;
+			$counter = $counter + 1 ;
 			$issue_date = ($facility['Date Last Issued']!=0) ? date('j M, Y', strtotime($facility['Date Last Issued'])) : "No Data Available";
 			$last_seen = ($facility['Date Last Seen']!=0) ? date('j M, Y', strtotime($facility['Date Last Seen'])) : "No Data Available";
 			$redistribution = ($facility['Date Last Redistributed']!=0) ? date('j M, Y', strtotime($facility['Date Last Redistributed'])) : "No Data Available";
 			$order_date = ($facility['Date Last Ordered']!=0) ? date('j M, Y', strtotime($facility['Date Last Ordered'])) : "No Data Available";
 			$decommission_date = ($facility['Date Last Decommissioned']!=0) ? date('j M, Y', strtotime($facility['Date Last Decommissioned'])) : "No Data Available";
-			$date_order = ($facility['Date Last Received Order']!=0) ? date('j M, Y', strtotime($facility['Date Last Received Order'])) : "No Data Available
-			";
-			
+			$date_order = ($facility['Date Last Received Order']!=0) ? date('j M, Y', strtotime($facility['Date Last Received Order'])) : "No Data Available";
+				
 			array_push($row_data, array($facility['Facility Name'], 
 										$facility['Facility Code'], 
 										$facility['Sub-County'],
@@ -3281,12 +3440,29 @@ class Reports extends MY_Controller {
 										$facility['Days From Last Decommissioned'], 
 										$date_order, 
 										$facility['Days From Last Received Order']));
-		
+
 		endforeach;
 		
+		echo "<pre> $counter";print_r($row_data);echo "</pre>";exit;
 		$excel_data = array();
 		$excel_data = array('doc_creator' => 'HCMP ', 'doc_title' => 'System Usage Breakdown ', 'file_name' => 'system usage breakdown');
-		$column_data = array("Facility Name", "Facility Code", "Sub County", "County",  "Date Last Logged In", "Days From Last Log In", "Date Last Issued", "Days From Last Issue", "Date Last Redistributed", "Days From Last Redistribution", "Date Last Ordered", "Days From Last Order", "Date Last Decommissioned", "Days From Last Decommission", "Date Last Received Order", "Days From Last Received Order");
+		$column_data = array(
+			"Facility Name", 
+			"Facility Code", 
+			"Sub County", 
+			"County",  
+			"Date Last Logged In", 
+			"Days From Last Log In", 
+			"Date Last Issued", 
+			"Days From Last Issue", 
+			"Date Last Redistributed", 
+			"Days From Last Redistribution", 
+			"Date Last Ordered", 
+			"Days From Last Order", 
+			"Date Last Decommissioned", 
+			"Days From Last Decommission", 
+			"Date Last Received Order", 
+			"Days From Last Received Order");
 		$excel_data['column_data'] = $column_data;
 		$excel_data['row_data'] = $row_data;
 		$this -> hcmp_functions -> create_excel($excel_data);
