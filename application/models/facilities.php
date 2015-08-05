@@ -303,13 +303,23 @@ class Facilities extends Doctrine_Record {
     
 	}
 
-	public function get_facility_data_specific($report_type = NULL,$criteria = NULL,$county_id = NULL,$district_id = NULL,$facility_code = NULL){
+	public function get_facility_data_specific($report_type = NULL,$county,$district_id = NULL,$facility_code = NULL){
 		/*
 		@author karsan AS AT 2015-08-04
 		*/
-		// $col_title = "days_from_last_login";
-		if (isset($report_type)) {
+
+		$facility_filter = NULL;
+		$district_id = isset($district_id)? $district_id : NULL;
+		$county_filter = (isset($county))? "AND c.id = $county" : NULL ;
+		$district_filter = (isset($district_id))? "AND d.id = $district_id" : NULL ;
+		if (isset($facility_code)) {
+			$facility_filter = "AND f.facility_code = $facility_code";
+			$county_filter = NULL;
+			$district_filter = NULL;
+		}
+		// echo $district_id;exit;
 		$addition = NULL;
+		if (isset($report_type)) {
 			if ($report_type == 'last_issued') {
 				$addition .= "AND l.issued = 1";
 				// $addition = "AND l.issued = 1 AND l.add_stock = 0 AND l.ordered = 0 AND l.decommissioned = 0 AND l.redistribute = 0";
@@ -331,38 +341,48 @@ class Facilities extends Doctrine_Record {
 				// $addition = "AND l.add_stock = 1 AND l.issued = 0 AND l.ordered = 0 AND l.decommissioned = 0 AND l.redistribute = 0";
 				// $col_title = "days_from_last_stock_addition";
 			}
+			else{
+				$addition = NULL;
+			}
 		}
-		// echo "<pre>SELECT 
-		// 	    u.id,
-		// 	    u.username,
-		// 	    d.district,
-		// 	    c.county,
-		// 	    f.facility_name,
-		// 	    f.facility_code AS facility_code,
-		// 	    c.county,
-		// 	    d.district,
-		// 	    d.id AS district_id,
-		// 	    c.id AS county_id,
-		// 	    l.action,
-		// 	    l.end_time_of_event AS last_seen,
-		// 	    l.issued,
-		// 	    l.ordered,
-		// 	    l.decommissioned,
-		// 	    l.redistribute,
-		// 	    l.add_stock,
-		// 	    DATEDIFF(NOW(), l.end_time_of_event) AS difference_in_days
-		// 	FROM
-		// 	    facilities f,
-		// 	    districts d,
-		// 	    counties c,
-		// 	    user u,
-		// 	    log l
-		// 	WHERE
-		// 	    f.district = d.id AND d.county = c.id
-		// 	        AND u.facility = f.facility_code
-		// 	        AND u.id = l.user_id
-		// 	        $addition </pre>";
-
+		/*
+		echo "
+		SELECT 
+			    u.id,
+			    u.username,
+			    d.district,
+			    c.county,
+			    f.facility_name,
+			    f.facility_code AS facility_code,
+			    c.county,
+			    d.district,
+			    d.id AS district_id,
+			    c.id AS county_id,
+			    l.action,
+			    l.end_time_of_event AS last_seen,
+			    l.issued,
+			    l.ordered,
+			    l.decommissioned,
+			    l.redistribute,
+			    l.add_stock,
+			    DATEDIFF(NOW(), l.end_time_of_event) AS difference_in_days
+			FROM
+			    facilities f,
+			    districts d,
+			    counties c,
+			    user u,
+			    log l
+			WHERE
+			    f.district = d.id AND d.county = c.id
+			        AND u.facility = f.facility_code
+			        AND u.id = l.user_id
+			        AND c.id = d.county
+			        $addition
+			        $county_filter
+			        $district_filter
+			        $facility_filter
+			        ";exit;
+	*/
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll(
 			"
 			SELECT 
@@ -394,6 +414,10 @@ class Facilities extends Doctrine_Record {
 			    f.district = d.id AND d.county = c.id
 			        AND u.facility = f.facility_code
 			        AND u.id = l.user_id
+			        AND c.id = d.county
+			        $county_filter
+			        $district_filter
+			        $facility_filter
 			        $addition
 			");
 
