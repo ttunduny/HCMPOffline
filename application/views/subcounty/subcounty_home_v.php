@@ -67,7 +67,7 @@ $identifier = $this -> session -> userdata('user_indicator');
                         </h4>
                     </div>
                 </div>
-                <div class="panel panel-default">
+                <!-- <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseEight" id="system_usage"><span class="glyphicon glyphicon-signal">
@@ -75,6 +75,27 @@ $identifier = $this -> session -> userdata('user_indicator');
                         </h4>
                     </div>
                     
+                </div> -->
+                <!--Stocking Levels-->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" id="system_usage"><span class="glyphicon glyphicon-signal">
+                            </span>System Usage</a>
+                        </h4></a>
+                        </h4>
+                    </div>
+                   <div id="collapseTwo" class="panel-collapse collapse <?php echo $active_panel=='stocking_levels'? 'in': null; ?>">
+                        <!-- <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        <a href="<?php echo base_url("facility_activation/facility_dash") ?>">Activate Facilities</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div> -->
+                    </div> 
                 </div>
                 <!--To be removed once the redesign is done
                 <div class="panel panel-default">

@@ -112,7 +112,7 @@ unset($popup);
   	<h2><span style="margin-right: 0.5em;" class="glyphicon glyphicon-lock"></span>Password Recovery</h2>	
   	<?php 
     
-	 echo form_open('User/confirm_code'); ?>
+	 echo form_open('user/confirm_code'); ?>
 <div id="login" >
 
 <div class="form-group" style="margin-top: 2.3em;">

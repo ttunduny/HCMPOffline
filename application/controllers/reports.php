@@ -336,6 +336,7 @@ class Reports extends MY_Controller {
 		$data['order_counts'] = $facility_order_count;
 		$data['delivered'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "delivered");
 		$data['pending_all'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_all");
+		// echo "<pre>";	print_r($data['pending_all']);exit;
 		$data['pending_cty'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_cty");
 		$data['approved'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "approved");
 		$data['rejected'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "rejected");
@@ -857,6 +858,7 @@ class Reports extends MY_Controller {
 	}
 	//The new Facility Mapping function
 	public function facility_mapping() {
+		redirect('home/under_maintenance');
 		//get the current year and date
 		$year = date("Y");
 		$month = date("m");

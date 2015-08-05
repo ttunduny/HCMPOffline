@@ -2,6 +2,9 @@
 <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
 <style>
 	 .center {text-align: center; margin-left: auto; margin-right: auto; margin-bottom: auto; margin-top: auto;}
+   .text-azure {
+    color: #00bdcc;
+    }
 </style>
 <div class="container">
   <div class="row">

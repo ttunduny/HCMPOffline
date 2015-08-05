@@ -19,6 +19,7 @@ if (!$this -> session -> userdata('user_id')) {
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="<?php echo base_url().'assets/img/coat_of_arms.png'?>" type="image/x-icon" />
+    <link href="<?php echo base_url().'assets/css/animate.css'?>" type="text/css" rel="stylesheet"/> 
     <link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
     <link href="<?php echo base_url().'assets/css/select2.css'?>" type="text/css" rel="stylesheet"/> 
   <link href="<?php echo base_url().'assets/css/normalize.css'?>" type="text/css" rel="stylesheet"/>
