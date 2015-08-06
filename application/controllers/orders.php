@@ -852,8 +852,8 @@ class orders extends MY_Controller {
 
 			}//insert the data here
 
-			$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("UPDATE `facility_orders` SET `order_total` = $order_total,`order_no` = $order_no
-						,`workload` = $workload ,`bed_capacity` = $bed_capacity WHERE `facility_orders`.`id` = $order_id;");
+			// $orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("UPDATE `facility_orders` SET `order_total` = $order_total,`order_no` = $order_no
+						// ,`workload` = $workload ,`bed_capacity` = $bed_capacity WHERE `facility_orders`.`id` = $order_id;");
 
 			$myobj = Doctrine::getTable('facility_orders') -> find($order_id);
 			$myobj -> workload = $workload;
@@ -962,6 +962,8 @@ class orders extends MY_Controller {
 							</table>
 						<br>
 						';
+
+			echo $tabledata;exit;
 
 			$response = $this -> hcmp_functions -> send_order_approval_email($message, $subject, $attach_file, $facility_code, $status);
 			if ($response) {
