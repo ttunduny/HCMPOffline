@@ -952,9 +952,25 @@ class Reports extends MY_Controller {
 		$data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v" : "shared_files/report_templates/side_bar_v";
 		// $data['content_view'] = "facility/facility_reports/reports_v";
 		$data['active_panel'] = (!$this -> session -> userdata('facility_id')) ? "system_usage" : "system_usage";
-		// $data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
+		// $data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));		
+		$data['temporary_system_usage'] = $this->monitoring(1);
+
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
+	}
+
+	public function generate_system_usage_temp_data()
+	{
+		$temporary_system_usage = $this->monitoring(1);
+		/////
+		$category_data = array( array("Facility Name", "Facility Code", "Sub County", "County", "Date Last Logged In","Days From Last Logged In", "Date Last Issued", "Days From Last Issue", "Date Last Redistributed","Days From Last Redistribution","Date Last Ordered","Days From Last Order","Date Last Decommissioned","Days From Last Decommission","Date Last Received Order","Days From Last Received Order"));
+		$graph_data = array_merge($graph_data, array("table_id" => 'system_usage_temp_table'));
+		$graph_data = array_merge($graph_data, array("table_header" => $category_data));
+		$graph_data = array_merge($graph_data, array("table_body" => $temporary_system_usage));
+		$data = array();
+		$data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);
+		$data['table_id'] = "system_usage_temp_table";
+		return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
 	}
 	//AJAX Request from the System Usage View in the County, Sub County and Facility interfaces
 	public function get_county_facility_mapping_ajax_request($option = null) {
@@ -3271,7 +3287,7 @@ class Reports extends MY_Controller {
 		return $this -> load -> view("subcounty/ajax/county_notification_v", $data);
 	}
 	//creates the report for the system usage breakdown.
-	public function monitoring() {//being authored by Karsan as at 2015-08-04
+	public function monitoring($mine = null) {//being authored by Karsan as at 2015-08-04
 		//pick values form the session
 		// $facility_code = (!$this -> session -> userdata('facility_id')) ? null : $this -> session -> userdata('facility_id');
 		// $district_id = (!$this -> session -> userdata('district_id')) ? null : $this -> session -> userdata('district_id');
@@ -3509,30 +3525,34 @@ class Reports extends MY_Controller {
 										$facility['Days From Last Received Order']));
 
 		endforeach;
-		
+		if($mine!=null){
+			return $row_data;
+		}else{
+			$excel_data = array();
+			$excel_data = array('doc_creator' => 'HCMP ', 'doc_title' => 'System Usage Breakdown ', 'file_name' => 'system usage breakdown');
+			$column_data = array(
+				"Facility Name", 
+				"Facility Code", 
+				"Sub County", 
+				"County",  
+				"Date Last Logged In", 
+				"Days From Last Log In", 
+				"Date Last Issued", 
+				"Days From Last Issue", 
+				"Date Last Redistributed", 
+				"Days From Last Redistribution", 
+				"Date Last Ordered", 
+				"Days From Last Order", 
+				"Date Last Decommissioned", 
+				"Days From Last Decommission", 
+				"Date Last Received Order", 
+				"Days From Last Received Order");
+			$excel_data['column_data'] = $column_data;
+			$excel_data['row_data'] = $row_data;
+			$this -> hcmp_functions -> create_excel($excel_data);
+		}
 		// echo "<pre>";print_r($row_data);echo "</pre>";exit;
-		$excel_data = array();
-		$excel_data = array('doc_creator' => 'HCMP ', 'doc_title' => 'System Usage Breakdown ', 'file_name' => 'system usage breakdown');
-		$column_data = array(
-			"Facility Name", 
-			"Facility Code", 
-			"Sub County", 
-			"County",  
-			"Date Last Logged In", 
-			"Days From Last Log In", 
-			"Date Last Issued", 
-			"Days From Last Issue", 
-			"Date Last Redistributed", 
-			"Days From Last Redistribution", 
-			"Date Last Ordered", 
-			"Days From Last Order", 
-			"Date Last Decommissioned", 
-			"Days From Last Decommission", 
-			"Date Last Received Order", 
-			"Days From Last Received Order");
-		$excel_data['column_data'] = $column_data;
-		$excel_data['row_data'] = $row_data;
-		$this -> hcmp_functions -> create_excel($excel_data);
+		
 	}
 	public function filter_monitoring($district_id = null) {
 		//pick values form the session

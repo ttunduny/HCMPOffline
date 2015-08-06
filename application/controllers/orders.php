@@ -763,6 +763,7 @@ class orders extends MY_Controller {
 			$bed_capacity = '0';
 			$drawing_rights = '0';
 			$order_total = $this -> input -> post('total_order_value');
+			// echo "$order_total";die;
 			$order_no = '0';
 			//$facility_code=$this -> session -> userdata('facility_id');
 			//$user_id=$this->session->userdata('user_id');
@@ -855,8 +856,7 @@ class orders extends MY_Controller {
 					`comment`,
 					`c_stock`,
 					`amc`,
-					`adjustnve`,
-					`source`)
+					`adjustnve`)
 					VALUES ($facility_order_details_id[$i],
 					$order_id,
 					$commodity_id[$i],
@@ -872,8 +872,7 @@ class orders extends MY_Controller {
 					'$comment[$i]',
 					$c_stock[$i],
 					$amc[$i],
-					$adjustnve[$i],
-					$source
+					$adjustnve[$i]
 					)
 					ON DUPLICATE KEY UPDATE
 					`commodity_id`=$commodity_id[$i],
@@ -893,7 +892,7 @@ class orders extends MY_Controller {
 					`order_number_id`=$order_id;");
 
 			}//insert the data here
-			die;
+			// die;
 			$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("UPDATE `facility_orders` SET `order_total` = $order_total,`order_no` = $order_no
 						,`workload` = $workload ,`bed_capacity` = $bed_capacity WHERE `facility_orders`.`id` = $order_id;");
 

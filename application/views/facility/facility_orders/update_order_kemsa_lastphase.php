@@ -48,8 +48,8 @@ border: 0px ;
 			<b>*Order Frequency</b><input  type="text" class="form-control input-large commodity_code" readonly="readonly" value="Quarterly" />
 		</div>
 		<div class="col-md-2">
-			<b>Total Order Value(KSH)</b>
-<input type="text" class="form-control" name="total_order_value" id="total_order_value" readonly="readonly" value="0"/>	
+			<!-- <b>Total Order Value(KSH)</b> -->
+<input type="hidden" class="form-control" name="total_order_value" id="total_order_value" readonly="readonly" value="0"/>	
 <input type="hidden" id="actual_drawing_rights" name="drawing_rights" value="<?php echo $drawing_rights; ?>" />		
 		</div>
 		

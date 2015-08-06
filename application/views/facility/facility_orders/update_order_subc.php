@@ -49,8 +49,8 @@ border: 0px ;
 		</div>
 		<div class="col-md-2">
 
-			<b>Total Order Value(KSH)</b>
-<input type="text" class="form-control" name="total_order_value" id="total_order_value" readonly="readonly" value="<?php echo $order_details[0]['order_total']; ?>"/>	
+			<!-- <b>Total Order Value(KSH)</b> -->
+<input type="hidden" class="form-control" name="total_order_value" id="total_order_value" readonly="readonly" value="<?php echo $order_details[0]['order_total']; ?>"/>	
 
 <input type="hidden" id="actual_drawing_rights" name="drawing_rights" value="<?php echo $drawing_rights; ?>" />		
 		</div>
@@ -394,10 +394,9 @@ $(document).ready(function() {
       balance=parseInt(drawing_rights_balance)-order_total;
      //set the balances here
      $("#total_order_balance_value").val(balance)
-     // $("#total_order_value").val(order_total);
+     $("#total_order_value").val(order_total);
 		
 	}
-	
 	function calculate_suggested_value(month){
 		$("input[name^=suggested]").each(function() {
         var amc=parseInt($(this).closest("tr").find(".amc").val());
