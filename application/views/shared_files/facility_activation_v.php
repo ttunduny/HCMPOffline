@@ -56,6 +56,9 @@
 								<th>Facility Name</th>
 								<th>Sub-County</th>
 								<th>Status (Checked means Active)</th>
+								<th>Date of Activation/ Deactivation</th>
+								<th>Action</th>
+								<!-- <th>Action</th> -->
 								<!-- <th>Action</th> -->
 
 							</tr>
@@ -72,11 +75,36 @@
 								<td class="district" data-attr="<?php echo $list['district']; ?>"><?php echo $list['district_name'];?></td>
 								<td style="width:20px;" >
 								<?php if ($list['using_hcmp'] == 1) {?>
-								<input type="checkbox" name="status-checkbox" id="status_switch_change" data-attr="<?php echo $list['facility_code']; ?>" class="small-status-switch" checked = "checked" style="border-radius:0px!important;">
+								<input type="checkbox" name="status-checkbox" disabled="disabled" id="f<?php echo $list['facility_code']; ?>" data-attr="<?php echo $list['facility_code']; ?>" class="small-status-switch" checked = "checked" style="border-radius:0px!important;">
 								<?php }else{ ?>
-								<input type="checkbox" name="status-checkbox" id="status_switch_change" data-attr="<?php echo $list['facility_code']; ?>" class="small-status-switch" style="border-radius:0px!important;">
+								<input type="checkbox" name="status-checkbox" disabled="disabled" id="chkbx_<?php echo $list['facility_code']; ?>" data-attr="<?php echo $list['facility_code']; ?>" class="small-status-switch" style="border-radius:0px!important;">
 								<?php } ?> 
-								<!--
+								<td id="date_<?php echo $list['facility_code']; ?>"><?php 
+									$date_of_activation= $list['date_of_activation']; 
+									if ($list['using_hcmp'] == 1){
+										echo date('D ,d F Y',strtotime($date_of_activation));
+									}else{
+										echo 'Not yet Activated';
+									}
+									?></td>
+								<td><?php 
+									$value=0;
+									$text = null;
+									if ($list['using_hcmp'] == 1) {
+										$value=1;
+										$text = 'Deactivate';
+									}else{
+										$value=0;
+										$text = 'Activate';
+									}?>
+									<span class="btn btn-primary status_btn form-control" style="width:90%" id="btn_<?php echo $list['facility_code']; ?>" data-attr="<?php echo $list['facility_code']; ?>" data-value="<?php echo $value; ?>"><?php echo $text; ?></span>
+								</td>
+								<!-- td><button class="btn btn-primary add" data-toggle="modal" data-target="#addUsersModal" id="add_new_users">
+										<span class="glyphicon glyphicon-plus"></span>Add Users
+									</button>
+								</td> -->
+								<!-- <td><TEXTAREA></TEXTAREA>st</td> -->
+								<!--addUsersModal
 								<td>
 								<button class="btn btn-primary btn-xs edit " data-toggle="modal" data-target="#myModal" id="<?php echo $list['facility_code']; ?>" data-target="#">
 									<span class="glyphicon glyphicon-edit"></span>Edit
@@ -215,6 +243,91 @@
 		</div>
 	</div>
 </div><!-- end Modal new user -->
+
+<div class="modal fade"  id="addUsersModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="myform_users">
+	<div class="modal-dialog editable" >
+		<div class="modal-content" style="margin:auto;width:1200px;">
+			<div class="modal-header" style="">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel" style="text-align: center;line-height: 1">Add Users</h4>
+			</div>
+			<div class="row" style="margin:auto;width:1200px;" id="error_msg">
+				<div class=" col-md-12">
+					<div class="form-group">
+
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-body" style="padding:0">
+				<div class="row" style="margin:auto;width:1200px;">
+					<div class="col-md-12 ">
+					
+					<div class="table-responsive" style="min-height:300px; overflow-y: auto;">
+ 
+<table  class="table table-hover table-bordered table-update" id="add_users_table" >
+<thead style="background-color: white">
+					<tr>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>Phone Number</th>
+						<th>Email</th>
+						<th>User Name</th>
+						<th>User Type</th>
+						<th>Facility Name</th>
+						<th>Action</th>			    
+					</tr>
+					</thead>
+					<tbody>
+						<tr row_id='0'>
+						<td>
+							<input type="text" id="first_name[]" name="first_name[]" value="" class="form-control input-meduim first_name" placeholder="Enter First Name" style="margin-left:6%;width:80px !important;"/>
+						</td>
+						<td>
+							<input type="text" id="last_name[]" name="last_name[]" value="" class="form-control input-meduim last_name" placeholder="Enter Last Name" style="margin-left:6%;width:80px !important;"/>
+						</td>
+						<td>
+							<input type="telephone" id="phone_number[]" name="phone_number[]" value="" class="form-control input-meduim phone_number" placeholder="Enter Phone Number e.g 254" style="margin-left:6%;width:80px !important;"/>
+						</td>
+						<td>
+							<input type="email" id="email[]" name="email[]" value="" class="form-control input-meduim email" placeholder="email@domain.com" style="margin-left:6%;width:80px !important;"/>
+						</td>
+						<td>
+							<input type="email" id="username[]" name="username[]" value="" class="form-control input-meduim username" placeholder="email@domain.com" style="margin-left:6%;width:80px !important;"/>						
+						</td>
+						<td>
+							<input type="text" id="usertype[]" name="usertype[]" value="" class="form-control input-meduim usertype" placeholder="Enter Usertype" style="margin-left:6%;width:80px !important;"/>						
+						</td>
+						<td>
+							<input type="text" id="facility_name[]" name="facility_name[]" value="" class="form-control input-meduim facility_name" placeholder="Enter Facility Name" style="margin-left:6%;width:80px !important;"/>						
+						</td>
+						<td style="width:50px !important;" id="step8" >
+							<button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>row</button>
+							<button type="button" id="step7" class="add btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span>row</button>
+						</td>
+			
+			</tr>
+		           </tbody>
+		           </table>
+</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-default borderless" data-dismiss="modal">
+					Close
+				</button>
+				
+				<button class="btn btn-primary borderless" id="create_new">
+					Save changes
+				</button>
+			</div>
+		</div>
+	</div>
+</div><!-- end Modal new user -->
+
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog" style="width:60%">
@@ -461,6 +574,47 @@ $("#create_new").click(function() {
            
     });
 
+
+	 $(".add").click(function() {
+        var selector_object=$('#add_users_table tr:last');
+  //       selector_object.closest("tr").find(".first_name").attr('readonly','readonly');
+		// selector_object.closest("tr").find(".last_name").attr("disabled", true);
+		// selector_object.closest("tr").find(".phone_number").attr("disabled", true);
+		// selector_object.closest("tr").find(".email").attr("disabled", true);				
+		// selector_object.closest("tr").find(".username").attr("disabled", true);				
+		// selector_object.closest("tr").find(".usertype").attr("disabled", true);				
+		// selector_object.closest("tr").find(".facility_name").attr("disabled", true);				
+		//reset the values of current element */
+		 clone_the_last_row_of_the_table();
+	});	/////batch no change event
+	function clone_the_last_row_of_the_table(){
+            var last_row = $('#add_users_table tr:last');
+            var cloned_object = last_row.clone(true);
+            var table_row = cloned_object.attr("row_id");
+            var next_table_row = parseInt(table_row) + 1;    
+            var blank_value = "";       
+		    cloned_object.attr("row_id", next_table_row);
+			// cloned_object.find(".first_name").attr('name','first_name['+next_table_row+']'); 
+			// cloned_object.find(".last_name").attr('name','last_name['+next_table_row+']'); 
+			// cloned_object.find(".phone_number").attr('name','phone_number['+next_table_row+']');
+			// cloned_object.find(".email").attr('name','email['+next_table_row+']'); 			
+			// cloned_object.find(".username").attr('name','username['+next_table_row+']'); 
+			// cloned_object.find(".usertype").attr('name','usertype['+next_table_row+']'); 
+			// cloned_object.find(".facility_name").attr('name','facility_name['+next_table_row+']');
+   //          cloned_object.find("input").val(blank_value);
+   //          cloned_object.find(".first_name").val(blank_value);  
+   //          cloned_object.find(".last_name").val(blank_value);  
+   //          cloned_object.find(".phone_number").val(blank_value);  
+   //          cloned_object.find(".email").val(blank_value);  
+   //          cloned_object.find(".username").val(blank_value);  
+   //          cloned_object.find(".usertype").val(blank_value);  
+   //          cloned_object.find(".add_users_table").val(blank_value);  
+            
+            // remove the error class
+            // cloned_object.find("label.error").remove();             
+			cloned_object.insertAfter('#add_users_table tr:last');
+	
+        }
    function ajax_post_process (url,div){
     var url =url;
 
@@ -544,7 +698,72 @@ $("#create_new").click(function() {
 		      
 		      // console.log(value);
    			});
+		$('.status_btn').click(function (e){
+			btn_value = $(this).attr('data-value');
+			btn_id = $(this).attr('id');
+			facility_code = $(this).attr('data-attr');
+			// alert(facility_code);
+			if(btn_value==0){
+				change_status_new(facility_code,0,btn_id);
+			}else{
+				change_status_new(facility_code,1,btn_id);
 
+			}
+		});
+
+		function change_status_new(facility_code,stati,btn_id){//seth
+      // alert(checked);return;
+	      message = "";
+	     
+	      var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";
+	      // alert(stati);
+
+	      $.ajax({
+	          type:"POST",
+	          data:{
+	            'facility_code': facility_code,
+	            'status': stati
+	        },
+
+          url:"<?php echo base_url()."facility_activation/change_status_new";?>",
+
+          beforeSend: function() {
+            //$(div).html("");
+            // alert($('#email_recieve_edit').prop('checked'));return;
+            var answer = confirm("Are you sure you want to proceed?");
+            if (answer){
+                $('.modal-body').html("<img style='margin:30% 0 20% 42%;' src="+loading_icon+">");
+            } else {
+            	message_denial = "No action has been taken";
+            	alertify.set({ delay: 10000 });
+             	alertify.success(message_denial, null);            	
+                return false;
+            }},
+            success: function(msg){            	
+              var data = jQuery.parseJSON(msg);
+              using_hcmp = data.using_hcmp;
+              date = data.date_of_activation;
+              // var date = jQuery.parseJSON(msg.date_of_activation);
+              if(using_hcmp==1){
+	        	message_after = "Facility: "+ facility_code +" has been Activated";
+	        	$('#chkbx_'+facility_code).prop('checked' ,true);
+	        	$('#date_'+facility_code).html(date);
+	        	$('#btn_'+facility_code).html('Deactivate');
+	        	$('#btn_'+facility_code).attr('data-value','1');
+              }else{
+              	message_after = "Facility: "+ facility_code +" has been Deactivated";
+	        	$('#chkbx_'+facility_code).removeAttr('checked');
+	        	$('#date_'+facility_code).html('Not yet Activated');	 
+	        	$('#btn_'+facility_code).html('Activate');
+	        	$('#btn_'+facility_code).attr('data-value','0');	        	
+
+              }
+              alertify.set({ delay: 10000 });
+              alertify.success(message_after, null);
+            }
+
+        });
+    }//end of change status function
 		function initialize_checkboxes(){
 			$('input[name="status-checkbox"]').change(function(e){
 		// e.prevenDefault();

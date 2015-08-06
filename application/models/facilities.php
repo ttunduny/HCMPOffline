@@ -848,7 +848,7 @@ public static function get_facility_details($district = NULL,$county = NULL){
 		$district = isset($district)? "AND d.id= $district": NULL;
 		$county = isset($county)? "AND d.county = $county": NULL;
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-SELECT DISTINCT f.id, f.facility_code, f.facility_name, f.district, f.owner, c.county, d.district as district_name,f.using_hcmp
+SELECT DISTINCT f.id, f.facility_code, f.date_of_activation, f.facility_name, f.district, f.owner, c.county, d.district as district_name,f.using_hcmp
 FROM facilities f, districts d, counties c
 WHERE f.district = d.id
 AND d.county=c.id
@@ -859,7 +859,7 @@ return $q;
 public static function get_one_facility_details($facility_code){
 	$facility_code = $facility_c;
 		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-SELECT DISTINCT f.id, f.facility_code, f.facility_name, f.district, f.owner, c.county, d.district as district_name
+SELECT DISTINCT f.id, f.facility_code,f.date_of_activation, f.facility_name, f.district, f.owner, c.county, d.district as district_name
 FROM facilities f, districts d, counties c
 WHERE f.facility_code='$facility_code'
 AND f.district=d.id
