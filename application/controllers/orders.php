@@ -430,6 +430,7 @@ class orders extends MY_Controller {
 
 	public function order_last_phase($order_id, $rejected = null, $option = null) {//karsan
 		$order_data = facility_orders::get_order_($order_id) -> toArray();
+		// echo "<pre>";print_r($order_data);echo "</pre>";exit;
 		$data['content_view'] = "facility/facility_orders/update_order_kemsa_lastphase";
 		$data['title'] = "Approve Order";
 		$data['banner_text'] = "Approve Order";
@@ -737,10 +738,10 @@ class orders extends MY_Controller {
 
 	}
 
-	public function update_order_facility($source = NULL) {
+	public function update_order_facility($source = NULL) {//karsanrichard
 		//security check
-		//$dump=$this -> input -> post();
-		//echo '<pre>';print_r($dump); echo '</pre>';exit;
+		// $dump=$this -> input -> post();
+		// echo '<pre>';print_r($dump); echo '</pre>';exit;
 		$user_indicator = $this -> session -> userdata('user_indicator');
 		if ($this -> input -> post('commodity_id')) :
 			//just picks values from the view and assigns them to a variable
@@ -923,6 +924,7 @@ class orders extends MY_Controller {
 					$subject = 'Approved Order For ' . $facility_name;
 					$myobj -> approval_county = date('y-m-d');
 
+						// echo "<pre>  ".$subject."  ".$tabledata;exit;
 				} else if ($user_indicator == 'district') {
 					//get dates here
 					$myobj -> status = 6;
@@ -964,6 +966,7 @@ class orders extends MY_Controller {
 						';
 
 			$response = $this -> hcmp_functions -> send_order_approval_email($message, $subject, $attach_file, $facility_code, $status);
+
 			if ($response) {
 				delete_files($attach_file);
 			} else {

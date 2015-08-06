@@ -1,4 +1,4 @@
-<?php //echo "<pre>";print_r($facility_order);echo "</pre>";exit; ?>
+<?php //echo "<pre>";print_r($order_details);echo "</pre>";exit; ?>
 <style>
  	.input-small{
  		width: 55px !important;
@@ -49,7 +49,7 @@ border: 0px ;
 		</div>
 		<div class="col-md-2">
 			<b>Total Order Value(KSH)</b>
-<input type="text" class="form-control" name="total_order_value" id="total_order_value" readonly="readonly" value="0"/>	
+<input type="text" class="form-control" name="total_order_value" id="total_order_value" readonly="readonly" value="<?php echo $order_details[0]['order_total'] ?>"/>	
 <input type="hidden" id="actual_drawing_rights" name="drawing_rights" value="<?php echo $drawing_rights; ?>" />		
 		</div>
 		
@@ -183,7 +183,7 @@ $(document).ready(function() {
 	var new_count =count+1;
 	var drawing_rights_balance=$('#actual_drawing_rights').val();
 	//auto compute the values
-	calculate_totals();
+	// calculate_totals();
 	calculate_suggested_value(3);
 	//datatables settings 
 	$('#example').dataTable( {
@@ -295,7 +295,7 @@ $(document).ready(function() {
     dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
     //This event is fired immediately when the hide instance method has been called.
     $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();	})
-    calculate_totals();
+    // calculate_totals();
     $(this).closest("tr").find(".actual_quantity").val("");
 	$(this).closest("tr").find(".cost").val("");
     return;   } 
@@ -304,7 +304,7 @@ $(document).ready(function() {
     }
 	
 	// set the order total here
-	calculate_totals();	
+	// calculate_totals();	
 	});
 	
 	// process all the order into a summary table for the user to confirm before placing the order bed_capacity workload
