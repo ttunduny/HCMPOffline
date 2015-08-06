@@ -48,8 +48,10 @@ border: 0px ;
 			<b>*Order Frequency</b><input  type="text" class="form-control input-large commodity_code" readonly="readonly" value="Quarterly" />
 		</div>
 		<div class="col-md-2">
-			<b>Total Order Value(KSH)</b>
-<input type="text" class="form-control" name="total_order_value" id="total_order_value" readonly="readonly" value="<?php echo $order_details[0]['order_total']; ?>"/>	
+
+			<!-- <b>Total Order Value(KSH)</b> -->
+<input type="hidden" class="form-control" name="total_order_value" id="total_order_value" readonly="readonly" value="<?php echo $order_details[0]['order_total']; ?>"/>	
+
 <input type="hidden" id="actual_drawing_rights" name="drawing_rights" value="<?php echo $drawing_rights; ?>" />		
 		</div>
 		
@@ -311,10 +313,17 @@ $(document).ready(function() {
 	calculate_totals();	
 	});
 	
+
+	// <div class="col-md-6">Total Order Value (Ksh)</div><div class="col-md-6">'+number_format(totalsum, 2, '.', ',')+'</div><
+
 	// process all the order into a summary table for the user to confirm before placing the order bed_capacity workload
 	$('.approve').on('click','', function (){
+	// var totalsum = 0;
+	// $('.cost').each(function(){
+	//     totalsum += parseFloat(this.value);
+	// });
 	var table_data='<div class="row" style="padding-left:2em"><div class="col-md-6"><h4>Order Summary</h4></div></div>'+
-    '<div class="row" style="padding-left:2em"><div class="col-md-6">Total Order Value (Ksh)</div><div class="col-md-6">'+number_format($("#total_order_value").val(), 2, '.', ',')+'</div></div>'+
+    '<div class="row" style="padding-left:2em"></div>'+
     '<table class="table table-hover table-bordered table-update">'+
 					"<thead><tr>"+
 					"<th>Description</th>"+
@@ -345,9 +354,9 @@ $(document).ready(function() {
       /************save the data here*******************/
 
 	$('#main-content').on('click','#save_dem_order',function() {
-     var order_total=$('#total_order_value').val();
-     var alert_message='';
-     if (order_total==0) {alert_message+="<li>Sorry, you can't submit an Order Value of Zero</li>";}
+     // var order_total=$('#total_order_value').val();
+     // var alert_message='';
+     // if (order_total==0) {alert_message+="<li>Sorry, you can't submit an Order Value of Zero</li>";}
      
      //put delay timer here
     var img='<img src="<?php echo base_url('assets/img/wait.gif') ?>"/>';
@@ -385,10 +394,9 @@ $(document).ready(function() {
       balance=parseInt(drawing_rights_balance)-order_total;
      //set the balances here
      $("#total_order_balance_value").val(balance)
-     // $("#total_order_value").val(order_total);
+     $("#total_order_value").val(order_total);
 		
 	}
-	
 	function calculate_suggested_value(month){
 		$("input[name^=suggested]").each(function() {
         var amc=parseInt($(this).closest("tr").find(".amc").val());

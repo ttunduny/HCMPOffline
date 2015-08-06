@@ -62,6 +62,33 @@ class Facility_activation extends MY_Controller
 			echo $update_user." success";
 	}
 
+
+	//Titus
+	public function change_status_new($facility_code = NULL,$status = NULL){
+		$facility_code = $_POST['facility_code'];
+		$status = $_POST['status'];
+		$new_status =null;
+		if($status==0){
+			$new_status = 1;
+		}else{
+			$new_status = 0;
+		}
+		$current_date = date("Y-m-d");
+		$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
+		$update_user->execute("UPDATE `facilities` SET using_hcmp = '$new_status',date_of_activation='$current_date' WHERE `facility_code`= '$facility_code'");
+		$sql = "select DISTINCT f.id, f.facility_code,f.date_of_activation,f.using_hcmp, f.facility_name, f.district, f.owner, c.county, d.district as district_name
+		FROM facilities f, districts d, counties c
+		WHERE f.facility_code='$facility_code'
+		AND f.district=d.id
+		AND d.county=c.id";
+		$facility_details = $this->db->query($sql)->result_array();
+		$date_of_activation = $facility_details[0]['date_of_activation'];
+		$using_hcmp = $facility_details[0]['using_hcmp'];
+		$date_of_activation = date('D ,d F Y',strtotime($date_of_activation));
+		$output = array('date_of_activation'=>$date_of_activation,'using_hcmp'=>$using_hcmp);
+		echo json_encode($output);
+	}
+
 	public function add_facility(){
 		// echo"<pre>"; var_dump($this->input->post()); echo "</pre>"; exit;
 		

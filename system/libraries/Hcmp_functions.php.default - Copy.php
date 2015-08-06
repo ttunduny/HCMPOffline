@@ -406,14 +406,11 @@ public function send_system_text($action)
 	public function send_order_approval_email($message, $subject, $attach_file, $facility_code, $reject_order = null) {
 		//set cc email as blank
 		$cc_email = "";
-		$bcc_email = "karsanrichard@gmail.com";
-		/*
 		$bcc_email = 'kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org,
 		bwariari@clintonhealthaccess.org,
 		amwaura@clintonhealthaccess.org,
 		eongute@clintonhealthaccess.org,
 		rkihoto@clintonhealthaccess.org';
-		*/
 		$data = facilities::get_facility_name_($facility_code) -> toArray();
 		$data = $data[0];
 

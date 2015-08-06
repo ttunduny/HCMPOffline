@@ -204,7 +204,7 @@ foreach($menus as $menu){ $menu_id=(int)$menu['menu_id'];?>
       	<div class="row">
       		
       		<div class="col-md-4" style="font-weight:bold; ">
-      		<span style="margin-left:2%;">  <?php echo $this -> session -> userdata('banner_name')." | ". $banner_text;?> </span>
+      		<span style="margin-left:2%;" id="template_banner_name">  <?php echo $this -> session -> userdata('banner_name')." | ". $banner_text;?> </span>
       		 	
      		</div>
         <center>

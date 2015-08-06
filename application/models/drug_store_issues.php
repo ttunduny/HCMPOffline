@@ -44,7 +44,7 @@ class drug_store_issues extends Doctrine_Record {
 	public static function check_drug_existence($commodity_id=NULL,$district_id = NULL){
 		$commodity_info = $commodity_id;
 		$existence = Doctrine_Manager::getInstance()->getCurrentConnection()->
-		fetchAll("SELECT COUNT(commodity_id) AS present FROM drug_store_totals where commodity_id = $commodity_id AND district_id = $district_id");
+		fetchAll("SELECT COUNT(commodity_id) AS present FROM drug_store_totals where commodity_id = '$commodity_id' AND district_id = '$district_id'");
 		return $existence;
 	}
 

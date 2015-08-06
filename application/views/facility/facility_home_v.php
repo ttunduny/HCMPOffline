@@ -154,7 +154,12 @@
         </div>
          <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
             <a href="<?php echo base_url('reports/facility_transaction_data/MEDS'); ?>"><h5>MEDS online</h5></a>
-            <a href="<?php echo base_url('reports/facility_transaction_data/KEMSA'); ?>"><h5>KEMSA online</h5></a>
+            <a href="#" id="kemsa_online"><h5>KEMSA online</h5></a>           
+
+            <a class="facility_order_links" style="margin-left:30px;" href="<?php echo base_url('reports/facility_transaction_data/KEMSA'); ?>"><h5>For Your Facility</h5></a>  
+            <br/><a class="facility_order_links" style="margin-left:30px;" href="<?php echo base_url('reports/facility_transaction_data_other/KEMSA'); ?>"><h5>For Other Facility</h5></a>
+
+
             <a href="" class="order-for-excel"><h5>KEMSA via excel</h5></a>
             
         </div>  
@@ -211,6 +216,15 @@
 	</div>	
 	
 </div>
+<style type="text/css">
+  .facility_order_links{
+    margin-left: 10px;
+    margin-: -5px;
+    color: #000000;
+  }
+
+  
+</style>
 
 <script>
 
@@ -223,6 +237,11 @@
 
    		startIntro();
    	}
+    $('.facility_order_links').hide();
+     $('#kemsa_online').click(function(event) {
+           /* Act on the event */
+           $('.facility_order_links').toggle('slow');
+       });
    	//for hiding the tabs when the page loads
    	$('#update_order_hide').hide() 
        $('#order_hide').hide() 

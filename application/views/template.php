@@ -68,6 +68,8 @@ if ($access_level == "dpp") {
 <link href="<?php echo base_url().'CSS/jquery-ui.css'?>" type="text/css" rel="stylesheet"/>
  
 <script src="<?php echo base_url().'Scripts/jquery.js'?>" type="text/javascript"></script> 
+<script src="<?php echo base_url().'assets/tablecloth/assets/js/jquery.tablecoth.js'?>" type="text/javascript"></script> 
+<script src="<?php echo base_url().'assets/tablecloth/assets/js/jquery.tablesorter.js'?>" type="text/javascript"></script> 
 <script src="<?php echo base_url();?>Scripts/HighCharts/highcharts.js"></script>
 <script src="<?php echo base_url();?>Scripts/HighCharts/modules/exporting.js"></script>
 <!--<script src="<?php echo base_url().'Scripts/jquery.form.js'?>" type="text/javascript"></script> -->
