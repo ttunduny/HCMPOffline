@@ -312,11 +312,7 @@ class Facilities extends Doctrine_Record {
 		$district_id = isset($district_id)? $district_id : NULL;
 		$county_filter = (isset($county))? "AND c.id = $county" : NULL ;
 		$district_filter = (isset($district_id))? "AND d.id = $district_id" : NULL ;
-		if (isset($facility_code)) {
-			$facility_filter = "AND f.facility_code = $facility_code";
-			$county_filter = NULL;
-			$district_filter = NULL;
-		}
+		
 		// echo $district_id;exit;
 		$addition = NULL;
 		if (isset($report_type)) {
@@ -414,7 +410,8 @@ class Facilities extends Doctrine_Record {
 			    f.district = d.id AND d.county = c.id
 			        AND u.facility = f.facility_code
 			        AND u.id = l.user_id
-			        AND c.id = d.county
+			        AND d.county = c.id
+			        AND l.action = 'Logged Out'
 			        $county_filter
 			        $district_filter
 			        $facility_filter

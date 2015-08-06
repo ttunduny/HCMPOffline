@@ -933,14 +933,14 @@ class Reports extends MY_Controller {
 
 	public function system_usage_temp(){
 		$data['title'] = "User Logs";
-			$data['banner_text'] = "System Use Statistics";
-			$data['content_view'] = "subcounty/ajax/system_usage_temporary";
-			$data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v" : "shared_files/report_templates/side_bar_v";
-			// $data['content_view'] = "facility/facility_reports/reports_v";
-			$data['active_panel'] = (!$this -> session -> userdata('facility_id')) ? "system_usage" : "system_usage";
-			// $data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
-			$view = 'shared_files/template/template';
-			$this -> load -> view($view, $data);
+		$data['banner_text'] = "System Use Statistics";
+		$data['content_view'] = "subcounty/ajax/system_usage_temporary";
+		$data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v" : "shared_files/report_templates/side_bar_v";
+		// $data['content_view'] = "facility/facility_reports/reports_v";
+		$data['active_panel'] = (!$this -> session -> userdata('facility_id')) ? "system_usage" : "system_usage";
+		// $data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
+		$view = 'shared_files/template/template';
+		$this -> load -> view($view, $data);
 	}
 	//AJAX Request from the System Usage View in the County, Sub County and Facility interfaces
 	public function get_county_facility_mapping_ajax_request($option = null) {
@@ -3304,12 +3304,12 @@ class Reports extends MY_Controller {
 
 		$final_array = array();
 
-		foreach ($last_seen as $l_issued) { 
+		foreach ($last_seen as $l_seen) { 
 		$final_array[] = array(
-			'Facility Name' => $l_issued['facility_name'], 
-			'Facility Code' => $l_issued['facility_code'],
-			'County' => $l_issued['county'],
-			'Sub-County' => $l_issued['district']
+			'Facility Name' => $l_seen['facility_name'], 
+			'Facility Code' => $l_seen['facility_code'],
+			'County' => $l_seen['county'],
+			'Sub-County' => $l_seen['district']
 			);
 		}//last issued foreach
 
@@ -3349,16 +3349,19 @@ class Reports extends MY_Controller {
 						if ($last_seen[$key]['last_seen'] > $last_seen_time) {
 							$last_seen_time = $last_seen[$key]['last_seen'];
 							$days_last_seen = $last_seen[$key]['difference_in_days'];
-							// echo "<pre>".$last_order_time;
+							// echo "<pre>".$last_seen_time;
 						}
 			        	$final_array[$keyy]['Date Last Seen'] = $last_seen_time;
 			        	$final_array[$keyy]['Days From Last Seen'] = $days_last_seen;
+							// echo "<pre>".$last_seen_time;
 			        	// $final_array[$i]['Days From Last Seen'] = abs($last_seen_time - $now);
 				$last_seen_time = NULL;
 			        }//end of facility code if
 				
 			}//end of last seen foreach
 		}
+
+		// echo "<pre>";print_r($final_array);echo "</pre>";exit;
 
 		//last issued time
 		foreach ($final_array as $keyy => $value) {
