@@ -22,7 +22,7 @@ font-size: 12px !important;
 		
 	<hr />
 <div class="table-responsive" style="min-height:300px; overflow-y: auto;">
- <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('users/users_create_multiple',$att); ?>
+ <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('user/users_create_multiple',$att); ?>
 <table  class="table table-hover table-bordered table-update" id="add_multiple_users_table" >
 	<thead style="background-color: white">
 		<tr>
@@ -159,6 +159,10 @@ font-size: 12px !important;
 <script>
 $(document).ready(function() {	
 
+$("#create_new").click(function(){
+	$("#myform").submit();
+});
+
  var $table = $('table');
 //float the headers
   $table.floatThead({ 
@@ -292,6 +296,39 @@ $(document).ready(function() {
         placement: 'left'
     }); 
 	});	
+
+$('#email').keyup(function() {
+
+  var email = $('#email').val()
+
+   $('#username').val(email)
+   
+   $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "<?php echo base_url()."user/check_user_json";?>", //Relative or absolute path to response.php file
+      data:{ 'email': $('#email').val()},
+      success: function(data) {
+        if(data.response=='false'){
+						
+						 $('#err').html(data.msg);
+							$( '#err' ).addClass( "alert-danger alert-dismissable" );
+							$(".edit_user,#create_new").attr("disabled", "disabled");
+							}else if(data.response=='true'){
+								
+								$("#err").empty();
+								$("#err").removeClass("alert-danger alert-dismissable");
+								$( '#err' ).addClass( "alert-success alert-dismissable" );
+								$(".edit_user,#create_new").attr("disabled", false);
+								$('#err').html(data.msg);
+								
+								
+							}
+      }
+    });
+    return false;
+  });
+
 </script>
  <script type="text/javascript">
       function startIntro(){
