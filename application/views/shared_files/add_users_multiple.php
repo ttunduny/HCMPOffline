@@ -297,11 +297,12 @@ $("#create_new").click(function(){
     }); 
 	});	
 
-$('#email').keyup(function() {
-
-  var email = $('#email').val()
-
-   $('#username').val(email)
+$('.email').keyup(function(e) {
+  var row_id  =   $(this).closest('tr').attr('row_id')
+  var username = 'username['+row_id+']';
+  var email =  $(this).closest('.email').val();
+  $("input[name='"+username+"'").val(email);
+   // $('.username').val(email)
    
    $.ajax({
       type: "POST",
