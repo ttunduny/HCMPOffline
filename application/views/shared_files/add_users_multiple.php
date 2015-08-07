@@ -50,7 +50,7 @@ font-size: 12px !important;
 						<input type="text" required="required" name="first_name[0]" id="first_name" class="form-control first_name" placeholder="Enter First Name" >
 						</td>
 						<td>
-						<input type="text" name="last_name" required="required" id="last_name[0]" class="form-control last_name" placeholder="Last Name" >
+						<input type="text" name="last_name[0]" required="required" id="last_name" class="form-control last_name" placeholder="Last Name" >
 						</td>
 						<td>
 						<input type="telephone" name="telephone[0]" required="required" id="telephone" class="form-control telephone" placeholder="Enter Phone Number eg, 254" tabindex="5">
@@ -59,7 +59,7 @@ font-size: 12px !important;
 						<input type="email" name="email[0]" id="email" required="required" class="form-control email" placeholder="email@domain.com" tabindex="6">
 						</td>
 						<td>
-						<input type="email" name="username[0]" id="username" required="required" class="form-control username" placeholder="email@domain.com" tabindex="5" readonly>
+						<input type="email" name="username[0]" id="username" required="required" class="form-control username" placeholder="email@domain.com" tabindex="5" >
 						</td>
 						<td>
 						<div class="input-group form-group u_mgt">
@@ -159,6 +159,7 @@ font-size: 12px !important;
 <script>
 $(document).ready(function() {	
 
+			var count_rows=0;
 $("#create_new").click(function(){
 	$("#myform").submit();
 });
@@ -180,18 +181,12 @@ $("#create_new").click(function(){
            hcmp_message_box(title='HCMP error message',notification,message_type='error')
        // dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
         return;   }// set the balance here
-			//set the quantities to readonly  $("#dropdown").prop("disabled", true);
-			selector_object.closest("tr").find(".quantity_issued").attr('readonly','readonly');
-			selector_object.closest("tr").find(".batch_no").attr("disabled", true);
-			selector_object.closest("tr").find(".commodity_unit_of_issue").attr("disabled", true);
-			selector_object.closest("tr").find(".desc").attr("disabled", true);				
 			//reset the values of current element */
 		  clone_the_last_row_of_the_table();
 		});	/////batch no change event
 
 		$('.remove').on('click',function(){
 			var row_id=$(this).closest("tr").index();
-			var count_rows=0;
             var total=0;
 			$("input[name^=username]").each(function(index, value) {				
                  count_rows++;
@@ -238,6 +233,7 @@ $("#create_new").click(function(){
 			cloned_object.find(".first_name").attr('name','first_name['+next_table_row+']'); 
 			cloned_object.find(".last_name").attr('name','last_name['+next_table_row+']'); 
 			cloned_object.find(".telephone").attr('name','telephone['+next_table_row+']');
+			cloned_object.find(".email").attr('name','email['+next_table_row+']');
 			// cloned_object.find(".commodity_id").attr('id',next_table_row); 
 			cloned_object.find(".username").attr('name','username['+next_table_row+']'); 	
 			cloned_object.find(".user_type").attr('name','user_type['+next_table_row+']'); 
@@ -298,7 +294,6 @@ $("#create_new").click(function(){
 	});	
 
 $('#email').keyup(function() {
-
   var email = $('#email').val()
 
    $('#username').val(email)
