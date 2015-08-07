@@ -3236,6 +3236,85 @@ class Reports extends MY_Controller {
 		$redistributed = Facilities::get_facility_data_specific('last_redistributed',$county_id,$district_id,$facility_code);
 		$added_stock = Facilities::get_facility_data_specific('last_added_stock',$county_id,$district_id,$facility_code);
 
+		$final_array = array();
+		$last_seen_count = count($last_seen);
+		$last_issued_count = count($last_issued);
+		$last_ordered_count = count($last_ordered);
+		$decommissioned_count = count($decommissioned);
+		$redistributed_count = count($redistributed);
+		$added_stock_count = count($added_stock);
+
+		$rollcall = array(
+			'last_seen' => $last_seen_count,
+			'last_issued' => $last_issued_count,
+			'last_ordered' => $last_ordered_count,
+			'decommissioned' => $decommissioned_count,
+			'redistributed' => $redistributed_count,
+			'added_stock' => $added_stock_count
+			);
+		// echo "<pre>";print_r($rollcall);echo "</pre>";
+		asort($rollcall);
+		$rollcall = array_reverse($rollcall,true);
+        $arr_key = key($rollcall);
+		// echo "<pre>";print_r($arr_key);echo "</pre>";
+
+
+		$highest = max($last_seen_count,$last_issued_count,$last_ordered_count,$decommissioned_count,$redistributed_count,$added_stock_count);
+		$keys_na_si_alishia = array_search($highest, $rollcall);
+		// echo $highest;
+		switch ($keys_na_si_alishia) {
+			case 'last_issued':
+				foreach ($last_issued as $l_seen) { 
+				$final_array[] = array(
+					'Facility Name' => $l_seen['facility_name'], 
+					'Facility Code' => $l_seen['facility_code'],
+					'County' => $l_seen['county'],
+					'Sub-County' => $l_seen['district']
+					);
+				}//last issued foreach
+
+			case 'last_ordered':
+				foreach ($last_ordered as $l_seen) { 
+				$final_array[] = array(
+					'Facility Name' => $l_seen['facility_name'], 
+					'Facility Code' => $l_seen['facility_code'],
+					'County' => $l_seen['county'],
+					'Sub-County' => $l_seen['district']
+					);
+				}//last issued foreach
+
+			case 'decommissioned':
+				foreach ($decommissioned as $l_seen) { 
+				$final_array[] = array(
+					'Facility Name' => $l_seen['facility_name'], 
+					'Facility Code' => $l_seen['facility_code'],
+					'County' => $l_seen['county'],
+					'Sub-County' => $l_seen['district']
+					);
+				}//last issued foreach
+			case 'redistributed':
+				foreach ($redistributed as $l_seen) { 
+				$final_array[] = array(
+					'Facility Name' => $l_seen['facility_name'], 
+					'Facility Code' => $l_seen['facility_code'],
+					'County' => $l_seen['county'],
+					'Sub-County' => $l_seen['district']
+					);
+				}//last issued foreach
+				break;
+			case 'added_stock':
+				foreach ($added_stock as $l_seen) { 
+				$final_array[] = array(
+					'Facility Name' => $l_seen['facility_name'], 
+					'Facility Code' => $l_seen['facility_code'],
+					'County' => $l_seen['county'],
+					'Sub-County' => $l_seen['district']
+					);
+				}//last issued foreach
+				break;
+		}
+		// echo $key;exit;
+		// echo "<pre>".$highest;exit;
 		// echo "<pre>";print_r($last_seen);echo "</pre>";
 		// echo "END OF LAST SEEN";
 		// echo "<pre>";print_r($last_issued);echo "</pre>";
@@ -3250,28 +3329,12 @@ class Reports extends MY_Controller {
 		// echo "END OF LAST ADDED STOCK";
 		// exit;
 
-		$final_array = array();
-
-		foreach ($last_seen as $l_seen) { 
-		$final_array[] = array(
-			'Facility Name' => $l_seen['facility_name'], 
-			'Facility Code' => $l_seen['facility_code'],
-			'County' => $l_seen['county'],
-			'Sub-County' => $l_seen['district']
-			);
-		}//last issued foreach
 
 		$final_array = array_unique($final_array,SORT_REGULAR);
 		// $final_array = array_map("unserialize", array_unique(array_map("serialize", $final_array)));
 		// echo "<pre>";print_r($final_array);echo "</pre>";exit;
 
 		$final_array_count = count($final_array);
-		$last_seen_count = count($last_seen);
-		$last_issued_count = count($last_issued);
-		$last_ordered_count = count($last_ordered);
-		$decommissioned_count = count($decommissioned);
-		$redistributed_count = count($redistributed);
-		$added_stock_count = count($added_stock);
 
 		// echo "<pre>" . $final_array_count."</pre>";
 		// echo "<pre>" . $last_seen_count."</pre>";
