@@ -995,8 +995,12 @@ endif;
         $data['title'] = "User Management";
 		$data['user_types']=Access_level::get_access_levels($permissions);	
 		$data['banner_text'] = "User Management";
-		$data['content_view'] = "shared_files/user_creation_v";
+		$data['content_view'] = "shared_files/add_users_multiple";
 		$this -> load -> view($template, $data);
+		}
+
+		public function users_create_multiple(){
+			echo "<pre>";print_r($this->input->post());echo "</pre>";exit;
 		}
 
 		public function tester(){
