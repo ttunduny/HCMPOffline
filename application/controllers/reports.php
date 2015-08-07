@@ -3263,6 +3263,16 @@ class Reports extends MY_Controller {
 		$keys_na_si_alishia = array_search($highest, $rollcall);
 		// echo $highest;
 		switch ($keys_na_si_alishia) {
+			case 'last_seen':
+				foreach ($last_issued as $l_seen) { 
+				$final_array[] = array(
+					'Facility Name' => $l_seen['facility_name'], 
+					'Facility Code' => $l_seen['facility_code'],
+					'County' => $l_seen['county'],
+					'Sub-County' => $l_seen['district']
+					);
+				}//last issued foreach
+
 			case 'last_issued':
 				foreach ($last_issued as $l_seen) { 
 				$final_array[] = array(
