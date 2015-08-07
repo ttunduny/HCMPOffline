@@ -94,6 +94,10 @@
 					<button class="btn btn-primary add" data-toggle="modal" data-target="#addModal" id="add_new">
 						<span class="glyphicon glyphicon-plus"></span>Add User
 					</button>
+						<a href="user_create_multiple" style="margin: 5px 0;">Add Multiple Users</a>
+				</div>
+
+
 				</div>
 				<div class="col-md-12 dt" style="border: 1px solid #ddd;padding-top: 1%; " id="test">
 
