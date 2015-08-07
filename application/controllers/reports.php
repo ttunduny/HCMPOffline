@@ -3205,7 +3205,7 @@ class Reports extends MY_Controller {
 		return $this -> load -> view("subcounty/ajax/county_notification_v", $data);
 	}
 	//creates the report for the system usage breakdown.
-	public function monitoring($mine = null) {//being authored by Karsan as at 2015-08-04
+	public function monitoring($for_temporary_system_usage = null) {//being authored by Karsan as at 2015-08-04
 		//pick values form the session
 		// $facility_code = (!$this -> session -> userdata('facility_id')) ? null : $this -> session -> userdata('facility_id');
 		// $district_id = (!$this -> session -> userdata('district_id')) ? null : $this -> session -> userdata('district_id');
@@ -3516,7 +3516,7 @@ class Reports extends MY_Controller {
 										$facility['Days From Last Received Order']));
 
 		endforeach;
-		if($mine!=null){
+		if($for_temporary_system_usage!=null){
 			return $row_data;
 		}else{
 			$excel_data = array();
