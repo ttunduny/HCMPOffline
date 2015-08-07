@@ -80,8 +80,8 @@ $identifier = $this -> session -> userdata('user_indicator');
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" id="system_usage"><span class="glyphicon glyphicon-signal">
-                            <!-- <a  href="<?php echo base_url().'reports/system_usage_temp'; ?>" id="system_usage"><span class="glyphicon glyphicon-signal"> -->
+                            <!-- <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" id="system_usage"><span class="glyphicon glyphicon-signal"> -->
+                            <a  href="<?php echo base_url().'reports/system_usage_temp'; ?>" id="system_usage"><span class="glyphicon glyphicon-signal">
                             </span>System Usage</a>
                         </h4></a>
                         </h4>
