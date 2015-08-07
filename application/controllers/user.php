@@ -1000,7 +1000,20 @@ endif;
 		}
 
 		public function users_create_multiple(){
-			echo "<pre>";print_r($this->input->post());echo "</pre>";exit;
+
+			echo "<pre>";print_r($this->input->post());echo "</pre>";
+			$count_variables = count($this->input->post('first_name'));
+			for ($i=0; $i < $count_variables; $i++) { 
+				$first_name = $this->input->post('first_name')[$i];
+				$last_name = $this->input->post('last_name')[$i];
+				$telephone = $this->input->post('telephone')[$i];
+				$email = $this->input->post('email')[$i];
+				$username = $this->input->post('username')[$i];
+				$user_type = $this->input->post('user_type')[$i];
+				$facility_id = $this->input->post('facility_id')[$i];
+				
+			}
+
 		}
 
 		public function tester(){

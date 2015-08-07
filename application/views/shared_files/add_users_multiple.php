@@ -50,7 +50,7 @@ font-size: 12px !important;
 						<input type="text" required="required" name="first_name[0]" id="first_name" class="form-control first_name" placeholder="Enter First Name" >
 						</td>
 						<td>
-						<input type="text" name="last_name" required="required" id="last_name[0]" class="form-control last_name" placeholder="Last Name" >
+						<input type="text" name="last_name[0]" required="required" id="last_name" class="form-control last_name" placeholder="Last Name" >
 						</td>
 						<td>
 						<input type="telephone" name="telephone[0]" required="required" id="telephone" class="form-control telephone" placeholder="Enter Phone Number eg, 254" tabindex="5">
