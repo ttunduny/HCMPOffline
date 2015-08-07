@@ -307,7 +307,21 @@ class Facilities extends Doctrine_Record {
 		/*
 		@author karsan AS AT 2015-08-04
 		*/
+		if (isset($county)) {
+			if (isset($district_id)) {
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		             CALL facility_monitoring_new('district','$district_id','$report_type');
+					");
+			}else{//if district id isnt set
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		             CALL facility_monitoring_new('county','$county','$report_type');
+					");
+			}
+		return $data;
+		}
 		
+		
+		/*
 		//PRIOR OF PROCEDURISATION OF BELOW QUERY
 		$facility_filter = NULL;
 		$district_id = isset($district_id)? $district_id : NULL;
@@ -381,6 +395,7 @@ class Facilities extends Doctrine_Record {
 			");
 
 		return $query;
+		*/
 		
 		//PRIOR TO PROCEDURISATION OF THE ABOVE QUERY
 	}//get facility data specific
