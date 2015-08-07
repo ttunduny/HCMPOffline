@@ -118,6 +118,13 @@ class Facilities extends Doctrine_Record {
 		$drugs = $query -> execute();
 		return $drugs;
 	}
+
+	public static function getFacilities_from_code($facility_code){
+		
+		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("facility_code='$facility_code'")->OrderBy("facility_name asc");
+		$drugs = $query -> execute();
+		return $drugs;
+	}
 	public static function getFacilities_json($district){
 		
 		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");

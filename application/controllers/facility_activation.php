@@ -136,8 +136,13 @@ class Facility_activation extends MY_Controller
 		array_push($facility_details, $facility_details_);
 
 		$result = $this->db->insert_batch('facilities',$facility_details);
-
-		echo "This: ".$result;exit;
+		$facility_id = $this->db->insert_id(); 
+		$q = $this->db->get_where('facilities', array('id' => $facility_id));
+		foreach ($q->result() as $row)
+		{
+		        echo $row->facility_code;
+		}
+		// echo "This: ".$facility_id;exit;
 		// $savefacility = new Facilities();
 
 		// $savefacility -> facility_code = $facility_code;

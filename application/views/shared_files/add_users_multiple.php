@@ -84,9 +84,12 @@ font-size: 12px !important;
 									?>
 									<div class="input-group form-group u_mgt">
 										<select class="form-control facility_id" id="facility_id" name="facility_id[0]" required="required">
-												<option value='NULL'>Select Facility</option>
-
-												<?php
+											<?php 
+												if(count($facilities)>1){?>
+													<option value='NULL'>Select Facility</option>
+												<?php }							
+												
+											
 												foreach ($facilities as $facility) :
 													$id = $facility ['facility_code'];
 													$facility_name = $facility ['facility_name'];
@@ -187,11 +190,8 @@ $("#create_new").click(function(){
 
 		$('.remove').on('click',function(){
 			var row_id=$(this).closest("tr").index();
-            var total=0;
-			$("input[name^=username]").each(function(index, value) {				
-                 count_rows++;
-		        });
-
+            var count_rows=$('#add_multiple_users_table tr').length;
+            count_rows--;
 	       //finally remove the row 
 	       if(count_rows==1){
 	       	 clone_the_last_row_of_the_table();

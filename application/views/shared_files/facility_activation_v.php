@@ -615,6 +615,8 @@ $("#create_new").click(function() {
 			cloned_object.insertAfter('#add_users_table tr:last');
 	
         }
+
+   
    function ajax_post_process (url,div){
     var url =url;
 
@@ -649,7 +651,7 @@ $("#create_new").click(function() {
           success: function(msg) {
   
           	// $('.modal-body').html(msg);return;
-         
+         var facility_code = msg;
         setTimeout(function () {
           	$('.modal-body').html("<div class='bg-warning' style='height:30px'>"+
 							"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"+
@@ -658,7 +660,8 @@ $("#create_new").click(function() {
 			$('.modal-footer').html("<button type='button' class='btn btn-default' data-dismiss='modal'><Close</button>")
 				
         }, 4000);
-        window.location.href = "<?php echo base_url().'user/user_create_multiple#' ?>";
+        var base_url = "<?php echo base_url().'user/user_create_multiple/' ?>";
+        window.location.href = base_url+facility_code;
 
         // window.reload();
           }
