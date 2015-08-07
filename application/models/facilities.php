@@ -303,16 +303,30 @@ class Facilities extends Doctrine_Record {
     
 	}
 
-	public function get_facility_data_specific($report_type = NULL,$county,$district_id = NULL,$facility_code = NULL){
+	public function get_facility_data_specific($report_type,$county,$district_id = NULL,$facility_code = NULL){
 		/*
 		@author karsan AS AT 2015-08-04
 		*/
-
+		if (isset($county)) {
+			if (isset($district_id)) {
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		             CALL facility_monitoring_new('district','$district_id','$report_type');
+					");
+			}else{//if district id isnt set
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		             CALL facility_monitoring_new('county','$county','$report_type');
+					");
+			}
+		return $data;
+		}
+		
+		
+		/*
+		//PRIOR OF PROCEDURISATION OF BELOW QUERY
 		$facility_filter = NULL;
 		$district_id = isset($district_id)? $district_id : NULL;
 		$county_filter = (isset($county))? "AND c.id = $county" : NULL ;
 		$district_filter = (isset($district_id))? "AND d.id = $district_id" : NULL ;
-		
 		// echo $district_id;exit;
 		$addition = NULL;
 		if (isset($report_type)) {
@@ -341,44 +355,7 @@ class Facilities extends Doctrine_Record {
 				$addition = NULL;
 			}
 		}
-		/*
-		echo "
-		SELECT 
-			    u.id,
-			    u.username,
-			    d.district,
-			    c.county,
-			    f.facility_name,
-			    f.facility_code AS facility_code,
-			    c.county,
-			    d.district,
-			    d.id AS district_id,
-			    c.id AS county_id,
-			    l.action,
-			    l.end_time_of_event AS last_seen,
-			    l.issued,
-			    l.ordered,
-			    l.decommissioned,
-			    l.redistribute,
-			    l.add_stock,
-			    DATEDIFF(NOW(), l.end_time_of_event) AS difference_in_days
-			FROM
-			    facilities f,
-			    districts d,
-			    counties c,
-			    user u,
-			    log l
-			WHERE
-			    f.district = d.id AND d.county = c.id
-			        AND u.facility = f.facility_code
-			        AND u.id = l.user_id
-			        AND c.id = d.county
-			        $addition
-			        $county_filter
-			        $district_filter
-			        $facility_filter
-			        ";exit;
-	*/
+
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll(
 			"
 			SELECT 
@@ -411,7 +388,6 @@ class Facilities extends Doctrine_Record {
 			        AND u.facility = f.facility_code
 			        AND u.id = l.user_id
 			        AND d.county = c.id
-			        AND l.action = 'Logged Out'
 			        $county_filter
 			        $district_filter
 			        $facility_filter
@@ -419,6 +395,9 @@ class Facilities extends Doctrine_Record {
 			");
 
 		return $query;
+		*/
+		
+		//PRIOR TO PROCEDURISATION OF THE ABOVE QUERY
 	}//get facility data specific
 
 	//gets the monitoring data for all the facilities using HCMP
@@ -1128,6 +1107,13 @@ public static function get_facility_district_county_level($facility_code)
 		AND c.id = d.county");
 
 	return $q[0];
+}
+
+public static function model_tester(){
+	$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+             CALL facility_monitoring_new('county','23','last_seen');
+			");
+	return $data;
 }
 
 }

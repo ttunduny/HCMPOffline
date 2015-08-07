@@ -81,11 +81,12 @@ $identifier = $this -> session -> userdata('user_indicator');
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" id="system_usage"><span class="glyphicon glyphicon-signal">
+                            <!-- <a  href="<?php echo base_url().'reports/system_usage_temp'; ?>" id="system_usage"><span class="glyphicon glyphicon-signal"> -->
                             </span>System Usage</a>
                         </h4></a>
                         </h4>
                     <!-- </div> -->
-                    
+                    <!--
                    <div id="collapseTwo" class="panel-collapse collapse <?php echo $active_panel=='stocking_levels'? 'in': null; ?>">
                          <div class="panel-body">
                             <table class="table">
@@ -97,6 +98,7 @@ $identifier = $this -> session -> userdata('user_indicator');
                             </table>
                         </div>
                     </div> 
+                    -->
                     
                 </div>
                 <!--To be removed once the redesign is done
@@ -195,13 +197,13 @@ $('.page-header').html('');
 ajax_request_replace_div_content('divisional_reports/program_reports',"#notification");
 });
 //System Usage function
+// $("#system_usage").on('click', function(){
+// active_panel(this);
+// $('.page-header').html('System Usage');
+// ajax_request_replace_div_content('reports/facility_mapping',"#notification");
+// });
 $("#system_usage").on('click', function(){
-active_panel(this);
-$('.page-header').html('System Usage');
-ajax_request_replace_div_content('reports/facility_mapping',"#notification");
-});
-
-
-     
+     window.location.href = "<?php echo base_url();?>reports/system_usage_temp" ;
+ });
 });
 </script>

@@ -861,102 +861,20 @@ class Reports extends MY_Controller {
 		// redirect('home/under_maintenance');
 		//get the current year and date
 		redirect('reports/system_usage_temp');
-		$year = date("Y");
-		$month = date("m");
-		//pick the user data from the session
-		$identifier = $this -> session -> userdata('user_indicator');
-		$county_id = $this -> session -> userdata('county_id');
-		//Get facility code from the session then pick the name from the database
-		$facility_code = $this -> session -> userdata('facility_id');
-		$facility_code_ = (isset($facility_code) && ($facility_code > 0)) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
-		$facility_name = $facility_code_[0]['facility_name'];
-		//pick the district from the session then get the name
-		$district_id = $this -> session -> userdata('district_id');
-		//Get the name of the county
-		$county_name = Counties::get_county_name($county_id);
-		$county_name = $county_name['county'];
-		$data['get_facility_data'] = facilities::get_facilities_online_per_district($county_id);
-		// echo "<pre>";print_r($data['get_facility_data']);echo "</pre>";exit;
-		$get_dates_facility_went_online = facilities::get_dates_facility_went_online($county_id);
-		// echo "<pre>";print_r($get_dates_facility_went_online);echo "</pre>";exit;
-		$data['data'] = $this -> get_county_facility_mapping_ajax_request("on_load");
-		// Graph data of last issued
-		if ($this -> session -> userdata('user_indicator') != 'facility') {
-			$facility_issues = Facilities::facility_issued($this -> session -> userdata('user_indicator'), $county_id, $district_id, $facility_code);
-			$facility_last_issue = array();
-			$facility_last_issue = array_merge($facility_last_issue, array("graph_id" => 'issued-graph'));
-			$facility_last_issue = array_merge($facility_last_issue, array("graph_title" => 'Days Since Last Issue'));
-			$facility_last_issue = array_merge($facility_last_issue, array("graph_type" => 'bar'));
-			$facility_last_issue = array_merge($facility_last_issue, array("graph_yaxis_title" => 'Days'));
-			$facility_last_issue = array_merge($facility_last_issue, array("graph_categories" => array()));
-			$facility_last_issue = array_merge($facility_last_issue, array("series_data" => array("Days from Last issued" => array())));
-			foreach ($facility_issues as $last_issued) :
-				$facility_last_issue['graph_categories'] = array_merge($facility_last_issue['graph_categories'], array($last_issued['Facility Name']));
-				$facility_last_issue['series_data']['Days from Last issued'] = array_merge($facility_last_issue['series_data']['Days from Last issued'], array((int)$last_issued['Days from last issue']));
-			endforeach;
-			//$facility_last_issue['series_data']['Days from Last issued'] = sort($facility_last_issue['series_data']['Days from Last issued'],'descend');
-			$facility_issued_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_issue);
-			$data['facility_last_issues'] = $facility_issued_;
-			//Graph data of last issued
-			// Graph data of last orders
-			$facility_orderings = Facilities::facility_ordered($this -> session -> userdata('user_indicator'), $county_id, $district_id, $facility_code);
-			$facility_last_order = array();
-			$facility_last_order = array_merge($facility_last_order, array("graph_id" => 'ordered-graph'));
-			$facility_last_order = array_merge($facility_last_order, array("graph_title" => 'Days Since Last Order'));
-			$facility_last_order = array_merge($facility_last_order, array("graph_type" => 'bar'));
-			$facility_last_order = array_merge($facility_last_order, array("graph_yaxis_title" => 'Days'));
-			$facility_last_order = array_merge($facility_last_order, array("graph_categories" => array()));
-			$facility_last_order = array_merge($facility_last_order, array("series_data" => array("Days From Last Order" => array())));
-			foreach ($facility_orderings as $last_ordered) :
-				$facility_last_order['graph_categories'] = array_merge($facility_last_order['graph_categories'], array($last_ordered['Facility Name']));
-				$facility_last_order['series_data']['Days From Last Order'] = array_merge($facility_last_order['series_data']['Days From Last Order'], array((int)$last_ordered['Days From Last Order']));
-			endforeach;
-			$facility_ordered_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_order);
-			$data['facility_last_orders'] = $facility_ordered_;
-			// Graph data of last logged
-			$facility_loggins = Facilities::facility_loggins($this -> session -> userdata('user_indicator'), $county_id, $district_id, $facility_code);
-			$facility_last_loggin = array();
-			$facility_last_loggin = array_merge($facility_last_loggin, array("graph_id" => 'logged-graph'));
-			$facility_last_loggin = array_merge($facility_last_loggin, array("graph_title" => 'Days From Last Seen'));
-			$facility_last_loggin = array_merge($facility_last_loggin, array("graph_type" => 'bar'));
-			$facility_last_loggin = array_merge($facility_last_loggin, array("graph_yaxis_title" => 'Days'));
-			$facility_last_loggin = array_merge($facility_last_loggin, array("graph_categories" => array()));
-			$facility_last_loggin = array_merge($facility_last_loggin, array("series_data" => array("Days From Last Seen" => array())));
-			foreach ($facility_loggins as $last_loggin) :
-				$facility_last_loggin['graph_categories'] = array_merge($facility_last_loggin['graph_categories'], array($last_loggin['Facility Name']));
-				$facility_last_loggin['series_data']['Days From Last Seen'] = array_merge($facility_last_loggin['series_data']['Days From Last Seen'], array((int)$last_loggin['Days From Last Seen']));
-			endforeach;
-			$facility_loggin_ = $this -> hcmp_functions -> create_high_chart_graph($facility_last_loggin);
-			$data['facility_last_loggin'] = $facility_loggin_;
-		}
-		if ($this -> input -> is_ajax_request()) :
-			$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
-			return $this -> load -> view('subcounty/ajax/facility_roll_out_at_a_glance_v', $data);
-		else :
-			$data['title'] = "User Logs";
-			$data['banner_text'] = "System Use Statistics";
-			$data['report_view'] = "subcounty/ajax/facility_roll_out_at_a_glance_v";
-			$data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v" : "shared_files/report_templates/side_bar_v";
-			$data['content_view'] = "facility/facility_reports/reports_v";
-			$data['active_panel'] = (!$this -> session -> userdata('facility_id')) ? "system_usage" : "system_usage";
-			$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
-			$view = 'shared_files/template/template';
-			$this -> load -> view($view, $data);
-		endif;
+		
 	}
 
 	public function system_usage_temp(){
-		$data['title'] = "User Logs";
+
+
+		$data['temporary_system_usage'] = $this->monitoring(1);
+		$data['title'] = " System Usage";
 		$data['banner_text'] = "System Use Statistics";
 		$data['content_view'] = "subcounty/ajax/system_usage_temporary";
-		$data['sidebar'] = (!$this -> session -> userdata('facility_id')) ? "shared_files/report_templates/side_bar_sub_county_v" : "shared_files/report_templates/side_bar_v";
-		// $data['content_view'] = "facility/facility_reports/reports_v";
-		$data['active_panel'] = (!$this -> session -> userdata('facility_id')) ? "system_usage" : "system_usage";
-		// $data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));		
-		$data['temporary_system_usage'] = $this->monitoring(1);
+		// $data['sidebar'] = "shared_files/report_templates/side_bar_v";
 
 		$view = 'shared_files/template/template';
-		$this -> load -> view($view, $data);
+		return $this -> load -> view($view, $data);
 	}
 
 	public function generate_system_usage_temp_data()
@@ -4009,7 +3927,7 @@ public function donation_report_download($year = null, $county_id = null,$distri
 	}
 	public function tester(){
 		$id = $this->session->userdata('county_id');
-		$sth = Counties::get_facilities_in_county($id);
+		$sth = Facilities::model_tester();
 		echo "<pre>";print_r($sth);echo "</pre>";exit;
 	}
 }

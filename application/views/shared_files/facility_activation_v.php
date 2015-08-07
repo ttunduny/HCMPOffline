@@ -84,7 +84,7 @@
 									if ($list['using_hcmp'] == 1){
 										echo date('D ,d F Y',strtotime($date_of_activation));
 									}else{
-										echo 'Not yet Activated';
+										echo 'Not Active';
 									}
 									?></td>
 								<td><?php 
@@ -97,7 +97,7 @@
 										$value=0;
 										$text = 'Activate';
 									}?>
-									<span class="btn btn-primary status_btn form-control" style="width:90%" id="btn_<?php echo $list['facility_code']; ?>" data-attr="<?php echo $list['facility_code']; ?>" data-value="<?php echo $value; ?>"><?php echo $text; ?></span>
+									<button class="btn btn-primary status_btn form-control" style="width:90%" id="btn_<?php echo $list['facility_code']; ?>" data-attr="<?php echo $list['facility_code']; ?>" data-value="<?php echo $value; ?>"><?php echo $text; ?></button>
 								</td>
 								<!-- td><button class="btn btn-primary add" data-toggle="modal" data-target="#addUsersModal" id="add_new_users">
 										<span class="glyphicon glyphicon-plus"></span>Add Users
@@ -753,7 +753,7 @@ $("#create_new").click(function() {
               }else{
               	message_after = "Facility: "+ facility_code +" has been Deactivated";
 	        	$('#chkbx_'+facility_code).removeAttr('checked');
-	        	$('#date_'+facility_code).html('Not yet Activated');	 
+	        	$('#date_'+facility_code).html('Not Active');	 
 	        	$('#btn_'+facility_code).html('Activate');
 	        	$('#btn_'+facility_code).attr('data-value','0');	        	
 

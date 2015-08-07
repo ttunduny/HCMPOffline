@@ -426,7 +426,7 @@ $(document).ready(function() {
 
 	function assign_dtb_properties(designated_table_id){
 		$(designated_table_id).dataTable( {	   "sDom": "T lfrtip",
-									"aaSorting": [[0,'desc'],
+									"aaSorting": [0,'desc'],
 			                         "sPaginationType": "bootstrap",
 		                    "oLanguage": {                        
 		                    	"sLengthMenu": "_MENU_ Records per page",                        
