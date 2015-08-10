@@ -3207,10 +3207,10 @@ class Reports extends MY_Controller {
 	//creates the report for the system usage breakdown.
 	public function monitoring($for_temporary_system_usage = null) {//being authored by Karsan as at 2015-08-04
 		//pick values form the session
-		// $facility_code = (!$this -> session -> userdata('facility_id')) ? null : $this -> session -> userdata('facility_id');
-		// $district_id = (!$this -> session -> userdata('district_id')) ? null : $this -> session -> userdata('district_id');
-		// $county_id = (!$this -> session -> userdata('county_id')) ? null : $this -> session -> userdata('county_id');
-		// $category_data = $series_data = $graph_data = $series_data_ = array();
+		$facility_code = (!$this -> session -> userdata('facility_id')) ? null : $this -> session -> userdata('facility_id');
+		$district_id = (!$this -> session -> userdata('district_id')) ? null : $this -> session -> userdata('district_id');
+		$county_id = (!$this -> session -> userdata('county_id')) ? null : $this -> session -> userdata('county_id');
+		$category_data = $series_data = $graph_data = $series_data_ = array();
 
 		$county_id = $this -> session -> userdata('county_id');
 		$district_id = $this -> session -> userdata('district_id');
