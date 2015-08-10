@@ -2,13 +2,19 @@
   thead{
     /*font-size: 10px;*/
   }
+  .download_btn{
+    margin: 10px 72.5%;
+  }
+  .btndef{
+    width: 292px;
+  }
 </style>
 <div class="container" style="width: 96%; margin: auto;">
 <div class="col-md-12">
       <div class="page-error">
 
-        <div class="error-details col-sm-6 col-sm-offset-5">
-          <a class="btn btn-default btn-primary" href="<?php echo base_url().'reports/monitoring'; ?>">Download System Usage Statistics</a>
+        <div class="error-details col-sm-6 download_btn">
+          <a class="btn btn-default btn-primary btndef" href="<?php echo base_url().'reports/monitoring'; ?>">Download System Usage Statistics</a>
         </div>
     </div>
 
