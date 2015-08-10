@@ -3225,10 +3225,11 @@ class Reports extends MY_Controller {
 		//the old query that causes too many locks on the mysql tables
 		//$facility_data=Facilities::get_facilities_monitoring_data( $facility_code,$district_id,$county_id,$identifier);
 		//get the monitoring data from the log tables
-		// $facility_data = Facilities::facility_monitoring($county_id, $district_id, $facility_code);
+		$facility_data = Facilities::facility_monitoring($county_id, $district_id, $facility_code);
 		// $facility_data_new = Facilities::new_facility_monitoring_function($county_id, $district_id, $facility_code,'all');
 		// get_facility_data_specific($report_type = NULL,$criteria = NULL,$county_id = NULL,$district_id = NULL,$facility_code = NULL)
 		// echo $district_id;exit;
+		/*
 		$last_seen = Facilities::get_facility_data_specific(NULL,$county_id,$district_id,$facility_code);
 		$last_issued = Facilities::get_facility_data_specific('last_issued',$county_id,$district_id,$facility_code);
 		$last_ordered = Facilities::get_facility_data_specific('last_ordered',$county_id,$district_id,$facility_code);
@@ -3486,10 +3487,11 @@ class Reports extends MY_Controller {
 		// exit;
 
 		// echo "<pre>";print_r($final_array_count);echo "</pre>";exit;
-
+		*/
 		$row_data = array();
 		$counterrrr = 0;
-		foreach ($final_array as $facility) :
+		// foreach ($final_array as $facility) :
+		foreach ($facility_data as $facility) :
 			// echo "<pre>". $counterrrr . "</pre>";
 		// $counterrrr = $counterrrr + 1;
 			$issue_date = (isset($facility['Date Last Issued'])) ? date('j M, Y', strtotime($facility['Date Last Issued'])) : "No Data Available";
