@@ -82,7 +82,7 @@
 								<td id="date_<?php echo $list['facility_code']; ?>"><?php 
 									$date_of_activation= $list['date_of_activation']; 
 									if ($list['using_hcmp'] == 1){
-										echo date('D ,d F Y',strtotime($date_of_activation));
+										echo date('d F Y',strtotime($date_of_activation));
 									}else{
 										echo 'Not Active';
 									}
@@ -93,11 +93,13 @@
 									if ($list['using_hcmp'] == 1) {
 										$value=1;
 										$text = 'Deactivate';
+										$class = 'danger';
 									}else{
 										$value=0;
 										$text = 'Activate';
+										$class = 'success';										
 									}?>
-									<button class="btn btn-primary status_btn form-control" style="width:90%" id="btn_<?php echo $list['facility_code']; ?>" data-attr="<?php echo $list['facility_code']; ?>" data-value="<?php echo $value; ?>"><?php echo $text; ?></button>
+									<button class="btn btn-<?php echo $class; ?> status_btn form-control" style="width:90%" id="btn_<?php echo $list['facility_code']; ?>" data-attr="<?php echo $list['facility_code']; ?>" data-value="<?php echo $value; ?>"><?php echo $text; ?></button>
 								</td>
 								<!-- td><button class="btn btn-primary add" data-toggle="modal" data-target="#addUsersModal" id="add_new_users">
 										<span class="glyphicon glyphicon-plus"></span>Add Users
@@ -754,12 +756,16 @@ $("#create_new").click(function() {
 	        	$('#date_'+facility_code).html(date);
 	        	$('#btn_'+facility_code).html('Deactivate');
 	        	$('#btn_'+facility_code).attr('data-value','1');
+	        	$('#btn_'+facility_code).removeClass('btn-success');
+	        	$('#btn_'+facility_code).addClass('btn-danger');	        	
               }else{
               	message_after = "Facility: "+ facility_code +" has been Deactivated";
 	        	$('#chkbx_'+facility_code).removeAttr('checked');
 	        	$('#date_'+facility_code).html('Not Active');	 
 	        	$('#btn_'+facility_code).html('Activate');
-	        	$('#btn_'+facility_code).attr('data-value','0');	        	
+	        	$('#btn_'+facility_code).attr('data-value','0');	  
+	        	$('#btn_'+facility_code).removeClass('btn-danger');	        	      	
+	        	$('#btn_'+facility_code).addClass('btn-success');
 
               }
               alertify.set({ delay: 10000 });
