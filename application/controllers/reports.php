@@ -3501,12 +3501,12 @@ class Reports extends MY_Controller {
 			$decommission_date = (isset($facility['Date Last Decommissioned'])) ? date('j M, Y', strtotime($facility['Date Last Decommissioned'])) : "No Data Available";
 			$date_order = (isset($facility['Date Last Received Order'])) ? date('j M, Y', strtotime($facility['Date Last Received Order'])) : "No Data Available";
 			
-			$days_last_see = (isset($facility['Days From Last Seen'])) ? $facility['Days From Last Seen'] : 0;
-			$days_last_order = (isset($facility['Days From Last Order'])) ? $facility['Days From Last Order'] : 0;
-			$days_last_issue = (isset($facility['Days From Last Issue'])) ? $facility['Days From Last Issue'] : 0;
-			$days_last_redist = (isset($facility['Days From Last Redistributed'])) ? $facility['Days From Last Redistributed'] : 0;
-			$days_last_decom = (isset($facility['Days From Last Decommissioned'])) ? $facility['Days From Last Decommissioned'] : 0;
-			$days_last_recieved = (isset($facility['Days From Last Received Order'])) ? $facility['Days From Last Received Order'] : 0;
+			$days_last_see = (isset($facility['Days From Last Seen'])) ? $facility['Days From Last Seen'] : '-';
+			$days_last_order = (isset($facility['Days From Last Order'])) ? $facility['Days From Last Order'] : '-';
+			$days_last_issue = (isset($facility['Days From Last Issue'])) ? $facility['Days From Last Issue'] : '-';
+			$days_last_redist = (isset($facility['Days From Last Redistributed'])) ? $facility['Days From Last Redistributed'] : '-';
+			$days_last_decom = (isset($facility['Days From Last Decommissioned'])) ? $facility['Days From Last Decommissioned'] : '-';
+			$days_last_recieved = (isset($facility['Days From Last Received Order'])) ? $facility['Days From Last Received Order'] : '-';
 			
 			array_push($row_data, array($facility['Facility Name'], 
 										$facility['Facility Code'], 
