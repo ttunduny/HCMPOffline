@@ -3499,22 +3499,29 @@ class Reports extends MY_Controller {
 			$decommission_date = (isset($facility['Date Last Decommissioned'])) ? date('j M, Y', strtotime($facility['Date Last Decommissioned'])) : "No Data Available";
 			$date_order = (isset($facility['Date Last Received Order'])) ? date('j M, Y', strtotime($facility['Date Last Received Order'])) : "No Data Available";
 				
+			$days_from_last_seen = isset($facility['Days From Last Seen'])?$facility['Days From Last Seen']:'    -    ';
+			$days_from_last_issued = isset($facility['Days From Last Issue'])?$facility['Days From Last Issue']:'  -    ';
+			$days_from_last_redist = isset($facility['Days From Last Redistributed'])?$facility['Days From Last Redistributed']:'    -    ';
+			$days_from_last_ordered = isset($facility['Days From Last Order'])?$facility['Days From Last Order']:'    -  ';
+			$decomissioned_days = isset($facility['Days From Last Decommissioned'])?$facility['Days From Last Decommissioned']:'    -    ';
+			$days_from_last_recieved = isset($facility['Days From Last Received Order'])?$facility['Days From Last Received Order']:'    -    ';
+
 			array_push($row_data, array($facility['Facility Name'], 
 										$facility['Facility Code'], 
 										$facility['Sub-County'],
 										$facility['County'], 
 										$last_seen, 
-										$facility['Days From Last Seen'], 
+										$days_from_last_seen, 
 										$issue_date, 
-										$facility['Days From Last Issue'], 
+										$days_from_last_issued, 
 										$redistribution, 
-										$facility['Days From Last Redistributed'], 
+										$days_from_last_redist, 
 										$order_date, 
-										$facility['Days From Last Order'], 
+										$days_from_last_ordered, 
 										$decommission_date, 
-										$facility['Days From Last Decommissioned'], 
+										$decomissioned_days, 
 										$date_order, 
-										$facility['Days From Last Received Order']));
+										$days_from_last_recieved));
 
 		endforeach;
 		if($for_temporary_system_usage!=null){
