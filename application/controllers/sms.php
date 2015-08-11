@@ -2842,12 +2842,13 @@ public function log_summary_weekly(){
 		foreach ($final_array as $facility) :
 			// echo "<pre>". $counterrrr . "</pre>";
 		// $counterrrr = $counterrrr + 1;
-			$issue_date = (isset($facility['Date Last Issued'])) ? strtotime($facility['Date Last Issued']) : "No Data Available";
-			$last_seen = (isset($facility['Date Last Seen'])) ? strtotime($facility['Date Last Seen']) : "No Data Available";
-			$redistribution = (isset($facility['Date Last Redistributed'])) ? strtotime($facility['Date Last Redistributed']) : "No Data Available";
-			$order_date = (isset($facility['Date Last Ordered'])) ? strtotime($facility['Date Last Ordered']) : "No Data Available";
-			$decommission_date = (isset($facility['Date Last Decommissioned'])) ? strtotime($facility['Date Last Decommissioned']) : "No Data Available";
-			$date_order = (isset($facility['Date Last Received Order'])) ? strtotime($facility['Date Last Received Order']) : "No Data Available";
+			//random code to allow for commit
+			$issue_date = (isset($facility['Date Last Issued'])) ? date('Y-m-d', strtotime($facility['Date Last Issued'])) : "No Data Available";
+			$last_seen = (isset($facility['Date Last Seen'])) ? date('Y-m-d', strtotime($facility['Date Last Seen'])) : "No Data Available";
+			$redistribution = (isset($facility['Date Last Redistributed'])) ? date('Y-m-d', strtotime($facility['Date Last Redistributed'])) : "No Data Available";
+			$order_date = (isset($facility['Date Last Ordered'])) ? date('Y-m-d', strtotime($facility['Date Last Ordered'])) : "No Data Available";
+			$decommission_date = (isset($facility['Date Last Decommissioned'])) ? date('Y-m-d', strtotime($facility['Date Last Decommissioned'])) : "No Data Available";
+			$date_order = (isset($facility['Date Last Received Order'])) ? date('Y-m-d', strtotime($facility['Date Last Received Order'])) : "No Data Available";
 				
 			$days_from_last_seen = isset($facility['Days From Last Seen'])?$facility['Days From Last Seen']:'    -    ';
 			$days_from_last_issued = isset($facility['Days From Last Issue'])?$facility['Days From Last Issue']:'  -    ';
