@@ -69,6 +69,7 @@
      
     </div>
     <!--System Usage Tab-->
+	<!--
     <div class="panel panel-default <?php echo $active_panel=='system_usage'? 'active-panel': null; ?>">
         <div class="panel-heading">
             <h4 class="panel-title">
@@ -77,6 +78,7 @@
             </h4>
         </div>
     </div>
+	-->
     <!--<div class="panel panel-default <?php echo $active_panel=='orders'? 'active-panel': null; ?>">
         <div class="panel-heading">
             <h4 class="panel-title">
