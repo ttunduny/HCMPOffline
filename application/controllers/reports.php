@@ -3207,10 +3207,10 @@ class Reports extends MY_Controller {
 	//creates the report for the system usage breakdown.
 	public function monitoring($for_temporary_system_usage = null) {//being authored by Karsan as at 2015-08-04
 		//pick values form the session
-		// $facility_code = (!$this -> session -> userdata('facility_id')) ? null : $this -> session -> userdata('facility_id');
-		// $district_id = (!$this -> session -> userdata('district_id')) ? null : $this -> session -> userdata('district_id');
-		// $county_id = (!$this -> session -> userdata('county_id')) ? null : $this -> session -> userdata('county_id');
-		// $category_data = $series_data = $graph_data = $series_data_ = array();
+		$facility_code = (!$this -> session -> userdata('facility_id')) ? null : $this -> session -> userdata('facility_id');
+		$district_id = (!$this -> session -> userdata('district_id')) ? null : $this -> session -> userdata('district_id');
+		$county_id = (!$this -> session -> userdata('county_id')) ? null : $this -> session -> userdata('county_id');
+		$category_data = $series_data = $graph_data = $series_data_ = array();
 
 		$county_id = $this -> session -> userdata('county_id');
 		$district_id = $this -> session -> userdata('district_id');
@@ -3225,10 +3225,11 @@ class Reports extends MY_Controller {
 		//the old query that causes too many locks on the mysql tables
 		//$facility_data=Facilities::get_facilities_monitoring_data( $facility_code,$district_id,$county_id,$identifier);
 		//get the monitoring data from the log tables
-		// $facility_data = Facilities::facility_monitoring($county_id, $district_id, $facility_code);
+		$facility_data = Facilities::facility_monitoring($county_id, $district_id, $facility_code);
 		// $facility_data_new = Facilities::new_facility_monitoring_function($county_id, $district_id, $facility_code,'all');
 		// get_facility_data_specific($report_type = NULL,$criteria = NULL,$county_id = NULL,$district_id = NULL,$facility_code = NULL)
 		// echo $district_id;exit;
+		/*
 		$last_seen = Facilities::get_facility_data_specific(NULL,$county_id,$district_id,$facility_code);
 		$last_issued = Facilities::get_facility_data_specific('last_issued',$county_id,$district_id,$facility_code);
 		$last_ordered = Facilities::get_facility_data_specific('last_ordered',$county_id,$district_id,$facility_code);
@@ -3487,10 +3488,11 @@ class Reports extends MY_Controller {
 		// exit;
 
 		// echo "<pre>";print_r($final_array_count);echo "</pre>";exit;
-
+		*/
 		$row_data = array();
 		$counterrrr = 0;
-		foreach ($final_array as $facility) :
+		// foreach ($final_array as $facility) :
+		foreach ($facility_data as $facility) :
 			// echo "<pre>". $counterrrr . "</pre>";
 		// $counterrrr = $counterrrr + 1;
 			$issue_date = (isset($facility['Date Last Issued'])) ? date('j M, Y', strtotime($facility['Date Last Issued'])) : "No Data Available";
@@ -3499,19 +3501,20 @@ class Reports extends MY_Controller {
 			$order_date = (isset($facility['Date Last Ordered'])) ? date('j M, Y', strtotime($facility['Date Last Ordered'])) : "No Data Available";
 			$decommission_date = (isset($facility['Date Last Decommissioned'])) ? date('j M, Y', strtotime($facility['Date Last Decommissioned'])) : "No Data Available";
 			$date_order = (isset($facility['Date Last Received Order'])) ? date('j M, Y', strtotime($facility['Date Last Received Order'])) : "No Data Available";
-				
-			$days_from_last_seen = isset($facility['Days From Last Seen'])?$facility['Days From Last Seen']:'    -    ';
-			$days_from_last_issued = isset($facility['Days From Last Issue'])?$facility['Days From Last Issue']:'  -    ';
-			$days_from_last_redist = isset($facility['Days From Last Redistributed'])?$facility['Days From Last Redistributed']:'    -    ';
-			$days_from_last_ordered = isset($facility['Days From Last Order'])?$facility['Days From Last Order']:'    -  ';
-			$decomissioned_days = isset($facility['Days From Last Decommissioned'])?$facility['Days From Last Decommissioned']:'    -    ';
-			$days_from_last_recieved = isset($facility['Days From Last Received Order'])?$facility['Days From Last Received Order']:'    -    ';
+			
+			$days_last_see = (isset($facility['Days From Last Seen'])) ? $facility['Days From Last Seen'] : '-';
+			$days_last_order = (isset($facility['Days From Last Order'])) ? $facility['Days From Last Order'] : '-';
+			$days_last_issue = (isset($facility['Days From Last Issue'])) ? $facility['Days From Last Issue'] : '-';
+			$days_last_redist = (isset($facility['Days From Last Redistributed'])) ? $facility['Days From Last Redistributed'] : '-';
+			$days_last_decom = (isset($facility['Days From Last Decommissioned'])) ? $facility['Days From Last Decommissioned'] : '-';
+			$days_last_recieved = (isset($facility['Days From Last Received Order'])) ? $facility['Days From Last Received Order'] : '-';
 
 			array_push($row_data, array($facility['Facility Name'], 
 										$facility['Facility Code'], 
 										$facility['Sub-County'],
 										$facility['County'], 
 										$last_seen, 
+<<<<<<< HEAD
 										$days_from_last_seen, 
 										$issue_date, 
 										$days_from_last_issued, 
@@ -3523,6 +3526,19 @@ class Reports extends MY_Controller {
 										$decomissioned_days, 
 										$date_order, 
 										$days_from_last_recieved));
+=======
+										$days_last_see, 
+										$issue_date, 
+										$days_last_issue, 
+										$redistribution, 
+										$days_last_redist, 
+										$order_date, 
+										$days_last_order, 
+										$decommission_date, 
+										$days_last_decom, 
+										$date_order, 
+										$days_last_recieved));
+>>>>>>> c46795e60d9443e5b14b53ada0e9dfff712260ee
 
 		endforeach;
 		if($for_temporary_system_usage!=null){
