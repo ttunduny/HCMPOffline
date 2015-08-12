@@ -41,11 +41,11 @@
 			
 			<div class="row">
 
-				<div class="col-md-1" style="padding-left: 0; right:0; float:right; margin-bottom:5px;">
+				<!-- <div class="col-md-1" style="padding-left: 0; right:0; float:right; margin-bottom:5px;">
 					<button class="btn btn-primary add" data-toggle="modal" data-target="#addModal" id="add_new">
 						<span class="glyphicon glyphicon-plus"></span>Add Facility
 					</button>
-				</div>
+				</div> -->
 
 				<div class="col-md-12 dt" style="border: 1px solid #ddd;padding-top: 1%; " id="test">
 
