@@ -887,6 +887,7 @@ $("#create_new").click(function() {
 				dataType: 'json',
 				success: function(s){
 				// console.log(s);
+				// alert(s);
 				oTable.fnClearTable();
 				for(var i = 0; i < s.length; i++) {
 					oTable.fnAddData([
