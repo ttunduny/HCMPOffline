@@ -930,7 +930,7 @@ endif;
 
 		}
 
-		public function user_create_multiple(){
+		public function user_create_multiple($facility_code=null){
 
 		//get user details in session
 		$identifier = $this -> session -> userdata('user_indicator');
@@ -953,7 +953,12 @@ endif;
 			case 'district':
 				$permissions='district_permissions';
 				$data['listing']= Users::get_user_list_district($district);
-				$data['facilities']=Facilities::getFacilities($district);
+				if($facility_code==0){
+					$data['facilities']=Facilities::getFacilities($district);
+				}else{
+					$data['facilities']=Facilities::getFacilities_from_code($facility_code);
+				}
+				
 				$data['counts']=Users::get_users_district($district);
 				$template = 'shared_files/template/template';
 			break;

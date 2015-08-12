@@ -30,9 +30,26 @@ class Facilities extends Doctrine_Record {
 	}
 
 	public static function getAll_() {
+<<<<<<< HEAD
 		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("using_hcmp='1'");
 		$drugs = $query -> execute();
 		return $drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+=======
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+			SELECT 
+		    c.county, d.district as subcounty, f.facility_name,f.facility_code, f.`level`, f.type,f.date_of_activation
+		from
+		    facilities f,
+		    districts d,
+		    counties c
+		where
+		    f.district = d.id and d.county = c.id
+		        and f.`using_hcmp` = 1
+		group by f.facility_name
+			");
+		$facilities = $query;
+		return $facilities;
+>>>>>>> b715e8e53270b3136e72ed6183c6287fb035f6b2
 	}
 
 	public static function get_detailed_listing($county_id) {

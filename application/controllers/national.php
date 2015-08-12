@@ -25,6 +25,7 @@ class national extends MY_Controller {
 		$map = array();
 		$datas = array();
 		$status = '';
+		// echo "<pre>";print_r($counties);echo "</pre>";exit;
 		
 			foreach ($counties as $county) {
             $countyMap = (int)$county['county_fusion_map_id'];
@@ -125,6 +126,7 @@ class national extends MY_Controller {
       and d.county=c.id and 
       f.`using_hcmp`=1 
       $and
+      group by f.facility_name
       ");
 
 			echo count($q);
@@ -144,8 +146,7 @@ class national extends MY_Controller {
 		    f.district = d.id and d.county = c.id
 		        and f.`using_hcmp` = 1
 		        $and
-		group by f.facility_code
-		order by c.county asc
+		group by f.facility_name
 		        ");
 
 			foreach ($facility_stock_data as $facility_stock_data_item) :

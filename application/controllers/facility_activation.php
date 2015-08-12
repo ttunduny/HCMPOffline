@@ -62,6 +62,19 @@ class Facility_activation extends MY_Controller
 			echo $update_user." success";
 	}
 
+	public function get_facility_user_data($facility_code){
+		// $facility_code = $_POST['facility_code'];
+		$facility_data = Facilities::get_facilities_user_activation_data($facility_code);		
+		foreach ($facility_data as $key => $value) {
+			$name = $value['fname'].' '.$value['lname'];
+			$created_at = $value['created_at'];
+			$last_login = $value['end_time_of_event'];
+			$created = date('d F Y',strtotime($created_at));
+			$last_login = date('d F Y',strtotime($last_login));
+			$output[] = array($name,$created,$last_login);
+		}
+		echo json_encode($output);
+	}
 
 	//Titus
 	public function change_status_new($facility_code = NULL,$status = NULL){
@@ -136,8 +149,13 @@ class Facility_activation extends MY_Controller
 		array_push($facility_details, $facility_details_);
 
 		$result = $this->db->insert_batch('facilities',$facility_details);
-
-		echo "This: ".$result;exit;
+		$facility_id = $this->db->insert_id(); 
+		$q = $this->db->get_where('facilities', array('id' => $facility_id));
+		foreach ($q->result() as $row)
+		{
+		        echo $row->facility_code;
+		}
+		// echo "This: ".$facility_id;exit;
 		// $savefacility = new Facilities();
 
 		// $savefacility -> facility_code = $facility_code;

@@ -82,7 +82,7 @@
 								<td id="date_<?php echo $list['facility_code']; ?>"><?php 
 									$date_of_activation= $list['date_of_activation']; 
 									if ($list['using_hcmp'] == 1){
-										echo date('D ,d F Y',strtotime($date_of_activation));
+										echo date('d F Y',strtotime($date_of_activation));
 									}else{
 										echo 'Not Active';
 									}
@@ -93,23 +93,18 @@
 									if ($list['using_hcmp'] == 1) {
 										$value=1;
 										$text = 'Deactivate';
+										$class = 'danger';
+										$class1 = 'deactivate';
 									}else{
 										$value=0;
 										$text = 'Activate';
+										$class = 'success';
+										$class1 = 'activate';
+
 									}?>
-									<button class="btn btn-primary status_btn form-control" style="width:90%" id="btn_<?php echo $list['facility_code']; ?>" data-attr="<?php echo $list['facility_code']; ?>" data-value="<?php echo $value; ?>"><?php echo $text; ?></button>
+									<button class="btn btn-<?php echo $class; ?> status_btn <?php echo $class1; ?>  form-control" style="width:90%"  data-id="<?php echo $list['facility_code']; ?>" id="btn_<?php echo $list['facility_code']; ?>" data-attr="<?php echo $list['facility_code']; ?>" data-value="<?php echo $value; ?>"><?php echo $text; ?></button>
 								</td>
-								<!-- td><button class="btn btn-primary add" data-toggle="modal" data-target="#addUsersModal" id="add_new_users">
-										<span class="glyphicon glyphicon-plus"></span>Add Users
-									</button>
-								</td> -->
-								<!-- <td><TEXTAREA></TEXTAREA>st</td> -->
-								<!--addUsersModal
-								<td>
-								<button class="btn btn-primary btn-xs edit " data-toggle="modal" data-target="#myModal" id="<?php echo $list['facility_code']; ?>" data-target="#">
-									<span class="glyphicon glyphicon-edit"></span>Edit
-								</button></td>
-								-->
+								
 							</tr>
 							<?php }//foreach ?>
 						</tbody>
@@ -615,6 +610,8 @@ $("#create_new").click(function() {
 			cloned_object.insertAfter('#add_users_table tr:last');
 	
         }
+
+   
    function ajax_post_process (url,div){
     var url =url;
 
@@ -649,15 +646,16 @@ $("#create_new").click(function() {
           success: function(msg) {
   
           	// $('.modal-body').html(msg);return;
-         
+         var facility_code = msg;
         setTimeout(function () {
           	$('.modal-body').html("<div class='bg-warning' style='height:30px'>"+
 							"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"+
 							"<h3>Success!!! A new facility was added to the system. Please Close to continue</h3></div>")
 							
-			$('.modal-footer').html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>")
+			$('.modal-footer').html("<button type='button' class='btn btn-default' data-dismiss='modal'><Close</button>")
 				
         }, 4000);
+        
 
         // window.reload();
           }
@@ -698,20 +696,100 @@ $("#create_new").click(function() {
 		      
 		      // console.log(value);
    			});
-		$('.status_btn').click(function (e){
-			btn_value = $(this).attr('data-value');
-			btn_id = $(this).attr('id');
-			facility_code = $(this).attr('data-attr');
-			// alert(facility_code);
-			if(btn_value==0){
-				change_status_new(facility_code,0,btn_id);
-			}else{
-				change_status_new(facility_code,1,btn_id);
+			//button initialisation
+   		$('#btnNoActivate').click(function() {
+		    message_denial = "No action has been taken";
+        	alertify.set({ delay: 10000 });
+         	alertify.success(message_denial, null);       
+		  	$('#confirmActivateModal').modal('hide');
+		  	 return false;
+		});
+		$('#btnNoDeactivate').click(function() {
+		    message_denial = "No action has been taken";
+        	alertify.set({ delay: 10000 });
+         	alertify.success(message_denial, null);       
+		  	$('#confirmDeActivateModal').modal('hide');
+		  	 return false;
+		});
+		$('#btnYesActivate').click(function() {
+		    // handle deletion here
+		  	var facility_code = $('#confirmActivateModal').data('id');
+		  	change_status_new(facility_code,0);
+		  	$('#confirmActivateModal').modal('hide');
+		});
+		$('#btnYesDeactivate').click(function() {
+		    // handle deletion here
+		  	var facility_code = $('#confirmDeActivateModal').data('id');
+		  	change_status_new(facility_code,1);
+		  	$('#confirmDeActivateModal').modal('hide');
+		});
+   		$('.deactivate').on('click', function(e) {
+		    e.preventDefault();
+		    var facility_code = $(this).data('id');
+		    $('#confirmDeActivateModal').data('id', facility_code).modal('show');
+		    var base_url = "<?php echo base_url() . 'facility_activation/get_facility_user_data/'; ?>";
+		    var url = base_url+facility_code;
+		    var oTable = $('.confirm_deactivate_table').dataTable(
+			{	
+				retrieve: true,
+    			paging: false,
+				"bPaginate":false, 
+			    "bFilter": false,
+			    "bSearchable":false,
+			    "bInfo":false
+			});				
+			$.ajax({
+				url: url,
+				dataType: 'json',
+				success: function(s){
+				// console.log(s);
+				oTable.fnClearTable();
+				for(var i = 0; i < s.length; i++) {
+					oTable.fnAddData([
+					s[i][0],
+					s[i][1],
+					s[i][2]
+					]);
+					} // End For
+				},
+				error: function(e){
+					console.log(e.responseText);
+				}
+			});
+		    
+		});//end of deactivate
 
-			}
+		$('.activate').on('click', function(e) {
+		    e.preventDefault();
+		    var id = $(this).data('id');
+		    $('#confirmActivateModal').data('id', id).modal('show');
 		});
 
-		function change_status_new(facility_code,stati,btn_id){//seth
+   		//end of button initialisation
+		// $('#btnYesDeactivate').click(function() {
+		//     // handle deletion here
+		//   	var facility_code = $('#confirmDeActivateModal').data('id');
+		//   	change_status_new(facility_code,0);
+		//   	$('#confirmDeActivateModal').modal('hide');
+		// });
+
+		
+
+		
+		// $('.status_btn').click(function (e){
+		// 	btn_value = $(this).attr('data-value');
+		// 	btn_id = $(this).attr('id');
+		// 	facility_code = $(this).attr('data-attr');
+		// 	// alert(facility_code);
+		// 	if(btn_value==0){
+		// 		change_status_new(facility_code,0,btn_id);
+		// 	}else{
+		// 		change_status_new(facility_code,1,btn_id);
+
+		// 	}
+		// });
+
+		function change_status_new(facility_code,stati){//seth
       // alert(checked);return;
 	      message = "";
 	     
@@ -728,17 +806,8 @@ $("#create_new").click(function() {
           url:"<?php echo base_url()."facility_activation/change_status_new";?>",
 
           beforeSend: function() {
-            //$(div).html("");
-            // alert($('#email_recieve_edit').prop('checked'));return;
-            var answer = confirm("Are you sure you want to proceed?");
-            if (answer){
-                $('.modal-body').html("<img style='margin:30% 0 20% 42%;' src="+loading_icon+">");
-            } else {
-            	message_denial = "No action has been taken";
-            	alertify.set({ delay: 10000 });
-             	alertify.success(message_denial, null);            	
-                return false;
-            }},
+           
+        	},
             success: function(msg){            	
               var data = jQuery.parseJSON(msg);
               using_hcmp = data.using_hcmp;
@@ -746,16 +815,24 @@ $("#create_new").click(function() {
               // var date = jQuery.parseJSON(msg.date_of_activation);
               if(using_hcmp==1){
 	        	message_after = "Facility: "+ facility_code +" has been Activated";
+	        	$('#chkbx_'+facility_code).removeAttr('checked');	        	
 	        	$('#chkbx_'+facility_code).prop('checked' ,true);
 	        	$('#date_'+facility_code).html(date);
 	        	$('#btn_'+facility_code).html('Deactivate');
 	        	$('#btn_'+facility_code).attr('data-value','1');
+	        	$('#btn_'+facility_code).removeClass('btn-success');
+	        	$('#btn_'+facility_code).addClass('btn-danger');
+	        	var base_url = "<?php echo base_url().'user/user_create_multiple/' ?>";
+       			window.location.href = base_url+facility_code;	        	
               }else{
               	message_after = "Facility: "+ facility_code +" has been Deactivated";
 	        	$('#chkbx_'+facility_code).removeAttr('checked');
+	        	$('#chkbx_'+facility_code).prop('checked' ,false);	        	
 	        	$('#date_'+facility_code).html('Not Active');	 
 	        	$('#btn_'+facility_code).html('Activate');
-	        	$('#btn_'+facility_code).attr('data-value','0');	        	
+	        	$('#btn_'+facility_code).attr('data-value','0');	  
+	        	$('#btn_'+facility_code).removeClass('btn-danger');	        	      	
+	        	$('#btn_'+facility_code).addClass('btn-success');
 
               }
               alertify.set({ delay: 10000 });
@@ -765,30 +842,79 @@ $("#create_new").click(function() {
         });
     }//end of change status function
 		function initialize_checkboxes(){
-			$('input[name="status-checkbox"]').change(function(e){
-		// e.prevenDefault();
-		      value = $(this).attr('checked');//member id
-		      facility_code = $(this).attr("data-attr");//member id
-		      if ($(this).prop('checked') == false){
-		        // alert($(this).prop("checked"));
-		        // console.log(user_id);
-		        change_status(facility_code,0,"unchecked");
-		        // $('input[name="status-checkbox"]').prop('checked', false);
-		      
-		      } else{
-		        // alert("checked");
-		        // console.log(user_id);
-		        // alert($(this).prop("checked"));
-		        change_status(facility_code,1,"checked");
-		        // $('input[name="status-checkbox"]').prop('checked', true);
-		      };
-		      
-		      // console.log(value);
-   			});
+				//button initialisation
+   		$('#btnNoActivate').click(function() {
+		    message_denial = "No action has been taken";
+        	alertify.set({ delay: 10000 });
+         	alertify.success(message_denial, null);       
+		  	$('#confirmActivateModal').modal('hide');
+		  	 return false;
+		});
+		$('#btnNoDeactivate').click(function() {
+		    message_denial = "No action has been taken";
+        	alertify.set({ delay: 10000 });
+         	alertify.success(message_denial, null);       
+		  	$('#confirmDeActivateModal').modal('hide');
+		  	 return false;
+		});
+		$('#btnYesActivate').click(function() {
+		    // handle deletion here
+		  	var facility_code = $('#confirmActivateModal').data('id');
+		  	change_status_new(facility_code,0);
+		  	$('#confirmActivateModal').modal('hide');
+		});
+		$('#btnYesDeactivate').click(function() {
+		    // handle deletion here
+		  	var facility_code = $('#confirmDeActivateModal').data('id');
+		  	change_status_new(facility_code,1);
+		  	$('#confirmDeActivateModal').modal('hide');
+		});
+   		$('.deactivate').on('click', function(e) {
+		    e.preventDefault();
+		    var facility_code = $(this).data('id');
+		    $('#confirmDeActivateModal').data('id', facility_code).modal('show');
+		    var base_url = "<?php echo base_url() . 'facility_activation/get_facility_user_data/'; ?>";
+		    var url = base_url+facility_code;
+		    var oTable = $('.confirm_deactivate_table').dataTable(
+			{	
+				retrieve: true,
+    			paging: false,
+				"bPaginate":false, 
+			    "bFilter": false,
+			    "bSearchable":false,
+			    "bInfo":false
+			});				
+			$.ajax({
+				url: url,
+				dataType: 'json',
+				success: function(s){
+				// console.log(s);
+				oTable.fnClearTable();
+				for(var i = 0; i < s.length; i++) {
+					oTable.fnAddData([
+					s[i][0],
+					s[i][1],
+					s[i][2]
+					]);
+					} // End For
+				},
+				error: function(e){
+					console.log(e.responseText);
+				}
+			});
+		    
+		});//end of deactivate
+
+		$('.activate').on('click', function(e) {
+		    e.preventDefault();
+		    var id = $(this).data('id');
+		    $('#confirmActivateModal').data('id', id).modal('show');
+		});
 		}
 		
 	
-			
+	
+				
 	
 
     function change_status(facility_code,stati,checked){//seth
@@ -844,3 +970,48 @@ $("#create_new").click(function() {
 			
 			});
     </script>
+
+<div class="modal fade" id="confirmActivateModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Confirm Activation</h4>
+      </div>
+      <div class="modal-body" style="font-size:13px;text-align:centre">
+        <p>The Facility will now be Active and will be able to submit data. <br/>Are you Sure you Want to Continue?&hellip;</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button"  id="btnNoActivate" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="btnYesActivate" class="btn btn-primary" id="btn-ok">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="confirmDeActivateModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Confirm Deactivation?</h4>
+      </div>
+      <div class="modal-body" style="font-size:14px;text-align:centre">
+      <center>
+      	<!-- <center><img src="<?php echo base_url().'assets/img/Alert_resized.png'?>" style="height:150px;width:150px;"></center><br/> -->
+        <p>The Folowing Users are currently Active Under this Facility. Deactivating this Facility will render them unable to use the system.</p>
+        <table  class="display table table-bordered confirm_deactivate_table" cellspacing="0" width="100%">
+        	<thead>
+        		<tr><th>User Details</th><th>Date Activated</th><th>Date Last Logged In</th></tr>
+        	</thead>
+        </table>
+         <br/>Are you Sure you Want to Continue?</p>
+        </center>
+      </div>
+      <div class="modal-footer">
+        <button type="button"  id="btnNoDeactivate"  class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="btnYesDeactivate" class="btn btn-danger" id="btn-ok">Yes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
