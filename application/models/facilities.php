@@ -275,6 +275,12 @@ class Facilities extends Doctrine_Record {
 		}	
 			
 	}
+
+	public static function get_facilities_user_activation_data($facility_code){
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT distinct user.fname,user.lname,user.created_at ,log.end_time_of_event 
+		    	FROM user,log where user.facility = '$facility_code' and user.status = 1 and user.id = log.user_id and log.action = 'Logged Out' GROUP BY user_id order by log.end_time_of_event desc"); 
+		return $q;  
+	}
    public static function get_facilities_monitoring_data($facility_code=null,$district_id=null,$county_id=null,$identifier=null)
    {
         switch ($identifier)
@@ -293,7 +299,7 @@ class Facilities extends Doctrine_Record {
 			 $where_clause=isset($facility_code)? "f.facility_code=$facility_code ":
 			  (isset($district_id) && !isset($county_id)? "d.id=$district_id ": "d.county=$county_id ") ;
 			break;	
-        }
+        }       
 	    $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 	    SELECT u.fname, u.lname,f.facility_name, f.facility_code,d.district,
 	    MAX( f_i.`created_at` ) AS last_issued, ifnull(DATEDIFF( NOW( ) , MAX( f_i.`created_at` ) ),0) AS days_last_issued, 
