@@ -2579,16 +2579,17 @@ public function log_summary_weekly(){
 								$this -> hcmp_functions -> create_excel($excel_data);
 						*/
 			/*END OF PRIOR TO CONVERSTION TO NEW QUERY*/
-
+		$active_facilities = Facilities::getAll_();
+		// echo "<pre>";print_r($active_facilities);echo "</pre>";exit;
 		$last_seen = Facilities::get_facility_data_specific(NULL,$county_id,$district_id,$facility_code,'all');
 		$last_issued = Facilities::get_facility_data_specific('last_issued',$county_id,$district_id,$facility_code,'all');
 		$last_ordered = Facilities::get_facility_data_specific('last_ordered',$county_id,$district_id,$facility_code,'all');
 		$decommissioned = Facilities::get_facility_data_specific('last_decommissioned',$county_id,$district_id,$facility_code,'all');
 		$redistributed = Facilities::get_facility_data_specific('last_redistributed',$county_id,$district_id,$facility_code,'all');
 		$added_stock = Facilities::get_facility_data_specific('last_added_stock',$county_id,$district_id,$facility_code,'all');
-		$all_faciliteis = Facilities::getAll_();
+		// $all_faciliteis = Facilities::getAll_();
 
-		echo "<pre>";print_r($all_faciliteis);echo "</pre>";exit;
+		// echo "<pre>";print_r($all_faciliteis);echo "</pre>";exit;
 		$final_array = array();
 		$last_seen_count = count($last_seen);
 		$last_issued_count = count($last_issued);
@@ -2612,88 +2613,17 @@ public function log_summary_weekly(){
 		// echo "END OF LAST ADDED STOCK";
 		// exit;
 
-		$rollcall = array(
-			'last_seen' => $last_seen_count,
-			'last_issued' => $last_issued_count,
-			'last_ordered' => $last_ordered_count,
-			'decommissioned' => $decommissioned_count,
-			'redistributed' => $redistributed_count,
-			'added_stock' => $added_stock_count
+		
+		foreach ($active_facilities as $a_c) { 
+		$final_array[] = array(
+			'Facility Name' => $a_c['facility_name'], 
+			'Facility Code' => $a_c['facility_code'],
+			'County' => $a_c['county'],
+			'Sub-County' => $a_c['subcounty']
 			);
-		// echo "<pre>";print_r($rollcall);echo "</pre>";
-		asort($rollcall);
-		$rollcall = array_reverse($rollcall,true);
-        $arr_key = key($rollcall);
-		// echo "<pre>";print_r($arr_key);echo "</pre>";
+		}//active_facilities foreach
 
-
-		$highest = max($last_seen_count,$last_issued_count,$last_ordered_count,$decommissioned_count,$redistributed_count,$added_stock_count);
-		$keys_na_si_alishia = array_search($highest, $rollcall);
-		// echo $highest;
-		switch ($keys_na_si_alishia) {
-			case 'last_seen':
-				foreach ($last_seen as $l_seen) { 
-				$final_array[] = array(
-					'Facility Name' => $l_seen['facility_name'], 
-					'Facility Code' => $l_seen['facility_code'],
-					'County' => $l_seen['county'],
-					'Sub-County' => $l_seen['district']
-					);
-				}//last issued foreach
-
-			case 'last_issued':
-				foreach ($last_issued as $l_seen) { 
-				$final_array[] = array(
-					'Facility Name' => $l_seen['facility_name'], 
-					'Facility Code' => $l_seen['facility_code'],
-					'County' => $l_seen['county'],
-					'Sub-County' => $l_seen['district']
-					);
-				}//last issued foreach
-
-			case 'last_ordered':
-				foreach ($last_ordered as $l_seen) { 
-				$final_array[] = array(
-					'Facility Name' => $l_seen['facility_name'], 
-					'Facility Code' => $l_seen['facility_code'],
-					'County' => $l_seen['county'],
-					'Sub-County' => $l_seen['district']
-					);
-				}//last issued foreach
-
-			case 'decommissioned':
-				foreach ($decommissioned as $l_seen) { 
-				$final_array[] = array(
-					'Facility Name' => $l_seen['facility_name'], 
-					'Facility Code' => $l_seen['facility_code'],
-					'County' => $l_seen['county'],
-					'Sub-County' => $l_seen['district']
-					);
-				}//last issued foreach
-			case 'redistributed':
-				foreach ($redistributed as $l_seen) { 
-				$final_array[] = array(
-					'Facility Name' => $l_seen['facility_name'], 
-					'Facility Code' => $l_seen['facility_code'],
-					'County' => $l_seen['county'],
-					'Sub-County' => $l_seen['district']
-					);
-				}//last issued foreach
-				break;
-			case 'added_stock':
-				foreach ($added_stock as $l_seen) { 
-				$final_array[] = array(
-					'Facility Name' => $l_seen['facility_name'], 
-					'Facility Code' => $l_seen['facility_code'],
-					'County' => $l_seen['county'],
-					'Sub-County' => $l_seen['district']
-					);
-				}//last issued foreach
-				break;
-		}
-
-
-		$final_array = array_unique($final_array,SORT_REGULAR);
+		// $final_array = array_unique($final_array,SORT_REGULAR);
 		// $final_array = array_map("unserialize", array_unique(array_map("serialize", $final_array)));
 		// echo "<pre>";print_r($final_array);echo "</pre>";exit;
 
@@ -2968,7 +2898,7 @@ public function log_summary_weekly(){
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						$subject = "Weekly Log Summary as at ".$time;
 
-                        $email_address = "smutheu@clintonhealthaccess.org,jaynerawz@gmail.com,karsanrichard@gmail.com";
+                        $email_address = "karsanrichard@gmail.com";
                         // $email_address = "karsanrichard@gmail.com";
                         //$bcc = "";
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);

@@ -30,9 +30,20 @@ class Facilities extends Doctrine_Record {
 	}
 
 	public static function getAll_() {
-		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("using_hcmp='1'");
-		$drugs = $query -> execute();
-		return $drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+			SELECT 
+		    c.county, d.district as subcounty, f.facility_name,f.facility_code, f.`level`, f.type,f.date_of_activation
+		from
+		    facilities f,
+		    districts d,
+		    counties c
+		where
+		    f.district = d.id and d.county = c.id
+		        and f.`using_hcmp` = 1
+		group by f.facility_name
+			");
+		$facilities = $query;
+		return $facilities;
 	}
 
 	public static function get_detailed_listing($county_id) {
@@ -122,13 +133,6 @@ class Facilities extends Doctrine_Record {
 	public static function getFacilities($district){
 		
 		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");
-		$drugs = $query -> execute();
-		return $drugs;
-	}
-
-	public static function getFacilities_from_code($facility_code){
-		
-		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("facility_code='$facility_code'")->OrderBy("facility_name asc");
 		$drugs = $query -> execute();
 		return $drugs;
 	}
@@ -282,12 +286,6 @@ class Facilities extends Doctrine_Record {
 		}	
 			
 	}
-
-	public static function get_facilities_user_activation_data($facility_code){
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT distinct user.fname,user.lname,user.created_at ,log.end_time_of_event 
-		    	FROM user,log where user.facility = '$facility_code' and user.status = 1 and user.id = log.user_id and log.action = 'Logged Out' GROUP BY user_id order by log.end_time_of_event desc"); 
-		return $q;  
-	}
    public static function get_facilities_monitoring_data($facility_code=null,$district_id=null,$county_id=null,$identifier=null)
    {
         switch ($identifier)
@@ -306,7 +304,7 @@ class Facilities extends Doctrine_Record {
 			 $where_clause=isset($facility_code)? "f.facility_code=$facility_code ":
 			  (isset($district_id) && !isset($county_id)? "d.id=$district_id ": "d.county=$county_id ") ;
 			break;	
-        }       
+        }
 	    $q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 	    SELECT u.fname, u.lname,f.facility_name, f.facility_code,d.district,
 	    MAX( f_i.`created_at` ) AS last_issued, ifnull(DATEDIFF( NOW( ) , MAX( f_i.`created_at` ) ),0) AS days_last_issued, 
