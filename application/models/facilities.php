@@ -29,7 +29,10 @@ class Facilities extends Doctrine_Record {
 		return $drugs;
 	}
 
-	public static function getAll_() {
+	public static function getAll_($county = NULL,$district = NULL) {
+		$and = isset($district)? "AND d.id = $district" : NULL;
+		$and .= (isset($county) && !isset($district))? " AND c.id = $county" : NULL;
+		
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 			SELECT 
 		    c.county, d.district as subcounty, f.facility_name,f.facility_code, f.`level`, f.type,f.date_of_activation
@@ -40,6 +43,7 @@ class Facilities extends Doctrine_Record {
 		where
 		    f.district = d.id and d.county = c.id
 		        and f.`using_hcmp` = 1
+		        $and
 		group by f.facility_name
 			");
 		$facilities = $query;
