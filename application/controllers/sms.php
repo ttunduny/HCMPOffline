@@ -2589,7 +2589,7 @@ public function log_summary_weekly(){
 		$added_stock = Facilities::get_facility_data_specific('last_added_stock',$county_id,$district_id,$facility_code,'all');
 		$all_faciliteis = Facilities::getAll_();
 
-		echo "<pre>";print_r($all_faciliteis);echo "</pre>";exit;
+		// echo "<pre>";print_r($all_faciliteis);echo "</pre>";exit;
 		$final_array = array();
 		$last_seen_count = count($last_seen);
 		$last_issued_count = count($last_issued);
