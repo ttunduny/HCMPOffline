@@ -330,8 +330,19 @@ class Facilities extends Doctrine_Record {
 		             CALL facility_monitoring_new('county','$county','$report_type');
 					");
 			}
-		return $data;
+		}else{
+			if ($all = 'all') {
+					// echo "I WORK";exit;
+					$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		             CALL facility_monitoring_new('all','$county','$report_type');
+					");
+				}else{
+				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+		             CALL facility_monitoring_new('county','$county','$report_type');
+					");
 		}
+	}
+		return $data;
 		
 		
 		/*
