@@ -82,7 +82,7 @@ if ($access_level == "dpp") {
 <script src="<?php echo base_url().'Scripts/bootstrap.js'?>" type="text/javascript"></script>
 
 <script src="<?php echo base_url();?>Scripts/FusionCharts/FusionCharts.js" type="text/javascript"></SCRIPT>
-	
+
  
 
 <script type="text/javascript">

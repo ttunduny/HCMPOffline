@@ -945,9 +945,11 @@ $("#create_new").click(function() {
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Confirm Deactivation</h4>
+        <h4 class="modal-title">Confirm Deactivation?</h4>
       </div>
-      <div class="modal-body" style="font-size:13px;text-align:centre">
+      <div class="modal-body" style="font-size:14px;text-align:centre">
+      <center>
+      	<!-- <center><img src="<?php echo base_url().'assets/img/Alert_resized.png'?>" style="height:150px;width:150px;"></center><br/> -->
         <p>The Folowing Users are currently Active Under this Facility. Deactivating this Facility will render them unable to use the system.</p>
         <table  class="display table table-bordered confirm_deactivate_table" cellspacing="0" width="100%">
         	<thead>
@@ -955,6 +957,7 @@ $("#create_new").click(function() {
         	</thead>
         </table>
          <br/>Are you Sure you Want to Continue?</p>
+        </center>
       </div>
       <div class="modal-footer">
         <button type="button"  id="btnNoDeactivate"  class="btn btn-default" data-dismiss="modal">Close</button>
