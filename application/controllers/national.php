@@ -144,7 +144,7 @@ class national extends MY_Controller {
 		    f.district = d.id and d.county = c.id
 		        and f.`using_hcmp` = 1
 		        $and
-		-- group by f.`level`,f.facility_code
+		group by f.facility_code
 		order by c.county asc
 		        ");
 
