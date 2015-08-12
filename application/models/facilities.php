@@ -28,6 +28,13 @@ class Facilities extends Doctrine_Record {
 		$drugs = $query -> execute();
 		return $drugs;
 	}
+
+	public static function getAll_() {
+		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("using_hcmp='1'");
+		$drugs = $query -> execute();
+		return $drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+	}
+
 	public static function get_detailed_listing($county_id) {
 		$facilities = Doctrine_Manager::getInstance()->getCurrentConnection()
 		->fetchAll("SELECT 
