@@ -725,32 +725,37 @@ $("#create_new").click(function() {
 		});
    		$('.deactivate').on('click', function(e) {
 		    e.preventDefault();
+		    $("#confirm_deactivate_table > tbody").html("");
 		    var facility_code = $(this).data('id');
 		    $('#confirmDeActivateModal').data('id', facility_code).modal('show');
 		    var base_url = "<?php echo base_url() . 'facility_activation/get_facility_user_data/'; ?>";
 		    var url = base_url+facility_code;
-		    var oTable = $('.confirm_deactivate_table').dataTable(
-			{	
-				retrieve: true,
-    			paging: false,
-				"bPaginate":false, 
-			    "bFilter": false,
-			    "bSearchable":false,
-			    "bInfo":false
-			});				
+		 //    var oTable = $('.confirm_deactivate_table').dataTable(
+			// {	
+			// 	retrieve: true,
+   //  			paging: false,
+			// 	"bPaginate":false, 
+			//     "bFilter": false,
+			//     "bSearchable":false,
+			//     "bInfo":false
+			// });				
 			$.ajax({
 				url: url,
 				dataType: 'json',
 				success: function(s){
-				// console.log(s);
-				oTable.fnClearTable();
-				for(var i = 0; i < s.length; i++) {
-					oTable.fnAddData([
-					s[i][0],
-					s[i][1],
-					s[i][2]
-					]);
-					} // End For
+				console.log(s);
+				 $.each(s, function( index, value ) {
+                       var row = $("<tr><td>" + value[0] + "</td><td>" + value[1] + "</td><td>"+value[2]+"</td></tr>");
+                       $("#confirm_deactivate_table").append(row);
+                    });
+				// oTable.fnClearTable();
+				// for(var i = 0; i < s.length; i++) {
+				// 	oTable.fnAddData([
+				// 	s[i][0],
+				// 	s[i][1],
+				// 	s[i][2]
+				// 	]);
+				// 	} // End For
 				},
 				error: function(e){
 					console.log(e.responseText);
@@ -951,10 +956,11 @@ $("#create_new").click(function() {
       <center>
       	<!-- <center><img src="<?php echo base_url().'assets/img/Alert_resized.png'?>" style="height:150px;width:150px;"></center><br/> -->
         <p>The Folowing Users are currently Active Under this Facility. Deactivating this Facility will render them unable to use the system.</p>
-        <table  class="display table table-bordered confirm_deactivate_table" cellspacing="0" width="100%">
+        <table  id="confirm_deactivate_table" class="display table table-bordered confirm_deactivate_table" cellspacing="0" width="100%">
         	<thead>
         		<tr><th>User Details</th><th>Date Activated</th><th>Date Last Logged In</th></tr>
         	</thead>
+        	<tbody></tbody>
         </table>
          <br/>Are you Sure you Want to Continue?</p>
         </center>
