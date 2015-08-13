@@ -3229,12 +3229,15 @@ class Reports extends MY_Controller {
 		// $facility_data_new = Facilities::new_facility_monitoring_function($county_id, $district_id, $facility_code,'all');
 		// get_facility_data_specific($report_type = NULL,$criteria = NULL,$county_id = NULL,$district_id = NULL,$facility_code = NULL)
 		// echo $district_id;exit;
+		$all_facilities = Facilities::getAll_($county_id,$district_id);
+		// echo "<pre>";print_r($all_facilities);echo "</pre>";exit;
 		$last_seen = Facilities::get_facility_data_specific(NULL,$county_id,$district_id,$facility_code);
 		$last_issued = Facilities::get_facility_data_specific('last_issued',$county_id,$district_id,$facility_code);
 		$last_ordered = Facilities::get_facility_data_specific('last_ordered',$county_id,$district_id,$facility_code);
 		$decommissioned = Facilities::get_facility_data_specific('last_decommissioned',$county_id,$district_id,$facility_code);
 		$redistributed = Facilities::get_facility_data_specific('last_redistributed',$county_id,$district_id,$facility_code);
 		$added_stock = Facilities::get_facility_data_specific('last_added_stock',$county_id,$district_id,$facility_code);
+
 
 		$final_array = array();
 		$last_seen_count = count($last_seen);
@@ -3244,6 +3247,8 @@ class Reports extends MY_Controller {
 		$redistributed_count = count($redistributed);
 		$added_stock_count = count($added_stock);
 
+				/*
+				//previous system that chose which array had highest value and begun with
 		$rollcall = array(
 			'last_seen' => $last_seen_count,
 			'last_issued' => $last_issued_count,
@@ -3324,6 +3329,7 @@ class Reports extends MY_Controller {
 				}//last issued foreach
 				break;
 		}
+		*/
 		//random code to allow for commit
 		// echo $key;exit;
 		// echo "<pre>".$highest;exit;
@@ -3340,9 +3346,16 @@ class Reports extends MY_Controller {
 		// echo "<pre>";print_r($added_stock);echo "</pre>";
 		// echo "END OF LAST ADDED STOCK";
 		// exit;
+				foreach ($all_facilities as $a_c) { 
+				$final_array[] = array(
+					'Facility Name' => $a_c['facility_name'], 
+					'Facility Code' => $a_c['facility_code'],
+					'County' => $a_c['county'],
+					'Sub-County' => $a_c['subcounty']
+					);
+				}//final_array foreach
 
-
-		$final_array = array_unique($final_array,SORT_REGULAR);
+		// $final_array = array_unique($final_array,SORT_REGULAR);
 		// $final_array = array_map("unserialize", array_unique(array_map("serialize", $final_array)));
 		// echo "<pre>";print_r($final_array);echo "</pre>";exit;
 
