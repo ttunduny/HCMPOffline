@@ -65,7 +65,7 @@ class Facility_activation extends MY_Controller
 	public function get_facility_user_data($facility_code){
 		// $facility_code = $_POST['facility_code'];
 		$facility_data = Facilities::get_facilities_user_activation_data($facility_code);
-		echo "<pre>";print_r($facility_data);echo "</pre>";exit;		
+		// echo "<pre>";print_r($facility_data);echo "</pre>";exit;		
 		foreach ($facility_data as $key => $value) {
 			$name = $value['fname'].' '.$value['lname'];
 			$created_at = $value['created_at'];

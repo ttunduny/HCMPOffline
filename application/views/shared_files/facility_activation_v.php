@@ -724,6 +724,8 @@ $("#create_new").click(function() {
 		  	$('#confirmDeActivateModal').modal('hide');
 		});
    		$('.deactivate').on('click', function(e) {
+				 	// console.log("i work");return;
+
 		    e.preventDefault();
 		    $("#confirm_deactivate_table > tbody").html("");
 		    var facility_code = $(this).data('id');
@@ -743,7 +745,7 @@ $("#create_new").click(function() {
 				url: url,
 				dataType: 'json',
 				success: function(s){
-				console.log(s);
+				// console.log(s);
 				 $.each(s, function( index, value ) {
                        var row = $("<tr><td>" + value[0] + "</td><td>" + value[1] + "</td><td>"+value[2]+"</td></tr>");
                        $("#confirm_deactivate_table").append(row);
