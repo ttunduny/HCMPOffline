@@ -846,26 +846,74 @@ $("#create_new").click(function() {
         });
     }//end of change status function
 		function initialize_checkboxes(){
-			$('input[name="status-checkbox"]').change(function(e){
-		// e.prevenDefault();
-		      value = $(this).attr('checked');//member id
-		      facility_code = $(this).attr("data-attr");//member id
-		      if ($(this).prop('checked') == false){
-		        // alert($(this).prop("checked"));
-		        // console.log(user_id);
-		        change_status(facility_code,0,"unchecked");
-		        // $('input[name="status-checkbox"]').prop('checked', false);
-		      
-		      } else{
-		        // alert("checked");
-		        // console.log(user_id);
-		        // alert($(this).prop("checked"));
-		        change_status(facility_code,1,"checked");
-		        // $('input[name="status-checkbox"]').prop('checked', true);
-		      };
-		      
-		      // console.log(value);
-   			});
+			$('#btnNoActivate').click(function() {
+		    message_denial = "No action has been taken";
+        	alertify.set({ delay: 10000 });
+         	alertify.success(message_denial, null);       
+		  	$('#confirmActivateModal').modal('hide');
+		  	 return false;
+		});
+		$('#btnNoDeactivate').click(function() {
+		    message_denial = "No action has been taken";
+        	alertify.set({ delay: 10000 });
+         	alertify.success(message_denial, null);       
+		  	$('#confirmDeActivateModal').modal('hide');
+		  	 return false;
+		});
+		$('#btnYesActivate').click(function() {
+		    // handle deletion here
+		  	var facility_code = $('#confirmActivateModal').data('id');
+		  	change_status_new(facility_code,0);
+		  	$('#confirmActivateModal').modal('hide');
+		});
+		$('#btnYesDeactivate').click(function() {
+		    // handle deletion here
+		  	var facility_code = $('#confirmDeActivateModal').data('id');
+		  	change_status_new(facility_code,1);
+		  	$('#confirmDeActivateModal').modal('hide');
+		});
+   		$('.deactivate').on('click', function(e) {
+		    e.preventDefault();
+		    var facility_code = $(this).data('id');
+		    $('#confirmDeActivateModal').data('id', facility_code).modal('show');
+		    var base_url = "<?php echo base_url() . 'facility_activation/get_facility_user_data/'; ?>";
+		    var url = base_url+facility_code;
+		    var oTable = $('.confirm_deactivate_table').dataTable(
+			{	
+				retrieve: true,
+    			paging: false,
+				"bPaginate":false, 
+			    "bFilter": false,
+			    "bSearchable":false,
+			    "bInfo":false
+			});				
+			$.ajax({
+				url: url,
+				dataType: 'json',
+				success: function(s){
+				// console.log(s);
+				// alert(s);
+				oTable.fnClearTable();
+				for(var i = 0; i < s.length; i++) {
+					oTable.fnAddData([
+					s[i][0],
+					s[i][1],
+					s[i][2]
+					]);
+					} // End For
+				},
+				error: function(e){
+					console.log(e.responseText);
+				}
+			});
+		    
+		});
+
+		$('.activate').on('click', function(e) {
+		    e.preventDefault();
+		    var id = $(this).data('id');
+		    $('#confirmActivateModal').data('id', id).modal('show');
+		});
 		}
 		
 	
