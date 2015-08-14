@@ -696,7 +696,7 @@ $("#create_new").click(function() {
 		      
 		      // console.log(value);
    			});
-			//button initialisation
+
    		$('#btnNoActivate').click(function() {
 		    message_denial = "No action has been taken";
         	alertify.set({ delay: 10000 });
@@ -757,7 +757,7 @@ $("#create_new").click(function() {
 				}
 			});
 		    
-		});//end of deactivate
+		});
 
 		$('.activate').on('click', function(e) {
 		    e.preventDefault();
@@ -765,7 +765,6 @@ $("#create_new").click(function() {
 		    $('#confirmActivateModal').data('id', id).modal('show');
 		});
 
-   		//end of button initialisation
 		// $('#btnYesDeactivate').click(function() {
 		//     // handle deletion here
 		//   	var facility_code = $('#confirmDeActivateModal').data('id');
@@ -842,8 +841,7 @@ $("#create_new").click(function() {
         });
     }//end of change status function
 		function initialize_checkboxes(){
-				//button initialisation
-   		$('#btnNoActivate').click(function() {
+			$('#btnNoActivate').click(function() {
 		    message_denial = "No action has been taken";
         	alertify.set({ delay: 10000 });
          	alertify.success(message_denial, null);       
@@ -889,6 +887,7 @@ $("#create_new").click(function() {
 				dataType: 'json',
 				success: function(s){
 				// console.log(s);
+				// alert(s);
 				oTable.fnClearTable();
 				for(var i = 0; i < s.length; i++) {
 					oTable.fnAddData([
@@ -903,7 +902,7 @@ $("#create_new").click(function() {
 				}
 			});
 		    
-		});//end of deactivate
+		});
 
 		$('.activate').on('click', function(e) {
 		    e.preventDefault();
