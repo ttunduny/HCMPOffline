@@ -57,7 +57,7 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 						<th>Description</th>
 						<!--<th>Commodity&nbsp;Code</th>-->
 						<th>Order Unit Size</th>
-						<th>Order Unit Cost (Ksh)</th>
+						<!-- <th>Order Unit Cost (Ksh)</th> -->
 						<th>Opening Balance (Units)</th>
 						<th>Total Receipts (Units)</th>
 					    <th>Total issues (Units)</th>
@@ -72,7 +72,7 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 					    <th>Suggested Order Qty (Packs)</th>
 					    <th>Order Qty (Packs)</th>
 					    <th>Actual Order Qty (Units)</th>
-					    <th>Order Cost(Ksh)</th>	
+					    <!-- <th>Order Cost(Ksh)</th>	 -->
 					    <!--<th>Comment</th>	-->			    
 	</tr>
 </thead>
@@ -93,13 +93,13 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 	<input class="total_commodity_units" type="hidden" name="total_commodity_units[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['total_commodity_units'];?>" />
 	<input class="commodity_id" type="hidden" name="commodity_id[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['commodity_id'];?>" />
 	<input class="commodity_name" type="hidden" name="commodity_name[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['commodity_name'];?>" />
-	<input class="price" type="hidden" name="price[<?php echo $i; ?>] " value="<?php echo $price;?>" />
+	<!-- <input class="price" type="hidden" name="price[<?php echo $i; ?>] " value="<?php echo $price;?>" /> -->
 	<input class="unit_size" type="hidden" name="unit_size[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['unit_size'];?>" />
-	<input class="unit_cost" type="hidden" name="unit_cost[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['unit_cost'];?>" />
+	<!-- <input class="unit_cost" type="hidden" name="unit_cost[<?php echo $i; ?>] " value="<?php echo $facility_order[$i]['unit_cost'];?>" /> -->
 							<td><?php echo $facility_order[$i]['commodity_name']?></td>
 							<!--<td><?php echo $facility_order[$i]['commodity_code'];?></td>-->
 							<td><?php echo $facility_order[$i]['unit_size']?> </td>
-							<td><?php echo $facility_order[$i]['unit_cost']; ?> </td>
+							<!-- <td><?php echo $facility_order[$i]['unit_cost']; ?> </td> -->
 							<td><input class="form-control input-small" readonly="readonly" type="text" name="open[<?php echo $i ;?>]" value="<?php echo $facility_order[$i]['opening_balance'];?>" /></td>
 							<td><input class="form-control input-small" readonly="readonly" type="text" name="receipts[<?php echo $i ;?>]" value="<?php echo $facility_order[$i]['total_receipts'];?>" /></td>
 							<td><input class="form-control input-small" readonly="readonly" type="text" name="issues[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['total_issues'];?>" /></td>
@@ -130,7 +130,6 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 							<td><input class="form-control input-small quantity" type="text" name="quantity[<?php echo $i ;?>]" value="<?php $qty=$facility_order[$i]['quantity_ordered'];
 							if($qty>0){echo $qty;} else echo 0;?>"/></td>
 							<td><input class="form-control input-small actual_quantity" readonly="readonly" type="text" name="actual_quantity[<?php echo $i ;?>]" value="0"/></td>
-							<td><?php echo '<input type="text" class="form-control input-small cost" name="cost['.$i.']" value="0" readonly="yes"   />';?></td>
 							<!--<td><input class="form-control input-small" type="text" name="comment[<?php echo $i ;?>]" value="N/A" /></td>-->
 			       			</tr>						
 						<?php } $i=($i==0)? 0: $i=$i-1;
@@ -156,7 +155,7 @@ $(document).ready(function() {
 	var new_count =count+1;
 	var drawing_rights_balance=$('#actual_drawing_rights').val();
 	//auto compute the values
-	calculate_totals();
+	// calculate_totals();
 	calculate_suggested_value(3);
 	//datatables settings 
 	$('#example').dataTable( {
@@ -171,7 +170,7 @@ $(document).ready(function() {
 	$('#example_length label select').addClass('form-control');	
 	// add commodity data
     $(".add").button().click( function (){
-	var body_content='<table class="table-update"><thead><tr><th>Description</th><th>Commodity Code</th><th>Order Unit Size</th><th>Order Unit Cost (Ksh)</th>'+				   	    
+	var body_content='<table class="table-update"><thead><tr><th>Description</th><th>Commodity Code</th><th>Order Unit Size</th>'+				   	    
 					'</tr></thead><tbody><tr><td>'+
                     '<select name="desc" class="form-control desc"><option value="0">--Select Commodity Name--</option>'+
                     '<?php	foreach($facility_commodity_list as $commodity):
@@ -179,14 +178,12 @@ $(document).ready(function() {
 							 $commodity_code=$commodity['commodity_code'];							
 							 $sub_category_name=preg_replace('/[^A-Za-z0-9\-]/', ' ',$commodity['sub_category_name']);
 							 $unit_size=preg_replace('/[^A-Za-z0-9\-]/', ' ',$commodity['unit_size']);
-							 $unit_cost=$commodity['unit_cost'];
 							 $total_commodity_units=$commodity['total_commodity_units'];
 							 $commodity_name= preg_replace('/[^A-Za-z0-9\-]/', ' ', $commodity['commodity_name']);?>'+					
 						'<option <?php echo 'special_data="'.$commodity_id.'^'.$unit_cost.'^'.$unit_size.
 	'^'.$sub_category_name.'^'.$commodity_code.'^'.$total_commodity_units.'" value="'.$commodity_id.'">'.$commodity_name ;?></option><?php endforeach;?>'+
 	'</select></td><td><input readonly="readonly" class="form-control" type="text" name="commodity_code"    /></td>'+
 						'<td><input class="form-control" readonly="readonly" type="text" name="unit_size"  /></td>'+
-						'<td><input class="form-control" readonly="readonly" type="text" name="unit_cost"   />'+
 						'<input type="hidden" name="cat_name"/><input type="hidden" name="commodity_id"  />' +
 						'<input type="hidden" name="commodity_name_"  /><input type="hidden" name="total_commodity_units_" value=""/></td></tr></tbody></table>';
         //hcmp custom message dialog
@@ -239,7 +236,7 @@ $(document).ready(function() {
 							'<input class="form-control input-small" type="text" value="0" name="suggested['+new_count+']" 	id="suggested['+new_count+']" readonly="yes"  />',
 							'<input class="form-control input-small quantity" type="text" name="quantity['+new_count+']" id="quantity['+new_count+']" value="0" />',
 							'<input class="form-control input-small actual_quantity" type="text" name="actual_quantity['+new_count+']" id="actual_quantity['+new_count+']" value="0" readonly="yes" />',
-							'<input class="form-control input-small cost" type="text" name="cost['+new_count+']" id="cost['+new_count+']" value="0" readonly="yes" />'
+							// '<input class="form-control input-small cost" type="text" name="cost['+new_count+']" id="cost['+new_count+']" value="0" readonly="yes" />'
 							//'<input type="text" class="form-control input-small" name="comment['+new_count+']" id="comment['+new_count+']" value="N/A"/>'
 		]); 
 		new_count=new_count+1;
@@ -264,7 +261,7 @@ $(document).ready(function() {
     dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
     //This event is fired immediately when the hide instance method has been called.
     $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();	})
-    calculate_totals();
+    // calculate_totals();
     $(this).closest("tr").find(".actual_quantity").val("");
 	$(this).closest("tr").find(".cost").val("");
     return;   } 
@@ -273,7 +270,7 @@ $(document).ready(function() {
     }
 	
 	// set the order total here
-	calculate_totals();	
+	// calculate_totals();	
 	});// process all the order into a summary table for the user to confirm before placing the order bed_capacity workload
 	$('.test').on('click','', function (){
 		var today = $.datepicker.formatDate('d MM, y', new Date());
@@ -289,9 +286,8 @@ $(document).ready(function() {
 					"<th>Description</th>"+
 					"<th>Commodity Code</th>"+
 					"<th>Order Quantity</th>"+
-					"<th>Unit Cost Ksh</th>"+
-					"<th>Total Ksh</th></tr></thead><tbody>";	 	    			
-        $("input[name^=cost]").each(function(i) { 
+					"</tr></thead><tbody>";	 	    			
+        $("input[name^=quantity]").each(function(i) { 
          	//$(document).each('','input[name^=cost]', function (i){
          var C_name=$(this).closest("tr").find(".commodity_name").val()
          //alert(C_name);
@@ -300,11 +296,10 @@ $(document).ready(function() {
 							"<td>" +C_name+ "</td>" +
 							"<td>" +$(this).closest("tr").find(".commodity_code").val()+ "</td>" +
 							"<td>" +$(this).closest("tr").find(".quantity").val()+ "</td>" +	
-							"<td>" +number_format($(this).closest("tr").find(".unit_cost").val(), 2, '.', ',')+ "</td>" +	
-							"<td>" +number_format($(this).closest("tr").find(".cost").val(), 2, '.', ',')+ "</td>" +													
 						"</tr>" 
                     });
          table_data +="</tbody></table>";
+         alert(table_data);
     //hcmp custom message dialog
     dialog_box(table_data,'<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>'
     +'<button type="button" class="btn btn-primary" id="save_dem_order" data-dismiss="modal">Save</button>');

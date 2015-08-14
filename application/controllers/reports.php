@@ -311,7 +311,8 @@ class Reports extends MY_Controller {
 		$pdf_data = array("pdf_title" => "Order Report For $test[facility_name]", 'pdf_html_body' => $test['table'], 'pdf_view_option' => 'view_file', 'file_name' => $file_name);
 		$this -> hcmp_functions -> create_pdf($pdf_data);
 	}
-	public function order_listing($for, $report = null) {
+	public function order_listing($for, $report = null , $file_name = NULL) {
+		redirect("orders/download_contents", 'refresh');
 		$facility_code = $county_id = $district_id = null;
 		if ($for == 'facility') :
 			$facility_code = $this -> session -> userdata('facility_id');
