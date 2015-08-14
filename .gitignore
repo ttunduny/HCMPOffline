@@ -1,5 +1,4 @@
 database.php
-Hcmp_functions.php
 *.class
 *.pyc
 *.pyo
@@ -13,8 +12,5 @@ Hcmp_functions.php
 
 
 application/config/database.php
-system/libraries/Hcmp_functions.php
 .htaccess
-MEDS Customer Order Form.xls
-MEDS Customer Order Form.xlsx
 *.xls

@@ -629,7 +629,7 @@ class orders extends MY_Controller {
 				$file_name = $facility_name . '_facility_order_no_' . $new_order_no . "_MEDS_date_created_" . date('d-m-y');
 
 					$result = $this -> hcmp_functions -> clone_meds_excel_order_template($new_order_no, 'save_file', $file_name);
-					echo "I WORKED ".$result;exit;
+					// echo "I WORKED ".$result;exit;
 					$message = '
 						<br>
 						Please find the Order Made by ' . $facility_name . ' attached.
