@@ -312,7 +312,7 @@ class Reports extends MY_Controller {
 		$this -> hcmp_functions -> create_pdf($pdf_data);
 	}
 	public function order_listing($for, $report = null , $file_name = NULL) {
-		redirect("orders/download_contents", 'refresh');
+		// redirect("orders/download_contents", 'refresh');
 		$facility_code = $county_id = $district_id = null;
 		if ($for == 'facility') :
 			$facility_code = $this -> session -> userdata('facility_id');
