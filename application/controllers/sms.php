@@ -21,11 +21,11 @@ class sms extends MY_Controller {
 	//for testing puposes only
 	public function test_sms() {
 
-		$phones = '254723722204';
+		$phones = '254707463571';
 		$message = 'test from system live server';
 		$message = urlencode($message);
 
-		$spam_sms = '254723722204';
+		$spam_sms = '254707463571';
 
 		$phone_numbers = explode("+", $spam_sms);
 
@@ -39,7 +39,7 @@ class sms extends MY_Controller {
 	public function test_email() {
 		$message = "Test email form the server";
 		$subject = "Test Subject from the server";
-		$email_address = "collinsojenge@gmail.com";
+		$email_address = "karsanrichard@gmail.com";
 
 		$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
@@ -676,7 +676,7 @@ class sms extends MY_Controller {
 
 	//Getting the bcc emails
 	public function get_bcc_notifications() {
-		$bcc_emails = "collinsojenge@gmail.com,kelvinmwas@gmail.com,smutheu@clintonhealthaccess.org,
+		$bcc_emails = "karsanrichard@gmail.com,smutheu@clintonhealthaccess.org,
 						jhungu@clintonhealthaccess.org,gmacharia@clintonhealthacces.org,tngugi@clintonhealthaccess.org,
 						bwariari@clintonhealthaccess.org,amwaura@clintonhealthaccess.org,eongute@clintonhealthaccess.org,
 						rkihoto@clintonhealthaccess.org,teddyodera@gmail.com,ericmurugami@yahoo.co.uk,
@@ -754,7 +754,7 @@ class sms extends MY_Controller {
 		$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 
 		//the email of the receipients
-		//$email_address = "collinsojenge@gmail.com";
+		//$email_address = "karsanrichard@gmail.com";
 		//function for sending the actual email
 		//$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
@@ -812,12 +812,12 @@ class sms extends MY_Controller {
 					$excel_data = array('doc_creator' => $facility_name, 'doc_title' => 'facility expiries monthly report ', 'file_name' => 'facility weekly report');
 					$row_data = array();
 
-					$column_data = array("Commodity Name", "Unit Size", "Quantity (packs)", "Quantity (units)", "Unit Cost(KSH)", "Total Expired(KSH)", "Date of Expiry", "Supplier", "Date Added", "Manufacturer", "Facility Name", "MFL Code", "Sub County", "County");
+					$column_data = array("Facility Name", "MFL Code", "Sub County", "County","Commodity Name", "Unit Size", "Quantity (packs)", "Quantity (units)", "Unit Cost(KSH)", "Total Expired(KSH)", "Date of Expiry", "Supplier", "Date Added", "Manufacturer");
 
 					$excel_data['column_data'] = $column_data;
 
 					foreach ($facility_expiries as $facility_expiries) :
-						array_push($row_data, array($facility_expiries["commodity_name"], $facility_expiries["unit_size"], $facility_expiries["packs"], $facility_expiries["units"], $facility_expiries["unit_cost"], $facility_expiries["total"], $facility_expiries["expiry_date"], $facility_expiries["source_name"], $facility_expiries["date_added"], $facility_expiries["manufacture"], $facility_expiries["facility_name"], $facility_expiries["facility_code"], $facility_expiries["subcounty"], $facility_expiries["county"]));
+						array_push($row_data, array($facility_expiries["facility_name"], $facility_expiries["facility_code"], $facility_expiries["subcounty"], $facility_expiries["county"],$facility_expiries["commodity_name"], $facility_expiries["unit_size"], $facility_expiries["packs"], $facility_expiries["units"], $facility_expiries["unit_cost"], $facility_expiries["total"], $facility_expiries["expiry_date"], $facility_expiries["source_name"], $facility_expiries["date_added"], $facility_expiries["manufacture"]));
 						$facility_potential_expiries_total = $facility_potential_expiries_total + $facility_expiries["total"];
 					endforeach;
 
@@ -861,13 +861,13 @@ class sms extends MY_Controller {
 				$excel_data = array();
 				$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'district expiries weekly report ', 'file_name' => 'district weekly report');
 				$row_data = array();
-				$column_data = array("Commodity Name", "Unit Size", "Quantity (packs)", "Quantity (units)", "Unit Cost(KSH)", "Total Expired(KSH)", "Date of Expiry", "Supplier", "Date Added", "Manufacturer", "Facility Name", "MFL Code", "Sub County", "County");
+				$column_data = array("Facility Name", "MFL Code", "Sub County", "County","Commodity Name", "Unit Size", "Quantity (packs)", "Quantity (units)", "Unit Cost(KSH)", "Total Expired(KSH)", "Date of Expiry", "Supplier", "Date Added", "Manufacturer");
 				$excel_data['column_data'] = $column_data;
 
 				foreach ($facility_total as $facility_total_1) :
 					foreach ($facility_total_1 as $facility_total_2) :
 						foreach ($facility_total_2 as $facility_total1) :
-							array_push($row_data, array($facility_total1["commodity_name"], $facility_total1["unit_size"], $facility_total1["packs"], $facility_total1["units"], $facility_total1["unit_cost"], $facility_total1["total"], $facility_total1["expiry_date"], $facility_total1["source_name"], $facility_total1["date_added"], $facility_total1["manufacture"], $facility_total1["facility_name"], $facility_total1["facility_code"], $facility_total1["subcounty"], $facility_total1["county"]));
+							array_push($row_data, array($facility_total1["facility_name"], $facility_total1["facility_code"], $facility_total1["subcounty"], $facility_total1["county"],$facility_total1["commodity_name"], $facility_total1["unit_size"], $facility_total1["packs"], $facility_total1["units"], $facility_total1["unit_cost"], $facility_total1["total"], $facility_total1["expiry_date"], $facility_total1["source_name"], $facility_total1["date_added"], $facility_total1["manufacture"]));
 							$sub_county_expiries_total = $sub_county_expiries_total + $facility_total1["total"];
 						endforeach;
 					endforeach;
@@ -910,7 +910,7 @@ class sms extends MY_Controller {
 			$excel_data = array();
 			$excel_data = array('doc_creator' => $district_name, 'doc_title' => 'county expiries weekly report ', 'file_name' => 'district report');
 			$row_data = array();
-			$column_data = array("Commodity Name", "Unit Size", "Quantity (packs)", "Quantity (units)", "Unit Cost(KSH)", "Total Expired(KSH)", "Date of Expiry", "Supplier", "Date Added", "Manufacturer", "Facility Name", "MFL Code", "Sub County", "County");
+			$column_data = array("Facility Name", "MFL Code", "Sub County", "County","Commodity Name", "Unit Size", "Quantity (packs)", "Quantity (units)", "Unit Cost(KSH)", "Total Expired(KSH)", "Date of Expiry", "Supplier", "Date Added", "Manufacturer");
 			$excel_data['column_data'] = $column_data;
 
 			foreach ($district_total as $facility_total_1) :
@@ -918,7 +918,7 @@ class sms extends MY_Controller {
 					foreach ($facility_total_2 as $facility_total_3) :
 						foreach ($facility_total_3 as $facility_total_4) :
 							foreach ($facility_total_4 as $facility_total1) :
-								array_push($row_data, array($facility_total1["commodity_name"], $facility_total1["unit_size"], $facility_total1["packs"], $facility_total1["units"], $facility_total1["unit_cost"], $facility_total1["total"], $facility_total1["expiry_date"], $facility_total1["source_name"], $facility_total1["date_added"], $facility_total1["manufacture"], $facility_total1["facility_name"], $facility_total1["facility_code"], $facility_total1["subcounty"], $facility_total1["county"]));
+								array_push($row_data, array($facility_total1["facility_name"], $facility_total1["facility_code"], $facility_total1["subcounty"], $facility_total1["county"],$facility_total1["commodity_name"], $facility_total1["unit_size"], $facility_total1["packs"], $facility_total1["units"], $facility_total1["unit_cost"], $facility_total1["total"], $facility_total1["expiry_date"], $facility_total1["source_name"], $facility_total1["date_added"], $facility_total1["manufacture"]));
 								$county_expiries_total = $county_expiries_total + $facility_total1["total"];
 							endforeach;
 						endforeach;
@@ -1745,7 +1745,7 @@ class sms extends MY_Controller {
 							<p>This email was automatically generated. Please do not respond to this email address or it will be ignored.</p>";
 
 				//$email_address = $this -> get_county_email($county_id);
-				//$email_address = "smutheu@clintonhealthaccess.org,kelvinmwas@gmail.com,collinsojenge@gmail.com";
+				//$email_address = "smutheu@clintonhealthaccess.org,kelvinmwas@gmail.com,karsanrichard@gmail.com";
 				$bcc = $this -> get_bcc_notifications();
 				if ($county_id == 1) :
 					$cc_email = $this -> get_bcc_notifications();
@@ -1864,7 +1864,7 @@ class sms extends MY_Controller {
 		//path for Mac
 		//$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 		$email_address = "smutheu@clintonhealthaccess.org,jaynerawz@gmail.com";
-		$bcc = "collinsojenge@gmail.com,kelvinmwas@gmail.com";
+		$bcc = "karsanrichard@gmail.com,kelvinmwas@gmail.com";
 
 		$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc);
 
@@ -1998,7 +1998,7 @@ class sms extends MY_Controller {
         //path for Mac
         //$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
         $email_address = "smutheu@clintonhealthaccess.org,jaynerawz@gmail.com";
-        $bcc = "collinsojenge@gmail.com,kelvinmwas@gmail.com";
+        $bcc = "karsanrichard@gmail.com,kelvinmwas@gmail.com";
 
         $this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc);
 
@@ -2076,7 +2076,7 @@ class sms extends MY_Controller {
         //path for Mac
         //$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
         $email_address = "smutheu@clintonhealthaccess.org,jaynerawz@gmail.com";
-        $bcc = "collinsojenge@gmail.com,kelvinmwas@gmail.com";
+        $bcc = "karsanrichard@gmail.com,kelvinmwas@gmail.com";
 
         $this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc);
 
@@ -2296,14 +2296,14 @@ class sms extends MY_Controller {
 			$path = $_SERVER["DOCUMENT_ROOT"];
 			$handler = $path . "/HCMPv2/pdf/" . $report_name;
 			write_file($handler, $this -> mpdf -> Output($report_name, 'S'));
-			//$email_address = "collinsojenge@gmail.com";
+			//$email_address = "karsanrichard@gmail.com";
 			$message = $html_body;
 			//echo $html_body;
 			//exit;
 			$subject = "Weekly Reports";
 			//Get the email address of the dpp to whom the email is going to
 			$email_address = $this -> get_ddp_email($district_id);
-			//$email_address = "collinsojenge@gmail.com";
+			//$email_address = "karsanrichard@gmail.com";
 			$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 		endif;
 	}
@@ -2320,7 +2320,7 @@ class sms extends MY_Controller {
 		ini_set("smtp_port", "465");
 		ini_set("max_execution_time", "50000");
 
-		$emails = "collinsojenge@gmail.com";
+		$emails = "karsanrichard@gmail.com";
 
 		//pulling emails from the DB
 		$this -> load -> library('email', $config);
