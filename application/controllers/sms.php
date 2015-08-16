@@ -849,7 +849,7 @@ class sms extends MY_Controller {
 						//the email of the receipients
 						$email_address = $this -> get_facility_email($facility_code);
 						//function for sending the actual email
-						// $this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
 					}
 
@@ -901,7 +901,7 @@ class sms extends MY_Controller {
 
 					//email address to receive
 					$email_address = $this -> get_ddp_email($district_id);
-					// $this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+					$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 				}
 
 			}
@@ -954,7 +954,7 @@ class sms extends MY_Controller {
 				$bcc = $this -> get_bcc_notifications();
 				$cc = $this -> get_county_email($county_id);
 
-				// $this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc);
+				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc, $cc);
 			}
 
 		}
