@@ -299,7 +299,7 @@ $(document).ready(function() {
 						"</tr>" 
                     });
          table_data +="</tbody></table>";
-         alert(table_data);
+         // alert(table_data);
     //hcmp custom message dialog
     dialog_box(table_data,'<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>'
     +'<button type="button" class="btn btn-primary" id="save_dem_order" data-dismiss="modal">Save</button>');

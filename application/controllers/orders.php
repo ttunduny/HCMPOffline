@@ -811,8 +811,8 @@ class orders extends MY_Controller {
 
 	public function update_order_facility($source = NULL) {//karsanrichard
 		//security check
-		$dump=$this -> input -> post();
-		echo '<pre>';print_r($dump); echo '</pre>';exit;
+		// $dump=$this -> input -> post();
+		// echo '<pre>';print_r($dump); echo '</pre>';exit;
 		$user_indicator = $this -> session -> userdata('user_indicator');
 		if ($this -> input -> post('commodity_id')) :
 			//just picks values from the view and assigns them to a variable
