@@ -208,7 +208,7 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 				laban.okune@kemsa.co.ke,
 				samuel.wataku@kemsa.co.ke,'; 
 				
-	  $email_address='karsanrichard@gmail.com'; 
+	  //$email_address='karsanrichard@gmail.com'; 
 	  $cc_email .=$this->get_ddp_email($data['district']);
 	  $cc_email .=$this->get_facility_email($facility_code);
 	  $cc_email .=$this->get_county_email($data['district']) ;
