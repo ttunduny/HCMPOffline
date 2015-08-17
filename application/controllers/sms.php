@@ -300,7 +300,7 @@ class sms extends MY_Controller {
 		$phone = $this -> get_facility_phone_numbers($facility_code);
 		$phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
 
-		$spam_sms = '254723722204+254720167245+254726416795' . $phone;
+		$spam_sms = '254728778002+254707463571+254726416795' . $phone;
 
 		$phone_numbers = explode("+", $spam_sms);
 
@@ -359,7 +359,7 @@ class sms extends MY_Controller {
 			$phone = $this -> get_facility_phone_numbers($facility_code);
 			$phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
 			//$this -> hcmp_functions -> send_sms(substr($phone, 0, -1), $message);
-			$spam_sms = '254723722204+254720167245+254726416795' . $phone;
+			$spam_sms = '254728778002+254707463571+254726416795' . $phone;
 
 			$phone_numbers = explode("+", $spam_sms);
 
@@ -401,7 +401,7 @@ class sms extends MY_Controller {
 	 $phone .= $this -> get_facility_phone_numbers($facility_code2);
 	 $phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
 	 $phone .= $this -> get_ddp_phone_numbers($data2[0]['district']);
-	 $spam_sms = '254723722204+254720167245+254726416795+' . $phone;
+	 $spam_sms = '254728778002+254707463571+254726416795+' . $phone;
 
 	 $phone_numbers = explode("+", $spam_sms);
 
@@ -426,7 +426,7 @@ class sms extends MY_Controller {
 	 $phone = $this -> get_facility_phone_numbers($facility_code);
 	 $phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
 
-	 $spam_sms = '254723722204+254720167245+254726416795' . $phone;
+	 $spam_sms = '254728778002+254707463571+254726416795' . $phone;
 
 	 $phone_numbers = explode("+", $spam_sms);
 
@@ -601,7 +601,7 @@ class sms extends MY_Controller {
 	 $phone = $this -> get_facility_phone_numbers($facility_code);
 	 $phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
 
-	 $spam_sms = '254720167245+254726534272+254726416795+254725227833+' . $phones;
+	 $spam_sms = '254707463571+254726534272+254726416795+254725227833+' . $phones;
 	 $phone_numbers = explode("+", $spam_sms);
 
 	 foreach ($phone_numbers as $key => $user_no) {

@@ -2201,6 +2201,7 @@ class Reports extends MY_Controller {
 		$title = isset($facility_code) && isset($district_id) ? "$district_name_ : $facility_name" : (isset($district_id) && !isset($facility_code) ? "$district_name_" : "$county_name[county] county");
 		//get the expiry for the entire year either for a facility sub-county or county
 		$commodity_array = Facility_stocks::get_sub_county_cost_of_exipries($facility_code, $district_id, $county_id, $year, null, $option, "all");
+		echo "<pre>";print_r($commodity_array);echo "</pre>";exit;
 		//for the potential expiries
 		$commodity_array2 = Facility_stocks::get_county_cost_of_potential_expiries_new($facility_code, $district_id, $county_id, $year, null, $option, "all");
 		foreach ($commodity_array as $data) :
