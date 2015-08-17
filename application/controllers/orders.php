@@ -811,8 +811,8 @@ class orders extends MY_Controller {
 
 	public function update_order_facility($source = NULL) {//karsanrichard
 		//security check
-		// $dump=$this -> input -> post();
-		// echo '<pre>';print_r($dump); echo '</pre>';exit;
+		$dump=$this -> input -> post();
+		echo '<pre>';print_r($dump); echo '</pre>';exit;
 		$user_indicator = $this -> session -> userdata('user_indicator');
 		if ($this -> input -> post('commodity_id')) :
 			//just picks values from the view and assigns them to a variable
@@ -876,7 +876,7 @@ class orders extends MY_Controller {
 					`commodity_id`,
 					`$column_packs`,
 					`$column_units`,
-					-- `price`,
+					`price`,
 					`o_balance`,
 					`t_receipts`,
 					`t_issues`,
@@ -886,13 +886,14 @@ class orders extends MY_Controller {
 					`comment`,
 					`c_stock`,
 					`amc`,
-					`adjustnve`)
+					`adjustnve`,
+					`source`)
 					VALUES ($facility_order_details_id[$i],
 					$order_id,
 					$commodity_id[$i],
 					$quantity_ordered_pack[$i],
 					$quantity_ordered_unit[$i],
-					-- $price[$i],
+					$price[$i],
 					$o_balance[$i],
 					$t_receipts[$i],
 					$t_issues[$i],
@@ -902,13 +903,14 @@ class orders extends MY_Controller {
 					'$comment[$i]',
 					$c_stock[$i],
 					$amc[$i],
-					$adjustnve[$i]
+					$adjustnve[$i],
+					$source
 					)
 					ON DUPLICATE KEY UPDATE
 					`commodity_id`=$commodity_id[$i],
 					`$column_packs`=$quantity_ordered_pack[$i],
 					`$column_units`=$quantity_ordered_unit[$i],
-					-- `price`=$price[$i],
+					`price`=$price[$i],
 					`o_balance`=$o_balance[$i],
 					`t_receipts`=$t_receipts[$i],
 					`t_issues`=$t_issues[$i],
@@ -933,7 +935,6 @@ class orders extends MY_Controller {
 			$myobj -> order_total = $order_total;
 			$facility_code = $myobj -> facility_code;
 
-			// echo "<pre>";print_r($myobj);exit;
 			$myobj1 = Doctrine::getTable('Facilities') -> findOneByfacility_code($facility_code);
 			$facility_name = $myobj1 -> facility_name;
 			//$pdf_body = $this -> create_order_pdf_template($order_id);

@@ -233,9 +233,8 @@ $query_results = Doctrine_Manager::getInstance()->getCurrentConnection()
  	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 		->fetchAll("SELECT order_total FROM hcmp_rtk.facility_orders WHERE id = $order_no;");	
 			
-	return $inserttransaction ;
-
- 	
+	return $inserttransaction ;	
  }
+
 }
 	
