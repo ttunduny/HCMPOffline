@@ -77,7 +77,7 @@ class facility_orders extends Doctrine_Record {
 		endif;
 		
 		$standard_query="
-		SELECT o.id, d.district, f.facility_name, f.facility_code, o.order_date, date_format( o.order_date, '%b %Y' ) AS mwaka, o.order_total
+		SELECT o.id, d.district, f.facility_name, f.facility_code, o.order_date, date_format( o.order_date, '%b %Y' ) AS mwaka, o.order_total,o.source
 		FROM districts d, facilities f, facility_orders o
 		WHERE f.district = d.id
 		AND o.facility_code = f.facility_code

@@ -654,17 +654,16 @@ class orders extends MY_Controller {
 
 				$subject = 'MEDS Order Made By ' . $facility_name;
 
+				$excel_order_value = $this-> get_excel_order_total($file_name,2);//karsan
+
 				}else{
 					// echo "CREATED";exit;
 				$file_name = $facility_name . '_facility_order_no_' . $new_order_no . "_KEMSA_date_created_" . date('d-m-y');
 
 					$result = $this -> hcmp_functions -> clone_excel_order_template($new_order_no, 'save_file', $file_name);
 					// echo "<pre>"; print_r($file_name);echo "</pre>";
-				$excel_order_value = $this-> get_excel_order_total($file_name);//karsan
-				//update_order_total_to_excel_total hack
-				$update_order_total_to_excel_total= Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("
-					UPDATE `facility_orders` SET `order_total`= $excel_order_value WHERE `id`= $new_order_no
-					");
+				$excel_order_value = $this-> get_excel_order_total($file_name,1);//karsan
+				
 				$message = '
 						<br>
 						Please find the Order Made by ' . $facility_name . ' attached.
@@ -692,7 +691,10 @@ class orders extends MY_Controller {
 				$subject = 'Order Pending Approval By Sub-County Pharmacist ' . $facility_name;
 				}
 				// echo("I REACH HERE");exit;
-
+				//update_order_total_to_excel_total hack
+				$update_order_total_to_excel_total= Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("
+					UPDATE `facility_orders` SET `order_total`= $excel_order_value WHERE `id`= $new_order_no
+					");
 				//create excel
 				$order_listing = 'facility';
 
@@ -760,9 +762,10 @@ class orders extends MY_Controller {
 	}
 
 	 
-	 public function get_excel_order_total($filename = NULL){
+	 public function get_excel_order_total($filename = NULL,$source = NULL){
 	 	// echo $filename;
- 	$filename =isset($filename) ? $filename.'.xls' : time().'.xls';
+ 		if ($source == 1) {
+ 			$filename =isset($filename) ? $filename.'.xls' : time().'.xls';
 	$inputFileName ="print_docs/excel/excel_files/".$filename;
 	$excel2 = PHPExcel_IOFactory::createReader('Excel5');
     $excel2=$objPHPExcel= $excel2->load($inputFileName); // Empty Sheet
@@ -776,6 +779,28 @@ class orders extends MY_Controller {
     $excel2->setActiveSheetIndex(0);
 
     return $value;
+ 		}elseif ($source == 2) {
+ 			$meds_total = 0;
+ 			$filename =isset($filename) ? $filename.'.xls' : time().'.xls';
+ 			$inputFileName ="print_docs/excel/excel_files/".$filename;
+			$excel2 = PHPExcel_IOFactory::createReader('Excel5');
+		    $excel2=$objPHPExcel= $excel2->load($inputFileName); // Empty Sheet
+		    
+		    $sheet = $objPHPExcel->getSheet(0); 
+		    $highestRow = $sheet->getHighestRow(); 
+			
+		    $highestColumn = $sheet->getHighestColumn();
+		    for ($i=0; $i < $highestRow ; $i++) { 
+			$value = $sheet->getCell("K$i" )->getCalculatedValue();
+			$meds_total = ($value > $meds_total)? $value: $meds_total;
+		    }
+			// echo $meds_total;
+		    $excel2->setActiveSheetIndex(0);
+
+ 			// echo $filename;exit;
+    return $meds_total;
+ 		}//end of if
+ 		
  	}
 
 
