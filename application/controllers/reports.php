@@ -373,8 +373,13 @@ class Reports extends MY_Controller {
 		$excel_data['row_data'] = $row_data;
 		$this -> hcmp_functions -> create_excel($excel_data);
 	}
-	public function create_excel_facility_order_template($order_id, $facility_code) {
+	public function create_excel_facility_order_template($order_id, $facility_code,$source) {
+		if ($source == 2) {
+		$this -> hcmp_functions -> clone_meds_excel_order_template($order_id, 'download_file');
+		}elseif ($source == 1) {
 		$this -> hcmp_functions -> clone_excel_order_template($order_id, 'download_file');
+		}
+
 	}
 	public function aggragate_order_new_sorf($order_id) {
 		$order_id_array = explode("_", $order_id);
