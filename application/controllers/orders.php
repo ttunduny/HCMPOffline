@@ -800,7 +800,7 @@ class orders extends MY_Controller {
  			// echo $filename;exit;
     return $meds_total;
  		}//end of if
- 		
+
  	}
 
 
@@ -870,12 +870,13 @@ class orders extends MY_Controller {
 
 				}
 
-				$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("INSERT INTO facility_order_details ( `id`,
+				$orders = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("INSERT INTO facility_order_details ( 
+					`id`,
 					`order_number_id`,
 					`commodity_id`,
 					`$column_packs`,
 					`$column_units`,
-					`price`,
+					-- `price`,
 					`o_balance`,
 					`t_receipts`,
 					`t_issues`,
@@ -885,14 +886,13 @@ class orders extends MY_Controller {
 					`comment`,
 					`c_stock`,
 					`amc`,
-					`adjustnve`,
-					`source`)
+					`adjustnve`)
 					VALUES ($facility_order_details_id[$i],
 					$order_id,
 					$commodity_id[$i],
 					$quantity_ordered_pack[$i],
 					$quantity_ordered_unit[$i],
-					$price[$i],
+					-- $price[$i],
 					$o_balance[$i],
 					$t_receipts[$i],
 					$t_issues[$i],
@@ -902,14 +902,13 @@ class orders extends MY_Controller {
 					'$comment[$i]',
 					$c_stock[$i],
 					$amc[$i],
-					$adjustnve[$i],
-					$source
+					$adjustnve[$i]
 					)
 					ON DUPLICATE KEY UPDATE
 					`commodity_id`=$commodity_id[$i],
 					`$column_packs`=$quantity_ordered_pack[$i],
 					`$column_units`=$quantity_ordered_unit[$i],
-					`price`=$price[$i],
+					-- `price`=$price[$i],
 					`o_balance`=$o_balance[$i],
 					`t_receipts`=$t_receipts[$i],
 					`t_issues`=$t_issues[$i],
@@ -934,6 +933,7 @@ class orders extends MY_Controller {
 			$myobj -> order_total = $order_total;
 			$facility_code = $myobj -> facility_code;
 
+			// echo "<pre>";print_r($myobj);exit;
 			$myobj1 = Doctrine::getTable('Facilities') -> findOneByfacility_code($facility_code);
 			$facility_name = $myobj1 -> facility_name;
 			//$pdf_body = $this -> create_order_pdf_template($order_id);
