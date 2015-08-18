@@ -12,23 +12,30 @@ class Hcmp_functions extends MY_Controller {
 	}
 	public function send_system_text($action)
 		{
+			$facility_name = $this -> session -> userdata('full_name');
+   			$facility_code=$this -> session -> userdata('facility_id');
+   			$county_id = $this -> session -> userdata('county_id');
+			$county_data = counties::get_county_name($county_id);
+			$district_id = $this -> session -> userdata('district_id');
+			$district_data = districts::get_district_name_($district_id);
+			$county_name = $county_data['county'];
+			$district_name = $district_data['district'];
+
 			switch($action):
 				//there are four functions the user performs
 				//redistribute, ordered, issue & decommissioned
 				case "redistribute";
 				//Facility Section of the message
 				//pick the details from the session
-				$facility_name = $this -> session -> userdata('full_name');
-	   			$facility_code=$this -> session -> userdata('facility_id');;
 	   			//pick the phone numbers for that facility
 	   			$data = Users::getUsers($facility_code)->toArray();
 				//get facility phone numbers
 				//$facility_phone = $this -> get_facility_phone_numbers($facility_code);
 				//facility message
-				$facility_message = "Dear $facility_name user, \n commodities have been redistributed to another facility. \n Log in to health-cmp.or.ke to follow up. HCMP";
+				$facility_message = "Dear $facility_name user, \nCommodities have been redistributed to another facility. \nLog in to health-cmp.or.ke to follow up. HCMP";
 				//url encode the message
 				$message = urlencode($facility_message);
-				$facility_phone = "254723722204+254720167245+254726416795";
+				$facility_phone = "254728778002+254707463571+254726416795";
 				//clean the phone numbers
 				$phone_numbers = explode("+", $facility_phone);
 				//send the message here
@@ -45,7 +52,7 @@ class Hcmp_functions extends MY_Controller {
 					//pick the name
 					$name_sub_county = $data['fname'] . " " . $data['lname'];
 					//message to be sent out to the sub county guys
-					$message = "Dear $name_sub_county user,\n $facility_name has redistributed commodities from its Store.\n Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
+					$message = "Dear $name_sub_county user,\n $facility_name has redistributed commodities from its store.\nFacility Name: $facility_name\nDistrict Name: $district_name\nLog in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 					$message = urlencode($message);
 					$user_no = $data['telephone'];
 					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
@@ -61,7 +68,7 @@ class Hcmp_functions extends MY_Controller {
 	   			$data = Users::getUsers($facility_code)->toArray();
 				//get facility phone numbers
 				//$facility_phone = $this -> get_facility_phone_numbers($facility_code);
-				$facility_phone = "254723722204+254720167245+254726416795";
+				$facility_phone = "254728778002+254707463571+254726416795";
 				//facility message
 				$facility_message = "Dear $facility_name user, \n an order has been placed. \n Log in to health-cmp.or.ke to follow up. HCMP";
 				//url encode the message
@@ -83,7 +90,7 @@ class Hcmp_functions extends MY_Controller {
 					//pick the name
 					$name_sub_county = $data['fname'] . " " . $data['lname'];
 					//message to be sent out to the sub county guys
-					$message = "Dear $name_sub_county user,\n $facility_name has placed an order.\n Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
+					$message = "Dear $name_sub_county user,\n $facility_name has placed an order.\nFacility Name: $facility_name\nDistrict Name: $district_name\nLog in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 					$message = urlencode($message);
 					$user_no = $data['telephone'];
 					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
@@ -98,9 +105,9 @@ class Hcmp_functions extends MY_Controller {
 	   			$data = Users::getUsers($facility_code)->toArray();
 				//get facility phone numbers
 				//$facility_phone = $this -> get_facility_phone_numbers($facility_code);
-					$facility_phone = "254723722204+254720167245+254726416795";
+					$facility_phone = "254728778002+254707463571+254726416795";
 				//facility message
-				$facility_message = "Dear $facility_name user, \n commodities have been decommissioned from the Store.\n Log in to health-cmp.or.ke to follow up. HCMP";
+				$facility_message = "Dear $facility_name user, \n commodities have been decommissioned from the Store.\nLog in to health-cmp.or.ke to follow up. HCMP";
 				//url encode the message
 				$message = urlencode($facility_message);
 				//clean the phone numbers
@@ -120,7 +127,7 @@ class Hcmp_functions extends MY_Controller {
 					//pick the name
 					$name_sub_county = $data['fname'] . " " . $data['lname'];
 					//message to be sent out to the sub county guys
-					$message = "Dear $name_sub_county user,\n $facility_name has decommissioned commodities from its store.\n Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
+					$message = "Dear $name_sub_county user,\n $facility_name has decommissioned commodities from its store.\nFacility Name: $facility_name\nDistrict Name: $district_name\nLog in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 					$message = urlencode($message);
 					$user_no = $data['telephone'];
 					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
@@ -136,9 +143,9 @@ class Hcmp_functions extends MY_Controller {
 	   			$data = Users::getUsers($facility_code)->toArray();
 				//get facility phone numbers
 				//$facility_phone = $this -> get_facility_phone_numbers($facility_code);
-					$facility_phone = "254723722204+254720167245+254726416795";
+					$facility_phone = "254728778002+254707463571+254726416795";
 				//facility message
-				$facility_message = "Dear $facility_name user, \n a stock update has been done in your facility Store.\n Log in to health-cmp.or.ke to follow up. HCMP";
+				$facility_message = "Dear $facility_name user, \nA stock update has been done in your facility store.\nLog in to health-cmp.or.ke to follow up. HCMP";
 				//url encode the message
 				$message = urlencode($facility_message);
 				//clean the phone numbers
@@ -158,7 +165,7 @@ class Hcmp_functions extends MY_Controller {
 					//pick the name
 					$name_sub_county = $data['fname'] . " " . $data['lname'];
 					//message to be sent out to the sub county guys
-					$message = "Dear $name_sub_county user,\n $facility_name has updated its stock in the facility Store.\n Log in to health-cmp.or.ke to follow up on the issue.\n HCMP";
+					$message = "Dear $name_sub_county user,\n $facility_name has updated its stock in the facility Store.\nFacility Name: $facility_name\nDistrict Name: $district_name\nLog in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 					$message = urlencode($message);
 					$user_no = $data['telephone'];
 					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
@@ -171,7 +178,7 @@ public function send_stock_update_sms(){
 	   $facility_code=$this -> session -> userdata('facility_id');;
 	   $data=Users::getUsers($facility_code)->toArray();
 
-	   $message= "Stock level for ".$facility_name." have been updated. HCMP";
+	   $message= "Stock levels for ".$facility_name." have been updated. HCMP";
        
 	   $phone=$this->get_facility_phone_numbers($facility_code);
 	   $phone .=$this->get_ddp_phone_numbers($data[0]['district']);
@@ -389,8 +396,8 @@ public function send_order_delivery_email($message,$subject,$attach_file=null){
 public function send_sms($phones,$message) {
 	
    $message=urlencode($message);
-   //$spam_sms='254726534272+254720167245';	
-   $spam_sms='254720167245+254726534272+254726416795+254725227833+'.$phones;
+   //$spam_sms='254726534272+254707463571';	
+   $spam_sms='254707463571+254726534272+254726416795+254725227833+'.$phones;
 //  $spam_sms='254726534272';
  	# code...
  	
