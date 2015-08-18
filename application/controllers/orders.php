@@ -843,7 +843,11 @@ class orders extends MY_Controller {
 			//order table details
 			$bed_capacity = '0';
 			$drawing_rights = '0';
-			$order_total = $this -> input -> post('total_order_value');
+			// $order_total = $this -> input -> post('total_order_value');
+			$order_total_ = facility_orders::get_order_cost($order_id);
+			$order_total = $order_total_[0]['order_total'];
+			// echo "<pre>";print_r($order_total);exit;
+
 			$order_no = '0';
 			//$facility_code=$this -> session -> userdata('facility_id');
 			//$user_id=$this->session->userdata('user_id');
@@ -893,7 +897,7 @@ class orders extends MY_Controller {
 					$commodity_id[$i],
 					$quantity_ordered_pack[$i],
 					$quantity_ordered_unit[$i],
-					$price[$i],
+					0,
 					$o_balance[$i],
 					$t_receipts[$i],
 					$t_issues[$i],
@@ -910,7 +914,7 @@ class orders extends MY_Controller {
 					`commodity_id`=$commodity_id[$i],
 					`$column_packs`=$quantity_ordered_pack[$i],
 					`$column_units`=$quantity_ordered_unit[$i],
-					`price`=$price[$i],
+					`price`=0,
 					`o_balance`=$o_balance[$i],
 					`t_receipts`=$t_receipts[$i],
 					`t_issues`=$t_issues[$i],
@@ -937,6 +941,7 @@ class orders extends MY_Controller {
 
 			$myobj1 = Doctrine::getTable('Facilities') -> findOneByfacility_code($facility_code);
 			$facility_name = $myobj1 -> facility_name;
+			
 			//$pdf_body = $this -> create_order_pdf_template($order_id);
 
 			$file_name = $facility_name . '_facility_order_no_' . $order_id . "_date_created_" . date('d-m-y');
@@ -1037,9 +1042,9 @@ class orders extends MY_Controller {
 						<br>
 						';
 
-			echo $tabledata;exit;
+			// echo $tabledata;exit;
 
-			$response = $this -> hcmp_functions -> send_order_approval_email($message, $subject, $attach_file, $facility_code, $status);
+			// $response = $this -> hcmp_functions -> send_order_approval_email($message, $subject, $attach_file, $facility_code, $status);
 
 			if ($response) {
 				delete_files($attach_file);
