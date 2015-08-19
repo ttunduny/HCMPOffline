@@ -2354,7 +2354,7 @@ class sms extends MY_Controller {
 		//delete the attachment after sending to avoid clog up of pdf'ss
 	}
 
-public function log_summary_weekly(){
+public function log_summary_weekly_view(){
 	    $time=date('M , d Y');
 			/*PRIOR TO CONVERSION TO NEW QUERY*/
 			/*Indented for nesting*/
@@ -2830,9 +2830,9 @@ public function log_summary_weekly(){
 			$data['column_data'] = $column_data;
 			$data['row_data'] = $row_data;
 			$data['title'] = "Weekly Log Summary";
-			$data['content_view'] = "shared_files/sms_weekly_usage";
+			$data['content_view'] = "Admin/log_summary_v";
 			$data['banner_text'] = "Weekly Log Summary";
-			$this -> load -> view("shared_files/template/template", $data);
+			$this -> load -> view("shared_files/template/dashboard_v", $data);
 		// echo 'This '.$res;exit;
 		
 		
@@ -2847,7 +2847,7 @@ public function log_summary_weekly(){
             
 		
        }
-    public function log_summary_weekly_send(){
+    public function log_summary_weekly(){
 	    $time=date('M , d Y');
 			/*PRIOR TO CONVERSION TO NEW QUERY*/
 			/*Indented for nesting*/
@@ -3391,12 +3391,12 @@ public function log_summary_weekly(){
 						$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 						$subject = "Weekly Log Summary as at ".$time;
 
-						// $email_address = "smutheu@clintonhealthaccess.org,jaynerawz@gmail.com,karsanrichard@gmail.com";
-                        $email_address = "ttunduny@gmail.com";
+						$email_address = "smutheu@clintonhealthaccess.org,jaynerawz@gmail.com,karsanrichard@gmail.com,ttunduny@gmail.com";
+                        // $email_address = "ttunduny@gmail.com";
                         //$bcc = "";
 						$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
-						redirect('sms/log_summary_weekly');
+						redirect('sms/log_summary_weekly_view');
 			
             
 			
