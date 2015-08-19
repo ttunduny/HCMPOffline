@@ -127,8 +127,8 @@ class Reports extends MY_Controller {
 	 |--------------------------------------------------------------------------
 	 */
 	//facility level potential expiries report
-	public function potential_expiries() {
-		$facility_code = $this -> session -> userdata('facility_id');
+	public function potential_expiries($f_code_ext = NULL) {
+		$facility_code = isset($f_code_ext)? $f_code_ext : $this -> session -> userdata('facility_id') ;
 		$data['title'] = "Reports";
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['facility_code'] = $this -> session -> userdata('facility_id');

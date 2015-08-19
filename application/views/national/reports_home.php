@@ -62,7 +62,7 @@
     	border-left: 6px solid #36BB24;
     }
     body {
-padding-top: 4.5%;
+padding-top: 6.5%;
 }
 
 .modal-content,.form-control
@@ -313,12 +313,12 @@ legend{
 							<input type="radio" name="doctype"  value="excel"/> Excel
 						</section>
 						
-						<section class="col-md-3">
+						<!-- <section class="col-md-3">
 							<input type="radio" name="doctype" id="web_graph" value="graph"/> Web Graph
-						</section>
-						<!--<section class="col-md-3">
+						</section> -->
+						<!-- <section class="col-md-3">
 							<input type="radio" name="doctype"  value="Table"/> Web Table
-						</section>-->
+						</section> -->
 						</section>
 			  	</fieldset>
 			</fieldset>
