@@ -8,6 +8,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 							<td>Health Facility</td>
 							<td>MFL</td>
 							<td>Date Ordered</td>
+							<td>Source</td>
 							<td>Order Value(Ksh)</td>
 							<td>Action</td>
 						</tr>
@@ -22,6 +23,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 							<td>Health Facility</td>
 							<td>MFL</td>
 							<td>Date Ordered</td>
+							<td>Source</td>
 							<td>Order Value(Ksh)</td>
 							<td>Action</td>
 						</tr>
@@ -36,6 +38,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 							<td>Health Facility</td>
 							<td>MFL</td>
 							<td>Date Ordered</td>
+							<td>Source</td>
 							<td>Order Value(Ksh)</td>
 							<td>Action</td>
 						</tr>
@@ -50,6 +53,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 							<td>Health Facility</td>
 							<td>MFL</td>
 							<td>Date Ordered</td>
+							<td>Source</td>
 							<td>Order Value(Ksh)</td>
 							<td>Action</td>
 						</tr>
@@ -64,6 +68,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 							<td>Health Facility</td>
 							<td>MFL</td>
 							<td>Date Ordered</td>
+							<td>Source</td>
 							<td>Order Value(Ksh)</td>
 							<td>Action</td>
 						</tr>
@@ -206,7 +211,8 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 		foreach ($pending_all as $key => $value) {
 			
 			$link=base_url('orders/get_facility_sorf/'.$value['id'].'/'.$mfl);
-			$link_excel=base_url('reports/create_excel_facility_order_template/'.$value['id'].'/'.$mfl);	
+			$link_excel=base_url('reports/create_excel_facility_order_template/'.$value['id'].'/NULL/'.$value['source']);
+	
 			if ($identifier==='county') {
 				$link2=base_url('orders/order_last_phase/'.$value['id']);
 			}elseif($identifier==='district'){
@@ -223,6 +229,13 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			<td><?php echo $value['facility_name']; ?></td>
 			<td><?php echo $value['facility_code']; ?></td>
 			<td><?php echo $value['mwaka']; ?></td>
+			<td><?php 
+			if ($value['source'] == 2) {
+				echo "MEDS";
+			}elseif ($value['source'] == 1) {
+				echo "KEMSA";
+			}
+			?></td>
 			<td><?php echo number_format($value['order_total'], 2, '.', ','); ?></td>
 			<td>
 			<!--	<a href='<?php echo $link; ?>' target="_blank">
@@ -252,7 +265,8 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 	//echo "<pre>";	print_r($pending_cty);
 		foreach ($pending_cty as $key => $value) {
 			$link=base_url('orders/get_facility_sorf/'.$value['id'].'/'.$mfl);
-			$link_excel=base_url('reports/create_excel_facility_order_template/'.$value['id'].'/'.$mfl);	
+			$link_excel=base_url('reports/create_excel_facility_order_template/'.$value['id'].'/NULL/'.$value['source']);
+	
 			
 			
 			?>
@@ -263,6 +277,13 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			<td><?php echo $value['facility_name']; ?></td>
 			<td><?php echo $value['facility_code']; ?></td>
 			<td><?php echo $value['mwaka']; ?></td>
+			<td><?php 
+			if ($value['source'] == 2) {
+				echo "MEDS";
+			}elseif ($value['source'] == 1) {
+				echo "KEMSA";
+			}
+			?></td>
 			<td><?php echo number_format($value['order_total'], 2, '.', ','); ?></td>
 			<td>
 				<!--<a href='<?php echo $link; ?>' target="_blank">
@@ -321,9 +342,10 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
   	
   	<?php
     	echo $theader4;
+    	// echo "<pre>";print_r($approved);
 		foreach ($approved as $key => $value) {
 			$link=base_url('orders/get_facility_sorf/'.$value['id'].'/'.$mfl); 
-			$link_excel=base_url('reports/create_excel_facility_order_template/'.$value['id'].'/'.$mfl);
+			$link_excel=base_url('reports/create_excel_facility_order_template/'.$value['id'].'/NULL/'.$value['source']);
 			$link2=base_url('orders/update_facility_order/'.$value['id']."/0/readonly");
 			$link3=base_url('orders/update_order_delivery/'.$value['id']);
 			
@@ -335,6 +357,13 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			<td><?php echo $value['facility_name']; ?></td>
 			<td><?php echo $value['facility_code']; ?></td>
 			<td><?php echo $value['mwaka']; ?></td>
+			<td><?php 
+			if ($value['source'] == 2) {
+				echo "MEDS";
+			}elseif ($value['source'] == 1) {
+				echo "KEMSA";
+			}
+			?></td>
 			<td><?php echo number_format($value['order_total'], 2, '.', ','); ?></td>
 			<td><?php  if ($identifier==='facility' ||$identifier==='facility_admin') {
 				
@@ -375,7 +404,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 		foreach ($delivered as $key => $value) {
 			$mfl=$value['facility_name'];
 			$link=base_url('orders/get_facility_sorf/'.$value['id'].'/'.$mfl);	
-			$link_excel=base_url('reports/create_excel_facility_order_template/'.$value['id'].'/'.$mfl);
+			$link_excel=base_url('reports/create_excel_facility_order_template/'.$value['id'].'/NULL/'.$value['source']);
 			$link2=base_url().'reports/order_delivery/'.$value['id'];//view the order
 			$link3=base_url().'reports/download_order_delivery/'.$value['id'];
 			?>
@@ -386,6 +415,13 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			<td><?php echo $value['facility_name']; ?></td>
 			<td><?php echo $value['facility_code']; ?></td>
 			<td><?php echo $value['mwaka']; ?></td>
+			<td><?php 
+			if ($value['source'] == 2) {
+				echo "MEDS";
+			}elseif ($value['source'] == 1) {
+				echo "KEMSA";
+			}
+			?></td>
 			<td><?php echo number_format($value['order_total'], 2, '.', ','); ?></td>
 			<td>
 				<!--<a href='<?php echo $link;?>' target="_blank">

@@ -1120,7 +1120,6 @@ public static function get_tracer_items_report_new($facility_code, $district_id,
 		$group_by_a_month = isset($facility_code) && isset($district_id) ? " GROUP BY fs.commodity_id having total>0" : (isset($district_id) && !isset($facility_code) ? " GROUP BY f.facility_code having total>0" : " GROUP BY d.id having total>0");
 		$group_by = ($data_for == 'all') ? "GROUP BY month(expiry_date) asc" : $group_by_a_month;
 
-		//exit;
 		$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT d.commodity_name,  f.facility_name, di.district, $select_option  date_format(expiry_date,'%M') AS month, $computation  
      FROM facility_stocks fs, facilities f, commodities d, counties c, districts di
      WHERE fs.facility_code = f.facility_code

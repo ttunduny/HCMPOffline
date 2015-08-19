@@ -127,8 +127,8 @@ class Reports extends MY_Controller {
 	 |--------------------------------------------------------------------------
 	 */
 	//facility level potential expiries report
-	public function potential_expiries() {
-		$facility_code = $this -> session -> userdata('facility_id');
+	public function potential_expiries($f_code_ext = NULL) {
+		$facility_code = isset($f_code_ext)? $f_code_ext : $this -> session -> userdata('facility_id') ;
 		$data['title'] = "Reports";
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['facility_code'] = $this -> session -> userdata('facility_id');
@@ -311,7 +311,8 @@ class Reports extends MY_Controller {
 		$pdf_data = array("pdf_title" => "Order Report For $test[facility_name]", 'pdf_html_body' => $test['table'], 'pdf_view_option' => 'view_file', 'file_name' => $file_name);
 		$this -> hcmp_functions -> create_pdf($pdf_data);
 	}
-	public function order_listing($for, $report = null) {
+	public function order_listing($for, $report = null , $file_name = NULL) {
+		// redirect("orders/download_contents", 'refresh');
 		$facility_code = $county_id = $district_id = null;
 		if ($for == 'facility') :
 			$facility_code = $this -> session -> userdata('facility_id');
@@ -372,8 +373,13 @@ class Reports extends MY_Controller {
 		$excel_data['row_data'] = $row_data;
 		$this -> hcmp_functions -> create_excel($excel_data);
 	}
-	public function create_excel_facility_order_template($order_id, $facility_code) {
+	public function create_excel_facility_order_template($order_id, $facility_code,$source) {
+		if ($source == 2) {
+		$this -> hcmp_functions -> clone_meds_excel_order_template($order_id, 'download_file');
+		}elseif ($source == 1) {
 		$this -> hcmp_functions -> clone_excel_order_template($order_id, 'download_file');
+		}
+
 	}
 	public function aggragate_order_new_sorf($order_id) {
 		$order_id_array = explode("_", $order_id);
@@ -2195,6 +2201,7 @@ class Reports extends MY_Controller {
 		$title = isset($facility_code) && isset($district_id) ? "$district_name_ : $facility_name" : (isset($district_id) && !isset($facility_code) ? "$district_name_" : "$county_name[county] county");
 		//get the expiry for the entire year either for a facility sub-county or county
 		$commodity_array = Facility_stocks::get_sub_county_cost_of_exipries($facility_code, $district_id, $county_id, $year, null, $option, "all");
+		// echo "<pre>";print_r($commodity_array);echo "</pre>";exit;
 		//for the potential expiries
 		$commodity_array2 = Facility_stocks::get_county_cost_of_potential_expiries_new($facility_code, $district_id, $county_id, $year, null, $option, "all");
 		foreach ($commodity_array as $data) :
