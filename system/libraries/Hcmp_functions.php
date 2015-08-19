@@ -10,7 +10,7 @@ class Hcmp_functions extends MY_Controller {
 		$this -> load -> library(array('PHPExcel/PHPExcel','mpdf/mpdf'));
 
 	}
-	public function send_system_text($action)
+public function send_system_text($action)
 		{
 			$facility_name = $this -> session -> userdata('full_name');
    			$facility_code=$this -> session -> userdata('facility_id');
@@ -30,13 +30,12 @@ class Hcmp_functions extends MY_Controller {
 	   			//pick the phone numbers for that facility
 	   			$data = Users::getUsers($facility_code)->toArray();
 				//get facility phone numbers
-				$facility_phone = $this -> get_facility_phone_numbers($facility_code);
+				//$facility_phone = $this -> get_facility_phone_numbers($facility_code);
 				//facility message
 				$facility_message = "Dear $facility_name user, \nCommodities have been redistributed to another facility. \nLog in to health-cmp.or.ke to follow up. HCMP";
 				//url encode the message
 				$message = urlencode($facility_message);
-				$facility_phone .= "254728778002+254707463571";
-				echo "<pre>";print_r($facility_phone);exit;
+				$facility_phone = "254728778002+254707463571";
 				//clean the phone numbers
 				$phone_numbers = explode("+", $facility_phone);
 				//send the message here
@@ -105,8 +104,8 @@ class Hcmp_functions extends MY_Controller {
 	   			//pick the phone numbers for that facility
 	   			$data = Users::getUsers($facility_code)->toArray();
 				//get facility phone numbers
-				$facility_phone = $this -> get_facility_phone_numbers($facility_code);
-					$facility_phone .= "254728778002+254707463571";
+				//$facility_phone = $this -> get_facility_phone_numbers($facility_code);
+					$facility_phone = "254728778002+254707463571";
 				//facility message
 				$facility_message = "Dear $facility_name user, \n commodities have been decommissioned from the Store.\nLog in to health-cmp.or.ke to follow up. HCMP";
 				//url encode the message
@@ -143,8 +142,8 @@ class Hcmp_functions extends MY_Controller {
 	   			//pick the phone numbers for that facility
 	   			$data = Users::getUsers($facility_code)->toArray();
 				//get facility phone numbers
-				$facility_phone = $this -> get_facility_phone_numbers($facility_code);
-					$facility_phone .= "254728778002+254707463571";
+				//$facility_phone = $this -> get_facility_phone_numbers($facility_code);
+					$facility_phone = "254728778002+254707463571";
 				//facility message
 				$facility_message = "Dear $facility_name user, \nA stock update has been done in your facility store.\nLog in to health-cmp.or.ke to follow up. HCMP";
 				//url encode the message
@@ -187,6 +186,7 @@ public function send_stock_update_sms(){
 	   $this->send_sms(substr($phone,0,-1),$message);
 
 	}
+
 public function send_stock_donate_sms(){
 		
        $facility_name = $this -> session -> userdata('full_name');
@@ -397,8 +397,8 @@ public function send_order_delivery_email($message,$subject,$attach_file=null){
 public function send_sms($phones,$message) {
 	
    $message=urlencode($message);
-   //$spam_sms='254726534272+254707463571';	
-   $spam_sms='254707463571+254726534272+254726416795+254725227833+'.$phones;
+   //$spam_sms='254726534272+254720167245';	
+   $spam_sms='254720167245+254726534272+254726416795+254725227833+'.$phones;
 //  $spam_sms='254726534272';
  	# code...
  	
