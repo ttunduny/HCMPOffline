@@ -332,7 +332,7 @@ class Facilities extends Doctrine_Record {
     
 	}
 
-	public function get_facility_data_specific($report_type,$county,$district_id = NULL,$facility_code = NULL){
+	public function get_facility_data_specific($report_type,$county,$district_id = NULL,$facility_code = NULL,$scope = NULL){
 		/*
 		@author karsan AS AT 2015-08-04
 		*/
@@ -347,7 +347,7 @@ class Facilities extends Doctrine_Record {
 					");
 			}
 		}else{
-			if ($all = 'all') {
+			if ($scope = 'all') {
 					// echo "I WORK";exit;
 					$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		             CALL facility_monitoring_new('all','$county','$report_type');

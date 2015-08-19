@@ -106,16 +106,16 @@ legend{
         </div>
         <div class="navbar-header" >
   
-            <a href="<?php echo base_url().'national';?>">   
+            <a href="<?php echo base_url().'kenya';?>">   
             <img style="display:inline-block;"  src="<?php echo base_url();?>assets/img/coat_of_arms_dash.png" class="img-responsive " alt="Responsive image" id="logo" ></a>
             
         </div>
         
         <div class="collapse navbar-collapse navbar-right">
           <ul class="nav navbar-nav navbar-right">
-            <li class=""><a href="<?php echo base_url().'national';?>">Home</a></li>
+            <li class=""><a href="<?php echo base_url().'kenya';?>">Home</a></li>
             <li class="active"><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>
-            <li class=""><a href="<?php echo base_url().'national/search';?>">Search</a></li>
+            <!-- <li class=""><a href="<?php echo base_url().'national/search';?>">Search</a></li> -->
             <li class="dropdown" style="background: #144d6e; color: white;">
      		<a href="#" class="dropdown-toggle" style="color:white" data-toggle="dropdown" role="button" aria-expanded="false">Log In <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
