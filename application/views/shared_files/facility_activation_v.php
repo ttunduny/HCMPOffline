@@ -1043,8 +1043,8 @@ $("#create_new").click(function() {
         <h4 class="modal-title">Confirm Activation</h4>
       </div>
       <div class="modal-body" style="font-size:13px;text-align:centre">
-        <p>The Facility will now be Active and users will be able to submit data. <p/>
-        <p>Proceed to Addition of Users?</p>
+        <p>The Facility will now be active and users will be able to submit data. <p/>
+        <p>Proceed to addition of Users?</p>
       </div>
       <div class="modal-footer">
         <button type="button"  id="btnNoActivate" class="btn btn-default" data-dismiss="modal">No</button>
