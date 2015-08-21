@@ -959,7 +959,7 @@ endif;
 					$no_of_facilities = 0;
 				}else{
 					$data['facilities']=Facilities::getFacilities_from_facility_code($facility_code);
-					$facility_name = ' to '.$data['facilities'][0]['facility_name'];					
+					$facility_name = ' to: '.$data['facilities'][0]['facility_name'];					
 					$no_of_facilities = 1;					
 				}
 				
