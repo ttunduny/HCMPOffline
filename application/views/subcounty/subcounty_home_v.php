@@ -111,7 +111,7 @@ $identifier = $this -> session -> userdata('user_indicator');
                         </h4></a>
                         </h4>
                     <!-- </div> -->
-                    
+                    <!--Hoping this Will Make Link Visisble !-->
                    <div id="collapseTwo" class="panel-collapse collapse <?php echo $active_panel=='stocking_levels'? 'in': null; ?>">
                          <div class="panel-body">
                             <table class="table">
