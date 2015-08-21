@@ -1021,7 +1021,7 @@ endif;
 
         $data['title'] = "Add Multiple Users";
 		$data['user_types']=Access_level::get_access_levels($permissions);	
-		$data['banner_text'] = "Addition of users".$facility_banner_text;
+		$data['banner_text'] = "Multiple User Addition";
 		$data['facility_name'] = $facility_name;
 		$data['facility_code'] = $facility_code;
 		$data['facility_banner_text'] = $facility_banner_text;

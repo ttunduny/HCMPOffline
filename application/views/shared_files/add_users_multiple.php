@@ -13,7 +13,7 @@ font-size: 12px !important;
 
 	<div class="row">
 		<div class="col-md-6" id=""><p class="bg-info"><span class="badge ">1</span>
-		<strong>Add multiple Users Below <?php echo $facility_banner_text; ?></strong></p></div>
+		<strong>Add multiple users <?php echo $facility_banner_text; ?></strong></p></div>
 		<div class="col-md-6" id="">
 
 	</div>
