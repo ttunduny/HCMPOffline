@@ -602,7 +602,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 		$and_data .= ($facility_code > 0) ? " AND f.facility_code = '$facility_code'" : null;
 		$and_data .= ($county_id > 0) ? " AND counties.id='$county_id'" : null;
 		$and_data = isset($and_data) ? $and_data : null;
-		$and_data .= isset($commodity_id) ? "AND d.id =$commodity_id" : "AND d.tracer_item =1";
+		$and_data .= isset($commodity_id) ? "AND commodity.id =$commodity_id" : "AND commodity.tracer_item =1";
 
 		$group_by = ($district_id > 0 && isset($county_id) && !isset($facility_code)) ? " ,d.id" : null;
 		$group_by .= ($facility_code > 0 && isset($district_id)) ? "  ,f.facility_code" : null;
