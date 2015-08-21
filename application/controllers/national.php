@@ -818,8 +818,8 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 			echo'</tr>';
 		}
 		echo '</table>';
-		exit;
-		
+		// exit;
+		/*
 			$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> 
 			fetchAll("select 
 					   c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.commodity_name as drug_name,
@@ -845,11 +845,14 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 					group by d.id,f.facility_code
 					order by c.county asc,d1.district asc
 			        ");
+			*/
 
 			foreach ($facility_stock_data as $facility_stock_data_item) :
 				array_push($row_data, array($facility_stock_data_item["county"], $facility_stock_data_item["subcounty"], $facility_stock_data_item["facility_name"], $facility_stock_data_item["facility_code"], $facility_stock_data_item["drug_name"], $facility_stock_data_item["total"]));
 			endforeach;
 			$excel_data['row_data'] = $row_data;
+
+			echo "<pre>";print_r($row_data);echo "</pre>";exit;
 
 			$this -> hcmp_functions -> create_excel($excel_data);
 		endif;
