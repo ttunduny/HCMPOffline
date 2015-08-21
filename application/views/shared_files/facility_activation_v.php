@@ -1064,7 +1064,7 @@ $("#create_new").click(function() {
       <div class="modal-body" style="font-size:14px;text-align:centre">
       <center>
       	<!-- <center><img src="<?php echo base_url().'assets/img/Alert_resized.png'?>" style="height:150px;width:150px;"></center><br/> -->
-        <p>The Folowing Users are currently Active Under this Facility. Deactivating this Facility will render them unable to use the system.</p>
+        <p>The Folowing Users are currently active Under this facility. Deactivation of the facility will render them unable to use the system.</p>
         <table  id="confirm_deactivate_table" class="display table table-bordered confirm_deactivate_table" cellspacing="0" width="100%">
         	<thead>
         		<tr><th>User Details</th><th>Date Activated</th><th>Date Last Logged In</th></tr>
