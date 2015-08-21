@@ -24,7 +24,7 @@ font-size: 12px !important;
 	<center>
 	<div style="width:94%">
 <div class="table-responsive" style="min-height:300px; overflow-y: auto;">
- <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('user/users_create_multiple',$att); ?>
+ <?php $att=array("name"=>'myform','id'=>'myform','method'=>'post','enctype'=>'application/x-www-form-urlencoded'); echo form_open('user/users_create_multiple',$att); ?>
 <table  class="table table-hover table-bordered table-update" id="add_multiple_users_table"> 
 	<thead style="background-color: white">
 		<tr>
@@ -40,9 +40,9 @@ font-size: 12px !important;
 
 			if ($identifier=='county') {
 			?>
-			<th>Subcounty Name</th>
+			<!-- <th>Subcounty Name</th> -->
 			<?php } ?>
-			<th>Facility Name</th>	 
+			<!-- <th>Facility Name</th>	  -->
 			<th>Action</th>   
 		</tr>
 	</thead>
@@ -77,7 +77,7 @@ font-size: 12px !important;
 									</select>
 						</div>
 						</td>
-						<td>
+						<!-- <td> -->
 							<?php
 
 									$identifier = $this -> session -> userdata('user_indicator');
@@ -85,52 +85,19 @@ font-size: 12px !important;
 									if ($identifier=='district') {
 									?>
 									<div class="input-group form-group u_mgt">
-										<select class="form-control facility_id" id="facility_id" name="facility_id[0]" required="required">
-											<?php 
-												if(count($facilities)>1){?>
-													<option value='NULL'>Select Facility</option>
-												<?php }							
-												
-											
-												foreach ($facilities as $facility) :
-													$id = $facility ['facility_code'];
-													$facility_name = $facility ['facility_name'];
-													echo "<option value='$id'>$facility_name</option>";
-												endforeach;
-												?>
-											</select>
+									<input type="hidden" class="form-control facility_id" id="facility_id" name="facility_id[0]"/>
+										
 									</div>
 
 
 									<?php }elseif ($identifier=='county') { ?>
 									<div class="input-group form-group u_mgt">
-										<select class="form-control district_name" id="district_name" name="district_name[0]" required="required">
-											<?php 
-												if($district_name!=''){
-													echo "<option value='$district_id'>$district_name</option>";
-												}else{?>
-												<option value=''>Select Sub-County</option>
-
-												<?php
-												foreach ($district_data as $district_) :
-													$district_id = $district_ ['id'];
-													$district_name = $district_ ['district'];
-													echo "<option value='$district_id'>$district_name</option>";
-												endforeach;
-												}?>
-										</select>
+										<input type="hidden" class="form-control district_name" id="district_name" name="district_name[0]"/>										
 									</div>
-									</td>
-									<td>
+									<!-- </td> -->
+									<!-- <td> -->
 									<div class="input-group form-group u_mgt">
-										<select class="form-control facility_id" id="facility_id" name="facility_id[0]" required="required">
-											<?php 
-											if($facility_name!=''){
-												echo "<option value='$facility_code'>$facility_name</option>";
-											}else{?>
-											<option value="">Select Facility</option>
-											<?php }?>	
-										</select>
+										<input type="hidden" class="form-control facility_id" id="facility_id" name="facility_id[0]"/>										
 
 									</div>
 
@@ -151,7 +118,7 @@ font-size: 12px !important;
 										</select>
 								</div>
 								<?php }?>
-						</td>
+						<!-- </td> -->
 						<td>
 							<button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>row</button>
 							<button type="button" id="step7" class="add btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span>row</button>
@@ -170,14 +137,18 @@ font-size: 12px !important;
 				</button>
 </div>
 </div>
-<?php echo form_close();?>
+</form>
+<?php //echo form_close();?>
 <script>
 $(document).ready(function() {	
 		var no_of_facilities = '<?php echo $no_of_facilities;?>';
 		var district_name = '<?php echo $district_name;?>';
+		var district_id = '<?php echo $district_id;?>';
+		var facility_code = '<?php echo $facility_code;?>';
 		if(no_of_facilities==1)
 		{
-			// $('.facility_id').attr("disabled","disabled");
+			$('.facility_id').val(facility_code);
+			$('.district_name').val(district_id);
 		}
 		var count_rows=0;
 $("#create_new").click(function(){
