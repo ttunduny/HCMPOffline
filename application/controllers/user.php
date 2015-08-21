@@ -1192,13 +1192,13 @@ endif;
 
 		public function users_create_multiple(){
 
-			// echo "<pre>";prisnt_r($this->input->post());echo "</pre>";
+			// echo "<pre>";print_r($this->input->post());echo "</pre>";die;
 			$count = count($this->input->post('username'));
 			for ($i=0; $i < $count; $i++) { 
 				$fname = $this->input->post('first_name')[$i];
 				$lname = $this->input->post('last_name')[$i];
 				$email_address = $this->input->post('email')[$i];
-				$username = $this->input->post('username')[$i];
+				$username = $this->input->post('email')[$i];
 				$password;
 				$telephone = $this->input->post('telephone')[$i];
 				$user_type = $this->input->post('user_type')[$i];
