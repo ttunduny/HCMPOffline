@@ -181,6 +181,7 @@
                         <li><a class="icon icon-study" href="<?php echo base_url().'admin/manage_commodities';?>">Commodities</a></li>
                         <li><a class="icon icon-location" href="<?php echo base_url().'admin/manage_users';?>">User Management</a></li>
                         <li><a class="icon icon-photo" href="<?php echo base_url().'admin/manage_facilities'?>">Facility Management</a></li>
+                        <li><a class="icon icon-wallet" href="<?php echo base_url().'sms/log_summary_weekly_view'?>"">Weekly Usage</a></li>
                         <li><a class="icon icon-wallet" href="#">Counties</a></li>
                         <li><a class="icon icon-wallet" href="#">Sub-Counties</a></li>
                         <li><a class="icon icon-photo" href="<?php echo base_url().'admin/report_management'?>">Report Management</a></li>

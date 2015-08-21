@@ -13,7 +13,7 @@ font-size: 12px !important;
 
 	<div class="row">
 		<div class="col-md-6" id=""><p class="bg-info"><span class="badge ">1</span>
-		<strong>Add multiple Users Below</strong></p></div>
+		<strong>Add multiple Users Below <?php echo $facility_name; ?></strong></p></div>
 		<div class="col-md-6" id="">
 
 	</div>
@@ -21,16 +21,18 @@ font-size: 12px !important;
 	
 		
 	<hr />
+	<center>
+	<div style="width:94%">
 <div class="table-responsive" style="min-height:300px; overflow-y: auto;">
  <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('user/users_create_multiple',$att); ?>
-<table  class="table table-hover table-bordered table-update" id="add_multiple_users_table" >
+<table  class="table table-hover table-bordered table-update" id="add_multiple_users_table"> 
 	<thead style="background-color: white">
 		<tr>
 			<th>First Name</th>
 			<th>Last Name</th>
 			<th>Phone Number</th>
 			<th>Email</th>
-			<th>User Name</th>
+			<!-- <th>User Name</th> -->
 			<th>User Type</th>
 			<?php
 
@@ -53,14 +55,14 @@ font-size: 12px !important;
 						<input type="text" name="last_name[0]" required="required" id="last_name" class="form-control last_name" placeholder="Last Name" >
 						</td>
 						<td>
-						<input type="telephone" name="telephone[0]" required="required" id="telephone" class="form-control telephone" placeholder="Enter Phone Number eg, 254" tabindex="5">
+						<input type="telephone" name="telephone[0]" required="required" id="telephone" class="form-control telephone" placeholder="254 XXX XXX XXX" tabindex="5">
 						</td>
 						<td>
 						<input type="email" name="email[0]" id="email" required="required" class="form-control email" placeholder="email@domain.com" tabindex="6">
 						</td>
-						<td>
-						<input type="email" name="username[0]" id="username" required="required" class="form-control username" placeholder="email@domain.com" tabindex="5" >
-						</td>
+						<!-- <td> -->
+						<input type="hidden" name="username[0]" id="username" required="required" class="form-control username" placeholder="email@domain.com" tabindex="5" >
+						<!-- </td> -->
 						<td>
 						<div class="input-group form-group u_mgt">
 									<select class="form-control user_type" id="user_type" name="user_type[0]" required="required">
@@ -150,6 +152,8 @@ font-size: 12px !important;
 		           </tbody>
 		           </table>
 </div>
+</div>
+</center>
 <hr />
 <div class="container-fluid">
 <div style="float: right">
@@ -161,8 +165,12 @@ font-size: 12px !important;
 <?php echo form_close();?>
 <script>
 $(document).ready(function() {	
-
-			var count_rows=0;
+		var no_of_facilities = '<?php echo $no_of_facilities;?>';
+		if(no_of_facilities==1)
+		{
+			// $('.facility_id').attr("disabled","disabled");
+		}
+		var count_rows=0;
 $("#create_new").click(function(){
 	$("#myform").submit();
 });

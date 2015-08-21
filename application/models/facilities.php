@@ -152,6 +152,13 @@ class Facilities extends Doctrine_Record {
 		$drugs = $query -> execute();
 		return $drugs;
 	}
+
+	public static function getFacilities_from_facility_code($facility_code){
+		
+		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("facility_code='$facility_code' AND using_hcmp=1")->OrderBy("facility_name asc");
+		$drugs = $query -> execute();
+		return $drugs;
+	}
 	public static function get_Facilities_using_HCMP($county_id = null, $district_id = null)
 	{
 		$and_data =(isset($county_id)&& ($county_id>0)) ?" AND d.county = $county_id" : null;
