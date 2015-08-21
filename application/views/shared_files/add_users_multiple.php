@@ -21,9 +21,11 @@ font-size: 12px !important;
 	
 		
 	<hr />
+	<center>
+	<div style="width:94%">
 <div class="table-responsive" style="min-height:300px; overflow-y: auto;">
  <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('user/users_create_multiple',$att); ?>
-<table  class="table table-hover table-bordered table-update" id="add_multiple_users_table" >
+<table  class="table table-hover table-bordered table-update" id="add_multiple_users_table"> 
 	<thead style="background-color: white">
 		<tr>
 			<th>First Name</th>
@@ -150,6 +152,8 @@ font-size: 12px !important;
 		           </tbody>
 		           </table>
 </div>
+</div>
+</center>
 <hr />
 <div class="container-fluid">
 <div style="float: right">
