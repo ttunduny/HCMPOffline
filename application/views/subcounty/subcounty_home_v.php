@@ -110,7 +110,7 @@ $identifier = $this -> session -> userdata('user_indicator');
                             </span>System Usage</a>
                         </h4></a>
                         </h4>
-                    <!-- </div> -->
+                    </div>
                     <div class="panel-body">
                         <table class="table">
                             <tr>
