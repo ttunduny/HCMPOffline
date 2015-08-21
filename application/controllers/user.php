@@ -956,10 +956,12 @@ endif;
 				if($facility_code==0){
 					$data['facilities']=Facilities::getFacilities($district);
 					$facility_name = null;
+					$facility_banner_text = null;
 					$no_of_facilities = 0;
 				}else{
 					$data['facilities']=Facilities::getFacilities_from_facility_code($facility_code);
-					$facility_name = ' to: '.$data['facilities'][0]['facility_name'];					
+					$facility_banner_text =  ' to: '.$data['facilities'][0]['facility_name'];			
+					$facility_name = $data['facilities'][0]['facility_name'];						
 					$no_of_facilities = 1;					
 				}
 				
@@ -1002,7 +1004,7 @@ endif;
 					$no_of_facilities = 0;
 				}else{
 					$data['facilities']=Facilities::getFacilities_from_facility_code($facility_code);
-					$facility_banner_text =  ' to '.$data['facilities'][0]['facility_name'];			
+					$facility_banner_text =  ' to: '.$data['facilities'][0]['facility_name'];			
 					$facility_name = $data['facilities'][0]['facility_name'];					
 					$district_id = $data['facilities'][0]['district'];								
 					$district_data = Districts::get_district_name($district_id);		
@@ -1019,7 +1021,7 @@ endif;
 
         $data['title'] = "Add Multiple Users";
 		$data['user_types']=Access_level::get_access_levels($permissions);	
-		$data['banner_text'] = "Add Multiple Users";
+		$data['banner_text'] = "Addition of users".$facility_banner_text;
 		$data['facility_name'] = $facility_name;
 		$data['facility_code'] = $facility_code;
 		$data['facility_banner_text'] = $facility_banner_text;
