@@ -1071,7 +1071,7 @@ $("#create_new").click(function() {
         	</thead>
         	<tbody></tbody>
         </table>
-         <br/>Are you Sure you Want to Continue?</p>
+         <br/>Are you sure you want to deactivate this facility?</p>
         </center>
       </div>
       <div class="modal-footer">
