@@ -410,6 +410,13 @@ where ds.expiry_date
 		return $stocks;
 	}
 
+	public static function potential_expiries_seth($facility_code) {
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+			SELECT * FROM facility_stocks WHERE expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code' AND current_balance>0 AND status IN (1,2)
+			");
+		return $query;
+	}
+
 	public static function potential_expiries_email($facility_code = null) {
 		$query = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
 		select 
