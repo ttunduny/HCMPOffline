@@ -1044,7 +1044,7 @@ $("#create_new").click(function() {
       </div>
       <div class="modal-body" style="font-size:13px;text-align:centre">
         <p>The Facility will now be active and users will be able to submit data. <p/>
-        <p>Proceed to addition of Users?</p>
+        <p>Proceed to addition of users?</p>
       </div>
       <div class="modal-footer">
         <button type="button"  id="btnNoActivate" class="btn btn-default" data-dismiss="modal">No</button>
