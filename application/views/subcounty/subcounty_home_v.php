@@ -110,19 +110,29 @@ $identifier = $this -> session -> userdata('user_indicator');
                             </span>System Usage</a>
                         </h4></a>
                         </h4>
-                    <!-- </div> -->
-                    <!--Hoping this Will Make Link Visisble !-->
-                   <div id="collapseTwo" class="panel-collapse collapse <?php echo $active_panel=='stocking_levels'? 'in': null; ?>">
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <!-- <a href="<?php echo base_url().'reports/potential_expiries' ?>">Potential Expiries</a> -->
+                                    <a href="<?php echo base_url("facility_activation/facility_dash") ?>">Facility Activation</a>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </div>
+                  <!--  <div id="collapseTwo" class="panel-collapse collapse <?php echo $active_panel=='stocking_levels'? 'in': null; ?>">
                          <div class="panel-body">
                             <table class="table">
                                 <tr>
                                     <td>
-                                        <a href="<?php echo base_url("facility_activation/facility_dash") ?>">Activate Facilities</a>
                                     </td>
                                 </tr>
                             </table>
                         </div>
-                    </div> 
+                    </div>  -->
                     
                     
                 </div>
