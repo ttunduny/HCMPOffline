@@ -1059,12 +1059,12 @@ $("#create_new").click(function() {
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Confirm Deactivation?</h4>
+        <h4 class="modal-title">Confirm Deactivation</h4>
       </div>
       <div class="modal-body" style="font-size:14px;text-align:centre">
       <center>
       	<!-- <center><img src="<?php echo base_url().'assets/img/Alert_resized.png'?>" style="height:150px;width:150px;"></center><br/> -->
-        <p>The Folowing Users are currently active Under this facility. Deactivation of the facility will render them unable to use the system.</p>
+        <p>The Folowing users are currently active under this facility. Deactivation of the facility will render them unable to use the system.</p>
         <table  id="confirm_deactivate_table" class="display table table-bordered confirm_deactivate_table" cellspacing="0" width="100%">
         	<thead>
         		<tr><th>User Details</th><th>Date Activated</th><th>Date Last Logged In</th></tr>
