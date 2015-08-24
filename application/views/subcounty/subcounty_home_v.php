@@ -49,7 +49,7 @@ $identifier = $this -> session -> userdata('user_indicator');
                     <tr>
                         <td>
                             <!-- <a href="<?php echo base_url().'reports/potential_expiries_dashboard' ?>" data-toggle="collapse" data-parent="#accordion"><span class="glyphicon glyphicon-upload"></span>Potential Expiries</a> -->
-                            <a href="#collapseten" data-toggle="collapse" data-parent="#accordion" id="potential_expiries"><span class="glyphicon glyphicon-upload"></span>Potential Expiries</a>
+                            <!-- <a href="#collapseten" data-toggle="collapse" data-parent="#accordion" id="potential_expiries"><span class="glyphicon glyphicon-upload"></span>Potential Expiries</a> -->
                         </td>
                     </tr>
                 </table>
