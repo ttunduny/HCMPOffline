@@ -2297,7 +2297,7 @@ class Reports extends MY_Controller {
 					));
 		endforeach;
 
-		echo "<pre>";print_r($series_data_);echo "</pre>";exit;
+		// echo "<pre>";print_r($series_data_);echo "</pre>";exit;
 		//get_county_cost_of_expiries_new/0/null/88/0/17401
 		$year = ($year == "NULL") ? null : $year;
 		//$month=($month=="NULL") ? NULL :$month;
@@ -2421,7 +2421,7 @@ class Reports extends MY_Controller {
 			$series_data_ = array_merge($series_data_, array( array($data["district"], $data["facility_name"], $data["commodity_name"], $data["month"], (int)$data['total'])));
 			$expiries_excel = array_merge($expiries_excel, array($data["cal_month"] => (int)$data['total']));
 		endforeach;
-		echo "<pre>";print_r($series_data_);echo "</pre>";exit;
+		// echo "<pre>";print_r($series_data_);echo "</pre>";exit;
 		foreach ($commodity_array2 as $data2) :
 			$temp_array2 = array_merge($temp_array2, array($data2["cal_month"] => (int)$data2['total_potential']));
 			$series_data_2 = array_merge($series_data_2, array( array($data2["cal_month"], (int)$data2['total_potential'])));
