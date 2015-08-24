@@ -996,7 +996,8 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
 		$county_id = ($county_id == "NULL") ? null : $county_id;
 		$commodity_id = ($commodity_id == "NULL") ? null : $commodity_id;
-
+		$commodity_array = explode(',', $commodity_id);
+		$count_commodities = count($commodity_array);
 		$year = ($year == "NULL" || !isset($year)) ? date('Y') : $year;
 		$to = ($to == "NULL" || !isset($to)) ? date('Y-m-d') : date('Y-m-d', strtotime(urldecode($to)));
 
@@ -1070,33 +1071,93 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 			return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
 		else :
 			$excel_data = array('doc_creator' => "HCMP", 'doc_title' => "$title Consumption (Packs) $time", 'file_name' => $title . ' Consumption');
-			$row_data = array();
+			$row_data = array();			
 			$column_data = array("County", "Sub-County", "Facility Name", "Facility Code", "Item Name", "Consumption (Packs)");
+			for ($i=1; $i < $count_commodities; $i++) { 
+				$item_name = "Item Name";
+				$consumption = "Consumption (Packs)";
+				array_push($column_data, $item_name);
+				array_push($column_data, $consumption);
+			}
+			// echo "<pre>";
+			// print_r($column_data);die;
 			$excel_data['column_data'] = $column_data;
 			// echo ; exit;
-			$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select 
-    c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.commodity_name as drug_name,
-    round(avg(IFNULL(ABS(f_i.`qty_issued`), 0) / IFNULL(d.total_commodity_units, 0)),
-            1) as total
-from
-    facilities f,
-    districts d1,
-    counties c,
-    commodities d
-left join facility_issues f_i on f_i.`commodity_id`=d.id 
-        where f_i.facility_code = f.facility_code 
-        and f.district=d1.id 
-        and d1.county=c.id 
-        and f_i.`qty_issued`>0
-        and f_i.created_at between '$from' and '$to'
-        $and_data
-        group by d.id , f.facility_code
-order by c.county asc , d1.district asc
-        ");
 
-			foreach ($facility_stock_data as $facility_stock_data_item) :
-				array_push($row_data, array($facility_stock_data_item["county"], $facility_stock_data_item["subcounty"], $facility_stock_data_item["facility_name"], $facility_stock_data_item["facility_code"], $facility_stock_data_item["drug_name"], $facility_stock_data_item["total"]));
-			endforeach;
+			if($count_commodities>1){
+				$sql = "SELECT c.county,d1.district AS subcounty,f.facility_name,f.facility_code FROM
+					    facilities f,districts d1,counties c WHERE f.district = d1.id AND d1.county = c.id 
+					    AND  f.facility_code IN (SELECT distinct f_i.facility_code FROM facility_issues f_i) 
+					    ORDER BY c.county ASC , d1.district ASC LIMIT 0,5";
+				// echo "$sql";die;
+				$facility_data = $this->db->query($sql)->result_array();
+
+				foreach ($facility_data as $key => $value) {
+					$county = $value['county'];
+					$subcounty = $value['subcounty'];
+					$facility_name = $value['facility_name'];
+					$facility_code = $value['facility_code'];
+					$final_array[$facility_code] = array($county,$subcounty,$facility_name,$facility_code);					
+					for ($i=0; $i <$count_commodities ; $i++) { 
+						$commodity_id =  $commodity_array[$i];
+						$commodity_details = Commodities::get_commodity_name($commodity_id);
+						$drug_name = $commodity_details[0]['commodity_name'];
+						array_push($final_array[$facility_code],$drug_name);
+
+						$sql_commodity_details = "SELECT ROUND(AVG(IFNULL(ABS(f_i.`qty_issued`), 0) / IFNULL(d.total_commodity_units, 0)),1) AS total
+												FROM commodities d LEFT JOIN  facility_issues f_i ON f_i.`commodity_id` = d.id
+												WHERE f_i.facility_code = '$facility_code'
+										        AND f_i.`qty_issued` > 0
+										        and f_i.created_at between '$from' and '$to'
+										        AND d.id = '$commodity_id'
+												GROUP BY d.id , f_i.facility_code";
+						$consuption_details = $this->db->query($sql_commodity_details)->result_array();
+						if(count($consuption_details)==0){
+							$total = 'No Data Available';
+							array_push($final_array[$facility_code],$total);
+
+						}else{
+							foreach ($consuption_details as $keys => $values) {												
+								$total = $values['total'];																		
+								array_push($final_array[$facility_code],$total);
+							}
+
+						}
+
+					}
+					
+					
+				}
+				$row_data = $final_array;
+			}else{
+				$commodity_id = $commodity_array[0];
+				$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select 
+				    c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.commodity_name as drug_name,
+				    round(avg(IFNULL(ABS(f_i.`qty_issued`), 0) / IFNULL(d.total_commodity_units, 0)),
+				            1) as total
+				from
+				    facilities f,
+				    districts d1,
+				    counties c,
+				    commodities d
+				left join facility_issues f_i on f_i.`commodity_id`=d.id 
+				        where f_i.facility_code = f.facility_code 
+				        and f.district=d1.id 
+				        and d1.county=c.id 
+				        and f_i.`qty_issued`>0
+				        and f_i.created_at between '$from' and '$to'
+				        $and_data
+				        group by d.id , f.facility_code
+				order by c.county asc , d1.district asc
+				        ");
+
+				foreach ($facility_stock_data as $facility_stock_data_item) :
+					array_push($row_data, array($facility_stock_data_item["county"], $facility_stock_data_item["subcounty"], $facility_stock_data_item["facility_name"], $facility_stock_data_item["facility_code"], $facility_stock_data_item["drug_name"], $facility_stock_data_item["total"]));
+				endforeach;
+			}
+			
+			
+			
 			$excel_data['row_data'] = $row_data;
 
 			$this -> hcmp_functions -> create_excel($excel_data);

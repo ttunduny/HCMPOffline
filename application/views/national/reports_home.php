@@ -8,6 +8,7 @@
     <!-- Bootstrap core CSS -->  
     <link rel="icon" href="<?php echo base_url().'assets/img/coat_of_arms.png'?>" type="image/x-icon" />
     <link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
+    <link href="<?php echo base_url().'assets/multiple_select/multiple-select.css'?>" type="text/css" rel="stylesheet"/> 
     <link href="<?php echo base_url().'assets/css/offline-theme-default.css'?>" type="text/css" rel="stylesheet"/> 
     <link href="<?php echo base_url().'assets/css/styles.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/css/select2.css'?>" type="text/css" rel="stylesheet"/> 
@@ -21,6 +22,7 @@
     <link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
+    <link href="<?php echo base_url().'assets/multiple_select/multiple-select.css'?>" type="text/css" rel="stylesheet"/>
     <script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
     <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
@@ -246,11 +248,10 @@ legend{
 				<div class="col-md-4" style="padding: 0">
 					<div class="" style="margin-top: 2%">
 			  	
-			    <select class="form-control input-md" id="commodity"> 
-			    	<option value="NULL">All Commodities</option>
+			    <select class="" multiple="multiple" id="commodity" disabled="true" > 			    	
 			    	<?php
 							foreach ($commodities as $value => $commodity) :
-									 $c_id = $commodity['id'];
+									$c_id = $commodity['id'];
 									$c_name = $commodity['commodity_name'];
 								    echo "<option value='$c_id'>$c_name</option>";
 							endforeach;
@@ -442,11 +443,16 @@ $('#sub_county').on('change', function(){
 
 $("input:radio[name=commodity_s]").click(function() {
 	var val = $(this).val();
+	// alert(val);
    	if(val=="Specify"){
-		$("#commodity").attr("disabled", false);
+		$(".ms-choice").attr("disabled", false);
+		// $("#commodity").attr("disabled", false);
+		$(".ms-choice").removeClass("disabled");
+		// $("#commodity").removeClass("disabled");
 	}else{
-		$("#commodity").attr("disabled", 'disabled');
-		$("#commodity").val("NULL");
+		// $("#commodity").attr("disabled", 'disabled');
+		// $("#commodity").val("NULL");
+		$(".ms-choice").addClass("disabled");
 	}
 });
 //Generate the reports after user has selected the options
@@ -477,8 +483,17 @@ $("input:radio[name=commodity_s]").click(function() {
 	        		link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel/'+encodeURI(from)+ '/'+encodeURI(to);
 	       		}
 	        	if(commodity_type=='Specify'){ 
-	        		var commodity_id=$('#commodity').val();
-	        		link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel/'+encodeURI(from)+ '/'+encodeURI(to);
+	        		var commodity_id=$('#commodity').val();	        		
+	        		// console.log(mycommodity_id);
+	        		// alert(typeof mycommodity_id);
+	    //     		var foo = []; 
+					// $('#commodity :selected').each(function(i, selected){ 
+					//   foo[i] = $(selected).val(); 
+					// });
+					// commodity_id = 'commodity_id='+mycommodity_id;
+					// commodity_id = mycommodity_id.toString();
+
+	        		link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+encodeURI(commodity_id)+'/excel/'+encodeURI(from)+ '/'+encodeURI(to);
 	        	}
 	        	
 	        	window.open(url+link,'_parent');
@@ -720,3 +735,14 @@ $("input:radio[name=commodity_s]").click(function() {
   <script src="<?php echo base_url().'assets/scripts/jquery.validate.min.js'?>" type="text/javascript"></script>
   <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/loadingbar.css'?>" />
   <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/elusive-webfont.css'?>" />
+  <script src="<?php echo base_url().'assets/multiple_select/jquery.multiple.select.js'?>" type="text/javascript"></script>
+
+
+<script>
+    // $('#commodity').multipleSelect();
+
+     $('#commodity').multipleSelect({
+            width: '100%',            
+            selectAll: false
+        });
+</script>
