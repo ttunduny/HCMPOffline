@@ -1022,7 +1022,11 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 		$and_data .= ($facility_code > 0) ? " AND f.facility_code = '$facility_code'" : null;
 		$and_data .= ($county_id > 0) ? " AND c.id='$county_id'" : null;
 		$and_data = isset($and_data) ? $and_data : null;
-		$and_data .= isset($commodity_id) ? "AND d.id =$commodity_id" : "AND d.tracer_item =1";
+		if($count_commodities>1){
+
+		}else{
+			$and_data .= isset($commodity_id) ? "AND d.id =$commodity_id" : "AND d.tracer_item =1";
+		}
 
 		/*$group_by =($district_id>0 && isset($county_id) && !isset($facility_code)) ?" ,d.id" : null;
 		 $group_by .=($facility_code>0 && isset($district_id)) ?"  ,f.facility_code" : null;
@@ -1103,9 +1107,8 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 
 			if($count_commodities>1){
 				$sql = "SELECT c.county,d1.district AS subcounty,f.facility_name,f.facility_code FROM
-					    facilities f,districts d1,counties c WHERE f.district = d1.id AND d1.county = c.id 
-					    AND  f.facility_code IN (SELECT distinct f_i.facility_code FROM facility_issues f_i) 
-					    ORDER BY c.county ASC , d1.district ASC LIMIT 0,5";
+					    facilities f,districts d1,counties c WHERE f.district = d1.id AND d1.county = c.id $and_data					    
+					    ORDER BY c.county ASC , d1.district ASC";
 				// echo "$sql";die;
 				$facility_data = $this->db->query($sql)->result_array();
 
@@ -1135,7 +1138,8 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 
 						}else{
 							foreach ($consuption_details as $keys => $values) {												
-								$total = $values['total'];																		
+								$total = $values['total'];	
+								$total = ($total=='') ? 'No Data Available' : $total ;																	
 								array_push($final_array[$facility_code],$total);
 							}
 
@@ -1474,7 +1478,7 @@ order by user.id asc
 		$counties = Counties::get_counties_all_using_HCMP();
 		$data['county'] = $counties;
 
-		$data['commodities'] = Commodities::get_all();
+		$data['commodities'] = Commodities::get_all();		
 		$data['sub_county'] = Districts::getAll();
 		$this -> load -> view('national/reports_home', $data);
 
