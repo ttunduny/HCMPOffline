@@ -602,7 +602,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 		$and_data .= ($facility_code > 0) ? " AND f.facility_code = '$facility_code'" : null;
 		$and_data .= ($county_id > 0) ? " AND counties.id='$county_id'" : null;
 		$and_data = isset($and_data) ? $and_data : null;
-		$and_data .= isset($commodity_id) ? "AND commodity.id =$commodity_id" : "AND commodity.tracer_item =1";
+		$and_data .= isset($commodity_id) ? "AND commodities.id =$commodity_id" : "AND commodities.tracer_item =1";
 
 		$group_by = ($district_id > 0 && isset($county_id) && !isset($facility_code)) ? " ,d.id" : null;
 		$group_by .= ($facility_code > 0 && isset($district_id)) ? "  ,f.facility_code" : null;
@@ -757,7 +757,7 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 		");
 
 		
-		echo'<table><tr>
+		/*echo'<table><tr>
 					<th>County</th>
 					<th>Sub-County</th>
 					<th>Facility code</th>
@@ -769,8 +769,9 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 					<th>Bal(packs)</th>
 					<th>AMC(packs)</th>
 					<th>MOS(packs)</th>
-					</tr>';
-		
+					</tr>';*/
+		$r_data = array();
+		$counter = 0;
 		foreach ($commodity_array as $key) {
 			$commodity=$key['id'];
 			$f_code=$key['facility_code'];
@@ -803,7 +804,7 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 							 }
 				
 			
-			echo'<tr>';
+			/*echo'<tr>';
 			echo '<td>'.$key['county'].'</td>';
 			echo '<td>'.$key['district'].'</td>';
 			echo '<td>'.$key['facility_code'].'</td>';
@@ -815,11 +816,26 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 			echo '<td>'.round($packs,2).'</td>';
 			echo '<td>'.$amc_packs.'</td>';
 			echo '<td>'.round($packs/$amc_packs,2).'</td>';
-			echo'</tr>';
+			echo'</tr>';*/
+
+			$r_data[$counter]["county"] = $key['county'];
+			$r_data[$counter]["district"] = $key['district'];
+			$r_data[$counter]["facility_code"] = $key['facility_code'];
+			$r_data[$counter]["facility_name"] = $key['facility_name'];
+			$r_data[$counter]["commodity_name"] = $key['commodity_name'];
+			$r_data[$counter]["batch_no"] = $key['batch_no'];
+			$r_data[$counter]["expiry_date"] = $key['expiry_date'];
+			$r_data[$counter]["balance"] = $bal;
+			$r_data[$counter]["bal_packs"] = round($packs,2);
+			$r_data[$counter]["amc_packs"] = $amc_packs;
+			$r_data[$counter]["amc_units"] = round($packs/$amc_packs,2);
+
+			$counter = $counter + 1;
 		}
-		echo '</table>';
-		exit;
-		
+		// echo '</table>';
+		// echo "<pre> MY ARRAY";print_r($r_data);echo "</pre>";exit;
+		// exit;
+		/*
 			$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> 
 			fetchAll("select 
 					   c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.commodity_name as drug_name,
@@ -845,11 +861,15 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 					group by d.id,f.facility_code
 					order by c.county asc,d1.district asc
 			        ");
+			*/
 
-			foreach ($facility_stock_data as $facility_stock_data_item) :
+			/*foreach ($facility_stock_data as $facility_stock_data_item) :
 				array_push($row_data, array($facility_stock_data_item["county"], $facility_stock_data_item["subcounty"], $facility_stock_data_item["facility_name"], $facility_stock_data_item["facility_code"], $facility_stock_data_item["drug_name"], $facility_stock_data_item["total"]));
-			endforeach;
-			$excel_data['row_data'] = $row_data;
+			endforeach;*/
+			array_push($row_data,$r_data);
+			$excel_data['row_data'] = $r_data;
+
+			// echo "<pre>";print_r($row_data);echo "</pre>";exit;
 
 			$this -> hcmp_functions -> create_excel($excel_data);
 		endif;

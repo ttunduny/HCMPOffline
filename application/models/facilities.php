@@ -152,6 +152,13 @@ class Facilities extends Doctrine_Record {
 		$drugs = $query -> execute();
 		return $drugs;
 	}
+
+	public static function getFacilities_from_facility_code($facility_code){
+		
+		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("facility_code='$facility_code' AND using_hcmp=1")->OrderBy("facility_name asc");
+		$drugs = $query -> execute();
+		return $drugs;
+	}
 	public static function get_Facilities_using_HCMP($county_id = null, $district_id = null)
 	{
 		$and_data =(isset($county_id)&& ($county_id>0)) ?" AND d.county = $county_id" : null;
@@ -332,7 +339,7 @@ class Facilities extends Doctrine_Record {
     
 	}
 
-	public function get_facility_data_specific($report_type,$county,$district_id = NULL,$facility_code = NULL){
+	public function get_facility_data_specific($report_type,$county,$district_id = NULL,$facility_code = NULL,$scope = NULL){
 		/*
 		@author karsan AS AT 2015-08-04
 		*/
@@ -347,7 +354,7 @@ class Facilities extends Doctrine_Record {
 					");
 			}
 		}else{
-			if ($all = 'all') {
+			if ($scope = 'all') {
 					// echo "I WORK";exit;
 					$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		             CALL facility_monitoring_new('all','$county','$report_type');

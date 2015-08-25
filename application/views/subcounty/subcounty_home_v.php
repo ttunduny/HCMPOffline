@@ -25,14 +25,39 @@ $identifier = $this -> session -> userdata('user_indicator');
                         </h4>
                     </div>
                 </div>
-                <div class="panel panel-default">
+               <!--  <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" id="expiries"><span class="glyphicon glyphicon-trash">
                             </span>Expiries</a>
+
                         </h4>
                     </div>
-                </div>
+                </div> -->
+
+        <div class="panel panel-default <?php echo $active_panel=='expiries'? 'active-panel': null; ?>">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseone" id="expiries" ><span class="glyphicon glyphicon-trash">
+                </span>Expiries</a>
+            </h4>
+        </div>
+
+        <!-- <div id="collapseone" class="panel-collapse collapse <?php echo $active_panel=='expiries'? 'in': null; ?>">
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <td>
+                            <a href="<?php echo base_url().'reports/potential_expiries_dashboard' ?>" data-toggle="collapse" data-parent="#accordion"><span class="glyphicon glyphicon-upload"></span>Potential Expiries</a>
+                            <a href="#collapseten" data-toggle="collapse" data-parent="#accordion" id="potential_expiries"><span class="glyphicon glyphicon-upload"></span>Potential Expiries</a>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div> -->
+        </div>
+
                  <!--Orders-->
                 <div class="panel panel-default <?php echo $active_panel=='orders'? 'active-panel': null; ?>">
                     <div class="panel-heading">
@@ -85,20 +110,30 @@ $identifier = $this -> session -> userdata('user_indicator');
                             </span>System Usage</a>
                         </h4></a>
                         </h4>
-                    <!-- </div> -->
-                    <!--
-                   <div id="collapseTwo" class="panel-collapse collapse <?php echo $active_panel=='stocking_levels'? 'in': null; ?>">
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <!-- <a href="<?php echo base_url().'reports/potential_expiries' ?>">Potential Expiries</a> -->
+                                    <a href="<?php echo base_url("facility_activation/facility_dash") ?>">Facility Activation</a>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </div>
+                  <!--  <div id="collapseTwo" class="panel-collapse collapse <?php echo $active_panel=='stocking_levels'? 'in': null; ?>">
                          <div class="panel-body">
                             <table class="table">
                                 <tr>
                                     <td>
-                                        <a href="<?php echo base_url("facility_activation/facility_dash") ?>">Activate Facilities</a>
                                     </td>
                                 </tr>
                             </table>
                         </div>
-                    </div> 
-                    -->
+                    </div>  -->
+                    
                     
                 </div>
                 <!--To be removed once the redesign is done
@@ -137,6 +172,7 @@ $identifier = $this -> session -> userdata('user_indicator');
  */
   $(document).ready(function () {
   	//default 
+
   $('.page-header').html('Consumption');
   $('#consumption').parent().parent().parent().addClass('active-panel');
   ajax_request_replace_div_content('reports/consumption_data_dashboard/NULL/NULL/NULL/NULL/NULL/NULL/NULL/1',"#notification");
@@ -164,6 +200,13 @@ $('.page-header').html('Expiries');
 active_panel(this);
 ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
 });
+
+$("#potential_expiries").on('click', function(){
+$('.page-header').html('Potential Expiries');
+// active_panel(this);
+ajax_request_replace_div_content('reports/potential_expiries_dashboard',"#notification");
+});
+
 //orders function
 $("#orders").on('click', function(){
 $('.page-header').html('Orders');
