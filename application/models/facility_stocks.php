@@ -722,7 +722,61 @@ FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDAT
 
 		return $inserttransaction;
 	}
+	
+		//for the potential expiries
+	public static function get_county_cost_of_potential_expiries_new_titus($facility_code = null, $district_id = null, $county_id, $year = null, $month = null, $option = null, $data_for = null,$period = null) {
+		switch ($option) :
+			case 'ksh' :
+				$computation = "ifnull((SUM(ROUND(fs.current_balance/ d.total_commodity_units)))*d.unit_cost ,0) AS total_potential,d.commodity_name as name";
+				break;
+			case 'units' :
+				$computation = " ifnull(CEIL(SUM(fs.current_balance)),0) AS total_potential";
+				break;
+			case 'packs' :
+				$computation = " ifnull(SUM(ROUND(fs.current_balance/d.total_commodity_units)),0) AS total_potential";
+				break;
+			default :
+				$computation = "ifnull((SUM(ROUND(fs.current_balance/ d.total_commodity_units)))*d.unit_cost ,0) AS total_potential,d.commodity_name as name";
+				break;
+		endswitch;
+		$selection_for_a_month = isset($facility_code) && isset($district_id) ? " d.commodity_name as name," : (isset($district_id) && !isset($facility_code) ? " f.facility_name as name," : " di.district as name,");
 
+		$select_option = ($data_for == 'all') ? "date_format( fs.expiry_date, '%b' ) as cal_month," : $selection_for_a_month;
+		$and_data = ($district_id > 0) ? " AND di.id = '$district_id'" : null;
+		$and_data .= ($facility_code > 0) ? " AND f.facility_code = '$facility_code'" : null;
+		$and_data .= ($county_id > 0) ? " AND c.id='$county_id'" : null;
+		//$and_data .=($month>0) ? " AND date_format( fs.expiry_date, '%m')=$month"  : null;
+		$and_data .= ($year > 0) ? " AND DATE_FORMAT( fs.expiry_date,'%Y') =$year" : null;
+		$and_data .= ($period > 0) ? " AND fs.expiry_date  BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL $period MONTH)" : null;
+		$group_by_a_month = isset($facility_code) && isset($district_id) ? " GROUP BY fs.commodity_id having total>0" : (isset($district_id) && !isset($facility_code) ? " GROUP BY f.facility_code having total>0" : " GROUP BY d.id having total>0");
+		$group_by = ($data_for == 'all') ? "GROUP BY month(expiry_date) asc" : $group_by_a_month;
+		// $group_by = ($period > 0) ? "LIMIT 0,$period" : null;
+
+		// $sql = "SELECT $select_option  date_format(expiry_date,'%M') AS month_potential, $computation  
+  //    FROM facility_stocks fs, facilities f, commodities d, counties c, districts di
+  //    WHERE fs.facility_code = f.facility_code
+  //    AND fs.`expiry_date` >= NOW( )
+  //    AND f.district =di.id
+  //    AND di.county=c.id
+  //    AND d.id = fs.commodity_id
+  //    $and_data
+  //    $group_by";
+  //    echo "$sql";die;
+		//exit;
+		$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT $select_option  date_format(expiry_date,'%M') AS month_potential, $computation  
+     FROM facility_stocks fs, facilities f, commodities d, counties c, districts di
+     WHERE fs.facility_code = f.facility_code
+     AND fs.`expiry_date` >= NOW( )
+     AND f.district =di.id
+     AND di.county=c.id
+     AND d.id = fs.commodity_id
+     $and_data
+     $group_by
+     ");
+
+		return $inserttransaction;
+	}
+	
 	public static function get_facility_cost_of_exipries_new($facility_code = null, $district_id = null, $county_id, $year = null, $month = null, $option = null, $data_for = null) {
 		switch ($option) :
 			case 'ksh' :

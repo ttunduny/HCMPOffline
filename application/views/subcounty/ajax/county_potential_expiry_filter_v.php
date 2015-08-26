@@ -5,9 +5,9 @@
 <form class="form-inline" role="form">
 <select id="county_year_filter" class="form-control col-md-2">
 	<option value="NULL" selected="selected">Select Period</option>
-	<option value="2014">3 Months</option>
-	<option value="2014">6 Months</option>
-	<option value="2014">12 Months (1 Year)</option>
+	<option value="3">3 Months</option>
+	<option value="6">6 Months</option>
+	<option value="12">12 Months (1 Year)</option>
 </select>
 <select id="county_district_filter" class="form-control col-md-2">
 <option selected="selected" value="NULL">Select Sub-county</option>
@@ -77,8 +77,9 @@
 	    $(".county-filter").on('click',function(e) {
 		e.preventDefault();	
 		//$year = null, $month = null, $district_id = null, $option = null, $facility_code = null,$report_type=null)
-        var url_ = 'reports/potential_expiries_dashboard_ajax/'+$("#county_year_filter").val()+"/"+$("#county_district_filter").val()+"/"+$("#county_plot_value_filter").val()+"/"+$("#facility_filter").val()+"/table";  
-		
+        //var url_ = 'reports/potential_expiries_dashboard_ajax/'+$("#county_year_filter").val()+"/"+$("#county_district_filter").val()+"/"+$("#county_plot_value_filter").val()+"/"+$("#facility_filter").val()+"/table";  
+        var url_ = 'reports/potential_expiries_dashboard_ajax_titus/NULL/'+$("#county_district_filter").val()+"/"+$("#facility_filter").val()+"/"+$("#county_plot_value_filter").val()+"/"+$("#county_year_filter").val();  
+		// alert(url_);
 		ajax_request_replace_div_content(url_,'.graph_content');		
           });
           
