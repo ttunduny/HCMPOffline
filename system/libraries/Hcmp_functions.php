@@ -35,13 +35,13 @@ public function send_system_text($action)
 				$facility_message = "Dear $facility_name user, \nCommodities have been redistributed to another facility. \nLog in to health-cmp.or.ke to follow up. HCMP";
 				//url encode the message
 				$message = urlencode($facility_message);
-				$facility_phone .= "254728778002+254707463571";
+				//$facility_phone .= "254728778002+254707463571";
 				//clean the phone numbers
 				$phone_numbers = explode("+", $facility_phone);
 				//send the message here
 				foreach ($phone_numbers as $key => $user_no)
 				{
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 				}
 				/*End the facility Section of the functions*/
 				/*Start the Sub County Section of the Message*/
@@ -55,7 +55,7 @@ public function send_system_text($action)
 					$message = "Dear $name_sub_county user,\n $facility_name has redistributed commodities from its store.\nFacility Name: $facility_name\nDistrict Name: $district_name\nLog in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 					$message = urlencode($message);
 					$user_no = $data['telephone'];
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 				endforeach;
 				break;
 				//texts sent when an order is sent
@@ -68,7 +68,7 @@ public function send_system_text($action)
 	   			$data = Users::getUsers($facility_code)->toArray();
 				//get facility phone numbers
 				$facility_phone = $this -> get_facility_phone_numbers($facility_code);
-				$facility_phone .= "254728778002+254707463571";
+				//$facility_phone .= "254728778002+254707463571";
 				//facility message
 				$facility_message = "Dear $facility_name user, \n an order has been placed. \n Log in to health-cmp.or.ke to follow up. HCMP";
 				//url encode the message
@@ -78,7 +78,7 @@ public function send_system_text($action)
 				//send the message here
 				foreach ($phone_numbers as $key => $user_no)
 				{
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 					//echo "Sent to ".$user_no;
 				}
 				/*End the facility Section of the functions*/
@@ -93,7 +93,7 @@ public function send_system_text($action)
 					$message = "Dear $name_sub_county user,\n $facility_name has placed an order.\nFacility Name: $facility_name\nDistrict Name: $district_name\nLog in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 					$message = urlencode($message);
 					$user_no = $data['telephone'];
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 				endforeach;
 				break;
 				case "decommissioned";
@@ -105,7 +105,7 @@ public function send_system_text($action)
 	   			$data = Users::getUsers($facility_code)->toArray();
 				//get facility phone numbers
 				$facility_phone = $this -> get_facility_phone_numbers($facility_code);
-				$facility_phone .= "254728778002+254707463571";
+				//$facility_phone .= "254728778002+254707463571";
 				//facility message
 				$facility_message = "Dear $facility_name user, \n commodities have been decommissioned from the Store.\nLog in to health-cmp.or.ke to follow up. HCMP";
 				//url encode the message
@@ -115,7 +115,7 @@ public function send_system_text($action)
 				//send the message here
 				foreach ($phone_numbers as $key => $user_no)
 				{
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 					//echo "Sent to ".$user_no;
 				}
 				/*End the facility Section of the functions*/
@@ -130,7 +130,7 @@ public function send_system_text($action)
 					$message = "Dear $name_sub_county user,\n $facility_name has decommissioned commodities from its store.\nFacility Name: $facility_name\nDistrict Name: $district_name\nLog in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 					$message = urlencode($message);
 					$user_no = $data['telephone'];
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 				endforeach;
 				break;
 				
@@ -143,7 +143,7 @@ public function send_system_text($action)
 	   			$data = Users::getUsers($facility_code)->toArray();
 				//get facility phone numbers
 				$facility_phone = $this -> get_facility_phone_numbers($facility_code);
-				$facility_phone .= "254728778002+254707463571";
+				//$facility_phone .= "254728778002+254707463571";
 				//facility message
 				$facility_message = "Dear $facility_name user, \nA stock update has been done in your facility store.\nLog in to health-cmp.or.ke to follow up. HCMP";
 				//url encode the message
@@ -153,7 +153,7 @@ public function send_system_text($action)
 				//send the message here
 				foreach ($phone_numbers as $key => $user_no)
 				{
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 					//echo "Sent to ".$user_no;
 				}
 				/*End the facility Section of the functions*/
@@ -168,7 +168,7 @@ public function send_system_text($action)
 					$message = "Dear $name_sub_county user,\n $facility_name has updated its stock in the facility Store.\nFacility Name: $facility_name\nDistrict Name: $district_name\nLog in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 					$message = urlencode($message);
 					$user_no = $data['telephone'];
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 				endforeach;
 				break;
 			endswitch;
@@ -183,7 +183,7 @@ public function send_stock_update_sms(){
 	   $phone=$this->get_facility_phone_numbers($facility_code);
 	   $phone .=$this->get_ddp_phone_numbers($data[0]['district']);
 
-	   $this->send_sms(substr($phone,0,-1),$message);
+	   //$this->send_sms(substr($phone,0,-1),$message);
 
 	}
 
@@ -198,7 +198,7 @@ public function send_stock_donate_sms(){
 	   $phone=$this->get_facility_phone_numbers($facility_code);
 	   $phone .=$this->get_ddp_phone_numbers($data[0]['district']);
 	   $message= $facility_name." have been donated commodities. HCMP";		
-	   $this->send_sms(substr($phone,0,-1),$message);
+	   //$this->send_sms(substr($phone,0,-1),$message);
 
 	}
 
@@ -214,7 +214,7 @@ public function send_order_sms(){
 	   $phone=$this->get_facility_phone_numbers($facility_code);
 	   $phone .=$this->get_ddp_phone_numbers($data[0]['district']);
 
-	   $this->send_sms(substr($phone,0,-1),$message);
+	   //$this->send_sms(substr($phone,0,-1),$message);
 
 	}
 public function send_order_approval_sms($facility_code,$status){
@@ -226,7 +226,7 @@ public function send_order_approval_sms($facility_code,$status){
 	   $phone=$this->get_facility_phone_numbers($facility_code);
 	   $phone .=$this->get_ddp_phone_numbers($data[0]['district']);
 
-	   $this->send_sms(substr($phone,0,-1),$message);
+	   //$this->send_sms(substr($phone,0,-1),$message);
 
 	}
 
