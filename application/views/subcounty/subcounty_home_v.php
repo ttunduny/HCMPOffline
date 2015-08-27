@@ -204,7 +204,8 @@ ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
 $("#potential_expiries").on('click', function(){
 $('.page-header').html('Potential Expiries');
 // active_panel(this);
-ajax_request_replace_div_content('reports/potential_expiries_dashboard',"#notification");
+ajax_request_replace_div_content('reports/potential_exp_sub_county_titus/',"#notification");
+// ajax_request_replace_div_content('reports/potential_expiries_dashboard',"#notification");
 });
 
 //orders function

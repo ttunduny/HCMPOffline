@@ -251,7 +251,7 @@ class Reports extends MY_Controller {
 	}
 	public function facility_stock_data() {
 		$facility_code = $this -> session -> userdata('facility_id');
-		$data['facility_stock_data'] = facility_stocks::get_distinct_stocks_for_this_facility($facility_code, "batch_data", 'all');
+		$data['facility_stock_data'] = facility_stocks::get_distinct_stocks_for_this_facility($facility_code, "batch_data", 'all');		
 		$data['title'] = "Facility Stock";
 		$data['content_view'] = "facility/facility_reports/facility_stock_data_v";
 		$data['banner_text'] = "Facility Stock";
@@ -537,6 +537,42 @@ class Reports extends MY_Controller {
 		$echo = Facility_stocks::specify_period_potential_expiry_store($district_id, $interval);
 		// echo "<pre>";print_r($echo);echo "</pre>";exit;
 		return $this -> load -> view("facility/facility_reports/ajax/potential_expiries_ajax", $data);
+	}
+
+
+	public function potential_exp_sub_county_titus() {
+		$district_id = isset($district_id) ? $district_id : $this -> session -> userdata('district_id');
+		$district_name = Districts::get_district_name($district_id) -> toArray();
+		$data['district_name'] = $district_name[0]['district'];		
+		// $interval = $_POST['option_selected'];
+		
+	
+		$data['report_data']= Facility_stocks::specify_period_potential_expiry_store_titus($district_id, 6);	
+		
+		// echo "<pre>";print_r($data['report_data']);echo "</pre>";exit;
+
+		$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
+		return $this -> load -> view("subcounty/ajax/subcounty_potential_expiry_filter_v", $data);
+		// return $this -> load -> view("subcounty/reports/potential_expiries_v", $data);
+	}
+
+	public function potential_exp_process_sub_county_titus($district_id = null,$facility_code=null,$option = null,$interval=null) {
+		$district_id = isset($district_id) ? $district_id : $this -> session -> userdata('district_id');
+		$district_name = Districts::get_district_name($district_id) -> toArray();
+		$data['district_name'] = $district_name[0]['district'];
+		$district_id = 4;
+		// $interval = $_POST['option_selected'];
+		$interval = (($interval=='NULL')||($interval==null)) ? 6 : $interval;
+		if($facility_code>0){
+			$data['report_data']= Facility_stocks::specify_period_potential_expiry($facility_code, $interval);	
+		}else{
+			$data['report_data']= Facility_stocks::specify_period_potential_expiry_store_titus($district_id, $interval);	
+		}
+		// echo "<pre>";print_r($data['report_data']);echo "</pre>";exit;
+
+		// $data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
+		// return $this -> load -> view("subcounty/ajax/subcounty_potential_expiry_filter_v", $data);
+		return $this -> load -> view("subcounty/reports/potential_expiries_v", $data);
 	}
 	public function potential_exp_process_subcounty($facility_code = null) {
 		$facility_code = isset($facility_code) ? $facility_code : $this -> session -> userdata('facility_id');
@@ -2242,6 +2278,27 @@ class Reports extends MY_Controller {
 		return $this -> load -> view("subcounty/ajax/county_potential_expiry_filter_v", $data);
 
 	}
+	public function potential_expiries_dashboard_titus(){
+		
+		$year = date("Y");
+		$county_id = $this -> session -> userdata('county_id');
+		$district_id = $this -> session -> userdata('district_id');
+		
+		// echo $facility_code;exit;
+		$data['title'] = "Reports";
+		$data['content_view'] = "facility/facility_reports/reports_v";
+		$data['facility_code'] = $facility_code;
+		$view = 'shared_files/template/template';
+		$data['report_view'] = "subcounty/facility_reports/potential_expiries_v";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		$data['report_data'] = Facility_stocks::potential_expiries($facility_code);
+		$data['active_panel'] = 'expiries';
+		$this -> load -> view($view, $data);
+		$data['default_expiries'] = $default_expiries_;
+		$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
+		return $this -> load -> view("subcounty/ajax/county_potential_expiry_filter_v", $data);
+
+	}
 
 	public function potential_expiries_dashboard_ajax($county=NULL,$district = NULL,$facility_code = NULL,$option=null){
 		// echo "<pre>";print_r($data['report_data']);echo "</pre>";exit;
@@ -2471,7 +2528,7 @@ class Reports extends MY_Controller {
 		$commodity_array = Facility_stocks::get_sub_county_cost_of_exipries($facility_code, $district_id, $county_id, $year, null, $option_new, "all");
 		// echo "<pre>";print_r($commodity_array);echo "</pre>";exit;
 		//for the potential expiries
-		$commodity_array2 = Facility_stocks::get_county_cost_of_potential_expiries_new_titus($facility_code, $district_id, $county_id, $year, null, $option_new, "all",$period);
+		$commodity_array2 = Facility_stocks::get_county_cost_of_potential_expiries_new($facility_code, $district_id, $county_id, $year, null, $option_new, "all",$period);
 		foreach ($commodity_array as $data) :
 			$temp_array = array_merge($temp_array, array($data["cal_month"] => (int)$data['total']));
 			$series_data_ = array_merge($series_data_, array( array($data["district"], $data["facility_name"], $data["commodity_name"], $data["month"], (int)$data['total'])));
