@@ -329,7 +329,7 @@ class orders extends MY_Controller {
 		// $data['facility_order'] = $items;
 		//echo '<pre>'; print_r($data['facility_order']);echo '<pre>'; exit;
 		$facility_code = $this -> session -> userdata('facility_id');
-		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();
+		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();		
 		$data['content_view'] = ($source == 2) ? "facility/facility_orders/facility_order_meds_new" : "facility/facility_orders/facility_order_from_kemsa_v";
 		$data['title'] = "Facility New Order";
 		$data['banner_text'] = "Facility New Order";
@@ -568,7 +568,7 @@ class orders extends MY_Controller {
 			//order table details
 			$bed_capacity = '0';
 			$drawing_rights = '0';
-			
+			$status = '2';
 			$order_total = $this -> input -> post('total_order_value');
 			$order_no = '0';
 			$facility_code = $this -> input -> post('facility_code');
@@ -586,6 +586,10 @@ class orders extends MY_Controller {
 					 'order_date' => $order_date, 
 					 'facility_code' => $facility_code, 
 					 'ordered_by' => $user_id, 
+					 'status' => $status, 
+					 'approval_date' => $order_date, 
+					 'dispatch_date' => $order_date, 
+					 'deliver_date' => $order_date, 
 					 'drawing_rights' => $drawing_rights,
 					 'source' => $commodity_source
 					 );
