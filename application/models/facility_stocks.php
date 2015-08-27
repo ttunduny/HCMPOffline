@@ -93,7 +93,7 @@ from facility_stocks fs, commodity_source c_s, drug_store_issues ds,commodities 
 		$check_expiry_date = isset($exception) ? null : " and fs.expiry_date >= NOW()";
 
 		$stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT DISTINCT c.id as commodity_id, fs.id as facility_stock_id,fs.expiry_date,c.commodity_name,c.commodity_code,
-	c.unit_size,sum(fs.current_balance) as commodity_balance, round((SUM(fs.current_balance ) / c.total_commodity_units) ,1) as pack_balance,
+	c.unit_size,fs.current_balance as commodity_balance, round((fs.current_balance / c.total_commodity_units) ,1) as pack_balance,
 	c.total_commodity_units,fs.manufacture,
 	c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commodities c, commodity_source c_s
 	 where fs.facility_code ='$facility_code' $check_expiry_date 

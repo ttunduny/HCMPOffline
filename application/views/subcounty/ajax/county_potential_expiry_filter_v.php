@@ -3,11 +3,11 @@
 </div>
 <div class="filter row">
 <form class="form-inline" role="form">
-<select id="county_year_filter" class="form-control col-md-2">
+<select id="county_period_filter" class="form-control col-md-2">
 	<option value="NULL" selected="selected">Select Period</option>
-	<option value="2014">3 Months</option>
-	<option value="2014">6 Months</option>
-	<option value="2014">12 Months (1 Year)</option>
+	<option value="3">3 Months</option>
+	<option value="6">6 Months</option>
+	<option value="12">12 Months (1 Year)</option>
 </select>
 <select id="county_district_filter" class="form-control col-md-2">
 <option selected="selected" value="NULL">Select Sub-county</option>
@@ -51,6 +51,35 @@
     var url_ = 'reports/get_county_cost_of_expiries_new/NULL/NULL/NULL/NULL/NULL';  
 		ajax_request_replace_div_content(url_,'.graph_content');	
   }
+
+  $(".optioncheck").click(function() {
+      
+      var div="#reports_display";
+      var url = "<?php echo base_url()."reports/potential_exp_process/$facility_code"?>";
+      var data= $(this).val();   
+      ajax_post_process_data (url,div,data); 
+     
+    });
+
+   function ajax_post_process_data (url,div,data){
+    var url =url;
+     var loading_icon="<?php echo base_url().'assets/img/loader.gif' ?>";
+     $.ajax({
+          type: "POST",
+          data:{'option_selected': data},
+          url: url,
+          beforeSend: function() {
+            $(div).html("");
+            
+             $(div).html("<img style='margin:20% 0 20% 30%;' src="+loading_icon+">");
+            
+          },
+          success: function(msg) {
+          $(div).html("");
+           $(div).html(msg);           
+          }
+        }); 
+}
 		// reports/get_county_cost_of_expiries_new/NULL/NULL/NULL/NULL/NULL
         //setting up the report
 		$("#facility_filter").hide();
@@ -77,7 +106,7 @@
 	    $(".county-filter").on('click',function(e) {
 		e.preventDefault();	
 		//$year = null, $month = null, $district_id = null, $option = null, $facility_code = null,$report_type=null)
-        var url_ = 'reports/potential_expiries_dashboard_ajax/'+$("#county_year_filter").val()+"/"+$("#county_district_filter").val()+"/"+$("#county_plot_value_filter").val()+"/"+$("#facility_filter").val()+"/table";  
+        var url_ = 'reports/potential_expiries_dashboard_ajax/'+$("#county_period_filter").val()+"/"+$("#county_district_filter").val()+"/"+$("#county_plot_value_filter").val()+"/"+$("#facility_filter").val()+"/table";  
 		
 		ajax_request_replace_div_content(url_,'.graph_content');		
           });
@@ -86,14 +115,14 @@
       	$(".county-table-data").on('click',function(e) {
 		e.preventDefault();	
 		//$year = null,$district_id = null, $option = null, $facility_code = null,$report_type=null)
-        var url_ = 'reports/get_county_cost_of_expiries_dashboard/'+$("#county_year_filter").val()+"/"+$("#county_district_filter").val()+"/"+$("#county_plot_value_filter").val()+"/"+$("#facility_filter").val()+"/table";  
+        var url_ = 'reports/get_county_cost_of_expiries_dashboard/'+$("#county_period_filter").val()+"/"+$("#county_district_filter").val()+"/"+$("#county_plot_value_filter").val()+"/"+$("#facility_filter").val()+"/table";  
 		
 		ajax_request_replace_div_content(url_,'.graph_content');		
           });
 		//For CSV downloads
 		$(".county-download").on('click',function(e) {
 		e.preventDefault();			  
-        var url_ = 'reports/get_county_cost_of_expiries_dashboard/'+$("#county_year_filter").val()+"/"+$("#county_district_filter").val()+"/"+$("#county_plot_value_filter").val()+"/"+$("#facility_filter").val()+"/csv_data";  
+        var url_ = 'reports/get_county_cost_of_expiries_dashboard/'+$("#county_period_filter").val()+"/"+$("#county_district_filter").val()+"/"+$("#county_plot_value_filter").val()+"/"+$("#facility_filter").val()+"/csv_data";  
 		window.open(url+url_ ,'_blank');
          });	
          
