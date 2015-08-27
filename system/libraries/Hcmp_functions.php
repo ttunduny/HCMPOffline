@@ -8,7 +8,6 @@ class Hcmp_functions extends MY_Controller {
 		parent::__construct();
 		$this -> load -> helper(array('url','file','download'));
 		$this -> load -> library(array('PHPExcel/PHPExcel','mpdf/mpdf'));
-
 	}
 public function send_system_text($action)
 		{
@@ -20,7 +19,6 @@ public function send_system_text($action)
 			$district_data = districts::get_district_name_($district_id);
 			$county_name = $county_data['county'];
 			$district_name = $district_data['district'];
-
 			switch($action):
 				//there are four functions the user performs
 				//redistribute, ordered, issue & decommissioned
@@ -30,18 +28,18 @@ public function send_system_text($action)
 	   			//pick the phone numbers for that facility
 	   			$data = Users::getUsers($facility_code)->toArray();
 				//get facility phone numbers
-				// $facility_phone = $this -> get_facility_phone_numbers($facility_code);
+				$facility_phone = $this -> get_facility_phone_numbers($facility_code);
 				//facility message
 				$facility_message = "Dear $facility_name user, \nCommodities have been redistributed to another facility. \nLog in to health-cmp.or.ke to follow up. HCMP";
 				//url encode the message
 				$message = urlencode($facility_message);
-				$facility_phone .= "254728778002+254707463571";
+				//$facility_phone .= "254728778002+254707463571";
 				//clean the phone numbers
 				$phone_numbers = explode("+", $facility_phone);
 				//send the message here
 				foreach ($phone_numbers as $key => $user_no)
 				{
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 				}
 				/*End the facility Section of the functions*/
 				/*Start the Sub County Section of the Message*/
@@ -55,7 +53,7 @@ public function send_system_text($action)
 					$message = "Dear $name_sub_county user,\n $facility_name has redistributed commodities from its store.\nFacility Name: $facility_name\nDistrict Name: $district_name\nLog in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 					$message = urlencode($message);
 					$user_no = $data['telephone'];
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 				endforeach;
 				break;
 				//texts sent when an order is sent
@@ -67,8 +65,8 @@ public function send_system_text($action)
 	   			//pick the phone numbers for that facility
 	   			$data = Users::getUsers($facility_code)->toArray();
 				//get facility phone numbers
-				// $facility_phone = $this -> get_facility_phone_numbers($facility_code);
-				$facility_phone = "254728778002+254707463571";
+				$facility_phone = $this -> get_facility_phone_numbers($facility_code);
+				//$facility_phone .= "254728778002+254707463571";
 				//facility message
 				$facility_message = "Dear $facility_name user, \n an order has been placed. \n Log in to health-cmp.or.ke to follow up. HCMP";
 				//url encode the message
@@ -78,7 +76,7 @@ public function send_system_text($action)
 				//send the message here
 				foreach ($phone_numbers as $key => $user_no)
 				{
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 					//echo "Sent to ".$user_no;
 				}
 				/*End the facility Section of the functions*/
@@ -93,7 +91,7 @@ public function send_system_text($action)
 					$message = "Dear $name_sub_county user,\n $facility_name has placed an order.\nFacility Name: $facility_name\nDistrict Name: $district_name\nLog in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 					$message = urlencode($message);
 					$user_no = $data['telephone'];
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 				endforeach;
 				break;
 				case "decommissioned";
@@ -104,8 +102,8 @@ public function send_system_text($action)
 	   			//pick the phone numbers for that facility
 	   			$data = Users::getUsers($facility_code)->toArray();
 				//get facility phone numbers
-				// $facility_phone = $this -> get_facility_phone_numbers($facility_code);
-				$facility_phone = "254728778002+254707463571";
+				$facility_phone = $this -> get_facility_phone_numbers($facility_code);
+				//$facility_phone .= "254728778002+254707463571";
 				//facility message
 				$facility_message = "Dear $facility_name user, \n commodities have been decommissioned from the Store.\nLog in to health-cmp.or.ke to follow up. HCMP";
 				//url encode the message
@@ -115,7 +113,7 @@ public function send_system_text($action)
 				//send the message here
 				foreach ($phone_numbers as $key => $user_no)
 				{
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 					//echo "Sent to ".$user_no;
 				}
 				/*End the facility Section of the functions*/
@@ -130,7 +128,7 @@ public function send_system_text($action)
 					$message = "Dear $name_sub_county user,\n $facility_name has decommissioned commodities from its store.\nFacility Name: $facility_name\nDistrict Name: $district_name\nLog in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 					$message = urlencode($message);
 					$user_no = $data['telephone'];
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 				endforeach;
 				break;
 				
@@ -142,8 +140,8 @@ public function send_system_text($action)
 	   			//pick the phone numbers for that facility
 	   			$data = Users::getUsers($facility_code)->toArray();
 				//get facility phone numbers
-				// $facility_phone = $this -> get_facility_phone_numbers($facility_code);
-				$facility_phone = "254728778002+254707463571";
+				$facility_phone = $this -> get_facility_phone_numbers($facility_code);
+				//$facility_phone .= "254728778002+254707463571";
 				//facility message
 				$facility_message = "Dear $facility_name user, \nA stock update has been done in your facility store.\nLog in to health-cmp.or.ke to follow up. HCMP";
 				//url encode the message
@@ -153,7 +151,7 @@ public function send_system_text($action)
 				//send the message here
 				foreach ($phone_numbers as $key => $user_no)
 				{
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 					//echo "Sent to ".$user_no;
 				}
 				/*End the facility Section of the functions*/
@@ -168,7 +166,7 @@ public function send_system_text($action)
 					$message = "Dear $name_sub_county user,\n $facility_name has updated its stock in the facility Store.\nFacility Name: $facility_name\nDistrict Name: $district_name\nLog in to health-cmp.or.ke to follow up on the issue.\n HCMP";
 					$message = urlencode($message);
 					$user_no = $data['telephone'];
-					file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
+					//file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$user_no&text=$message");
 				endforeach;
 				break;
 			endswitch;
@@ -177,67 +175,49 @@ public function send_stock_update_sms(){
        $facility_name = $this -> session -> userdata('full_name');
 	   $facility_code=$this -> session -> userdata('facility_id');;
 	   $data=Users::getUsers($facility_code)->toArray();
-
 	   $message= "Stock levels for ".$facility_name." have been updated. HCMP";
        
 	   $phone=$this->get_facility_phone_numbers($facility_code);
 	   $phone .=$this->get_ddp_phone_numbers($data[0]['district']);
-
-	   $this->send_sms(substr($phone,0,-1),$message);
-
+	   //$this->send_sms(substr($phone,0,-1),$message);
 	}
-
 public function send_stock_donate_sms(){
 		
        $facility_name = $this -> session -> userdata('full_name');
 	   $facility_code=$this -> session -> userdata('facility_id');;
 	   $data=Users::getUsers($facility_code)->toArray();
-
 	   //$message= "Stock level for ".$facility_name." has been updated. HCMP";
        
 	   $phone=$this->get_facility_phone_numbers($facility_code);
 	   $phone .=$this->get_ddp_phone_numbers($data[0]['district']);
 	   $message= $facility_name." have been donated commodities. HCMP";		
-	   $this->send_sms(substr($phone,0,-1),$message);
-
+	   //$this->send_sms(substr($phone,0,-1),$message);
 	}
-
 public function send_order_sms(){
 	
-
        $facility_name = $this -> session -> userdata('full_name');
 	   $facility_code=$this -> session -> userdata('facility_id');;
 	   $data=Users::getUsers($facility_code)->toArray();
-
 	   $message= $facility_name." has submitted an order. HCMP";
        
 	   $phone=$this->get_facility_phone_numbers($facility_code);
 	   $phone .=$this->get_ddp_phone_numbers($data[0]['district']);
-
-	   $this->send_sms(substr($phone,0,-1),$message);
-
+	   //$this->send_sms(substr($phone,0,-1),$message);
 	}
 public function send_order_approval_sms($facility_code,$status){
-
        $message=($status==1)?$facility_name." order has been rejected. HCMP":
        $facility_name." order has been approved. HCMP";
  
        $data=Users::getUsers($facility_code)->toArray();
 	   $phone=$this->get_facility_phone_numbers($facility_code);
 	   $phone .=$this->get_ddp_phone_numbers($data[0]['district']);
-
-	   $this->send_sms(substr($phone,0,-1),$message);
-
+	   //$this->send_sms(substr($phone,0,-1),$message);
 	}
-
-
 public function get_facility_phone_numbers($facility_code){
 	$data=Users::get_user_info($facility_code);
 	$phone=""; 
 	foreach ($data as $info) {
-
 			$telephone =preg_replace('(^0+)', "254",$info->telephone);
-
 		    $phone .=$telephone.'+';	
 		}
 	return $phone;
@@ -246,15 +226,12 @@ public function get_facility_email($facility_code){
 	$data=Users::get_user_info($facility_code);
 	$user_email=""; 
 	foreach ($data as $info) {
-
 			$user_email .=$info->email.',';
-
 		   	
 		}
 	$facility_code=='' ?  exit : null;
 	return $user_email;
 }
-
 public function get_ddp_phone_numbers($district_id){
 	$data=Users::get_dpp_details($district_id);
 	$phone=""; 
@@ -269,7 +246,6 @@ public function get_ddp_email($district_id){
 	$data=Users::get_dpp_details($district_id);
 	$user_email=""; 
 	foreach ($data as $info) {
-
 			$user_email .=$info->email.',';
 		}
 	$district_id=='' ?  exit : null;
@@ -288,7 +264,6 @@ public function get_county_email($county_id){
 		if(count($county_email)>0){
 		return $county_email[0]['email'].',';	
 		}else{
-
 		return "";
 		}
 		
@@ -306,7 +281,6 @@ public function send_stock_decommission_email($message,$subject,$attach_file){
 	   // $email_address .=$this->get_ddp_email($data[0]['district']);
         
     //    $email_address .= $this->get_county_email($data[0]['district']);
-
        $email_address = 'karsanrichard@gmail.com';
       /* 
 	   $bcc_email ='karsanrichard@gmail.com,smutheu@clintonhealthaccess.org,collinsojenge@gmail.com,tngugi@clintonhealthaccess.org,
@@ -320,7 +294,6 @@ public function send_stock_decommission_email($message,$subject,$attach_file){
 	 
 	}
 public function send_order_submission_email($message,$subject,$attach_file){
-
 	   $facility_code=$this -> session -> userdata('facility_id');
 	   $data=Users::getUsers($facility_code)->toArray();
 	   $email_address = $this -> get_facility_email($facility_code);
@@ -337,7 +310,6 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 	  
  $email="karsanrichard@gmail.com";
  $cc_email="";
-
 /*
  $bcc_email ='karsanrichard@gmail.com,
  		smutheu@clintonhealthaccess.org,
@@ -347,19 +319,15 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 		eongute@clintonhealthaccess.org,
 		rkihoto@clintonhealthaccess.org';
 */
-
  // $bcc_email ='karsanrichard@gmail.com';
-
  $data=facilities::get_facility_name_($facility_code)->toArray();
  $data=$data[0];
-
   if($reject_order=="Rejected" || $reject_order=="Updated"):
 	  // $email_address=$this->get_facility_email($facility_code);
 	  // $cc_email .=$this->get_ddp_email($data['district']);	  
 	  $email_address='karsanrichard@gmail.com'; 
 	  else:		  
 	  $email_address='karsanrichard@gmail.com'; 
-
 	  	/*
 		   $email_address='shamim.kuppuswamy@kemsa.co.ke,
 				jmunyu@kemsa.co.ke,
@@ -367,19 +335,15 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 				laban.okune@kemsa.co.ke,
 				samuel.wataku@kemsa.co.ke,'; 
 		*/
-
 	  $cc_email .=$this->get_ddp_email($data['district']);
 	  $cc_email .=$this->get_facility_email($facility_code);
 	  $cc_email .=$this->get_county_email($data['district']) ;
-
-
   endif;
  
 		return $this->send_email(substr($email_address,0,-1),$message, $subject,$attach_file,$bcc_email,substr($cc_email,0,-1));
 	
 }
 public function send_order_delivery_email($message,$subject,$attach_file=null){
-
        $cc_email='';
       // echo 'test'; exit;
 	   $bcc_email ='karsanrichard@gmail.com,smutheu@clintonhealthaccess.org,tngugi@clintonhealthaccess.org';
@@ -393,7 +357,6 @@ public function send_order_delivery_email($message,$subject,$attach_file=null){
 	return $this->send_email(substr($this->get_ddp_email($data[0]['district']),0,-1),$message,$subject,null,$bcc_email,substr($cc_email,0,-1));
 	
 }
-
 public function send_sms($phones,$message) {
 	
    $message=urlencode($message);
@@ -412,7 +375,6 @@ public function send_sms($phones,$message) {
  		
 	}
 /*****************************************Email function for HCMP, all the deafult email addresses and email content have been set ***************/
-
 public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL)
 {
 	 //echo $message;EXIT;
@@ -436,8 +398,6 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
 				<style>
 #outlook a{padding:0}body{width:100%!important;min-width:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}.ExternalClass{width:100%}.ExternalClass,.ExternalClass div,.ExternalClass font,.ExternalClass p,.ExternalClass span,.ExternalClass td{line-height:100%}#backgroundTable{margin:0;padding:0;width:100%!important;line-height:100%!important}img{outline:0;text-decoration:none;-ms-interpolation-mode:bicubic;width:auto;max-width:100%;float:left;clear:both;display:block}center{width:100%;min-width:580px}a img{border:none}table{border-spacing:0;border-collapse:collapse}td{word-break:break-word;-webkit-hyphens:auto;-moz-hyphens:auto;hyphens:auto;border-collapse:collapse!important}table,td,tr{padding:0;vertical-align:top;text-align:left}hr{color:#d9d9d9;background-color:#d9d9d9;height:1px;border:none}table.body{height:100%;width:100%}table.container{width:580px;margin:0 auto;text-align:inherit}table.row{padding:0;width:100%;position:relative}table.container table.row{display:block}td.wrapper{padding:10px 20px 0 0;position:relative}table.column,table.columns{margin:0 auto}table.column td,table.columns td{padding:0 0 10px}table.column td.sub-column,table.column td.sub-columns,table.columns td.sub-column,table.columns td.sub-columns{padding-right:10px}td.sub-column,td.sub-columns{min-width:0}table.container td.last,table.row td.last{padding-right:0}table.one{width:30px}table.two{width:80px}table.three{width:130px}table.four{width:180px}table.five{width:230px}table.six{width:280px}table.seven{width:330px}table.eight{width:380px}table.nine{width:430px}table.ten{width:480px}table.eleven{width:530px}table.twelve{width:580px}table.one center{min-width:30px}table.two center{min-width:80px}table.three center{min-width:130px}table.four center{min-width:180px}table.five center{min-width:230px}table.six center{min-width:280px}table.seven center{min-width:330px}table.eight center{min-width:380px}table.nine center{min-width:430px}table.ten center{min-width:480px}table.eleven center{min-width:530px}table.twelve center{min-width:580px}table.one .panel center{min-width:10px}table.two .panel center{min-width:60px}table.three .panel center{min-width:110px}table.four .panel center{min-width:160px}table.five .panel center{min-width:210px}table.six .panel center{min-width:260px}table.seven .panel center{min-width:310px}table.eight .panel center{min-width:360px}table.nine .panel center{min-width:410px}table.ten .panel center{min-width:460px}table.eleven .panel center{min-width:510px}table.twelve .panel center{min-width:560px}.body .column td.one,.body .columns td.one{width:8.333333%}.body .column td.two,.body .columns td.two{width:16.666666%}.body .column td.three,.body .columns td.three{width:25%}.body .column td.four,.body .columns td.four{width:33.333333%}.body .column td.five,.body .columns td.five{width:41.666666%}.body .column td.six,.body .columns td.six{width:50%}.body .column td.seven,.body .columns td.seven{width:58.333333%}.body .column td.eight,.body .columns td.eight{width:66.666666%}.body .column td.nine,.body .columns td.nine{width:75%}.body .column td.ten,.body .columns td.ten{width:83.333333%}.body .column td.eleven,.body .columns td.eleven{width:91.666666%}.body .column td.twelve,.body .columns td.twelve{width:100%}td.offset-by-one{padding-left:50px}td.offset-by-two{padding-left:100px}td.offset-by-three{padding-left:150px}td.offset-by-four{padding-left:200px}td.offset-by-five{padding-left:250px}td.offset-by-six{padding-left:300px}td.offset-by-seven{padding-left:350px}td.offset-by-eight{padding-left:400px}td.offset-by-nine{padding-left:450px}td.offset-by-ten{padding-left:500px}td.offset-by-eleven{padding-left:550px}td.expander{visibility:hidden;width:0;padding:0!important}table.column .text-pad,table.columns .text-pad{padding-left:10px;padding-right:10px}table.column .left-text-pad,table.column .text-pad-left,table.columns .left-text-pad,table.columns .text-pad-left{padding-left:10px}table.column .right-text-pad,table.column .text-pad-right,table.columns .right-text-pad,table.columns .text-pad-right{padding-right:10px}.block-grid{width:100%;max-width:580px}.block-grid td{display:inline-block;padding:10px}.two-up td{width:270px}.three-up td{width:173px}.four-up td{width:125px}.five-up td{width:96px}.six-up td{width:76px}.seven-up td{width:62px}.eight-up td{width:52px}h1.center,h2.center,h3.center,h4.center,h5.center,h6.center,table.center,td.center{text-align:center}span.center{display:block;width:100%;text-align:center}img.center{margin:0 auto;float:none}.hide-for-desktop,.show-for-small{display:none}body,h1,h2,h3,h4,h5,h6,p,table.body,td{color:#222;font-family:Helvetica,Arial,sans-serif;font-weight:400;padding:0;margin:0;text-align:left;line-height:1.3}h1,h2,h3,h4,h5,h6{word-break:normal}h1{font-size:40px}h2{font-size:36px}h3{font-size:32px}h4{font-size:28px}h5{font-size:24px}h6{font-size:20px}body,p,table.body,td{font-size:14px;line-height:19px}p.lead,p.lede,p.leed{font-size:18px;line-height:21px}p{margin-bottom:10px}small{font-size:10px}a{color:#2ba6cb;text-decoration:none}a:active,a:hover{color:#2795b6!important}a:visited{color:#2ba6cb!important}h1 a,h2 a,h3 a,h4 a,h5 a,h6 a{color:#2ba6cb}h1 a:active,h1 a:visited,h2 a:active,h2 a:visited,h3 a:active,h3 a:visited,h4 a:active,h4 a:visited,h5 a:active,h5 a:visited,h6 a:active,h6 a:visited{color:#2ba6cb!important}.panel{background:#f2f2f2;border:1px solid #d9d9d9;padding:10px!important}.sub-grid table{width:100%}.sub-grid td.sub-columns{padding-bottom:0}table.button,table.large-button,table.medium-button,table.small-button,table.tiny-button{width:100%;overflow:hidden}table.button td,table.large-button td,table.medium-button td,table.small-button td,table.tiny-button td{display:block;width:auto!important;text-align:center;background:#2ba6cb;border:1px solid #2284a1;color:#fff;padding:8px 0}table.tiny-button td{padding:5px 0 4px}table.small-button td{padding:8px 0 7px}table.medium-button td{padding:12px 0 10px}table.large-button td{padding:21px 0 18px}table.button td a,table.large-button td a,table.medium-button td a,table.small-button td a,table.tiny-button td a{font-weight:700;text-decoration:none;font-family:Helvetica,Arial,sans-serif;color:#fff;font-size:16px}table.tiny-button td a{font-size:12px;font-weight:400}table.small-button td a{font-size:16px}table.medium-button td a{font-size:20px}table.large-button td a{font-size:24px}table.button:active td,table.button:hover td,table.button:visited td{background:#2795b6!important}table.button:active td a,table.button:hover td a,table.button:visited td a{color:#fff!important}table.button:hover td,table.large-button:hover td,table.medium-button:hover td,table.small-button:hover td,table.tiny-button:hover td{background:#2795b6!important}table.button td a:visited,table.button:active td a,table.button:hover td a,table.large-button td a:visited,table.large-button:active td a,table.large-button:hover td a,table.medium-button td a:visited,table.medium-button:active td a,table.medium-button:hover td a,table.small-button td a:visited,table.small-button:active td a,table.small-button:hover td a,table.tiny-button td a:visited,table.tiny-button:active td a,table.tiny-button:hover td a{color:#fff!important}table.secondary td{background:#e9e9e9;border-color:#d0d0d0;color:#555}table.secondary td a{color:#555}table.secondary:hover td{background:#d0d0d0!important;color:#555}table.secondary td a:visited,table.secondary:active td a,table.secondary:hover td a{color:#555!important}table.success td{background:#5da423;border-color:#457a1a}table.success:hover td{background:#457a1a!important}table.alert td{background:#c60f13;border-color:#970b0e}table.alert:hover td{background:#970b0e!important}table.radius td{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px}table.round td{-webkit-border-radius:500px;-moz-border-radius:500px;border-radius:500px}body.outlook p{display:inline!important}@media only screen and (max-width:600px){table[class=body] img{width:auto!important;height:auto!important}table[class=body] center{min-width:0!important}table[class=body] .container{width:95%!important}table[class=body] .row{width:100%!important;display:block!important}table[class=body] .wrapper{display:block!important;padding-right:0!important}table[class=body] .column,table[class=body] .columns{table-layout:fixed!important;float:none!important;width:100%!important;padding-right:0!important;padding-left:0!important;display:block!important}table[class=body] .wrapper.first .column,table[class=body] .wrapper.first .columns{display:table!important}table[class=body] table.column td,table[class=body] table.columns td{width:100%!important}table[class=body] .column td.one,table[class=body] .columns td.one{width:8.333333%!important}table[class=body] .column td.two,table[class=body] .columns td.two{width:16.666666%!important}table[class=body] .column td.three,table[class=body] .columns td.three{width:25%!important}table[class=body] .column td.four,table[class=body] .columns td.four{width:33.333333%!important}table[class=body] .column td.five,table[class=body] .columns td.five{width:41.666666%!important}table[class=body] .column td.six,table[class=body] .columns td.six{width:50%!important}table[class=body] .column td.seven,table[class=body] .columns td.seven{width:58.333333%!important}table[class=body] .column td.eight,table[class=body] .columns td.eight{width:66.666666%!important}table[class=body] .column td.nine,table[class=body] .columns td.nine{width:75%!important}table[class=body] .column td.ten,table[class=body] .columns td.ten{width:83.333333%!important}table[class=body] .column td.eleven,table[class=body] .columns td.eleven{width:91.666666%!important}table[class=body] .column td.twelve,table[class=body] .columns td.twelve{width:100%!important}table[class=body] td.offset-by-eight,table[class=body] td.offset-by-eleven,table[class=body] td.offset-by-five,table[class=body] td.offset-by-four,table[class=body] td.offset-by-nine,table[class=body] td.offset-by-one,table[class=body] td.offset-by-seven,table[class=body] td.offset-by-six,table[class=body] td.offset-by-ten,table[class=body] td.offset-by-three,table[class=body] td.offset-by-two{padding-left:0!important}table[class=body] table.columns td.expander{width:1px!important}table[class=body] .right-text-pad,table[class=body] .text-pad-right{padding-left:10px!important}table[class=body] .left-text-pad,table[class=body] .text-pad-left{padding-right:10px!important}table[class=body] .hide-for-small,table[class=body] .show-for-desktop{display:none!important}table[class=body] .hide-for-desktop,table[class=body] .show-for-small{display:inherit!important}}table.facebook td{background:#3b5998;border-color:#2d4473}table.facebook:hover td{background:#2d4473!important}table.twitter td{background:#00acee;border-color:#0087bb}table.twitter:hover td{background:#0087bb!important}table.google-plus td{background-color:#DB4A39;border-color:#C00}table.google-plus:hover td{background:#C00!important}.template-label{color:#000;font-weight:700;font-size:11px}.callout .wrapper{padding-bottom:20px}.callout .panel{background:#ECF8FF;border-color:#b9e5ff}.header{background:#F0F2F3}.footer .wrapper{background:#ebebeb}.footer h5{padding-bottom:10px}table.columns .text-pad{padding-left:10px;padding-right:10px}table.columns .left-text-pad{padding-left:10px}table.columns .right-text-pad{padding-right:10px}@media only screen and (max-width:600px){table[class=body] .right-text-pad{padding-left:10px!important}table[class=body] .left-text-pad{padding-right:10px!important}}
   </style><body>';
-
-
         $this->email->initialize($config);
 		
   		$this->email->set_newline("\r\n");
@@ -456,7 +416,6 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
 		$this->email->attach($files);
 		}	
 		}
-
 		endif;
 			
   		$this->email->subject($subject);
@@ -465,20 +424,16 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
   if($this->email->send())
  {
  	$this->email->clear(TRUE);
-
 	unlink($attach_file);
 	return TRUE;
-
  }
  else
 {
 //echo $this->email->print_debugger(); 
 $this -> load -> view('shared_files/404');
 exit;
-
  
 }
-
 }
 /**************************************** creating excel sheet for the system *************************/
 	public function create_excel($excel_data=NUll) {
@@ -493,14 +448,10 @@ if(count($excel_data)>0):
 		$objPHPExcel -> getProperties() -> setTitle($excel_data['doc_title']);
 		$objPHPExcel -> getProperties() -> setSubject($excel_data['doc_title']);
 		$objPHPExcel -> getProperties() -> setDescription("");
-
 		$objPHPExcel -> setActiveSheetIndex(0);
-
 		$rowExec = 1;
-
 		//Looping through the cells
 		$column = 0;
-
 		foreach ($excel_data['column_data'] as $column_data) {
 			$objPHPExcel -> getActiveSheet() -> setCellValueByColumnAndRow($column, $rowExec, $column_data);
 			$objPHPExcel -> getActiveSheet() -> getColumnDimension(PHPExcel_Cell::stringFromColumnIndex($column)) -> setAutoSize(true);
@@ -520,16 +471,12 @@ if(count($excel_data)>0):
          }
         $rowExec++;
 		}
-
 		$objPHPExcel -> getActiveSheet() -> setTitle('Simple');
-
 		// Save Excel 2007 file
 		//echo date('H:i:s') . " Write to Excel2007 format\n";
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-
    	    	// We'll be outputting an excel file
 	if(isset($excel_data['report_type'])){
-
 	   $objWriter->save("./print_docs/excel/excel_files/".$excel_data['file_name'].'.xls');
    	} else{
    	
@@ -553,7 +500,6 @@ endif;
     $facility_details = facility_orders::get_facility_order_details($order_id);
 	if(count($facility_details)==1):
 	$facility_stock_data_item = facility_order_details::get_order_details($order_id);
-
 	// echo "<pre>"; print_r($facility_stock_data_item);echo "</pre>";exit;
 	
 	$sysnthesis = array();
@@ -566,9 +512,7 @@ endif;
 				);
 		}
 	}
-
 	// echo "<pre>"; print_r($facility_stock_data_item);echo "</pre>";exit;
-
     $file_name =isset($file_name) ? $file_name.'.xls' : time().'.xls';
 	
 	$excel2 = PHPExcel_IOFactory::createReader('Excel5');
@@ -588,9 +532,7 @@ endif;
     ->setCellValue('H7', $facility_details[0]['county'])
 	->setCellValue('H8', $facility_details[0]['order_date']);
    //  Loop through each row of the worksheet in turn
-
 	// echo "<pre>"; print_r($facility_stock_data_item);echo "</pre>";exit;
-
 for ($row = 17; $row <= $highestRow; $row++){ 
     //  Read a row of data into an array
     $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);							  
@@ -605,7 +547,6 @@ for ($row = 17; $row <= $highestRow; $row++){
    }
 }
 // exit;
-
    $objWriter = PHPExcel_IOFactory::createWriter($excel2, 'Excel5');
    if($report_type=='download_file'){
    	// We'll be outputting an excel file
@@ -623,16 +564,13 @@ for ($row = 17; $row <= $highestRow; $row++){
    	 $objWriter->save("./print_docs/excel/excel_files/".$file_name);
    }
    endif;
-
  }
-
  public function clone_meds_excel_order_template($order_id,$report_type,$file_name=null){
     $inputFileName = 'print_docs/excel/excel_template/MEDS Customer Order Form.xls';
     $facility_details = facility_orders::get_facility_order_details($order_id);
     // echo "<pre>";print_r($facility_details);echo "</pre>";exit;
 	if(count($facility_details)==1):
 	$facility_stock_data_item = facility_order_details::get_order_details($order_id);
-
 	// echo "<pre>"; print_r($facility_stock_data_item);echo "</pre>";exit;
 	
 	$sysnthesis = array();
@@ -645,9 +583,7 @@ for ($row = 17; $row <= $highestRow; $row++){
 				);
 		}
 	}
-
 	// echo "<pre>"; print_r($facility_stock_data_item);echo "</pre>";exit;
-
     $file_name =isset($file_name) ? $file_name.'.xls' : time().'.xls';
 	
 	$excel2 = PHPExcel_IOFactory::createReader('Excel5');
@@ -659,11 +595,9 @@ for ($row = 17; $row <= $highestRow; $row++){
     // $highestColumn = $sheet->getHighestColumn();
     $highestColumn = 'L';//due to its weird format
 	// echo "<pre>";print_r($highestColumn);echo "</pre>";exit;
-
 	
     $excel2->setActiveSheetIndex(0);
 	
-
  //    $excel2->getActiveSheet()
  //    ->setCellValue('H4', $facility_details[0]['facility_code'])
  //    ->setCellValue('H5', $facility_details[0]['facility_name'])
@@ -671,9 +605,7 @@ for ($row = 17; $row <= $highestRow; $row++){
  //    ->setCellValue('H7', $facility_details[0]['county'])
 	// ->setCellValue('H8', $facility_details[0]['order_date']);
    //  Loop through each row of the worksheet in turn
-
 	// echo "<pre>"; print_r($facility_stock_data_item);echo "</pre>";exit;
-
 for ($row = 16; $row <= $highestRow; $row++){ 
     //  Read a row of data into an array
     $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE);
@@ -709,10 +641,7 @@ for ($row = 16; $row <= $highestRow; $row++){
    	 $objWriter->save("./print_docs/excel/excel_files/".$file_name);
    }
    endif;
-
  }
-
-
  public function get_excel_order_total($filename = NULL){
 	 	// echo $filename;
  	$filename =isset($filename) ? $filename.'.xls' : time().'.xls';
@@ -727,13 +656,11 @@ for ($row = 16; $row <= $highestRow; $row++){
 	$value = $sheet->getCell( 'J409' )->getCalculatedValue();
 	
     $excel2->setActiveSheetIndex(0);
-
     return $value;
  	}
 /*********KEMSA UPLOADER**********/
  public function kemsa_excel_order_uploader($inputFileName){
    // $inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx';
-
 	if(isset($inputFileName)):
 	$item_details = Commodities::get_all_from_supllier(1);
     $ext = pathinfo($inputFileName, PATHINFO_EXTENSION);
@@ -781,11 +708,9 @@ array_push($temp,array('sub_category_name'=>$data['sub_category_name'],'commodit
    	} 	
    }
 }
-
    unset($objPHPExcel);
   return(array('row_data'=>$temp,'facility_code'=>$facility_code));
    endif;
-
  }
 /*************/	
 /* HCMP file downloader 
@@ -797,9 +722,7 @@ force_download(basename($path), $data);
 /*************/	
 /* HCMP PDF creator
 /********/	
-
 public function create_pdf($pdf_data=NULL){
-
 if(count($pdf_data)>0):	
 	
 $url=base_url().'assets/img/coat_of_arms.png';
@@ -809,7 +732,6 @@ $html_title="<div align=center><img src='$url' height='70' width='70'style='vert
 Ministry of Health</div>
 <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold;display: block; font-size: 13px;'>
 Health Commodities Management Platform</div><hr/>";
-
 $table_style='<style>table.data-table {border: 1px solid #DDD;margin: 10px auto;border-spacing: 0px;}
 table.data-table th {border: none;color: #036;text-align: center;border: 1px solid #DDD;border-top: none;max-width: 450px;}
 table.data-table td, table th {padding: 4px;}
@@ -823,7 +745,6 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
             $this->mpdf->simpleTables = true;
             $this->mpdf->WriteHTML($table_style.$pdf_data['pdf_html_body']);
             $this->mpdf->SetFooter("{DATE D j M Y }|{PAGENO}/{nb}|Prepared by: $name, source HCMP");
-
 			
 	if($pdf_data['pdf_view_option']=='save_file'):
 		 //change the pdf to a binary file then use codeigniter write function to write the file as pdf in a specific folder 
@@ -835,7 +756,6 @@ table.data-table td {border: none;border-left: 1px solid #DDD;border-right: 1px 
 	        $this->mpdf->Output($pdf_data['file_name'],'I');
 			exit;
 	endif;		
-
 	
 endif;
 }
@@ -909,9 +829,7 @@ endif;
 					  $high_chart .= json_encode($temp_array)."},";				  
 				   endforeach;
 	     $high_chart .="]  })";
-
 	endif;
-
 	return $high_chart; 	
   }
 //// /////HCMP Create high chart graph
@@ -949,7 +867,6 @@ endif;
 					  $high_chart .= "[]".json_encode($temp_array)."},";				  
 				   endforeach;
 	     $high_chart .="]  })";
-
 	endif;
 	return $high_chart; 	
   }
@@ -1131,5 +1048,4 @@ Facility Order No $order_id| KEMSA Order No $kemsa_order_no | Total ordered valu
 HTML_DATA;
 return array('table'=>$message,'date_ordered'=>$order_date,'date_received'=>$deliver_date,'order_total'=>$order_total,'actual_order_total'=>$actual_order_total,'lead_time'=>$date_diff,'facility_name'=>$facility_name);
  }
-
 }
