@@ -11,7 +11,7 @@
 	width: 100%;
 	height:auto;
 	-webkit-box-shadow: 1px 1px 1px 1px #DDD3ED;
-box-shadow: 1px 1px 1px 1px #DDD3ED;
+	box-shadow: 1px 1px 1px 1px #DDD3ED;
 	margin:auto;
 	}
 </style>

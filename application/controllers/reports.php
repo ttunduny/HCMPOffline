@@ -4015,7 +4015,7 @@ class Reports extends MY_Controller {
 	 */
 	public function county_expiries() {
 		$county_id = $this -> session -> userdata('county_id');
-		$county_id = $this -> session -> userdata('county_id');
+		$user_indicator = $this -> session-> userdata('user_indicator');
 		//$year = date('Y');
 		$data['year'] = date('Y');
 		$data['title'] = "Expired Products";

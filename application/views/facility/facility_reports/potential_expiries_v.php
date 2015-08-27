@@ -13,7 +13,7 @@
 </div>
  </div>
 
-<div class="well">
+<div class="well" style="background-color:#ffffff">
   <div style="min-height: 400px;" id="reports_display">
     <table  class="table table-hover table-bordered table-update" id="potential_exp_datatable" >
   <thead style="background-color: white">
