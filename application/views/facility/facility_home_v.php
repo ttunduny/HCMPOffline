@@ -153,7 +153,7 @@
             <h5>Place an Order</h5>
         </div>
          <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
-            <!-- <a href="<?php echo base_url('reports/facility_transaction_data/MEDS'); ?>"><h5>MEDS online</h5></a> -->
+            <a href="<?php echo base_url('reports/facility_transaction_data/MEDS'); ?>"><h5>MEDS online</h5></a>
             <a href="#" id="kemsa_lists"><h5>KEMSA online</h5></a>
             <span>
                 <a class="other_listings" style="margin-left:15px;width:100%;" href="<?php echo base_url('reports/facility_transaction_data/KEMSA'); ?>"><h5>For own facility</h5></a>
