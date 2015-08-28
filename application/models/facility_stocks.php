@@ -97,7 +97,7 @@ from facility_stocks fs, commodity_source c_s, drug_store_issues ds,commodities 
 	c.total_commodity_units,fs.manufacture,
 	c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commodities c, commodity_source c_s
 	 where fs.facility_code ='$facility_code' $check_expiry_date 
-	 and c.id=fs.commodity_id and fs.status='1' $addition 
+	 and c.id=fs.commodity_id and fs.status='1' AND c_s.id=fs.source_of_commodity $addition 
 	");
 
 		return $stocks;
