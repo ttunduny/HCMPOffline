@@ -28,7 +28,7 @@ class Commodities extends Doctrine_Record {
 	}
 
 	public static function get_all() {
-		$query = Doctrine_Query::create() -> select("*") -> from("commodities")->where("status=1");
+		$query = Doctrine_Query::create() -> select("*") -> from("commodities")->where("status=1")->orderBy('commodity_name','ASC');
 		$commodities = $query -> execute();
 		
 		return $commodities;
@@ -145,7 +145,8 @@ return $inserttransaction;
 				c.total_commodity_units,
                 c.unit_size,c.unit_cost ,c_s.source_name
                FROM commodities c, commodity_source c_s
-               WHERE c.commodity_source_id= $supplier_id
+               WHERE c_s.id = c.commodity_source_id
+               AND c.commodity_source_id= $supplier_id
                ORDER BY c.commodity_name asc "); 
 return $inserttransaction;
 	}

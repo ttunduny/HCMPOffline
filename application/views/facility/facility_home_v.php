@@ -154,7 +154,11 @@
         </div>
          <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
             <!-- <a href="<?php echo base_url('reports/facility_transaction_data/MEDS'); ?>"><h5>MEDS online</h5></a> -->
-            <a href="<?php echo base_url('reports/facility_transaction_data/KEMSA'); ?>"><h5>KEMSA online</h5></a>
+            <a href="#" id="kemsa_lists"><h5>KEMSA online</h5></a>
+            <span>
+                <a class="other_listings" style="margin-left:15px;width:100%;" href="<?php echo base_url('reports/facility_transaction_data/KEMSA'); ?>"><h5>For own facility</h5></a>
+                <a class="other_listings" style="margin-left:15px;width:100%;" href="<?php echo base_url('reports/facility_transaction_data_other/KEMSA'); ?>"><h5>For other facility</h5></a>              
+            </span>
             <a href="" class="order-for-excel"><h5>KEMSA via excel</h5></a>
             
         </div>  
@@ -223,6 +227,11 @@
 
    		startIntro();
    	}
+    $('.other_listings').hide();
+
+    $('#kemsa_lists').click(function(e){
+      $( ".other_listings" ).toggle('slow');
+    });
    	//for hiding the tabs when the page loads
    	$('#update_order_hide').hide() 
        $('#order_hide').hide() 

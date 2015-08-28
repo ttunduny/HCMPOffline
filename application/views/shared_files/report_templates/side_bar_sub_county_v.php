@@ -48,6 +48,7 @@ $identifier = $this -> session -> userdata('user_indicator');
                         </h4>
                     </div>
                 </div>
+                
                 <!--Orders-->
                 <div class="panel panel-default <?php echo $active_panel=='orders'? 'active-panel': null; ?>">
                     <div class="panel-heading">
