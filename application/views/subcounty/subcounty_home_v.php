@@ -42,13 +42,12 @@ $identifier = $this -> session -> userdata('user_indicator');
                 </span>Expiries</a>
             </h4>
         </div>
-
+<!-- 
         <div id="collapseone" class="panel-collapse collapse <?php echo $active_panel=='expiries'? 'in': null; ?>">
             <div class="panel-body">
                 <table class="table">
                     <tr>
                         <td>
-                            <!-- <a href="<?php// echo base_url().'reports/county_expiries' ?>" data-toggle="collapse" data-parent="#accordion"><span class="glyphicon glyphicon-upload"></span>Potential Expiries</a> -->
                             <a href="#collapseten" data-toggle="collapse" data-parent="#accordion" id="potential_expiries"><span class="glyphicon glyphicon-upload"></span>Potential Expiries</a>
                         </td>
                     </tr>
@@ -56,6 +55,7 @@ $identifier = $this -> session -> userdata('user_indicator');
 
             </div>
         </div>
+         -->
         </div>
 
                  <!--Orders-->
