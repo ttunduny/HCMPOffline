@@ -711,16 +711,23 @@ $("#create_new").click(function() {
 		  	$('#confirmDeActivateModal').modal('hide');
 		  	 return false;
 		});
+		
 		$('#btnYesActivate').click(function() {
 		    // handle deletion here
 		  	var facility_code = $('#confirmActivateModal').data('id');
-		  	change_status_new(facility_code,0);
+		  	change_status_new(facility_code,0,1);
+		  	$('#confirmActivateModal').modal('hide');
+		});
+		$('#btnYesActivateNoUsers').click(function() {
+		    // handle deletion here
+		  	var facility_code = $('#confirmActivateModal').data('id');
+		  	change_status_new(facility_code,0,0);
 		  	$('#confirmActivateModal').modal('hide');
 		});
 		$('#btnYesDeactivate').click(function() {
 		    // handle deletion here
 		  	var facility_code = $('#confirmDeActivateModal').data('id');
-		  	change_status_new(facility_code,1);
+		  	change_status_new(facility_code,1,0);
 		  	$('#confirmDeActivateModal').modal('hide');
 		});
   //  		$('.deactivate').on('click', function(e) {
@@ -841,7 +848,7 @@ $("#create_new").click(function() {
 		// 	}
 		// });
 
-		function change_status_new(facility_code,stati){//seth
+		function change_status_new(facility_code,stati,add_users){//seth
       // alert(checked);return;
 	      message = "";
 	     
@@ -877,8 +884,11 @@ $("#create_new").click(function() {
 	        	$('#btn_'+facility_code).addClass('btn-danger');
 	        	$('#btn_'+facility_code).removeClass('activate');
 	        	$('#btn_'+facility_code).addClass('deactivate');
-	        	var base_url = "<?php echo base_url().'user/user_create_multiple/' ?>";
-       			window.location.href = base_url+facility_code;	        	
+	        	if(add_users==1){
+	        		var base_url = "<?php echo base_url().'user/user_create_multiple/' ?>";
+       				window.location.href = base_url+facility_code;	      
+	        	}
+	        	  	
               }else{
               	message_after = "Facility: "+ facility_code +" has been Deactivated";
 	        	$('#chkbx_'+facility_code).removeAttr('checked');	        	
@@ -918,13 +928,13 @@ $("#create_new").click(function() {
 		$('#btnYesActivate').click(function() {
 		    // handle deletion here
 		  	var facility_code = $('#confirmActivateModal').data('id');
-		  	change_status_new(facility_code,0);
+		  	change_status_new(facility_code,0,0);
 		  	$('#confirmActivateModal').modal('hide');
 		});
 		$('#btnYesDeactivate').click(function() {
 		    // handle deletion here
 		  	var facility_code = $('#confirmDeActivateModal').data('id');
-		  	change_status_new(facility_code,1);
+		  	change_status_new(facility_code,1,0);
 		  	$('#confirmDeActivateModal').modal('hide');
 		});
    		$('.deactivate').on('click', function(e) {
@@ -1047,8 +1057,9 @@ $("#create_new").click(function() {
         <p>Proceed to addition of users?</p>
       </div>
       <div class="modal-footer">
-        <button type="button"  id="btnNoActivate" class="btn btn-default" data-dismiss="modal">No</button>
-        <button type="button" id="btnYesActivate" class="btn btn-primary" id="btn-ok">Yes</button>
+        <button type="button"  id="btnYesActivateNoUsers" class="btn btn-success" data-dismiss="modal">Activate without Users</button>
+        <button type="button"  id="btnNoActivate" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="button" id="btnYesActivate" class="btn btn-primary" id="btn-ok">Activate adding Users</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
