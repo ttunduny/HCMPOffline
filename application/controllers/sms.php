@@ -2598,6 +2598,8 @@ class sms extends MY_Controller {
 			$data['title'] = "Weekly Log Summary";
 			$data['content_view'] = "admin/log_summary_v";
 			$data['banner_text'] = "Weekly Log Summary";
+
+			
 			$this -> load -> view("shared_files/template/dashboard_v", $data);
 		// echo 'This '.$res;exit;
 		

@@ -10,7 +10,7 @@
         
  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 " style="padding:0;border-radius: 0; ">
 <h1 class="page-header" style="margin: 0;font-size: 1.6em;"></h1>
-<div class="well">
+<div class="well" style="background-color:#ffffff">
 <div style="height: 100%;" id="notification"><?php $this -> load -> view($report_view);?></div>
 </div>
 </div>

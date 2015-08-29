@@ -28,7 +28,7 @@ class Commodities extends Doctrine_Record {
 	}
 
 	public static function get_all() {
-		$query = Doctrine_Query::create() -> select("*") -> from("commodities")->where("status=1");
+		$query = Doctrine_Query::create() -> select("*") -> from("commodities")->where("status=1")->orderBy('commodity_name','ASC');
 		$commodities = $query -> execute();
 		
 		return $commodities;
