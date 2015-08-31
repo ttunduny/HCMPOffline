@@ -4024,7 +4024,7 @@ class Reports extends MY_Controller {
 		$data['report_view'] = "subcounty/reports/county_expiries_v";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
 		$data['active_panel'] = 'expiries';
-		$this -> load -> view("shared_files/template/template", $data);
+		return $this -> load -> view("subcounty/reports/county_expiries_v", $data);
 	}
 	public function county_consumption() {
 		$county_id = $this -> session -> userdata('county_id');
