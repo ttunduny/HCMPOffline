@@ -20,10 +20,13 @@
 		
 	}
 		
+  .table{
+    font-size: 13px;
+  }
 	
 </style>
 
-<!---Echo Comment -->
+<!---random comment to enable for commit -->
 
 
 <div class="container-fluid">
@@ -45,8 +48,9 @@
   </button>
 </div>
 <br/><br/>
+<center>
 <div style="width:92%">
-<table id="sms_usage" class="table table-hover table-bordered table-update">
+<table id="sms_usage" class="table table-hover table-bordered table-update col-md-10">
   <thead>
     <tr>
       <th ><b>Facility Name</b></th>
@@ -112,6 +116,7 @@
   </tbody>
   </table>
 </div>
+</center>
 
   	
   </div>

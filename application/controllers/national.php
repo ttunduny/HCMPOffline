@@ -1177,9 +1177,7 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 					array_push($row_data, array($facility_stock_data_item["county"], $facility_stock_data_item["subcounty"], $facility_stock_data_item["facility_name"], $facility_stock_data_item["facility_code"], $facility_stock_data_item["drug_name"], $facility_stock_data_item["total"]));
 				endforeach;
 			}
-			
-			
-			
+
 			$excel_data['row_data'] = $row_data;
 
 			$this -> hcmp_functions -> create_excel($excel_data);
