@@ -43,10 +43,22 @@ $identifier = $this -> session -> userdata('user_indicator');
                 <div class="panel panel-default <?php echo $active_panel=='expiries'? 'active-panel': null; ?>">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a  data-parent="#accordion" href="<?php echo base_url("reports/county_expiries") ?>" id="expiries"><span class="glyphicon glyphicon-trash">
+                            <a  data-parent="#accordion" href="<?php echo base_url("reports/expiries_dashboard") ?>" id="expiries"><span class="glyphicon glyphicon-trash">
                             </span>Expiries</a>
                         </h4>
                     </div>
+                    <div id="collapseone" class="panel-collapse collapse <?php echo $active_panel=='expiries'? 'in': null; ?>">
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <a href="<?php echo base_url().'reports/county_expiries'; ?>" data-toggle="collapse" data-parent="#accordion" id="potential_expiries"><span class="glyphicon glyphicon-upload"></span>Potential Expiries</a>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+        </div>
                 </div>
                 
                 <!--Orders-->
