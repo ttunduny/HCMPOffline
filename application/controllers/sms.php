@@ -2596,7 +2596,7 @@ class sms extends MY_Controller {
 			$data['column_data'] = $column_data;
 			$data['row_data'] = $row_data;
 			$data['title'] = "Weekly Log Summary";
-			$data['content_view'] = "admin/log_summary_v";
+			$data['content_view'] = "Admin/log_summary_v";
 			$data['banner_text'] = "Weekly Log Summary";
 
 			

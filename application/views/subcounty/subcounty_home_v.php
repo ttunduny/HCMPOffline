@@ -48,7 +48,6 @@ $identifier = $this -> session -> userdata('user_indicator');
                 <table class="table">
                     <tr>
                         <td>
-                            <!-- <a href="<?php// echo base_url().'reports/county_expiries' ?>" data-toggle="collapse" data-parent="#accordion"><span class="glyphicon glyphicon-upload"></span>Potential Expiries</a> -->
                             <a href="#collapseten" data-toggle="collapse" data-parent="#accordion" id="potential_expiries"><span class="glyphicon glyphicon-upload"></span>Potential Expiries</a>
                         </td>
                     </tr>
@@ -56,6 +55,7 @@ $identifier = $this -> session -> userdata('user_indicator');
 
             </div>
         </div>
+        
         </div>
 
                  <!--Orders-->
@@ -204,8 +204,8 @@ ajax_request_replace_div_content('reports/expiries_dashboard',"#notification");
 $("#potential_expiries").on('click', function(){
 $('.page-header').html('Potential Expiries');
 // active_panel(this);
-var url_ = '<?php echo base_url();?>reports/county_expiries';
-window.location = url_;
+// active_panel(this);
+ajax_request_replace_div_content('reports/county_expiries',"#notification");
 // ajax_request_replace_div_content('reports/potential_exp_sub_county_titus/',"#notification");
 // ajax_request_replace_div_content('reports/potential_expiries_dashboard',"#notification");
 });
