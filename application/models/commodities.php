@@ -205,6 +205,7 @@ return $inserttransaction;
     WHERE c.commodity_code NOT IN 
     (SELECT distinct commodity_id FROM facility_transaction_table WHERE facility_code = $facility_code) 
     AND c.commodity_source_id = $source
+    GROUP BY c.commodity_code
     ORDER BY `c`.`commodity_name` ASC
               "); 
               
