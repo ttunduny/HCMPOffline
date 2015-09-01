@@ -568,7 +568,8 @@ class orders extends MY_Controller {
 			//order table details
 			$bed_capacity = '0';
 			$drawing_rights = '0';
-			$status = '2';
+			$status = ($commodity_source==1)? '1' : '2';
+			// $status = '2';
 			$order_total = $this -> input -> post('total_order_value');
 			$order_no = '0';
 			$facility_code = $this -> input -> post('facility_code');
