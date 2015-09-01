@@ -84,10 +84,12 @@ class Facility_activation extends MY_Controller
 		$new_status =null;
 		if($status==0){
 			$new_status = 1;
+			$current_date = date("Y-m-d");
 		}else{
 			$new_status = 0;
+			$current_date = '0000-00-00 00:00:00';
+
 		}
-		$current_date = date("Y-m-d");
 		$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
 		$update_user->execute("UPDATE `facilities` SET using_hcmp = '$new_status',date_of_activation='$current_date' WHERE `facility_code`= '$facility_code'");
 		$sql = "select DISTINCT f.id, f.facility_code,f.date_of_activation,f.using_hcmp, f.facility_name, f.district, f.owner, c.county, d.district as district_name
