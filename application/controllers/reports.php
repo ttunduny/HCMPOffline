@@ -526,7 +526,8 @@ class Reports extends MY_Controller {
 		$data['facility_name'] = $facility_name[0]['facility_name']; ;
 		$interval = $_POST['option_selected'];
 		$data['report_data'] = Facility_stocks::specify_period_potential_expiry($facility_code, $interval);
-		$this -> load -> view("facility/facility_reports/ajax/potential_expiries_ajax", $data);
+		// echo "<pre>";print_r($data['report_data']);echo "</pre>";exit;
+		$this -> load -> view("facility/facility_reports/ajax/potential_expiries_ajax_new", $data);
 	}
 	public function potential_exp_process_store($district_id = null) {
 		$district_id = isset($district_id) ? $district_id : $this -> session -> userdata('district_id');
@@ -4111,6 +4112,7 @@ class Reports extends MY_Controller {
 		$district_id = $this -> session -> userdata('district_id');
 		$dist_id = isset($district_id) ? $district_id : null;
 		$expiries_array = Facility_stocks::get_potential_expiry_summary($county_id, $year, $dist_id);
+		// echo "<pre>";print_r($expiries_array);echo "</pre>";exit;
 		$graph_data = $series_data = array();
 		$total_expiry = 0;
 		foreach ($expiries_array as $facility_expiry_data) :
