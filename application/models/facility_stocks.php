@@ -405,7 +405,7 @@ where ds.expiry_date
 
 	public static function potential_expiries($facility_code) {
 		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date 
-		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code' AND current_balance>0 AND status IN (1,2)");
+		BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) AND facility_code='$facility_code' AND YEAR(expiry_date) = YEAR(NOW()) AND current_balance>0 AND status IN (1,2)");
 
 		$stocks = $query -> execute();
 		return $stocks;
@@ -531,10 +531,34 @@ where ds.expiry_date
 	}
 
 	public static function specify_period_potential_expiry($facility_code, $interval) {
-		$query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL $interval MONTH) 
-		 AND facility_code='$facility_code' AND current_balance>0");
-
-		$stocks = $query -> execute();
+		// $query = Doctrine_Query::create() -> select("*") -> from("Facility_stocks") -> where("expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL $interval MONTH) 
+		//  AND facility_code='$facility_code' AND YEAR(expiry_date) = YEAR(NOW()) AND current_balance>0");
+		$stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() ->fetchAll("
+			SELECT 
+				fs.facility_code,
+			    fs.current_balance,
+			    fs.initial_quantity,
+			    fs.date_modified,
+    			fs.batch_no,
+    			fs.expiry_date,
+    			fs.manufacture,
+			    c.id,
+			    c.commodity_code,
+			    c.commodity_name,
+			    c.unit_size,
+			    c.unit_cost,
+			    c.total_commodity_units,
+			    ROUND((fs.current_balance / c.total_commodity_units) * c.unit_cost, 1) AS total
+			FROM
+			    facility_stocks fs,commodities c
+			WHERE
+			    expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL $interval MONTH)
+					AND fs.commodity_id = c.id 
+			        AND fs.facility_code = $facility_code
+			        AND fs.current_balance > 0
+			        AND YEAR(fs.expiry_date) = YEAR(NOW())
+			        AND fs.status IN (1 , 2)");
+		// $stocks = $query -> execute();
 		return $stocks;
 	}
 
