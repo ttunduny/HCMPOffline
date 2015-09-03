@@ -33,7 +33,7 @@
         <h5>Donations</h5> 
         	<p>
 			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/pending') ?>"><span class="badge"><?php 
-				echo $facility_dashboard_notifications['facility_donations'];?></span> Items donated by you are pending receipt</a> 
+				echo $facility_dashboard_notifications['facility_donations'];?></span> Donated items by you are pending receipt</a> 
 			</p>
 			 </div>
 		  <?php endif; //donations_pending?>
