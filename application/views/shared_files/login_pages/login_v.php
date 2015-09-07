@@ -167,7 +167,7 @@
 
 									<a class="" style="margin-left: 2%;" href="<?php echo base_url().'user/forgot_password'?>" id="modalbox">Can't access your account ?</a>
 									<a class="" style="margin-left: 2%;" href="<?php echo base_url().'user/sms_activate'?>" id="modalbox">Activate my Account?</a>
-									<a class="" style="margin-left: 2%;" href="mailto:hcmphelpdesk@googlegroups.com" id="modalbox">Report problems</a>
+									<!-- <a class="" style="margin-left: 2%;" href="mailto:hcmphelpdesk@googlegroups.com" id="modalbox">Report problems</a> -->
 
 								</div>
 
