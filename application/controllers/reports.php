@@ -1,4 +1,4 @@
-<?php
+f<?php
 /**
  * @author Kariuki & Collins & Mureithi
  */
@@ -871,15 +871,60 @@ class Reports extends MY_Controller {
 		
 	}
 
-	public function system_usage_temp(){
-
-
+	public function system_usage_graph(){
 		$data['temporary_system_usage'] = $this->monitoring(1);
+		$data['title'] = " System Usage";
+		$data['banner_text'] = "System Use Statistics";
+		$temp_data = $data['temporary_system_usage'];
+
+		//for($i = 0; $i < count($temp_data); $i++){
+		//echo "<pre>"; print_r($temp_data); echo "</pre>";
+		//exit;
+		//}
+		/*echo "<pre>"; print_r($temp_data); echo "</pre>";
+		echo count($temp_data); echo "<br  />";
+		print_r($temp_data[0]);
+		exit;*/
+		$array_length = count($temp_data);
+		$last_login_new = array();
+		$facility_name_new = array();
+		for($i = 0; $i < $array_length; $i++){
+			$last_login_new[$i] = intval($temp_data[$i][5]);
+			$facility_name_new[$i] = $temp_data[$i][0];
+		}
+		/*echo "<pre>"; print_r($last_login_new); echo "</pre>";
+		echo "<pre>"; print_r($facility_name_new); echo "</pre>"; 
+		exit;*/
+		
+		$graph_type = 'column';
+		$graph_data = array();
+		$graph_data = array_merge($graph_data, array("graph_id" => 'lesan_trial'));
+		$graph_data = array_merge($graph_data, array("graph_title" => "Days From Last Login per Facility"));
+		$graph_data = array_merge($graph_data, array("color" => "['#AA4643', '#89A54E']"));
+		$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
+		$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Days"));
+		$graph_data = array_merge($graph_data, array("graph_categories" => $facility_name_new));
+		$graph_data = array_merge($graph_data, array("series_data" => array()));
+
+		$graph_data['series_data'] = array_merge($graph_data['series_data'], array('Days from last login' => $last_login_new));
+
+		$data = array();
+		$data['graph_id'] = 'lesan_trial';
+		$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
+		$view = 'shared_files/template/template';
+		
+		$data['content_view'] = "shared_files/report_templates/high_charts_template_v";
+		
+		$this -> load -> view($data['content_view'], $data);
+		return $this -> load -> view($view);
+	}
+
+	public function system_usage_temp(){
+ 		$data['temporary_system_usage'] = $this->monitoring(1);
 		$data['title'] = " System Usage";
 		$data['banner_text'] = "System Use Statistics";
 		$data['content_view'] = "subcounty/ajax/system_usage_temporary";
 		// $data['sidebar'] = "shared_files/report_templates/side_bar_v";
-
 		$view = 'shared_files/template/template';
 		return $this -> load -> view($view, $data);
 	}
@@ -3653,6 +3698,8 @@ class Reports extends MY_Controller {
 			        	$final_array[$keyy]['Days From Last Order'] = $days_last_ordered;
 			        	// $final_array[$i]['Days From Last Seen'] = abs($last_seen_time - $now);
 				$last_order_time = NULL;
+
+
 			        }//end of facility code if
 				
 			}//end of last seen foreach

@@ -401,6 +401,9 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 				$series_data2 = array_merge($series_data2, array($val2));
 				array_push($series_data_2, array($data, $val2));
 			endforeach;
+			/*echo "<pre>";
+			print_r($commodity_array);
+			echo "</pre>";*/
 			$graph_type = 'column';
 
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
@@ -419,7 +422,7 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
 
 			// print_r($data['high_graph']);
-			//exit;
+			// exit;
 			return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
 		else :
 			$excel_data = array('doc_creator' => "HCMP", 'doc_title' => "Expiry  $title", 'file_name' => "Stock Expired in $title  $year");
