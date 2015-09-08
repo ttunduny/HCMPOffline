@@ -93,7 +93,7 @@
 </tbody>
 </table> 
 <?php echo form_close();?> 
-<?php if(isset($editable)){ } else{ ?>
+<?php if(!isset($editable)){ } else{ ?>
 <hr />
 <div class="container-fluid">
 <div style="float: right">
