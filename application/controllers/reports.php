@@ -69,8 +69,8 @@ class Reports extends MY_Controller {
 	 */
 	//Default function for all non functioning parts of the system
 	public function work_in_progress() {
-		$data['title'] = "Work In Progress";
-		$data['banner_text'] = "Work In Progress";
+		$data['title'] = "MEDS Orders";
+		$data['banner_text'] = "MEDS Orders";
 		$data['content_view'] = "shared_files/work_in_progress";
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);

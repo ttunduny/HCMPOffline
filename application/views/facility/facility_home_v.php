@@ -169,7 +169,8 @@
          </div>  
         	  <div style="height:auto; margin-bottom: 2px" class="" id="update_order_hide">
 	            <a href="<?php echo base_url('reports/order_listing/facility'); ?>"><h5>KEMSA</h5></a>
-	            <a href="<?php echo base_url('reports/work_in_progress'); ?>"><h5>MEDS</h5></a> 
+              <a href="<?php echo base_url('reports/order_listing/facility'); ?>"><h5>MEDS</h5></a> 
+	            <!-- <a href="<?php// echo base_url('reports/work_in_progress'); ?>"><h5>MEDS</h5></a>  -->
         	</div>       	 
         <div style="height:auto; margin-bottom: 2px" class="order message ">
           <a href="<?php echo base_url("issues/add_service_points") ?>"><h5>Add Service Points </h5></a>          

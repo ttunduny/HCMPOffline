@@ -79,7 +79,7 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 							</td>
 
 							<td id="step2">
-								<input class='form-control input-small opening_balance' type="text" id="opening_balance[0]" name="opening_balance[0]" value="" class="opening_balance"/>
+								<input class='form-control input-small opening_balance' type="text" id="open[0]" name="open[0]" value="" class="opening_balance"/>
 							</td>
 
 							<td id="step2">

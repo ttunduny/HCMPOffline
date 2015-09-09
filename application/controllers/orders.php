@@ -408,6 +408,44 @@ class orders extends MY_Controller {
 		$this -> load -> view('shared_files/template/template', $data);
 	}
 
+	public function update_meds_facility_order($order_id) {
+		$order_data = facility_orders::get_order_($order_id) -> toArray();
+		$data['content_view'] = "facility/facility_orders/receive_meds_orders_v";
+		$data['title'] = "Facility MEDS Receive Order";
+		$data['banner_text'] = "Facility MEDS Receive Order";
+		$data['rejected'] = ($rejected == 'rejected') ? 1 : 0;
+		$data['option_'] = ($option == 'readonly') ? 'readonly_' : 0;
+		$data['order_details'] = $order_data;
+		$items = facility_order_details::get_order_details($order_id);
+		//create new array to hold pushed amc values
+		$facility_code = $this -> session -> userdata('facility_id');
+		$amc_calc = $this -> amc($county, $district, $facility_code);
+		$new = array();
+		foreach ($items as $value) {
+
+			$drud_id = $value['commodity_id'];
+			$historical = $value['historical'];
+			for ($i = 0; $i < count($items); $i++) {
+				if ($drud_id == $amc_calc[$i]['commodity_id']) {
+
+					$historical = $amc_calc[$i]['amc_packs'];
+
+				}
+			}
+
+			array_push($new, array('id' => $value['id'], 'sub_category_name' => $value['sub_category_name'], 'commodity_name' => $value['commodity_name'], 'unit_size' => $value['unit_size'], 'unit_cost' => $value['unit_cost'], 'scp_qty' => $value['scp_qty'], 'cty_qty' => $value['cty_qty'], 'commodity_code' => $value['commodity_code'], 'commodity_id' => $value['commodity_id'], 'quantity_ordered_pack' => $value['quantity_ordered_pack'], 'total_commodity_units' => $value['total_commodity_units'], 'opening_balance' => $value['opening_balance'], 'total_receipts' => $value['total_receipts'], 'total_issues' => $value['total_issues'], 'comment' => $value['comment'], 'closing_stock_' => $value['closing_stock_'], 'closing_stock' => $value['closing_stock'], 'days_out_of_stock' => $value['days_out_of_stock'], 'date_added' => $value['date_added'], 'losses' => $value['losses'], 'status' => $value['status'], 'adjustmentpve' => $value['adjustmentpve'], 'adjustmentnve' => $value['adjustmentnve'], 'historical' => round($historical)));
+
+		}
+		// echo '<pre>';print_r($new); echo '</pre>';exit;
+		$items = $new;
+
+		$data['facility_order'] = $items;
+		$data['facility_commodity_list'] = Commodities::get_all_from_meds(2);
+		// echo "<pre>";
+		// print_r($data['facility_commodity_list']);die;s
+		$this -> load -> view('shared_files/template/template', $data);
+	}
+
 	public function update_order_subc($order_id, $rejected = null, $option = null) {//karsan
 		$order_data = facility_orders::get_order_($order_id) -> toArray();
 		$data['content_view'] = "facility/facility_orders/update_order_subc";
@@ -543,6 +581,7 @@ class orders extends MY_Controller {
 	public function facility_new_order($source = NULL) {//karsan
 		//security check
 		// echo "<pre>";print_r($this->input->post()); echo "</pre>";exit;
+		ini_set('max_input_vars', -1);
 		$commodity_source = (isset($source))? $source : 1;//KEMSA by default
 		if ($this -> input -> post('commodity_id')) :
 			$this -> load -> database();
@@ -576,7 +615,15 @@ class orders extends MY_Controller {
 			$user_id = $this -> session -> userdata('user_id');
 			$order_date = date('y-m-d');
 			$number_of_id = count($commodity_id);
-
+			if ($source==2) {
+				$amc = ($amc==null) ? '0' : $amc;
+				$days = ($days==null) ? '0' : $days;
+				$o_balance = ($o_balance==null) ? '0' : $o_balance;
+				$price = ($price==null) ? '0' : $price;
+				$s_quantity = ($s_quantity==null) ? '0' : $s_quantity;
+				$t_receipts = ($t_receipts==null) ? '0' : $t_receipts;
+			}
+			
 			// echo "<pre>";print_r($number_of_id); echo "</pre>";exit;
 			for ($i = 0; $i < $number_of_id; $i++) {
 				if ($i == 0) {
@@ -625,8 +672,8 @@ class orders extends MY_Controller {
 				//create the pdf here
 				//$pdf_body = $this -> create_order_pdf_template($new_order_no);
 				$file_name = $facility_name . '_facility_order_no_' . $new_order_no . "_date_created_" . date('d-m-y');
-				//$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
-				//$this -> hcmp_functions -> create_pdf($pdf_data);
+				$pdf_data = array("pdf_title" => "Order Report For $facility_name", 'pdf_html_body' => $pdf_body, 'pdf_view_option' => 'save_file', 'file_name' => $file_name);
+				$this -> hcmp_functions -> create_pdf($pdf_data);
 				// create pdf
 				if ($source == 2) {
 					//$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');
@@ -708,10 +755,10 @@ class orders extends MY_Controller {
 				$attach_file = "./print_docs/excel/excel_files/" . $file_name . '.xls';
 
 				// $email_address = "kelvinmwas@gmail.com";//FOREFATHER
-				$email_address = "karsanrichard@gmail.com";
-				// $response = $this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file);
+				$email_address = "ttunduny@gmail.com,karsanrichard@gmail.com";
+				$response = $this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file);
 				if ($response) {
-					// $this->hcmp_functions->download_file('/print_docs/excel/excel_files/'. $file_name . '.xls');
+					$this->hcmp_functions->download_file('/print_docs/excel/excel_files/'. $file_name . '.xls');
 					// echo "I WORK";exit;
 					// delete_files($attach_file);
 					//unlink($attach_file);
@@ -1102,10 +1149,25 @@ class orders extends MY_Controller {
 		$data['facility_commodity_list'] = Commodities::get_all_from_supllier(1);
 		$data['order_details'] = facility_order_details::get_order_details($order_id);
 		$data['general_order_details'] = facility_orders::get_order_($order_id);
-		$data['banner_text'] = "Facility Update Order Delivery";
+		$data['banner_text'] = "Facility KEMSA Update Order Delivery";
 		$this -> load -> view('shared_files/template/template', $data);
 
 	}
+
+	public function update_meds_order_delivery($order_id) {
+		$facility_code = $this -> session -> userdata('facility_id');
+		$data['content_view'] = "facility/facility_orders/update_order_delivery_from_meds_v";
+		$data['title'] = "Facility Update Order Delivery";
+		$data['facility_commodity_list'] = Commodities::get_all_from_meds(2);		
+		$data['order_details'] = facility_order_details::get_order_details($order_id);		
+		$data['general_order_details'] = facility_orders::get_order_($order_id);
+		$data['banner_text'] = "Facility MEDS Update Order Delivery";
+		$ordered_by = $data['general_order_details'][0]['ordered_by'];		
+		$data['ordered_by'] = users::get_user_names($ordered_by);		
+		$this -> load -> view('shared_files/template/template', $data);
+
+	}
+
 
 	public function delete_facility_order($for, $order_id) {
 		$reset_facility_order_table = Doctrine_Manager::getInstance() -> getCurrentConnection();

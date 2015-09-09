@@ -131,7 +131,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 	<div class="col-md-6" style="text-transform: capitalize;margin-left:1.5%;margin-top:2%;">
 		<p class="bg-info" style="height:30px;padding:5px;">
 			<span class="">
-				Please Note that You can downoad your MEDS Orders for Sending Under the approved orders tab
+				Please Note that You can download your MEDS Orders for Sending Under the approved orders tab
 			</span>
 		</p>
 	</div>
@@ -359,6 +359,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			$link_excel=base_url('reports/create_excel_facility_order_template/'.$value['id'].'/NULL/'.$value['source']);
 			$link2=base_url('orders/update_facility_order/'.$value['id']."/0/readonly");
 			$link3=base_url('orders/update_order_delivery/'.$value['id']);
+			$link4=base_url('orders/update_meds_order_delivery/'.$value['id']);
 			
 			?>
 		<tr>
@@ -381,10 +382,12 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			 ?>
 			<?php 
 				if($value['source'] == 2){?>
+				<a href='<?php echo $link4; ?>' target="_blank">
+	           	<button  type="button" class="btn btn-xs btn-success">
+	           	<span class="glyphicon glyphicon-save"></span>&nbsp;&nbsp;Receive &nbsp;Order  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</button></a>
 				<a href='<?php echo $link_excel; ?>' target="_blank">
 	           	<button  type="button" class="btn btn-xs btn-primary">
 	           	<span class="glyphicon glyphicon-save"></span>Download Order excel</button></a>
-				<a href="<?php echo $link2; ?>">
 			<?php }else{ ?>
 				<a href='<?php echo $link3; ?>' target="_blank">
 				<button type="button" class="btn btn-xs btn-success">
