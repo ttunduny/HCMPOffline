@@ -65,7 +65,7 @@
       	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
         <h5>Potential Expiries</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('reports') ?>"><span class="badge"><?php 
+			<a class="link" href="<?php echo base_url('reports/potential_expiries') ?>"><span class="badge"><?php 
 				echo $facility_dashboard_notifications['potential_expiries'];?></span>Commodities Expiring in the next 6 months</a> 
 			</p>
 			 </div>

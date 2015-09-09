@@ -131,6 +131,7 @@ class Reports extends MY_Controller {
 		$facility_code = $this -> session -> userdata('facility_id');
 		// echo $facility_code;exit;
 		$data['title'] = "Reports";
+		$data['banner_text'] = "Potential Expiries";
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['facility_code'] = $facility_code;
 		$view = 'shared_files/template/template';
