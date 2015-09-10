@@ -885,6 +885,7 @@ class Reports extends MY_Controller {
 		echo count($temp_data); echo "<br  />";
 		print_r($temp_data[0]);
 		exit;*/
+		
 		$array_length = count($temp_data);
 		$last_login_new = array();
 		$facility_name_new = array();

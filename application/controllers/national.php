@@ -605,7 +605,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 		$and_data .= ($facility_code > 0) ? " AND f.facility_code = '$facility_code'" : null;
 		$and_data .= ($county_id > 0) ? " AND counties.id='$county_id'" : null;
 		$and_data = isset($and_data) ? $and_data : null;
-		$and_data .= isset($commodity_id) ? "AND commodities.id =$commodity_id" : "AND commodities.tracer_item =1";
+		$and_data .= isset($commodity_id) ? "AND commodities.id =$commodity_id" : "AND commodities.tracer_item = 1";
 
 		$group_by = ($district_id > 0 && isset($county_id) && !isset($facility_code)) ? " ,d.id" : null;
 		$group_by .= ($facility_code > 0 && isset($district_id)) ? "  ,f.facility_code" : null;
@@ -674,7 +674,7 @@ inner join counties on districts.county=counties.id inner join commodities on fa
 					
 			
 			//return $get_amc ;	
-			
+			//echo '<pre>'; print_r($get_amc);echo '<pre>'; exit;
 			
 			$get_totals = Doctrine_Manager::getInstance()->getCurrentConnection()
 		->fetchAll("SELECT commodities.id,commodities.commodity_name,sum(facility_stocks.current_balance) 
@@ -739,6 +739,7 @@ inner join counties on districts.county=counties.id inner join commodities on fa
 			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
 			//
 			$data['graph_id'] = 'dem_graph_mos';
+			//echo "<pre>"; print_r($data['high_graph']); echo "</pre>"; exit;
 			return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
 		//
 		else :
