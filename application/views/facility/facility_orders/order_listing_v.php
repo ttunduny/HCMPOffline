@@ -430,8 +430,13 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			$mfl=$value['facility_name'];
 			$link=base_url('orders/get_facility_sorf/'.$value['id'].'/'.$mfl);	
 			$link_excel=base_url('reports/create_excel_facility_order_template/'.$value['id'].'/NULL/'.$value['source']);
-			$link2=base_url().'reports/order_delivery/'.$value['id'];//view the order
-			$link3=base_url().'reports/download_order_delivery/'.$value['id'];
+			$link2=base_url().'reports/order_delivery/'.$value['id'];//view the order			
+			if ($value['source'] == 2) {
+				$link3='#';
+			}elseif ($value['source'] == 1) {
+				$link3=base_url().'reports/download_order_delivery/'.$value['id'];
+			}			
+			//$link3=base_url().'reports/download_order_delivery/'.$value['id'];
 			?>
 		<tr>
 			<td><?php echo $value['order_date']; ?></td>
@@ -455,10 +460,16 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
            <a href='<?php echo  $link_excel; ?>' target="_blank">
            <button  type="button" class="btn btn-xs btn-primary">
            <span class="glyphicon glyphicon-save"></span>Download Order excel</button></a>
-           
-           <a href='<?php echo $link3; ?>' target="_blank">
-           <button  type="button" class="btn btn-xs btn-primary">
-           <span class="glyphicon glyphicon-save"></span>Fill rate Report</button></a></td>
+           <?php 
+			if ($value['source'] == 2) {
+				
+			}elseif ($value['source'] == 1) {?>
+				<a href='<?php echo $link3; ?>' target="_blank">
+	         	<button  type="button" class="btn btn-xs btn-primary">
+				<span class="glyphicon glyphicon-save"></span>Fill rate Report</button></a></td>
+			<?php }
+			?>
+          
 		</tr>	
 		<?php
 			}
