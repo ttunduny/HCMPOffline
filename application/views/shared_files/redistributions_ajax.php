@@ -1,5 +1,5 @@
 
-
+<?php //echo "<pre>";print_r($donations);exit; ?>
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"  style="margin-top: 1%;">
 	
 	  <div class="panel panel-danger">
