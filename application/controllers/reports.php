@@ -4141,14 +4141,18 @@ class Reports extends MY_Controller {
 	}
 	public function donation_reports($year = null, $district_id = null, $facility_code = null) {
 		//reset the values here
+		$district_id = $this -> session -> userdata('district_id');
 		$year = ($year == "NULL") ? date('Y') : $year;
-		$district_id = ($district_id == "NULL") ? null : $district_id;
+		$district_id = ($district_id == "NULL") ? NULL : $district_id;
+		// echo $district_id;exit;
 		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
 		$county_id = $this -> session -> userdata('county_id');
 		$expiries_array = redistribution_data::get_redistribution_data($facility_code, $district_id, $county_id, $year);
 		$data['donations'] = $expiries_array;
 		$data['year'] = $year;
-		$data['redistribute_count'] = count(redistribution_data::get_redistribution_pending($facility_code, $district_id, $county_id, $year))+1;
+		$pending = redistribution_data::get_redistribution_pending($facility_code, $district_id, $county_id, $year);
+		// echo "<pre>";print_r($expiries_array);exit;
+		$data['redistribute_count'] = count(redistribution_data::get_redistribution_pending($facility_code, $district_id, $county_id, $year));
 		return $this -> load -> view("shared_files/redistributions_ajax", $data);
 	}
 public function donation_report_download($year = null, $county_id = null,$district_id = null, $facility_code = null) {
