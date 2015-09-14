@@ -777,7 +777,7 @@ class orders extends MY_Controller {
 			AND action = 'Logged In' 
 			and UNIX_TIMESTAMP( `end_time_of_event`) = 0");
 
-			//$this -> hcmp_functions -> send_order_sms();
+			$this -> hcmp_functions -> send_order_sms();
 
 			$this -> session -> set_flashdata('system_success_message', "Facility Order No $new_order_no has Been Saved");
 			// $this->session->set_userdata($downloadable);

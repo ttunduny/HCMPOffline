@@ -275,7 +275,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			var data =$('option:selected', this).attr('special_data'); 
 	       	var data_array=data.split("^");	
 	       if(data_array[0]!=''){
-	       	alert(data_array[4]);
+	       	// alert(data_array[4]);
 	       	var new_date=$.datepicker.formatDate('d M yy', new Date(data_array[0]));
 	       	var total_issues=0;
 	      	var total_stock_bal=data_array[1];	
@@ -297,7 +297,8 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 		        locator.closest("tr").find(".available_stock").val(total_stock_bal-total_issues);
 		        locator.closest("tr").find(".expiry_date").val(""+new_date+"");	        		
 			    locator.closest("tr").find(".quantity_issued").val("0");
-			    locator.closest("tr").find(".balance").val(locator.closest("tr").find(".commodity_balance").val());
+			    locator.closest("tr").find(".balance").val(total_stock_bal-total_issues);
+			    // locator.closest("tr").find(".balance").val(locator.closest("tr").find(".commodity_balance").val());
 			    locator.closest("tr").find(".manufacture").val(data_array[5]);
 			    }else{
 			    locator.closest("tr").find(".expiry_date").val("");
