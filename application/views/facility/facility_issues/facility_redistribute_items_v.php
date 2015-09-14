@@ -192,6 +192,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 	     	    	
 			var commodity_id=data_array[0];
 			var stock_data=extract_data(data_array[0],commodity_id,'batch_data');
+			console.log(stock_data);
             var dropdown="<option special_data=''>--select Batch--</option>"+stock_data[0];
             var facility_stock_id=stock_data[1];
             var total_stock_bal=data_array[4];
@@ -220,7 +221,8 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 				locator.closest("tr").find(".batch_no").html(dropdown);
 				locator.closest("tr").find(".expiry_date").val(""+stock_data[3]+"" );
 				locator.closest("tr").find(".balance").val(remaining_items);
-				locator.closest("tr").find(".available_stock").val(stock_data[2]-total_issues_for_this_batch);		
+				locator.closest("tr").find(".available_stock").val(remaining_items);		
+				// locator.closest("tr").find(".available_stock").val(stock_data[2]-total_issues_for_this_batch);		
 				locator.closest("tr").find(".commodity_id").val(commodity_id);
 				locator.closest("tr").find(".commodity_balance").val(remaining_items);	
 		});//entering the values to issue check if you have enough balance
