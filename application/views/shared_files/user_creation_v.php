@@ -234,7 +234,7 @@
 									<?php
 
 									$identifier = $this -> session -> userdata('user_indicator');
-
+									
 									if ($identifier=='district') {
 									?>
 									<div class="input-group form-group u_mgt">
@@ -278,7 +278,7 @@
 
 									</div>
 
-								<?php }elseif ($identifier=='facility_admin') {
+								<?php }/*elseif ($identifier=='facility_admin') {
 									//code if facility admin
 									
 								?>
@@ -295,7 +295,7 @@
 													?>
 										</select>
 								</div>
-								<?php }?>
+								<?php }*/?>
 								<div class="row" style="margin:auto" id="processing">
 									<div class=" col-md-12">
 										<div class="form-group">
