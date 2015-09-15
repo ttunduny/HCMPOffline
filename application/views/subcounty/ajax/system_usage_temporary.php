@@ -39,7 +39,7 @@
           <th>Date Last Decommissioned</th>
           <th>Days From Last Decommission</th>
           <th>Date Last Received Order</th>
-          <th>Days From Last Received Order</th>
+          <th>Days From Last Stock Addition</th>
         </tr>  
       </thead>                 
       <tbody>

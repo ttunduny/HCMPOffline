@@ -49,8 +49,9 @@ class redistribution_data extends Doctrine_Record {
 	public static function get_redistribution_data($facility_code,$district_id,$county_id,$year){
 	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND d.id = '$district_id'" : null;
 	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;
-     $and_data .=($county_id>0) ?" AND d.county='$county_id'" : null;
+     $and_data .=($county_id>0 && $district_id<1) ?" AND d.county='$county_id'" : null;
 	 $and_data .=isset($year) ?" AND year(r_d.`date_sent`)='$year'" : null;
+
      $query=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
      select temp1.fname as sender_name, temp1.fname as receiver_name, 
      r_d.`source_facility_code`, f.facility_name as source_facility_name,d.district as source_district, temp3.facility_name as receiver_facility_name, 
