@@ -221,7 +221,7 @@
             var data_count=data.length;
             var x=1;
             var last_row=$('#facility_stock_table tr:last');
-
+            // console.log(data);
             $.each(data, function(i, jsondata) {
             //prepare the data
             var commodity_id=data[i]['commodity_id'];
@@ -244,6 +244,7 @@
             cloned_object.attr("table_row", next_table_row);
             cloned_object.find(".commodity_unit_of_issue").val(selected_option);
             cloned_object.find(".desc").val(commodity_id);
+            cloned_object.find(".commodity_id").val(commodity_id);
            
             cloned_object.find(".unit_size").attr('value',unit_size);
             cloned_object.find(".commodity_batch_no").attr('value',batch_no);
