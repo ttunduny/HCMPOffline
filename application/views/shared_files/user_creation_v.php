@@ -481,6 +481,7 @@
 												</select>
 									</div>
 
+
 									<div class="input-group form-group u_mgt">
 									<span class="input-group-addon sponsor">Status</span>
 									</div>
@@ -494,6 +495,7 @@
 										</div>
 										</div>
 								<?php }?>
+
 
 							</form>
 							</center>
@@ -648,9 +650,9 @@
   
   //make sure email==username  for edits
   $('#email_edit').keyup(function() {
-  	var email = $('#email_edit').val()
-   	$('#username_edit').val(email)
-   	$('#username').val(email)
+  	var email = $('#email_edit').val();
+   	$('#username_edit').val(email);
+   	$('#username').val(email);
    	
    	$.ajax({
       type: "POST",
@@ -673,6 +675,37 @@
     });
     return false;
 	})
+
+  $('#email').keyup(function() {
+  	// var email = $('#email').val();   	   	
+   	
+   	$.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "<?php echo base_url()."user/check_user_json";?>", //Relative or absolute path to response.php file
+      data:{ 'email': $('#email').val()},
+      beforeSend: function(){
+        	$('#processing').html('Checking Email...');
+
+      },
+      success: function(data) {
+      	console.log(data);
+        if(data.response=='false'){
+        	$('#processing').html(data.msg);
+			$( '#processing' ).addClass( "alert-danger alert-dismissable" );
+			// $("#create_new").attr("disabled", "disabled");
+		}else if(data.response=='true'){
+			$("#processingr").val('');
+			$("#processing").removeClass("alert-danger alert-dismissable");
+			$( '#processing' ).addClass( "alert-success alert-dismissable" );
+			// $(".#create_new").attr("disabled", false);
+			$('#processing').html(data.msg);
+		}
+      }
+    });
+    return false;
+	})
+
     
    //Handle adding new users 
    $("#add_new").on('click',function() {

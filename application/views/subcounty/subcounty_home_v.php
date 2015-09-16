@@ -66,7 +66,25 @@ $identifier = $this -> session -> userdata('user_indicator');
                             </span>Orders</a>
                         </h4>
                     </div>
+                    <?php
+                        $identifier = $this -> session -> userdata('user_indicator');
+                        
+                        if ($identifier=='district') {
+                        ?>
+                    <div class="panel-body">
+                        <table class="">
+                            <tr>
+                                <td>                                    
+                                    <a href="<?php echo base_url("reports/facility_transaction_data_other/KEMSA") ?>">Submit Facility Order</a>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </div>
+                    <?php }?>
                 </div>
+
                 <!--Program Reports-->
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -111,6 +129,11 @@ $identifier = $this -> session -> userdata('user_indicator');
                         </h4></a>
                         </h4>
                     </div>
+                     <?php
+                        $identifier = $this -> session -> userdata('user_indicator');
+                        
+                        if ($identifier=='district') {
+                        ?>
                     <div class="panel-body">
                         <table class="table">
                             <tr>
@@ -123,6 +146,7 @@ $identifier = $this -> session -> userdata('user_indicator');
                         </table>
 
                     </div>
+                    <?php }?>
                   <!--  <div id="collapseTwo" class="panel-collapse collapse <?php echo $active_panel=='stocking_levels'? 'in': null; ?>">
                          <div class="panel-body">
                             <table class="table">
