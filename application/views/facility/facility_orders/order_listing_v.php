@@ -126,6 +126,17 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
   background-color: #1a1a1a;
 }
 </style>
+ 
+<div class="row">
+	<div class="col-md-6" style="text-transform: capitalize;margin-left:1.5%;margin-top:2%;">
+		<p class="bg-info" style="height:30px;padding:5px;">
+			<span class="">
+				Please Note that You can downoad your MEDS Orders for Sending Under the approved orders tab
+			</span>
+		</p>
+	</div>
+	
+</div>			
 <section class="row-fluid">
 	<div class="col-lg-12" style="margin:1%;">
 		<div class="col-lg-1"><span class="badge badge-success">Please Note that</span></div>
@@ -368,11 +379,22 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 			<td><?php  if ($identifier==='facility' ||$identifier==='facility_admin') {
 				
 			 ?>
-				
+			<?php 
+				if($value['source'] == 2){?>
+				<a href='<?php echo $link_excel; ?>' target="_blank">
+	           	<button  type="button" class="btn btn-xs btn-primary">
+	           	<span class="glyphicon glyphicon-save"></span>Download Order excel</button></a>
+				<a href="<?php echo $link2; ?>">
+			<?php }else{ ?>
 				<a href='<?php echo $link3; ?>' target="_blank">
 				<button type="button" class="btn btn-xs btn-success">
-				<span class="glyphicon glyphicon-zoom-in"></span>Update Order</button></a>
-				<a href="<?php echo $link2; ?>">
+				<span class="glyphicon glyphicon-zoom-in"></span>&nbsp;&nbsp;Update &nbsp;Order  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</button></a>
+			<?php }
+			?>
+			<!-- 	<a href='<?php echo $link3; ?>' target="_blank">
+				<button type="button" class="btn btn-xs btn-success">
+				<span class="glyphicon glyphicon-zoom-in"></span>Update Order</button></a> -->
+				
             <button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-zoom-in"></span>View Order</button></a>
             </td>
 		</tr>	

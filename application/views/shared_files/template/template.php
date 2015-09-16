@@ -537,7 +537,7 @@ return i;
 						
 					},
 					success: function(data){
-						console.log($('#current_password').val())
+						// console.log($('#current_password').val())
 						console.log(data)
 						//return;
 						//response = jQuery.parseJSON(data);

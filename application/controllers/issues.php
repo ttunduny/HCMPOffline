@@ -65,31 +65,80 @@ class issues extends MY_Controller {
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 
+	public function county_store_home()
+	{
+		$county_id = $this -> session -> userdata('county_id');
+
+		$data['content_view'] = "county/county_drug_store_home";
+		$data['county_dashboard_notifications'] = $this-> get_county_dashboard_notifications_graph_data();
+		$data['title'] = "County Store Home";
+		$data['banner_text'] = "Drug Store";
+
+		echo "<pre>";
+		print_r($data);
+		echo "</pre>";
+		//echo $county_id; exit;
+
+		$this-> load -> view("shared_files/template/template", $data);
+	}
+
+	public function county_store_internal()
+	{
+		$county_id = $this -> session -> userdata('county_id');
+		$county = counties::get_county_name($county_id);
+		$data['county_id'] = $county_id;
+		$data['county_data'] = $county;
+		$data['content_view'] = "county/county_drug_store";
+		$data['donate_destination'] = "county";
+		$data['counties'] = counties::getAll();
+		$data['banner_text'] = "Redistribute Commodities To Counties";
+		$data['title'] = "Redistribute Commodities";
+
+		$data['commodities'] = "";
+		$data['county_stock_data'] = "";
+		echo "<pre>"; print_r($data); echo "</pre>";
+		$this -> load -> view("shared_files/template/template", $data);
+	}
+
+	public function county_store()
+	{
+		$county_id = $this -> session -> userdata('county_id');
+		$county = counties::get_county_name($county_id);
+		$data['county_id'] = $county_id;
+		$data['county_data'] = $county;
+		$data['content_view'] = "county/county_drug_store";
+		$data['donate_destination'] = "county";
+		$data['subcounties'] = districts::getAll();
+		$data['banner_text'] = "Redistribute Commodities To Districts";
+		echo "<pre>"; print_r($data); echo "</pre>"; exit;
+		//$this -> load -> view("shared_files/template/template", $data);
+	}
 	public function store_home(){
 		$district_id = $this -> session -> userdata('district_id');	
 		// echo $district_id;exit;
 		//$data['expiry_data'] = Facility_stocks::drug_store_commodity_expiries($district_id);
 		// echo "<pre>";print_r($data['expiry_data']);echo "</pre>";exit;
 
-		    $data['content_view'] = "subcounty/subcounty_drug_store_home";	
-			$data['district_dashboard_notifications']=$this->get_district_dashboard_notifications_graph_data();
+		$data['content_view'] = "subcounty/subcounty_drug_store_home";	
+		$data['district_dashboard_notifications']=$this->get_district_dashboard_notifications_graph_data();
 		//echo $district_id;exit;
-			$data['title'] = "Drug Store Home";
+		$data['title'] = "Drug Store Home";
 		$data['banner_text'] = "Drug Store";
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 
+	
 	public function district_store(){
 		$district_id = $this -> session -> userdata('district_id');	
-						$dist = districts::get_district_name_($district_id);	
-						$data['district_id'] = $this -> session -> userdata('district_id');
-						$data['district_data'] = districts::get_district_name_($district_id);
-						$data['content_view'] = "subcounty/subcounty_drug_store";
-						$data['donate_destination'] = "facility";
-						$data['subcounties']=districts::getAll();
-						$data['banner_text'] = "Redistribute Commodities to Facilities";
-						$data['title'] ="Redistribute Commodities";		
-						//$data['service_point']=service_points::get_all_active($facility_code);		
+		$dist = districts::get_district_name_($district_id);	
+		$data['district_id'] = $this -> session -> userdata('district_id');
+		$data['district_data'] = districts::get_district_name_($district_id);
+		$data['content_view'] = "subcounty/subcounty_drug_store";
+		$data['donate_destination'] = "facility";
+		$data['subcounties']=districts::getAll();
+		$data['banner_text'] = "Redistribute Commodities to Facilities";
+		$data['title'] ="Redistribute Commodities";		
+		//$data['service_point']=service_points::get_all_active($facility_code);		
 		$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_district_store($district_id,1);
 		// echo "<pre>";print_r($data['commodities']);echo "</pre>";exit;
 	    $data['facility_stock_data']=json_encode(facility_stocks::get_distinct_stocks_for_this_district_store($district_id,"batch_data"));	
@@ -101,15 +150,15 @@ class issues extends MY_Controller {
 	//THIS FUNCTION VANISHES WHEN A COLLINS RELATED PULL GOES DOWN
 	//#collins_repo #my_function_my_choice #hahahaha # this was some random thing so that i can commit this function. Cheers
 		$district_id = $this -> session -> userdata('district_id');	
-						$dist = districts::get_district_name_($district_id);	
-						$data['district_id'] = $this -> session -> userdata('district_id');
-						$data['district_data'] = districts::get_district_name_($district_id);
-						$data['content_view'] = "subcounty/drug_store/drug_store_internal";
-						$data['donate_destination'] = "facility";
-						$data['subcounties']=districts::getAll();
-						$data['banner_text'] = "Redistribute Commodities to District Stores";
-						$data['title'] ="Redistribute Commodities";		
-						//$data['service_point']=service_points::get_all_active($facility_code);		
+		$dist = districts::get_district_name_($district_id);	
+		$data['district_id'] = $this -> session -> userdata('district_id');
+		$data['district_data'] = districts::get_district_name_($district_id);
+		$data['content_view'] = "subcounty/drug_store/drug_store_internal";
+		$data['donate_destination'] = "facility";
+		$data['subcounties']=districts::getAll();
+		$data['banner_text'] = "Redistribute Commodities to District Stores";
+		$data['title'] ="Redistribute Commodities";		
+		//$data['service_point']=service_points::get_all_active($facility_code);		
 		$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_district_store($district_id,1);
 		// echo "<pre>";print_r($data['commodities']);echo "</pre>";exit;
 	    $data['facility_stock_data']=json_encode(facility_stocks::get_distinct_stocks_for_this_district_store($district_id,"batch_data"));	

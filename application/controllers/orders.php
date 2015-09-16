@@ -568,7 +568,8 @@ class orders extends MY_Controller {
 			//order table details
 			$bed_capacity = '0';
 			$drawing_rights = '0';
-			$status = '2';
+			$status = ($commodity_source==1)? '1' : '2';
+			// $status = '2';
 			$order_total = $this -> input -> post('total_order_value');
 			$order_no = '0';
 			$facility_code = $this -> input -> post('facility_code');
@@ -599,7 +600,7 @@ class orders extends MY_Controller {
 			$comment[$i] = isset($comment)? $this -> input -> post('comment'):'N/A';
 
 				}
-
+				
 				$temp_array = array("commodity_id" => (int)$commodity_id[$i], 'quantity_ordered_pack' => (int)$quantity_ordered_pack[$i], 'quantity_ordered_unit' => (int)$quantity_ordered_units[$i], 'quantity_recieved' => 0, 'price' => $price[$i], 'o_balance' => $o_balance[$i], 't_receipts' => $t_receipts[$i], 't_issues' => $t_issues[$i], 'adjustpve' => $adjustpve[$i], 'adjustnve' => $adjustnve[$i], 'losses' => $losses[$i], 'days' => $days[$i], 'c_stock' => $c_stock[$i], 'comment' => $comment[$i], 's_quantity' => $s_quantity[$i], 'amc' => $amc[$i], 'order_number_id' => $new_order_no);
 				//create the array to push to the db
 				array_push($data_array, $temp_array);

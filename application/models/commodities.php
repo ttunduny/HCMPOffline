@@ -145,7 +145,8 @@ return $inserttransaction;
 				c.total_commodity_units,
                 c.unit_size,c.unit_cost ,c_s.source_name
                FROM commodities c, commodity_source c_s
-               WHERE c.commodity_source_id= $supplier_id
+               WHERE c_s.id = c.commodity_source_id
+               AND c.commodity_source_id= $supplier_id
                ORDER BY c.commodity_name asc "); 
 return $inserttransaction;
 	}
@@ -204,6 +205,7 @@ return $inserttransaction;
     WHERE c.commodity_code NOT IN 
     (SELECT distinct commodity_id FROM facility_transaction_table WHERE facility_code = $facility_code) 
     AND c.commodity_source_id = $source
+    GROUP BY c.commodity_code
     ORDER BY `c`.`commodity_name` ASC
               "); 
               

@@ -352,6 +352,76 @@ endforeach;
 </div>
 </div>
 <div class="graph_content" id="graph_content_">	
+  <table  class="table table-hover table-bordered table-update" id="potential_exp_datatable" >
+  <thead style="background-color: white">
+  <tr>
+    <th>Commodity Description</th>
+    <th>Commodity Code </th>
+    <th>Batch No Affected</th>
+    <th>Manufacturer</th>
+    <th>Expiry Date</th>
+    <th># Days to Expiry</th>
+    <th>Unit size</th>
+    <th>Stock Expired (Packs)</th>
+    <th>Stock Expired (Units)</th>
+    <th>Unit Cost (KSH)</th>
+    <th>Total Cost(KSH)</th>
+  </tr>
+  </thead>
+      
+    <tbody>
+    
+    <?php   
+       $total=0;
+        foreach ($report_data as $potential_exp ) { 
+
+          foreach($potential_exp->Code as $stock_commodity){
+               
+                $name=$stock_commodity->commodity_name;
+                $commodity_code=$stock_commodity->commodity_code;
+                $unitS=$stock_commodity->unit_size; 
+                $unitC=$stock_commodity->unit_cost;
+                $total_units=$stock_commodity->total_commodity_units;
+                $calculated=$potential_exp->current_balance;
+                $expired_packs=round($calculated/$total_units,1);
+                $total_exp_cost=  $expired_packs*$unitC;             
+                $formatdate = new DateTime($potential_exp->expiry_date);
+                $formated_date= $formatdate->format('d M Y');
+				$ts1 = strtotime(date('d M Y'));
+                $ts2 = strtotime(date($potential_exp->expiry_date));
+                $seconds_diff = $ts2 - $ts1;
+				$total=$total+ $total_exp_cost;
+                ?>       
+            <tr>
+              <td><?php  echo $name;?> </td>
+              <td><?php  echo $commodity_code;?> </td>
+              <td><?php  echo $potential_exp->batch_no;?></td>
+              <td><?php  echo $potential_exp->manufacture;?> </td>
+              <td><?php  echo $formated_date;?> </td>
+              <td><?php  echo floor($seconds_diff/3600/24);?> </td>
+              <td><?php  echo $unitS;?></td>
+              <td><?php  echo $expired_packs; ?></td>
+              <td><?php  echo $calculated; ?></td>
+              <td><?php  echo $unitC;?></td>
+              <td><?php  echo number_format($total_exp_cost, 2, '.', ',');?></td>
+            </tr>
+          <?php }} echo "<tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>Total</td>
+          <td>".number_format($total, 2, '.', ',')."</td></tr>";
+          ?>  
+     
+    
+   </tbody>
+</table>
 </div>
 <script>
 	 $(function () { 
@@ -423,8 +493,7 @@ var drop_down='';
         if(from==''){from="NULL";}
         if(to==''){to="NULL";}
         var url_ = "reports/consumption_data_dashboard/"+
-       $("#tracer_commodity_filter").val()+"/"+
-       $("#tracer_district_filter").val()+"/NULL/"+$("#tracer_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/NULL/1"; 
+       $("#tracer_commodity_filter").val()+"/NULL/NULL/"+$("#tracer_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/NULL/1"; 
         ajax_request_replace_div_content(url_,'.graph_content'); 
         
           });   
@@ -439,7 +508,7 @@ var drop_down='';
         if(to==''){to="NULL";}
 
         var url_ = "reports/consumption_stats_graph/"+
-       $("#tracer_commodity_filter").val()+"/NULL/"+$("#tracer_district_filter").val()+"/NULL/"+$("#tracer_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/"+"table_data"; 
+       $("#tracer_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#tracer_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/"+"table_data"; 
         ajax_request_replace_div_content(url_,'.graph_content');    
           }); 
 

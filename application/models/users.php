@@ -65,7 +65,7 @@ class Users extends Doctrine_Record {
 	}
 
 	public static function getuserby_id($id) {
-		$query = Doctrine_Query::create() -> select("fname") -> from("users") -> where("id='$id' ");
+		$query = Doctrine_Query::create() -> select("fname,password") -> from("users") -> where("id='$id' ");
 		$level = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $level;
 	}

@@ -112,44 +112,7 @@ order by `a`.`sub_category_name` desc");
 
 	 public static function get_commodities_for_ordering_meds($facility_code,$source){
 	 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-		->fetchAll("SELECT 
-					    `c`.`facility_code` AS `facility_code`,
-					    `a`.`sub_category_name` AS `sub_category_name`,
-					    `b`.`commodity_name` AS `commodity_name`,
-					    `b`.`unit_size` AS `unit_size`,
-					    `b`.`unit_cost` AS `unit_cost`,
-					    `b`.`commodity_code` AS `commodity_code`,
-					    `d`.`source_name` AS `source_name`,
-					    `b`.`id` AS `commodity_id`,
-					    `c`.`opening_balance` AS `opening_balance`,
-					    `c`.`total_receipts` AS `total_receipts`,
-					    `c`.`total_issues` AS `total_issues`,
-					    `c`.`quantity_ordered` AS `quantity_ordered`,
-					    `c`.`comment` AS `comment`,
-					    `c`.`closing_stock` AS `closing_stock`,
-					    `c`.`days_out_of_stock` AS `days_out_of_stock`,
-					    `c`.`date_added` AS `date_added`,
-					    `c`.`losses` AS `losses`,
-					    `c`.`status` AS `status`,
-					    `c`.`adjustmentpve` AS `adjustmentpve`,
-					    `c`.`adjustmentnve` AS `adjustmentnve`
-					FROM
-					    `commodity_sub_category` `a`,
-					    `commodities` `b`,
-					    `commodity_source` `d`,
-					    `facility_transaction_table` `c`
-					        LEFT JOIN
-					    `facility_monthly_stock` `h` ON (h.`facility_code` = $facility_code
-					        AND `h`.`commodity_id` = `c`.`commodity_id`)
-					WHERE
-					    (`b`.`commodity_code` = `c`.`commodity_id`
-					        AND `c`.`status` = '1'
-					        AND `a`.`id` = `b`.`commodity_sub_category_id`
-					        AND c.`facility_code` = $facility_code
-					        AND b.`commodity_source_id`= $source
-					        AND d.`id` = b.`commodity_source_id` )
-					GROUP BY `c`.`facility_code` , `c`.`commodity_id`
-					ORDER BY `a`.`sub_category_name` DESC");
+		->fetchAll("SELECT * FROM commodities WHERE commodity_source_id = 2");
 		     return $inserttransaction ;
 	 }
 
