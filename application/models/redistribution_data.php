@@ -46,6 +46,30 @@ class redistribution_data extends Doctrine_Record {
 		return $redistribution_data;
 	}
 	
+    public function get_all_active_drug_store_county($county_id){
+        $in_county_donations = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+            SELECT 
+    *
+FROM
+    redistribution_data rd 
+    INNER JOIN 
+    districts d ON (rd.source_district_id = d.id)
+WHERE
+    rd.source_district_id BETWEEN (SELECT 
+            MIN(id)
+        FROM
+            districts
+        WHERE
+            county = '$county_id') AND (SELECT 
+            MAX(id)
+        FROM
+            districts
+        WHERE
+            county = '$county_id')
+;
+        ");
+        return $in_county_donations;
+    }
 	public static function get_redistribution_data($facility_code,$district_id,$county_id,$year){
 	 $and_data .=(isset($district_id)&& ($district_id>0)) ?"AND d.id = '$district_id'" : null;
 	 $and_data .=(isset($facility_code)&& ($facility_code>0)) ?" AND f.facility_code = '$facility_code'" : null;
