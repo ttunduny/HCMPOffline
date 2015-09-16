@@ -70,16 +70,32 @@ class issues extends MY_Controller {
 		$county_id = $this -> session -> userdata('county_id');
 
 		$data['content_view'] = "county/county_drug_store_home";
-		$data['county_dashboard_notifications'] = $this-> get_county_dashboard_notifications_graph_data();
+		$data['county_dashboard_notifications'] = $this -> get_county_dashboard_notifications_graph_data();
 		$data['title'] = "County Store Home";
 		$data['banner_text'] = "Drug Store";
 
-		echo "<pre>";
-		print_r($data);
-		echo "</pre>";
-		//echo $county_id; exit;
-
 		$this-> load -> view("shared_files/template/template", $data);
+	}
+
+	/* URL For Donations to Districts*/
+	public function county_store()
+	{
+		$county_id = $this -> session -> userdata('county_id');
+		$county = counties::get_county_name($county_id);
+		$data['county_id'] = $county_id;
+		$data['county_data'] = $county;
+		$data['content_view'] = "county/county_drug_store";
+		$data['donate_destination'] = "subcounty";
+		$data['subcounties'] = districts::getAll();
+		$data['banner_text'] = "Redistribute Commodities To Districts";
+		echo "<pre>"; print_r($data); echo "</pre>"; exit;
+		//$this -> load -> view("shared_files/template/template", $data);
+	}
+
+	public function county_store_facilities()
+	{
+		$county_id = $this -> session -> userdata('county_id');
+
 	}
 
 	public function county_store_internal()
@@ -88,7 +104,7 @@ class issues extends MY_Controller {
 		$county = counties::get_county_name($county_id);
 		$data['county_id'] = $county_id;
 		$data['county_data'] = $county;
-		$data['content_view'] = "county/county_drug_store";
+		$data['content_view'] = "county/drug_store/drug_store_internal";
 		$data['donate_destination'] = "county";
 		$data['counties'] = counties::getAll();
 		$data['banner_text'] = "Redistribute Commodities To Counties";
@@ -100,19 +116,6 @@ class issues extends MY_Controller {
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 
-	public function county_store()
-	{
-		$county_id = $this -> session -> userdata('county_id');
-		$county = counties::get_county_name($county_id);
-		$data['county_id'] = $county_id;
-		$data['county_data'] = $county;
-		$data['content_view'] = "county/county_drug_store";
-		$data['donate_destination'] = "county";
-		$data['subcounties'] = districts::getAll();
-		$data['banner_text'] = "Redistribute Commodities To Districts";
-		echo "<pre>"; print_r($data); echo "</pre>"; exit;
-		//$this -> load -> view("shared_files/template/template", $data);
-	}
 	public function store_home(){
 		$district_id = $this -> session -> userdata('district_id');	
 		// echo $district_id;exit;
@@ -261,6 +264,45 @@ class issues extends MY_Controller {
 			redirect(home);
 		// redirect(home);		
 	}//district store internal issue
+
+	public function get_county_dashboard_notifications_graph_data()
+	{
+		$county_id = $this -> session -> userdata('county_id');
+		$county_stock = facility_stocks::get_county_stock_amc($county_id);
+		$county_stock_count = count($county_stock);
+		$graph_id = "container";
+		$graph_data = array();
+		$graph_data = array_merge($graph_data, array("graph_id" => $graph_id));
+		$graph_data = array_merge($graph_data, array("graph_title" => "County Store Stock Level"));
+		$graph_data = array_merge($graph_data, array("graph_type" => "bar"));
+		$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Total Stock Level"));
+		$graph_data = array_merge($graph_data, array("graph_categories" => array()));
+		$graph_data = array_merge($graph_data, array("series_data" => array("Current Pack Balance" => array(), "Current Unit Balance" => array())));
+		$graph_data['stacking'] = 'normal';
+		
+		foreach($county_stock as $county_stock):
+			$graph_data['graph_categories'] = array_merge($graph_data['graph_categories'], array($county_stock['commodity_name']));
+			$graph_data['series_data']['Current Pack Balance'] = array_merge($graph_data['series_data']['Current Pack Balance'],array((float) $county_stock['pack_balance']));
+			$graph_data['series_data']['Current Unit Balance'] = array_merge($graph_data['series_data']['Current Unit Balance'],array((float) $county_stock['commodity_balance']));
+		endforeach;
+		
+		$county_stock_data = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
+		//echo "<pre>"; print_r($county_stock_data); echo "</pre>"; exit;
+		$loading_icon = base_url('assets/img/no-record-found.png');
+		$county_stock_data = ($county_stock_count > 0) ? $county_stock_data : "$('#container').html('<img src=$loading_icon>');";
+
+		$actual_expiries = count(facility_stocks::county_drug_store_act_expiries($county_id));
+		$potential_expiries = count(facility_stocks::county_drug_store_pte_expiries($county_id));
+		$county_donations = count(redistribution_data::get_all_active_drug_store_county($county_id));
+		//$real_county_donations = county(redistribution_data::get_all_active_drug_store($county_id, "to-me"));
+		return array(
+			"county_stock_count" => $county_stock_count,
+			"county_stock_graph" => $county_stock_data,
+			"potential_expiries" => $potential_expiries,
+			"actual_expiries" => $actual_expiries,
+			"county_donations" => $county_donations
+		);
+	}
 
 	public function get_district_dashboard_notifications_graph_data()
      {
