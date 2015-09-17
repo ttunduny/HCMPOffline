@@ -825,7 +825,8 @@ endif;
 
 
 		public function save_new_password() {
-			
+		// echo "<pre>";
+		// echo json_encode($_POST);die;
 		$id=$this -> session -> userdata('user_id');		
 		$old_password=$_POST['current_password'];
 		$new_passw=$_POST['new_password_confirm'];
@@ -836,6 +837,7 @@ endif;
 		$db_password=$getdata[0]['password'];
 		//echo "</br>";
 		$captured_password=( md5($salt . $old_password));
+		// echo json_encode($db_password);die;
 		//exit;
 		// $valid_old_password = $this -> correct_current_password($db_password,$captured_password);
 		 

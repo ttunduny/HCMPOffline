@@ -23,7 +23,7 @@
       	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
         <h5>Donations</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/pending') ?>"><span class="badge"><?php 
+			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/to-me') ?>"><span class="badge"><?php 
 				echo $facility_dashboard_notifications['facility_donations_pending'];?></span> Items have been donated and are pending receipt</a> 
 			</p>
 			 </div>
@@ -32,8 +32,8 @@
       	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
         <h5>Donations</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/to-me') ?>"><span class="badge"><?php 
-				echo $facility_dashboard_notifications['facility_donations'];?></span> Items have been donated to you</a> 
+			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/pending') ?>"><span class="badge"><?php 
+				echo $facility_dashboard_notifications['facility_donations'];?></span> Donated items by you are pending receipt</a> 
 			</p>
 			 </div>
 		  <?php endif; //donations_pending?>
