@@ -121,6 +121,19 @@ class Reports extends MY_Controller {
 		$data['title'] = "District Store Reports";
 		$this -> load -> view($view, $data);
 	}
+	
+	public function county_store_reports(){
+		$county_id = $this -> session -> userdata('county_id');
+		$data['county_name'] = counties::get_county_name($county_id);
+		$data['content_view'] = "county/county_reports/reports_v";
+		$data['report_view'] = "county/county_report/drug_store_reports_home";
+		$data['sidebar'] = "county/county_report/drug_store_sidebar";
+		$data['report_data'] = Facility_stocks::county_drug_store_pte_expiries($county_id);
+		$data['active_panel'] = "expiries";
+		$data['banner_text'] = "Drug Store Potential Expiries";
+		$data['title'] = "County Store Reports";
+		$this -> load -> view("shared_files/template/template", $data);
+	}
 	/*
 	 |--------------------------------------------------------------------------
 	 | FACILITY REPORTS
@@ -473,6 +486,23 @@ class Reports extends MY_Controller {
 		$data['active_panel'] = 'expiries';
 		$this -> load -> view("shared_files/template/template", $data);
 	}
+
+	public function county_store_expiries(){
+		$county_id = $this -> session -> userdata('county_id');
+		$county_name = counties::get_county_name($county_id);
+		$data['county_name'] = $county_name;
+		$data['title'] = "Store Expiries";
+		$data['banner_text'] = "Drug Store Expiries";
+		$data['sidebar'] = "county/county_report/drug_store_sidebar";
+		$data['content_view'] = "county/county_report/reports_v";
+		$data['expiry_data'] = Facility_stocks::county_drug_store_act_expiries($county_id);
+		$data['report_view'] = "county/expiries_v";
+		$data['active_panel'] = "expiries";
+		
+		//secho "<pre>"; print_r($data); echo "</pre>";
+		$this -> load -> view("shared_files/template/template", $data);
+	}
+
 	public function expiry_tracking($facility_code = null) {
 		$years = array();
 		$month_names[] = array();

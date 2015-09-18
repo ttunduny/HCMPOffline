@@ -46,26 +46,16 @@ class redistribution_data extends Doctrine_Record {
 		return $redistribution_data;
 	}
 	
-    public function get_all_active_drug_store_county($county_id){
+    public function get_all_active_drug_store_county($county_id, $option = null){
+        $and_data = ($option == 'to-me') ? "receive_facility_code = 4" : "source_facility_code = 4";
         $in_county_donations = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
             SELECT 
     *
 FROM
     redistribution_data rd 
-    INNER JOIN 
-    districts d ON (rd.source_district_id = d.id)
+    
 WHERE
-    rd.source_district_id BETWEEN (SELECT 
-            MIN(id)
-        FROM
-            districts
-        WHERE
-            county = '$county_id') AND (SELECT 
-            MAX(id)
-        FROM
-            districts
-        WHERE
-            county = '$county_id')
+    $and_data AND rd.source_county_id = '$county_id'
 ;
         ");
         return $in_county_donations;

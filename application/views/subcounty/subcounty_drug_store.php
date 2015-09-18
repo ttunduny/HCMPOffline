@@ -207,7 +207,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
             var facility_stock_id=stock_data[1];
             var total_stock_bal=data_array[4];
             var total_issues_for_this_item=0; 
-            var total_issues_for_this_batch=0         
+            var total_issues_for_this_batch=0;        
 			 /* get all the items which have been issued and have the same id and sum them up reduce the total available balance*/	
 			  /* Check for all commodities that have the same id as the current item selected
 		         * then sum up all the issues above the given item

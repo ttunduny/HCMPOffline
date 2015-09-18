@@ -77,19 +77,24 @@ class issues extends MY_Controller {
 		$this-> load -> view("shared_files/template/template", $data);
 	}
 
-	/* URL For Donations to Districts*/
+	/* Function For Donations to Districts*/
 	public function county_store()
 	{
 		$county_id = $this -> session -> userdata('county_id');
+		$data['district_id'] = $this -> session -> userdata('district_id');
+		$data['district_data'] = districts::get_district_name_($district_id);
 		$county = counties::get_county_name($county_id);
 		$data['county_id'] = $county_id;
 		$data['county_data'] = $county;
 		$data['content_view'] = "county/county_drug_store";
 		$data['donate_destination'] = "subcounty";
 		$data['subcounties'] = districts::getAll();
-		$data['banner_text'] = "Redistribute Commodities To Districts";
-		echo "<pre>"; print_r($data); echo "</pre>"; exit;
-		//$this -> load -> view("shared_files/template/template", $data);
+		$data['banner_text'] = "Redistribute Commodities To District Stores";
+		$data['title'] = "Redistribute Commodities";
+		$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_county_store($county_id);
+
+		$data['facility_stock_data'] = json_encode(facility_stocks::get_distinct_stocks_for_this_county_store($county_id,"batch_data"));
+		$this -> load -> view("shared_files/template/template", $data);
 	}
 
 	public function county_store_facilities()
@@ -308,7 +313,7 @@ class issues extends MY_Controller {
      {
      //format the graph here
      //$facility_code=$this -> session -> userdata('facility_id');
-     $district_id = $this -> session -> userdata('district_id');	
+     $district_id = $this -> session -> userdata('district_id');
      $district_stock_=facility_stocks::get_district_stock_amc($district_id);
  	$district_stock_count=count($district_stock_);
      $graph_data=array();
@@ -466,6 +471,9 @@ class issues extends MY_Controller {
 		redirect();	
 	}//confirm distribution to district store
 
+	public function county_store_external_issue(){
+
+	}
 	public function district_store_external_issue()
 		{//karsan
 			// echo "<pre>";print_r($this -> input -> post());echo "</pre>";exit;
@@ -658,16 +666,27 @@ class issues extends MY_Controller {
 		echo"<pre>"; print_r($sth); echo "</pre>";
 	}
 
-	public function confirm_store_external_issue($editable_=null){
+	public function confirm_store_external_issue(){
 		//seth
 		$district_id = $this -> session -> userdata('district_id');
 		$data['title'] ="Confirm Redistribution";	
 		$data['banner_text'] = "Confirm Redistribution";
 		$data['redistribution_data']=redistribution_data::get_all_active_drug_store($district_id,$editable_);
 		// echo "<pre>";print_r($data['redistribution_data']);echo "</pre>";exit;
-		$data['editable']=$editable_;
+		//$data['editable']=$editable_;
 		$data['content_view'] = "subcounty/drug_store/drug_store_redistribute_items_confirmation_v";
 		$this -> load -> view("shared_files/template/template", $data);		
+	}
+
+	public function county_confirm_store_external_issue($editable_ = null){
+		$county_id = $this -> session -> userdata('county_id');
+		$data['title'] = "Confirm Redistribution";
+		$data['banner_text'] = "Confirm Redistribution";
+		$data['redistribution_data'] = redistribution_data::get_all_active_drug_store_county($county_id);
+		$data['editable'] = $editable_;
+ 
+		$data['content_view'] = "county/drug_store/drug_store_redistribute_items_confirmation_v";
+		$this -> load -> view("shared_files/template/template", $data);
 	}
 
 	// facility internal issue
