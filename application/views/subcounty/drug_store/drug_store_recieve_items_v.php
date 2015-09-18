@@ -23,7 +23,7 @@
  <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/district_store_drug_recieval',$att); ?>
 <table width="100%"  class="table table-hover table-bordered table-update" id="facility_issues_table" >
 <thead style="background-color: white">
-					<tr>
+					<tr>d
 						<th>Select Subcounty</th>
 						<th>Select Facility</th>
 						<th>Description</th>
@@ -172,7 +172,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 				locator.closest("tr").find(".commodity_id").val(commodity_id);
 				locator.closest("tr").find(".commodity_balance").val(remaining_items);	
 		});//entering the values to issue check if you have enough balance
-        $(".quantity_issued").on('keyup',function (){
+           $(".quantity_issued").on('keyup',function (){
         	var bal=parseInt($(this).closest("tr").find(".available_stock").val());
         	var bal1=parseInt($(this).closest("tr").find(".commodity_balance").val());
         	var selector_object=$(this);
@@ -192,7 +192,8 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 	//reset the text field and the message dialog box 
     selector_object.val(""); var notification='<ol>'+alert_message+form_data[0]+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
     //hcmp custom message dialog
-    dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
+    hcmp_message_box(title='HCMP Error',notification,message_type='error')
+    //dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
     //This event is fired immediately when the hide instance method has been called.
     $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();	})
     selector_object.closest("tr").find(".balance").val(selector_object.closest("tr").find(".commodity_balance").val());
@@ -215,13 +216,13 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			//reset the values of current element 
 		  clone_the_last_row_of_the_table();
 		});	/////batch no change event
-		$('.batch_no').on('change',function(){
+				$('.batch_no').on('change',function(){
 			var row_id=$(this).closest("tr").index();
 		    var locator=$('option:selected', this);
 			var data =$('option:selected', this).attr('special_data'); 
 	       	var data_array=data.split("^");	
 	       if(data_array[0]!=''){
-	       	alert(data_array[4]);
+	       	// alert(data_array[4]);
 	       	var new_date=$.datepicker.formatDate('d M yy', new Date(data_array[0]));
 	       	var total_issues=0;
 	      	var total_stock_bal=data_array[1];	
@@ -243,7 +244,8 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 		        locator.closest("tr").find(".available_stock").val(total_stock_bal-total_issues);
 		        locator.closest("tr").find(".expiry_date").val(""+new_date+"");	        		
 			    locator.closest("tr").find(".quantity_issued").val("0");
-			    locator.closest("tr").find(".balance").val(locator.closest("tr").find(".commodity_balance").val());
+			    locator.closest("tr").find(".balance").val(total_stock_bal-total_issues);
+			    // locator.closest("tr").find(".balance").val(locator.closest("tr").find(".commodity_balance").val());
 			    locator.closest("tr").find(".manufacture").val(data_array[5]);
 			    }else{
 			    locator.closest("tr").find(".expiry_date").val("");
