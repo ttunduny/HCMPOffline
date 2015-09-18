@@ -335,11 +335,11 @@ class orders extends MY_Controller {
 		// echo '<pre>'; print_r($items);echo '<pre>'; exit;
 		// $facility_code = $this -> session -> userdata('facility_id');
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();	
-
+		$source_name = ($source==2) ?'MEDS' : 'KEMSA' ;
 		$data['content_view'] = ($source == 2) ? "facility/facility_orders/facility_order_meds_new" : "facility/facility_orders/facility_order_from_kemsa_v";
 		$data['facility_code'] = $facility_code;
 		$data['title'] = "Facility New Order";
-		$data['banner_text'] = "Facility New Order";
+		$data['banner_text'] = "Facility New Order ".$source_name;
 		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];
 		$data['facility_commodity_list'] = ($source == 2) ? Commodities::get_meds_commodities_not_in_facility($facility_code,$source) : Commodities::get_commodities_not_in_facility($facility_code);
 
