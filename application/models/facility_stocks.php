@@ -59,6 +59,40 @@ class Facility_stocks extends Doctrine_Record {
 		return $stocks;
 	}// get all facility stock commodity id, options check if the user wants batch data or commodity grouped data and return the total
 
+	public static function get_distinct_stocks_for_this_county_store($county_id){
+		$store_stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+			SELECT DISTINCT
+    dst.commodity_id AS commodity_id,
+    fs.id AS facility_stock_id,
+    dst.expiry_date,
+    c.commodity_name,
+    c.commodity_code,
+    c.unit_size,
+    dst.total_balance AS store_commodity_balance,
+    ROUND(((dst.total_balance) / c.total_commodity_units),
+            1) AS pack_balance,
+    c.total_commodity_units,
+    fs.manufacture,
+    c_s.source_name,
+    fs.batch_no,
+    c_s.id AS source_id
+FROM
+    facility_stocks fs,
+    commodity_source c_s,
+    drug_store_issues ds,
+    commodities c,
+    drug_store_totals dst
+WHERE
+    ds.district_id = dst.district_id BETWEEN (SELECT MIN(id) FROM districts WHERE county = '$county_id') AND (SELECT MIN(id) FROM districts WHERE county = '$county_id')
+        AND dst.expiry_date >= NOW()
+        AND dst.commodity_id = fs.commodity_id
+        AND c.id = dst.commodity_id
+        AND dst.total_balance > 0
+GROUP BY dst.commodity_id
+ORDER BY fs.expiry_date ASC
+		");
+		return $store_stocks;
+	}
 	public static function get_distinct_stocks_for_this_district_store($district_id) {
 		$store_stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT DISTINCT dst.commodity_id as commodity_id,
 fs.id as facility_stock_id,
