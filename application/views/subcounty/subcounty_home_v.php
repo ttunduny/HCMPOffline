@@ -71,17 +71,17 @@ $identifier = $this -> session -> userdata('user_indicator');
                         
                         if ($identifier=='district') {
                         ?>
-                    <div class="panel-body">
+                   <!--  <div class="panel-body">
                         <table class="">
                             <tr>
                                 <td>                                    
-                                    <a href="<?php echo base_url("reports/facility_transaction_data_other/KEMSA") ?>">Submit Facility Order</a>
+                                    <a href="<?php //echo base_url("reports/facility_transaction_data_other/KEMSA") ?>">Submit Facility Order</a>
                                 </td>
                             </tr>
 
                         </table>
 
-                    </div>
+                    </div> -->
                     <?php }?>
                 </div>
 
