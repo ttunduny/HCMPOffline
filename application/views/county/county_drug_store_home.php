@@ -15,14 +15,13 @@
 							<div style="height: auto; margin-bottom: 2px;" class="warning message">
 								<h5>County Donation</h5>
 								<p>
-									<a class="link" href="<?php echo base_url('issues/confirm_county_store_external_issues/to-me'); ?>">
-										<span class="badge"><?php echo $county_dashboard_notifications['county_donations'] ?></span> Items Donated Within Your County
-									</a>
+									<a class="link" href="<?php echo base_url('issues/county_confirm_store_external_issue/to-me'); ?>">
+										<span class="badge"><?php echo $county_dashboard_notifications['county_donations'] ?></span> Items Donated to you									</a>
 								</p>
 							</div>
 						<?php else: ?>
 							<div style="height: auto; margin-bottom:2px;" class="warning message">
-								<p><span class="glyphicon glyphicon-info-sign">No Donations Within Your County</span></p>
+								<p><span class="glyphicon glyphicon-info-sign">No Donations to you since last visit</span></p>
 							</div>
 						<?php endif; //stockCount?>
 						<?php if($county_dashboard_notifications['actual_expiries'] > 0): ?>
