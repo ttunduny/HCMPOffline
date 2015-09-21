@@ -88,7 +88,7 @@ from facility_stocks fs, commodity_source c_s, drug_store_issues ds,commodities 
 	}
 
 	public static function get_distinct_stocks_for_this_facility($facility_code, $checker = null, $exception = null) {
-		$addition = isset($checker) ? ($checker === 'batch_data') ? 'and fs.current_balance>0 group by fs.id,c.id order by fs.expiry_date asc' : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc' : null;
+		$addition = isset($checker) ? ($checker === 'batch_data') ? 'and fs.current_balance>0 group by fs.id,c.id order by c.commodity_name asc,fs.batch_no asc,fs.expiry_date asc' : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc,fs.batch_no desc' : null;
 
 		$check_expiry_date = isset($exception) ? null : " and fs.expiry_date >= NOW()";
 

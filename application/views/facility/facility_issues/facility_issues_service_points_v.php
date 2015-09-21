@@ -127,7 +127,8 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
       		var row_id=$(this).closest("tr").index();	
       		var locator=$('option:selected', this);
 			var data =$('option:selected', this).attr('special_data'); 
-	       	var data_array=data.split("^");	       	
+	       	var data_array=data.split("^");	 
+	           	
 	        locator.closest("tr").find(".unit_size").val(data_array[1]);
 	     	locator.closest("tr").find(".supplier_name").val(data_array[2]);
 	     	locator.closest("tr").find(".commodity_id").val(data_array[0]);
@@ -135,16 +136,16 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 	     	locator.closest("tr").find(".total_units").val(data_array[3]);
 	     	locator.closest("tr").find(".expiry_date").val("");
 	     	locator.closest("tr").find(".quantity_issued").val("0");
-	     	locator.closest("tr").find(".clone_datepicker_normal_limit_today").val("");	     	
-
+	     	locator.closest("tr").find(".clone_datepicker_normal_limit_today").val("");	  
+	     	    	
 			var commodity_id=data_array[0];
 			var stock_data=extract_data(data_array[0],commodity_id,'batch_data');
-			//alert(data); 
-            var dropdown="<option special_data=''>Select Batch</option>"+stock_data[0];
+			
+            var dropdown="<option special_data=''>--select Batch--</option>"+stock_data[0];
             var facility_stock_id=stock_data[1];
             var total_stock_bal=data_array[4];
             var total_issues_for_this_item=0; 
-            var total_issues_for_this_batch=0         
+            var total_issues_for_this_batch=0           
 			 /* get all the items which have been issued and have the same id and sum them up reduce the total available balance*/	
 			  /* Check for all commodities that have the same id as the current item selected
 		         * then sum up all the issues above the given item
@@ -162,27 +163,41 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
               }
                });		        
 		        var remaining_items=total_stock_bal-total_issues_for_this_item;	
+		
+		        locator.closest("tr").find(".manufacture").val(stock_data[4]);
 		        locator.closest("tr").find(".facility_stock_id").val(stock_data[1]);	        
 				locator.closest("tr").find(".batch_no").html(dropdown);
 				locator.closest("tr").find(".expiry_date").val(""+stock_data[3]+"" );
 				locator.closest("tr").find(".balance").val(remaining_items);
-				locator.closest("tr").find(".available_stock").val(stock_data[2]-total_issues_for_this_batch);		
+				locator.closest("tr").find(".available_stock").val(remaining_items);		
+				// locator.closest("tr").find(".available_stock").val(stock_data[2]-total_issues_for_this_batch);		
 				locator.closest("tr").find(".commodity_id").val(commodity_id);
 				locator.closest("tr").find(".commodity_balance").val(remaining_items);	
 		});//entering the values to issue check if you have enough balance
-        $(".quantity_issued").on('keyup',function (){
+       $(".quantity_issued").on('keyup',function (){
         	var bal=parseInt($(this).closest("tr").find(".available_stock").val());
         	var bal1=parseInt($(this).closest("tr").find(".commodity_balance").val());
         	var selector_object=$(this);
         	var data =$('option:selected', selector_object.closest("tr").find('.desc')).attr('special_data') 
 	       	var data_array=data.split("^");
         	var remainder1=bal1-parseInt(calculate_actual_stock(data_array[3],selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
-    selector_object.val(),'return',selector_object));
-    var issue=parseInt(calculate_actual_stock(data_array[3],selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
-    selector_object.val(),'return',selector_object));
-    var remainder=bal-parseInt(calculate_actual_stock(data_array[3],selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
-    selector_object.val(),'return',selector_object));
+		    selector_object.val(),'return',selector_object));
+		    var remainder=bal-parseInt(calculate_actual_stock(data_array[3],selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
+		    selector_object.val(),'return',selector_object));
         	var form_data=check_if_the_form_has_been_filled_correctly(selector_object);
+	       	// console.log(data_array);
+    //     	var remainder1=bal1-parseInt(calculate_actual_stock(data_array[3],selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
+    // selector_object.val(),'return',selector_object));
+    // var issue=parseInt(calculate_actual_stock(data_array[3],selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
+    // selector_object.val(),'return',selector_object));
+    // var remainder=bal-parseInt(calculate_actual_stock(data_array[3],selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
+    // selector_object.val(),'return',selector_object));
+			// var remainder1=bal1-issue;
+		 //    var issue=parseInt(calculate_actual_stock(data_array[3],commodity_unit_of_issue,selector_object.val(),'return'));
+		 //    var remainder=bal-parseInt(calculate_actual_stock(data_array[3],commodity_unit_of_issue,selector_object.val(),'return'));
+   //      	var form_data=check_if_the_form_has_been_filled_correctly(selector_object);
+			// var remainder1=bal1-issue;  
+			// alert(remainder1);      	
         	var alert_message='';
         	if (remainder<0) {alert_message+="<li>Can not issue beyond available stock</li></br>"+
         	"<li>You are trying to issue "+issue+" (Units) from "+data_array[4]+" (Units)</li>";}
@@ -224,6 +239,7 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 		    var locator=$('option:selected', this);
 			var data =$('option:selected', this).attr('special_data'); 
 	       	var data_array=data.split("^");	
+	       	console.log(data_array);
 	       if(data_array[0]!=''){
 	       	var new_date=$.datepicker.formatDate('d M yy', new Date(data_array[0]));
 	       	var total_issues=0;
@@ -245,7 +261,8 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 		        locator.closest("tr").find(".available_stock").val(total_stock_bal-total_issues);
 		        locator.closest("tr").find(".expiry_date").val(""+new_date+"");	        		
 			    locator.closest("tr").find(".quantity_issued").val("0");
-			    locator.closest("tr").find(".balance").val(locator.closest("tr").find(".commodity_balance").val());
+			    locator.closest("tr").find(".balance").val(total_stock_bal-total_issues);
+			    locator.closest("tr").find(".commodity_balance").val(total_stock_bal-total_issues);
 			    }else{
 			      locator.closest("tr").find(".expiry_date").val("");
 			    locator.closest("tr").find(".balance").val("");

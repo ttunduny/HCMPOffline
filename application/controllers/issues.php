@@ -60,6 +60,7 @@ class issues extends MY_Controller {
 			$data_[$key]['commodity_name'] = preg_replace('/[^A-Za-z0-9\-]/', ' ', $data_1['commodity_name']);
 		}
 		$data['facility_stock_data'] = json_encode($data_);
+		// echo "<pre>";print_r($data_);echo "</pre>";//exit;
 		// echo "<pre>";print_r($data['commodities']);echo "</pre>";exit;
 		// echo $district_id;exit;
 		$this -> load -> view("shared_files/template/template", $data);

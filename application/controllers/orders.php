@@ -170,10 +170,13 @@ class orders extends MY_Controller {
 		echo $list;
 	}
 
-	public function facility_order($source = NULL) {
+	public function facility_order($source = NULL,$facility_code=null) {
 		header('Content-Type: text/html; charset=UTF-8');
 		//pick the facility code from the session as it is set
-		$facility_code = $this -> session -> userdata('facility_id');
+		if(!isset($facility_code)){
+			$facility_code = $this -> session -> userdata('facility_id');
+			$data['other_facility_code'] = $facility_code;
+		}
 
 		$amc_calc = $this -> amc($county, $district, $facility_code);
 		//echo '<pre>'; print_r($amc_calc);echo '<pre>'; exit;
@@ -317,8 +320,10 @@ class orders extends MY_Controller {
 
 					}
 				}
-
-				array_push($new, array('sub_category_name' => $value['sub_category_name'], 'commodity_name' => $value['commodity_name'], 'unit_size' => $value['unit_size'], 'unit_cost' => $value['unit_cost'], 'commodity_code' => $value['commodity_code'], 'commodity_id' => $value['commodity_id'], 'quantity_ordered' => $value['quantity_ordered'], 'total_commodity_units' => $value['total_commodity_units'], 'opening_balance' => $value['opening_balance'], 'total_receipts' => $value['total_receipts'], 'total_issues' => $value['total_issues'], 'comment' => $value['comment'], 'closing_stock_' => $value['closing_stock_'], 'closing_stock' => $value['closing_stock'], 'days_out_of_stock' => $value['days_out_of_stock'], 'date_added' => $value['date_added'], 'losses' => $value['losses'], 'status' => $value['status'], 'adjustmentpve' => $value['adjustmentpve'], 'adjustmentnve' => $value['adjustmentnve'], 'historical' => round($historical)));
+				$unit_size =  $value['unit_size'];
+				$commodity_name =  $value['commodity_name'].' ('.$unit_size.')';
+				array_push($new, array('sub_category_name' => $value['sub_category_name'], 'commodity_name' => $commodity_name, 'unit_size' => $unit_size, 'unit_cost' => $value['unit_cost'], 'commodity_code' => $value['commodity_code'], 'commodity_id' => $value['commodity_id'], 'quantity_ordered' => $value['quantity_ordered'], 'total_commodity_units' => $value['total_commodity_units'], 'opening_balance' => $value['opening_balance'], 'total_receipts' => $value['total_receipts'], 'total_issues' => $value['total_issues'], 'comment' => $value['comment'], 'closing_stock_' => $value['closing_stock_'], 'closing_stock' => $value['closing_stock'], 'days_out_of_stock' => $value['days_out_of_stock'], 'date_added' => $value['date_added'], 'losses' => $value['losses'], 'status' => $value['status'], 'adjustmentpve' => $value['adjustmentpve'], 'adjustmentnve' => $value['adjustmentnve'], 'historical' => round($historical)));
+				// array_push($new, array('sub_category_name' => $value['sub_category_name'], 'commodity_name' => $value['commodity_name'], 'unit_size' => $value['unit_size'], 'unit_cost' => $value['unit_cost'], 'commodity_code' => $value['commodity_code'], 'commodity_id' => $value['commodity_id'], 'quantity_ordered' => $value['quantity_ordered'], 'total_commodity_units' => $value['total_commodity_units'], 'opening_balance' => $value['opening_balance'], 'total_receipts' => $value['total_receipts'], 'total_issues' => $value['total_issues'], 'comment' => $value['comment'], 'closing_stock_' => $value['closing_stock_'], 'closing_stock' => $value['closing_stock'], 'days_out_of_stock' => $value['days_out_of_stock'], 'date_added' => $value['date_added'], 'losses' => $value['losses'], 'status' => $value['status'], 'adjustmentpve' => $value['adjustmentpve'], 'adjustmentnve' => $value['adjustmentnve'], 'historical' => round($historical)));
 
 			}
 			
@@ -327,12 +332,14 @@ class orders extends MY_Controller {
 		}
 
 		// $data['facility_order'] = $items;
-		//echo '<pre>'; print_r($data['facility_order']);echo '<pre>'; exit;
-		$facility_code = $this -> session -> userdata('facility_id');
-		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();		
+		// echo '<pre>'; print_r($items);echo '<pre>'; exit;
+		// $facility_code = $this -> session -> userdata('facility_id');
+		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();	
+		$source_name = ($source==2) ?'MEDS' : 'KEMSA' ;
 		$data['content_view'] = ($source == 2) ? "facility/facility_orders/facility_order_meds_new" : "facility/facility_orders/facility_order_from_kemsa_v";
+		$data['facility_code'] = $facility_code;
 		$data['title'] = "Facility New Order";
-		$data['banner_text'] = "Facility New Order";
+		$data['banner_text'] = "Facility New Order ".$source_name;
 		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];
 		$data['facility_commodity_list'] = ($source == 2) ? Commodities::get_meds_commodities_not_in_facility($facility_code,$source) : Commodities::get_commodities_not_in_facility($facility_code);
 
@@ -641,6 +648,7 @@ class orders extends MY_Controller {
 					 'drawing_rights' => $drawing_rights,
 					 'source' => $commodity_source
 					 );
+					
 					$insertion = $this -> db -> insert('facility_orders', $order_details);
 					$new_order_no = $this -> db -> insert_id();
 					// echo "<pre>I RAN : ";print_r($new_order_no);echo "</pre>";exit;

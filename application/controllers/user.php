@@ -149,7 +149,11 @@ class User extends MY_Controller {
 		Log::update_log_out_action($this -> session -> userdata('user_id'));
 		$this -> session -> sess_destroy(); session_destroy();
 		$this -> clearBrowserCache();
-		
+
+		//Titus
+		// $last_run = Sms_listing::get_last_run();
+		// echo "<pre>";
+		// print_r($last_run->result_array());die;
 		$data['title'] = "Login";
 		$this -> load -> view("shared_files/login_pages/login_v", $data);
 	}
@@ -517,6 +521,7 @@ class User extends MY_Controller {
 							
 			
 		}
+		
 		
 
 	public function addnew_user(){
