@@ -86,7 +86,8 @@ border: 1px solid #FFF !important;
  					
  				</div>
  				<div class="col-md-7">
- 					<?php echo $available_bal ;?>
+        <span id="avail_bal"></span>
+ 					<?php //echo $available_bal ;?>
  				</div>
  			</div>
  			<div class="row">
@@ -243,7 +244,8 @@ border: 1px solid #FFF !important;
   <script type="text/javascript">
 $(document).ready(function() {
 
-
+  var avail_bal = '<?php echo $running_bal_cl ?>';
+  $('#avail_bal').text(avail_bal);
  $(".optioncheck").change(function() {
       
       var div="#reports_display";
