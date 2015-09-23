@@ -150,7 +150,12 @@ border: 1px solid #FFF !important;
                 if($qty_issued<=0){
                   $running_bal_cl = $running_bal_op + $qty_issued;
                 }else{
-                  $running_bal_cl = $running_bal_op + $qty_issued;                  
+                  if($s11=='internal issue'){
+                    $running_bal_cl = $running_bal_op - $qty_issued;        
+                  }else{
+                    $running_bal_cl = $running_bal_op + $qty_issued;        
+                  }
+                            
                 }                             
               }else{
                 if($negative_adjustment !=0) {
