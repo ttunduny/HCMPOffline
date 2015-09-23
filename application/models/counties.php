@@ -42,7 +42,7 @@ class Counties extends Doctrine_Record {
 	
 	public static function get_county_name($county_id)
 	{
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT county, id FROM counties WHERE counties.id='$county_id' ");
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT county  FROM counties WHERE counties.id='$county_id' ");
 		return $q[0];
 	}
 	public static function get_district_expiry_summary($date,$county){

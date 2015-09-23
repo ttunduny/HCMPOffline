@@ -527,18 +527,18 @@ echo $maps; ?>
             });
         }
        function ajax_request_replace_div_content(function_url,div){
-        var function_url =url+function_url;
-        var loading_icon=url+"assets/img/loader2.gif";
-        $.ajax({
-        type: "POST",
-        url: function_url,
-        beforeSend: function() {
-        $(div).html("<img style='margin-left:20%;' src="+loading_icon+">");
-        },
-        success: function(msg) {
-        $(div).html(msg);
-        }
-        });
+            var function_url = url+function_url;
+            var loading_icon = url+"assets/img/loader2.gif";
+            $.ajax({
+                type: "POST",
+                url: function_url,
+                beforeSend: function() {
+                    $(div).html("<img style='margin-left:20%;' src="+loading_icon+">");
+                },
+                success: function(msg) {
+                  $(div).html(msg);
+                }
+            });
         } 
         $(".excel_").click(function(e) {
         e.preventDefault();

@@ -175,6 +175,92 @@ class Divisional_Reports extends MY_Controller
 		$this -> load -> view($view, $data);
 		
 	}
+
+	public function generate_antimalarial_graph_ajax($county_id){
+		$subcounties = Counties::get_subcounties_in_county($county_id);	
+		$county_dets = Counties::get_county_name($county_id);
+		foreach ($county_dets as $value) {			
+			$county_name = $value;
+		}	
+		
+		$subcounties_listing = array();
+		$sub_counties_graph = array();
+		$sub_counties_names= array();
+		foreach ($subcounties as $key => $value) {
+		 	$subcounty_id = $value['id'];
+		 	$subcounty_name = $value['district'];		 	
+		 	$antimalarial_data =  Malaria_Data::get_sub_county_antimalaria($subcounty_id);
+		 	if(count($antimalarial_data>0)){
+		 		$b6 = ($antimalarial_data[0]['quantity']!='') ? $antimalarial_data[0]['quantity'] : 0 ;
+		 		$b12 = ($antimalarial_data[1]['quantity']!='') ? $antimalarial_data[1]['quantity'] : 0 ;
+		 		$b18 = ($antimalarial_data[2]['qusantity']!='') ? $antimalarial_data[2]['quantity'] : 0 ;
+		 		$b24 = ($antimalarial_data[3]['quantity']!='') ? $antimalarial_data[3]['quantity'] : 0 ;
+		 	}
+		 	$b6 = intval($b6);
+		 	$b12 = intval($b12);
+		 	$b18 = intval($b18);
+		 	$b24 = intval($b24);
+			$sub_counties_names_list= array('Blister of 6','Blister of 12','Blister of 18','Blister of 24');
+		 	array_push($sub_counties_names, $sub_counties_names_list);
+		 	array_push($sub_counties_graph, $subcounty_name);
+
+		 	$bdata = array('Blister of 6'=>$b6,'Blister of 12'=>$b12,'Blister of 18'=>$b18,'Blister of 24'=>$b24);
+		 	// $bdata = array($b6,$b12,$b18,$b24);
+		 	$subcounties_listing[] = array('id'=>$subcounty_id,'name'=>$subcounty_name,'data'=>$bdata);
+		}
+		// $sub_counties_names= array('Blister of 6','Blister of 12','Blister of 18','Blister of 24');
+		// echo "<pre>";
+		// print_r($subcounties_listing);die;
+		// $data['count_records'] = count($sub_counties_graph);
+		// $sub_counties_graph = json_encode($sub_counties_graph);
+		// $data['sub_counties'] = str_replace('"', "'", $sub_counties_graph);
+		$graph_data = array();
+		$graph_data = array_merge($graph_data, array("graph_id" => 'graph-section'));
+		$graph_data = array_merge($graph_data, array("graph_title" => $county_name.' County Antimalarial Stocks'));
+		$graph_data = array_merge($graph_data, array("graph_type" => 'bar'));
+		$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Quantity in Packs'));
+		$graph_data = array_merge($graph_data, array("graph_categories" => array()));
+		$graph_data = array_merge($graph_data, array("series_data" => array($subcounties_listing)));
+		foreach ($subcounties_listing as $subcounties_graph_listing) :
+			$graph_data['graph_categories'] = $sub_counties_graph;
+			$graph_data['series_data']['Quantity'] =  array($subcounties_graph_listing['data']);
+		endforeach;
+		// foreach ($subcounties_listing as $subcounties_graph_listing) :			
+			// echo "<pre>";
+			// print_r($graph_data['series_data']);die;
+		// 	$graph_data['graph_categories'] = $sub_counties_names;
+		// 	$graph_data['series_data']= array($subcounties_graph_listing['data']);
+		// endforeach;
+		// echo "<pre>";
+		// print_r($graph_data);die;
+		$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
+		// $data['sub_counties'] = $sub_counties_graph);
+		// echo $data['high_graph'];die;
+		// print_r($data['sub_counties']);die;
+		// $data['graph_title'] = $county_name.' County Antimalarial Stocks';
+		
+		// // echo $data['graph_title'];die;
+		// $data['report_view'] = "subcounty/reports/program_reports_v_titus";	 		
+		// $data['content_view'] = "facility/facility_reports/reports_v";
+		// // $data['subcounties_listing']=json_encode($subcounties_listing);
+		// $data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		// // $data['report_title'] =	"Divisional Malaria Reports";
+		// $this -> load -> view('shared_files/template/template', $data);
+		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
+		
+	}
+	public function generate_antimalarial_graph($county_id){
+		
+		
+		$data['county_id'] = $county_id;	 		
+		$data['report_view'] = "subcounty/reports/program_reports_v_titus";	 		
+		$data['content_view'] = "facility/facility_reports/reports_v";		
+		$data['sidebar'] = "shared_files/report_templates/side_bar_v";
+		$data['report_title'] =	"Divisional Malaria Reports";
+		$this -> load -> view('shared_files/template/template', $data);
+		// return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
+		
+	}
 	public function malaria_report($facility = NULL)
 	{
 		//Used to pick the kemsa code and assign it to elements displayed on the report
