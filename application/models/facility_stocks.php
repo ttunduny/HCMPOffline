@@ -59,6 +59,40 @@ class Facility_stocks extends Doctrine_Record {
 		return $stocks;
 	}// get all facility stock commodity id, options check if the user wants batch data or commodity grouped data and return the total
 
+	public static function get_distinct_stocks_for_this_county_store($county_id){
+		$store_stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+			SELECT DISTINCT
+    dst.commodity_id AS commodity_id,
+    fs.id AS facility_stock_id,
+    dst.expiry_date,
+    c.commodity_name,
+    c.commodity_code,
+    c.unit_size,
+    dst.total_balance AS store_commodity_balance,
+    ROUND(((dst.total_balance) / c.total_commodity_units),
+            1) AS pack_balance,
+    c.total_commodity_units,
+    fs.manufacture,
+    c_s.source_name,
+    fs.batch_no,
+    c_s.id AS source_id
+FROM
+    facility_stocks fs,
+    commodity_source c_s,
+    drug_store_issues ds,
+    commodities c,
+    drug_store_totals dst
+WHERE
+    ds.district_id = dst.district_id BETWEEN (SELECT MIN(id) FROM districts WHERE county = '$county_id') AND (SELECT MIN(id) FROM districts WHERE county = '$county_id')
+        AND dst.expiry_date >= NOW()
+        AND dst.commodity_id = fs.commodity_id
+        AND c.id = dst.commodity_id
+        AND dst.total_balance > 0
+GROUP BY dst.commodity_id
+ORDER BY fs.expiry_date ASC
+		");
+		return $store_stocks;
+	}
 	public static function get_distinct_stocks_for_this_district_store($district_id) {
 		$store_stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT DISTINCT dst.commodity_id as commodity_id,
 fs.id as facility_stock_id,
@@ -100,6 +134,38 @@ from facility_stocks fs, commodity_source c_s, drug_store_issues ds,commodities 
 	 and c.id=fs.commodity_id and fs.status='1' AND c_s.id = fs.source_of_commodity $addition 
 	");
 		
+		return $stocks;
+	}
+
+	public static function get_county_stock_amc($county_id){
+		$stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+			SELECT 
+    c.id AS commodity_id,
+    ds.id AS drug_store_stock_id,
+    c.commodity_name,
+    c.commodity_code,
+    c.unit_size,
+    fs.expiry_date,
+    ROUND((ds.total_balance), 1) AS commodity_balance,
+    ROUND(((ds.total_balance) / c.total_commodity_units), 1) AS pack_balance,
+    c.total_commodity_units,
+    c_s.source_name,
+    c_s.id AS source_id
+FROM
+    commodity_source c_s,
+    drug_store_totals ds,
+    facility_stocks fs,
+    commodities c
+        LEFT JOIN
+    facility_monthly_stock fms ON fms.commodity_id = c.id
+WHERE
+	ds.district_id BETWEEN (SELECT MIN(id) FROM districts WHERE county = '$county_id') 
+    AND (SELECT MAX(id) FROM districts WHERE county = '$county_id')
+	AND fs.expiry_date >= NOW()
+	AND fs.commodity_id = ds.commodity_id
+	AND c.id = ds.commodity_id
+GROUP BY c.id;
+			");
 		return $stocks;
 	}
 
@@ -287,6 +353,76 @@ GROUP BY c.id
 		        and fs.expiry_date <= NOW()
 		        and c.id = fs.commodity_id
 		        and fs.status = '1' 
+		");
+		return $stocks;
+	}
+
+	public static function county_drug_store_act_expiries($county_id){
+		$stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+SELECT 
+    ds.id,
+    ds.commodity_id AS commodity_id,
+    c.commodity_name,
+    c.unit_size,
+    c.unit_cost,
+    ds.facility_code,
+    ds.district_id,
+    ds.s11_No,
+    ds.batch_no,
+    ds.expiry_date,
+    ds.balance_as_of,
+    ds.adjustmentpve,
+    ds.adjustmentnve,
+    ds.qty_issued AS current_balance,
+    ds.date_issued,
+    ds.issued_to,
+    ds.created_at,
+    ds.issued_by,
+    ds.status
+FROM
+    drug_store_issues ds,
+    commodities c
+WHERE
+    ds.expiry_date <= NOW()
+        AND ds.district_id BETWEEN (SELECT MIN(id) FROM districts WHERE county = '$county_id') 
+                                    AND (SELECT MAX(id) FROM districts WHERE county = '$county_id')
+        AND ds.qty_issued > 0
+        AND c.id = ds.commodity_id
+		");
+		return $stocks;
+	}
+
+	public static function county_drug_store_pte_expiries($county_id){
+		$stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
+			SELECT 
+    ds.id,
+    ds.commodity_id AS commodity_id,
+    c.commodity_name,
+    c.unit_size,
+    c.unit_cost,
+    ds.facility_code,
+    ds.district_id,
+    ds.s11_No,
+    ds.batch_no,
+    ds.expiry_date,
+    ds.balance_as_of,
+    ds.adjustmentpve,
+    ds.adjustmentnve,
+    ds.qty_issued AS current_balance,
+    ds.date_issued,
+    ds.issued_to,
+    ds.created_at,
+    ds.issued_by,
+    ds.status
+FROM
+    drug_store_issues ds,
+    commodities c
+WHERE
+    ds.expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH)
+        AND ds.district_id BETWEEN (SELECT MIN(id) FROM districts WHERE county = '$county_id') 
+                                    AND (SELECT MAX(id) FROM districts WHERE county = '$county_id')
+        AND qty_issued > 0
+        AND c.id = ds.commodity_id;
 		");
 		return $stocks;
 	}
