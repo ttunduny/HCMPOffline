@@ -676,7 +676,7 @@
     return false;
 	})
 
-  $('#email').keyup(function() {
+  $('#email').bind('input change paste keyup mouseup',function() {
   	// var email = $('#email').val();   	   	
    	
    	$.ajax({
@@ -693,12 +693,12 @@
         if(data.response=='false'){
         	$('#processing').html(data.msg);
 			$( '#processing' ).addClass( "alert-danger alert-dismissable" );
-			// $("#create_new").attr("disabled", "disabled");
+			$("#create_new").attr("disabled", "disabled");
 		}else if(data.response=='true'){
 			$("#processingr").val('');
 			$("#processing").removeClass("alert-danger alert-dismissable");
-			$( '#processing' ).addClass( "alert-success alert-dismissable" );
-			// $(".#create_new").attr("disabled", false);
+			$('#processing' ).addClass( "alert-success alert-dismissable" );
+			$("#create_new").attr("disabled", false);
 			$('#processing').html(data.msg);
 		}
       }
