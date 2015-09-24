@@ -69,7 +69,7 @@
                     <th> Supplier</th>
                     <th> Unit Size</th>
                     <th> Batch No</th>
-                    <th> Source of Item</th>
+                    <!-- <th> Source of Item</th> -->
                     <th> Manufacturer</th>
                     <th> Expiry Date</th>
                     <th> Issue Type</th>
@@ -92,8 +92,9 @@
                     $commodity_code = $commodities['commodity_code'];
                     $total_units = $commodities['total_commodity_units'];                  
                     $name =$commodities['source_name'];
+                    $source_id =$commodities['supplier_id'];
               
-                    echo "<option special_data='" . $id . "^" . $name . "^" . $commodity_code . "^" . $unit_size . "^" . $total_units . "' 
+                    echo "<option special_data='" . $id . "^" . $name . "^" . $commodity_code . "^" . $unit_size . "^" . $total_units ."^" . $source_id . "' 
                     value='$id'>" . $commodities_name . "</option>";
                 }
                 ?>
@@ -108,16 +109,19 @@
                     <td>
                     <input  style="width:80px !important;" class='form-control input-small commodity_batch_no' required="required" data-val="true" name='commodity_batch_no[]' type='text'/>
                     </td>
-                    <td>
-                    <select style="width:95px !important;" class="form-control input-small source_of_item" name="source_of_item[]">
+                  <!--   <td> -->
+                    <input  style="width:80px !important;" class='form-control input-small source_of_item' name='source_of_item[]' type='hidden'/>
+
+                    <!-- <select style="width:95px !important;" class="form-control input-small source_of_item" name="source_of_item[]">
                         <?php
-                        foreach ($commodity_source as $commodity_source) {
-                            $id = $commodity_source -> id;
-                            $commodity_source_name = $commodity_source -> source_name;
-                            echo "<option value='$id'>$commodity_source_name</option>";
-                        }
+                        //foreach ($commodity_source as $commodity_source) {
+                            //$id = $commodity_source -> id;
+                            //$commodity_source_name = $commodity_source -> source_name;
+                            //echo "<option value='$id'>$commodity_source_name</option>";
+                        //}
                         ?>
-                    </select></td>
+                    </select> -->
+                    <!-- </td> -->
                     <td>
                     <input style="width:70px !important;" id='commodity_manufacture' required="required" class="form-control commodity_manufacture input-small"
                     name='commodity_manufacture[]' type='text' value=""  data-val="true"/>
@@ -137,6 +141,7 @@
                     <td>
                     <input type='text' style="width:60px !important;" class='form-control input-small commodity_total_units' readonly="readonly" name='commodity_total_units[]' value=''/>
                     </td>
+
                     <td style="width:120px !important;">
                     <button type="button" class="remove btn btn-danger btn-xs">
                         <span class="glyphicon glyphicon-minus"></span>row
@@ -281,6 +286,7 @@
             $(this).closest("tr").find(".commodity_supplier").val(data_array[1]);
             $(this).closest("tr").find(".commodity_id").val(data_array[0]);
             $(this).closest("tr").find(".actual_units").val(data_array[4]);
+            $(this).closest("tr").find(".source_of_item").val(data_array[5]);
             });
 
             $(".commodity_batch_no").on('keyup',function(){
