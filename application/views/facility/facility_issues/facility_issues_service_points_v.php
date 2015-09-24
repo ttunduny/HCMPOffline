@@ -181,23 +181,12 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
         	var data =$('option:selected', selector_object.closest("tr").find('.desc')).attr('special_data') 
 	       	var data_array=data.split("^");
         	var remainder1=bal1-parseInt(calculate_actual_stock(data_array[3],selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
-		    selector_object.val(),'return',selector_object));
-		    var remainder=bal-parseInt(calculate_actual_stock(data_array[3],selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
-		    selector_object.val(),'return',selector_object));
+    selector_object.val(),'return',selector_object));
+    var issue=parseInt(calculate_actual_stock(data_array[3],selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
+    selector_object.val(),'return',selector_object));
+    var remainder=bal-parseInt(calculate_actual_stock(data_array[3],selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
+    selector_object.val(),'return',selector_object));
         	var form_data=check_if_the_form_has_been_filled_correctly(selector_object);
-	       	// console.log(data_array);
-    //     	var remainder1=bal1-parseInt(calculate_actual_stock(data_array[3],selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
-    // selector_object.val(),'return',selector_object));
-    // var issue=parseInt(calculate_actual_stock(data_array[3],selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
-    // selector_object.val(),'return',selector_object));
-    // var remainder=bal-parseInt(calculate_actual_stock(data_array[3],selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
-    // selector_object.val(),'return',selector_object));
-			// var remainder1=bal1-issue;
-		 //    var issue=parseInt(calculate_actual_stock(data_array[3],commodity_unit_of_issue,selector_object.val(),'return'));
-		 //    var remainder=bal-parseInt(calculate_actual_stock(data_array[3],commodity_unit_of_issue,selector_object.val(),'return'));
-   //      	var form_data=check_if_the_form_has_been_filled_correctly(selector_object);
-			// var remainder1=bal1-issue;  
-			// alert(remainder1);      	
         	var alert_message='';
         	if (remainder<0) {alert_message+="<li>Can not issue beyond available stock</li></br>"+
         	"<li>You are trying to issue "+issue+" (Units) from "+data_array[4]+" (Units)</li>";}
