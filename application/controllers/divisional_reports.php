@@ -127,8 +127,10 @@ class Divisional_Reports extends MY_Controller
 				
 				// $index++;
 			 // }
+
 			 $data['sub_counties'] = $subcounties_listing;
 			 $data['county_id'] = $county_id;
+
 			 $data['mal_report_data'] = $malaria_report_data;
 			 $data['page_header'] = "Program Reports";	
 			 $data['title'] = "County Program Reports";
@@ -203,6 +205,7 @@ class Divisional_Reports extends MY_Controller
 		 	$b12 = intval($b12);
 		 	$b18 = intval($b18);
 		 	$b24 = intval($b24);
+<<<<<<< HEAD
 			
 		 	array_push($sub_counties_names, $sub_counties_names_list);
 		 	array_push($sub_counties_graph, $subcounty_name);
@@ -210,6 +213,37 @@ class Divisional_Reports extends MY_Controller
 		 	$subcounties_listing[] = array('id'=>$subcounty_id,'name'=>$subcounty_name,'b6'=>$b6,'b12'=>$b12,'b18'=>$b18,'b24'=>$b24);
 		}
 		
+=======
+			// $sub_counties_names_list= array('Blister of 6','Blister of 12','Blister of 18','Blister of 24');
+		 	array_push($sub_counties_names, $sub_counties_names_list);
+		 	array_push($sub_counties_graph, $subcounty_name);
+
+		 	// $bdata = array('Blister of 6'=>$b6,'Blister of 12'=>$b12,'Blister of 18'=>$b18,'Blister of 24'=>$b24);
+		 	// $bdata = array($b6,$b12,$b18,$b24);
+		 	$subcounties_listing[] = array('id'=>$subcounty_id,'name'=>$subcounty_name,'b6'=>$b6,'b12'=>$b12,'b18'=>$b18,'b24'=>$b24);
+		}
+		// $sub_counties_names= array('Blister of 6','Blister of 12','Blister of 18','Blister of 24');
+		// echo "<pre>";
+		// print_r($subcounties_listing);die;
+		// $data['count_records'] = count($sub_counties_graph);
+		// $sub_counties_graph = json_encode($sub_counties_graph);
+		// $data['sub_counties'] = str_replace('"', "'", $sub_counties_graph);
+		// $graph_data = array();
+		// $graph_data = array_merge($graph_data, array("graph_id" => 'graph-section'));
+		// $graph_data = array_merge($graph_data, array("graph_title" => $county_name.' County Antimalarial Stocks'));
+		// $graph_data = array_merge($graph_data, array("graph_type" => 'bar'));
+		// $graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Quantity in Packs'));
+		// $graph_data = array_merge($graph_data, array("graph_categories" => array()));
+		// $graph_data=array_merge($graph_data,array("series_data"=>array("Blister of 6"=>array(),"Blister of 12"=>array(),"Blister of 18"=>array(),"Blister of 24"=>array())));
+		// foreach ($subcounties_listing as $subcounties_graph_listing) :			
+
+		// 	// $graph_data['graph_categories'] = $sub_counties_graph;
+		// 	$graph_data['graph_categories']=array_merge($graph_data['graph_categories'],array($subcounties_graph_listing['name']));	
+
+		// 	$graph_data['series_data'] =  array_merge($graph_data['series_data']['Blister of 6'],array($sub_counties_graph['b6']));	
+		// 	// $graph_data['series_data'] =  array($subcounties_graph_listing['data']);
+		// endforeach;
+>>>>>>> 7c44caceccf22eee4d2ba4120bb907ad00e41c40
 		
 		$graph_data=array();
 		$graph_data=array_merge($graph_data,array("graph_id"=>'graph-section'));
