@@ -279,6 +279,10 @@ HTML_DATA;
 				break;
 		}
 	});
+
+	$('#AMGRAPH').click(function (e){
+		ajax_request_replace_div_content(url,"#graph-section");	
+	});
 	
 	$('#filter').click(function(){
 		facility = $('select[name="facilities"]').val();
