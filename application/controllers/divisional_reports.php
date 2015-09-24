@@ -97,6 +97,8 @@ class Divisional_Reports extends MY_Controller
 			 $county_id = $this -> session -> userdata('county_id');
 			 // $facilities = Facilities::get_all_facilities_in_county($county_id);
 			 $subcounties = Counties::get_subcounties_in_county($county_id);
+			 // echo "<pre>";
+			 // print_r($subcounties);die;
 			 $subcounties_listing = '';
 			 foreach ($subcounties as $key => $value) {
 			 	$subcounties_listing .= '<option value = "'.$value['id'].'">'.$value['district'].'</option>';
@@ -126,6 +128,7 @@ class Divisional_Reports extends MY_Controller
 				// $index++;
 			 // }
 			 $data['sub_counties'] = $subcounties_listing;
+			 $data['county_id'] = $county_id;
 			 $data['mal_report_data'] = $malaria_report_data;
 			 $data['page_header'] = "Program Reports";	
 			 $data['title'] = "County Program Reports";
@@ -193,46 +196,42 @@ class Divisional_Reports extends MY_Controller
 		 	if(count($antimalarial_data>0)){
 		 		$b6 = ($antimalarial_data[0]['quantity']!='') ? $antimalarial_data[0]['quantity'] : 0 ;
 		 		$b12 = ($antimalarial_data[1]['quantity']!='') ? $antimalarial_data[1]['quantity'] : 0 ;
-		 		$b18 = ($antimalarial_data[2]['qusantity']!='') ? $antimalarial_data[2]['quantity'] : 0 ;
+		 		$b18 = ($antimalarial_data[2]['quantity']!='') ? $antimalarial_data[2]['quantity'] : 0 ;
 		 		$b24 = ($antimalarial_data[3]['quantity']!='') ? $antimalarial_data[3]['quantity'] : 0 ;
 		 	}
 		 	$b6 = intval($b6);
 		 	$b12 = intval($b12);
 		 	$b18 = intval($b18);
 		 	$b24 = intval($b24);
-			$sub_counties_names_list= array('Blister of 6','Blister of 12','Blister of 18','Blister of 24');
+			
 		 	array_push($sub_counties_names, $sub_counties_names_list);
 		 	array_push($sub_counties_graph, $subcounty_name);
 
-		 	$bdata = array('Blister of 6'=>$b6,'Blister of 12'=>$b12,'Blister of 18'=>$b18,'Blister of 24'=>$b24);
-		 	// $bdata = array($b6,$b12,$b18,$b24);
-		 	$subcounties_listing[] = array('id'=>$subcounty_id,'name'=>$subcounty_name,'data'=>$bdata);
+		 	$subcounties_listing[] = array('id'=>$subcounty_id,'name'=>$subcounty_name,'b6'=>$b6,'b12'=>$b12,'b18'=>$b18,'b24'=>$b24);
 		}
-		// $sub_counties_names= array('Blister of 6','Blister of 12','Blister of 18','Blister of 24');
-		// echo "<pre>";
-		// print_r($subcounties_listing);die;
-		// $data['count_records'] = count($sub_counties_graph);
-		// $sub_counties_graph = json_encode($sub_counties_graph);
-		// $data['sub_counties'] = str_replace('"', "'", $sub_counties_graph);
-		$graph_data = array();
-		$graph_data = array_merge($graph_data, array("graph_id" => 'graph-section'));
-		$graph_data = array_merge($graph_data, array("graph_title" => $county_name.' County Antimalarial Stocks'));
-		$graph_data = array_merge($graph_data, array("graph_type" => 'bar'));
-		$graph_data = array_merge($graph_data, array("graph_yaxis_title" => 'Quantity in Packs'));
-		$graph_data = array_merge($graph_data, array("graph_categories" => array()));
-		$graph_data = array_merge($graph_data, array("series_data" => array($subcounties_listing)));
-		foreach ($subcounties_listing as $subcounties_graph_listing) :
-			$graph_data['graph_categories'] = $sub_counties_graph;
-			$graph_data['series_data']['Quantity'] =  array($subcounties_graph_listing['data']);
-		endforeach;
-		// foreach ($subcounties_listing as $subcounties_graph_listing) :			
+		
+		
+		$graph_data=array();
+		$graph_data=array_merge($graph_data,array("graph_id"=>'graph-section'));
+		$graph_data=array_merge($graph_data,array("graph_title"=>$county_name.' County Antimalarial Stocks'));
+		// $graph_data = array_merge($graph_data, array("color" => "['#4b0082','#FFF263', '#6AF9C4']"));
+		$graph_data=array_merge($graph_data,array("graph_type"=>'column'));
+		$graph_data=array_merge($graph_data,array("graph_yaxis_title"=>'Quantity in Packs'));
+		$graph_data=array_merge($graph_data,array("graph_categories"=>array()));
+		$graph_data=array_merge($graph_data,array("series_data"=>array("Blister of 6"=>array(),"Blister of 12"=>array(),"Blister of 18"=>array(),"Blister of 24"=>array())));
+		// $graph_data['stacking']='normal';
+		foreach($subcounties_listing as $subcounties_graph_listing):
 			// echo "<pre>";
-			// print_r($graph_data['series_data']);die;
-		// 	$graph_data['graph_categories'] = $sub_counties_names;
-		// 	$graph_data['series_data']= array($subcounties_graph_listing['data']);
-		// endforeach;
-		// echo "<pre>";
-		// print_r($graph_data);die;
+	  //   	print_r($subcounties_graph_listing);die;
+			$category_name = $subcounties_graph_listing['name'];
+			$graph_data['graph_categories']=array_merge($graph_data['graph_categories'],array($category_name));	
+			$graph_data['series_data']['Blister of 6']=array_merge($graph_data['series_data']['Blister of 6'],array((float) $subcounties_graph_listing['b6']));
+			$graph_data['series_data']['Blister of 12']=array_merge($graph_data['series_data']['Blister of 12'],array((float) $subcounties_graph_listing['b12']));
+			$graph_data['series_data']['Blister of 18']=array_merge($graph_data['series_data']['Blister of 18'],array((float) $subcounties_graph_listing['b18']));
+			$graph_data['series_data']['Blister of 24']=array_merge($graph_data['series_data']['Blister of 24'],array((float) $subcounties_graph_listing['b24']));
+	        // $graph_data['series_data']['AMC']=array_merge($graph_data['series_data']['AMC'],array((float) $facility_stock_['amc']));	
+
+		endforeach;
 		$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
 		// $data['sub_counties'] = $sub_counties_graph);
 		// echo $data['high_graph'];die;
