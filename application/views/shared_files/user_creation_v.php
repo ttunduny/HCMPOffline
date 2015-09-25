@@ -139,7 +139,8 @@
 									<!-- <div class="btn btn-primary btn-xs" id="reset_pwd"  data-attr="<?php echo $list['user_id']; ?>">
 									<span class="glyphicon glyphicon-edit"></span>Reset Password
 									</div> -->
-									<a href="<?php echo base_url().'user/reset_pass_to_default/'.$list['user_id']; ?>" class="btn btn-primary btn-xs" name="reset_pwd" class="reset_pwd" id="reset_pwd" data-attr="<?php echo $list['user_id']; ?>">
+									<a href="#" class="btn btn-primary btn-xs reset_pwd" name="reset_pwd"  id="reset_pwd" data-attr="<?php echo $list['user_id']; ?>" data-name="<?php echo $list['email']; ?>">
+									<!-- <a href="<?php //echo base_url().'user/reset_pass_to_default/'.$list['user_id']; ?>" class="btn btn-primary btn-xs" name="reset_pwd" class="reset_pwd" id="reset_pwd" data-attr="<?php echo $list['user_id']; ?>"> -->
 									<span class="glyphicon glyphicon-edit"></span>Reset Password
 									 </a>	 
 								</td>
@@ -763,31 +764,40 @@ $('#email').keyup(function() {
   });
 
     // $("#reset_pwd").on('click',function() {//karsan
-    $('#reset_pwd').click(function(){
+    $('.reset_pwd').click(function(){    	
     	var user_id = $(this).attr('data-attr');
+    	var user_email = $(this).attr('data-name');
     	var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";
-    	var message = "The Password for User: "+user_id+" has been reset to : 123456";
-    	// alert(user_id);return
-
+    	var message_success = "The Password for User: "+user_email+" has been reset to : 123456";
+    	var message_fail = "The Password for User: "+user_email+" has NOT reset";
+    	var message_cancel = "No action has been taken";    	
+    	var my_url = "<?php echo base_url()."user/reset_pass_to_default";?>"+'/'+user_id;
     	$.ajax({
     		type:"POST",
     		data:{
     			'user_id' : user_id
     		},
-    		url:"<?php echo base_url()."user/reset_pass_to_default";?>",
+    		url:my_url,
     		beforeSend: function() {
             var message = confirm("This will reset the selected user's credentials to the default which is 123456. Are you sure you want to proceed?");
 		        if (message){
 		            return true;
-		        } else {
-		            return false;
+		        } else {		            
+		            alertify.set({ delay: 10000 });
+            		alertify.success(message_cancel, null);
+            		return false;
 		        }
            
           },
-          success: function(msg){
- 			 // alert("Tumefika hapa");return;
- 			 
-            }
+          success: function(msg){          		
+	 			if(msg==true){
+	 			 	alertify.set({ delay: 10000 });
+            		alertify.success(message_success, null);
+	            }else{
+	            	alertify.set({ delay: 10000 });
+            		alertify.success(message_fail, null);
+	            }
+ 			}
 
     	});
     });
