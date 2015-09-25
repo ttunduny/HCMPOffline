@@ -99,7 +99,16 @@ class Reports extends MY_Controller {
 	}
 	public function get_facilities() {
 		$district = $_POST['district'];
-		$facilities = Facilities::getFacilities($district);
+		$user_indicator = $this -> session -> userdata('user_indicator') ;
+		if(($user_indicator=='facility')||($user_indicator=='facility_admin')){
+			$facility_code = $this -> session -> userdata('facility_id') ;
+			$facilities = Facilities::getFacilities($district,$facility_code);
+
+		}else{
+			$facilities = Facilities::getFacilities($district);
+
+		}
+		
 		$list = "";
 		foreach ($facilities as $facilities) {
 			$list .= $facilities -> facility_code;
@@ -2282,7 +2291,15 @@ class Reports extends MY_Controller {
 		$default_expiries_ = $this -> hcmp_functions -> create_high_chart_graph($default_expiries);
 		$data['default_expiries'] = $default_expiries_;
 		$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
-		return $this -> load -> view("subcounty/ajax/county_expiry_filter_v", $data);
+		// return $this -> load -> view("subcounty/ajax/county_expiry_filter_v", $data);
+		$data['report_view'] = "subcounty/ajax/county_expiry_filter_v";
+		$data['banner_text'] = "Expired Products";
+		$data['content_view'] = "facility/facility_reports/reports_v";
+		$data['report_view'] = "subcounty/ajax/county_expiry_filter_v";
+		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
+		return $this -> load -> view("shared_files/template/template", $data);
+
+		// return $this -> load -> view("subcounty/ajax/county_expiry_filter_v", $data);
 	}
 	//For filtering for the expiries dashboard
 	
@@ -4104,7 +4121,9 @@ class Reports extends MY_Controller {
 		$data['report_view'] = "subcounty/reports/county_expiries_v";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
 		$data['active_panel'] = 'expiries';
-		return $this -> load -> view("subcounty/reports/county_expiries_v", $data);
+		// return $this -> load -> view("subcounty/reports/county_expiries_v", $data);
+		return $this -> load -> view("shared_files/template/template", $data);
+
 	}
 	public function county_consumption() {
 		$county_id = $this -> session -> userdata('county_id');
