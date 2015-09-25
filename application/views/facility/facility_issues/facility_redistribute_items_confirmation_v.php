@@ -24,6 +24,7 @@
 			<th>To</th>
 			<th>Commodity Name</th>
 			<th>Commodity Code</th>
+			<th>Date Sent</th>
 			<th>Unit Size</th>
 			<th>Batch No</th>
 			<th>Expiry Date</th>
@@ -54,6 +55,7 @@
 				}
 				$packs=round($redistribution_data->quantity_sent/$total_commodity_units,1);	
 				$date=date('d My',strtotime($redistribution_data->expiry_date));
+				$date_sent=date('d M Y',strtotime($redistribution_data->date_sent));
 						
 			}
 		echo "<tr>
@@ -67,6 +69,7 @@
 		<td>$name_facility_detail_receive</td>
 		<td>$name</td>
 		<td>$code</td>
+		<td>$date_sent</td>
 		<td>$unit_size</td>
 		<td><input type='text' 
 		name='commodity_batch_no[]' class='form-control input-small commodity_batch_no' value='$redistribution_data->batch_no' $edit></td>
