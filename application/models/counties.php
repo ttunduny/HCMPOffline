@@ -189,4 +189,11 @@ $and_data");
 	
 		return $query;
 	}
+
+	public static function get_county_info($county){
+	$query = Doctrine_Query::create() -> select("*") -> from("counties")->where("id='$county'");
+	$counties = $query -> execute();
+	$counties = $counties->toArray();
+	return $counties[0];
+	}
 }

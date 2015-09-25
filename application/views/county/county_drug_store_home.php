@@ -20,9 +20,9 @@
 								</p>
 							</div>
 						<?php else: ?>
-							<div style="height: auto; margin-bottom:2px;" class="warning message">
-								<p><span class="glyphicon glyphicon-info-sign">No Donations to you since last visit</span></p>
-							</div>
+							<div style="height:auto; margin-bottom: 2px" class="warning message ">   
+						      <p><span class="glyphicon glyphicon-info-sign"></span>There have been no donations to you since last visit</p>
+						    </div>
 						<?php endif; //stockCount?>
 						<?php if($county_dashboard_notifications['actual_expiries'] > 0): ?>
 							<div style="height: auto; margin-bottom:2px; " class="warning message">
@@ -35,9 +35,9 @@
 								</p>
 							</div>
 						<?php else: ?>
-							<div style="height: auto; margin-bottom: 2px;" class="warning message">
-								<p><span class="glyphicon glyphicon-info-sign">No Expiries</span></p>
-							</div>
+							<div style="height:auto; margin-bottom: 2px" class="warning message ">   
+						      <p><span class="glyphicon glyphicon-info-sign"></span>There are no Expired Commodities</p>
+						    </div>
 						<?php endif; //actualExpiries?>
 						<?php if($county_dashboard_notifications['potential_expiries']> 0): ?>
 							<div style="height: auto; margin-bottom: 2px;" class="warning message">
@@ -49,9 +49,9 @@
 								</p>
 							</div>
 						<?php else: ?>
-							<div style="height:auto; margin-bottom: 2px; " class="warning message">
-								<p><span class="glyphicon glyphicon-info-sign">No potential expiries (6 Month Interval)</span></p>
-							</div>
+						      <div style="height:auto; margin-bottom: 2px" class="warning message ">   
+						      	<p><span class="glyphicon glyphicon-info-sign"></span>There are no Potential Expiries (6 Month Interval)</p>
+						      </div>
 						<?php endif; //pteExpiries?>
 						</div>
 					</div>
@@ -67,7 +67,7 @@
 					<div class="panel-body">
 						<?php $countyStockCount = 10; if($countyStockCount > 0): ?>
 						<div style="height: auto; margin-bottom: 2px; " class="distribute message">
-							<a href="<?php echo base_url('issues/county_store_facilities'); ?>"><h5>Redistribute Commodities To Facilities</h5></a>
+							<a href="<?php echo base_url('issues/county_store'); ?>"><h5>Redistribute Commodities To Facilities</h5></a>
 						</div>
 						<div style="height: auto; margin-bottom: 2px; " class="distribute message">
 							<a href="<?php echo base_url('issues/county_store'); ?>"><h5>Redistribute Commodities To District Stores</h5></a>
