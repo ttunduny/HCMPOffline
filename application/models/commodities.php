@@ -153,15 +153,22 @@ return $inserttransaction;
 
 	public static function get_facility_commodities($facility_code,$checker=null){
 		$order_by=isset($checker)? " order by c_s_c.sub_category_name asc ": "order by c.commodity_name asc" ;
-	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-    ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as commodity_id,c.unit_size,c.unit_cost as unit_cost,
-    c.total_commodity_units,
-    c_s.source_name,c_s.id as supplier_id, c_s_c.sub_category_name
-               FROM commodities c, commodity_source c_s, commodity_sub_category c_s_c,facility_monthly_stock f_m_s
-               WHERE f_m_s.commodity_id = c.id
-               AND c.commodity_sub_category_id = c_s_c.id
-               AND f_m_s.facility_code =$facility_code
-               AND c.commodity_source_id = c_s.id $order_by"); 
+	// $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+ //    ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as commodity_id,c.unit_size,c.unit_cost as unit_cost,
+ //    c.total_commodity_units,
+ //    c_s.source_name,c_s.id as supplier_id, c_s_c.sub_category_name
+ //               FROM commodities c, commodity_source c_s, commodity_sub_category c_s_c,facility_monthly_stock f_m_s
+ //               WHERE f_m_s.commodity_id = c.id
+ //               AND c.commodity_sub_category_id = c_s_c.id
+ //               AND f_m_s.facility_code =$facility_code
+ //               AND c.commodity_source_id = c_s.id $order_by"); 
+		$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+    ->fetchAll("SELECT c.id,c.commodity_name,c.commodity_code,c.id AS commodity_id,c.unit_size,c.unit_cost AS unit_cost,
+				c.total_commodity_units,c_s.source_name,c_s.id AS supplier_id, c_s_c.sub_category_name
+				FROM facility_monthly_stock fms,
+				commodities c LEFT JOIN  commodity_sub_category c_s_c on c.commodity_sub_category_id = c_s_c.id,commodity_source c_s 
+				WHERE fms.facility_code = $facility_code AND fms.commodity_id = c.id AND c.commodity_source_id = c_s.id      
+				GROUP BY fms.commodity_id , c.commodity_code $order_by"); 
               
   return $inserttransaction;
 	}// set up the facility stock here
