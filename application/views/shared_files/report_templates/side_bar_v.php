@@ -62,7 +62,8 @@
     <div class="panel panel-default <?php echo $active_panel=='stocking_levels'? 'active-panel': null; ?>">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-parent="#accordion" id="stocking_levels" href="<?php echo base_url().'reports/facility_stock_level_dashboard'?>"><span class="glyphicon glyphicon-sort-by-attributes">
+                <a data-parent="#accordion" id="stocking_levels" href="<?php echo base_url().'reports/system_usage_temp'?>"><span class="glyphicon glyphicon-sort-by-attributes">
+                <!-- <a data-parent="#accordion"  href="<?php echo base_url().'reports/system_usage_temp'; ?>" id="system_usage"><span class="glyphicon glyphicon-signal"> -->
                 </span>Stocking Levels</a>
             </h4>
         </div>
