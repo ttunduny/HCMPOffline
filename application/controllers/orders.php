@@ -763,7 +763,7 @@ class orders extends MY_Controller {
 
 				// $email_address = "kelvinmwas@gmail.com";//FOREFATHER
 				$email_address = "ttunduny@gmail.com,karsanrichard@gmail.com";
-				$response = $this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file);
+				// $response = $this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file);
 				if ($response) {
 					$this->hcmp_functions->download_file('/print_docs/excel/excel_files/'. $file_name . '.xls');
 					// echo "I WORK";exit;
