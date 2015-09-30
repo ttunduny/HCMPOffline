@@ -3485,13 +3485,14 @@ class Reports extends MY_Controller {
 		$county_id = (isset($county_id) && ($county_id > 0)) ? $county_id : $this -> session -> userdata('county_id');
 		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
 		$report_type = ($graph_type == "NULL") ? null : $graph_type;
-		//echo $district_id;exit;
+		// echo $district_id;exit;
 		$from = (($from == "NULL")) ? strtotime(date('Y-m-01')) : strtotime(urldecode($from));
 		$to = (($to == "NULL")) ? strtotime(date('Y-m-d')) : strtotime(urldecode($to));
 		$county_name = counties::get_county_name($county_id);
 		//start building the notifications dashboaard first
 		//compute stocked out items
 		$items_stocked_out_in_facility = count(facility_stocks::get_items_that_have_stock_out_in_facility($facility_code, $district_id, $county_id));
+		// echo "I reach here";exit;
 		//get order information from the db
 		$facility_order_count_ = facility_orders::get_facility_order_summary_count($facility_code, $district_id, $county_id);
 		$facility_order_count = array();
