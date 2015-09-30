@@ -750,7 +750,7 @@ class orders extends MY_Controller {
 					$result = $this -> hcmp_functions -> clone_excel_order_template($new_order_no, 'save_file', $file_name);
 					// echo "<pre> This "; print_r($result);echo "</pre>";exit;
 				$excel_order_value = $this-> get_excel_order_total($file_name,1);//karsan
-				echo "<pre>";print_r($excel_order_value);exit;
+				// echo "<pre>";print_r($excel_order_value);exit;
 				$message = '
 						<br>
 						Please find the Order Made by ' . $facility_name . ' attached.
