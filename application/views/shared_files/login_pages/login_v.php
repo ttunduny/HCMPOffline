@@ -135,7 +135,8 @@
 		<div class="container" style="margin-top: 3%;" id="containerlogin">
 
 			<div class="row">
-				<div class="col-md-3">
+			<div class="col-md-3">
+					<a href="http://41.89.6.209/hcmp_demo/national/demo_accounts"><button class="btn btn-primary ">Demo Site Login Credentials </button></a>
 				 <span>
 				 	<h5>Experiencing any challenges?<br />
 						Send an email to: hcmphelpdesk@googlegroups.com</h5> 

@@ -506,8 +506,9 @@ class Facility_stocks extends Doctrine_Record {
 	}
 
 	public static function get_items_that_have_stock_out_in_facility($facility_code = null, $district_id = null, $county_id = null) {
-		$where_clause = isset($facility_code) ? "f.facility_code=$facility_code " : (isset($district_id) ? "d.id=$district_id " : "d.county=$county_id ");
+		$where_clause = ((isset($facility_code)) && $facility_code != '') ? "f.facility_code=$facility_code " : ((isset($district_id) && $district_id != '') ? "d.id=$district_id " : "d.county=$county_id ");
 		$group_by = isset($facility_code) ? " order by c.commodity_name asc" : (isset($district_id) ? " order by f.facility_name asc" : " order by d.district asc");
+		
 		$stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT 
 			d.district,
 			f_s.`facility_code`,
