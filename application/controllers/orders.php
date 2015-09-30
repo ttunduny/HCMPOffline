@@ -559,11 +559,11 @@ class orders extends MY_Controller {
 				$subject = 'Pending Approval Order Report For ' . $facility_name;
 
 				$attach_file1 = './pdf/' . $file_name . '.pdf';
-				$attach_file2 = FCPATH."print_docs/excel/excel_files/" . $file_name . '.xls';
+				$attach_file2 = base_url()."print_docs/excel/excel_files/" . $file_name . '.xls';
 
 				$message = $message_1 . $pdf_body;
 
-				$response = $this -> hcmp_functions -> send_order_submission_email($message, $subject, $attach_file1 . "(more)" . $attach_file2, null);
+				// $response = $this -> hcmp_functions -> send_order_submission_email($message, $subject, $attach_file1 . "(more)" . $attach_file2, null);
 
 				if ($response) {
 					delete_files($attach_file1);
@@ -761,21 +761,21 @@ class orders extends MY_Controller {
 				//create excel
 				$order_listing = 'facility';
 
-
 				//$attach_file1 = './pdf/'.$file_name.'.pdf';
-				$attach_file = "./print_docs/excel/excel_files/" . $file_name . '.xls';
+				$attach_file = FCPATH."print_docs/excel/excel_files/" . $file_name . '.xls';
 
 				// $email_address = "kelvinmwas@gmail.com";//FOREFATHER
 				$email_address = "ttunduny@gmail.com,karsanrichard@gmail.com";
 				$response = $this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file);
-				if ($response) {
+				// echo("Im here");exit;
+				/*if ($response) {
 					$this->hcmp_functions->download_file('/print_docs/excel/excel_files/'. $file_name . '.xls');
 					// echo "I WORK";exit;
 					// delete_files($attach_file);
 					//unlink($attach_file);
 				} else {
 
-				}
+				}*/
 
 			endif;
 			//updates the log tables with the action
