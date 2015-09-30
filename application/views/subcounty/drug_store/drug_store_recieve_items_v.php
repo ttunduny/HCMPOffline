@@ -23,7 +23,7 @@
  <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/district_store_drug_recieval',$att); ?>
 <table width="100%"  class="table table-hover table-bordered table-update" id="facility_issues_table" >
 <thead style="background-color: white">
-					<tr>d
+					<tr>
 						<th>Select Subcounty</th>
 						<th>Select Facility</th>
 						<th>Description</th>
