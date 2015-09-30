@@ -722,7 +722,7 @@ class orders extends MY_Controller {
 				$file_name = $facility_name . '_facility_order_no_' . $new_order_no . "_KEMSA_date_created_" . date('d-m-y');
 
 					$result = $this -> hcmp_functions -> clone_excel_order_template($new_order_no, 'save_file', $file_name);
-					// echo "<pre>"; print_r($file_name);echo "</pre>";
+					// echo "<pre> This "; print_r($file_name);echo "</pre>";exit;
 				$excel_order_value = $this-> get_excel_order_total($file_name,1);//karsan
 				
 				$message = '
@@ -776,6 +776,7 @@ class orders extends MY_Controller {
 				}
 
 			endif;
+
 			//updates the log tables with the action
 			$user = $this -> session -> userdata('user_id');
 			$user_action = "ordered";

@@ -87,6 +87,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 		$delivered_orders=$order_counts['delivered'];
 		$rejected_orders=$order_counts['rejected'];
 		$pending_orders=$pending_all_count+$pending_cty_count;
+		// echo "This ".$pending_orders;exit;
 		$identifier = $this -> session -> userdata('user_indicator');
 ?>
 <style>

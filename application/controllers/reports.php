@@ -352,7 +352,6 @@ class Reports extends MY_Controller {
 		$data['order_counts'] = $facility_order_count;
 		$data['delivered'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "delivered");
 		$data['pending_all'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_all");
-		// echo "<pre>";	print_r($data['pending_all']);exit;
 		$data['pending_cty'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_cty");
 		$data['approved'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "approved");
 		$data['rejected'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "rejected");
@@ -372,6 +371,8 @@ class Reports extends MY_Controller {
 			$data['banner_text'] = $desc;
 			$data['content_view'] = "facility/facility_orders/order_listing_v";
 		endif;
+		// echo "<pre>";	print_r($data);exit;
+
 		$this -> load -> view('shared_files/template/template', $data);
 	}
 	public function create_excel_facility_stock_template() {
