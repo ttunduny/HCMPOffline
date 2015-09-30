@@ -345,13 +345,15 @@ class Reports extends MY_Controller {
 		//get order information from the db
 		$facility_order_count_ = facility_orders::get_facility_order_summary_count($facility_code, $district_id, $county_id);
 		$facility_order_count = array();
-		//echo "<pre>";	print_r($facility_order_count_);exit;
+		// echo "<pre>";	print_r($facility_order_count_);exit;
 		foreach ($facility_order_count_ as $facility_order_count_) {
 			$facility_order_count[$facility_order_count_['status']] = (int)$facility_order_count_['total'];
 		}
 		$data['order_counts'] = $facility_order_count;
+		// echo "<pre>";	print_r($facility_order_count);exit;
 		$data['delivered'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "delivered");
 		$data['pending_all'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_all");
+		// echo "<pre>"; print_r($data['pending_all']);exit;
 		$data['pending_cty'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_cty");
 		$data['approved'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "approved");
 		$data['rejected'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "rejected");
