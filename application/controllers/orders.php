@@ -179,15 +179,15 @@ class orders extends MY_Controller {
 		}
 
 		$amc_calc = $this -> amc($county, $district, $facility_code);
-		//echo '<pre>'; print_r($amc_calc);echo '<pre>'; exit;
+		// echo '<pre>'; print_r($source);echo '<pre>'; exit;
 		$items = ((isset($source)) && ($source == 2)) ? Facility_Transaction_Table::get_commodities_for_ordering_meds($facility_code,$source) : Facility_Transaction_Table::get_commodities_for_ordering($facility_code);
 		
 		// echo '<pre>'; print_r($items);echo '<pre>'; exit;
 
 		if (isset($_FILES['file']) && $_FILES['file']['size'] > 0) {
 			$ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
-			//echo $ext;exit;
-//echo $_FILES["file"]["tmp_name"];exit;
+			// echo $ext;exit;
+// echo $_FILES["file"]["tmp_name"];exit;
 			if ($ext == 'xls') {
 				$excel2 = PHPExcel_IOFactory::createReader('Excel5');
 			} else if ($ext == 'xlsx') {
@@ -220,12 +220,13 @@ class orders extends MY_Controller {
 			$array_price = array();
 			$array_order_qty = array();
 			$array_order_val = array();
-
+			$array_id = array();
 			//$array_code=array();
 			for ($row = 17; $row <= $highestRow; $row++) {
 				//  Read a row of data into an array
 				$rowData = $objPHPExcel -> getActiveSheet() -> rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
 
+				// echo "<pre>";print_r($rowData);
 				if ($checker == '#REF!' || $checker == '=VLOOKUP(C17,#REF!,1,FALSE)') {
 					unset($rowData[0][4]);
 					unset($rowData[0][5]);
@@ -236,7 +237,6 @@ class orders extends MY_Controller {
 					}
 
 				}
-
 				//count($rowData);
 				$code = preg_replace('/\s+/ ', '', $rowData[0][2]);
 				$code = str_replace('-', '', $code);
@@ -249,14 +249,39 @@ class orders extends MY_Controller {
 				$array_order_val[] = $rowData[0][8];
 				$array_pack[] = $rowData[0][5];
 
-
+				$id = Commodities::get_id_by_code($code);
+				// echo "This thig is: <pre>";print_r($id);echo "</pre>";
+				$array_id[] = $id[0]['id'];
 			}
 
+			// exit;
 			foreach ($array_order_qty as $id => $key) {
 
-				array_push($temp, array('sub_category_name' => $array_category[$id], 'commodity_name' => $array_commodity[$id], 'unit_size' => $array_pack[$id], 'unit_cost' => ($array_price[$id] == '') ? 0 : (float)$array_price[$id], 'commodity_code' => preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $array_code[$id]), 'commodity_id' => $data['commodity_id'], 'quantity_ordered' => ($array_order_qty[$id] == '') ? 0 : (int)$array_order_qty[$id], 'total_commodity_units' => 0, 'opening_balance' => 0, 'total_receipts' => 0, 'total_issues' => 0, 'comment' => '', 'closing_stock_' => 0, 'closing_stock' => 0, 'days_out_of_stock' => 0, 'date_added' => '', 'losses' => 0, 'status' => 0, 'adjustmentpve' => 0, 'adjustmentnve' => 0, 'historical' => 0));
+				array_push($temp, array(
+					'sub_category_name' => $array_category[$id], 
+					'commodity_name' => $array_commodity[$id], 
+					'unit_size' => $array_pack[$id], 
+					'unit_cost' => ($array_price[$id] == '') ? 0 : (float)$array_price[$id], 
+					'commodity_code' => preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $array_code[$id]), 
+					'commodity_id' => $array_id[$id], 
+					'quantity_ordered' => ($array_order_qty[$id] == '') ? 0 : (int)$array_order_qty[$id], 
+					'total_commodity_units' => 0, 
+					'opening_balance' => 0, 
+					'total_receipts' => 0, 
+					'total_issues' => 0, 
+					'comment' => '', 
+					'closing_stock_' => 0, 
+					'closing_stock' => 0, 
+					'days_out_of_stock' => 0, 
+					'date_added' => '', 
+					'losses' => 0, 
+					'status' => 0, 
+					'adjustmentpve' => 0, 
+					'adjustmentnve' => 0, 
+					'historical' => 0));
 
 			}
+			// echo "<pre>";print_r($temp);exit;
 			foreach ($temp as $key => $value) {
 				
 				if ($value['commodity_code'] == "" || $value['quantity_ordered'] == 0) {
@@ -270,7 +295,7 @@ class orders extends MY_Controller {
 			$weka = array();
 			$k = 0; 
 
-			// echo "<pre>";print_r($temp);echo "</pre>";exit;
+			// echo "<pre>";print_r($items);echo "</pre>";exit;
 			foreach ($temp as $keys) {
 
 				$kemsa = $keys['commodity_code'];
@@ -332,7 +357,7 @@ class orders extends MY_Controller {
 		}
 
 		// $data['facility_order'] = $items;
-		// echo '<pre>'; print_r($items);echo '<pre>'; exit;
+		// echo '<pre>'; print_r($main_array);echo '<pre>'; exit;
 		// $facility_code = $this -> session -> userdata('facility_id');
 		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();	
 		$source_name = ($source==2) ?'MEDS' : 'KEMSA' ;
@@ -343,6 +368,7 @@ class orders extends MY_Controller {
 		$data['drawing_rights'] = $facility_data[0]['drawing_rights'];
 		$data['facility_commodity_list'] = ($source == 2) ? Commodities::get_meds_commodities_not_in_facility($facility_code,$source) : Commodities::get_commodities_not_in_facility($facility_code);
 
+		// echo '<pre>'; print_r($data);echo '<pre>'; exit;
 		// echo '<pre>'; print_r($data['facility_commodity_list']);echo '<pre>'; exit;
 
 		$this -> load -> view('shared_files/template/template', $data);
@@ -722,9 +748,9 @@ class orders extends MY_Controller {
 				$file_name = $facility_name . '_facility_order_no_' . $new_order_no . "_KEMSA_date_created_" . date('d-m-y');
 
 					$result = $this -> hcmp_functions -> clone_excel_order_template($new_order_no, 'save_file', $file_name);
-					// echo "<pre> This "; print_r($file_name);echo "</pre>";exit;
+					// echo "<pre> This "; print_r($result);echo "</pre>";exit;
 				$excel_order_value = $this-> get_excel_order_total($file_name,1);//karsan
-				
+				echo "<pre>";print_r($excel_order_value);exit;
 				$message = '
 						<br>
 						Please find the Order Made by ' . $facility_name . ' attached.
