@@ -561,7 +561,7 @@ for ($row = 17; $row <= $highestRow; $row++){
        $objPHPExcel -> disconnectWorksheets();
        unset($objPHPExcel);
    } elseif($report_type=='save_file'){
-   	 $objWriter->save("./print_docs/excel/excel_files/".$file_name);
+   	 $sth = $objWriter->save(FCPATH."print_docs/excel/excel_files/".$file_name);
    }
    endif;
  }

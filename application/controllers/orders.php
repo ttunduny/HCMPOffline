@@ -252,6 +252,8 @@ class orders extends MY_Controller {
 
 			}
 
+		// echo '<pre>'; print_r($array_order_qty);echo '<pre>'; exit;
+
 			foreach ($array_order_qty as $id => $key) {
 
 				array_push($temp, array('sub_category_name' => $array_category[$id], 'commodity_name' => $array_commodity[$id], 'unit_size' => $array_pack[$id], 'unit_cost' => ($array_price[$id] == '') ? 0 : (float)$array_price[$id], 'commodity_code' => preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $array_code[$id]), 'commodity_id' => $data['commodity_id'], 'quantity_ordered' => ($array_order_qty[$id] == '') ? 0 : (int)$array_order_qty[$id], 'total_commodity_units' => 0, 'opening_balance' => 0, 'total_receipts' => 0, 'total_issues' => 0, 'comment' => '', 'closing_stock_' => 0, 'closing_stock' => 0, 'days_out_of_stock' => 0, 'date_added' => '', 'losses' => 0, 'status' => 0, 'adjustmentpve' => 0, 'adjustmentnve' => 0, 'historical' => 0));
@@ -334,7 +336,8 @@ class orders extends MY_Controller {
 		// $data['facility_order'] = $items;
 		// echo '<pre>'; print_r($items);echo '<pre>'; exit;
 		// $facility_code = $this -> session -> userdata('facility_id');
-		$facility_data = Facilities::get_facility_name_($facility_code) -> toArray();	
+		$facility_data = Facilities::get_facility_name_($facility_code);	
+		// echo "<pre>";print_r($facility_data);
 		$source_name = ($source==2) ?'MEDS' : 'KEMSA' ;
 		$data['content_view'] = ($source == 2) ? "facility/facility_orders/facility_order_meds_new" : "facility/facility_orders/facility_order_from_kemsa_v";
 		$data['facility_code'] = $facility_code;
@@ -556,7 +559,7 @@ class orders extends MY_Controller {
 				$subject = 'Pending Approval Order Report For ' . $facility_name;
 
 				$attach_file1 = './pdf/' . $file_name . '.pdf';
-				$attach_file2 = "./print_docs/excel/excel_files/" . $file_name . '.xls';
+				$attach_file2 = FCPATH."print_docs/excel/excel_files/" . $file_name . '.xls';
 
 				$message = $message_1 . $pdf_body;
 
