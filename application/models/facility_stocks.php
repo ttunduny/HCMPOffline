@@ -496,7 +496,7 @@ where ds.expiry_date
 	}
 
 	public static function get_stocked_out_commodities_for_report($facility_code = null, $district_id = null, $county_id = null) {
-		$where_clause = isset($facility_code) ? "f.facility_code=$facility_code " : (isset($district_id) ? "d.id=$district_id " : "d.county=$county_id ");
+		$where_clause = ((isset($facility_code)) && $facility_code != '') ? "f.facility_code=$facility_code " : ((isset($district_id) && $district_id != '') ? "d.id=$district_id " : "d.county=$county_id ");
 		$group_by = isset($facility_code) ? " order by c.commodity_name asc" : (isset($district_id) ? " order by f.facility_name asc" : " order by d.district asc");
 
 		$stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT 
