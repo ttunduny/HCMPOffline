@@ -61,9 +61,13 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 							<td>
 								<select class="form-control input-small commodities" data-code="default" name="commodities[0]" id="commodities" style="width:150px !important;" >
 							    <option special_data="0" value="0" selected="selected" style="width:auto !important;">Select Commodity</option>
-											<?php 
+											<?php 											
 									foreach ($facility_commodity_list as $fcl) :
-										echo '<option value="'.$fcl['commodity_id'].'" data-code="'.$fcl['commodity_code'].'" data-name="'.$fcl['commodity_name'].'" data-u-size="'.$fcl['unit_size'].'" style="width:auto !important;">'.$fcl['commodity_name'].'</option>';						
+										$commodity_name = $fcl['commodity_name'];
+										$unit_size = $fcl['unit_size'];
+										$commodity_name_unit = $commodity_name.' ('.$unit_size.')';
+										$commodity_name = ($commodity_name=='') ? $commodity_name : $commodity_name_unit;
+										echo '<option value="'.$fcl['commodity_id'].'" data-code="'.$fcl['commodity_code'].'" data-name="'.$fcl['commodity_name'].'" data-u-size="'.$fcl['unit_size'].'" style="width:auto !important;">'.$commodity_name.'</option>';						
 												endforeach;
 									?> 		
 								</select>
@@ -79,7 +83,7 @@ id="total_order_balance_value" readonly="readonly" value="<?php echo $drawing_ri
 							</td>
 
 							<td id="step2">
-								<input class='form-control input-small opening_balance' type="text" id="opening_balance[0]" name="opening_balance[0]" value="" class="opening_balance"/>
+								<input class='form-control input-small opening_balance' type="text" id="open[0]" name="open[0]" value="" class="opening_balance"/>
 							</td>
 
 							<td id="step2">
@@ -201,15 +205,24 @@ $('#commodities').change(function(){
     dialog_box(table_data+'<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>'
     +'<button type="button" class="btn btn-primary" id="save_dem_order" data-dismiss="modal">Save</button>');
 	});
-
+	function confirm_validation(){
+		var rowCount = $('#facility_meds_table tr').length;
+		if(('.open').val()==''){
+			alert('Please Enter an Opening Balance before Saving');
+			return false; 
+		}
+	}
+		
 	$('#main-content').on('click','#save_dem_order',function() {
      var order_total=$('#total_order_value').val();
      var workload=$('#workload').val();
+     var order_no=$('#order_no').val();
      var bed_capacity=$('#bed_capacity').val();
      var alert_message='';
      // if (order_total==0) {alert_message+="<li>Sorry, you can't submit an Order Value of Zero</li>";}
      if (workload=='') {alert_message+="<li>Indicate Total OPD Visits & Revisits</li>";}
      if (bed_capacity=='') {alert_message+="<li>Indicate In-patient Bed Days</li>";}
+     if (order_no=='') {alert_message+="<li>Indicate Order Number</li>";}
      if(isNaN(alert_message)){
      //This event is fired immediately when the hide instance method has been called.
     $('#workload').delay(500).queue(function (nxt){
@@ -219,56 +232,107 @@ $('#commodities').change(function(){
     	nxt();
     });
      }else{
+     	// var validate = confirm_validation();
+
     $('#workload').delay(500).queue(function (nxt){
     // Load up a new modal...
     var img='<img src="<?php echo base_url('assets/img/wait.gif') ?>"/>';
      dialog_box(img+'<h5 style="display: inline-block; font-weight:500;font-size: 18px;padding-left: 2%;"> Please wait as the order is being processed</h5>',
      '');
     	nxt();
-    	$("#myform").submit();
+    	// $("#myform").submit();
     });
      	
      }
      });
 
+	function validate_row_inputs(row_id)
+	{
+		var opening_balance = $(".opening_balance").attr('name','open['+row_id+']').val(); 
+		var quantity_issued = $(".quantity_issued").attr('name','quantity_issued['+row_id+']').val(); 	
+		var total_reciepts = $(".total_reciepts").attr('name','total_reciepts['+row_id+']').val(); 
+		var total_issues = $(".total_issues").attr('name','total_issues['+row_id+']').val(); 
+		var adjustmentnve = $(".adjustmentnve").attr('name','adjustmentnve['+row_id+']').val(); 
+		var adjustmentpve = $(".adjustmentpve").attr('name','adjustmentpve['+row_id+']').val();
+		var losses = $(".losses").attr('name','losses['+row_id+']').val();
+		var closing = $(".closing").attr('name','closing['+row_id+']').val();
+		var quantity = $(".quantity").attr('name','quantity['+row_id+']').val();
+		alert_message = '';
+		var checker = false;
+		// var message = 'Please fill in the Following before continuing';
+		if ((opening_balance!='')&&(quantity_issued!='')&&(total_reciepts!='')&&(total_issues!='')&&(adjustmentnve!='')&&(adjustmentpve!='')&&(losses!='')&&(closing!='')&&(quantity!='')) {
+			// alert_message = '';				
+			checker = true;
+		}else{
+			if (opening_balance=='') {alert_message+="<li>The Opening Balance</li>";}
+			if (quantity_issued=='') {alert_message+="<li>The Quantity Issued </li>";}
+			if (total_reciepts=='') {alert_message+="<li>The Total Receipts</li>";}
+			if (total_issues=='') {alert_message+="<li>The Total Issues</li>";}
+			if (adjustmentnve=='') {alert_message+="<li>The Negatve Adjustments</li>";}
+			if (adjustmentpve=='') {alert_message+="<li>The Positive Adjustments</li>";}
+			if (losses=='') {alert_message+="<li>The Losses</li>";}
+			if (closing=='') {alert_message+="<li>The Closing Balance</li>";}
+			if (quantity=='') {alert_message+="<li>The Order Quantity</li>";}
+			checker =  false;
+		}
+		
+		if(checker==false){
+
+		    $('.quantity').delay(500).queue(function (nxt){
+		    // Load up a new modal...
+		     dialog_box('Fix these items before saving your Order <ol>'+alert_message+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;',
+		     '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
+		    	nxt();
+		    });
+		    return false;
+	     }else{
+	     	return true;
+					
+
+		}
+	}
      /************************* form validation ************/
         function clone_the_last_row_of_the_table(){
             var last_row = $('#facility_meds_table tr:last');
             var cloned_object = last_row.clone(true);
             var table_row = cloned_object.attr("row_id");
             var next_table_row = parseInt(table_row) + 1;    
-            var blank_value = "";       
-		    cloned_object.attr("row_id", next_table_row);
-			cloned_object.find(".commodity_code").attr('name','commodity_code['+next_table_row+']'); 
-			cloned_object.find(".commodity_id").attr('name','commodity_id['+next_table_row+']'); 
-			cloned_object.find(".commodity_name").attr('name','commodity_name['+next_table_row+']'); 
-			cloned_object.find(".unit_size").attr('name','unit_size['+next_table_row+']');
-			cloned_object.find(".opening_balance").attr('opening_balance',next_table_row); 
-			cloned_object.find(".quantity_issued").attr('name','quantity_issued['+next_table_row+']'); 	
-			cloned_object.find(".total_reciepts").attr('name','total_reciepts['+next_table_row+']'); 
-			cloned_object.find(".total_issues").attr('name','total_issues['+next_table_row+']'); 
-			cloned_object.find(".adjustmentnve").attr('name','adjustmentnve['+next_table_row+']'); 
-			cloned_object.find(".adjustmentpve").attr('name','adjustmentpve['+next_table_row+']');
-			cloned_object.find(".losses").attr('name','losses['+next_table_row+']');
-			cloned_object.find(".closing").attr('name','closing['+next_table_row+']');
-			cloned_object.find(".quantity").attr('name','quantity['+next_table_row+']');
-			cloned_object.find(".actual_quantity").attr('name','actual_quantity['+next_table_row+']');
-			// cloned_object.find(".s11_no").attr('name','s11_no['+next_table_row+']');					
-           // cloned_object.find("input").attr('value',"");     
-            //cloned_object.find(".quantity_issued").attr('value',blank_value); 
-            cloned_object.find("input").val(blank_value);
-            // cloned_object.find(".quantity_issued").val(blank_value);  
-            // cloned_object.find(".quantity_issued").removeAttr('readonly');  
-            // cloned_object.find(".batch_no").removeAttr('disabled');
-            // cloned_object.find(".commodity_unit_of_issue").removeAttr('disabled'); 
-            // cloned_object.find(".desc").removeAttr('disabled');   
-            //cloned_object.find(".commodity_balance").attr('value',"");     
-            // cloned_object.find(".commodity_balance").val(blank_value);        
-            // cloned_object.find(".batch_no").html("");
-            // remove the error class
-            cloned_object.find("label.error").remove();             
-			cloned_object.insertAfter('#facility_meds_table tr:last');	
-			// refresh_clone_datepicker_normal_limit_today();	
+            var filled_check = validate_row_inputs(last_row);
+            if (filled_check==true) {
+            	var blank_value = "";       
+			    cloned_object.attr("row_id", next_table_row);
+				cloned_object.find(".commodity_code").attr('name','commodity_code['+next_table_row+']'); 
+				cloned_object.find(".commodity_id").attr('name','commodity_id['+next_table_row+']'); 
+				cloned_object.find(".commodity_name").attr('name','commodity_name['+next_table_row+']'); 
+				cloned_object.find(".unit_size").attr('name','unit_size['+next_table_row+']');
+				cloned_object.find(".opening_balance").attr('name','open['+next_table_row+']'); 
+				cloned_object.find(".quantity_issued").attr('name','quantity_issued['+next_table_row+']'); 	
+				cloned_object.find(".total_reciepts").attr('name','total_reciepts['+next_table_row+']'); 
+				cloned_object.find(".total_issues").attr('name','total_issues['+next_table_row+']'); 
+				cloned_object.find(".adjustmentnve").attr('name','adjustmentnve['+next_table_row+']'); 
+				cloned_object.find(".adjustmentpve").attr('name','adjustmentpve['+next_table_row+']');
+				cloned_object.find(".losses").attr('name','losses['+next_table_row+']');
+				cloned_object.find(".closing").attr('name','closing['+next_table_row+']');
+				cloned_object.find(".quantity").attr('name','quantity['+next_table_row+']');
+				cloned_object.find(".actual_quantity").attr('name','actual_quantity['+next_table_row+']');
+				// cloned_object.find(".s11_no").attr('name','s11_no['+next_table_row+']');					
+	           // cloned_object.find("input").attr('value',"");     
+	            //cloned_object.find(".quantity_issued").attr('value',blank_value); 
+	            cloned_object.find("input").val(blank_value);
+	            // cloned_object.find(".quantity_issued").val(blank_value);  
+	            // cloned_object.find(".quantity_issued").removeAttr('readonly');  
+	            // cloned_object.find(".batch_no").removeAttr('disabled');
+	            // cloned_object.find(".commodity_unit_of_issue").removeAttr('disabled'); 
+	            // cloned_object.find(".desc").removeAttr('disabled');   
+	            //cloned_object.find(".commodity_balance").attr('value',"");     
+	            // cloned_object.find(".commodity_balance").val(blank_value);        
+	            // cloned_object.find(".batch_no").html("");
+	            // remove the error class
+	            cloned_object.find("label.error").remove();             
+				cloned_object.insertAfter('#facility_meds_table tr:last');	
+				// refresh_clone_datepicker_normal_limit_today();	
+            }
+            
         }
 		function check_if_the_form_has_been_filled_correctly(selector_object){
 		var alert_message='';

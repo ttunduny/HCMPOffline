@@ -1,7 +1,7 @@
+<?php //echo "<pre>"; print_r($redistribution_data); echo "</pre>"; ?>
 <style type="text/css">
 .row div p,.row-fluid div p{
 	padding:10px;
-
 }
 .form-control {
 

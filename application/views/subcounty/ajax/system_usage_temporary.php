@@ -12,7 +12,9 @@
 <div class="container" style="width: 96%; margin: auto;">
 <div class="col-md-12">
       <div class="page-error">
-
+        <!-- <div class="error-details col-sm-6 download_btn">
+          <a class="btn btn-default btn-primary btndef" href="<?php echo base_url().'reports/system_usage_graph'; ?>">View Graph</a>
+        </div> -->
         <div class="error-details col-sm-6 download_btn">
           <a class="btn btn-default btn-primary btndef" href="<?php echo base_url().'reports/monitoring'; ?>">Download System Usage Statistics</a>
         </div>
@@ -39,7 +41,7 @@
           <th>Date Last Decommissioned</th>
           <th>Days From Last Decommission</th>
           <th>Date Last Received Order</th>
-          <th>Days From Last Received Order</th>
+          <th>Days From Last Stock Addition</th>
         </tr>  
       </thead>                 
       <tbody>

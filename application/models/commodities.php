@@ -166,17 +166,26 @@ return $inserttransaction;
   return $inserttransaction;
 	}// set up the facility stock here
 	public static function set_facility_stock_data_amc($facility_code){
-	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-    ->fetchAll("SELECT c.id as commodity_id, c.commodity_code, c.commodity_name, c.unit_size, 
-    c.commodity_sub_category_id, c_s_c.sub_category_name, c.total_commodity_units, 
-    c.commodity_source_id, c_s.source_name, ifnull( f_m_s.consumption_level, 0 ) AS consumption_level, 
-    ifnull( f_m_s.selected_option, null ) AS selected_option, ifnull( f_m_s.total_units, 0 ) AS total_units
-FROM commodity_sub_category c_s_c, commodity_source c_s, commodities c
-LEFT JOIN facility_monthly_stock f_m_s ON f_m_s.commodity_id = c.id
-AND f_m_s.facility_code =$facility_code
-WHERE c.commodity_source_id = c_s.id
-AND c.status =1
-AND c.commodity_sub_category_id = c_s_c.id"); 
+
+// 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+//     ->fetchAll("SELECT c.id as commodity_id, c.commodity_code, c.commodity_name, c.unit_size, 
+//     c.commodity_sub_category_id, c_s_c.sub_category_name, c.total_commodity_units, 
+//     c.commodity_source_id, c_s.source_name, ifnull( f_m_s.consumption_level, 0 ) AS consumption_level, 
+//     ifnull( f_m_s.selected_option, null ) AS selected_option, ifnull( f_m_s.total_units, 0 ) AS total_units
+// FROM commodity_sub_category c_s_c, commodity_source c_s, commodities c
+// LEFT JOIN facility_monthly_stock f_m_s ON f_m_s.commodity_id = c.id
+// AND f_m_s.facility_code =$facility_code
+// WHERE c.commodity_source_id = c_s.id
+// AND c.status =1
+// AND c.commodity_sub_category_id = c_s_c.id"); 
+		$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+    ->fetchAll("SELECT distinct c.id AS commodity_id,c.commodity_code,c.commodity_name, c.unit_size, c.commodity_sub_category_id,
+				    c.total_commodity_units,c.commodity_source_id,IFNULL(f_m_s.consumption_level, 0) AS consumption_level,
+				    IFNULL(f_m_s.selected_option, NULL) AS selected_option, IFNULL(f_m_s.total_units, 0) AS total_units, c_s.source_name
+				FROM  commodities c  LEFT JOIN  facility_monthly_stock f_m_s ON f_m_s.commodity_id = c.id AND f_m_s.facility_code = $facility_code 
+				LEFT JOIN   commodity_sub_category c_s_c ON c.commodity_sub_category_id = c_s_c.id,commodity_source c_s	
+				WHERE  c.status = 1  AND c.commodity_source_id = c_s.id"); 
+
 return $inserttransaction;	
 	}
 	
@@ -194,19 +203,32 @@ return $inserttransaction;
 
 	public static function get_meds_commodities_not_in_facility($facility_code,$source = NULL){
 		
-	$getdata = Doctrine_Manager::getInstance()->getCurrentConnection()
-    ->fetchAll("SELECT 
-	c.commodity_name, 
-	c.commodity_code, c.id as commodity_id,
-    c.unit_size as unit_size,
-    c.unit_cost as unit_cost, 
-    c.commodity_source_id
-    FROM commodities c ,commodity_source cs
-    WHERE c.commodity_code NOT IN 
-    (SELECT distinct commodity_id FROM facility_transaction_table WHERE facility_code = $facility_code) 
-    AND c.commodity_source_id = $source
-    GROUP BY c.commodity_code
-    ORDER BY `c`.`commodity_name` ASC
+	// $getdata = Doctrine_Manager::getInstance()->getCurrentConnection()
+ //    ->fetchAll("SELECT 
+	// c.commodity_name, 
+	// c.commodity_code, c.id as commodity_id,
+ //    c.unit_size as unit_size,
+ //    c.unit_cost as unit_cost, 
+ //    c.commodity_source_id
+ //    FROM commodities c ,commodity_source cs
+ //    WHERE c.commodity_code NOT IN 
+ //    (SELECT distinct commodity_id FROM facility_transaction_table WHERE facility_code = $facility_code) 
+ //    AND c.commodity_source_id = $source
+ //    GROUP BY c.commodity_code
+ //    ORDER BY `c`.`commodity_name` ASC
+ //              "); 
+		$getdata = Doctrine_Manager::getInstance()->getCurrentConnection()
+	    ->fetchAll("SELECT DISTINCT
+		c.commodity_name, 
+		c.commodity_code, c.id as commodity_id,
+	    c.unit_size as unit_size,
+	    c.unit_cost as unit_cost, 
+	    c.commodity_source_id
+	    FROM commodities c ,commodity_source cs
+	    WHERE cs.id NOT IN 
+	    (SELECT distinct facility_transaction_table.commodity_id FROM facility_transaction_table WHERE facility_transaction_table.facility_code = $facility_code) 
+	    GROUP BY c.commodity_code
+	    ORDER BY `c`.`commodity_name` ASC
               "); 
               
   return $getdata;

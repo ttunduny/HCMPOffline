@@ -15,3 +15,4 @@ system/libraries/Hcmp_functions.php
 application/config/database.php
 .htaccess
 *.xls
+application/views/subcounty/ajax/system_usage_graph.php

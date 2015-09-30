@@ -23,7 +23,7 @@
       	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
         <h5>Donations</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/pending') ?>"><span class="badge"><?php 
+			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/to-me') ?>"><span class="badge"><?php 
 				echo $facility_dashboard_notifications['facility_donations_pending'];?></span> Items have been donated and are pending receipt</a> 
 			</p>
 			 </div>
@@ -32,8 +32,8 @@
       	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
         <h5>Donations</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/to-me') ?>"><span class="badge"><?php 
-				echo $facility_dashboard_notifications['facility_donations'];?></span> Items have been donated to you</a> 
+			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/pending') ?>"><span class="badge"><?php 
+				echo $facility_dashboard_notifications['facility_donations'];?></span> Donated items by you are pending receipt</a> 
 			</p>
 			 </div>
 		  <?php endif; //donations_pending?>
@@ -65,7 +65,7 @@
       	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
         <h5>Potential Expiries</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('reports') ?>"><span class="badge"><?php 
+			<a class="link" href="<?php echo base_url('reports/potential_expiries') ?>"><span class="badge"><?php 
 				echo $facility_dashboard_notifications['potential_expiries'];?></span>Commodities Expiring in the next 6 months</a> 
 			</p>
 			 </div>
@@ -169,7 +169,8 @@
          </div>  
         	  <div style="height:auto; margin-bottom: 2px" class="" id="update_order_hide">
 	            <a href="<?php echo base_url('reports/order_listing/facility'); ?>"><h5>KEMSA</h5></a>
-	            <a href="<?php echo base_url('reports/work_in_progress'); ?>"><h5>MEDS</h5></a> 
+              <a href="<?php echo base_url('reports/order_listing/facility'); ?>"><h5>MEDS</h5></a> 
+	            <!-- <a href="<?php// echo base_url('reports/work_in_progress'); ?>"><h5>MEDS</h5></a>  -->
         	</div>       	 
         <div style="height:auto; margin-bottom: 2px" class="order message ">
           <a href="<?php echo base_url("issues/add_service_points") ?>"><h5>Add Service Points </h5></a>          

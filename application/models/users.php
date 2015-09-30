@@ -65,7 +65,7 @@ class Users extends Doctrine_Record {
 	}
 
 	public static function getuserby_id($id) {
-		$query = Doctrine_Query::create() -> select("fname") -> from("users") -> where("id='$id' ");
+		$query = Doctrine_Query::create() -> select("fname,password") -> from("users") -> where("id='$id' ");
 		$level = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $level;
 	}
@@ -449,10 +449,12 @@ public static function get_county_details($county_id){
 	}
 	
 	public static function check_if_email($test_email) {
-		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username LIKE '%$test_email%'");
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username = '$test_email'");
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
 	}
+
+
 
 	public static function deactivate_facility($facility_code,$status){
 		if ($status == 0) {

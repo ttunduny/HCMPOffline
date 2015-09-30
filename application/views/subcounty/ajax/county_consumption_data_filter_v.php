@@ -423,7 +423,8 @@ var drop_down='';
         if(from==''){from="NULL";}
         if(to==''){to="NULL";}
         var url_ = "reports/consumption_data_dashboard/"+
-       $("#tracer_commodity_filter").val()+"/NULL/NULL/"+$("#tracer_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/NULL/1"; 
+       $("#tracer_commodity_filter").val()+"/"+
+       $("#tracer_district_filter").val()+"/NULL/"+$("#tracer_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/NULL/1"; 
         ajax_request_replace_div_content(url_,'.graph_content'); 
         
           });   
@@ -438,7 +439,7 @@ var drop_down='';
         if(to==''){to="NULL";}
 
         var url_ = "reports/consumption_stats_graph/"+
-       $("#tracer_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#tracer_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/"+"table_data"; 
+       $("#tracer_commodity_filter").val()+"/NULL/"+$("#tracer_district_filter").val()+"/NULL/"+$("#tracer_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/"+"table_data"; 
         ajax_request_replace_div_content(url_,'.graph_content');    
           }); 
 

@@ -33,8 +33,10 @@ if (!$this -> session -> userdata('user_id')) {
   <link rel="stylesheet" href="<?php echo base_url().'assets/bower_components/alertifyjs/dist/css/alertify_bootstrap_3.css'?>" />
     <script src="<?php echo base_url().'assets/scripts/jquery.js'?>" type="text/javascript"></script>
   <link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
+  <link href="<?php echo base_url().'assets/plugins/select2/select2.css'?>" type="text/css" rel="stylesheet"/>
   <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
   <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/plugins/select2/select2.min.js'?>" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/select2.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/bower_components/sweetalert/lib/sweet-alert.js'?>" type="text/javascript"></script>
@@ -439,6 +441,7 @@ return i;
 
 <script>
 	$(document).ready(function() {
+    // $(".makesearchable").select2();//dont put form-control when you make it searchable
  changeHashOnLoad();
     	$('#new_password').keyup(function() {
 			$('#result').html(checkStrength($('#new_password').val()))
@@ -537,7 +540,7 @@ return i;
 						
 					},
 					success: function(data){
-						console.log($('#current_password').val())
+						// console.log($('#current_password').val())
 						console.log(data)
 						//return;
 						//response = jQuery.parseJSON(data);
