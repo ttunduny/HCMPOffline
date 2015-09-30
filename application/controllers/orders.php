@@ -380,7 +380,9 @@ class orders extends MY_Controller {
 	}
 
 	public function update_facility_order($order_id, $rejected = null, $option = null) {
+		// echo "I reach here";exit;
 		$order_data = facility_orders::get_order_($order_id) -> toArray();
+		// echo "<pre>";print_r($order_data);exit;
 		$data['content_view'] = "facility/facility_orders/update_order_facility_v";
 		$data['title'] = "Facility Update Order";
 		$data['banner_text'] = "Facility Update Order";
