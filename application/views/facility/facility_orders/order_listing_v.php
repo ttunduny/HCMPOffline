@@ -132,7 +132,7 @@ $theader='<table width="100%" border="0" class="row-fluid table table-hover tabl
 	<div class="col-md-6" style="text-transform: capitalize;margin-left:1.5%;margin-top:2%;">
 		<p class="bg-info" style="height:30px;padding:5px;">
 			<span class="">
-				Please Note that You can download your MEDS Orders for Sending Under the approved orders tab
+				<span class="badge badge-info">Note</span> MEDS orders are downloadable under the Approved Orders Tab for sending
 			</span>
 		</p>
 	</div>
