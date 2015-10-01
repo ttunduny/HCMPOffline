@@ -135,10 +135,11 @@
 		<div class="container" style="margin-top: 3%;" id="containerlogin">
 
 			<div class="row">
-				<div class="col-md-3">
+			<div class="col-md-3">
 				 <span>
 				 	<h5>Experiencing any challenges?<br />
 						Send an email to: hcmphelpdesk@googlegroups.com</h5> 
+						<!-- Random comment to allow for commit -->
 						</span> 
 						<img src="<?php echo base_url('assets/img/healpdesk.jpg')?>" height="140" width="200" />
 						

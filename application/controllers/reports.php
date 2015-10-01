@@ -354,14 +354,15 @@ class Reports extends MY_Controller {
 		//get order information from the db
 		$facility_order_count_ = facility_orders::get_facility_order_summary_count($facility_code, $district_id, $county_id);
 		$facility_order_count = array();
-		//echo "<pre>";	print_r($facility_order_count_);exit;
+		// echo "<pre>";	print_r($facility_order_count_);exit;
 		foreach ($facility_order_count_ as $facility_order_count_) {
 			$facility_order_count[$facility_order_count_['status']] = (int)$facility_order_count_['total'];
 		}
 		$data['order_counts'] = $facility_order_count;
+		// echo "<pre>";	print_r($facility_order_count);exit;
 		$data['delivered'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "delivered");
 		$data['pending_all'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_all");
-		// echo "<pre>";	print_r($data['pending_all']);exit;
+		// echo "<pre>"; print_r($data['pending_all']);exit;
 		$data['pending_cty'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_cty");
 		$data['approved'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "approved");
 		$data['rejected'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "rejected");
@@ -381,6 +382,8 @@ class Reports extends MY_Controller {
 			$data['banner_text'] = $desc;
 			$data['content_view'] = "facility/facility_orders/order_listing_v";
 		endif;
+		// echo "<pre>";	print_r($data);exit;
+
 		$this -> load -> view('shared_files/template/template', $data);
 	}
 	public function create_excel_facility_stock_template() {
@@ -3502,13 +3505,14 @@ class Reports extends MY_Controller {
 		$county_id = (isset($county_id) && ($county_id > 0)) ? $county_id : $this -> session -> userdata('county_id');
 		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
 		$report_type = ($graph_type == "NULL") ? null : $graph_type;
-		//echo $district_id;exit;
+		// echo $district_id;exit;
 		$from = (($from == "NULL")) ? strtotime(date('Y-m-01')) : strtotime(urldecode($from));
 		$to = (($to == "NULL")) ? strtotime(date('Y-m-d')) : strtotime(urldecode($to));
 		$county_name = counties::get_county_name($county_id);
 		//start building the notifications dashboaard first
 		//compute stocked out items
 		$items_stocked_out_in_facility = count(facility_stocks::get_items_that_have_stock_out_in_facility($facility_code, $district_id, $county_id));
+		// echo "I reach here";exit;
 		//get order information from the db
 		$facility_order_count_ = facility_orders::get_facility_order_summary_count($facility_code, $district_id, $county_id);
 		$facility_order_count = array();

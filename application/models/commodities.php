@@ -257,5 +257,12 @@ return $inserttransaction;
   return $getdata;
 	}
 
+	public static function get_id_by_code($commodity_code){
+		$getdata = Doctrine_Manager::getInstance()->getCurrentConnection()
+		    ->fetchAll("SELECT id FROM commodities WHERE commodity_code='$commodity_code'"); 
+		              
+		  return $getdata;
+	}
+
 }
 ?>
