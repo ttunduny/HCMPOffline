@@ -765,14 +765,14 @@ class issues extends MY_Controller {
 		echo"<pre>"; print_r($sth); echo "</pre>";
 	}
 
-	public function confirm_store_external_issue(){
+	public function confirm_store_external_issue($editable_ = NULL){
 		//seth
 		$district_id = $this -> session -> userdata('district_id');
 		$data['title'] ="Confirm Redistribution";	
 		$data['banner_text'] = "Confirm Redistribution";
 		$data['redistribution_data']=redistribution_data::get_all_active_drug_store($district_id,$editable_);
 		// echo "<pre>";print_r($data['redistribution_data']);echo "</pre>";exit;
-		//$data['editable']=$editable_;
+		$data['editable']=$editable_;
 		$data['content_view'] = "subcounty/drug_store/drug_store_redistribute_items_confirmation_v";
 		$this -> load -> view("shared_files/template/template", $data);		
 	}
