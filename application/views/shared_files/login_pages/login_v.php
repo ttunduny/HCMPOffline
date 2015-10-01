@@ -136,10 +136,10 @@
 
 			<div class="row">
 			<div class="col-md-3">
-					<a href="http://41.89.6.209/hcmp_demo/national/demo_accounts"><button class="btn btn-primary ">Demo Site Login Credentials </button></a>
 				 <span>
 				 	<h5>Experiencing any challenges?<br />
 						Send an email to: hcmphelpdesk@googlegroups.com</h5> 
+						<!-- Random comment to allow for commit -->
 						</span> 
 						<img src="<?php echo base_url('assets/img/healpdesk.jpg')?>" height="140" width="200" />
 						
