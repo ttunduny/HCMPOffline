@@ -40,7 +40,7 @@ border: 0px ;
 		</div>
 		<div class="col-md-2">
 			<b>Total Order Value(KSH)</b>
-<input type="text" class="form-control" name="total_order_value" id="total_order_value" readonly="readonly" value="0"/>	
+<input type="text" class="form-control" name="total_order_value" id="total_order_value" value="<?php echo $order_details[0]['order_total'] ?>" readonly="readonly" value="0"/>	
 <input type="hidden" id="actual_drawing_rights" name="drawing_rights" value="<?php echo $drawing_rights; ?>" />		
 		</div>
 		
@@ -56,7 +56,7 @@ border: 0px ;
 						<th>Description</th>
 						<!--<th>Commodity&nbsp;Code</th>-->
 						<th>Order Unit Size</th>
-						<th>Order Unit Cost (Ksh)</th>
+						<!-- <th>Order Unit Cost (Ksh)</th> -->
 						<th>Opening Balance (Units)</th>
 						<th>Total Receipts (Units)</th>
 					    <th>Total issues (Units)</th>
@@ -71,9 +71,9 @@ border: 0px ;
 					    <th>Actual Order Qty (Units)</th>
 					    <th>Facility Order Qty (Packs)</th>
 					    
-					    <th>Order Cost(Ksh)</th>
+<!-- 					    <th>Order Cost(Ksh)</th>
 					    <th>SCP Order Qty  (Packs)</th>
-					    <th>CP Order Qty  (Packs)</th>
+					    <th>CP Order Qty  (Packs)</th> -->
 					    
 					    	
 					    <!--<th>Comment</th>	-->					    
@@ -145,10 +145,10 @@ border: 0px ;
 							
 							
 							
-							<td><?php echo '<input type="text" class="form-control input-small cost" name="cost['.$i.']" value="0" readonly="yes"   />';?></td>
+<!-- 							<td><?php echo '<input type="text" class="form-control input-small cost" name="cost['.$i.']" value="0" readonly="yes"   />';?></td>
 							<td><input style="background-color:#B2EFB2 " class="form-control input-small" type="text" readonly="readonly" name="scp_qty[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['scp_qty'];?>"/></td>
 							<td><input style="background-color: #B2EFB2;" class="form-control input-small " readonly="readonly" type="text" name="cty_qty[<?php echo $i ;?>]"  value="<?php echo $facility_order[$i]['cty_qty'];?>"/></td>
-							
+							 -->
 							
 							<!--<td><input class="form-control input-small" type="text" name="comment[<?php echo $i ;?>]" value="N/A" /></td>-->
 			       			</tr>					
@@ -181,7 +181,7 @@ $(document).ready(function() {
 	var new_count =count+1;
 	var drawing_rights_balance=$('#actual_drawing_rights').val();
 	//auto compute the values
-	calculate_totals();
+	// calculate_totals();
 	calculate_suggested_value(3);
 	//datatables settings 
 	$('#example').dataTable( {

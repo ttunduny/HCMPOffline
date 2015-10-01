@@ -116,8 +116,6 @@ $fill_rate_compute
 `c`.`quantity_recieved_unit`,
 `c`.`expiry_date`,
 `c`.`batch_no`,
-`c`.`scp_qty_packs` AS scp_qty,
-`c`.`cty_qty_packs` AS cty_qty,
 `c`.`maun`,
 `c`.`o_balance` AS `opening_balance`,
 `c`.`t_receipts` AS `total_receipts`,
