@@ -911,12 +911,31 @@ class issues extends MY_Controller {
 	}//confirm the external issue
 
 	public function confirm_external_issue($editable = null) {
-		$facility_code = $this -> session -> userdata('facility_id');
+		$facility_code = $this -> session -> userdata('facility_id');		
 		$data['title'] = "Confirm Redistribution";
 		$data['banner_text'] = "Confirm Redistribution";
 		$data['redistribution_data'] = redistribution_data::get_all_active($facility_code, $editable);
 		$data['editable'] = $editable;
 		$data['content_view'] = "facility/facility_issues/facility_redistribute_items_confirmation_v";
+		$this -> load -> view("shared_files/template/template", $data);
+	}
+
+	public function confirm_external_issue_edit($editable = null) {
+		$facility_code = $this -> session -> userdata('facility_id');
+		$subcounty_id = $this -> session -> userdata('district_id');		
+		$data['title'] = "Edit Redistribution";
+		$data['banner_text'] = "Edit Redistribution";
+		$data['redistribution_data'] = redistribution_data::get_all_active($facility_code, $editable);
+		$districts_data = districts::get_district_name($subcounty_id);
+		$district_name = '';
+		foreach ($districts_data as $value) {
+			$district_name = $value->district;
+		}
+		$data['district_name']=$district_name;		
+		$data['district_id']=$subcounty_id;		
+		$data['editable'] = $editable;
+		$data['subcounties'] = districts::getAll();
+		$data['content_view'] = "facility/facility_issues/facility_redistribute_items_confirmation_edit_v";
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 

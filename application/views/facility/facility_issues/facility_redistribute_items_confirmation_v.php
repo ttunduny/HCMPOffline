@@ -95,15 +95,32 @@
 
 </tbody>
 </table> 
+
 <?php echo form_close();?> 
-<?php if(!isset($editable)){ } else{ ?>
-<hr />
-<div class="container-fluid">
-<div style="float: right">
-<button class="btn btn-success save" ><span class="glyphicon glyphicon-open"></span>Update</button></div>
+<div id="confirm_actions" class="container-fluid" style="margin-top:5%; width:100%;height:50px;border:1px solid #ccc">
+
+	<?php if(!isset($editable)){ } else{
+			if($editable!='to-me'){
+
+	 ?>
+	<div style="float: right">
+		<button class="btn btn-success save form-input" ><span class="glyphicon glyphicon-open"></span>Update</button>
+	</div>
+
+ 	<?php };};?>
+
+ 	<div style="float: right">
+ 		<a href="<?php echo base_url().'issues/confirm_external_issue_edit';?>">
+			<button class="btn btn-primary " ><span class="glyphicon glyphicon-open"></span>Edit</button>
+		</a>	
+	</div>
+
 </div>
-</div>
- <?php };?>  
+
+<!-- <hr /> -->
+
+ 
+ 
 <script>
 $(document).ready(function() {
 	//datatables settings 
