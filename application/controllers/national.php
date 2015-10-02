@@ -727,7 +727,7 @@ inner join counties on districts.county=counties.id inner join commodities on fa
 			endforeach;
 
 			// echo "<pre>";print_r($series_data);echo "</pre>";exit;
-			$graph_type = 'bar';
+			$graph_type = 'line';
 
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_mos'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "$title Stock Level in Months of Stock (MOS)"));
@@ -1083,7 +1083,7 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 				$category_data = array_merge($category_data, array($data["drug_name"]));
 			endforeach;
 
-			$graph_type = 'bar';
+			$graph_type = 'spline';
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_consuption'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "$title Consumption (Packs) for $year"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
@@ -1267,7 +1267,7 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 			// array_merge($series_data,$series_data_2);
 			// echo "<pre>";print_r($series_data_2);echo "</pre>";exit;
 
-			$graph_type = 'column';
+			$graph_type = 'area';
 
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_order'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "$year $title Order Cost"));
