@@ -133,7 +133,7 @@ HTML_DATA;
       <li class="active"><a href="#Malaria" data-toggle="tab">Malaria</a></li>
       <li class=""><a href="#RH" data-toggle="tab">Reproductive Health</a></li>
       <?php if($identifier=='county'){?>
-      <li class=""><a href="#AMGRAPH" data-toggle="tab">Sub-County Antimalarial Graph</a></li><?php }?>
+      <li class=""><a href="#AMGRAPH" data-toggle="tab">Sub-County Comparison</a></li><?php }?>
     </ul>
     <div id="myTabContent" class="tab-content">
  		<div  id="Malaria" class="tab-pane fade active in">
