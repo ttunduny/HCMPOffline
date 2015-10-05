@@ -324,7 +324,7 @@ legend{
 							<input type="radio" name="doctype" value="pdf" checked/> PDF
 						</section>-->
 						<section class="col-md-3">
-							<input type="radio" name="doctype"  value="excel"/> Excel
+							<input type="radio" name="doctype"  value="excel" checked /> Excel
 						</section>
 						
 						<!-- <section class="col-md-3">
