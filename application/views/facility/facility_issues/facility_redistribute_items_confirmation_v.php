@@ -97,10 +97,10 @@
 </table> 
 
 <?php echo form_close();?> 
-<div id="confirm_actions" class="container-fluid" style="margin-top:5%; width:100%;height:50px;border:1px solid #ccc">
+<div id="confirm_actions" class="container-fluid" style="margin-top:5%; width:100%;height:50px;">
 
 	<?php if(!isset($editable)){ } else{
-			if($editable!='to-me'){
+			if($editable=='to-me'){
 
 	 ?>
 	<div style="float: right">
@@ -109,11 +109,11 @@
 
  	<?php };};?>
 
- 	<div style="float: right">
+ 	<!-- <div style="float: right">
  		<a href="<?php echo base_url().'issues/confirm_external_issue_edit';?>">
 			<button class="btn btn-primary " ><span class="glyphicon glyphicon-open"></span>Edit</button>
 		</a>	
-	</div>
+	</div> -->
 
 </div>
 
