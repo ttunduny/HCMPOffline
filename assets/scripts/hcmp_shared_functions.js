@@ -274,11 +274,11 @@ function confirm_with_summary(html_data,form_id){
 				     closeOnCancel: false }, 
 				     
 				     function(isConfirm){   if (isConfirm) {   
-				     	$(form_id).submit();  
-				     	 swal("Saved!", "Your data was saved.", "success"); 
+				     	$(form_id).submit();  				     	
 				     	 if($(form_id).valid()){
 					           $(form_id).submit();      
 					          }
+                    swal("Saved!", "Your data was saved. ", "success"); 
 				     	 
 				     	   } else {
 				     	   	
