@@ -278,7 +278,7 @@ function confirm_with_summary(html_data,form_id){
 				     	 if($(form_id).valid()){
 					           $(form_id).submit();      
 					          }
-                    swal("Saved!", "Your data was saved. ", "success"); 
+                    swal("Saving Data!", "Your data is Being Saved. Click on Leave this Page to Complete Saving", "success"); 
 				     	 
 				     	   } else {
 				     	   	
