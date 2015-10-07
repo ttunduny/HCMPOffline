@@ -467,7 +467,8 @@ endforeach;
 	#tracking_table tr td:nth-child(5),
 	#tracking_table tr td:nth-child(6) {
 	  /*background: #C3272B;*/
-	  background: #B63A3A;
+	  background: #FF0000;
+	  /*background: #B63A3A;*/
 	  color:#ffffff;
 	}
 
@@ -475,7 +476,8 @@ endforeach;
 	#tracking_table tr td:nth-child(8),
 	#tracking_table tr td:nth-child(9) {
 	  /*background: #27ae60;*/	
-	  background: #2F922F;
+	  background: #009900;
+	  /*background: #2F922F;*/
 	  color: #ffffff;
 	}
 
@@ -484,12 +486,7 @@ endforeach;
 	#tracking_table tr td:nth-child(12),
 	#tracking_table tr td:nth-child(13),
 	#tracking_table tr td:nth-child(14),
-	#tracking_table tr td:nth-child(15) {
-	  /*background: #85C2FF;*/	
-	  background: #059A86;
-	  color: #ffffff;
-	}
-	
+	#tracking_table tr td:nth-child(15),
 	#tracking_table tr td:nth-child(16),
 	#tracking_table tr td:nth-child(17),
 	#tracking_table tr td:nth-child(18),
@@ -514,7 +511,7 @@ endforeach;
 	#tracking_table tr td:nth-child(37),
 	#tracking_table tr td:nth-child(38),
 	#tracking_table tr td:nth-child(39) {
-	  background: #6666A3;
+	  background:#CCCC00;
 	  color: #ffffff;
 	}
 	#tracking_table td{
