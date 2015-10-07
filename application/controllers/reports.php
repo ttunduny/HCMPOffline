@@ -3676,6 +3676,7 @@ class Reports extends MY_Controller {
 			if ($commodity_id > 0) :
 				$category_data = array( array("Sub-county", "Facility Name", "Mfl", "Commodity Name", "TOTAL " . $option_new));
 			else :
+				// array_push($category_data, array("Commodity Name", "stocks worth in $option_new"));
 				array_push($category_data, array("Consumption level $commodity_name $title $time", "Commodity Name", "stocks worth in $option_new"));
 			endif;
 			$graph_data = array_merge($graph_data, array("table_id" => 'dem_graph_'));

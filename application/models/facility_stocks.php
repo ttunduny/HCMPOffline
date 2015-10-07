@@ -1218,7 +1218,16 @@ FROM drug_store_issues ds,drug_store_totals dst where ds.expiry_date BETWEEN CUR
 
 		}
 		$group_by_a_month = (isset($tracer) && ($group_by_a_month)) ? " GROUP BY commodity" : $group_by_a_month;
-
+		// echo "SELECT  $selection_for_a_month $computation
+  //   FROM facility_issues fs, facilities f, commodities d, districts di
+  //   WHERE fs.facility_code = f.facility_code
+  //   AND f.district = di.id
+  //   AND fs.qty_issued >0
+  //   $and 
+  //   AND d.id = fs.commodity_id
+  //   $and_data
+  //   $group_by_a_month
+  //    ";die;
 		$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT  $selection_for_a_month $computation
     FROM facility_issues fs, facilities f, commodities d, districts di
     WHERE fs.facility_code = f.facility_code
