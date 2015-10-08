@@ -600,7 +600,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 		// echo $commodity_id;die;
 		$and_data = ($district_id > 0) ? " AND d.id = '$district_id'" : null;
 		$and_data .= ($facility_code > 0) ? " AND f.facility_code = '$facility_code'" : null;
-		$and_data .= ($county_id > 0) ? " AND ct.id='$county_id'" : null;
+		$and_data .= ($county_id > 0) ? " AND counties.id='$county_id'" : null;
 		$and_data = isset($and_data) ? $and_data : null;
 		if ($graph_type=='excel') {
 			$and_data .= isset($commodity_id) ? "AND commodities.id =$commodity_id" : "AND d.tracer_item =1";			
