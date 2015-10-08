@@ -95,7 +95,7 @@
                     $source_id =$commodities['supplier_id'];
               
                     echo "<option special_data='" . $id . "^" . $name . "^" . $commodity_code . "^" . $unit_size . "^" . $total_units ."^" . $source_id . "' 
-                    value='$id'>" . $commodities_name . "</option>";
+                    value='$id'>" . $commodities_name ." (".$name.")". "</option>";
                 }
                 ?>
                     </select></td>

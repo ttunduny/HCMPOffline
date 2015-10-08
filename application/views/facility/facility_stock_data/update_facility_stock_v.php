@@ -50,7 +50,7 @@ To add facility stock data, first do physical stock count</strong></p></div>
                     $name =$commodities['source_name'];
               
                     echo "<option special_data='" . $id . "^" . $name . "^" . $commodity_code . "^" . $unit_size . "^" . $total_units . "' 
-                    value='$id'>" . $commodities_name . "</option>";
+                    value='$id'>" .$commodities_name ." (".$name.")"."</option>";
                 }
                 ?>
             </select></td>
