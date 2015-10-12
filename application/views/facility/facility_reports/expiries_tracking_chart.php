@@ -511,7 +511,7 @@ endforeach;
 	#tracking_table tr td:nth-child(37),
 	#tracking_table tr td:nth-child(38),
 	#tracking_table tr td:nth-child(39) {
-	  background:#CCCC00;
+	  background:#E6E600;
 	  color: #ffffff;
 	}
 	#tracking_table td{
