@@ -8,6 +8,7 @@ border: 1px solid #FFF !important;
     $(document).ready(function() {
   //datatables settings 
   $('#example').dataTable( {
+    "bSort": false,
      "sDom": "T lfrtip",
        "sScrollY": "377px",
        "sScrollX": "100%",
