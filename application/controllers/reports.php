@@ -2240,7 +2240,72 @@ class Reports extends MY_Controller {
 	 | COUNTY SUB-COUNTY dashboard                                              |
 	 |--------------------------------------------------------------------------|
 	 */
-	public function expiries_dashboard() {
+	// public function expiries_dashboard() {
+	// 	$year = date("Y");
+	// 	$county_id = $this -> session -> userdata('county_id');
+	// 	$district_id = $this -> session -> userdata('district_id');
+	// 	$months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+	// 	$option_new = 'units';
+	// 	$category_data = array();
+	// 	$graph_data = array();
+	// 	//$graph_type='';
+	// 	$title = '';
+	// 	$series_data = $series_data_ = $series_data2 = array();
+	// 	$temp_array = $temp_array_ = $temp_array2 = array();
+	// 	//Get the name of the facility if the facility code is set
+	// 	$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
+	// 	$facility_name = $facility_code_[0]['facility_name'];
+	// 	//Get the name of the District
+	// 	$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
+	// 	$district_name_ = (isset($district_data)) ? ": " . $district_data[0]['district'] . " Sub County" : null;
+	// 	//Get the name of the county
+	// 	$county_name = counties::get_county_name($county_id);
+	// 	$title = isset($facility_code) && isset($district_id) ? "$district_name_ : $facility_name" : (isset($district_id) && !isset($facility_code) ? "$county_name[county] County$district_name_" : "$county_name[county] County");
+	// 	$category_data = array_merge($category_data, $months);
+	// 	//for the expiries
+	// 	$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code, $district_id, $county_id, $year, null, $option, "all");
+	// 	$column_data_ = array("Expiries in $title $year", "stock expired in $option_new");
+	// 	//for the potential expiries
+	// 	$commodity_array2 = Facility_stocks::get_county_cost_of_potential_expiries_new($facility_code, $district_id, $county_id, $year, null, $option, "all");
+	// 	foreach ($commodity_array as $data) :
+	// 		$temp_array = array_merge($temp_array, array($data["cal_month"] => (int)$data['total']));
+	// 		$series_data_ = array_merge($series_data_, array( array($data["cal_month"], (int)$data['total'])));
+	// 	endforeach;
+	// 	foreach ($commodity_array2 as $data2) :
+	// 		$temp_array2 = array_merge($temp_array2, array($data2["cal_month"] => (int)$data2['total_potential']));
+	// 		$series_data_2 = array_merge($series_data_2, array( array($data2["cal_month"], (int)$data2['total'])));
+	// 	endforeach;
+	// 	foreach ($months as $key => $data) :
+	// 		$val = (array_key_exists($data, $temp_array)) ? (int)$temp_array[$data] : (int)0;
+	// 		$val2 = (array_key_exists($data, $temp_array2)) ? (int)$temp_array2[$data] : (int)0;
+	// 		$series_data = array_merge($series_data, array($val));
+	// 		$series_data2 = array_merge($series_data2, array($val2));
+	// 	endforeach;
+	// 	$default_expiries = array();
+	// 	$default_expiries = array_merge($default_expiries, array("graph_id" => 'dem_graph_'));
+	// 	$graph_type = 'column';
+	// 	$default_expiries = array_merge($default_expiries, array("graph_title" => "Expiries in $title for $year"));
+	// 	$default_expiries = array_merge($default_expiries, array("graph_type" => $graph_type));
+	// 	$default_expiries = array_merge($default_expiries, array("graph_yaxis_title" => "$option_new"));
+	// 	$default_expiries = array_merge($default_expiries, array("graph_categories" => $category_data));
+	// 	$default_expiries = array_merge($default_expiries, array("series_data" => array()));
+	// 	$default_expiries['series_data'] = array_merge($default_expiries['series_data'], array("Potential Expiries" => $series_data2, "Actual Expiries" => $series_data));
+	// 	$data = array();
+	// 	$default_expiries_ = $this -> hcmp_functions -> create_high_chart_graph($default_expiries);
+	// 	$data['default_expiries'] = $default_expiries_;
+	// 	$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
+	// 	// return $this -> load -> view("subcounty/ajax/county_expiry_filter_v", $data);
+	// 	$data['report_view'] = "subcounty/ajax/county_expiry_filter_v";
+	// 	$data['banner_text'] = "Expired Products";
+	// 	$data['content_view'] = "facility/facility_reports/reports_v";
+	// 	$data['report_view'] = "subcounty/ajax/county_expiry_filter_v";
+	// 	$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
+	// 	return $this -> load -> view("shared_files/template/template", $data);
+
+	// 	// return $this -> load -> view("subcounty/ajax/county_expiry_filter_v", $data);
+	// }
+
+	 public function expiries_dashboard() {
 		$year = date("Y");
 		$county_id = $this -> session -> userdata('county_id');
 		$district_id = $this -> session -> userdata('district_id');
@@ -2294,15 +2359,7 @@ class Reports extends MY_Controller {
 		$default_expiries_ = $this -> hcmp_functions -> create_high_chart_graph($default_expiries);
 		$data['default_expiries'] = $default_expiries_;
 		$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
-		// return $this -> load -> view("subcounty/ajax/county_expiry_filter_v", $data);
-		$data['report_view'] = "subcounty/ajax/county_expiry_filter_v";
-		$data['banner_text'] = "Expired Products";
-		$data['content_view'] = "facility/facility_reports/reports_v";
-		$data['report_view'] = "subcounty/ajax/county_expiry_filter_v";
-		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
-		return $this -> load -> view("shared_files/template/template", $data);
-
-		// return $this -> load -> view("subcounty/ajax/county_expiry_filter_v", $data);
+		return $this -> load -> view("subcounty/ajax/county_expiry_filter_v", $data);
 	}
 	//For filtering for the expiries dashboard
 	
