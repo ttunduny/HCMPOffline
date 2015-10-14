@@ -920,12 +920,33 @@ class issues extends MY_Controller {
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 
+	public function delete_redistribution($id){
+		$redistribution_data = redistribution_data::get_one($id);
+		foreach ($redistribution_data as $key => $value) {
+			$quantity_sent = intval($value['quantity_sent']);
+			$stock_id = $value['stock_id'];
+			$stock_data = facility_stocks::get_facilty_stock_id($stock_id);			
+			foreach ($stock_data as $keys => $values) {
+				$current_balance = intval($values['current_balance']);
+				$new_balance = $current_balance+$quantity_sent;
+				$update_array = array('id'=>$stock_id,'current_balance'=>$new_balance);
+				$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection();
+				$inserttransaction -> execute("UPDATE `facility_stocks` SET `current_balance` = '$new_balance' WHERE id= '$stock_id'");
+				$inserttransaction -> execute("UPDATE `redistribution_data` SET `status` = '5' WHERE id= '$id'");
+				$this -> session -> set_flashdata('system_success_message', "The Issue has been Deleted");
+				redirect('issues/confirm_external_issue_edit');
+			}
+
+		}
+	}
+
 	public function confirm_external_issue_edit($editable = null) {
 		$facility_code = $this -> session -> userdata('facility_id');
 		$subcounty_id = $this -> session -> userdata('district_id');		
 		$data['title'] = "Edit Redistribution";
 		$data['banner_text'] = "Edit Redistribution";
-		$data['redistribution_data'] = redistribution_data::get_all_active($facility_code, $editable);
+		$data['redistribution_data'] = redistribution_data::get_all_active_edit($facility_code, $editable);
+		// $data['redistribution_data'] = redistribution_data::get_all_active($facility_code, $editable);
 		$districts_data = districts::get_district_name($subcounty_id);
 		$district_name = '';
 		foreach ($districts_data as $value) {

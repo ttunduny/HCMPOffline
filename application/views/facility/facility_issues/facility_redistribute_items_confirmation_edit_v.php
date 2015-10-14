@@ -16,7 +16,7 @@
 		
 	</div>
 	
- <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('stock/update_stock_level_external',$att); ?>
+ <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('stock/update_stock_level_external_edit',$att); ?>
  <table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="redistribution_edit">
 	<thead>
 		<tr>
@@ -31,83 +31,93 @@
 			<th>Expiry Date</th>
 			<th>Manufacturer</th>
 			<th>Issue Type</th>	
-			<!-- <th>Available Batch Stock</th> -->
+			<th>Available Batch Stock</th>
 			<th>Quantity Sent</th>
 			<th>New Quantity</th>
 			<th>New Quantity(units)</th>			
+			<th>Action</th>			
 		</tr>
 	</thead>
 	<tbody>
-		<?php $edit=($editable!='to-me') ? "readonly='readonly'": null;	
-		foreach($redistribution_data as $redistribution_data){
-			$manu=$redistribution_data->manufacturer;
-			foreach($redistribution_data->facility_detail_source as $facility){
-					$name_=$facility->facility_name." MFL ".$facility->facility_code; $mfl=$facility->facility_code;}
-			foreach($redistribution_data->facility_detail_receive as $facility){
-					$name_facility_detail_receive=$facility->facility_name." MFL ".$facility->facility_code;
-					$name_facility_detail_receive_name=$facility->facility_name;
-					$name_facility_detail_receive_code=$facility->facility_code;}
-			foreach($redistribution_data->stock_detail as $stock_detail){			
-				
-				foreach($stock_detail->commodity_detail as $commodity_detail){
-				$name=$commodity_detail->commodity_name;
-				$code=$commodity_detail->commodity_code;
-				$unit_size=$commodity_detail->unit_size;
-				$total_commodity_units=$commodity_detail->total_commodity_units;
-				$source_of_item=$commodity_detail->commodity_source_id;	
-				}
-				$packs=round($redistribution_data->quantity_sent/$total_commodity_units,1);	
-				$units = $redistribution_data->quantity_sent;
-				$date=date('d My',strtotime($redistribution_data->expiry_date));
-				$date_sent=date('d M Y',strtotime($redistribution_data->date_sent));				
-				$option_subcounty = '<option value='.$district_id.'>'.$district_name.'</option>';
-				$option_subcounty .= '<option value=\'2\'>District Store</option>';
-				foreach ($subcounties as $district) {
-						$id=$district->id;
-						$new_district_name=$district->district;		
-						$option_subcounty.= '<option value="'.$id.'"> '.$new_district_name.'</option>';					
-				}
+		<?php $edit=($editable!='to-me') ? "readonly='readonly'": null;			
+		// echo "<pre>";
+		// print_r($redistribution_data);die;		
+		foreach($redistribution_data as $key => $value){
+			$id = $value['id'];
+			$manufacturer = $value['manufacturer'];
+			$source_facility_code = $value['source_facility_code'];
+			$receive_facility_code = $value['receive_facility_code'];
+			$commodity_id = $value['commodity_id'];
+			$quantity_sent = $value['quantity_sent'];
+			$sender_id = $value['sender_id'];
+			$batch_no = $value['batch_no'];
+			$expiry_date = $value['expiry_date'];
+			$facility_stock_ref_id = $value['facility_stock_ref_id'];
+			$date_sent = $value['date_sent'];
+			$source_district_id = $value['source_district_id'];
+			$commodity_name = $value['commodity_name'];
+			$current_balance = $value['current_balance'];
+			$commodity_code = $value['commodity_code'];
+			$district_name = $value['district_name'];
+			$receiver_district_id = $value['receiver_district_id'];
+			$total_commodity_units = $value['total_commodity_units'];
+			$packs=round($quantity_sent/$total_commodity_units,1);	
+			$receiving_facility=$value['receiving_facility'];	
+			$units = $quantity_sent;
+			$unit_size = $value['unit_size'];	
+			$date=date('d My',strtotime($expiry_date));
+			$date_sent=date('d M Y',strtotime($date_sent));				
+			$option_subcounty = '<option value='.$receiver_district_id.'>'.$district_name.'</option>';
+			$option_subcounty .= '<option value=\'2\'>District Store</option>';
+			foreach ($subcounties as $district) {
+					$district_id=$district->id;
+					$new_district_name=$district->district;		
+					$option_subcounty.= '<option value="'.$district_id.'"> '.$new_district_name.'</option>';					
+			}
 
-				$option_facility = '<option value='.$name_facility_detail_receive_code.'>'.$name_facility_detail_receive_name.'</option>';
-				
+			$option_facility = '<option value='.$receive_facility_code.'>'.$receiving_facility.'</option>';
+			
 				// foreach ($subcounties as $district) {
 				// 		$id=$district->id;
 				// 		$name=$district->district;		
 				// 		$option_subcounty.= '<option value="'.$id.'"> '.$name.'</option>';					
 				// }
 		
-			}
+			// }
 		echo "<tr>
 		<input type='hidden' name='source_of_item[]' class='source_of_item' value='$source_of_item'>
-		<input type='hidden' name='service_point[]' class='service_point' value='$mfl'>
+		<input type='hidden' name='service_point[]' class='service_point' value='$receive_facility_code'>
 		<input type='hidden' name='total_commodity_units[]' class='total_commodity_units' value='$total_commodity_units'>
-		<input type='hidden' name='commodity_id[]' class='commodity_id' value='$redistribution_data->commodity_id'>
-		<input type='hidden' name='facility_stock_id[]' class='facility_stock_id' value='$redistribution_data->id'>
+		<input type='hidden' name='commodity_id[]' class='commodity_id' value='$commodity_id'>
+		<input type='hidden' name='facility_stock_id[]' class='facility_stock_id' value='$facility_stock_ref_id'>
 		
 		<td>
 			<select class='form-control  sub_county ' name='sub_county[]'>".$option_subcounty."			
 			</select>
 		</td>
-		<td><select class='form-control  facility_name ' name='facility_name[]'>".$option_facility."			
+		<td><select class='form-control  facility_name ' name='facility_name[]' style=\"width:100%\">".$option_facility." 			
 			</select></td>
-		<td>$name</td>
-		<td>$code</td>
+		<td>$commodity_name</td>
+		<td>$commodity_code</td>
 		<td>$date_sent</td>
 		<td>$unit_size</td>
 		<td><input type='text' 
-		name='commodity_batch_no[]' class='form-control input-small commodity_batch_no' value='$redistribution_data->batch_no' $edit></td>
+		name='commodity_batch_no[]' class='form-control input-small commodity_batch_no' value='$batch_no' $edit></td>
 		<td><input type='text' 
 		name='clone_datepicker[]' class=' form-control big clone_datepicker' value='$date' $edit></td>
 		<td><input type='text' 
-		name='commodity_manufacture[]' class='form-control input-small  commodity_manufacture' value='$manu' $edit></td>
+		name='commodity_manufacture[]' class='form-control input-small  commodity_manufacture' value='$manufacturer' $edit></td>
 		<td><select class='form-control  commodity_unit_of_issue ' name='commodity_unit_of_issue[]'>
 			<option value='Pack_Size'>Pack Size</option>
 			<option value='Unit_Size'>Unit Size</option>
 			</select></td>
+		<td><input class='form-control big available_quantity' readonly='readonly' name='available_quantity[]' type='text' value='$current_balance'></td>
 		<td><input class='form-control big old_quantity' readonly='readonly' name='old_quantity[]' type='text' value='$units'></td>
 		<td><input class='form-control big quantity' name='quantity[]' type='text' value='$packs'></td>
 		
 		<td><input class='form-control big commodity_total_units' readonly='readonly'  type='text'  name='commodity_total_units[]' value='$units'/></td>		
+		<td><input type='submit' class='btn-danger delete_object form-control' style='width:100%''  data-id='$id' id='btn_$id' data-attr='$id' data-value='$id' value='Delete'></td>		
+
 		</tr>";			
 		}
 		//readonly='readonly'
@@ -125,6 +135,28 @@
  	
 </div>
 
+
+<div class="modal fade" id="confirmDeleteModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Confirm Deletion</h4>
+      </div>
+      <center>
+      <div class="modal-body" style="font-size:16px;text-align:centre">
+        <p>This Record will be Deleted. <p/>
+        <p>Do you want to Proceed?</p>
+      </div>
+      </center>
+      <div class="modal-footer">        
+        <button type="button"  id="btnNoDelete" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="button" id="btnYesDelete" class="btn btn-primary" id="btn-ok">Delete</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <style type="text/css">
 
 	#redistribution_edit_paginate {
@@ -141,8 +173,36 @@
 </style>
 <script>
 $(document).ready(function() {
-	//datatables settings 
+	// $('#confirmDeleteModal').on('hidden.bs.modal', function () {		
+	//  	// location.reload();
+	// });
 
+	$('#btnNoDelete').click(function() {
+	    message_denial = "No action has been taken";
+		alertify.set({ delay: 10000 });
+	 	alertify.success(message_denial, null);       
+	  	$('#confirmDeleteModal').modal('hide');
+	  	 return false;
+	});
+	$('#btnYesDelete').click(function() {
+	    // message_denial = "No action has been taken";
+		// alertify.set({ delay: 10000 });
+	 	// alertify.success(message_denial, null);       
+	  	var record_id = $('#confirmDeleteModal').data('id');	  	
+	  	var base_url = "<?php echo base_url() . 'issues/delete_redistribution/'; ?>";
+	  	var link = base_url+record_id;	  	
+	  	$('#confirmDeleteModal').modal('hide');
+
+		window.location.href = link;
+	});
+		
+	$("#redistribution_edit").on('click','.delete_object',function(event) {	
+	   event.preventDefault();	    
+       var id = $(this).data('id');       
+   	   // alert(id);
+    	$('#confirmDeleteModal').data('id', id).modal('show');
+	    
+	});
     $('#redistribution_edit').DataTable( {
         "order": [[ 2, "desc" ]]
     } );

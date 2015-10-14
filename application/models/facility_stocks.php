@@ -38,6 +38,11 @@ class Facility_stocks extends Doctrine_Record {
 		and commodity_id=$commodity_id and status=1 ");
 		return $commodities;
 	}
+
+	public function get_facilty_stock_id($id){
+		$sql = "select current_balance from facility_stocks where id = '$id'";
+        return $this->db->query($sql)->result_array();
+	}
 	public static function get_all() {
 		$query = Doctrine_Query::create() -> select("*") -> from("facility_stocks");
 		$commodities = $query -> execute();
