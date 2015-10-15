@@ -764,7 +764,8 @@ $('#email').keyup(function() {
   });
 
     // $("#reset_pwd").on('click',function() {//karsan
-    $('.reset_pwd').click(function(){    	
+   $(".dataTable").on('click','.reset_pwd',function(event) {//titus
+    // $('.reset_pwd').click(function(){    	
     	var user_id = $(this).attr('data-attr');
     	var user_email = $(this).attr('data-name');
     	var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";
