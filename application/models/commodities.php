@@ -197,12 +197,12 @@ return $inserttransaction;
 	}
 	
 	public static function get_commodities_not_in_facility($facility_code,$source = NULL){
-		
+	
 	$getdata = Doctrine_Manager::getInstance()->getCurrentConnection()
     ->fetchAll("SELECT c.commodity_name, c.commodity_code, c.id as 
     commodity_id,c.unit_size,c.unit_cost as unit_cost, c.total_commodity_units, c_s_c.sub_category_name FROM commodities c ,commodity_sub_category c_s_c Where c.id NOT IN 
-    (SELECT distinct commodity_id FROM facility_transaction_table Where facility_code =$facility_code) 
-    AND c.commodity_sub_category_id = c_s_c.id ORDER BY `c`.`commodity_name` ASC
+    (SELECT distinct commodity_id FROM facility_transaction_table Where facility_code ='$facility_code') 
+    AND c.commodity_sub_category_id = c_s_c.id ORDER BY `c.commodity_name` ASC
               "); 
               
   return $getdata;
