@@ -90,6 +90,7 @@
 		<input type='hidden' name='total_commodity_units[]' class='total_commodity_units' value='$total_commodity_units'>
 		<input type='hidden' name='commodity_id[]' class='commodity_id' value='$commodity_id'>
 		<input type='hidden' name='facility_stock_id[]' class='facility_stock_id' value='$facility_stock_ref_id'>
+		<input type='hidden' name='redistribution_id[]' class='redistribution_id' value='$id'>
 		
 		<td>
 			<select class='form-control  sub_county ' name='sub_county[]'>".$option_subcounty."			
@@ -113,9 +114,9 @@
 			</select></td>
 		<td><input class='form-control big available_quantity' readonly='readonly' name='available_quantity[]' type='text' value='$current_balance'></td>
 		<td><input class='form-control big old_quantity' readonly='readonly' name='old_quantity[]' type='text' value='$units'></td>
-		<td><input class='form-control big quantity' name='quantity[]' type='text' value='$packs'></td>
+		<td><input class='form-control big quantity' name='quantity[]' type='text' value='0'></td>
 		
-		<td><input class='form-control big commodity_total_units' readonly='readonly'  type='text'  name='commodity_total_units[]' value='$units'/></td>		
+		<td><input class='form-control big commodity_total_units' readonly='readonly'  type='text'  name='commodity_total_units[]' value='0'/></td>		
 		<td><input type='submit' class='btn-danger delete_object form-control' style='width:100%''  data-id='$id' id='btn_$id' data-attr='$id' data-value='$id' value='Delete'></td>		
 
 		</tr>";			
@@ -273,16 +274,61 @@ $(document).ready(function() {
 
 		});	
 		//compute the order totals here
+	$(".quantity_issued").on('keyup',function (){
+        	var bal=parseInt($(this).closest("tr").find(".available_quantity").val());        	
+        	var selector_object=$(this);
+    var issue=parseInt(calculate_actual_stock(selector_object.closest("tr").find(".quantity").val(),selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
+    selector_object.val(),'return',selector_object));
+    var remainder=bal-parseInt(calculate_actual_stock(selector_object.closest("tr").find(".quantity").val(),selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
+    selector_object.val(),'return',selector_object));        	
+        	var alert_message='';
+        	if (remainder<0) {alert_message+="<li>Can not issue beyond available stock</li></br>"+
+        	"<li>You are trying to issue "+issue+" (Units) from "+$(this).closest("tr").find(".available_quantity").val()+" (Units)</li>";
+    
+//data_array[4]
+}
+			if (selector_object.val() <0) { alert_message+="<li>Issued value must be above 0</li>";}
+		    if (selector_object.val().indexOf('.') > -1) {alert_message+="<li>Decimals are not allowed.</li>";}		
+			if (isNaN(selector_object.val())){alert_message+="<li>Enter only numbers</li>";}				
+			if(isNaN(alert_message) || isNaN(form_data[0])){
+	//reset the text field and the message dialog box 
+    selector_object.val(""); var notification='<ol>'+alert_message+form_data[0]+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
+    //hcmp custom message dialog
+    
+    hcmp_message_box(title='HCMP error message',notification,message_type='error')
+   // dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
+    //This event is fired immediately when the hide instance method has been called.
+    $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();	})
+    selector_object.closest("tr").find(".balance").val(selector_object.closest("tr").find(".total_commodity_bal").val());
+    // selector_object.closest("tr").find(".balance").val(selector_object.closest("tr").find(".commodity_balance").val());
+    return;   }// set the balance here
+   	selector_object.closest("tr").find(".balance").val(remainder1);	
+
+    // selector_object.closest("tr").find(".balance").val(selector_object.closest("tr").find(".total_commodity_bal").val());
+
+        });// adding a new row
 	$(".quantity").on('keyup', function (){
 
 	var selector_object=$(this);
 	var user_input=$(this).val();
+	var bal = $(this).closest("tr").find(".available_quantity").val();
 	var total_units=$(this).closest("tr").find(".total_commodity_units").val();
 	var pack_unit_option=$(this).closest("tr").find(".commodity_unit_of_issue").val();
 	var donated_items=$(this).closest("tr").find(".commodity_total_units").val();
 	//var total_units=calculate_actual_stock (total_units,pack_unit_option,user_input,"return",selector_object,null);
 	// check the user input value here
+    var issue=parseInt(calculate_actual_stock(selector_object.closest("tr").find(".quantity").val(),pack_unit_option,user_input,'return',selector_object));
+	var remainder=bal-parseInt(calculate_actual_stock(total_units,pack_unit_option,user_input,'return',selector_object));  
 	var alert_message='';
+	if (remainder<0) {alert_message+="<li>Can not issue beyond available stock</li></br>"+
+    	"<li>You are trying to issue "+issue+" (Units) from "+$(this).closest("tr").find(".available_quantity").val()+" (Units)</li>";    	
+    	$(this).closest("tr").find(".commodity_total_units").val("0");
+    	$(this).closest("tr").find(".quantity").val("0");
+	}else{
+		calculate_actual_stock (total_units,pack_unit_option,user_input,".commodity_total_units",selector_object,null);
+	}     	
+
+
 			if (selector_object.val() <0) { alert_message+="<li>Value must be above 0</li>";}
 		    if (selector_object.val().indexOf('.') > -1) {alert_message+="<li>Decimals are not allowed.</li>";}		
 			if (isNaN(selector_object.val())){alert_message+="<li>Enter only numbers</li>";}	
@@ -292,13 +338,15 @@ $(document).ready(function() {
     selector_object.val(""); var notification='<ol>'+alert_message+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
     //hcmp custom message dialog
     dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
+
+    
     //This event is fired immediately when the hide instance method has been called.
     $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();	})
     selector_object.closest("tr").find(".actual_quantity").val("");
     selector_object.val("");
     return;   } 
  
-   	calculate_actual_stock (total_units,pack_unit_option,user_input,".commodity_total_units",selector_object,null);
+   	
    
 	});
 	

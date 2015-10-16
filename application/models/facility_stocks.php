@@ -40,7 +40,7 @@ class Facility_stocks extends Doctrine_Record {
 	}
 
 	public function get_facilty_stock_id($id){
-		$sql = "select current_balance from facility_stocks where id = '$id'";
+		$sql = "select current_balance from facility_stocks where id = '$id' LIMIT 0,1";
         return $this->db->query($sql)->result_array();
 	}
 	public static function get_all() {

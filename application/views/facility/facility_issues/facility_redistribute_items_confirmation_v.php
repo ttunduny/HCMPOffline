@@ -109,11 +109,11 @@
 
  	<?php };};?>
 
- 	<!-- <div style="float: right">
+ 	<div style="float: right">
  		<a href="<?php echo base_url().'issues/confirm_external_issue_edit';?>">
 			<button class="btn btn-primary " ><span class="glyphicon glyphicon-open"></span>Edit</button>
 		</a>	
-	</div> -->
+	</div>
 
 </div>
 

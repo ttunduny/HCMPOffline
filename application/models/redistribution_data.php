@@ -48,7 +48,7 @@ class redistribution_data extends Doctrine_Record {
         $and=($option=='to-me')? " receive_facility_code=$facility_code" : " source_facility_code=$facility_code";
     
         $sql = "SELECT r.*, c.commodity_name,c.total_commodity_units,f.facility_name as receiving_facility,c.commodity_code,c.unit_size,fs.current_balance,d.district as district_name, d.id as receiver_district_id   FROM redistribution_data r, facility_stocks fs, commodities c,facilities f, districts d  WHERE fs.commodity_id = r.commodity_id AND r.source_facility_code = '$facility_code'
-                AND fs.facility_code = '$facility_code'  AND r.commodity_id = c.id AND d.id = f.district AND f.facility_code = r.receive_facility_code  AND r.batch_no = fs.batch_no  AND r.status = 0 GROUP By r.batch_no";        
+                AND fs.facility_code = '$facility_code'  AND r.commodity_id = c.id AND d.id = f.district AND f.facility_code = r.source_facility_code  AND r.batch_no = fs.batch_no  AND r.status = 0 GROUP BY r.batch_no, r.id";        
         return $this->db->query($sql)->result_array();
     }
 
