@@ -179,6 +179,7 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
         	var selector_object=$(this);
         	var data =$('option:selected', selector_object.closest("tr").find('.desc')).attr('special_data') 
 	       	var data_array=data.split("^");
+	       	console.log(data_array);
 	       	var total_commodity_bal = selector_object.closest("tr").find(".total_commodity_bal").val();
         	var remainder1=total_commodity_bal-parseInt(calculate_actual_stock(data_array[3],selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
         	// var remainder1=bal1-parseInt(calculate_actual_stock(data_array[3],selector_object.closest("tr").find(".commodity_unit_of_issue").val(),
@@ -190,7 +191,10 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
         	var form_data=check_if_the_form_has_been_filled_correctly(selector_object);
         	var alert_message='';
         	if (remainder<0) {alert_message+="<li>Can not issue beyond available stock</li></br>"+
-        	"<li>You are trying to issue "+issue+" (Units) from "+data_array[4]+" (Units)</li>";}
+        	"<li>You are trying to issue "+issue+" (Units) from "+$(this).closest("tr").find(".available_stock").val()+" (Units)</li>";
+    
+//data_array[4]
+}
 			if (selector_object.val() <0) { alert_message+="<li>Issued value must be above 0</li>";}
 		    if (selector_object.val().indexOf('.') > -1) {alert_message+="<li>Decimals are not allowed.</li>";}		
 			if (isNaN(selector_object.val())){alert_message+="<li>Enter only numbers</li>";}				
@@ -203,8 +207,8 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
    // dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
     //This event is fired immediately when the hide instance method has been called.
     $('#communication_dialog').on('hide.bs.modal', function (e) { selector_object.focus();	})
-    // selector_object.closest("tr").find(".balance").val(selector_object.closest("tr").find(".total_commodity_bal").val());
-    selector_object.closest("tr").find(".balance").val(selector_object.closest("tr").find(".commodity_balance").val());
+    selector_object.closest("tr").find(".balance").val(selector_object.closest("tr").find(".total_commodity_bal").val());
+    // selector_object.closest("tr").find(".balance").val(selector_object.closest("tr").find(".commodity_balance").val());
     return;   }// set the balance here
    	selector_object.closest("tr").find(".balance").val(remainder1);	
 
@@ -257,16 +261,18 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 		        locator.closest("tr").find(".available_stock").val(total_stock_bal-total_issues);
 		        locator.closest("tr").find(".expiry_date").val(""+new_date+"");	        		
 			    locator.closest("tr").find(".quantity_issued").val("0");
-			    locator.closest("tr").find(".balance").val(total_commodity_bal-total_issues);
-			    locator.closest("tr").find(".total_commodity_bal").val(total_commodity_bal-total_issues);
+			    locator.closest("tr").find(".balance").val(total_commodity_bal);
+			    // locator.closest("tr").find(".balance").val(total_commodity_bal-total_issues);
+			    locator.closest("tr").find(".total_commodity_bal").val(total_commodity_bal);
 			    locator.closest("tr").find(".commodity_balance").val(total_stock_bal-total_issues);
 			    }else{
 			    var total_commodity_bal = $(this).closest("tr").find(".total_commodity_bal").val();
 			    locator.closest("tr").find(".expiry_date").val("");
 			    // locator.closest("tr").find(".balance").val("");
-			    locator.closest("tr").find(".balance").val(total_commodity_bal-total_issues);
+			    locator.closest("tr").find(".balance").val(total_commodity_bal);
+			    // locator.closest("tr").find(".balance").val(total_commodity_bal-total_issues);
 			    locator.closest("tr").find(".available_stock").val("0");
-			     locator.closest("tr").find(".total_commodity_bal").val(total_commodity_bal-total_issues);
+			     locator.closest("tr").find(".total_commodity_bal").val(total_commodity_bal);
 			    locator.closest("tr").find(".quantity_issued").val("0");	
 			    }
 			  			
