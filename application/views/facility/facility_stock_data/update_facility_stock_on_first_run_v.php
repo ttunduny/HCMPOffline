@@ -42,7 +42,7 @@
 
           <div class="col-md-3">
               <div style="padding-top:2%;">
-                  <a href="<?php echo base_url().'reports/create_excel_facility_stock_template';?>"><button type="button" class="btn btn-primary">
+                  <a href="http://localhost/HCMP-1/reports/create_excel_facility_stock_template"><button type="button" class="btn btn-primary">
             <span class="glyphicon glyphicon-save"></span>Download Excel Template
         </button> </a>
         <button type="button" class="btn btn-success update-via-excel">

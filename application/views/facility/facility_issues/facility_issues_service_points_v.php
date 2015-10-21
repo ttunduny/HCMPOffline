@@ -1,8 +1,10 @@
 <style type="text/css">
 .row div p,.row-fluid div p{
 	padding:10px;
+
 }
 .form-control {
+
 font-size: 12px !important;
 }
 </style>
@@ -68,7 +70,7 @@ foreach ($commodities as $commodities) :
 			$source_name=$commodities['source_name'];
 			$total_commodity_units=$commodities['total_commodity_units'];
 			$commodity_balance=$commodities['commodity_balance'];		
-		        echo "<option special_data='$commodity_id^$unit^$source_name^$total_commodity_units^$commodity_balance' value='$commodity_id'>$commodity_name. ($source_name)</option>";        
+		echo "<option special_data='$commodity_id^$unit^$source_name^$total_commodity_units^$commodity_balance' value='$commodity_id'>$commodity_name. ($source_name)</option>";		
 endforeach;
 		?> 		
 	</select>
@@ -109,6 +111,7 @@ endforeach;
 <?php echo form_close();?>
 <script>
 $(document).ready(function() {	
+
  var $table = $('table');
 //float the headers
   $table.floatThead({ 
@@ -118,6 +121,7 @@ $(document).ready(function() {
 	});	
 //step one load all the facility data here
 var facility_stock_data=<?php echo $facility_stock_data;?>;
+
             ///when changing the commodity combobox
       		$(".desc").on('change',function(){
       		var row_id=$(this).closest("tr").index();	
@@ -454,6 +458,7 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
               }
             ]
           });
+
           intro.start();
       }
     </script>
