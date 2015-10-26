@@ -1,4 +1,4 @@
-<?php //echo "<pre>"; print_r($commodity_list);echo "</pre>";exit;?>
+<?php echo "<pre>"; print_r($commodity_list);echo "</pre>";exit;?>
 <div class="container" style="width: 96%; margin: auto;">
  <table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
