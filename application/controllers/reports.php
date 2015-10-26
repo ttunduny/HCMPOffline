@@ -4184,7 +4184,8 @@ class Reports extends MY_Controller {
 		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
 		$data['active_panel'] = 'expiries';
 		// return $this -> load -> view("subcounty/reports/county_expiries_v", $data);
-		return $this -> load -> view("shared_files/template/template", $data);
+		return $this -> load -> view("subcounty/reports/county_expiries_v", $data);
+		// return $this -> load -> view("shared_files/template/template", $data);
 
 	}
 	public function county_consumption() {
