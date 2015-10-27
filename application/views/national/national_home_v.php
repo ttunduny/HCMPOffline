@@ -64,6 +64,8 @@
               	<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-user"></span>Essential Commodities</a></li>
                 <li role="presentation" class="divider"></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="http://41.89.6.223/HCMP/user"><span class="glyphicon glyphicon-user"></span>RTK</a></li>
+                <li role="presentation" class="divider"></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://41.89.6.209/sms_system"><span class="glyphicon glyphicon-user"></span>SMS System</a></li>
                 
               </ul>
             </li>
