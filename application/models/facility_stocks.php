@@ -1202,13 +1202,16 @@ FROM drug_store_issues ds,drug_store_totals dst where ds.expiry_date BETWEEN CUR
 		$from = date('Y-m-d', $from);
 		switch ($option) :
 			case 'ksh' :
-				$computation = "ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+				// $computation = "ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull((SUM(ROUND(ABS(fs.qty_issued)/ d.total_commodity_units)))*d.unit_cost ,0)-ifnull((SUM(ROUND(ABS(fs.adjustmentnve)/ d.total_commodity_units)))*d.unit_cost ,0)+ifnull((SUM(ROUND(ABS(fs.adjustmentpve)/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
 				break;
 			case 'units' :
-				$computation = "ifnull(CEIL(SUM(fs.qty_issued)),0) AS total,d.commodity_name as commodity";
+				// $computation = "ifnull(CEIL(SUM(fs.qty_issued)),0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull(CEIL(SUM(ABS(fs.qty_issued)),0)-ifnull(CEIL(SUM(ABS(fs.adjustmentnve)),0)+ifnull(CEIL(SUM(ABS(fs.adjustmentpve)),0) AS total,d.commodity_name as commodity";
 				break;
 			case 'packs' :
-				$computation = "ifnull(SUM(ROUND(fs.qty_issued/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
+				// $computation = "ifnull(SUM(ROUND(fs.qty_issued/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull(SUM(ROUND(ABS(fs.qty_issued)/d.total_commodity_units)),0)-ifnull(SUM(ROUND(ABS(fs.adjustmentnve)/d.total_commodity_units)),0)+ifnull(SUM(ROUND(ABS(fs.adjustmentpve)/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
 				break;
 			case 'mos' :
 				$r = facility_stocks_temp::get_months_of_stock($district_id, $county_id, $facility_code);
@@ -1216,7 +1219,8 @@ FROM drug_store_issues ds,drug_store_totals dst where ds.expiry_date BETWEEN CUR
 				exit ;
 				break;
 			default :
-				$computation = "ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull((SUM(ROUND(ABS(fs.qty_issued)/ d.total_commodity_units)))*d.unit_cost ,0)-ifnull((SUM(ROUND(ABS(fs.adjustmentnve)/ d.total_commodity_units)))*d.unit_cost ,0)+ifnull((SUM(ROUND(ABS(fs.adjustmentpve)/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+				// $computation = "ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
 				break;
 		endswitch;
 		$and_data .= (isset($category_id) && ($category_id > 0)) ? "AND d.commodity_sub_category_id = '$category_id'" : null;
@@ -1251,7 +1255,7 @@ FROM drug_store_issues ds,drug_store_totals dst where ds.expiry_date BETWEEN CUR
     FROM facility_issues fs, facilities f, commodities d, districts di
     WHERE fs.facility_code = f.facility_code
     AND f.district = di.id
-    AND fs.qty_issued >0
+    AND fs.qty_issued >=0
     $and 
     AND d.id = fs.commodity_id
     $and_data
