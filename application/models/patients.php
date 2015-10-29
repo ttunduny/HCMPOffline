@@ -29,7 +29,7 @@ class Patients extends Doctrine_Record {
 		return $query;
 	}
 
-	public function get_patient_info($id = NULL){
+	public function get_patient_commodity_info($id = NULL){
 		$magufuli = isset($id)? "AND p.id = $id":NULL;
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 			SELECT 

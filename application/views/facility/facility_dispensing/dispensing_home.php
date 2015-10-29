@@ -29,19 +29,20 @@
 
         <div class=" patient-data well col-md-12">
           <div id="patient_info" class="col-md-6">
-
+          <h3>Kindly select patient</h3>
           </div>
 
           <div class="col-md-6">
           <h4>Dispense to Patient</h4>
             <select class="form-control">
-              <option>Select Commodities</option>
-              <option>Commodity One</option>
-              <option>Commodity Two</option>
+              <option value="0">Select Commodities</option>
+              <?php foreach ($commodities as $key) {
+                echo '<option value="'.$key['commodity_id'].'" data-facility-stock-id = "'.$key['facility_stock_id'].'">'.$key['commodity_name'].'</option>';
+              } ?>
             </select>
 
-            <div id="patient_info" class="col-md-12">
-              
+            <div id="" class="col-md-12">
+              Kindly
             </div>
           </div>
         </div>
@@ -107,5 +108,7 @@ $(document).ready(function () {
         }
        });
     });
+
+    
   });
 </script>

@@ -26,7 +26,9 @@ class Dispensing extends MY_Controller
 		$data['title'] = "Dispensing";
 
 		$patients = patients::get_all();
-		// echo "<pre>";print_r($patients);exit;
+		$commodities_in_facility = facility_stocks::get_facility_stock_amc($facility_code);
+		$data['commodities'] = 	$commodities_in_facility;
+		// echo "<pre>";print_r($commodities_in_facility);exit;
 
 		$data['patients'] = $patients;
 		$this -> load -> view($view, $data);		
@@ -47,7 +49,7 @@ class Dispensing extends MY_Controller
 		// Season 2 Episode 4
 
 		$imp = Patients::get_patient_details($id);
-		$winterfell = Patients::get_patient_info($id);
+		$winterfell = Patients::get_patient_commodity_info($id);
 
 		// echo "<pre>";print_r($winterfell);echo "</pre>";
 		$table = NULL;
@@ -79,6 +81,10 @@ class Dispensing extends MY_Controller
             </tbody>
           </table>';
 		echo $table;
+	}
+
+	public function patients(){
+		
 	}
 }
 
