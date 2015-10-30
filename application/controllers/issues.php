@@ -66,6 +66,13 @@ class issues extends MY_Controller {
 	 	$this -> load -> view("shared_files/template/template", $data);
 	 }
 
+
+
+	public function generate_issue_excel()
+	{
+		$this -> hcmp_functions -> clone_facility_issues_sp_template('download_file');
+	
+	}
 	public function county_store_home()
 	 {
 	 	$county_id = $this -> session -> userdata('county_id');
