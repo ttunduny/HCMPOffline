@@ -44,6 +44,7 @@ class Facility_stocks extends Doctrine_Record {
 		$sql = "SELECT * FROM facility_stocks where facility_code='$facility_code' and current_balance >0 and expiry_date > '$current_date'";
         return $this->db->query($sql)->result_array();		
 	}
+	
 	public function get_facilty_stock_id($id){
 		$sql = "select current_balance from facility_stocks where id = '$id' LIMIT 0,1";
         return $this->db->query($sql)->result_array();
