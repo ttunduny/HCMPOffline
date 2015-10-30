@@ -88,7 +88,7 @@ class Dispensing extends MY_Controller
 		$data['patient_data'] = $p_data;
 		$data['sidebar'] = "facility/facility_dispensing/sidebar_dispensing";
 		$view = 'shared_files/template/template';
-		$data['report_view']
+		// $data['report_view']
 		$this->load->view($view,$data);
 	}
 }
