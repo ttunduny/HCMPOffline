@@ -18,6 +18,7 @@ font-size: 12px !important;
 	batch, Total Balance <strong>(Units)</strong> is the total for the commodity</p>
 		
 	</div>
+	<!-- <span><a href="<?php //echo base_url().'issues/generate_issue_excel'?>" target="_blank">Download Facility Issues to Service Points Template</a></span> -->
 	</div>
 	
 		

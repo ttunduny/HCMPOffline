@@ -4183,7 +4183,6 @@ class Reports extends MY_Controller {
 		$data['report_view'] = "subcounty/reports/county_expiries_v";
 		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
 		$data['active_panel'] = 'expiries';
-		// return $this -> load -> view("subcounty/reports/county_expiries_v", $data);
 		return $this -> load -> view("subcounty/reports/county_expiries_v", $data);
 		// return $this -> load -> view("shared_files/template/template", $data);
 
