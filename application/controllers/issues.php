@@ -96,7 +96,7 @@ class issues extends MY_Controller {
 	 	$data['banner_text'] = "Redistribute Commodities To Facilities";
 	 	$data['title'] = "Redistribute Commodities";
 	 	$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_county_store($county_id);
-
+	 	echo "<pre>";print_r($data['commodities']);exit;
 	 	$data['facility_stock_data'] = json_encode(facility_stocks::get_distinct_stocks_for_this_county_store($county_id,"batch_data"));
 	 	$this -> load -> view("shared_files/template/template", $data);
 	 }

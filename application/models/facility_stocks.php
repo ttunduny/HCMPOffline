@@ -83,8 +83,8 @@ class Facility_stocks extends Doctrine_Record {
 			    commodities c,
 			    county_drug_store_totals dst
 			WHERE
-			    ds.county_id = '1'
-			        AND dst.county_id = '1'
+			    ds.county_id = '$county_id'
+			        AND dst.county_id = '$county_id'
 			        AND dst.expiry_date >= NOW()
 			        AND dst.commodity_id = fs.commodity_id
 			        AND c.id = dst.commodity_id
