@@ -84,7 +84,12 @@ class Dispensing extends MY_Controller
 	}
 
 	public function patients(){
-		
+		$p_data = Patients::get_patient_data();
+		$data['patient_data'] = $p_data;
+		$data['sidebar'] = "facility/facility_dispensing/sidebar_dispensing";
+		$view = 'shared_files/template/template';
+		// $data['report_view']
+		$this->load->view($view,$data);
 	}
 }
 

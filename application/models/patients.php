@@ -58,5 +58,14 @@ class Patients extends Doctrine_Record {
 		return $query;
 	}
 
+	public function get_patient_data($patient_id){
+		$dawa_sawa = isset($patient_id)? "WHERE id = $patient_id":NULL;
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+			SELECT * FROM patients $dawa_sawa
+			");
+
+		return $query;
+	}
+
 }
 ?>
