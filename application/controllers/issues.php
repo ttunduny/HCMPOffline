@@ -66,6 +66,13 @@ class issues extends MY_Controller {
 	 	$this -> load -> view("shared_files/template/template", $data);
 	 }
 
+
+
+	public function generate_issue_excel()
+	{
+		$this -> hcmp_functions -> clone_facility_issues_sp_template('download_file');
+	
+	}
 	public function county_store_home()
 	 {
 	 	$county_id = $this -> session -> userdata('county_id');
@@ -96,7 +103,7 @@ class issues extends MY_Controller {
 	 	$data['banner_text'] = "Redistribute Commodities To Facilities";
 	 	$data['title'] = "Redistribute Commodities";
 	 	$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_county_store($county_id);
-	 	echo "<pre>";print_r($data['commodities']);exit;
+
 	 	$data['facility_stock_data'] = json_encode(facility_stocks::get_distinct_stocks_for_this_county_store($county_id,"batch_data"));
 	 	$this -> load -> view("shared_files/template/template", $data);
 	 }
@@ -771,7 +778,7 @@ class issues extends MY_Controller {
 		$data['title'] ="Confirm Redistribution";	
 		$data['banner_text'] = "Confirm Redistribution";
 		$data['redistribution_data']=redistribution_data::get_all_active_drug_store($district_id,$editable_);
-		// echo "<pre>";print_r($district_id);echo "</pre>";exit;
+		// echo "<pre>";print_r($data['redistribution_data']);echo "</pre>";exit;
 		$data['editable']=$editable_;
 		$data['content_view'] = "subcounty/drug_store/drug_store_redistribute_items_confirmation_v";
 		$this -> load -> view("shared_files/template/template", $data);		
@@ -911,12 +918,52 @@ class issues extends MY_Controller {
 	}//confirm the external issue
 
 	public function confirm_external_issue($editable = null) {
-		$facility_code = $this -> session -> userdata('facility_id');
+		$facility_code = $this -> session -> userdata('facility_id');		
 		$data['title'] = "Confirm Redistribution";
 		$data['banner_text'] = "Confirm Redistribution";
 		$data['redistribution_data'] = redistribution_data::get_all_active($facility_code, $editable);
 		$data['editable'] = $editable;
 		$data['content_view'] = "facility/facility_issues/facility_redistribute_items_confirmation_v";
+		$this -> load -> view("shared_files/template/template", $data);
+	}
+
+	public function delete_redistribution($id){
+		$redistribution_data = redistribution_data::get_one($id);
+		foreach ($redistribution_data as $key => $value) {
+			$quantity_sent = intval($value['quantity_sent']);
+			$stock_id = $value['stock_id'];
+			$stock_data = facility_stocks::get_facilty_stock_id($stock_id);			
+			foreach ($stock_data as $keys => $values) {
+				$current_balance = intval($values['current_balance']);
+				$new_balance = $current_balance+$quantity_sent;
+				$update_array = array('id'=>$stock_id,'current_balance'=>$new_balance);
+				$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection();
+				$inserttransaction -> execute("UPDATE `facility_stocks` SET `current_balance` = '$new_balance' WHERE id= '$stock_id'");
+				$inserttransaction -> execute("UPDATE `redistribution_data` SET `status` = '5' WHERE id= '$id'");
+				$this -> session -> set_flashdata('system_success_message', "The Issue has been Deleted");
+				redirect('issues/confirm_external_issue_edit');
+			}
+
+		}
+	}
+
+	public function confirm_external_issue_edit($editable = null) {
+		$facility_code = $this -> session -> userdata('facility_id');
+		$subcounty_id = $this -> session -> userdata('district_id');		
+		$data['title'] = "Edit Redistribution";
+		$data['banner_text'] = "Edit Redistribution";
+		$data['redistribution_data'] = redistribution_data::get_all_active_edit($facility_code, $editable);
+		// $data['redistribution_data'] = redistribution_data::get_all_active($facility_code, $editable);
+		$districts_data = districts::get_district_name($subcounty_id);
+		$district_name = '';
+		foreach ($districts_data as $value) {
+			$district_name = $value->district;
+		}
+		$data['district_name']=$district_name;		
+		$data['district_id']=$subcounty_id;		
+		$data['editable'] = $editable;
+		$data['subcounties'] = districts::getAll();
+		$data['content_view'] = "facility/facility_issues/facility_redistribute_items_confirmation_edit_v";
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 

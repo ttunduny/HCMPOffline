@@ -35,9 +35,10 @@ class orders extends MY_Controller {
 	public function test_read_write_excel() {
 
 		$inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xlsx';
-
+		$inputFileType = PHPExcel_IOFactory::identify($inputFileName);
+		// echo "$inputFileType";die;		
 		$file_name = time() . '.xlsx';
-		$excel2 = PHPExcel_IOFactory::createReader('Excel5');
+		$excel2 = PHPExcel_IOFactory::createReader($inputFileType);
 		$excel2 = $objPHPExcel = $excel2 -> load($inputFileName);
 		// Empty Sheet
 
@@ -60,7 +61,7 @@ class orders extends MY_Controller {
 
 		}
 
-		$objWriter = PHPExcel_IOFactory::createWriter($excel2, 'Excel5');
+		$objWriter = PHPExcel_IOFactory::createWriter($excel2, $inputFileType);
 		$objWriter -> save("print_docs/excel/excel_files/" . $file_name);
 
 	}

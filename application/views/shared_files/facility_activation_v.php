@@ -773,7 +773,8 @@ $("#create_new").click(function() {
 		    
 		// });
 
-		$('.status_btn').click(function() {
+		// $('.status_btn').click(function() {
+		$(".dataTable").on('click','.status_btn',function(event) {
 		    if ( $(this).hasClass("activate") ) {
 		       var id = $(this).data('id');
 		   	   // alert(id);
