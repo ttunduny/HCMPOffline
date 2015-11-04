@@ -39,7 +39,7 @@
     <div class="row margin_top_sm">
 
         <div class="col-md-4">
-                <a href="<?php echo base_url().'#';?>">
+                <a href="<?php echo base_url().'home';?>">
             <div class="background_yellow dash_notifications">
                 <span class="icon-lg fa fa-tasks"></span>
                 Task(s)  
@@ -47,7 +47,7 @@
                 </a>  
         </div>
         <div class="col-md-4">
-                <a href="<?php echo base_url().'#';?>">
+                <a href="<?php echo base_url().'home';?>">
             <div class="background_purple dash_notifications">
                 <span class="icon-lg fa fa-envelope-o"></span>
                 Messages    
@@ -55,7 +55,7 @@
                 </a>
         </div>
         <div class="col-md-4">
-                <a href="<?php echo base_url().'#';?>">
+                <a href="<?php echo base_url().'home';?>">
             <div class="background_maroon dash_notifications">
                 <span class="icon-lg glyphicon glyphicon-dashboard"></span>
                 Online Users (Debatable)
