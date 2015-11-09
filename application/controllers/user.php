@@ -1227,7 +1227,7 @@ endif;
 			$two = array(
 				'title' => $subject,
 				'description' => $description,
-				'facility_code' => $facility_id; 
+				'facility_code' => $facility_id
 				);
 
 			// echo $subject . ' ' . $description;
