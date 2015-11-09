@@ -1221,12 +1221,13 @@ endif;
 		public function contact_us(){
 			$subject = "title";
 			$description = "subjects";
+			$facility_id=$this -> session -> userdata('facility_id');
 			
 			$one = array();
 			$two = array(
 				'title' => $subject,
 				'description' => $description,
-				'facility_code' => ; 
+				'facility_code' => $facility_id; 
 				);
 
 			// echo $subject . ' ' . $description;
