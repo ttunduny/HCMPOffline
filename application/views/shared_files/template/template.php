@@ -150,7 +150,7 @@ var url="<?php echo base_url(); ?>";
     </li>	 
     <?php }?>
     <li><a href="<?php echo site_url("reports/commodity_listing");?>" class="">COMMODITY LIST</a> </li>
-    <li data-toggle="modal" data-target="#contact_us" id="contact_link"><a>CONTACT US</a></li>
+    <!-- <li data-toggle="modal" data-target="#contact_us" id="contact_link"><a>CONTACT US</a></li> -->
     <li class="dropdown " id="drop-step">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user" ></span><?php echo $this -> session -> userdata('full_name');?> <b class="caret"></b></a>
       <ul class="dropdown-menu" >
