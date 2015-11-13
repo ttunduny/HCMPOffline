@@ -34,6 +34,10 @@ class Facility_stocks extends Doctrine_Record {
 		return $commodities;
 	}
 
+	public function get_current_stock_for_reversal($facility_code,$commodity_id,$batch_no){
+		$sql = "SELECT * FROM facility_stocks where facility_code = '$facility_code' and commodity_id = '$commodity_id' and batch_no='$batch_no'";
+        return $this->db->query($sql)->result_array();	
+	}
 
 	public function get_facility_batches($facility_code){
 		$current_date = date('Y-m-d',strtotime('NOW'));
