@@ -187,6 +187,7 @@
                         <li><a class="icon icon-wallet" href="#">Counties</a></li>
                         <li><a class="icon icon-wallet" href="#">Sub-Counties</a></li>
                         <li><a class="icon icon-photo" href="<?php echo base_url().'admin/report_management'?>">Report Management</a></li>
+                        <li><a class="icon icon-photo" href="<?php echo base_url().'admin/reversals'?>">Reversals</a></li>
                     </ul>
                 </nav>
 

@@ -1021,7 +1021,7 @@ class Reports extends MY_Controller {
 
 	public function generate_system_usage_temp_data()
 	{
-		$temporary_system_usage = $this->monitoring(1);
+		$temporary_system_usage = $this->monitoring(1);	
 		/////
 		$category_data = array( array("Facility Name", "Facility Code", "Sub County", "County", "Date Last Logged In","Days From Last Logged In", "Date Last Issued", "Days From Last Issue", "Date Last Redistributed","Days From Last Redistribution","Date Last Ordered","Days From Last Order","Date Last Decommissioned","Days From Last Decommission","Date Last Received Order","Days From Last Received Order"));
 		$graph_data = array_merge($graph_data, array("table_id" => 'system_usage_temp_table'));
