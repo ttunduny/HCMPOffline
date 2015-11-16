@@ -1,0 +1,121 @@
+body {
+  padding-top: 5.5em;
+  margin-bottom: 60px !important;
+}
+
+a ,u {
+	text-decoration: none !important;
+}
+	.active-panel{
+    	border-left: 6px solid #36BB24;
+    }
+    body {
+    	font-family: "Segoe UI Light","Segoe UI","Segoe WP","Helvetica Neue",sans-serif;
+}
+#mainNav {
+  background-color: white;
+  border-color: whitesmoke;
+}
+#mainNav a {
+  
+  color:black;
+}
+
+.modal-content,.form-control
+{
+  border-radius: 0 !important;
+}
+
+h4{
+	
+	padding:4px;
+	color:black;
+	background:white;
+	text-align:center;
+	margin:0;	
+	font-size:15px;
+}
+
+.stat_item {
+		height: 36px;
+		padding: 2px 5px;
+		color: #fff;
+		text-align: center;
+		font-size: 1em;
+		
+	}	
+	
+	#notify .col-md-2,.col-md-1{
+		padding:3px;
+	}
+	#notify {
+		margin-bottom: 5px;
+	}
+	.tile{
+		box-shadow:  0px 1px 5px 0px #d3d3d3;
+		background:white;
+		
+	}
+	 #coverage-map{
+		margin:0 !important;
+		padding:0 !important;
+	}
+	#map-key{
+		background-color:#FFCC99;
+		height:15px;
+		width:15px;
+	}
+	.tile h4{
+		padding: 5px;
+		background-color:#528f42;
+		color: white;
+	}
+	.btn{
+		border-radius: 0;
+	}
+	.modal-dialog {
+		
+		width: 85%;
+	}
+	.statistic{
+		display: inline-block;
+		text-align: center;
+		cursor: pointer;
+	}
+	.statistic .label{
+		color:black;
+		font-weight: 400;
+	}
+	.statistic .value{
+		font-size:1.7rem;
+		font-weight: 800;
+	}
+	.corner-label{
+		background-color: #5cb85c;
+		border-color: #4cae4c;
+		color:white;
+		text-align: center;
+		height:10%;
+		padding: 15 2 2 2;
+		width: 36;
+		margin-right:0.5%;
+		font-size:1.3rem;
+		cursor: pointer;
+	}
+	.tabs-style-bar nav ul li.tab-current a {
+	background: #4CAE4C;
+	color: #fff;
+}
+.tile-header{
+	background-color: #528f42;
+	height:25px;
+	font-size:1.3rem;
+	text-align: center;
+	font-weight: 800;
+	color:white;
+	
+}
+.tile_size{
+	height: 500px ;
+	margin-right: 0;
+}
