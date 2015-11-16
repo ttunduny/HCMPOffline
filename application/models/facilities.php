@@ -134,15 +134,9 @@ class Facilities extends Doctrine_Record {
 		$drugs = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $drugs;
 	}
-	public static function getFacilities($district,$facility_code=null){		
-		 if (isset($facility_code)) {
-			$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("facility_code !='$facility_code' and district='$district'")->OrderBy("facility_name asc");			
-
-		 }else{
-			$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");
-
-		 }
+	public static function getFacilities($district){
 		
+		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("district='$district'")->OrderBy("facility_name asc");
 		$drugs = $query -> execute();
 		return $drugs;
 	}

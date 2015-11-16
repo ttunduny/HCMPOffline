@@ -2,10 +2,8 @@
 <style type="text/css">
 	.row div p,.row-fluid div p{
 		padding:10px;
-
 	}
 	.form-control {
-
 		font-size: 12px !important;
 	}
 </style>
@@ -49,7 +47,6 @@
 						<td>
 							<select name="district[0]" class="form-control input-small district">
 								<?php 
-
 								if (isset($donate_destination)&&($donate_destination == 'district')) {
 									echo '<option value="'.$district_id.' "> '.$district_data['district'].'</option>';
 								}
@@ -149,7 +146,6 @@ $table.floatThead({
 	zIndex: 1001,
 	scrollContainer: function($table){ return $table.closest('.table-responsive'); }
 });	
-
 ///// county district facility filter 
 $('.district').on("change", function() {
 			/*
@@ -186,12 +182,10 @@ $('.district').on("change", function() {
 		});	
             ///when changing the commodity combobox
             $(".desc").on('change',function(){
-
             	var row_id=$(this).closest("tr").index();	
             	var locator=$('option:selected', this);
             	var data =$('option:selected', this).attr('special_data'); 
             	var data_array=data.split("^");	 
-
             	locator.closest("tr").find(".unit_size").val(data_array[1]);
             	locator.closest("tr").find(".supplier_name").val(data_array[2]);
             	locator.closest("tr").find(".commodity_id").val(data_array[0]);
@@ -200,7 +194,6 @@ $('.district').on("change", function() {
             	locator.closest("tr").find(".expiry_date").val("");
             	locator.closest("tr").find(".quantity_issued").val("0");
             	locator.closest("tr").find(".clone_datepicker_normal_limit_today").val("");	  
-
             	var commodity_id=data_array[0];
             	var stock_data=extract_data(data_array[0],commodity_id,'batch_data');
             	var dropdown="<option special_data=''>--select Batch--</option>"+stock_data[0];
@@ -225,7 +218,6 @@ $('.district').on("change", function() {
 		         	}
 		         });		        
 		         var remaining_items=total_stock_bal-total_issues_for_this_item;	
-
 		         locator.closest("tr").find(".manufacture").val(stock_data[4]);
 		         locator.closest("tr").find(".facility_stock_id").val(stock_data[1]);	        
 		         locator.closest("tr").find(".batch_no").html(dropdown);
@@ -290,7 +282,6 @@ $('.batch_no').on('change',function(){
 		var total_stock_bal=data_array[1];	
 		var commodity_stock_id_old=parseInt($("input[name='commodity_id["+row_id+"]']").val());
 		var facility_stock_id_current=parseInt(data_array[2]);
-
 		$("input[name='facility_stock_id["+row_id+"]']").val(data_array[2]);     	
 		        /* Check for all commodities that have the same id as the current item selected
 		         * then sum up all the issues above the given item
@@ -315,7 +306,6 @@ $('.batch_no').on('change',function(){
 		     	locator.closest("tr").find(".quantity_issued").val("0");	
 			    //locator.closest("tr").find(".manufacture").val(data_array[5]);
 			}
-
       }); // change issue type
 $(".commodity_unit_of_issue").on('change', function(){
 	$(this).closest("tr").find(".quantity_issued").val('0');
@@ -406,12 +396,10 @@ $('.remove').on('click',function(){
         	var commodity_id = selector_object.closest("tr").find(".desc").val();
         	var issue_date = selector_object.closest("tr").find(".clone_datepicker_normal_limit_today").val();
 		//var issue_quantity = selector_object.closest("tr").find(".quantity_issued").val();
-
 		var service_point=selector_object.closest("tr").find(".service_point").val();
 		var commodity_id=selector_object.closest("tr").find(".desc").val();
 		var issue_date=selector_object.closest("tr").find(".clone_datepicker_normal_limit_today").val();
 		//var issue_quantity=selector_object.closest("tr").find(".quantity_issued").val();
-
 		var facility=selector_object.closest("tr").find(".facility").val();
 		//set the message here
 		if (facility==0) {alert_message+="<li>Select a Facility First</li>";}
@@ -419,9 +407,7 @@ $('.remove').on('click',function(){
 		if (commodity_id==0) {alert_message+="<li>Select a commodity</li>";}
 		if (issue_date==0 || issue_date=='') {alert_message+="<li>Indicate the date of the issue</li>";}	
 	   // if (issue_quantity==0) {alert_message+="<li>Indicate how much you want to issue</li>";}	    
-
 	   return[alert_message,service_point,commodity_id,issue_date];	
-
 		}//extract facility_data  from the json object 		
 		function extract_data(commodity_id_,commodity_stock_row_id,type_of_drop_down){
 			var row_id=0; var dropdown='';var facility_stock_id_='';  var total_stock_bal=0; var expiry_date=manu='';
@@ -429,11 +415,9 @@ $('.remove').on('click',function(){
 				var commodity_id=facility_stock_data[i]['commodity_id'];
 				if(parseInt(commodity_id)==commodity_id_){
 				if(type_of_drop_down=='batch_data'){//check if the user option is to create a batch combobox
-
 					if(row_id==0){//if the row is 0, create a selected default value
 						
 						var facility_stock_id=facility_stock_data[i]['facility_stock_id'];	
-
 						dropdown+="<option selected='selected' "+
 						"special_data='"+facility_stock_data[i]['expiry_date']+
 						"^"+facility_stock_data[i]['store_commodity_balance']+
@@ -447,7 +431,6 @@ $('.remove').on('click',function(){
 						drug_id_current=commodity_id_;	
 						manu=facility_stock_data[i]['manufacture'];		  				 
 					}else{
-
 						dropdown+="<option "+
 						"special_data="+facility_stock_data[i]['expiry_date']+
 						"^"+facility_stock_data[i]['store_commodity_balance']+

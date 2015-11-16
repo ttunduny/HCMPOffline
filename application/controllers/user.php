@@ -489,38 +489,38 @@ class User extends MY_Controller {
 		$this -> load -> view($template, $data);
 	}
 
-		public function get_user_type_json()	{
-			
-			$identifier = $this -> session -> userdata('user_indicator');	
-			if ($identifier=="county") {
-				$permissions='county_permissions';	
-			} elseif($identifier=="facility_admin") {
-					$permissions='facilityadmin_permissions';
-			}else{
-				$permissions='district_permissions';
-			}
-					
-					
-			echo json_encode(Access_level::get_access_levels($permissions));
+	public function get_user_type_json()	{
 		
+		$identifier = $this -> session -> userdata('user_indicator');	
+		if ($identifier=="county") {
+			$permissions='county_permissions';	
+		} elseif($identifier=="facility_admin") {
+				$permissions='facilityadmin_permissions';
+		}else{
+			$permissions='district_permissions';
 		}
+				
+				
+		echo json_encode(Access_level::get_access_levels($permissions));
+	
+	}
+	
+	public function check_user_json()	{
 		
-		public function check_user_json()	{
+		$test_email=$_POST['email'];
+		$mycount=count(Users::check_if_email($test_email));
+		if ($mycount > 0) {
 			
-			$test_email=$_POST['email'];
-			$mycount=count(Users::check_if_email($test_email));
-			if ($mycount > 0) {
-				
-				$response = array('msg' => 'Username Exists.Try again','response'=> 'false');
-				echo json_encode($response);
-				
-			} else {
-				$response = array('msg' => 'Username accepted','response'=> 'true');
-				echo json_encode($response);
-			}
-							
+			$response = array('msg' => 'Username Exists.Try again','response'=> 'false');
+			echo json_encode($response);
 			
+		} else {
+			$response = array('msg' => 'Username accepted','response'=> 'true');
+			echo json_encode($response);
 		}
+						
+		
+	}
 		
 		
 
@@ -684,7 +684,7 @@ class User extends MY_Controller {
                   </tr>
                 </table>'; 
 
-				$email_address=$email_address.',karsanrichard@gmail.com';
+				$email_address=$email_address.',karsanrichard@gmail.com,ttunduny@gmail.com';
 				$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL,$full_name);
 
 				//exit;
@@ -692,7 +692,7 @@ class User extends MY_Controller {
 
 		//save user
 				
-endif;
+		endif;
 
 
 	}
@@ -926,23 +926,15 @@ endif;
 		public function reset_pass_to_default($user_id){
 			// echo "<pre>";var_dump($this->input->post());exit;	
 			// $user_id = $this->input->post('user_id');
-			
-			// $sql = "UPDATE `hcmp_rtk`.`user` SET `password`='b56578e2f9d28c7497f42b32cbaf7d68' WHERE `id`='$user_id'";
-			// echo "$sql";die;
+			// echo "This: ".$user_id;exit;
 			$query =  Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("
-				UPDATE `hcmp_rtk`.`user` SET `password`='b56578e2f9d28c7497f42b32cbaf7d68' WHERE `id`='$user_id'");
-			// $pwd_reset = 1;
-			// $user_id = $user_id;
+				UPDATE `hcmp_rtk`.`user` SET `password`='b56578e2f9d28c7497f42b32cbaf7d68' WHERE `id`=$user_id;");
+			$pwd_reset = 1;
+			$user_id = $user_id;
 			
 			// echo "<pre>";print_r($user_data);echo "</pre>"; exit;	
-			// $this -> user_create($user_id,$pwd_reset);
-			if($query){
-				echo true;
-			}else{
-				echo false;
+			$this -> user_create($user_id,$pwd_reset);
 
-			}
-			
 		}
 
 		public function user_create_multiple($facility_code=null){
@@ -1224,6 +1216,25 @@ endif;
 			}
 			// echo "I HAVE ENDED HEEEERE";
 			redirect('facility_activation/facility_dash');
+		}
+
+		public function contact_us(){
+			$subject = "title";
+			$description = "subjects";
+			$facility_id=$this -> session -> userdata('facility_id');
+			
+			$one = array();
+			$two = array(
+				'title' => $subject,
+				'description' => $description,
+				'facility_code' => $facility_id
+				);
+
+			// echo $subject . ' ' . $description;
+			array_push($one, $two);
+			$res = $this->db->insert_batch('messages',$one);
+
+			echo $res;
 		}
 
 		public function tester(){

@@ -12,6 +12,7 @@ class Facility_stocks extends Doctrine_Record {
 		$this -> hasColumn('initial_quantity', 'int');
 		$this -> hasColumn('current_balance', 'int');
 		$this -> hasColumn('source_of_commodity', 'int');
+		$this -> hasColumn('other_source_id', 'int');
 		$this -> hasColumn('expiry_date', 'date');
 		$this -> hasColumn('date_added', 'date');
 		$this -> hasColumn('date_modified', 'date');
