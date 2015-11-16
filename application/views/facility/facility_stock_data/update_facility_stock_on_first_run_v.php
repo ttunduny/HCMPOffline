@@ -69,7 +69,9 @@
                     <th> Supplier</th>
                     <th> Unit Size</th>
                     <th> Batch No</th>
-                    <!-- <th> Source of Item</th> -->
+                    <th> Source of Item</th>
+                    <th> Source Name</th>
+                    <th> Price</th>
                     <th> Manufacturer</th>
                     <th> Expiry Date</th>
                     <th> Issue Type</th>
@@ -109,19 +111,25 @@
                     <td>
                     <input  style="width:80px !important;" class='form-control input-small commodity_batch_no' required="required" data-val="true" name='commodity_batch_no[]' type='text'/>
                     </td>
-                  <!--   <td> -->
-                    <input  style="width:80px !important;" class='form-control input-small source_of_item' name='source_of_item[]' type='hidden'/>
+                    <td>
+                    <!-- <input  style="width:80px !important;" class='form-control input-small source_of_item' name='source_of_item[]' type='hidden'/> -->
 
-                    <!-- <select style="width:95px !important;" class="form-control input-small source_of_item" name="source_of_item[]">
+                    <select style="width:95px !important;" class="form-control input-small source_of_item" name="source_of_item[]">
                         <?php
-                        //foreach ($commodity_source as $commodity_source) {
-                            //$id = $commodity_source -> id;
-                            //$commodity_source_name = $commodity_source -> source_name;
-                            //echo "<option value='$id'>$commodity_source_name</option>";
-                        //}
+                        foreach ($commodity_source as $commodity_source) {
+                            $id = $commodity_source -> id;
+                            $commodity_source_name = $commodity_source -> source_name;
+                            echo "<option value='$id'>$commodity_source_name</option>";
+                        }
                         ?>
-                    </select> -->
-                    <!-- </td> -->
+                    </select> 
+                    </td> 
+                    <td>
+                        <input style="width:70px;" name="new_source_name[]" id="new_source_name" class="form-control new_source_name" />
+                    </td>
+                    <td>
+                        <input style="width:70px;" name="price[]" id="price" class="form-control price" type="number" readonly />
+                    </td>
                     <td>
                     <input style="width:70px !important;" id='commodity_manufacture' required="required" class="form-control commodity_manufacture input-small"
                     name='commodity_manufacture[]' type='text' value=""  data-val="true"/>
@@ -130,7 +138,7 @@
                     <input  style="width:90px !important;" class='form-control input-small clone_datepicker' required="required"  data-val="true" name='clone_datepicker[]' type='text' />
                     </td>
                     <td>
-                    <select style="width:80px !important;"name="commodity_unit_of_issue[]" class="form-control commodity_unit_of_issue input-small">
+                    <select style="width:80px !important;" name="commodity_unit_of_issue[]" class="form-control commodity_unit_of_issue input-small">
                         <option value="Pack_Size">Packs</option>
                         <option value="Unit_Size">Units</option>
                     </select></td>
@@ -176,7 +184,14 @@
         <?php endif; ?>
     </div>
 </div>
-
+<?php 
+    $array_length = count($source_names);
+    $other_sources = array();
+    for($i = 0; $i<$array_length; $i++){
+        $other_sources[$i] = $source_names[$i]['source_name'];
+    }
+    $other_sources_json = json_encode($other_sources);
+?>
     <script type="text/javascript">
         $(document).ready(function() {
         	window.onbeforeunload = function() {
@@ -196,7 +211,42 @@
                      });
 
              }, 000);
-                    
+        $(".price").attr('disabled',true);
+        $(".price").val('');
+        $(".new_source_name").attr('disabled',true);
+        $(".source_of_item").on('change', function(){
+                var source_places = $(this).closest('tr').find('.source_of_item').val();
+                
+                if(source_places != 3){
+                    $(this).closest('tr').find('.new_source_name').attr("readonly", true);
+                    $(this).closest('tr').find('.new_source_name').attr("disabled", true);
+                    $(this).closest('tr').find('.new_source_name').attr("required", false);
+                    $(this).closest('tr').find('.price').attr("readonly", true);
+                    $(this).closest('tr').find('.price').attr("disabled", true);
+                    $(this).closest('tr').find('.price').val('');
+                    $(this).closest('tr').find('.pirce').attr("required", false);
+                }
+                else{
+                    $(this).closest('tr').find('.new_source_name').attr("readonly", false);
+                    $(this).closest('tr').find('.new_source_name').attr("required", true);
+                    $(this).closest('tr').find('.new_source_name').removeAttr('disabled');
+                    $(this).closest('tr').find('.price').removeAttr('disabled');
+                    $(this).closest('tr').find('.price').removeAttr('readonly');
+                    $(this).closest('tr').find('.price').attr("required", true);
+                    $(this).closest('tr').find('.price').val('0');
+                    //$(this).closesr('tr').find('.new_source_name').attr("autocomplete", true);
+                }
+        });
+        // $(".new_source_name").keyup(function(){
+        //     // var source = $(this).closest('tr').find('.new_source_name').val();
+        //     $(this).closest('tr').find('.new_source_name').autocomplete({
+        //         source: <?php echo $other_sources_json ?>
+        //     });  
+        // });
+        // $('.new_source_name').autocomplete({
+        //     source: <?php echo $other_sources_json ?>
+        // });   
+
         var $table = $('table');
         //float the headers
         $table.floatThead({
@@ -297,6 +347,7 @@
             ////when the user clicks add a row
             $(".add").on('click',function(){
             /////update the record
+
             var selector_object=$("#facility_stock_table tr:last");
             var url = "<?php echo base_url('stock/autosave_update_stock')?>";
             var temp_data=send_data_to_the_temp_table(selector_object);
@@ -317,7 +368,8 @@
             ajax_simple_post_with_console_response(url, temp_data[0]);  /// uncomment this
             }
             clone_the_last_row_of_the_table();
-
+            $(".price").attr('disabled',true);            
+            $(".new_source_name").attr('disabled',true);
             });
             $('.commodity_available_stock').on('keyup',function(){
             //get the value of the input
@@ -546,6 +598,10 @@
 
             clone_datepicker.attr("id", clone_datepicker_id);
             clone_datepicker.attr("name", "clone_datepicker["+next_table_row+"]");
+
+            $('.new_source_name').autocomplete({
+                source: <?php echo $other_sources_json ?>
+            });  
 
             // remove the error class
             cloned_object.find("label.error").remove();

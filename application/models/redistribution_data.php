@@ -1,3 +1,4 @@
+
 <?php
 
 class redistribution_data extends Doctrine_Record {
@@ -169,5 +170,29 @@ class redistribution_data extends Doctrine_Record {
 
 	return $query;	
 	}
+
+    public static function get_redistribution_mismatches_count($facility_code){
+        $mismatch_count = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+            SELECT COUNT(*) AS ms_count
+            FROM redistribution_data rd
+            WHERE (rd.quantity_received < rd.quantity_sent OR rd.quantity_received > rd.quantity_sent)
+            AND rd.source_facility_code = '$facility_code';
+        ");
+        $count = 0;
+        foreach ($mismatch_count as $key => $value) {
+            $count = $value['ms_count'];
+        }
+        return $count;
+    }
+
+    public static function get_redistribution_mismatches($facility_code){
+        $mismatch_data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+            SELECT * 
+            FROM redistribution_data rd
+            WHERE (rd.quantity_received < rd.quantity_sent OR rd.quantity_received > rd.quantity_sent)
+            AND rd.source_facility_code = '$facility_code';
+        ");
+        return $mismatch_data;
+    }
 }
 ?>

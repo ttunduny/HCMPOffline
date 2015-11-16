@@ -33,7 +33,7 @@ font-size: 12px !important;
 	<table  class="table table-hover table-bordered table-update" id="facility_issues_table" >
 					<thead style="background-color: white">
 					<tr>
-						<th>S11</th>
+						<th>S11 This One</th>
 						<th>Service Point</th>
 						<th>Description</th>
 						<th>Supplier</th>

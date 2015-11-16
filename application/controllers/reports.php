@@ -320,6 +320,15 @@ class Reports extends MY_Controller {
 		$data['banner_text'] = "Facility Stock Out Summary";
 		$this -> load -> view("shared_files/template/template", $data);
 	}
+
+	public function redistribution_mismatches(){
+		$facility_code = $this -> session -> userdata('facility_id');
+		$data['redistribution_data'] = redistribution_data::get_redistribution_mismatches($facility_code);
+		$data['title'] = "Redistribution Mismatches";
+		$data['content_view'] = "facility/facility_reports/facility_redistribution_mismatches_v";
+		$data['banner_text'] = "Redistribution Mismatches Summary";
+		$this -> load -> view("shared_files/template/template", $data);
+	}
 	public function order_delivery($order_id) {
 		$test = $this -> hcmp_functions -> create_order_delivery_color_coded_table($order_id);
 		$data['content_view'] = "facility/facility_orders/view_order_delivery_details_v";

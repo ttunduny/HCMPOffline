@@ -203,6 +203,8 @@ class Home extends MY_Controller
 	$facility_donations=redistribution_data::get_all_active($facility_code)->count();
 	//get items they have been donated and are pending
 	$facility_donations_pending=redistribution_data::get_all_active($facility_code,"to-me")->count();
+	//get redistribution mismatch data
+	$facility_redistribution_mismatches = redistribution_data::get_redistribution_mismatches_count($facility_code);
 	//get stocks from v1
 	$stocks_from_v1=0;
 	if($facility_stock_count==0 && $facility_donations==0 && $facility_donations_pending==0 ){
@@ -215,7 +217,8 @@ class Home extends MY_Controller
 	'potential_expiries'=>$potential_expiries,
 	'actual_expiries'=>$actual_expiries,
 	'facility_donations'=>$facility_donations,
-	'facility_donations_pending'=>$facility_donations_pending//,'stocks_from_v1'=>$stocks_from_v1
+	'facility_donations_pending'=>$facility_donations_pending,//,'stocks_from_v1'=>$stocks_from_v1
+	'facility_redistribution_mismatches'=>$facility_redistribution_mismatches
 	);	
     }
 	public function tester(){

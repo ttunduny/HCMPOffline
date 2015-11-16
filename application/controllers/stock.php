@@ -187,6 +187,7 @@ class Stock extends MY_Controller {
 		$data['banner_text'] = "Update Stock Level";
 		$data['commodities'] = Commodities::get_facility_commodities($facility_code);
 		$data['commodity_source'] = commodity_source::get_all();
+		$data['source_names'] = commodity_source::get_all_other_source_names();
 		$data['import'] = $import;
 		$this -> load -> view("shared_files/template/template", $data);
 
@@ -362,8 +363,31 @@ class Stock extends MY_Controller {
 
 	// finally add the stock here, the final step to the first step of new facilities getting on board
 	public function add_stock_level() {
-
+		//echo "<pre>"; print_r($_POST); echo "</pre>"; exit;
 		if ($this -> input -> post('commodity_id')) :
+			if($this->input->post('new_source_name')){
+				$source_name = $this->input->post('new_source_name');
+				$name_exists = commodity_source::check_name_exists($source_name);
+				$other_source_id = array();
+				if($name_exists == 1){
+					$other_source_id = commodity_source::find_source_id($source_name);
+					/*for($i = 0; $i < count($other_source_id); $i++){
+						$other_source_id[$i] = commodity_source::find_source_id($source_name);
+					}*/
+					//print_r($other_source_id);
+					//exit;
+				}
+				else{
+					$insert_name_trans = Doctrine_Manager::getInstance()->getCurrentConnection();
+					$insert_name_trans->execute("INSERT INTO commodity_source_other(source_name) VALUES ('$source_name')");
+					$other_source_id = $insert_name_trans->lastInsertId();
+					/*for($i = 0; $i < count($other_source_id); $i++){
+						$other_source_id[$i] = $insert_name_trans->lastInsertId();
+					}*/
+					//print_r($other_source_id);
+					//exit;
+				}
+			}
 			$facility_code = $this -> session -> userdata('facility_id');
 			$form_type = $this -> input -> post('form_type');
 			$commodity_id = array_values($this -> input -> post('desc'));
@@ -373,8 +397,8 @@ class Stock extends MY_Controller {
 			$manu = array_values($this -> input -> post('commodity_manufacture'));
 			$total_unit_count = array_values($this -> input -> post('commodity_total_units'));
 			$source_of_item = array_values($this -> input -> post('source_of_item'));
+			$commodity_price = array_values($this -> input-> post('price'));
 			$date_of_entry_ = ($form_type == 'first_run') ? date('y-m-d H:i:s') : array_values($this -> input -> post('date_received'));
-
 			$count = count($commodity_id);
 			$commodity_id_array = $data_array_facility_issues = $data_array_facility_transaction = array();
 
@@ -383,8 +407,16 @@ class Stock extends MY_Controller {
 				$status = ($total_unit_count[$i] > 0) ? true : false;
 				$status = ($status && strtotime(str_replace(",", " ", $expiry_date[$i])) > strtotime('now')) ? 1 : 2;
 				$date_of_entry = ($form_type == 'first_run') ? date('y-m-d H:i:s') : date('Y-m-d', strtotime($date_of_entry_[$i]));
-				$mydata = array('facility_code' => $facility_code, 'commodity_id' => $commodity_id[$i], 'batch_no' => $batch_no[$i], 'manufacture' => $manu[$i], 'expiry_date' => date('y-m-d', strtotime(str_replace(",", " ", $expiry_date[$i]))), 'initial_quantity' => $total_unit_count[$i], 'current_balance' => $total_unit_count[$i], 'source_of_commodity' => $source_of_item[$i], 'date_added' => $date_of_entry, 'status' => $status);
-
+				$mydata = array('facility_code' => $facility_code, 'commodity_id' => $commodity_id[$i], 'batch_no' => $batch_no[$i], 'manufacture' => $manu[$i], 'expiry_date' => date('y-m-d', strtotime(str_replace(",", " ", $expiry_date[$i]))), 'initial_quantity' => $total_unit_count[$i], 'current_balance' => $total_unit_count[$i], 'source_of_commodity' => $source_of_item[$i], 'other_source_id' => $other_source_id[$i], 'date_added' => $date_of_entry, 'status' => $status);
+				//echo "<pre>"; print_r($mydata); echo "</pre>";	
+				if($this -> input -> post('price')):
+					$price_data = array('facility_code' => $facility_code, 'commodity_id' => $commodity_id[$i], 'batch_no' => $batch_no[$i], 'other_source_id' => $other_source_id[$i], 'price' => $commodity_price[$i]);
+					//echo "<pre>"; print_r($price_data); echo "</pre>"; exit;
+					commodity_source_other_prices::update_prices($price_data);
+					/*$store_price_transaction = Doctrine_Manager::getInstance() -> getCurrentConnection();
+					$store_price_transaction -> execute("INSERT INTO commodity_source_other_prices(facility_code, commodity_id,
+						batch_no, other_source_id, price) VALUES ('$facility_code', '$commodity_id[$i]', '$batch_no[$i]', '$other_source_id', '$commodity_price[$i]')");*/
+				endif;
 				//get the closing stock of the given item
 				$facility_stock_ = facility_stocks::get_facility_commodity_total($facility_code, $commodity_id[$i], $date_of_entry) -> toArray();
 				//update the facility stock table
@@ -393,7 +425,7 @@ class Stock extends MY_Controller {
 				$facility_has_commodity = facility_transaction_table::get_if_commodity_is_in_table($facility_code, $commodity_id[$i]);
 
 				$total_unit_count_ = $total_unit_count[$i] * 1;
-
+				
 				if ($facility_has_commodity > 0 && $status == 1) :
 					//update the opening balance for the transaction table
 					$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection();

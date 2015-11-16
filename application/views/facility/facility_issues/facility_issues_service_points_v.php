@@ -241,8 +241,24 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 			var row_id=$(this).closest("tr").index();
 		    var locator=$('option:selected', this);
 			var data =$('option:selected', this).attr('special_data'); 
-	       	var data_array=data.split("^");	
-	       	console.log(data_array);
+	       	var data_array=data.split("^");
+	       	//Get the date of the currently selected option
+	       	var largest_date = $(".batch_no_specific").attr("special_data").index(0);
+	       	var largest_data_array = data.split("^");
+	       	console.log(largest_data_array);
+	       	var large_date = data_array[0];
+	       	//console.log(large_date);
+	       	/*$('option:selected', this).on("change",function(){
+	       		var new_data = $(this).attr('special_data');
+	       		var new_data_array = new_data.split("^");
+	       		console.log(new_data_array);
+	       	});*/
+	       	var no_of_batches = $(".batch_no_specific").size();
+	       	//console.log(no_of_batches);
+	       	//console.log(data_array);
+	       	/*for(var i = 0; i < data_array.length; i++){
+	       		console.log(data_array[0]);
+	       	}*/
 	       if(data_array[0]!=''){
 	       	var new_date=$.datepicker.formatDate('d M yy', new Date(data_array[0]));
 	       	var total_issues=0;	       
@@ -279,8 +295,7 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 			    locator.closest("tr").find(".available_stock").val("0");
 			     locator.closest("tr").find(".total_commodity_bal").val(total_commodity_bal);
 			    locator.closest("tr").find(".quantity_issued").val("0");	
-			    }
-			  			
+			    }  			
       }); // change issue type
         $(".commodity_unit_of_issue").on('change', function(){
           $(this).closest("tr").find(".quantity_issued").val('0');
@@ -401,7 +416,7 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 				if(type_of_drop_down=='batch_data'){//check if the user option is to create a batch combobox
 					if(row_id==0){//if the row is 0, create a selected default value
 					var facility_stock_id=facility_stock_data[i]['facility_stock_id'];	
-			  		dropdown+="<option selected='selected'"+
+			  		dropdown+="<option selected='selected'"+ "class='batch_no_specific'" + 
 			  		 "special_data="+facility_stock_data[i]['expiry_date']+
 			  		 "^"+facility_stock_data[i]['commodity_balance']+
 			  		 "^"+facility_stock_data[i]['facility_stock_id']+
@@ -413,14 +428,16 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 			  				 total_commodity_balance=total_commodity_balance+parseInt(facility_stock_data[i]['commodity_balance']);
 			  				 drug_id_current=commodity_id_;			  				 
 			  			}else{
-			  		dropdown+="<option "+
+			  		dropdown+="<option "+ "class='batch_no_specific'" + 
 			  		 "special_data="+facility_stock_data[i]['expiry_date']+
 			  		 "^"+facility_stock_data[i]['commodity_balance']+
 			  		 "^"+facility_stock_data[i]['facility_stock_id']+
 			  		 "^"+facility_stock_data[i]['commodity_balance']+">";	 
 			  			total_stock_bal=facility_stock_data[i]['commodity_balance'];
-			  			total_commodity_balance= total_commodity_balance + parseInt(facility_stock_data[i]['commodity_balance']);}			  			
-						dropdown+=facility_stock_data[i]['batch_no'];						
+			  			total_commodity_balance= total_commodity_balance + parseInt(facility_stock_data[i]['commodity_balance']);
+			  		}			  			
+						dropdown+=facility_stock_data[i]['batch_no'];
+						//dropdown+="data-date="+facility_stock_data[i]['expiry_date'];						
 						dropdown+="</option>";}
 			row_id++; //auto-increment the checker
 			}
