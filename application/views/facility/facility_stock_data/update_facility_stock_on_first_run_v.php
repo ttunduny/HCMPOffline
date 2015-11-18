@@ -522,6 +522,8 @@
             var stock_level=selector_object.closest("tr").find('.commodity_available_stock').val();
             var unit_count=selector_object.closest("tr").find('.commodity_total_units').val();
             var commodity_unit_of_issue=selector_object.closest("tr").find('.commodity_unit_of_issue').val();
+            var source_name=selector_object.closest("tr").find('.new_source_name').val();
+            var price=selector_object.closest("tr").find('.price').val();
             var supplier=data_array[1];
             var data="&commodity_id="+data_array[0]+"&unit_size="
             +unit_size+" &batch_no="+commodity_batch_noo+"&manuf="+commodity_manufacture+
@@ -533,7 +535,7 @@
             "&source_of_item="+source_of_item+
             "&supplier="+supplier;
 
-            return [data, data_ ,commodity_batch_noo,commodity_manufacture,clone_datepicker,stock_level,data_array[0]];
+            return [data, data_ ,commodity_batch_noo,commodity_manufacture,clone_datepicker,stock_level,data_array[0],source_of_item,source_name,price];
             }
 
             function check_if_the_form_has_been_filled_correctly(selector_object){
@@ -554,6 +556,15 @@
             if(temp_data[5]==''){
             alert_message +="<li><b>Please Indicate the stock level of the commodity.<b></li>";
             }
+            if(temp_data[7]==3){
+                if(temp_data[8]==''){
+                 alert_message +="<li><b>Please Indicate the Source Name.<b></li>";
+                }
+                if(temp_data[9]==''){
+                 alert_message +="<li><b>Please Indicate the Price.<b></li>";
+                }
+            }
+            
             return alert_message;
             }
             function  clone_the_last_row_of_the_table(){
