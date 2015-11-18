@@ -210,6 +210,16 @@ class Home extends MY_Controller
 	if($facility_stock_count==0 && $facility_donations==0 && $facility_donations_pending==0 ){
 	//$stocks_from_v1=count(facility_stocks::import_stock_from_v1($facility_code));	
 	}
+	// return array('facility_stock_count'=>$facility_stock_count,
+	// 'faciliy_stock_graph'=>$faciliy_stock_data,
+	// 'items_stocked_out_in_facility'=>$items_stocked_out_in_facility,
+	// 'facility_order_count'=>$facility_order_count,
+	// 'potential_expiries'=>$potential_expiries,
+	// 'actual_expiries'=>$actual_expiries,
+	// 'facility_donations'=>$facility_donations,
+	// 'facility_donations_pending'=>$facility_donations_pending,//,'stocks_from_v1'=>$stocks_from_v1
+	// 'facility_redistribution_mismatches'=>$facility_redistribution_mismatches
+	// );	
 	return array('facility_stock_count'=>$facility_stock_count,
 	'faciliy_stock_graph'=>$faciliy_stock_data,
 	'items_stocked_out_in_facility'=>$items_stocked_out_in_facility,
@@ -217,8 +227,7 @@ class Home extends MY_Controller
 	'potential_expiries'=>$potential_expiries,
 	'actual_expiries'=>$actual_expiries,
 	'facility_donations'=>$facility_donations,
-	'facility_donations_pending'=>$facility_donations_pending,//,'stocks_from_v1'=>$stocks_from_v1
-	'facility_redistribution_mismatches'=>$facility_redistribution_mismatches
+	'facility_donations_pending'=>$facility_donations_pending,//,'stocks_from_v1'=>$stocks_from_v1	
 	);	
     }
 	public function tester(){
