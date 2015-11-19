@@ -63,7 +63,9 @@
               <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
               	<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-user"></span>Essential Commodities</a></li>
                 <li role="presentation" class="divider"></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://41.89.6.223/HCMP/user"><span class="glyphicon glyphicon-user"></span>RTK</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://41.89.6.223/RTK/user"><span class="glyphicon glyphicon-user"></span>RTK</a></li>
+                <li role="presentation" class="divider"></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://41.89.6.209/sms_system"><span class="glyphicon glyphicon-user"></span>SMS System</a></li>
                 
               </ul>
             </li>
@@ -198,13 +200,10 @@
 
 			<div class="row-fluid">
 
-				<div class="tile col-xs-12 col-md-6 col-lg-6 ">
+				<div class="tile col-xs-12 col-md-6 col-lg-6">
+					<div class="tile-header">Cost of Orders</div>
 					
-					<div class="tile-header">
-							Stock Level in Months of Stock (MOS)
-						</div>
-					
-					<div id="mos" class="tile_size"></div> <!--- MOS -->
+					<div id="orders" class="tile_size"></div> <!--- orders -->
 					
 				</div>
 				
@@ -219,13 +218,16 @@
 			
 			<div class="row-fluid" style="max-height: 430px;margin-top: 4%;">
 
-				<div class="tile col-xs-12 col-md-6 col-lg-6">
-					<div class="tile-header">Cost of Orders</div>
+				<div class="">
 					
-					<div id="orders" class="tile_size"></div> <!--- orders -->
+					<div class="tile-header">
+							Stock Level in Months of Stock (MOS)
+						</div>
+					
+					<div id="mos" class="tile_size"></div> <!--- MOS -->
 					
 				</div>
-				
+<!-- 				
 				<div class="tile col-xs-12 col-md-6 col-lg-6">
 					<div class="tile-header" >Order Lead Time</div>
 					
@@ -235,10 +237,10 @@
 
 
       				 </div>
-					</div> <!--- orders -->
+					</div>
 					
 				</div>
-
+ -->
 			</div>
 
 		</div>

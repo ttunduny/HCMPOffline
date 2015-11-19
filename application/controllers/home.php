@@ -160,8 +160,7 @@ class Home extends MY_Controller
     {
     //format the graph here
     $facility_code=$this -> session -> userdata('facility_id'); 
-    $facility_stock_=facility_stocks::get_facility_stock_amc($facility_code);
-
+    $facility_stock_=facility_stocks::get_facility_stock_amc($facility_code);   
 	$facility_stock_count=count($facility_stock_);
     $graph_data=array();
 	$graph_data=array_merge($graph_data,array("graph_id"=>'container'));
@@ -173,9 +172,10 @@ class Home extends MY_Controller
 	$graph_data=array_merge($graph_data,array("series_data"=>array("Current Balance"=>array(),"AMC"=>array())));
 	$graph_data['stacking']='normal';
 	foreach($facility_stock_ as $facility_stock_):
-		$graph_data['graph_categories']=array_merge($graph_data['graph_categories'],array($facility_stock_['commodity_name']));	
+		$category_name = $facility_stock_['commodity_name'].' ('.$facility_stock_['source_name'].')';
+		$graph_data['graph_categories']=array_merge($graph_data['graph_categories'],array($category_name));	
 		$graph_data['series_data']['Current Balance']=array_merge($graph_data['series_data']['Current Balance'],array((float) $facility_stock_['pack_balance']));
-        $graph_data['series_data']['AMC']=array_merge($graph_data['series_data']['AMC'],array((float) $facility_stock_['amc']));	
+        // $graph_data['series_data']['AMC']=array_merge($graph_data['series_data']['AMC'],array((float) $facility_stock_['amc']));	
 
 	endforeach;
 	//echo "<pre>";print_r($facility_stock_);echo "</pre>";exit;

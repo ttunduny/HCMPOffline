@@ -23,6 +23,7 @@
 						<th>Commodity&nbsp;Code</th>
 						<th>In Use?</th>	
 						<th>Unit Size</th>
+						<th>Source</th>
 						<th>Issue Type</th>
 					    <th>Average&nbsp;Monthly&nbsp;Consumption&nbsp; </th>
 					    <th>Total&nbsp;Units</th>
@@ -41,6 +42,7 @@
 	   <td>$facility_commodities[commodity_code]</td>
 	   <td><input type='checkbox' class='checkbox'  $status/></td>
 	   <td>$facility_commodities[unit_size]</td>
+	   <td>$facility_commodities[source_name]</td>
 	   <td><select class='form-control commodity_unit_of_issue input-small' name='commodity_unit_of_issue[]'>
 			<option value='Pack_Size' $pack_size>Pack Size</option>
 			<option value='Unit_Size' $unit_size>Unit Size</option>

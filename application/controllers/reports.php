@@ -1,4 +1,4 @@
-f<?php
+<?php
 /**
  * @author Kariuki & Collins & Mureithi
  */
@@ -69,8 +69,8 @@ class Reports extends MY_Controller {
 	 */
 	//Default function for all non functioning parts of the system
 	public function work_in_progress() {
-		$data['title'] = "Work In Progress";
-		$data['banner_text'] = "Work In Progress";
+		$data['title'] = "MEDS Orders";
+		$data['banner_text'] = "MEDS Orders";
 		$data['content_view'] = "shared_files/work_in_progress";
 		$view = 'shared_files/template/template';
 		$this -> load -> view($view, $data);
@@ -99,7 +99,16 @@ class Reports extends MY_Controller {
 	}
 	public function get_facilities() {
 		$district = $_POST['district'];
-		$facilities = Facilities::getFacilities($district);
+		$user_indicator = $this -> session -> userdata('user_indicator') ;
+		if(($user_indicator=='facility')||($user_indicator=='facility_admin')){
+			$facility_code = $this -> session -> userdata('facility_id') ;
+			$facilities = Facilities::getFacilities($district,$facility_code);
+
+		}else{
+			$facilities = Facilities::getFacilities($district);
+
+		}
+		
 		$list = "";
 		foreach ($facilities as $facilities) {
 			$list .= $facilities -> facility_code;
@@ -144,6 +153,7 @@ class Reports extends MY_Controller {
 		$facility_code = $this -> session -> userdata('facility_id');
 		// echo $facility_code;exit;
 		$data['title'] = "Reports";
+		$data['banner_text'] = "Potential Expiries";
 		$data['content_view'] = "facility/facility_reports/reports_v";
 		$data['facility_code'] = $facility_code;
 		$view = 'shared_files/template/template';
@@ -344,14 +354,15 @@ class Reports extends MY_Controller {
 		//get order information from the db
 		$facility_order_count_ = facility_orders::get_facility_order_summary_count($facility_code, $district_id, $county_id);
 		$facility_order_count = array();
-		//echo "<pre>";	print_r($facility_order_count_);exit;
+		// echo "<pre>";	print_r($facility_order_count_);exit;
 		foreach ($facility_order_count_ as $facility_order_count_) {
 			$facility_order_count[$facility_order_count_['status']] = (int)$facility_order_count_['total'];
 		}
 		$data['order_counts'] = $facility_order_count;
+		// echo "<pre>";	print_r($facility_order_count);exit;
 		$data['delivered'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "delivered");
 		$data['pending_all'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_all");
-		// echo "<pre>";	print_r($data['pending_all']);exit;
+		// echo "<pre>"; print_r($data['pending_all']);exit;
 		$data['pending_cty'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "pending_cty");
 		$data['approved'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "approved");
 		$data['rejected'] = facility_orders::get_order_details($facility_code, $district_id, $county_id, "rejected");
@@ -371,6 +382,8 @@ class Reports extends MY_Controller {
 			$data['banner_text'] = $desc;
 			$data['content_view'] = "facility/facility_orders/order_listing_v";
 		endif;
+		// echo "<pre>";	print_r($data);exit;
+
 		$this -> load -> view('shared_files/template/template', $data);
 	}
 	public function create_excel_facility_stock_template() {
@@ -2227,7 +2240,72 @@ class Reports extends MY_Controller {
 	 | COUNTY SUB-COUNTY dashboard                                              |
 	 |--------------------------------------------------------------------------|
 	 */
-	public function expiries_dashboard() {
+	// public function expiries_dashboard() {
+	// 	$year = date("Y");
+	// 	$county_id = $this -> session -> userdata('county_id');
+	// 	$district_id = $this -> session -> userdata('district_id');
+	// 	$months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+	// 	$option_new = 'units';
+	// 	$category_data = array();
+	// 	$graph_data = array();
+	// 	//$graph_type='';
+	// 	$title = '';
+	// 	$series_data = $series_data_ = $series_data2 = array();
+	// 	$temp_array = $temp_array_ = $temp_array2 = array();
+	// 	//Get the name of the facility if the facility code is set
+	// 	$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
+	// 	$facility_name = $facility_code_[0]['facility_name'];
+	// 	//Get the name of the District
+	// 	$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
+	// 	$district_name_ = (isset($district_data)) ? ": " . $district_data[0]['district'] . " Sub County" : null;
+	// 	//Get the name of the county
+	// 	$county_name = counties::get_county_name($county_id);
+	// 	$title = isset($facility_code) && isset($district_id) ? "$district_name_ : $facility_name" : (isset($district_id) && !isset($facility_code) ? "$county_name[county] County$district_name_" : "$county_name[county] County");
+	// 	$category_data = array_merge($category_data, $months);
+	// 	//for the expiries
+	// 	$commodity_array = Facility_stocks::get_county_cost_of_exipries_new($facility_code, $district_id, $county_id, $year, null, $option, "all");
+	// 	$column_data_ = array("Expiries in $title $year", "stock expired in $option_new");
+	// 	//for the potential expiries
+	// 	$commodity_array2 = Facility_stocks::get_county_cost_of_potential_expiries_new($facility_code, $district_id, $county_id, $year, null, $option, "all");
+	// 	foreach ($commodity_array as $data) :
+	// 		$temp_array = array_merge($temp_array, array($data["cal_month"] => (int)$data['total']));
+	// 		$series_data_ = array_merge($series_data_, array( array($data["cal_month"], (int)$data['total'])));
+	// 	endforeach;
+	// 	foreach ($commodity_array2 as $data2) :
+	// 		$temp_array2 = array_merge($temp_array2, array($data2["cal_month"] => (int)$data2['total_potential']));
+	// 		$series_data_2 = array_merge($series_data_2, array( array($data2["cal_month"], (int)$data2['total'])));
+	// 	endforeach;
+	// 	foreach ($months as $key => $data) :
+	// 		$val = (array_key_exists($data, $temp_array)) ? (int)$temp_array[$data] : (int)0;
+	// 		$val2 = (array_key_exists($data, $temp_array2)) ? (int)$temp_array2[$data] : (int)0;
+	// 		$series_data = array_merge($series_data, array($val));
+	// 		$series_data2 = array_merge($series_data2, array($val2));
+	// 	endforeach;
+	// 	$default_expiries = array();
+	// 	$default_expiries = array_merge($default_expiries, array("graph_id" => 'dem_graph_'));
+	// 	$graph_type = 'column';
+	// 	$default_expiries = array_merge($default_expiries, array("graph_title" => "Expiries in $title for $year"));
+	// 	$default_expiries = array_merge($default_expiries, array("graph_type" => $graph_type));
+	// 	$default_expiries = array_merge($default_expiries, array("graph_yaxis_title" => "$option_new"));
+	// 	$default_expiries = array_merge($default_expiries, array("graph_categories" => $category_data));
+	// 	$default_expiries = array_merge($default_expiries, array("series_data" => array()));
+	// 	$default_expiries['series_data'] = array_merge($default_expiries['series_data'], array("Potential Expiries" => $series_data2, "Actual Expiries" => $series_data));
+	// 	$data = array();
+	// 	$default_expiries_ = $this -> hcmp_functions -> create_high_chart_graph($default_expiries);
+	// 	$data['default_expiries'] = $default_expiries_;
+	// 	$data['district_data'] = districts::getDistrict($this -> session -> userdata('county_id'));
+	// 	// return $this -> load -> view("subcounty/ajax/county_expiry_filter_v", $data);
+	// 	$data['report_view'] = "subcounty/ajax/county_expiry_filter_v";
+	// 	$data['banner_text'] = "Expired Products";
+	// 	$data['content_view'] = "facility/facility_reports/reports_v";
+	// 	$data['report_view'] = "subcounty/ajax/county_expiry_filter_v";
+	// 	$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
+	// 	return $this -> load -> view("shared_files/template/template", $data);
+
+	// 	// return $this -> load -> view("subcounty/ajax/county_expiry_filter_v", $data);
+	// }
+
+	 public function expiries_dashboard() {
 		$year = date("Y");
 		$county_id = $this -> session -> userdata('county_id');
 		$district_id = $this -> session -> userdata('district_id');
@@ -3476,7 +3554,7 @@ class Reports extends MY_Controller {
 				$axis = "Packs";
 				break;
 			default :
-				$axis = "packs";
+				$axis = "Ksh";
 				break;
 		endswitch;
 		$commodity_id = ($commodity_id == "NULL") ? null : $commodity_id;
@@ -3484,13 +3562,14 @@ class Reports extends MY_Controller {
 		$county_id = (isset($county_id) && ($county_id > 0)) ? $county_id : $this -> session -> userdata('county_id');
 		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
 		$report_type = ($graph_type == "NULL") ? null : $graph_type;
-		//echo $district_id;exit;
+		// echo $district_id;exit;
 		$from = (($from == "NULL")) ? strtotime(date('Y-m-01')) : strtotime(urldecode($from));
 		$to = (($to == "NULL")) ? strtotime(date('Y-m-d')) : strtotime(urldecode($to));
 		$county_name = counties::get_county_name($county_id);
 		//start building the notifications dashboaard first
 		//compute stocked out items
 		$items_stocked_out_in_facility = count(facility_stocks::get_items_that_have_stock_out_in_facility($facility_code, $district_id, $county_id));
+		// echo "I reach here";exit;
 		//get order information from the db
 		$facility_order_count_ = facility_orders::get_facility_order_summary_count($facility_code, $district_id, $county_id);
 		$facility_order_count = array();
@@ -3654,6 +3733,7 @@ class Reports extends MY_Controller {
 			if ($commodity_id > 0) :
 				$category_data = array( array("Sub-county", "Facility Name", "Mfl", "Commodity Name", "TOTAL " . $option_new));
 			else :
+				// array_push($category_data, array("Commodity Name", "stocks worth in $option_new"));
 				array_push($category_data, array("Consumption level $commodity_name $title $time", "Commodity Name", "stocks worth in $option_new"));
 			endif;
 			$graph_data = array_merge($graph_data, array("table_id" => 'dem_graph_'));
@@ -4104,6 +4184,8 @@ class Reports extends MY_Controller {
 		$data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
 		$data['active_panel'] = 'expiries';
 		return $this -> load -> view("subcounty/reports/county_expiries_v", $data);
+		// return $this -> load -> view("shared_files/template/template", $data);
+
 	}
 	public function county_consumption() {
 		$county_id = $this -> session -> userdata('county_id');
@@ -4218,14 +4300,18 @@ class Reports extends MY_Controller {
 	}
 	public function donation_reports($year = null, $district_id = null, $facility_code = null) {
 		//reset the values here
+		$district_id = $this -> session -> userdata('district_id');
 		$year = ($year == "NULL") ? date('Y') : $year;
-		$district_id = ($district_id == "NULL") ? null : $district_id;
+		$district_id = ($district_id == "NULL") ? NULL : $district_id;
+		// echo $district_id;exit;
 		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
 		$county_id = $this -> session -> userdata('county_id');
 		$expiries_array = redistribution_data::get_redistribution_data($facility_code, $district_id, $county_id, $year);
 		$data['donations'] = $expiries_array;
 		$data['year'] = $year;
-		$data['redistribute_count'] = count(redistribution_data::get_redistribution_pending($facility_code, $district_id, $county_id, $year))+1;
+		$pending = redistribution_data::get_redistribution_pending($facility_code, $district_id, $county_id, $year);
+		// echo "<pre>";print_r($expiries_array);exit;
+		$data['redistribute_count'] = count(redistribution_data::get_redistribution_pending($facility_code, $district_id, $county_id, $year));
 		return $this -> load -> view("shared_files/redistributions_ajax", $data);
 	}
 public function donation_report_download($year = null, $county_id = null,$district_id = null, $facility_code = null) {

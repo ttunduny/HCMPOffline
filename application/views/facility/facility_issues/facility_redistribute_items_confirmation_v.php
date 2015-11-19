@@ -24,6 +24,7 @@
 			<th>To</th>
 			<th>Commodity Name</th>
 			<th>Commodity Code</th>
+			<th>Date Sent</th>
 			<th>Unit Size</th>
 			<th>Batch No</th>
 			<th>Expiry Date</th>
@@ -54,6 +55,7 @@
 				}
 				$packs=round($redistribution_data->quantity_sent/$total_commodity_units,1);	
 				$date=date('d My',strtotime($redistribution_data->expiry_date));
+				$date_sent=date('d M Y',strtotime($redistribution_data->date_sent));
 						
 			}
 		echo "<tr>
@@ -67,6 +69,7 @@
 		<td>$name_facility_detail_receive</td>
 		<td>$name</td>
 		<td>$code</td>
+		<td>$date_sent</td>
 		<td>$unit_size</td>
 		<td><input type='text' 
 		name='commodity_batch_no[]' class='form-control input-small commodity_batch_no' value='$redistribution_data->batch_no' $edit></td>
@@ -92,15 +95,32 @@
 
 </tbody>
 </table> 
+
 <?php echo form_close();?> 
-<?php if(!isset($editable)){ } else{ ?>
-<hr />
-<div class="container-fluid">
-<div style="float: right">
-<button class="btn btn-success save" ><span class="glyphicon glyphicon-open"></span>Update</button></div>
+<div id="confirm_actions" class="container-fluid" style="margin-top:5%; width:100%;height:50px;">
+
+	<?php if(!isset($editable)){ } else{
+			if($editable=='to-me'){
+
+	 ?>
+	<div style="float: right">
+		<button class="btn btn-success save form-input" ><span class="glyphicon glyphicon-open"></span>Update</button>
+	</div>
+
+ 	<?php };};?>
+
+ 	<div style="float: right">
+ 		<a href="<?php echo base_url().'issues/confirm_external_issue_edit';?>">
+			<button class="btn btn-primary " ><span class="glyphicon glyphicon-open"></span>Edit</button>
+		</a>	
+	</div>
+
 </div>
-</div>
- <?php };?>  
+
+<!-- <hr /> -->
+
+ 
+ 
 <script>
 $(document).ready(function() {
 	//datatables settings 

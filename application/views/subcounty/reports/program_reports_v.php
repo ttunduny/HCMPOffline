@@ -23,6 +23,7 @@
 </style>
 <?php   $identifier = $this -> session -> userdata('user_indicator');
 		$countyname = $this -> session -> userdata('county_name');
+		$county_id = $this -> session -> userdata('county_id');
 		// $malaria_report_data='';
 		$RH_report_details='';
 		$TB_report_details='';
@@ -131,6 +132,8 @@ HTML_DATA;
 	<ul class='nav nav-tabs'>
       <li class="active"><a href="#Malaria" data-toggle="tab">Malaria</a></li>
       <li class=""><a href="#RH" data-toggle="tab">Reproductive Health</a></li>
+      <?php if($identifier=='county'){?>
+      <li class=""><a href="#AMGRAPH" data-toggle="tab">Sub-County Comparison</a></li><?php }?>
     </ul>
     <div id="myTabContent" class="tab-content">
  		<div  id="Malaria" class="tab-pane fade active in">
@@ -206,6 +209,10 @@ HTML_DATA;
 		?>
 		<div id = "rh-table-holder"></div>		           	
      </div>
+
+      <div class="tab-pane fade" id="AMGRAPH">     	
+		<div id="graph-section" style="min-height:600px;width:100%;overflow-x:scroll;"></div>		           	
+     </div>
     </div>
  	</div>
   </div>
@@ -255,6 +262,9 @@ HTML_DATA;
 	user_indicator = '<?php echo $this->session->userdata("user_indicator"); ?>';
 	base_url = '<?php echo base_url(); ?>';
 	$(document).ready(function(){
+		var county_id = '<?php echo $county_id; ?>';
+		var url = 'divisional_reports/generate_antimalarial_graph_ajax/'+county_id;
+		ajax_request_replace_div_content(url,"#graph-section");	 
 		switch(user_indicator)
 		{
 			case 'facility':
@@ -268,6 +278,10 @@ HTML_DATA;
 			default:
 				break;
 		}
+	});
+
+	$('#AMGRAPH').click(function (e){
+		ajax_request_replace_div_content(url,"#graph-section");	
 	});
 	
 	$('#filter').click(function(){

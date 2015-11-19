@@ -149,7 +149,11 @@ class User extends MY_Controller {
 		Log::update_log_out_action($this -> session -> userdata('user_id'));
 		$this -> session -> sess_destroy(); session_destroy();
 		$this -> clearBrowserCache();
-		
+
+		//Titus
+		// $last_run = Sms_listing::get_last_run();
+		// echo "<pre>";
+		// print_r($last_run->result_array());die;
 		$data['title'] = "Login";
 		$this -> load -> view("shared_files/login_pages/login_v", $data);
 	}
@@ -517,6 +521,7 @@ class User extends MY_Controller {
 							
 			
 		}
+		
 		
 
 	public function addnew_user(){
@@ -921,15 +926,23 @@ endif;
 		public function reset_pass_to_default($user_id){
 			// echo "<pre>";var_dump($this->input->post());exit;	
 			// $user_id = $this->input->post('user_id');
-			// echo "This: ".$user_id;exit;
+			
+			// $sql = "UPDATE `hcmp_rtk`.`user` SET `password`='b56578e2f9d28c7497f42b32cbaf7d68' WHERE `id`='$user_id'";
+			// echo "$sql";die;
 			$query =  Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("
-				UPDATE `hcmp_rtk`.`user` SET `password`='b56578e2f9d28c7497f42b32cbaf7d68' WHERE `id`=$user_id;");
-			$pwd_reset = 1;
-			$user_id = $user_id;
+				UPDATE `hcmp_rtk`.`user` SET `password`='b56578e2f9d28c7497f42b32cbaf7d68' WHERE `id`='$user_id'");
+			// $pwd_reset = 1;
+			// $user_id = $user_id;
 			
 			// echo "<pre>";print_r($user_data);echo "</pre>"; exit;	
-			$this -> user_create($user_id,$pwd_reset);
+			// $this -> user_create($user_id,$pwd_reset);
+			if($query){
+				echo true;
+			}else{
+				echo false;
 
+			}
+			
 		}
 
 		public function user_create_multiple($facility_code=null){

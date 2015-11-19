@@ -449,10 +449,12 @@ public static function get_county_details($county_id){
 	}
 	
 	public static function check_if_email($test_email) {
-		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username LIKE '%$test_email%'");
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username = '$test_email'");
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
 	}
+
+
 
 	public static function deactivate_facility($facility_code,$status){
 		if ($status == 0) {

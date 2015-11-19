@@ -38,6 +38,17 @@ class Facility_stocks extends Doctrine_Record {
 		and commodity_id=$commodity_id and status=1 ");
 		return $commodities;
 	}
+
+	public function get_facility_batches($facility_code){
+		$current_date = date('Y-m-d',strtotime('NOW'));
+		$sql = "SELECT * FROM facility_stocks where facility_code='$facility_code' and current_balance >0 and expiry_date > '$current_date'";
+        return $this->db->query($sql)->result_array();		
+	}
+	
+	public function get_facilty_stock_id($id){
+		$sql = "select current_balance from facility_stocks where id = '$id' LIMIT 0,1";
+        return $this->db->query($sql)->result_array();
+	}
 	public static function get_all() {
 		$query = Doctrine_Query::create() -> select("*") -> from("facility_stocks");
 		$commodities = $query -> execute();
@@ -94,6 +105,20 @@ ORDER BY fs.expiry_date ASC
 		return $store_stocks;
 	}
 	public static function get_distinct_stocks_for_this_district_store($district_id) {
+// 		$store_stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT DISTINCT dst.commodity_id as commodity_id,
+// fs.id as facility_stock_id,
+// dst.expiry_date, c.commodity_name,
+// c.commodity_code,c.unit_size,
+// dst.total_balance as store_commodity_balance, 
+// round(((dst.total_balance) / c.total_commodity_units) ,1) as pack_balance,
+// c.total_commodity_units,
+// fs.manufacture,c_s.source_name,
+// fs.batch_no,
+// c_s.id as source_id
+// from facility_stocks fs, commodity_source c_s, drug_store_issues ds,commodities c,drug_store_totals dst
+//  where ds.district_id= '$district_id' and dst.district_id= '$district_id' and dst.expiry_date >= NOW()
+//  and dst.commodity_id=fs.commodity_id and c.id=dst.commodity_id and dst.total_balance>0 group by dst.commodity_id order by fs.expiry_date asc
+// ");
 		$store_stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT DISTINCT dst.commodity_id as commodity_id,
 fs.id as facility_stock_id,
 dst.expiry_date, c.commodity_name,
@@ -105,7 +130,7 @@ fs.manufacture,c_s.source_name,
 fs.batch_no,
 c_s.id as source_id
 from facility_stocks fs, commodity_source c_s, drug_store_issues ds,commodities c,drug_store_totals dst
- where ds.district_id= '$district_id' and dst.district_id= '$district_id' and dst.expiry_date >= NOW()
+ where  dst.district_id= '$district_id' and dst.expiry_date >= NOW()
  and dst.commodity_id=fs.commodity_id and c.id=dst.commodity_id and dst.total_balance>0 group by dst.commodity_id order by fs.expiry_date asc
 ");
 		return $store_stocks;
@@ -121,11 +146,25 @@ from facility_stocks fs, commodity_source c_s, drug_store_issues ds,commodities 
 		return $store_comm;
 	}
 
+	// public static function get_distinct_stocks_for_this_facility($facility_code, $checker = null, $exception = null) {
+	// 	$addition = isset($checker) ? ($checker === 'batch_data') ? 'and fs.current_balance>0 group by fs.id,c.id order by c.commodity_name asc,fs.batch_no asc,fs.expiry_date asc' : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc,fs.batch_no desc' : null;
+
+	// 	$check_expiry_date = isset($exception) ? null : " and fs.expiry_date >= NOW()";
+
+	// 	$stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT DISTINCT c.id as commodity_id, fs.id as facility_stock_id,fs.expiry_date,c.commodity_name,c.commodity_code,
+	// c.unit_size,fs.current_balance as commodity_balance, round((fs.current_balance / c.total_commodity_units) ,1) as pack_balance,
+	// c.total_commodity_units,fs.manufacture,
+	// c_s.source_name, fs.batch_no, c_s.id as source_id from facility_stocks fs, commodities c, commodity_source c_s
+	//  where fs.facility_code ='$facility_code' $check_expiry_date 
+	//  and c.id=fs.commodity_id and fs.status='1' AND c_s.id = fs.source_of_commodity $addition 
+	// ");
+		
+	// 	return $stocks;
+	// }
 	public static function get_distinct_stocks_for_this_facility($facility_code, $checker = null, $exception = null) {
-		$addition = isset($checker) ? ($checker === 'batch_data') ? 'and fs.current_balance>0 group by fs.id,c.id order by fs.expiry_date asc' : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc' : null;
-
+		$addition = isset($checker) ? ($checker === 'batch_data') ? 'and fs.current_balance>0 group by fs.id,c.id order by c.commodity_name asc,fs.expiry_date asc,fs.batch_no desc' : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc,fs.expiry_date asc,fs.batch_no desc' : null;
+		// $addition = isset($checker) ? ($checker === 'batch_data') ? 'and fs.current_balance>0 group by fs.id,c.id order by c.commodity_name asc,fs.batch_no desc,fs.expiry_date asc' : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc,fs.batch_no desc' : null;
 		$check_expiry_date = isset($exception) ? null : " and fs.expiry_date >= NOW()";
-
 		$stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT DISTINCT c.id as commodity_id, fs.id as facility_stock_id,fs.expiry_date,c.commodity_name,c.commodity_code,
 	c.unit_size,fs.current_balance as commodity_balance, round((fs.current_balance / c.total_commodity_units) ,1) as pack_balance,
 	c.total_commodity_units,fs.manufacture,
@@ -136,6 +175,7 @@ from facility_stocks fs, commodity_source c_s, drug_store_issues ds,commodities 
 		
 		return $stocks;
 	}
+
 
 	public static function get_county_stock_amc($county_id){
 		$stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
@@ -461,8 +501,9 @@ where ds.expiry_date
 	}
 
 	public static function get_items_that_have_stock_out_in_facility($facility_code = null, $district_id = null, $county_id = null) {
-		$where_clause = isset($facility_code) ? "f.facility_code=$facility_code " : (isset($district_id) ? "d.id=$district_id " : "d.county=$county_id ");
+		$where_clause = ((isset($facility_code)) && $facility_code != '') ? "f.facility_code=$facility_code " : ((isset($district_id) && $district_id != '') ? "d.id=$district_id " : "d.county=$county_id ");
 		$group_by = isset($facility_code) ? " order by c.commodity_name asc" : (isset($district_id) ? " order by f.facility_name asc" : " order by d.district asc");
+		
 		$stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT 
 			    d.district,
 			    f_s.`facility_code`,
@@ -701,9 +742,13 @@ where ds.expiry_date
 	public static function specify_period_potential_expiry_store($district_id, $interval) {
 		$stocks = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("
 		SELECT ds.id, ds.facility_code, ds.district_id, ds.commodity_id, ds.s11_No, ds.batch_no, ds.expiry_date, ds.balance_as_of , ds.adjustmentpve, ds.adjustmentnve, ds.qty_issued, ds.date_issued, ds.issued_to, ds.created_at, ds.issued_by, ds.status 
-FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL $interval MONTH)
+FROM drug_store_issues ds,drug_store_totals dst where ds.expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL $interval MONTH)
 		 AND ds.district_id= $district_id AND ds.district_id = dst.district_id AND dst.total_balance > 0
 		 ");
+// 		echo "SELECT ds.id, ds.facility_code, ds.district_id, ds.commodity_id, ds.s11_No, ds.batch_no, ds.expiry_date, ds.balance_as_of , ds.adjustmentpve, ds.adjustmentnve, ds.qty_issued, ds.date_issued, ds.issued_to, ds.created_at, ds.issued_by, ds.status 
+// FROM drug_store_issues ds,drug_store_totals dst where ds.expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL $interval MONTH)
+// 		 AND ds.district_id= $district_id AND ds.district_id = dst.district_id AND dst.total_balance > 0
+// 		 ";die;
 		return $stocks;
 	}
 
@@ -1164,13 +1209,16 @@ FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDAT
 		$from = date('Y-m-d', $from);
 		switch ($option) :
 			case 'ksh' :
-				$computation = "ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+				// $computation = "ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull((SUM(ROUND(ABS(fs.qty_issued)/ d.total_commodity_units)))*d.unit_cost ,0)-ifnull((SUM(ROUND(ABS(fs.adjustmentnve)/ d.total_commodity_units)))*d.unit_cost ,0)+ifnull((SUM(ROUND(ABS(fs.adjustmentpve)/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
 				break;
 			case 'units' :
-				$computation = "ifnull(CEIL(SUM(fs.qty_issued)),0) AS total,d.commodity_name as commodity";
+				// $computation = "ifnull(CEIL(SUM(fs.qty_issued)),0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull(CEIL(SUM(ABS(fs.qty_issued)),0)-ifnull(CEIL(SUM(ABS(fs.adjustmentnve)),0)+ifnull(CEIL(SUM(ABS(fs.adjustmentpve)),0) AS total,d.commodity_name as commodity";
 				break;
 			case 'packs' :
-				$computation = "ifnull(SUM(ROUND(fs.qty_issued/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
+				// $computation = "ifnull(SUM(ROUND(fs.qty_issued/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull(SUM(ROUND(ABS(fs.qty_issued)/d.total_commodity_units)),0)-ifnull(SUM(ROUND(ABS(fs.adjustmentnve)/d.total_commodity_units)),0)+ifnull(SUM(ROUND(ABS(fs.adjustmentpve)/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
 				break;
 			case 'mos' :
 				$r = facility_stocks_temp::get_months_of_stock($district_id, $county_id, $facility_code);
@@ -1178,7 +1226,8 @@ FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDAT
 				exit ;
 				break;
 			default :
-				$computation = "ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull((SUM(ROUND(ABS(fs.qty_issued)/ d.total_commodity_units)))*d.unit_cost ,0)-ifnull((SUM(ROUND(ABS(fs.adjustmentnve)/ d.total_commodity_units)))*d.unit_cost ,0)+ifnull((SUM(ROUND(ABS(fs.adjustmentpve)/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+				// $computation = "ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
 				break;
 		endswitch;
 		$and_data .= (isset($category_id) && ($category_id > 0)) ? "AND d.commodity_sub_category_id = '$category_id'" : null;
@@ -1199,12 +1248,21 @@ FROM drug_store_issues ds,drug_store_totals dst where expiry_date BETWEEN CURDAT
 
 		}
 		$group_by_a_month = (isset($tracer) && ($group_by_a_month)) ? " GROUP BY commodity" : $group_by_a_month;
-
+		// echo "SELECT  $selection_for_a_month $computation
+  //   FROM facility_issues fs, facilities f, commodities d, districts di
+  //   WHERE fs.facility_code = f.facility_code
+  //   AND f.district = di.id
+  //   AND fs.qty_issued >0
+  //   $and 
+  //   AND d.id = fs.commodity_id
+  //   $and_data
+  //   $group_by_a_month
+  //    ";die;
 		$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT  $selection_for_a_month $computation
     FROM facility_issues fs, facilities f, commodities d, districts di
     WHERE fs.facility_code = f.facility_code
     AND f.district = di.id
-    AND fs.qty_issued >0
+    AND fs.qty_issued >=0
     $and 
     AND d.id = fs.commodity_id
     $and_data

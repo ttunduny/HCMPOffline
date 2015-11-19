@@ -401,9 +401,6 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 				$series_data2 = array_merge($series_data2, array($val2));
 				array_push($series_data_2, array($data, $val2));
 			endforeach;
-			/*echo "<pre>";
-			print_r($commodity_array);
-			echo "</pre>";*/
 			$graph_type = 'column';
 
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
@@ -422,7 +419,7 @@ or f.`owner` LIKE  '%community%' or f.`owner` LIKE  '%public%' or f.`owner` LIKE
 			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
 
 			// print_r($data['high_graph']);
-			// exit;
+			//exit;
 			return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
 		else :
 			$excel_data = array('doc_creator' => "HCMP", 'doc_title' => "Expiry  $title", 'file_name' => "Stock Expired in $title  $year");
@@ -512,7 +509,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 	 $category_data = array_merge($category_data, array($data["cal_month"]));
 	 endforeach;
 
-	 $graph_type='spline';
+	 $graph_type='bar';
 
 	 $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_1'));
 	 $graph_data = array_merge($graph_data, array("color" => "['#4b0082', '#6AF9C4']"));
@@ -600,12 +597,17 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
 		$county_id = ($county_id == "NULL") ? null : $county_id;
 		$commodity_id = ($commodity_id == "ALL" || $commodity_id == "NULL") ? null : $commodity_id;
-
-		$and_data = ($district_id > 0) ? " AND d1.id = '$district_id'" : null;
+		// echo $commodity_id;die;
+		$and_data = ($district_id > 0) ? " AND d.id = '$district_id'" : null;
 		$and_data .= ($facility_code > 0) ? " AND f.facility_code = '$facility_code'" : null;
 		$and_data .= ($county_id > 0) ? " AND counties.id='$county_id'" : null;
 		$and_data = isset($and_data) ? $and_data : null;
-		$and_data .= isset($commodity_id) ? "AND commodities.id =$commodity_id" : "AND commodities.tracer_item = 1";
+		if ($graph_type=='excel') {
+			$and_data .= isset($commodity_id) ? "AND commodities.id =$commodity_id" : "AND d.tracer_item =1";			
+		}else{
+			$and_data .= isset($commodity_id) ? "AND commodities.id =$commodity_id" : "AND commodities.tracer_item =1";
+
+		}
 
 		$group_by = ($district_id > 0 && isset($county_id) && !isset($facility_code)) ? " ,d.id" : null;
 		$group_by .= ($facility_code > 0 && isset($district_id)) ? "  ,f.facility_code" : null;
@@ -674,7 +676,7 @@ inner join counties on districts.county=counties.id inner join commodities on fa
 					
 			
 			//return $get_amc ;	
-			//echo '<pre>'; print_r($get_amc);echo '<pre>'; exit;
+			
 			
 			$get_totals = Doctrine_Manager::getInstance()->getCurrentConnection()
 		->fetchAll("SELECT commodities.id,commodities.commodity_name,sum(facility_stocks.current_balance) 
@@ -739,7 +741,6 @@ inner join counties on districts.county=counties.id inner join commodities on fa
 			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
 			//
 			$data['graph_id'] = 'dem_graph_mos';
-			//echo "<pre>"; print_r($data['high_graph']); echo "</pre>"; exit;
 			return $this -> load -> view("shared_files/report_templates/high_charts_template_v_national", $data);
 		//
 		else :
@@ -748,6 +749,7 @@ inner join counties on districts.county=counties.id inner join commodities on fa
 			$column_data = array("County", "Sub-County", "Facility Name", "Facility Code", "Item Name", "MOS");
 			$excel_data['column_data'] = $column_data;
 			 //echo '' ; exit;
+			
 			$commodity_array = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT d.id,ct.county,sc.district,f.facility_code,
 			f.facility_name,sum(fs.current_balance) as bal
 ,sum(fs.current_balance)/d.total_commodity_units as packs,d.total_commodity_units,fs.batch_no,fs.expiry_date,d.commodity_name
@@ -1180,9 +1182,7 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 					array_push($row_data, array($facility_stock_data_item["county"], $facility_stock_data_item["subcounty"], $facility_stock_data_item["facility_name"], $facility_stock_data_item["facility_code"], $facility_stock_data_item["drug_name"], $facility_stock_data_item["total"]));
 				endforeach;
 			}
-			
-			
-			
+
 			$excel_data['row_data'] = $row_data;
 
 			$this -> hcmp_functions -> create_excel($excel_data);
@@ -1267,7 +1267,7 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 			// array_merge($series_data,$series_data_2);
 			// echo "<pre>";print_r($series_data_2);echo "</pre>";exit;
 
-			$graph_type = 'column';
+			$graph_type = 'area';
 
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_order'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "$year $title Order Cost"));
