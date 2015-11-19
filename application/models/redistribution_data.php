@@ -1,3 +1,4 @@
+
 <?php
 
 class redistribution_data extends Doctrine_Record {
@@ -69,8 +70,7 @@ class redistribution_data extends Doctrine_Record {
 
 		public static function get_all_active_drug_store($district_id,$option=null) {
 		$and=($option=='to-me')? " receive_facility_code=2":" source_facility_code=2";
-        $query = Doctrine_Query::create() -> select("*") -> from("redistribution_data") -> where("$and and status=0 and source_district_id = $district_id");
-		// $query = Doctrine_Query::create() -> select("*") -> from("redistribution_data") -> where("$and and status=0 and source_district_id = $district_id");
+		$query = Doctrine_Query::create() -> select("*") -> from("redistribution_data") -> where("$and and status=0 and source_district_id = $district_id");
 		$redistribution_data = $query -> execute();
 		return $redistribution_data;
 	}
@@ -170,5 +170,29 @@ class redistribution_data extends Doctrine_Record {
 
 	return $query;	
 	}
+
+    public static function get_redistribution_mismatches_count($facility_code){
+        $mismatch_count = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+            SELECT COUNT(*) AS ms_count
+            FROM redistribution_data rd
+            WHERE (rd.quantity_received < rd.quantity_sent OR rd.quantity_received > rd.quantity_sent)
+            AND rd.source_facility_code = '$facility_code';
+        ");
+        $count = 0;
+        foreach ($mismatch_count as $key => $value) {
+            $count = $value['ms_count'];
+        }
+        return $count;
+    }
+
+    public static function get_redistribution_mismatches($facility_code){
+        $mismatch_data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+            SELECT * 
+            FROM redistribution_data rd
+            WHERE (rd.quantity_received < rd.quantity_sent OR rd.quantity_received > rd.quantity_sent)
+            AND rd.source_facility_code = '$facility_code';
+        ");
+        return $mismatch_data;
+    }
 }
 ?>

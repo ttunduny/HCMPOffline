@@ -160,7 +160,9 @@ class Home extends MY_Controller
     {
     //format the graph here
     $facility_code=$this -> session -> userdata('facility_id'); 
-    $facility_stock_=facility_stocks::get_facility_stock_amc($facility_code);   
+    $facility_stock_=facility_stocks::get_facility_stock_amc($facility_code);
+    // echo "<pre>";
+    // print_r($facility_stock_);die;
 	$facility_stock_count=count($facility_stock_);
     $graph_data=array();
 	$graph_data=array_merge($graph_data,array("graph_id"=>'container'));
@@ -175,7 +177,7 @@ class Home extends MY_Controller
 		$category_name = $facility_stock_['commodity_name'].' ('.$facility_stock_['source_name'].')';
 		$graph_data['graph_categories']=array_merge($graph_data['graph_categories'],array($category_name));	
 		$graph_data['series_data']['Current Balance']=array_merge($graph_data['series_data']['Current Balance'],array((float) $facility_stock_['pack_balance']));
-        // $graph_data['series_data']['AMC']=array_merge($graph_data['series_data']['AMC'],array((float) $facility_stock_['amc']));	
+        $graph_data['series_data']['AMC']=array_merge($graph_data['series_data']['AMC'],array((float) $facility_stock_['amc']));	
 
 	endforeach;
 	//echo "<pre>";print_r($facility_stock_);echo "</pre>";exit;
@@ -201,11 +203,23 @@ class Home extends MY_Controller
 	$facility_donations=redistribution_data::get_all_active($facility_code)->count();
 	//get items they have been donated and are pending
 	$facility_donations_pending=redistribution_data::get_all_active($facility_code,"to-me")->count();
+	//get redistribution mismatch data
+	$facility_redistribution_mismatches = redistribution_data::get_redistribution_mismatches_count($facility_code);
 	//get stocks from v1
 	$stocks_from_v1=0;
 	if($facility_stock_count==0 && $facility_donations==0 && $facility_donations_pending==0 ){
 	//$stocks_from_v1=count(facility_stocks::import_stock_from_v1($facility_code));	
 	}
+	// return array('facility_stock_count'=>$facility_stock_count,
+	// 'faciliy_stock_graph'=>$faciliy_stock_data,
+	// 'items_stocked_out_in_facility'=>$items_stocked_out_in_facility,
+	// 'facility_order_count'=>$facility_order_count,
+	// 'potential_expiries'=>$potential_expiries,
+	// 'actual_expiries'=>$actual_expiries,
+	// 'facility_donations'=>$facility_donations,
+	// 'facility_donations_pending'=>$facility_donations_pending,//,'stocks_from_v1'=>$stocks_from_v1
+	// 'facility_redistribution_mismatches'=>$facility_redistribution_mismatches
+	// );	
 	return array('facility_stock_count'=>$facility_stock_count,
 	'faciliy_stock_graph'=>$faciliy_stock_data,
 	'items_stocked_out_in_facility'=>$items_stocked_out_in_facility,
@@ -213,7 +227,7 @@ class Home extends MY_Controller
 	'potential_expiries'=>$potential_expiries,
 	'actual_expiries'=>$actual_expiries,
 	'facility_donations'=>$facility_donations,
-	'facility_donations_pending'=>$facility_donations_pending//,'stocks_from_v1'=>$stocks_from_v1
+	'facility_donations_pending'=>$facility_donations_pending,//,'stocks_from_v1'=>$stocks_from_v1	
 	);	
     }
 	public function tester(){

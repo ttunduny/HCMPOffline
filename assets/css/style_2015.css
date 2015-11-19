@@ -20,8 +20,21 @@
 	padding: 10%;
 }
 
+.dash_notifications a{
+	color: #FFF;
+}
+
+.admin_dashboard a:hover {
+    font-size: 13px;
+    text-decoration:none;
+}
+
 .margin_top_sm{
 	margin: 10px 0;
+}
+
+.icon-lg{
+	font-size: 20px!important;
 }
 
 .background_blue{

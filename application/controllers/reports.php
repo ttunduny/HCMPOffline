@@ -320,6 +320,15 @@ class Reports extends MY_Controller {
 		$data['banner_text'] = "Facility Stock Out Summary";
 		$this -> load -> view("shared_files/template/template", $data);
 	}
+
+	public function redistribution_mismatches(){
+		$facility_code = $this -> session -> userdata('facility_id');
+		$data['redistribution_data'] = redistribution_data::get_redistribution_mismatches($facility_code);
+		$data['title'] = "Redistribution Mismatches";
+		$data['content_view'] = "facility/facility_reports/facility_redistribution_mismatches_v";
+		$data['banner_text'] = "Redistribution Mismatches Summary";
+		$this -> load -> view("shared_files/template/template", $data);
+	}
 	public function order_delivery($order_id) {
 		$test = $this -> hcmp_functions -> create_order_delivery_color_coded_table($order_id);
 		$data['content_view'] = "facility/facility_orders/view_order_delivery_details_v";
@@ -1012,7 +1021,7 @@ class Reports extends MY_Controller {
 
 	public function generate_system_usage_temp_data()
 	{
-		$temporary_system_usage = $this->monitoring(1);
+		$temporary_system_usage = $this->monitoring(1);	
 		/////
 		$category_data = array( array("Facility Name", "Facility Code", "Sub County", "County", "Date Last Logged In","Days From Last Logged In", "Date Last Issued", "Days From Last Issue", "Date Last Redistributed","Days From Last Redistribution","Date Last Ordered","Days From Last Order","Date Last Decommissioned","Days From Last Decommission","Date Last Received Order","Days From Last Received Order"));
 		$graph_data = array_merge($graph_data, array("table_id" => 'system_usage_temp_table'));

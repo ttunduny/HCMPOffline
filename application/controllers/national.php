@@ -509,7 +509,7 @@ order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 	 $category_data = array_merge($category_data, array($data["cal_month"]));
 	 endforeach;
 
-	 $graph_type='bar';
+	 $graph_type='spline';
 
 	 $graph_data=array_merge($graph_data,array("graph_id"=>'dem_graph_1'));
 	 $graph_data = array_merge($graph_data, array("color" => "['#4b0082', '#6AF9C4']"));
@@ -1267,7 +1267,7 @@ $and_data AND fs.status=1 group by fs.batch_no order by ct.id asc
 			// array_merge($series_data,$series_data_2);
 			// echo "<pre>";print_r($series_data_2);echo "</pre>";exit;
 
-			$graph_type = 'area';
+			$graph_type = 'column';
 
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_order'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "$year $title Order Cost"));

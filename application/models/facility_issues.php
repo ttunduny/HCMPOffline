@@ -97,6 +97,51 @@ class facility_issues extends Doctrine_Record {
 	   
    }
 
+   public function get_issues_for_reversals(){   		
+   	  $issues = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+   	  select f.facility_name,  f_i.facility_code,f_i.created_at,f_i.issued_by,u.fname, u.lname from facilities f,facility_issues f_i,user u where f.facility_code = f_i.facility_code 
+   	  and f_i.s11_No ='internal issue'  AND u.id = f_i.issued_by
+   	  group by created_at, issued_by, facility_code order by created_at desc limit 0,15");
+
+        return $issues;
+   }
+
+	public function get_redistributions_for_reversals(){   		
+   	  $redistributions = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT f.facility_name,r.source_facility_code as facility_code,r.receive_facility_code,r.date_sent, 
+   	  	u.fname, u.lname,r.sender_id FROM  facilities f,  redistribution_data r, user u WHERE  f.facility_code = r.source_facility_code AND u.id = r.sender_id
+		GROUP BY date_sent , sender_id ,r.source_facility_code ORDER BY date_sent DESC;");
+
+        return $redistributions;
+   }
+
+    public function get_issue_details_for_reversals($facility_code,$time,$issuer){   		
+   	  $issues = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT f.facility_name,f_i.*, c.commodity_name FROM facility_issues f_i, commodities c,facilities f 
+   	  	where f_i.facility_code = '$facility_code' and f.facility_code = f_i.facility_code and f_i.created_at='$time' and f_i.issued_by='$issuer' and f_i.s11_No ='internal issue' and f_i.commodity_id = c.id");
+
+      return $issues;
+   }
+
+   public function get_reversal_details_for_reversals($facility_code,$time,$issuer){   		
+   	  $redistributions = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT f.facility_name,r.*, c.commodity_name FROM redistribution_data r, commodities c,facilities f 
+	  	where r.source_facility_code = '$facility_code' and f.facility_code = r.source_facility_code and r.date_sent='$time' and r.sender_id='$issuer' and r.commodity_id = c.id");
+      return $redistributions;
+   }
+
+   public function get_reversed_issues(){   		
+   	  $reversals = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT f.facility_name, r.facility_code,r.created_at, u.fname, u.lname,r.issued_by FROM
+    	facilities f, reversals r, user u WHERE    f.facility_code = r.facility_code AND r.s11 = 'internal issue' AND u.id = r.issued_by GROUP BY created_at , issued_by , facility_code ORDER BY created_at DESC");
+       return $reversals;
+   }
+
+   public function get_undo_issue_details_for_reversals($facility_code,$time,$issuer){   		
+   	  $reversed_details = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT f.facility_name,r.*, c.commodity_name FROM reversals r, commodities c,facilities f 
+   	  	where r.facility_code = '$facility_code' and f.facility_code = r.facility_code and r.created_at='$time' 
+        and r.issued_by='$issuer' and r.s11 ='internal issue' and r.commodity_id = c.id and r.reversal_status = '1'");
+
+      return $reversed_details;
+   }
+
+
     //The function gets the consumption for the email consumption report
     public static function get_consumption_report_ors_zinc($commodities)
     {
