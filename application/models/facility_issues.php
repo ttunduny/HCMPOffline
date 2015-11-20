@@ -32,6 +32,18 @@ class facility_issues extends Doctrine_Record {
 		$commodities = $query -> execute();
 		return $commodities;
 	}
+
+	public function get_all_issue_data() {
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT id,issued_to,facility_code FROM facility_issues ORDER BY id");
+
+		return $query;
+	}
+
+	public function get_all_service_points() {
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT id,service_point_name,facility_code FROM service_points ORDER BY id");
+
+		return $query;
+	}
 	
    ////dumbing data into the issues table
 	public static function update_issues_table($data_array){
