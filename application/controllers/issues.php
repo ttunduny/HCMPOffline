@@ -161,7 +161,7 @@ class issues extends MY_Controller {
               $button_reverse_link = "<a href=\"".base_url().'issues/reverse_issue/'.$commodity_id.'/'.$create_date_timestamp.'/'.$issuer_id.'/reverse'."\"><button class=\"btn btn-danger  form-control\" style=\"width:98%\">Reverse Issue</button></a>";
               $output[] = array($commodity_name,$batch_no,$qty_issued,$issue_date,$issued_to,$issuer);
         }
-        $category_data = array( array("Commodity Name", "Batch Number","Quantity Reversed (Units)", "Date of Issue",  "Issued To", "Person Reversing"));
+        $category_data = array( array("Commodity Name", "Batch Number","Quantity Reversed (Units)", "Date of Reversal",  "Issued To", "Person Reversing"));
 		$graph_data = array_merge($graph_data, array("table_id" => 'reversed_issues_tbl	'));
 		$graph_data = array_merge($graph_data, array("table_header" => $category_data));
 		$graph_data = array_merge($graph_data, array("table_body" => $output));
