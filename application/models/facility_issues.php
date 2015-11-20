@@ -106,6 +106,24 @@ class facility_issues extends Doctrine_Record {
         return $issues;
    }
 
+   public function get_facility_issues_for_reversals($facility_code,$start_date){
+   	 $issues = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT distinct f.facility_name, f_i.issued_to,f_i.facility_code,f_i.issued_by,f_i.created_at, u.fname, u.lname, f_i.commodity_id,c.commodity_name,f_i.batch_no,f_i.qty_issued,f_i.date_issued
+		FROM  facilities f, facility_issues f_i, user u, commodities c WHERE   f.facility_code = f_i.facility_code AND f_i.s11_No = 'internal issue'
+        AND u.id = f_i.issued_by  AND f.facility_code = '$facility_code'  AND c.id = f_i.commodity_id  and f_i.status = '1' 
+        and f_i.created_at between '$start_date' and NOW()
+		ORDER BY f_i.date_issued DESC");
+        return $issues;
+   }
+
+    public function get_facility_issues_reversals($facility_code,$start_date){
+   	 $issues = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT distinct f.facility_name, f_i.issued_to,f_i.facility_code,f_i.issued_by,f_i.created_at, u.fname, u.lname, f_i.commodity_id,c.commodity_name,f_i.batch_no,f_i.qty_issued,f_i.date_issued
+		FROM  facilities f, facility_issues f_i, user u, commodities c WHERE   f.facility_code = f_i.facility_code AND f_i.s11_No = 'reversed issue'
+        AND u.id = f_i.issued_by  AND f.facility_code = '$facility_code'  AND c.id = f_i.commodity_id  and f_i.status = '1' 
+        and f_i.created_at between '$start_date' and NOW()
+		ORDER BY f_i.created_at DESC");
+        return $issues;
+   }
+
 	public function get_redistributions_for_reversals(){   		
    	  $redistributions = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT f.facility_name,r.source_facility_code as facility_code,r.receive_facility_code,r.date_sent, 
    	  	u.fname, u.lname,r.sender_id FROM  facilities f,  redistribution_data r, user u WHERE  f.facility_code = r.source_facility_code AND u.id = r.sender_id
@@ -118,6 +136,11 @@ class facility_issues extends Doctrine_Record {
    	  $issues = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT f.facility_name,f_i.*, c.commodity_name FROM facility_issues f_i, commodities c,facilities f 
    	  	where f_i.facility_code = '$facility_code' and f.facility_code = f_i.facility_code and f_i.created_at='$time' and f_i.issued_by='$issuer' and f_i.s11_No ='internal issue' and f_i.commodity_id = c.id");
 
+      return $issues;
+   }
+   public function get_facility_issue_details_for_reversals($facility_code,$commodity_id,$time,$issuer){   		
+   	  $issues = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT distinct* FROM hcmp_rtk.facility_issues 
+   	  	where facility_code = '$facility_code' and commodity_id = '$commodity_id' and created_at = '$time' and issued_by = '$issuer' and status='1' LIMIT 0,1");
       return $issues;
    }
 
