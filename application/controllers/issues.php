@@ -1023,6 +1023,7 @@ class issues extends MY_Controller {
 		$alphacount = count($alpha_data);
 		$betacount = count($beta_data);
 		$omega_data = array();
+		$epsilon_data = array();//for generic service points
 		for ($a=0; $a < $alphacount; $a++) { 
 			for ($b=0; $b < $betacount; $b++) { 
 				if (($alpha_data[$a]['issued_to'] == $beta_data[$b]['service_point_name']) && ($alpha_data[$a]['facility_code'] == $beta_data[$b]['facility_code'])) {
@@ -1030,9 +1031,19 @@ class issues extends MY_Controller {
 					$omega_data[$a]['sp_id'] = $beta_data[$b]['id'];
 				}
 			}
+			for ($b=0; $b < $betacount; $b++) { 
+				if ($alpha_data[$a]['issued_to'] == $beta_data[$b]['service_point_name'] && ($alpha_data[$a]['facility_code'] != $beta_data[$b]['facility_code'])) {
+					$epsilon_data[$a]['issue_id'] = $alpha_data[$a]['id'];
+					$epsilon_data[$a]['sp_id'] = $beta_data[$b]['id'];
+					break;
+					// echo "<pre>";echo $beta_data[$b]['id'].'  '.$b;echo "</pre>";
+				}
+			}
 		}
 
-		// echo "<pre>";print_r($omega_data);exit;
+		
+
+		// echo "<pre>";print_r($epsilon_data);exit;
 		foreach ($omega_data as $omegakey => $omegavalue) {
 			$issue_id = $omegavalue['issue_id'];
 			$service_point_id = $omegavalue['sp_id'];
@@ -1040,12 +1051,21 @@ class issues extends MY_Controller {
 			$updater = Doctrine_Manager::getInstance()->getCurrentConnection()->execute("
 				UPDATE facility_issues SET issued_to = $service_point_id WHERE id = $issue_id
 				");
-
-			// echo "<pre>";echo $updater;
-
 		}//end of foreach
 
-		echo "THE UPDATE WAS SUCCESSFUL";
+		echo "THE -OMEGA- UPDATE WAS SUCCESSFUL. </br>-EPSILON DATA- UPDATE COMMENCING</br>";
+
+		foreach ($omega_data as $omegakey => $omegavalue) {
+			$issue_id = $omegavalue['issue_id'];
+			$service_point_id = $omegavalue['sp_id'];
+
+			$updater = Doctrine_Manager::getInstance()->getCurrentConnection()->execute("
+				UPDATE facility_issues SET issued_to = $service_point_id WHERE id = $issue_id
+				");
+		}//end of foreach
+
+		echo "THE -EPSILON- UPDATE WAS SUCCESSFUL </br>";
+		echo "THE UPDATE WAS SUCCESSFUL. GOD SPEED. </br>";
 
 	}
 

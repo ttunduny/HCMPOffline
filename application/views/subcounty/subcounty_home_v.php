@@ -132,7 +132,7 @@ $identifier = $this -> session -> userdata('user_indicator');
                      <?php
                         $identifier = $this -> session -> userdata('user_indicator');
                         // echo "This".$identifier;
-                        if ($identifier=='district') {
+                        if (($identifier=='district') && ($identifier=='county')) {
                         // if ($identifier=='district' || $identifier=='county') {
                         ?>
                     <div class="panel-body">

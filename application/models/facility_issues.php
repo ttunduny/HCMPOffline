@@ -40,7 +40,7 @@ class facility_issues extends Doctrine_Record {
 	}
 
 	public function get_all_service_points() {
-		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT id,service_point_name FROM service_points ORDER BY id");
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT id,service_point_name,facility_code FROM service_points ORDER BY id");
 
 		return $query;
 	}
