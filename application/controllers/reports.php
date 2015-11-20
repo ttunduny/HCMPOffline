@@ -4128,7 +4128,7 @@ class Reports extends MY_Controller {
 			return $row_data;
 		}else{
 			$excel_data = array();
-			$excel_data = array('doc_creator' => 'HCMP ', 'doc_title' => 'System Usage Breakdown ', 'file_name' => 'system usage breakdown');
+			$excel_data = array('doc_creator' => 'HCMP ', 'doc_title' => 'System Usage Breakdown ', 'file_name' => 'System Usage Breakdown');
 			$column_data = array(
 				"Facility Name", 
 				"Facility Code", 
@@ -4150,7 +4150,7 @@ class Reports extends MY_Controller {
 			$excel_data['row_data'] = $row_data;
 			$this -> hcmp_functions -> create_excel($excel_data);
 		}
-		// echo "<pre>";print_r($row_data);echo "</pre>";exit;
+		// echo "<pre>";print_r($excel_data);echo "</pre>";exit;
 		
 	}
 	public function filter_monitoring($district_id = null) {
