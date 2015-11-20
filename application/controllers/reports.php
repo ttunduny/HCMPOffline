@@ -3563,7 +3563,8 @@ class Reports extends MY_Controller {
 				$axis = "Packs";
 				break;
 			default :
-				$axis = "Ksh";
+				$axis = "Packs";
+				// $axis = "Ksh";
 				break;
 		endswitch;
 		$commodity_id = ($commodity_id == "NULL") ? null : $commodity_id;

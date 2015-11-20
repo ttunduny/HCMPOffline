@@ -1153,7 +1153,7 @@ class Facility_stocks extends Doctrine_Record {
 				break;
 			case 'units' :
 				// $computation = "ifnull(CEIL(SUM(fs.qty_issued)),0) AS total,d.commodity_name as commodity";
-				$computation = "ifnull(CEIL(SUM(ABS(fs.qty_issued)),0)-ifnull(CEIL(SUM(ABS(fs.adjustmentnve)),0)+ifnull(CEIL(SUM(ABS(fs.adjustmentpve)),0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull(CEIL(SUM(ABS(fs.qty_issued))),0)-ifnull(CEIL(SUM(ABS(fs.adjustmentnve))),0)+ifnull(CEIL(SUM(ABS(fs.adjustmentpve))),0) AS total,d.commodity_name as commodity";
 				break;
 			case 'packs' :
 				// $computation = "ifnull(SUM(ROUND(fs.qty_issued/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
@@ -1165,7 +1165,9 @@ class Facility_stocks extends Doctrine_Record {
 				exit ;
 				break;
 			default :
-				$computation = "ifnull((SUM(ROUND(ABS(fs.qty_issued)/ d.total_commodity_units)))*d.unit_cost ,0)-ifnull((SUM(ROUND(ABS(fs.adjustmentnve)/ d.total_commodity_units)))*d.unit_cost ,0)+ifnull((SUM(ROUND(ABS(fs.adjustmentpve)/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull(SUM(ROUND(ABS(fs.qty_issued)/d.total_commodity_units)),0)-ifnull(SUM(ROUND(ABS(fs.adjustmentnve)/d.total_commodity_units)),0)+ifnull(SUM(ROUND(ABS(fs.adjustmentpve)/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
+			
+				// $computation = "ifnull((SUM(ROUND(ABS(fs.qty_issued)/ d.total_commodity_units)))*d.unit_cost ,0)-ifnull((SUM(ROUND(ABS(fs.adjustmentnve)/ d.total_commodity_units)))*d.unit_cost ,0)+ifnull((SUM(ROUND(ABS(fs.adjustmentpve)/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
 				// $computation = "ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
 				break;
 
