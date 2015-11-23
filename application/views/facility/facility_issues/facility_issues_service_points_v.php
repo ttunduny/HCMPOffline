@@ -284,7 +284,7 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 			    if(days>0){
 					var notification='<ol>The batch you are issuing has an expiry date later than the first one. Please issue the first batch</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
 		           //hcmp custom message dialog
-		           hcmp_message_box(title='HCMP Notification',notification,message_type='error')
+		           hcmp_message_box(title='HCMP Notification',notification,message_type='warning')
 		       // dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
 	        	return; 
 				}

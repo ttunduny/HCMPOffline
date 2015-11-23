@@ -119,55 +119,58 @@ class issues extends MY_Controller {
               $issued_to = $value['issued_to'];
               $issue_date = $value['date_issued'];
               $create_date_raw = $value['created_at'];
-              $create_date = date('F, m Y', strtotime($create_date_raw));
-              $issue_date = date('F, m Y', strtotime($issue_date));
+              $create_date = date('F, d Y', strtotime($create_date_raw));
+              $issue_date = date('F, d Y', strtotime($issue_date));
               $issuer = $value['fname'].' '.$value['lname'];                          
               $issuer_id = $value['issued_by'];
               $create_date_timestamp = strtotime($create_date_raw); 
-              $data_id = $facility_code.'/'.$create_date_timestamp.'/'.$issuer_id;
-              $button_dets_link = '<button class="btn btn-success status_btn form-control" style="width:98%"  data-id="'.$data_id.'" id="'.$data_id.'" data-attr="'.$data_id.'" data-value="'.$data_id.'">View Details</button>';
-              $button_reverse_link = "<a href=\"".base_url().'issues/reverse_issue/'.$commodity_id.'/'.$create_date_timestamp.'/'.$issuer_id.'/reverse'."\"><button class=\"btn btn-danger  form-control\" style=\"width:98%\">Reverse Issue</button></a>";
-              $output[] = array($commodity_name,$batch_no,$qty_issued,$issue_date,$issued_to,$issuer,$button_reverse_link);
+              $data_id = $commodity_id.'/'.$create_date_timestamp.'/'.$issuer_id;
+              $button_reverse_link = '<button class="btn btn-danger status_btn form-control" style="width:98%"  data-id="'.$data_id.'" id="'.$data_id.'" data-attr="'.$data_id.'" data-value="'.$data_id.'">Reverse</button>';
+              // $button_dets_link = '<button class="btn btn-danger status_btn form-control" style="width:98%"  data-id="'.$data_id.'" id="'.$data_id.'" data-attr="'.$data_id.'" data-value="'.$data_id.'">Reverse</button>';
+              // $button_reverse_link = "<a href=\"".base_url().'issues/reverse_issue/'.$commodity_id.'/'.$create_date_timestamp.'/'.$issuer_id.'/reverse'."\"><button class=\"btn btn-danger  form-control\" style=\"width:98%\">Reverse Issue</button></a>";
+              $output[] = array($commodity_name,$batch_no,$qty_issued,$issue_date,$issued_to,$issuer,$create_date,$button_reverse_link);
         }
-        $category_data = array( array("Commodity Name", "Batch Number","Quantity Issued (Units)", "Date of Issue",  "Issued To", "Name of Issuer", "Action"));
-		$graph_data = array_merge($graph_data, array("table_id" => 'issues_tbl'));
-		$graph_data = array_merge($graph_data, array("table_header" => $category_data));
-		$graph_data = array_merge($graph_data, array("table_body" => $output));
-		$data = array();
-		$data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);	
-		return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);   
+  //       $category_data = array( array("Commodity Name", "Batch Number","Quantity Issued (Units)", "Date of Issue",  "Issued To", "Name of Issuer", "Action"));
+		// $graph_data = array_merge($graph_data, array("table_id" => 'issues_tbl'));
+		// $graph_data = array_merge($graph_data, array("table_header" => $category_data));
+		// $graph_data = array_merge($graph_data, array("table_body" => $output));
+		// $data = array();
+		// $data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);	
+		// return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);  
+		echo json_encode($output); 
 	}
 
 	public function get_reversed_table(){
 		$graph_data = array();
 		$facility_code = $this -> session -> userdata('facility_id');
 		$start_date = date('Y-m-01',strtotime('-0 month'));		
-		$current_reversals = Facility_issues::get_facility_issues_reversals($facility_code,$start_date);
+		$current_reversals = Facility_issues::get_facility_issues_reversals($facility_code,$start_date);		
 		foreach ($current_reversals as $key => $value) {
               $commodity_id = $value['commodity_id'];
               $commodity_name = $value['commodity_name'];
               $batch_no = $value['batch_no'];
               $qty_issued = intval($value['qty_issued'])*-1;
               $issued_to = $value['issued_to'];
-              $issue_date = $value['date_issued'];
-              $create_date_raw = $value['created_at'];
-              $create_date = date('F, m Y', strtotime($create_date_raw));
-              $issue_date = date('F, m Y', strtotime($issue_date));
+              // $issue_date = $value['date_issued'];
+              $create_date_raw = $value['date_issued'];
+              $create_date = date('F, d Y', strtotime($create_date_raw));
+              // $issue_date = date('F, m Y', strtotime($issue_date));
               $issuer = $value['fname'].' '.$value['lname'];                          
               $issuer_id = $value['issued_by'];
               $create_date_timestamp = strtotime($create_date_raw); 
-              $data_id = $facility_code.'/'.$create_date_timestamp.'/'.$issuer_id;
-              $button_dets_link = '<button class="btn btn-success status_btn form-control" style="width:98%"  data-id="'.$data_id.'" id="'.$data_id.'" data-attr="'.$data_id.'" data-value="'.$data_id.'">View Details</button>';
-              $button_reverse_link = "<a href=\"".base_url().'issues/reverse_issue/'.$commodity_id.'/'.$create_date_timestamp.'/'.$issuer_id.'/reverse'."\"><button class=\"btn btn-danger  form-control\" style=\"width:98%\">Reverse Issue</button></a>";
-              $output[] = array($commodity_name,$batch_no,$qty_issued,$issue_date,$issued_to,$issuer);
+              // $data_id = $facility_code.'/'.$create_date_timestamp.'/'.$issuer_id;
+              // $button_dets_link = '<button class="btn btn-success status_btn form-control" style="width:98%"  data-id="'.$data_id.'" id="'.$data_id.'" data-attr="'.$data_id.'" data-value="'.$data_id.'">View Details</button>';
+              // $button_reverse_link = "<a href=\"".base_url().'issues/reverse_issue/'.$commodity_id.'/'.$create_date_timestamp.'/'.$issuer_id.'/reverse'."\"><button class=\"btn btn-danger  form-control\" style=\"width:98%\">Reverse Issue</button></a>";
+              $output[] = array($commodity_name,$batch_no,$qty_issued,$issued_to,$create_date,$issuer);
         }
-        $category_data = array( array("Commodity Name", "Batch Number","Quantity Reversed (Units)", "Date of Reversal",  "Issued To", "Person Reversing"));
-		$graph_data = array_merge($graph_data, array("table_id" => 'reversed_issues_tbl	'));
-		$graph_data = array_merge($graph_data, array("table_header" => $category_data));
-		$graph_data = array_merge($graph_data, array("table_body" => $output));
-		$data = array();
-		$data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);	
-		return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);   
+        echo json_encode($output); 
+        // $category_data = array( array("Commodity Name", "Batch Number","Quantity Reversed (Units)", "Date of Reversal",  "Issued To", "Person Reversing"));
+		// $graph_data = array_merge($graph_data, array("table_id" => 'reversed_issues_tbl	'));
+		// $graph_data = array_merge($graph_data, array("table_header" => $category_data));
+		// $graph_data = array_merge($graph_data, array("table_body" => $output));
+		// $data = array();
+		// $data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);	
+		// return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);   
 	}
 
 
