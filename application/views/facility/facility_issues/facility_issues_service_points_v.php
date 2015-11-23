@@ -76,6 +76,7 @@ endforeach;
 						</td>
 						<td>
 						<input type="hidden" id="" name="commodity_id[0]" value="" class="commodity_id"/>
+						<input type="hidden" id="" name="first_expiry[0]" value="" class="first_expiry"/>
 						<input type="hidden" id="" name="total_units[0]" value="" class="total_units"/>
 						<input type="hidden" name="commodity_balance[0]" value="0" class="commodity_balance"/>
 						<input type="hidden" name="facility_stock_id[0]" value="0" class="facility_stock_id"/>	
@@ -166,6 +167,7 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 		        locator.closest("tr").find(".facility_stock_id").val(stock_data[1]);	        
 				locator.closest("tr").find(".batch_no").html(dropdown);
 				locator.closest("tr").find(".expiry_date").val(""+stock_data[3]+"" );
+				locator.closest("tr").find(".first_expiry").val(""+stock_data[3]+"" );
 				locator.closest("tr").find(".balance").val(remaining_comodity_bal);
 				locator.closest("tr").find(".total_commodity_bal").val(remaining_comodity_bal);
 				locator.closest("tr").find(".available_stock").val(remaining_items);		
@@ -237,7 +239,13 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 	       	var data_array=data.split("^");	
 	       	console.log(data_array);
 	       if(data_array[0]!=''){
+	       	var first_expiry = $(this).closest("tr").find(".first_expiry").val();
+	       	first_expiry = $.datepicker.formatDate('@', new Date(first_expiry));	       		       
 	       	var new_date=$.datepicker.formatDate('d M yy', new Date(data_array[0]));
+	       	new_date_ts = $.datepicker.formatDate('@', new Date(new_date));	       		       
+	       	var timestamp_date = new_date_ts-first_expiry;
+	       	var days = Math.floor(timestamp_date / 86400/1000);
+
 	       	var total_issues=0;	       
 	      	var total_stock_bal=data_array[1];	
             var commodity_stock_id_old=parseInt($("input[name='commodity_id["+row_id+"]']").val());
@@ -273,6 +281,13 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 			     locator.closest("tr").find(".total_commodity_bal").val(total_commodity_bal);
 			    locator.closest("tr").find(".quantity_issued").val("0");	
 			    }
+			    if(days>0){
+					var notification='<ol>The batch you are issuing has an expiry date later than the first one. Please issue the first batch</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
+		           //hcmp custom message dialog
+		           hcmp_message_box(title='HCMP Notification',notification,message_type='error')
+		       // dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
+	        	return; 
+				}
 			  			
       }); // change issue type
         $(".commodity_unit_of_issue").on('change', function(){
