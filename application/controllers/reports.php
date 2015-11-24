@@ -323,7 +323,8 @@ class Reports extends MY_Controller {
 
 	public function redistribution_mismatches(){
 		$facility_code = $this -> session -> userdata('facility_id');
-		$data['redistribution_data'] = redistribution_data::get_redistribution_mismatches($facility_code);
+		$data['redistribution_data_source'] = redistribution_data::get_redistribution_mismatches_source($facility_code);
+		$data['redistribution_data_receive'] = redistribution_data::get_redistribution_mismatches_receive($facility_code);
 		$data['title'] = "Redistribution Mismatches";
 		$data['content_view'] = "facility/facility_reports/facility_redistribution_mismatches_v";
 		$data['banner_text'] = "Redistribution Mismatches Summary";
