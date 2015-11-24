@@ -57,7 +57,7 @@ font-size: 12px !important;
 foreach ($service_point as $service_point) :						
 			$service_point_name=$service_point->service_point_name;			
 			$service_point_id=$service_point->id;			
-		echo "<option  value='$service_point_id'>$service_point_name</option>";		
+		echo "<option  value='$service_point_id'>$service_point_name</option>";	//this is what its supposed to do	
 endforeach;
 		?> 
 						</select>
