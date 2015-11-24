@@ -1,8 +1,11 @@
+<?php //echo "<pre>";print_r($service_point);exit; ?>
 <style type="text/css">
 .row div p,.row-fluid div p{
 	padding:10px;
+
 }
 .form-control {
+
 font-size: 12px !important;
 }
 </style>
@@ -18,7 +21,7 @@ font-size: 12px !important;
 	batch, Total Balance <strong>(Units)</strong> is the total for the commodity</p>
 		
 	</div>
-	<!-- <span><a href="<?php //echo base_url().'issues/generate_issue_excel'?>" target="_blank">Download Facility Issues to Service Points Template</a></span> -->
+	<span><a href="<?php echo base_url().'issues/generate_issue_excel'?>" target="_blank">Download Facility Issues to Service Points Template</a></span>
 	</div>
 	
 		
@@ -53,7 +56,8 @@ font-size: 12px !important;
 								<?php 
 foreach ($service_point as $service_point) :						
 			$service_point_name=$service_point->service_point_name;			
-		echo "<option  value='$service_point_name'>$service_point_name</option>";		
+			$service_point_id=$service_point->id;			
+		echo "<option  value='$service_point_id'>$service_point_name</option>";	//this is what its supposed to do	
 endforeach;
 		?> 
 						</select>
@@ -69,14 +73,13 @@ foreach ($commodities as $commodities) :
 			$source_name=$commodities['source_name'];
 			$total_commodity_units=$commodities['total_commodity_units'];
 			$commodity_balance=$commodities['commodity_balance'];		
-		        echo "<option special_data='$commodity_id^$unit^$source_name^$total_commodity_units^$commodity_balance' value='$commodity_id'>$commodity_name. ($source_name)</option>";        
+		echo "<option special_data='$commodity_id^$unit^$source_name^$total_commodity_units^$commodity_balance' value='$commodity_id'>$commodity_name. ($source_name)</option>";		
 endforeach;
 		?> 		
 	</select>
 						</td>
 						<td>
 						<input type="hidden" id="" name="commodity_id[0]" value="" class="commodity_id"/>
-						<input type="hidden" id="" name="first_expiry[0]" value="" class="first_expiry"/>
 						<input type="hidden" id="" name="total_units[0]" value="" class="total_units"/>
 						<input type="hidden" name="commodity_balance[0]" value="0" class="commodity_balance"/>
 						<input type="hidden" name="facility_stock_id[0]" value="0" class="facility_stock_id"/>	
@@ -112,6 +115,7 @@ endforeach;
 <?php echo form_close();?>
 <script>
 $(document).ready(function() {	
+
  var $table = $('table');
 //float the headers
   $table.floatThead({ 
@@ -121,6 +125,7 @@ $(document).ready(function() {
 	});	
 //step one load all the facility data here
 var facility_stock_data=<?php echo $facility_stock_data;?>;
+
             ///when changing the commodity combobox
       		$(".desc").on('change',function(){
       		var row_id=$(this).closest("tr").index();	
@@ -160,6 +165,7 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
     $(this).closest("tr").find(".quantity_issued").val(),'return',''))+total_issues_for_this_batch;
               }
                });		                    	
+
 		        var remaining_items=total_stock_bal-total_issues_for_this_batch;	
 		        var remaining_comodity_bal=total_commodity_bal-total_issues_for_this_item;	
 		
@@ -167,7 +173,6 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 		        locator.closest("tr").find(".facility_stock_id").val(stock_data[1]);	        
 				locator.closest("tr").find(".batch_no").html(dropdown);
 				locator.closest("tr").find(".expiry_date").val(""+stock_data[3]+"" );
-				locator.closest("tr").find(".first_expiry").val(""+stock_data[3]+"" );
 				locator.closest("tr").find(".balance").val(remaining_comodity_bal);
 				locator.closest("tr").find(".total_commodity_bal").val(remaining_comodity_bal);
 				locator.closest("tr").find(".available_stock").val(remaining_items);		
@@ -213,7 +218,9 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
     // selector_object.closest("tr").find(".balance").val(selector_object.closest("tr").find(".commodity_balance").val());
     return;   }// set the balance here
    	selector_object.closest("tr").find(".balance").val(remainder1);	
+
     // selector_object.closest("tr").find(".balance").val(selector_object.closest("tr").find(".total_commodity_bal").val());
+
         });// adding a new row 
         $(".add").click(function() {
         var selector_object=$('#facility_issues_table tr:last');
@@ -236,16 +243,26 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 			var row_id=$(this).closest("tr").index();
 		    var locator=$('option:selected', this);
 			var data =$('option:selected', this).attr('special_data'); 
-	       	var data_array=data.split("^");	
-	       	console.log(data_array);
+	       	var data_array=data.split("^");
+	       	//Get the date of the currently selected option
+	       	var largest_date = $(".batch_no_specific").attr("special_data").index(0);
+	       	var largest_data_array = data.split("^");
+	       	console.log(largest_data_array);
+	       	var large_date = data_array[0];
+	       	//console.log(large_date);
+	       	/*$('option:selected', this).on("change",function(){
+	       		var new_data = $(this).attr('special_data');
+	       		var new_data_array = new_data.split("^");
+	       		console.log(new_data_array);
+	       	});*/
+	       	var no_of_batches = $(".batch_no_specific").size();
+	       	//console.log(no_of_batches);
+	       	//console.log(data_array);
+	       	/*for(var i = 0; i < data_array.length; i++){
+	       		console.log(data_array[0]);
+	       	}*/
 	       if(data_array[0]!=''){
-	       	var first_expiry = $(this).closest("tr").find(".first_expiry").val();
-	       	first_expiry = $.datepicker.formatDate('@', new Date(first_expiry));	       		       
 	       	var new_date=$.datepicker.formatDate('d M yy', new Date(data_array[0]));
-	       	new_date_ts = $.datepicker.formatDate('@', new Date(new_date));	       		       
-	       	var timestamp_date = new_date_ts-first_expiry;
-	       	var days = Math.floor(timestamp_date / 86400/1000);
-
 	       	var total_issues=0;	       
 	      	var total_stock_bal=data_array[1];	
             var commodity_stock_id_old=parseInt($("input[name='commodity_id["+row_id+"]']").val());
@@ -280,15 +297,7 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 			    locator.closest("tr").find(".available_stock").val("0");
 			     locator.closest("tr").find(".total_commodity_bal").val(total_commodity_bal);
 			    locator.closest("tr").find(".quantity_issued").val("0");	
-			    }
-			    if(days>0){
-					var notification='<ol>The batch you are issuing has an expiry date later than the first one. Please issue the first batch</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
-		           //hcmp custom message dialog
-		           hcmp_message_box(title='HCMP Notification',notification,message_type='warning')
-		       // dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
-	        	return; 
-				}
-			  			
+			    }  			
       }); // change issue type
         $(".commodity_unit_of_issue").on('change', function(){
           $(this).closest("tr").find(".quantity_issued").val('0');
@@ -409,7 +418,7 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 				if(type_of_drop_down=='batch_data'){//check if the user option is to create a batch combobox
 					if(row_id==0){//if the row is 0, create a selected default value
 					var facility_stock_id=facility_stock_data[i]['facility_stock_id'];	
-			  		dropdown+="<option selected='selected'"+
+			  		dropdown+="<option selected='selected'"+ "class='batch_no_specific'" + 
 			  		 "special_data="+facility_stock_data[i]['expiry_date']+
 			  		 "^"+facility_stock_data[i]['commodity_balance']+
 			  		 "^"+facility_stock_data[i]['facility_stock_id']+
@@ -421,14 +430,16 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 			  				 total_commodity_balance=total_commodity_balance+parseInt(facility_stock_data[i]['commodity_balance']);
 			  				 drug_id_current=commodity_id_;			  				 
 			  			}else{
-			  		dropdown+="<option "+
+			  		dropdown+="<option "+ "class='batch_no_specific'" + 
 			  		 "special_data="+facility_stock_data[i]['expiry_date']+
 			  		 "^"+facility_stock_data[i]['commodity_balance']+
 			  		 "^"+facility_stock_data[i]['facility_stock_id']+
 			  		 "^"+facility_stock_data[i]['commodity_balance']+">";	 
 			  			total_stock_bal=facility_stock_data[i]['commodity_balance'];
-			  			total_commodity_balance= total_commodity_balance + parseInt(facility_stock_data[i]['commodity_balance']);}			  			
-						dropdown+=facility_stock_data[i]['batch_no'];						
+			  			total_commodity_balance= total_commodity_balance + parseInt(facility_stock_data[i]['commodity_balance']);
+			  		}			  			
+						dropdown+=facility_stock_data[i]['batch_no'];
+						//dropdown+="data-date="+facility_stock_data[i]['expiry_date'];						
 						dropdown+="</option>";}
 			row_id++; //auto-increment the checker
 			}
@@ -491,6 +502,7 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
               }
             ]
           });
+
           intro.start();
       }
     </script>

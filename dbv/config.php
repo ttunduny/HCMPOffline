@@ -16,7 +16,7 @@ define('DB_NAME', 'hcmp_rtk');
  * @see http://dbv.vizuina.com/documentation/#optional-settings
  */
 define('DBV_USERNAME', 'hcmp');
-define('DBV_PASSWORD', 'hcmp');
+define('DBV_PASSWORD', '');
 
 /**
  * @see http://dbv.vizuina.com/documentation/#writing-adapters
