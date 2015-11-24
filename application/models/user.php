@@ -421,8 +421,8 @@ class User extends Doctrine_Record {
 				# code...
 				break;
 		}
-		echo $dawa_sawa;
-		// $query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($dawa_sawa);
+		// echo $dawa_sawa;
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($dawa_sawa);
 
 		return $query;
 	}
