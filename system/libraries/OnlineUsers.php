@@ -16,7 +16,10 @@ class onlineusers{
 	public $ip;
 
 	function OnlineUsers(){
-	 $this->ip=$_SERVER['REMOTE_ADDR']; $this->data = @unserialize(file_get_contents($this->file)); $aryData = $this->data['useronline']; if(!$this->data) $this->data=array(); $timeout = time()-120;
+	 $this->ip=$_SERVER['REMOTE_ADDR']; 
+	 $this->data = @unserialize(file_get_contents($this->file)); 
+	 $aryData = $this->data['useronline']; 
+	 if(!$this->data) $this->data=array(); $timeout = time()-21600;
 
 //Removes expired data 
 	foreach($aryData as $key => $value){ if($value['time'] <= $timeout) { if($value['username']) { $this->data['memonline']; } else $this->data['guestonline']; unset($aryData[$key]); } }
