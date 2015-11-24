@@ -201,6 +201,14 @@ class facility_issues extends Doctrine_Record {
 		$convertfrom=date('Y-m-d',strtotime($from ));
 		$convertto=date('Y-m-d',strtotime($to ));
 
+		echo "SELECT f.date_issued, f.expiry_date, f.batch_no, c.unit_size, f.s11_No, f.balance_as_of,
+ f.adjustmentnve, f.adjustmentpve, f.qty_issued, u.fname, u.lname, f.issued_to AS service_point_name
+FROM facility_issues f
+INNER JOIN user u on f.issued_by = u.id
+INNER JOIN commodities c on c.id = f.commodity_id
+WHERE f.facility_code = $facility_code AND f.status = 1 
+AND f.commodity_id = $commodity_id AND f.date_issued 
+BETWEEN '$convertfrom' AND '$convertto' ORDER BY f.created_at ASC";exit;
 	$transaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 	-> fetchAll("SELECT f.date_issued, f.expiry_date, f.batch_no, c.unit_size, f.s11_No, f.balance_as_of,
  f.adjustmentnve, f.adjustmentpve, f.qty_issued, u.fname, u.lname, f.issued_to AS service_point_name
@@ -258,5 +266,13 @@ BETWEEN '$convertfrom' AND '$convertto' ORDER BY f.created_at ASC");
 			ORDER BY f.`facility_name` ASC");
 		
 		return $query ;
+	}
+
+	public static function get_service_point_stocks($facility_code,$service_point,$commodity_id){
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll(
+			"SELECT * FROM service_point_stocks WHERE facility_code = $facility_code AND service_point_id = $service_point AND commodity_id = $commodity_id"
+			);
+
+		return $query;
 	}
 }

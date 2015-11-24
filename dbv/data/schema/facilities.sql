@@ -1,0 +1,23 @@
+CREATE TABLE `facilities` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `facility_code` int(11) DEFAULT NULL,
+  `facility_name` varchar(100) DEFAULT NULL,
+  `district` int(11) DEFAULT NULL,
+  `partner` int(11) NOT NULL DEFAULT '0',
+  `drawing_rights` int(50) DEFAULT NULL,
+  `owner` varchar(100) DEFAULT NULL,
+  `type` varchar(100) DEFAULT NULL,
+  `level` varchar(30) DEFAULT NULL,
+  `rtk_enabled` int(11) DEFAULT NULL,
+  `cd4_enabled` tinyint(4) DEFAULT NULL,
+  `drawing_rights_balance` int(11) DEFAULT NULL,
+  `using_hcmp` int(11) DEFAULT NULL,
+  `date_of_activation` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `zone` varchar(6) DEFAULT NULL,
+  `contactperson` varchar(50) DEFAULT NULL,
+  `cellphone` int(15) DEFAULT NULL,
+  `targetted` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_facilities_facility_code` (`facility_code`),
+  KEY `idx_facilities_district` (`district`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1

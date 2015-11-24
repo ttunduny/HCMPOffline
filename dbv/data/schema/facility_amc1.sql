@@ -1,0 +1,9 @@
+CREATE TABLE `facility_amc1` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `facility_code` int(11) NOT NULL,
+  `commodity_id` int(5) NOT NULL,
+  `amc` varchar(6) NOT NULL,
+  `last_update` varchar(15) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `facility_code` (`facility_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
