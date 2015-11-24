@@ -418,7 +418,28 @@ class User extends Doctrine_Record {
 				break;
 
 			default:
-				# code...
+				$dawa_sawa = "SELECT 
+							    l.id,
+							    l.action,
+							    l.start_time_of_event,
+							    l.action_id,
+							    l.end_time_of_event,
+							    u.fname,
+							    u.lname,
+							    u.username,
+							    c.county,
+							    a.level
+							FROM
+							    log l,
+							    counties c,
+							    access_level a,
+							    user u
+							WHERE
+							    action = \"Logged In\"
+							        AND start_time_of_event BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+							        AND end_time_of_event = \"0000-00-00 00:00:00\"
+									AND u.county_id = c.id
+							        AND u.usertype_id = a.id AND l.user_id = u.id";
 				break;
 		}
 		// echo $dawa_sawa;

@@ -497,6 +497,7 @@ class Admin extends MY_Controller {
 	}//end of function
 	
 	public function user_logs(){
+		$currently_logged_in_all = user::get_currently_logged_in_users();
 		$currently_logged_in_county = user::get_currently_logged_in_users('county');
 		$currently_logged_in_subcounty = user::get_currently_logged_in_users('subcounty');
 		$currently_logged_in_facility = user::get_currently_logged_in_users('facility');
@@ -506,6 +507,7 @@ class Admin extends MY_Controller {
 		echo "<pre>";print_r($currently_logged_in_subcounty);echo "</pre> END OF SC";
 		echo "<pre>";print_r($currently_logged_in_facility);exit;*/
 
+		$data['currently_logged_in_all'] = $currently_logged_in_all;
 		$data['currently_logged_in_county'] = $currently_logged_in_county;
 		$data['currently_logged_in_subcounty'] = $currently_logged_in_subcounty;
 		$data['currently_logged_in_facility'] = $currently_logged_in_facility;
