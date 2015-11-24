@@ -502,9 +502,14 @@ class Admin extends MY_Controller {
 		$currently_logged_in_facility = user::get_currently_logged_in_users('facility');
 
 		
-		echo "<pre>";print_r($currently_logged_in_county);echo "</pre> END OF C";
-		echo "<pre>";print_r($currently_logged_in_subcounty);echo "</pre> END OF SC";
-		echo "<pre>";print_r($currently_logged_in_facility);exit;
+		// echo "<pre>";print_r($currently_logged_in_county);echo "</pre> END OF C";
+		// echo "<pre>";print_r($currently_logged_in_subcounty);echo "</pre> END OF SC";
+		// echo "<pre>";print_r($currently_logged_in_facility);exit;
+
+		$data['currently_logged_in_county'] = $currently_logged_in_county;
+		$data['currently_logged_in_subcounty'] = $currently_logged_in_subcounty;
+		$data['currently_logged_in_facility'] = $currently_logged_in_facility;
+		
 		$data['currently_logged_in'] = $currently_logged_in;
 		$data['title'] = "User Logs";
 		$data['content_view'] = "Admin/logging";
