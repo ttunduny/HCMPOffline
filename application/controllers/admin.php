@@ -515,4 +515,11 @@ class Admin extends MY_Controller {
 		$data['content_view'] = "Admin/logging";
 		$this -> load -> view("shared_files/template/dashboard_v", $data);
 	}
+
+	public function show_online_users(){
+		// $this->load->library('OnlineUsers');
+		$all_online = $this->onlineusers->total_users();
+
+		echo "<pre> Here I am  ";print_r($all_online);echo "</pre>";
+	}
 }
