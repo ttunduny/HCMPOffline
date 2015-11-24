@@ -1,3 +1,4 @@
+<?php //echo "<pre>";print_r($service_point);exit; ?>
 <style type="text/css">
 .row div p,.row-fluid div p{
 	padding:10px;
@@ -55,7 +56,8 @@ font-size: 12px !important;
 								<?php 
 foreach ($service_point as $service_point) :						
 			$service_point_name=$service_point->service_point_name;			
-		echo "<option  value='$service_point_name'>$service_point_name</option>";		
+			$service_point_id=$service_point->id;			
+		echo "<option  value='$service_point_id'>$service_point_name</option>";	//this is what its supposed to do	
 endforeach;
 		?> 
 						</select>

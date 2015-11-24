@@ -166,7 +166,7 @@ public function send_sms($phones,$message) {
 	}
 public function send_order_submission_email($message,$subject,$attach_file){
 	 
-      $cc_email=($this->test_mode)?'kariukijackson@gmail.com': 'anganga.pmo@gmail.com,sochola06@yahoo.com';
+      $cc_email=($this->test_mode)?'karsanrichard@gmail.com': 'anganga.pmo@gmail.com,sochola06@yahoo.com';
 	 
 		
 	   $facility_code=$this -> session -> userdata('news');
@@ -183,7 +183,7 @@ public function send_order_submission_email($message,$subject,$attach_file){
 }
 public function send_order_approval_email($message,$subject,$attach_file,$facility_code,$reject_order=null){
 	  
- $cc_email=($this->test_mode)?'kariukijackson@gmail.com': 'anganga.pmo@gmail.com,sochola06@yahoo.com';
+ $cc_email=($this->test_mode)?'karsanrichard@gmail.com': 'anganga.pmo@gmail.com,sochola06@yahoo.com';
 	   
 	  
  $data=User::getUsers($facility_code)->toArray();
@@ -193,7 +193,7 @@ public function send_order_approval_email($message,$subject,$attach_file,$facili
 	  
 	  else:
 		  
-		  $email_address=($this->test_mode)?'kariukijackson@gmail.com': 'shamim.kuppuswamy@kemsa.co.ke,
+		  $email_address=($this->test_mode)?'karsanrichard@gmail.com': 'shamim.kuppuswamy@kemsa.co.ke,
 samuel.wataku@kemsa.co.ke,
 jmunyu@kemsa.co.ke,
 imugada@kemsa.co.ke,
@@ -210,7 +210,7 @@ samuel.wataku@kemsa.co.ke,';
 }
 public function send_order_delivery_email($message,$subject,$attach_file=null){
 
-$cc_email=($this->test_mode)?'kariukijackson@gmail.com': 'anganga.pmo@gmail.com,sochola06@yahoo.com';
+$cc_email=($this->test_mode)?'karsanrichard@gmail.com': 'anganga.pmo@gmail.com,sochola06@yahoo.com';
 
 	   $facility_code=$this -> session -> userdata('news');
 	   
@@ -226,7 +226,7 @@ $cc_email=($this->test_mode)?'kariukijackson@gmail.com': 'anganga.pmo@gmail.com,
 
 public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL,$cc_email=NULL){
   
-		$mail_list=($this->test_mode)?'kariukijackson@gmail.com,kariukijackson@ymail.com': 'rkihoto@clintonhealthaccess.org,
+		$mail_list=($this->test_mode)?'karsanrichard@gmail.com,karsanrichard@ymail.com': 'rkihoto@clintonhealthaccess.org,
   		eunicew2000@yahoo.com,
   		gmacharia@clintonhealthaccess.org,
   		Jhungu@clintonhealthaccess.org,
@@ -235,7 +235,7 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
   		kyalocatherine@gmail.com,
   		ashminneh.mugo@gmail.com,
   		smutheu@clintonhealthaccess.org,
-  		kariukijackson@gmail.com,
+  		karsanrichard@gmail.com,
   		kelvinmwas@gmail.com,';
 			
 		$fromm='hcmpkenya@gmail.com';
