@@ -502,15 +502,29 @@ class Admin extends MY_Controller {
 		$currently_logged_in_subcounty = user::get_currently_logged_in_users('subcounty');
 		$currently_logged_in_facility = user::get_currently_logged_in_users('facility');
 
+		$previous_logged_in_all = user::get_previous_logs();
+		$previous_logged_in_county = user::get_previous_logs('county');
+		$previous_logged_in_subcounty = user::get_previous_logs('subcounty');
+		$previous_logged_in_facility = user::get_previous_logs('facility');
+
 		
 		/*echo "<pre>";print_r($currently_logged_in_county);echo "</pre> END OF C";
 		echo "<pre>";print_r($currently_logged_in_subcounty);echo "</pre> END OF SC";
 		echo "<pre>";print_r($currently_logged_in_facility);exit;*/
 
+		echo "<pre>";print_r($previous_logged_in_county);echo "</pre> END OF C";
+		echo "<pre>";print_r($previous_logged_in_subcounty);echo "</pre> END OF SC";
+		echo "<pre>";print_r($previous_logged_in_facility);exit;
+
 		$data['currently_logged_in_all'] = $currently_logged_in_all;
 		$data['currently_logged_in_county'] = $currently_logged_in_county;
 		$data['currently_logged_in_subcounty'] = $currently_logged_in_subcounty;
 		$data['currently_logged_in_facility'] = $currently_logged_in_facility;
+
+		$data['previous_logged_in_all'] = $previous_logged_in_all;
+		$data['previous_logged_in_county'] = $previous_logged_in_county;
+		$data['previous_logged_in_subcounty'] = $previous_logged_in_subcounty;
+		$data['previous_logged_in_facility'] = $previous_logged_in_facility;
 		
 		$data['currently_logged_in'] = $currently_logged_in;
 		$data['title'] = "User Logs";
