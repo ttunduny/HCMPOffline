@@ -21,7 +21,7 @@ class issues extends MY_Controller {
 	 |2. check if the facility has commodity data
 	 |4. save the data in the facility stock, facility transaction , issues table
 	 */
-	public function index($checker = NULL) {
+	 public function index($checker = NULL) {
 	 	$facility_code = $this -> session -> userdata('facility_id');
 	 	switch ($checker) :
 	 	case 'internal' :
@@ -174,12 +174,12 @@ class issues extends MY_Controller {
 	}
 
 
-	public function generate_issue_excel()
-	{
-		$this -> hcmp_functions -> clone_facility_issues_sp_template('download_file');
-	
-	}
-	public function county_store_home()
+	 public function generate_issue_excel()
+	 {
+	 	$this -> hcmp_functions -> clone_facility_issues_sp_template('download_file');
+	 	
+	 }
+	 public function county_store_home()
 	 {
 	 	$county_id = $this -> session -> userdata('county_id');
 
@@ -194,7 +194,7 @@ class issues extends MY_Controller {
 	 }
 
 	 /* Function For Donations to Districts*/
-	public function county_store()
+	 public function county_store()
 	 {
 	 	$county_id = $this -> session -> userdata('county_id');
 	 	$data['county_id'] = $this -> session -> userdata('county_id');
@@ -214,13 +214,13 @@ class issues extends MY_Controller {
 	 	$this -> load -> view("shared_files/template/template", $data);
 	 }
 
-	public function county_store_facilities()
+	 public function county_store_facilities()
 	 {
 	 	$county_id = $this -> session -> userdata('county_id');
 
 	 }
 
-	public function county_store_internal()
+	 public function county_store_internal()
 	 {
 	 	$county_id = $this -> session -> userdata('county_id');
 	 	$county = counties::get_county_name($county_id);
@@ -238,7 +238,7 @@ class issues extends MY_Controller {
 	 	$this -> load -> view("shared_files/template/template", $data);
 	 }
 
-	public function store_home(){
+	 public function store_home(){
 	 	$district_id = $this -> session -> userdata('district_id');	
 		// echo $district_id;exit;
 		//$data['expiry_data'] = Facility_stocks::drug_store_commodity_expiries($district_id);
@@ -252,7 +252,7 @@ class issues extends MY_Controller {
 	 	$this -> load -> view("shared_files/template/template", $data);
 	 }
 
-	public function district_store(){
+	 public function district_store(){
 	 	$district_id = $this -> session -> userdata('district_id');	
 	 	$dist = districts::get_district_name_($district_id);	
 	 	$data['district_id'] = $this -> session -> userdata('district_id');
@@ -270,7 +270,7 @@ class issues extends MY_Controller {
 
 	 }
 
-	public function district_store_internal(){
+	 public function district_store_internal(){
 	//THIS FUNCTION VANISHES WHEN A COLLINS RELATED PULL GOES DOWN
 	//#collins_repo #my_function_my_choice #hahahaha # this was some random thing so that i can commit this function. Cheers
 	 	$district_id = $this -> session -> userdata('district_id');	
@@ -290,12 +290,12 @@ class issues extends MY_Controller {
 
 	 }
 
-	public function district_store_internal_issue()
+	 public function district_store_internal_issue()
 	 {
 			// echo "<pre>";print_r($this -> input -> post());echo "</pre>";exit;
 			//security check
-	 	$facility_code = $this -> session -> userdata('facility_id');
-	 	$district_id = $this -> session -> userdata('district_id');
+		 	$facility_code = $this -> session -> userdata('facility_id');
+		 	$district_id = $this -> session -> userdata('district_id');
 			$service_point = 2;//predefined since 2 is the official code for all district stores
 			$destined_district = array_values($this->input->post('district'));
 			$commodity_id = array_values($this -> input -> post('desc'));
@@ -592,29 +592,29 @@ class issues extends MY_Controller {
 	public function county_store_external_issue(){//karsan
 			// echo "<pre>";print_r($this -> input -> post());echo "</pre>";exit;
 			//security check
-			if ($this -> input -> post('mfl')) :
+		if ($this -> input -> post('mfl')) :
 			$facility_code = $this -> session -> userdata('facility_id');
-			$district_id = $this -> session -> userdata('district_id');
-			$county_id = $this -> session -> userdata('county_id');
-			$service_point = array_values($this -> input -> post('mfl'));
-			$commodity_id = array_values($this -> input -> post('desc'));
-			$commodity_balance_before = array_values($this -> input -> post('commodity_balance'));
-			$facility_stock_id = array_values($this -> input -> post('facility_stock_id'));
-			$batch_no = array_values($this -> input -> post('batch_no'));
-			$expiry_date = array_values($this -> input -> post('expiry_date'));
-			$commodity_unit_of_issue = array_values($this -> input -> post('commodity_unit_of_issue'));
-			$quantity_issued = array_values($this -> input -> post('quantity_issued'));
-			$clone_datepicker_normal_limit_today = array_values($this -> input -> post('clone_datepicker_normal_limit_today'));
-			$manufacture = array_values($this -> input -> post('manufacture'));
+		$district_id = $this -> session -> userdata('district_id');
+		$county_id = $this -> session -> userdata('county_id');
+		$service_point = array_values($this -> input -> post('mfl'));
+		$commodity_id = array_values($this -> input -> post('desc'));
+		$commodity_balance_before = array_values($this -> input -> post('commodity_balance'));
+		$facility_stock_id = array_values($this -> input -> post('facility_stock_id'));
+		$batch_no = array_values($this -> input -> post('batch_no'));
+		$expiry_date = array_values($this -> input -> post('expiry_date'));
+		$commodity_unit_of_issue = array_values($this -> input -> post('commodity_unit_of_issue'));
+		$quantity_issued = array_values($this -> input -> post('quantity_issued'));
+		$clone_datepicker_normal_limit_today = array_values($this -> input -> post('clone_datepicker_normal_limit_today'));
+		$manufacture = array_values($this -> input -> post('manufacture'));
 
-			$total_units = array_values($this -> input -> post('total_units'));
-			$total_items = count($facility_stock_id);
+		$total_units = array_values($this -> input -> post('total_units'));
+		$total_items = count($facility_stock_id);
 			//var_dump($total_units);exit;
-			$data_array_issues_table = array();
-			$data_array_redistribution_table = array();
+		$data_array_issues_table = array();
+		$data_array_redistribution_table = array();
 
-			$new_transaction_entry = array();
-			$digested_expiry = $expiry_date[0] ;
+		$new_transaction_entry = array();
+		$digested_expiry = $expiry_date[0] ;
 			for ($i = 0; $i < $total_items; $i++) ://compute the actual stock
 
 			$total_items_issues = ($commodity_unit_of_issue[$i] == 'Pack_Size') ? $quantity_issued[$i] * $total_units[$i] : $quantity_issued[$i];
@@ -904,10 +904,10 @@ class issues extends MY_Controller {
 	// facility internal issue
 	public function internal_issue() {
 		//security check
+		// echo "<pre>";print_r($this->input->post());echo "</pre>";exit;
 		if ($this -> input -> post('service_point')) :
-			$facility_code = $this -> session -> userdata('facility_id');
+		$facility_code = $this -> session -> userdata('facility_id');
 		$service_points = array_values($this -> input -> post('service_point'));
-
 		$commodity_id = array_values($this -> input -> post('desc'));
 		$commodity_balance_before = array_values($this -> input -> post('commodity_balance'));
 		$facility_stock_id = array_values($this -> input -> post('facility_stock_id'));
@@ -937,8 +937,34 @@ class issues extends MY_Controller {
 				`closing_stock`=`closing_stock`-$total_items_issues
 				WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");
 
-			endfor;
+			//insertion to service points stock table
+			$sp_checker = facility_issues::get_service_point_stocks($facility_code,$service_points[$i],$commodity_id[$i]);
 
+			// $current_balance = $commodity_balance_before[$i] - $total_items_issues;
+			
+			if (count($sp_checker)>0) {
+				$update = Doctrine_Manager::getInstance()->getCurrentConnection()->execute(
+					"UPDATE service_point_stocks SET current_balance = current_balance + $total_items_issues WHERE facility_code = $facility_code AND service_point_id = $service_points[$i]"
+					);
+			}else{
+				$sp_stocks_array= array();
+				$sp_stocks = array(
+					'facility_code' => $facility_code,
+					'batch_no' => $batch_no[$i],
+					'commodity_id' => $commodity_id[$i],
+					'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])),
+					'service_point_id' => $service_points[$i],
+					'current_balance' => $total_items_issues
+					);
+
+
+				array_push($sp_stocks_array, $sp_stocks);
+				// echo "<pre>";print_r($sp_stocks);exit;
+				$this->db->insert_batch('service_point_stocks',$sp_stocks_array);
+			}
+			
+			endfor;
+			// echo "Insertion done";exit;
 			//updates the log tables with the action
 			$user = $this -> session -> userdata('user_id');
 			$user_action = "issued";
@@ -1142,13 +1168,14 @@ class issues extends MY_Controller {
 					$epsilon_data[$a]['issue_id'] = $alpha_data[$a]['id'];
 					$epsilon_data[$a]['sp_id'] = $beta_data[$b]['id'];
 					break;
-					// echo "<pre>";echo $beta_data[$b]['id'].'  '.$b;echo "</pre>";
+					echo "<pre>";echo $beta_data[$b]['id'].'  '.$b;echo "</pre>";
 				}
 			}
 		}
 
 		
 
+		// echo "<pre>";print_r($omega_data);exit;
 		// echo "<pre>";print_r($epsilon_data);exit;
 		foreach ($omega_data as $omegakey => $omegavalue) {
 			$issue_id = $omegavalue['issue_id'];
@@ -1158,19 +1185,20 @@ class issues extends MY_Controller {
 				UPDATE facility_issues SET issued_to = $service_point_id WHERE id = $issue_id
 				");
 		}//end of foreach
+		$omega_affected = $this->db->affected_rows();
+		echo "OMEGA AFFECTED: ".$omega_affected;
+		echo "<br>THE -OMEGA- UPDATE WAS SUCCESSFUL. </br>-EPSILON DATA- UPDATE COMMENCING</br>";
 
-		echo "THE -OMEGA- UPDATE WAS SUCCESSFUL. </br>-EPSILON DATA- UPDATE COMMENCING</br>";
+		foreach ($epsilon_data as $epsilonkey => $epsilonvalue) {
+			$issue_id = $epsilonvalue['issue_id'];
+			$service_point_id = $epsilonvalue['sp_id'];
 
-		foreach ($omega_data as $omegakey => $omegavalue) {
-			$issue_id = $omegavalue['issue_id'];
-			$service_point_id = $omegavalue['sp_id'];
-
-			$updater = Doctrine_Manager::getInstance()->getCurrentConnection()->execute("
-				UPDATE facility_issues SET issued_to = $service_point_id WHERE id = $issue_id
-				");
+			$updater = Doctrine_Manager::getInstance()->getCurrentConnection()->execute("UPDATE facility_issues SET issued_to = $service_point_id WHERE id = $issue_id");
 		}//end of foreach
+		$epsilon_affected = $this->db->affected_rows();
+		echo "EPSILON AFFECTED: ".$epsilon_affected;
 
-		echo "THE -EPSILON- UPDATE WAS SUCCESSFUL </br>";
+		echo "<br>THE -EPSILON- UPDATE WAS SUCCESSFUL </br>";
 		echo "THE UPDATE WAS SUCCESSFUL. GOD SPEED. </br>";
 
 	}

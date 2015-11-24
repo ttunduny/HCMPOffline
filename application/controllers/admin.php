@@ -98,19 +98,19 @@ class Admin extends MY_Controller {
 		$graph_data = array();
 		$current_issues = Facility_issues::get_issues_for_reversals();
 		foreach ($current_issues as $key => $value) {
-              $facility_name = $value['facility_name'];
-              $facility_code = $value['facility_code'];
-              $issue_date_raw = $value['created_at'];
-              $issue_date = date('F, m Y', strtotime($issue_date_raw));
-              $issuer = $value['fname'].' '.$value['lname'];                          
-              $issuer_id = $value['issued_by'];
-              $issue_date_timestamp = strtotime($issue_date_raw); 
-              $data_id = $facility_code.'/'.$issue_date_timestamp.'/'.$issuer_id;
-              $button_dets_link = '<button class="btn btn-success status_btn form-control" style="width:98%"  data-id="'.$data_id.'" id="'.$data_id.'" data-attr="'.$data_id.'" data-value="'.$data_id.'">View Details</button>';
-              $button_reverse_link = "<a href=\"".base_url().'admin/reverse_issue/'.$facility_code.'/'.$issue_date_timestamp.'/'.$issuer_id.'/reverse'."\"><button class=\"btn btn-danger  form-control\" style=\"width:98%\">Reverse Issue</button></a>";
-              $output[] = array($facility_code,$facility_name,$issue_date,$issuer,$button_reverse_link);
-        }
-        $category_data = array( array("Facility Code", "Facility Name", "Date of Issue", "Name of Issuer", "Action"));
+			$facility_name = $value['facility_name'];
+			$facility_code = $value['facility_code'];
+			$issue_date_raw = $value['created_at'];
+			$issue_date = date('F, m Y', strtotime($issue_date_raw));
+			$issuer = $value['fname'].' '.$value['lname'];                          
+			$issuer_id = $value['issued_by'];
+			$issue_date_timestamp = strtotime($issue_date_raw); 
+			$data_id = $facility_code.'/'.$issue_date_timestamp.'/'.$issuer_id;
+			$button_dets_link = '<button class="btn btn-success status_btn form-control" style="width:98%"  data-id="'.$data_id.'" id="'.$data_id.'" data-attr="'.$data_id.'" data-value="'.$data_id.'">View Details</button>';
+			$button_reverse_link = "<a href=\"".base_url().'admin/reverse_issue/'.$facility_code.'/'.$issue_date_timestamp.'/'.$issuer_id.'/reverse'."\"><button class=\"btn btn-danger  form-control\" style=\"width:98%\">Reverse Issue</button></a>";
+			$output[] = array($facility_code,$facility_name,$issue_date,$issuer,$button_reverse_link);
+		}
+		$category_data = array( array("Facility Code", "Facility Name", "Date of Issue", "Name of Issuer", "Action"));
 		$graph_data = array_merge($graph_data, array("table_id" => 'issues_tbl'));
 		$graph_data = array_merge($graph_data, array("table_header" => $category_data));
 		$graph_data = array_merge($graph_data, array("table_body" => $output));
@@ -126,19 +126,19 @@ class Admin extends MY_Controller {
 		$graph_data = array();
 		$current_redistributions = Facility_issues::get_redistributions_for_reversals();
 		foreach ($current_redistributions as $key => $value) {
-              $facility_name = $value['facility_name'];
-              $facility_code = $value['facility_code'];
-              $redistribution_date_raw = $value['date_sent'];
-              $redistribution_date = date('F, m Y', strtotime($redistribution_date_raw));
-              $issuer = $value['fname'].' '.$value['lname'];                          
-              $issuer_id = $value['sender_id'];
-              $redistribution_date_timestamp = strtotime($redistribution_date_raw); 
-              $data_id = $facility_code.'/'.$redistribution_date_timestamp.'/'.$issuer_id;
-              $button_dets_link = '<button class="btn btn-success status_btn form-control" style="width:98%"  data-id="'.$data_id.'" id="'.$data_id.'" data-attr="'.$data_id.'" data-value="'.$data_id.'">View Details</button>';
-              $button_reverse_link = "<a href=\"".base_url().'admin/reverse_redistribution/'.$facility_code.'/'.$redistribution_date_timestamp.'/'.$issuer_id.'/reverse'."\"><button class=\"btn btn-danger  form-control\" style=\"width:98%\">Reverse Redistribution</button></a>";
-              $output[] = array($facility_code,$facility_name,$redistribution_date,$issuer,$button_reverse_link);
-        }
-        $category_data = array( array("Facility Code", "Facility Name", "Redistribution Date", "Name of Issuer","Action"));
+			$facility_name = $value['facility_name'];
+			$facility_code = $value['facility_code'];
+			$redistribution_date_raw = $value['date_sent'];
+			$redistribution_date = date('F, m Y', strtotime($redistribution_date_raw));
+			$issuer = $value['fname'].' '.$value['lname'];                          
+			$issuer_id = $value['sender_id'];
+			$redistribution_date_timestamp = strtotime($redistribution_date_raw); 
+			$data_id = $facility_code.'/'.$redistribution_date_timestamp.'/'.$issuer_id;
+			$button_dets_link = '<button class="btn btn-success status_btn form-control" style="width:98%"  data-id="'.$data_id.'" id="'.$data_id.'" data-attr="'.$data_id.'" data-value="'.$data_id.'">View Details</button>';
+			$button_reverse_link = "<a href=\"".base_url().'admin/reverse_redistribution/'.$facility_code.'/'.$redistribution_date_timestamp.'/'.$issuer_id.'/reverse'."\"><button class=\"btn btn-danger  form-control\" style=\"width:98%\">Reverse Redistribution</button></a>";
+			$output[] = array($facility_code,$facility_name,$redistribution_date,$issuer,$button_reverse_link);
+		}
+		$category_data = array( array("Facility Code", "Facility Name", "Redistribution Date", "Name of Issuer","Action"));
 		$graph_data = array_merge($graph_data, array("table_id" => 'redistributions_tbl'));
 		$graph_data = array_merge($graph_data, array("table_header" => $category_data));
 		$graph_data = array_merge($graph_data, array("table_body" => $output));
@@ -153,19 +153,19 @@ class Admin extends MY_Controller {
 		$graph_data = array();
 		$current_reversed = Facility_issues::get_reversed_issues();
 		foreach ($current_reversed as $key => $value) {
-              $facility_name = $value['facility_name'];
-              $facility_code = $value['facility_code'];
-              $issue_date_raw = $value['created_at'];
-              $issue_date = date('F, m Y', strtotime($issue_date_raw));
-              $issuer = $value['fname'].' '.$value['lname'];                          
-              $issuer_id = $value['issued_by'];
-              $issue_date_timestamp = strtotime($issue_date_raw); 
-              $data_id = $facility_code.'/'.$issue_date_timestamp.'/'.$issuer_id;
-              $button_dets_link = '<button class="btn btn-success reverse_status_btn form-control" style="width:98%"  data-id="'.$data_id.'" id="'.$data_id.'" data-attr="'.$data_id.'" data-value="'.$data_id.'">View Details</button>';
-              $button_reverse_link = "<a href=\"".base_url().'admin/undo_reverse_issue/'.$facility_code.'/'.$issue_date_timestamp.'/'.$issuer_id.'/reverse'."\"><button class=\"btn btn-danger  form-control\" style=\"width:98%\">Undo Reverse Issue</button></a>";
-              $output[] = array($facility_code,$facility_name,$issue_date,$issuer,$button_dets_link,$button_reverse_link);
-        }
-        $category_data = array( array("Facility Code", "Facility Name", "Date of Issue", "Name of Issuer","Details", "Action"));
+			$facility_name = $value['facility_name'];
+			$facility_code = $value['facility_code'];
+			$issue_date_raw = $value['created_at'];
+			$issue_date = date('F, m Y', strtotime($issue_date_raw));
+			$issuer = $value['fname'].' '.$value['lname'];                          
+			$issuer_id = $value['issued_by'];
+			$issue_date_timestamp = strtotime($issue_date_raw); 
+			$data_id = $facility_code.'/'.$issue_date_timestamp.'/'.$issuer_id;
+			$button_dets_link = '<button class="btn btn-success reverse_status_btn form-control" style="width:98%"  data-id="'.$data_id.'" id="'.$data_id.'" data-attr="'.$data_id.'" data-value="'.$data_id.'">View Details</button>';
+			$button_reverse_link = "<a href=\"".base_url().'admin/undo_reverse_issue/'.$facility_code.'/'.$issue_date_timestamp.'/'.$issuer_id.'/reverse'."\"><button class=\"btn btn-danger  form-control\" style=\"width:98%\">Undo Reverse Issue</button></a>";
+			$output[] = array($facility_code,$facility_name,$issue_date,$issuer,$button_dets_link,$button_reverse_link);
+		}
+		$category_data = array( array("Facility Code", "Facility Name", "Date of Issue", "Name of Issuer","Details", "Action"));
 		$graph_data = array_merge($graph_data, array("table_id" => 'reversed_issues_tbl'));
 		$graph_data = array_merge($graph_data, array("table_header" => $category_data));
 		$graph_data = array_merge($graph_data, array("table_body" => $output));
@@ -215,7 +215,7 @@ class Admin extends MY_Controller {
 					'reversal_time'=>$current_time,
 					'reversal_status'=>'1',
 
-				);
+					);
 				
 				$this->db->insert('reversals', $reverse_data); 
 				$facility_stocks_data = facility_stocks::get_current_stock_for_reversal($value['facility_code'],$value['commodity_id'],$value['batch_no']);
@@ -231,7 +231,7 @@ class Admin extends MY_Controller {
 				$this->db->where('id', $value['id']);
 				$this->db->delete('facility_issues'); 
 
-				 
+
 			}
 			redirect('admin/reversals');
 		}
@@ -277,7 +277,7 @@ class Admin extends MY_Controller {
 					'reversal_time'=>$current_time,
 					'reversal_status'=>'1',
 
-				);
+					);
 				echo "<pre>";
 				print_r($reverse_data);die;
 				$this->db->insert('reverse_redistributions', $reverse_data); 
@@ -294,7 +294,7 @@ class Admin extends MY_Controller {
 				$this->db->where('id', $value['id']);
 				$this->db->delete('redistribution_data'); 
 
-				 
+
 			}
 			redirect('admin/reversals');
 		}
@@ -336,7 +336,7 @@ class Admin extends MY_Controller {
 					'created_at'=>$value['created_at'],
 					'issued_by'=>$value['issued_by'],
 					'status'=>$value['status']
-				);
+					);
 				
 				$this->db->insert('facility_issues', $undo_reversed_data); 
 				$facility_stocks_data = facility_stocks::get_current_stock_for_reversal($value['facility_code'],$value['commodity_id'],$value['batch_no']);
@@ -352,7 +352,7 @@ class Admin extends MY_Controller {
 				$this->db->where('id', $value['id']);
 				$this->db->delete('reversals'); 
 
-				 
+
 			}
 			redirect('admin/reversals');
 		}
@@ -396,12 +396,12 @@ class Admin extends MY_Controller {
 		
 		
 		//update user
-			$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
-			$update_user->execute("UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
-									district ='$district_name_edit',facility ='$facility_id_edit',
+		$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
+		$update_user->execute("UPDATE `user` SET fname ='$fname' ,lname ='$lname',email ='$email_edit',usertype_id =$user_type_edit_district,telephone ='$telephone_edit',
+			district ='$district_name_edit',facility ='$facility_id_edit',
 									-- status ='$status',
 									county_id ='$county'
-                                  	WHERE `id`= '$user_id'");
+									WHERE `id`= '$user_id'");
 		
 	}
 
@@ -412,88 +412,102 @@ class Admin extends MY_Controller {
 		// echo $status. " " . $member_id;exit;
 		// echo "UPDATE `user` SET status = '$status' WHERE `id`= '$user_id'";exit;
 		$update_user = Doctrine_Manager::getInstance()->getCurrentConnection();
-			$update_user->execute("UPDATE `user` SET status = '$status' WHERE `id`= '$user_id'");
-			echo $update_user." success";
+		$update_user->execute("UPDATE `user` SET status = '$status' WHERE `id`= '$user_id'");
+		echo $update_user." success";
 	}
 
 	public function update_stock_prices(){
-	$inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xls';
-	
-	// echo 'Loading file ',pathinfo($inputFileName,PATHINFO_BASENAME),' using IOFactory to identify the format<br />';
-	$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
+		$inputFileName = 'print_docs/excel/excel_template/KEMSA Customer Order Form.xls';
+
+		// echo 'Loading file ',pathinfo($inputFileName,PATHINFO_BASENAME),' using IOFactory to identify the format<br />';
+		$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
 
 
-	$commodities = commodities::get_all_2();
-	$system_commodity_details = array();
-	$excel_commodity_details = array();
-	$ate_hwat = array();
-	$temp = array();
-	$keys_na_si_alishia = array();
+		$commodities = commodities::get_all_2();
+		$system_commodity_details = array();
+		$excel_commodity_details = array();
+		$ate_hwat = array();
+		$temp = array();
+		$keys_na_si_alishia = array();
 
-	// echo "<pre>";print_r($commodities);echo "</pre>";exit;
+		// echo "<pre>";print_r($commodities);echo "</pre>";exit;
 
-	foreach ($commodities as $commodity) {
-		$system_commodity_details[] = array(
-			'id'=> $commodity['id'],
-			'commodity_code'=> $commodity['commodity_code'],
-			'commodity_name'=> $commodity['commodity_name']
-			);
-	}//end of foreach
+		foreach ($commodities as $commodity) {
+			$system_commodity_details[] = array(
+				'id'=> $commodity['id'],
+				'commodity_code'=> $commodity['commodity_code'],
+				'commodity_name'=> $commodity['commodity_name']
+				);
+		}//end of foreach
 
 
-	$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
-	$sheet = $objPHPExcel->getSheet(0); 
-	$highestRow = $sheet->getHighestRow(); 
-    $highestColumn = $sheet->getHighestColumn();
+		$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+		$sheet = $objPHPExcel->getSheet(0); 
+		$highestRow = $sheet->getHighestRow(); 
+		$highestColumn = $sheet->getHighestColumn();
 
-	// echo "<pre>";print_r($sheetData);echo "</pre>";exit;
+		// echo "<pre>";print_r($sheetData);echo "</pre>";exit;
 
-	for ($row=17; $row < $highestRow; $row++) { 
-	$rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE); 
-	$excel_commodity_details[] = array(
-		'commodity_name' => $rowData[0][3], 
-		'price' => $rowData[0][6],
-		'commodity_code' => $rowData[0][2]
-		);
-	}
-	// echo "<pre>";print_r($excel_commodity_details);echo "</pre>";exit;
+		for ($row=17; $row < $highestRow; $row++) { 
+			$rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,NULL,TRUE,FALSE); 
+			$excel_commodity_details[] = array(
+				'commodity_name' => $rowData[0][3], 
+				'price' => $rowData[0][6],
+				'commodity_code' => $rowData[0][2]
+				);
+		}
+		// echo "<pre>";print_r($excel_commodity_details);echo "</pre>";exit;
 
-	// echo "<pre>";print_r($system_commodity_details);echo "</pre>";exit;
-	
-	$synthesised = array();
-	$unsynthesised = array();
-	foreach ($excel_commodity_details as $excels) {
-		foreach ($system_commodity_details as $systems) {
-			if ($excels['commodity_name'] == $systems['commodity_name']){
-				$synthesised[] = array(
-					'id' => $systems['id'], 
-					'commodity_name' => $excels['name'], 
-					'new_unit_price' => $excels['price'],
-					'commodity_code'=> $excels['commodity_code']
+		// echo "<pre>";print_r($system_commodity_details);echo "</pre>";exit;
+		
+		$synthesised = array();
+		$unsynthesised = array();
+		foreach ($excel_commodity_details as $excels) {
+			foreach ($system_commodity_details as $systems) {
+				if ($excels['commodity_name'] == $systems['commodity_name']){
+					$synthesised[] = array(
+						'id' => $systems['id'], 
+						'commodity_name' => $excels['name'], 
+						'new_unit_price' => $excels['price'],
+						'commodity_code'=> $excels['commodity_code']
+						);
+				}
+			}
+
+		}//end of foreach
+
+		// echo "<pre>";print_r($synthesised);echo "</pre>";exit;
+
+		$counter = 0;
+		foreach ($synthesised as $synthesis) {
+			if (isset($synthesis['commodity_code']) && $synthesis['commodity_code'] != '') {
+				$details = array(
+					'commodity_code' => $synthesis['commodity_code'], 
 					);
+				$this->db->where('commodity_name',$synthesis['commodity_name']);
+				$result=$this->db->update('commodities',$details);
+				$counter = $counter + 1;
+				echo "<pre>Commodity: ".$synthesis['id']."  ".$synthesis['commodity_name']." Price: ".$synthesis['new_unit_price']." updated successfully</pre>";
 			}
 		}
-
-	}//end of foreach
-
-	// echo "<pre>";print_r($synthesised);echo "</pre>";exit;
-
-	$counter = 0;
-	foreach ($synthesised as $synthesis) {
-		if (isset($synthesis['commodity_code']) && $synthesis['commodity_code'] != '') {
-		$details = array(
-			'commodity_code' => $synthesis['commodity_code'], 
-			);
-		$this->db->where('commodity_name',$synthesis['commodity_name']);
-		$result=$this->db->update('commodities',$details);
-		$counter = $counter + 1;
-		echo "<pre>Commodity: ".$synthesis['id']."  ".$synthesis['commodity_name']." Price: ".$synthesis['new_unit_price']." updated successfully</pre>";
-		}
-	}
-	$handler = array('unit_cost' => 0);
-	$this->db->where('unit_cost','N/A');
-	$result=$this->db->update('commodities',$handler);
-	echo "Total Queries: ".$counter;
+		$handler = array('unit_cost' => 0);
+		$this->db->where('unit_cost','N/A');
+		$result=$this->db->update('commodities',$handler);
+		echo "Total Queries: ".$counter;
 	}//end of function
 	
+	public function user_logs(){
+		$currently_logged_in_county = user::get_currently_logged_in_users('county');
+		$currently_logged_in_subcounty = user::get_currently_logged_in_users('subcounty');
+		$currently_logged_in_facility = user::get_currently_logged_in_users('facility');
+
+		
+		echo "<pre>";print_r($currently_logged_in_county);echo "</pre> END OF C";
+		echo "<pre>";print_r($currently_logged_in_subcounty);echo "</pre> END OF SC";
+		echo "<pre>";print_r($currently_logged_in_facility);exit;
+		$data['currently_logged_in'] = $currently_logged_in;
+		$data['title'] = "User Logs";
+		$data['content_view'] = "Admin/logging";
+		$this -> load -> view("shared_files/template/dashboard_v", $data);
+	}
 }
