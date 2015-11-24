@@ -361,7 +361,8 @@ class User extends Doctrine_Record {
 							        AND end_time_of_event = \"0000-00-00 00:00:00\"
 							        AND u.district = d.id
 							        AND d.county = c.id
-							        AND u.usertype_id = a.id AND u.facility = f.facility_code AND l.user_id = u.id";
+							        AND u.usertype_id = a.id AND u.facility = f.facility_code AND l.user_id = u.id
+							        AND u.usertype_id IN (2,5)";
 				break;
 				
 			case 'subcounty':
@@ -389,7 +390,7 @@ class User extends Doctrine_Record {
 							        AND end_time_of_event = \"0000-00-00 00:00:00\"
 							        AND u.district = d.id
 							        AND d.county = c.id
-							        AND u.usertype_id = a.id AND l.user_id = u.id";
+							        AND u.usertype_id = a.id AND l.user_id = u.id AND u.usertype_id = 3";
 				break;
 			case 'county':
 				$dawa_sawa = "SELECT 
@@ -413,14 +414,15 @@ class User extends Doctrine_Record {
 							        AND start_time_of_event BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 1 DAY)
 							        AND end_time_of_event = \"0000-00-00 00:00:00\"
 									AND u.county_id = c.id
-							        AND u.usertype_id = a.id AND l.user_id = u.id";
+							        AND u.usertype_id = a.id AND l.user_id = u.id AND u.usertype_id = 10";
 				break;
 
 			default:
 				# code...
 				break;
 		}
-		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($dawa_sawa);
+		echo $dawa_sawa;
+		// $query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($dawa_sawa);
 
 		return $query;
 	}
