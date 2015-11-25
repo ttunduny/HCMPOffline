@@ -182,6 +182,7 @@
                         <li><a class="icon icon-data" href="<?php echo base_url().'home';?>">Home</a></li>
                         <li><a class="icon icon-study" href="<?php echo base_url().'admin/manage_commodities';?>">Commodities</a></li>
                         <li><a class="icon icon-location" href="<?php echo base_url().'user/user_create';?>">User Management</a></li>
+                        <li><a class="icon icon-location" href="<?php echo base_url().'admin/user_logs';?>">User Logs</a></li>
                         <li><a class="icon icon-photo" href="<?php echo base_url().'admin/manage_facilities'?>">Facility Management</a></li>
                         <li><a class="icon icon-wallet" href="<?php echo base_url().'sms/log_summary_weekly_view'?>">Weekly Usage</a></li>
                         <li><a class="icon icon-wallet" href="#">Counties</a></li>

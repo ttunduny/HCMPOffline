@@ -361,9 +361,9 @@ class User extends Doctrine_Record {
 							        AND end_time_of_event = \"0000-00-00 00:00:00\"
 							        AND u.district = d.id
 							        AND d.county = c.id
-							        AND u.usertype_id = a.id AND u.facility = f.facility_code AND l.user_id = u.id";
+							        AND u.usertype_id = a.id AND u.facility = f.facility_code AND l.user_id = u.id
+							        AND u.usertype_id IN (2,5)";
 				break;
-				
 			case 'subcounty':
 				$dawa_sawa = "SELECT 
 							    l.id,
@@ -389,7 +389,7 @@ class User extends Doctrine_Record {
 							        AND end_time_of_event = \"0000-00-00 00:00:00\"
 							        AND u.district = d.id
 							        AND d.county = c.id
-							        AND u.usertype_id = a.id AND l.user_id = u.id";
+							        AND u.usertype_id = a.id AND l.user_id = u.id AND u.usertype_id = 3";
 				break;
 			case 'county':
 				$dawa_sawa = "SELECT 
@@ -413,17 +413,38 @@ class User extends Doctrine_Record {
 							        AND start_time_of_event BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 1 DAY)
 							        AND end_time_of_event = \"0000-00-00 00:00:00\"
 									AND u.county_id = c.id
+							        AND u.usertype_id = a.id AND l.user_id = u.id AND u.usertype_id = 10";
+				break;
+			default:
+				$dawa_sawa = "SELECT 
+							    l.id,
+							    l.action,
+							    l.start_time_of_event,
+							    l.action_id,
+							    l.end_time_of_event,
+							    u.fname,
+							    u.lname,
+							    u.username,
+							    c.county,
+							    a.level
+							FROM
+							    log l,
+							    counties c,
+							    access_level a,
+							    user u
+							WHERE
+							    action = \"Logged In\"
+							        AND start_time_of_event BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+							        AND end_time_of_event = \"0000-00-00 00:00:00\"
+									AND u.county_id = c.id
 							        AND u.usertype_id = a.id AND l.user_id = u.id";
 				break;
-
-			default:
-				# code...
-				break;
 		}
+		// echo $dawa_sawa;
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($dawa_sawa);
 
 		return $query;
-	}
+	}//end of currently logged in users
 
 	public function get_previous_logs($level){
 		switch ($level) {
@@ -454,7 +475,9 @@ class User extends Doctrine_Record {
 							      start_time_of_event BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND CURDATE()
 							      AND u.district = d.id
 							      AND d.county = c.id
-							      AND u.usertype_id = a.id AND u.facility = f.facility_code AND l.user_id = u.id";
+							      AND u.usertype_id = a.id AND u.facility = f.facility_code AND l.user_id = u.id
+							      AND u.usertype_id IN (10)
+							      ORDER BY end_time_of_event DESC";
 				break;
 
 			case 'subcounty':
@@ -467,6 +490,7 @@ class User extends Doctrine_Record {
 							  u.fname,
 							  u.lname,
 							  u.username,
+							  f.facility_name,
 							  d.district,
 							  c.county,
 							  a.level,
@@ -483,7 +507,9 @@ class User extends Doctrine_Record {
 							      start_time_of_event BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND CURDATE()
 							      AND u.district = d.id
 							      AND d.county = c.id
-							      AND u.usertype_id = a.id  AND l.user_id = u.id";
+							      AND u.usertype_id = a.id AND u.facility = f.facility_code AND l.user_id = u.id
+							      AND u.usertype_id IN (3)
+							      ORDER BY end_time_of_event DESC";
 				break;
 
 			case 'facility':
@@ -513,14 +539,47 @@ class User extends Doctrine_Record {
 							      start_time_of_event BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND CURDATE()
 							      AND u.district = d.id
 							      AND d.county = c.id
-							      AND u.usertype_id = a.id AND u.facility = f.facility_code AND l.user_id = u.id";
+							      AND u.usertype_id = a.id AND u.facility = f.facility_code AND l.user_id = u.id
+							      AND u.usertype_id IN (2,5)
+							      ORDER BY end_time_of_event DESC";
 				break;
 			
 			default:
-				# code...
+				$panadol = "SELECT 
+							  l.id,
+							  l.action,
+							  l.start_time_of_event,
+							  l.action_id,
+							  l.end_time_of_event,
+							  u.fname,
+							  u.lname,
+							  u.username,
+							  f.facility_name,
+							  d.district,
+							  c.county,
+							  a.level,
+							  l.start_time_of_event,
+							  l.end_time_of_event
+							FROM
+							  log l,
+							  districts d,
+							  counties c,
+							  access_level a,
+							  user u,
+							  facilities f
+							WHERE
+							      start_time_of_event BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND CURDATE()
+							      AND u.district = d.id
+							      AND d.county = c.id
+							      AND u.usertype_id = a.id AND u.facility = f.facility_code AND l.user_id = u.id
+							      ORDER BY end_time_of_event DESC";
 				break;
-		}
-	}
+
+		}//end of switch
+				$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($panadol);
+
+				return $query;
+	}//end of previous logs function
 
 
 }
