@@ -15,8 +15,8 @@ define('DB_NAME', 'hcmp_rtk');
  * If you leave any of the two constants below blank, authentication will be disabled
  * @see http://dbv.vizuina.com/documentation/#optional-settings
  */
-define('DBV_USERNAME', 'hcmp');
-define('DBV_PASSWORD', 'hcmp');
+define('DBV_USERNAME', '');
+define('DBV_PASSWORD', '');
 
 /**
  * @see http://dbv.vizuina.com/documentation/#writing-adapters

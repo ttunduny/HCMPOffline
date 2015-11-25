@@ -19,9 +19,9 @@ class Dispensing extends MY_Controller {
 		$facility_code = $this -> session -> userdata('facility_id');
 		$data['banner_text'] = "Pharmacy";
 		$data['sidebar'] = "facility/facility_dispensing/sidebar_dispensing";
-		$data['report_view'] = "facility/facility_dispensing/dispensing_home_v";
+		// $data['report_view'] = "facility/facility_dispensing/dispensing_home_v";
 		// $commodities = Commodities::get_all();
-		// $data['content_view'] = "facility/facility_dispensing/service_point_home";
+		$data['content_view'] = "facility/facility_dispensing/service_point_home";
 		$view = 'shared_files/template/template';
 		$data['active_panel'] = 'dispensing';
 		$data['title'] = "Dispensing";

@@ -389,7 +389,9 @@ class User extends Doctrine_Record {
 							        AND end_time_of_event = \"0000-00-00 00:00:00\"
 							        AND u.district = d.id
 							        AND d.county = c.id
-							        AND u.usertype_id = a.id AND l.user_id = u.id AND u.usertype_id = 3";
+							        AND u.usertype_id = a.id 
+							        AND l.user_id = u.id 
+							        AND u.usertype_id = 3";
 				break;
 			case 'county':
 				$dawa_sawa = "SELECT 
@@ -413,7 +415,9 @@ class User extends Doctrine_Record {
 							        AND start_time_of_event BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 1 DAY)
 							        AND end_time_of_event = \"0000-00-00 00:00:00\"
 									AND u.county_id = c.id
-							        AND u.usertype_id = a.id AND l.user_id = u.id AND u.usertype_id = 10";
+							        AND u.usertype_id = a.id 
+							        AND l.user_id = u.id 
+							        AND u.usertype_id = 10";
 				break;
 			default:
 				$dawa_sawa = "SELECT 
@@ -437,7 +441,8 @@ class User extends Doctrine_Record {
 							        AND start_time_of_event BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 1 DAY)
 							        AND end_time_of_event = \"0000-00-00 00:00:00\"
 									AND u.county_id = c.id
-							        AND u.usertype_id = a.id AND l.user_id = u.id";
+							        AND u.usertype_id = a.id 
+							        AND l.user_id = u.id";
 				break;
 		}
 		// echo $dawa_sawa;
@@ -473,11 +478,10 @@ class User extends Doctrine_Record {
 							  facilities f
 							WHERE
 							      start_time_of_event BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND CURDATE()
-							      AND u.district = d.id
 							      AND d.county = c.id
-							      AND u.usertype_id = a.id AND u.facility = f.facility_code AND l.user_id = u.id
-							      AND u.usertype_id IN (10)
-							      ORDER BY end_time_of_event DESC";
+							      AND u.usertype_id = a.id
+							      AND l.user_id = u.id
+							      AND u.usertype_id = 10";
 				break;
 
 			case 'subcounty':
@@ -505,11 +509,11 @@ class User extends Doctrine_Record {
 							  facilities f
 							WHERE
 							      start_time_of_event BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND CURDATE()
+							      AND u.usertype_id = 3
 							      AND u.district = d.id
 							      AND d.county = c.id
-							      AND u.usertype_id = a.id AND u.facility = f.facility_code AND l.user_id = u.id
-							      AND u.usertype_id IN (3)
-							      ORDER BY end_time_of_event DESC";
+							      AND u.usertype_id = a.id 
+							      AND l.user_id = u.id";
 				break;
 
 			case 'facility':
@@ -539,9 +543,10 @@ class User extends Doctrine_Record {
 							      start_time_of_event BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND CURDATE()
 							      AND u.district = d.id
 							      AND d.county = c.id
-							      AND u.usertype_id = a.id AND u.facility = f.facility_code AND l.user_id = u.id
-							      AND u.usertype_id IN (2,5)
-							      ORDER BY end_time_of_event DESC";
+							      AND u.usertype_id = a.id 
+							      AND u.facility = f.facility_code 
+							      AND l.user_id = u.id
+							      AND u.usertype_id IN (2,5)";
 				break;
 			
 			default:
@@ -571,11 +576,14 @@ class User extends Doctrine_Record {
 							      start_time_of_event BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND CURDATE()
 							      AND u.district = d.id
 							      AND d.county = c.id
-							      AND u.usertype_id = a.id AND u.facility = f.facility_code AND l.user_id = u.id
-							      ORDER BY end_time_of_event DESC";
+							      AND u.usertype_id = a.id 
+							      AND u.facility = f.facility_code 
+							      AND l.user_id = u.id";
 				break;
 
 		}//end of switch
+
+		// echo $panadol."<br>";
 				$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($panadol);
 
 				return $query;
