@@ -44,6 +44,12 @@ class facility_issues extends Doctrine_Record {
 
 		return $query;
 	}
+
+	public function get_one_service_points($id) {
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT id,service_point_name,facility_code FROM service_points where id='$id' ORDER BY id");
+
+		return $query;
+	}
 	
    ////dumbing data into the issues table
 	public static function update_issues_table($data_array){
@@ -119,7 +125,7 @@ class facility_issues extends Doctrine_Record {
    }
 
    public function get_facility_issues_for_reversals($facility_code,$start_date){
-   	 $issues = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT distinct f.facility_name, f_i.issued_to,f_i.facility_code,f_i.issued_by,f_i.created_at, u.fname, u.lname, f_i.commodity_id,c.commodity_name,f_i.batch_no,f_i.qty_issued,f_i.date_issued
+   	 $issues = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT distinct f.facility_name, f_i.issued_to,f_i.s11_No,f_i.facility_code,f_i.issued_by,f_i.created_at, u.fname, u.lname, f_i.commodity_id,c.commodity_name,f_i.batch_no,f_i.qty_issued,f_i.date_issued
 		FROM  facilities f, facility_issues f_i, user u, commodities c WHERE   f.facility_code = f_i.facility_code AND f_i.s11_No = 'internal issue'
         AND u.id = f_i.issued_by  AND f.facility_code = '$facility_code'  AND c.id = f_i.commodity_id  and f_i.status = '1' 
         and f_i.created_at between '$start_date' and NOW()
@@ -224,23 +230,23 @@ class facility_issues extends Doctrine_Record {
 		$convertfrom=date('Y-m-d',strtotime($from ));
 		$convertto=date('Y-m-d',strtotime($to ));
 
-		echo "SELECT f.date_issued, f.expiry_date, f.batch_no, c.unit_size, f.s11_No, f.balance_as_of,
- f.adjustmentnve, f.adjustmentpve, f.qty_issued, u.fname, u.lname, f.issued_to AS service_point_name
-FROM facility_issues f
-INNER JOIN user u on f.issued_by = u.id
-INNER JOIN commodities c on c.id = f.commodity_id
-WHERE f.facility_code = $facility_code AND f.status = 1 
-AND f.commodity_id = $commodity_id AND f.date_issued 
-BETWEEN '$convertfrom' AND '$convertto' ORDER BY f.created_at ASC";exit;
+// 		echo "SELECT f.date_issued, f.expiry_date, f.batch_no, c.unit_size, f.s11_No, f.balance_as_of,
+//  f.adjustmentnve, f.adjustmentpve, f.qty_issued, u.fname, u.lname, f.issued_to AS service_point_name
+// FROM facility_issues f
+// INNER JOIN user u on f.issued_by = u.id
+// INNER JOIN commodities c on c.id = f.commodity_id
+// WHERE f.facility_code = $facility_code AND f.status = 1 
+// AND f.commodity_id = $commodity_id AND f.date_issued 
+// BETWEEN '$convertfrom' AND '$convertto' ORDER BY f.created_at ASC";exit;
 	$transaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 	-> fetchAll("SELECT f.date_issued, f.expiry_date, f.batch_no, c.unit_size, f.s11_No, f.balance_as_of,
  f.adjustmentnve, f.adjustmentpve, f.qty_issued, u.fname, u.lname, f.issued_to AS service_point_name
 FROM facility_issues f
 INNER JOIN user u on f.issued_by = u.id
 INNER JOIN commodities c on c.id = f.commodity_id
-WHERE f.facility_code = $facility_code AND f.status = 1 
+WHERE f.facility_code = $facility_code AND f.status in (1,3) 
 AND f.commodity_id = $commodity_id AND f.date_issued 
-BETWEEN '$convertfrom' AND '$convertto' ORDER BY f.created_at ASC"); 
+BETWEEN '$convertfrom' AND '$convertto' ORDER BY f.date_issued ASC"); 
 		
 
 
