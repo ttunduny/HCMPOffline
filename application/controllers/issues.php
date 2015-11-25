@@ -111,12 +111,29 @@ class issues extends MY_Controller {
 		$facility_code = $this -> session -> userdata('facility_id');
 		$start_date = date('Y-m-01',strtotime('-0 month'));		
 		$current_issues = Facility_issues::get_facility_issues_for_reversals($facility_code,$start_date);
+		// echo "<pre>";
+		// print_r($current_issues);die;
 		foreach ($current_issues as $key => $value) {
               $commodity_id = $value['commodity_id'];
               $commodity_name = $value['commodity_name'];
               $batch_no = $value['batch_no'];
+              $s11_No = $value['s11_No'];
               $qty_issued = $value['qty_issued'];
               $issued_to = $value['issued_to'];
+              if($s11_No=='internal issue'){
+					if (preg_match('/[A-Za-z]/i', $issued_to)) {
+						$issued_to = $value['issued_to'];
+					}else{
+						$service_point_name = intval($issued_to);
+						$service_point_details = Facility_issues::get_one_service_points($service_point_name);
+						foreach ($service_point_details as $keys => $values) {
+							$issued_to = $values['service_point_name'];
+						}
+
+					}
+				}else{
+              		$issued_to = $value['issued_to'];
+				}
               $issue_date = $value['date_issued'];
               $create_date_raw = $value['created_at'];
               $create_date = date('F, d Y', strtotime($create_date_raw));
