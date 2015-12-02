@@ -29,7 +29,7 @@
 	<link href="<?php echo base_url().'assets/css/style_2015.css'?>" type="text/css" rel="stylesheet"/> 
   <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
-    <script src="<?php echo base_url().'assets/scripts/offline-simulate-ui.min.js'?>" type="text/javascript"></script>
+    <!--<script src="<?php echo base_url().'assets/scripts/offline-simulate-ui.min.js'?>" type="text/javascript"></script>-->
      <script src="<?php echo base_url().'assets/scripts/select2.js'?>" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/bower_components/alertifyjs/dist/js/alertify.js'?>" type="text/javascript"></script>
     <link rel="stylesheet" href="<?php echo base_url().'assets/bower_components/alertifyjs/dist/css/alertify_bootstrap_3.css'?>" />

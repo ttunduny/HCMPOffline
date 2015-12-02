@@ -6,9 +6,9 @@
 			<?php if($currently == "currently"):?>
 					<li class="active"><a  data-toggle="tab" href="#all_users">All Currently Logged In</a></li>
 			<?php endif; ?>
-					<li	class = "<?php $active = ($active == 'county')? 'active':NULL; echo $active;?>" ><a data-toggle="tab"  href="#county_users">County Users</a></li>
-					<li	class = "<?php $active = ($active == 'subcounty')? 'active':NULL; echo $active;?>" ><a data-toggle="tab"  href="#subcounty_users">Subcounty Users</a></li>
-					<li	class = "<?php $active = ($active == 'facility')? 'active':NULL; echo $active;?>" ><a data-toggle="tab"  href="#facility_users">Facility Users</a></li> 
+					<li	class = "<?php $activestat = ($active == 'county')? 'active':NULL; echo $activestat;?>" ><a data-toggle="tab"  href="#county_users">County Users</a></li>
+					<li	class = "<?php $activestat = ($active == 'subcounty')? 'active':NULL; echo $activestat;?>" ><a data-toggle="tab"  href="#subcounty_users">Subcounty Users</a></li>
+					<li	class = "<?php $activestat = ($active == 'facility')? 'active':NULL; echo $activestat;?>" ><a data-toggle="tab"  href="#facility_users">Facility Users</a></li> 
 				<!-- <li><a  data-toggle="tab" href="#past_logs">Previous Records</a></li> -->
 			</ul>
 			<div class="tab-content">
@@ -44,7 +44,7 @@
 					</div>
 				</div><!-- END OF ALL USERS -->
 			<?php endif; ?>
-				<div id="county_users" class="tab-pane fade in <?php echo $active;?>">
+				<div id="county_users" class="tab-pane fade in <?php $activestat = ($active == 'county')? 'active':NULL; echo $activestat;?>">
 					<div class="row">
 						<table class="table table-bordered" id="datatable">
 							<thead>
