@@ -5,7 +5,7 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 class Dispensing extends MY_Controller {
-	function __construct() 
+	public function __construct() 
 	{
 		parent::__construct();
 		$this -> load -> helper(array('form', 'url'));
@@ -19,9 +19,9 @@ class Dispensing extends MY_Controller {
 		$facility_code = $this -> session -> userdata('facility_id');
 		$data['banner_text'] = "Pharmacy";
 		$data['sidebar'] = "facility/facility_dispensing/sidebar_dispensing";
-		$data['report_view'] = "facility/facility_dispensing/dispensing_home_v";
+		//$data['report_view'] = "facility/facility_dispensing/dispensing_home_v";
 		// $commodities = Commodities::get_all();
-		// $data['content_view'] = "facility/facility_dispensing/service_point_home";
+		$data['content_view'] = "facility/facility_dispensing/service_point_home";
 		$view = 'shared_files/template/template';
 		$data['active_panel'] = 'dispensing';
 		$data['title'] = "Dispensing";
@@ -34,6 +34,7 @@ class Dispensing extends MY_Controller {
 		$data['patients'] = $patients;
 		$this -> load -> view($view, $data);		
 	}
+
 	public function get_patient_data(){
 		$id = $this->input->post('id');
 		// all variable names inspired by Game of Thrones
@@ -129,5 +130,37 @@ class Dispensing extends MY_Controller {
 			);
 			}//end of service point dashboard notifications graph data function
 			//damn that was a long name
+
+	public function service_point_expiries(){
+		$facility_code = $this -> session -> userdata('facility_id');
+		$service_point = 2;
+		
+		$data['expiry_data'] = facility_stocks::get_service_point_stocks($facility_code,$service_point,NULL,1);
+		$data['banner_text'] = "Service Point Expiries";
+		$data['content_view'] = "facility/facility_dispensing/service_point_expiries_home_v";
+		$data['title'] = "Service Point Expiries";
+		$view = 'shared_files/template/template';
+
+		$this -> load -> view($view, $data);
 	}
+
+	public function service_point_potential(){
+		$facility_code = $this -> session -> userdata('facility_id');
+		$service_point = 2;
+
+		$data['potential_expiry_data'] = facility_stocks::get_service_point_stocks($facility_code,$service_point,1,NULL);
+		$data['banner_text'] = "Service Point Potential Expiries";
+		$data['content_view'] = "facility/facility_dispensing/service_point_potential_home_v";
+		$data['title'] = "Service Point Potential Expiries";
+		$view = 'shared_files/template/template';
+
+		$this -> load -> view($view, $data);
+	}
+
+	public function decommision_expiries(){
+		echo "<script>";
+		echo "alert('I Got Here!')";
+		echo "</script>";
+	}
+}
 ?>
