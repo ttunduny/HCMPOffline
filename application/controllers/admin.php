@@ -521,9 +521,9 @@ class Admin extends MY_Controller {
 	public function previous_user_logs(){
 
 		// $previous_logged_in_all = user::get_previous_logs();
-		// $previous_logged_in_county = user::get_previous_logs('county');
+		$previous_logged_in_county = user::get_previous_logs('county');
 		$previous_logged_in_subcounty = user::get_previous_logs('subcounty');
-		// $previous_logged_in_facility = user::get_previous_logs('facility');
+		$previous_logged_in_facility = user::get_previous_logs('facility');
 
 		// echo "<pre>";print_r($previous_logged_in_county);echo "</pre> END OF C";
 		// echo "<pre>";print_r($previous_logged_in_subcounty);echo "</pre> END OF SC";
@@ -536,6 +536,7 @@ class Admin extends MY_Controller {
 		
 		$data['currently_logged_in'] = $currently_logged_in;
 		$data['title'] = "User Logs";
+		$data['active'] = "county";
 		$data['content_view'] = "Admin/logging";
 		$this -> load -> view("shared_files/template/dashboard_v", $data);
 	}

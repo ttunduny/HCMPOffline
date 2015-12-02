@@ -455,33 +455,30 @@ class User extends Doctrine_Record {
 		switch ($level) {
 			case 'county':
 				$panadol = "SELECT 
-							  l.id,
-							  l.action,
-							  l.start_time_of_event,
-							  l.action_id,
-							  l.end_time_of_event,
-							  u.fname,
-							  u.lname,
-							  u.username,
-							  f.facility_name,
-							  d.district,
-							  c.county,
-							  a.level,
-							  l.start_time_of_event,
-							  l.end_time_of_event
+							    l.id,
+							    l.action,
+							    l.start_time_of_event,
+							    l.action_id,
+							    l.end_time_of_event,
+							    u.fname,
+							    u.lname,
+							    u.username,
+							    c.county,
+							    a.level,
+							    l.start_time_of_event,
+							    l.end_time_of_event
 							FROM
-							  log l,
-							  districts d,
-							  counties c,
-							  access_level a,
-							  user u,
-							  facilities f
+							    log l,
+							    counties c,
+							    access_level a,
+							    user u
 							WHERE
-							      start_time_of_event BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND CURDATE()
-							      AND d.county = c.id
-							      AND u.usertype_id = a.id
-							      AND l.user_id = u.id
-							      AND u.usertype_id = 10";
+							    start_time_of_event BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND CURDATE()
+							        AND u.usertype_id = 10
+							        AND u.usertype_id = a.id
+							        AND l.user_id = u.id
+							        AND u.county_id = c.id
+							LIMIT 500";
 				break;
 
 			case 'subcounty':
@@ -513,7 +510,8 @@ class User extends Doctrine_Record {
 							      AND u.district = d.id
 							      AND d.county = c.id
 							      AND u.usertype_id = a.id 
-							      AND l.user_id = u.id";
+							      AND l.user_id = u.id
+							      LIMIT 500 ";
 				break;
 
 			case 'facility':
@@ -546,7 +544,8 @@ class User extends Doctrine_Record {
 							      AND u.usertype_id = a.id 
 							      AND u.facility = f.facility_code 
 							      AND l.user_id = u.id
-							      AND u.usertype_id IN (2,5)";
+							      AND u.usertype_id IN (2,5)
+							      LIMIT 500";
 				break;
 			
 			default:
@@ -578,12 +577,13 @@ class User extends Doctrine_Record {
 							      AND d.county = c.id
 							      AND u.usertype_id = a.id 
 							      AND u.facility = f.facility_code 
-							      AND l.user_id = u.id";
+							      AND l.user_id = u.id
+							      LIMIT 500";
 				break;
 
 		}//end of switch
 
-		// echo $panadol."<br>";
+			 	// $query = $panadol."<br>";
 				$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($panadol);
 
 				return $query;
