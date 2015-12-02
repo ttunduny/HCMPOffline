@@ -478,10 +478,11 @@ class User extends Doctrine_Record {
 							  facilities f
 							WHERE
 							      start_time_of_event BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND CURDATE()
-							      AND d.county = c.id
+							      AND u.usertype_id = 10
 							      AND u.usertype_id = a.id
 							      AND l.user_id = u.id
-							      AND u.usertype_id = 10";
+							      AND d.county = c.id
+							      LIMIT 500";
 				break;
 
 			case 'subcounty':
@@ -513,7 +514,8 @@ class User extends Doctrine_Record {
 							      AND u.district = d.id
 							      AND d.county = c.id
 							      AND u.usertype_id = a.id 
-							      AND l.user_id = u.id";
+							      AND l.user_id = u.id
+							      LIMIT 500 ";
 				break;
 
 			case 'facility':
@@ -546,7 +548,8 @@ class User extends Doctrine_Record {
 							      AND u.usertype_id = a.id 
 							      AND u.facility = f.facility_code 
 							      AND l.user_id = u.id
-							      AND u.usertype_id IN (2,5)";
+							      AND u.usertype_id IN (2,5)
+							      LIMIT 500";
 				break;
 			
 			default:
@@ -578,12 +581,13 @@ class User extends Doctrine_Record {
 							      AND d.county = c.id
 							      AND u.usertype_id = a.id 
 							      AND u.facility = f.facility_code 
-							      AND l.user_id = u.id";
+							      AND l.user_id = u.id
+							      LIMIT 500";
 				break;
 
 		}//end of switch
 
-		// echo $panadol."<br>";
+			 	// $query = $panadol."<br>";
 				$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($panadol);
 
 				return $query;
