@@ -102,16 +102,17 @@ class Dispensing extends MY_Controller {
 		$count = count($this->input->post('first_name'));		
 		for ($i=0; $i < $count; $i++) { 
 			$patient_number = $this->input->post('patient_number')[$i];
+			$dob = date('y-m-d', strtotime($this->input->post('clone_datepicker_normal_limit_today')[$i]));
 			$date_created = date('Y-m-d',strtotime('NOW'));
 			$data_array = array('firstname' =>$this->input->post('first_name')[$i] ,
 								'lastname' =>$this->input->post('last_name')[$i] ,
-								'date_of_birth' =>$this->input->post('dob')[$i] ,
+								'date_of_birth' =>$dob ,
 								'gender' =>$this->input->post('gender')[$i] ,
 								'telephone' =>$this->input->post('telephone')[$i] ,
 								'email' =>$this->input->post('email')[$i] ,
 								'home_address' =>$this->input->post('physical_address')[$i] ,
 								'work_address' =>$this->input->post('work_address')[$i] ,
-								'patient_number' =>$patient_number,
+								'patient_number' =>$this->input->post('patient_number')[$i],
 								'facility_code' =>$facility_code ,
 								'date_created' =>$date_created ,
 								'status' =>1);		
