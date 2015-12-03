@@ -28,10 +28,9 @@ class Patients extends Doctrine_Record {
 
 
 	public function get_all(){
-		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-			SELECT * from patients
-			");
-
+		$facility_code = $this -> session -> userdata('facility_id');		
+		$sql = "select firstname, lastname,date_of_birth,gender,telephone,email,home_address,work_address,patient_number,date_created from patient_details where facility_code ='$facility_code' and status = '1'";
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($sql);
 		return $query;
 	}
 

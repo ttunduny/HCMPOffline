@@ -104,52 +104,49 @@
 					<table  class="table table-hover table-bordered table-update" id="datatable"  >
 						<thead style="background-color: white">
 							<tr>
-								<th>Names</th>
-								<th>Username </th>
-								<th>Phone No</th>
-								<th>Sub-County</th>
-								<th>Health Facility</th>
-								<th>User Type</th>
-								<th>Status (Checked means Active)</th>
-								<th>Password</th>
-								<th>Action</th>
+								<th>Name</th>								
+								<th>Age</th>
+								<th>Gender</th>
+								<th>Phone No</th>								
+								<th>Email</th>								
+								<th>Home Address</th>
+								<th>Work Address</th>
+								<th>Patient Number</th>
+								<th>Date Added</th>								
 							</tr>
 						</thead>
 
 						<tbody>
 
 							<?php
-							foreach ($listing as $list ) {
+							foreach ($patient_data as $key => $list ) {
+								$name = $list['firstname'].' '.$list['lastname'];
+								$dob = $list['date_of_birth'];
+								$_age = floor((time() - strtotime($dob)) / 31556926);								
+								$dob = ($dob=='0000-00-00') ? 'N/A' : $_age ;
+								$gender = $list['gender'];
+								$gender = ($gender=='1') ?'Male' : 'Female' ;
+								$telephone = $list['telephone'];
+								$email = $list['email'];
+								$email = ($email=='') ? '-' : $email ;
+								$home_address = $list['home_address'];
+								$work_address = $list['work_address'];
+								$work_address = ($work_address=='') ? '-' : $work_address ;								
+								$patient_number = $list['patient_number'];
+								$date_created = $list['date_created'];
+								$date_created_f = date('D, d F Y',strtotime($date_created));
 							?>
 							<tr class="edit_tr" >
-								<td class="fname" ><?php echo ucfirst($list['fname'])." ".ucfirst($list['lname']);?></td>
-								<!-- <td class="lname"><?php echo $list['lname']; ?>	</td> -->
-								<td class="email" data-attr="<?php echo $list['user_id']; ?>"><?php echo $list['email'];?></td>
-								<td class="phone"><?php echo $list['telephone']; ?></td>
-								<td class="district" data-attr="<?php echo $list['district_id']; ?>"><?php echo $list['district']; ?></td>
-								<td class="facility_name" data-attr="<?php echo $list['facility_code']; ?>"><?php echo $list['facility_name']; ?></td>
-								<td class="level" data-attr="<?php echo $list['level_id']; ?>"><?php echo $list['level']; ?></td>
-								<td style="width:20px;" >
-								<?php if ($list['status']==1) {?>
-								<input type="checkbox" name="status-checkbox" id="status_switch_change" data-attr="<?php echo $list['user_id']; ?>" class="small-status-switch" checked = "checked" style="border-radius:0px!important;">
-								<?php }else{ ?>
-								<input type="checkbox" name="status-checkbox" id="status_switch_change" data-attr="<?php echo $list['user_id']; ?>" class="small-status-switch" style="border-radius:0px!important;">
-								<?php } ?> 
-								<td>
-									<!-- <div class="btn btn-primary btn-xs" id="reset_pwd"  data-attr="<?php echo $list['user_id']; ?>">
-									<span class="glyphicon glyphicon-edit"></span>Reset Password
-									</div> -->
-									<a href="#" class="btn btn-primary btn-xs reset_pwd" name="reset_pwd"  id="reset_pwd" data-attr="<?php echo $list['user_id']; ?>" data-name="<?php echo $list['email']; ?>">
-									<!-- <a href="<?php //echo base_url().'user/reset_pass_to_default/'.$list['user_id']; ?>" class="btn btn-primary btn-xs" name="reset_pwd" class="reset_pwd" id="reset_pwd" data-attr="<?php echo $list['user_id']; ?>"> -->
-									<span class="glyphicon glyphicon-edit"></span>Reset Password
-									 </a>	 
-								</td>
-
-								<td>
-								<button class="btn btn-primary btn-xs edit " data-toggle="modal" data-target="#myModal" id="<?php echo $list['user_id']; ?>" data-target="#">
-									<span class="glyphicon glyphicon-edit"></span>Edit
-								</button>
-								</td>
+								<td><?php echo ucfirst($name);?></td>
+								<td><?php echo $dob;?></td>
+								<td><?php echo $gender;?></td>
+								<td><?php echo $telephone;?></td>
+								<td><?php echo $email;?></td>
+								<td><?php echo $home_address;?></td>
+								<td><?php echo $work_address;?></td>
+								<td><?php echo $patient_number;?></td>
+								<td><?php echo $date_created_f;?></td>
+								
 							</tr>
 							<?php } ?>
 						</tbody>

@@ -75,7 +75,8 @@ class Dispensing extends MY_Controller {
 	}
 
 	public function patients(){
-		$p_data = Patients::get_patient_data();
+		$p_data = Patients::get_all();
+		// $p_data = Patients::get_patient_data();		
 		$data['patient_data'] = $p_data;
 		$facility_code = $this -> session -> userdata('facility_id');
 		$data['title'] = "Patient Management";
