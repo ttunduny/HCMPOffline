@@ -43,7 +43,7 @@
   </div>
 
 
-<div class="modal fade" id="issueReverseConfirm" style="margin-top:2%; overflow:scroll;min-width:2000px;">
+<div class="modal fade" id="issueReverseConfirm" style="margin-top:10%; overflow:scroll;min-width:2000px;">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -67,7 +67,7 @@
 
 
 <style type="text/css">
-   .modal-backdrop.in { z-index: auto;}
+   /*.modal-backdrop.in { z-index: auto;}*/
 </style>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
