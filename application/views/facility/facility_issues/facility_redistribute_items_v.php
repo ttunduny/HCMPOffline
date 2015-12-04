@@ -194,10 +194,10 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 	     	    	
 			var commodity_id=data_array[0];
 			var stock_data=extract_data(data_array[0],commodity_id,'batch_data');
-			// console.log(stock_data);
+			console.log(stock_data);
             var dropdown="<option special_data=''>--select Batch--</option>"+stock_data[0];
             var facility_stock_id=stock_data[1];
-            var total_stock_bal=data_array[4];
+            var total_stock_bal=data_array[3];
             var total_issues_for_this_item=0; 
             var total_issues_for_this_batch=0;
             var total_commodity_bal=stock_data[5];         
@@ -231,8 +231,8 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 		        var remaining_comodity_bal=total_commodity_bal-total_issues_for_this_item;	
 		       
 
-		        var remaining_items=total_stock_bal-total_issues_for_this_batch;	
-		        var remaining_comodity_bal=total_commodity_bal-total_issues_for_this_item;
+		        // var remaining_items=total_stock_bal-total_issues_for_this_batch;	
+		        // var remaining_comodity_bal=total_commodity_bal-total_issues_for_this_item;
 
 		        locator.closest("tr").find(".manufacture").val(stock_data[4]);
 		        locator.closest("tr").find(".facility_stock_id").val(stock_data[1]);	        

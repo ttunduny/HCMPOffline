@@ -145,7 +145,7 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 			var stock_data=extract_data(data_array[0],commodity_id,'batch_data');			
             var dropdown="<option special_data=''>--select Batch--</option>"+stock_data[0];           
             var facility_stock_id=stock_data[1];
-            var total_stock_bal=data_array[4];
+            var total_stock_bal=data_array[3];
             var total_issues_for_this_item=0; 
             var total_issues_for_this_batch=0           
             var total_commodity_bal=stock_data[4];           
@@ -240,12 +240,12 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 		  clone_the_last_row_of_the_table();
 		});	/////batch no change event
 		$('.batch_no').on('change',function(){
-			var row_id=$(this).closest("tr").index();
+			var row_id=$(this).closest("tr").attr('row_id');
 		    var locator=$('option:selected', this);
 			var data =$('option:selected', this).attr('special_data'); 
 	       	var data_array=data.split("^");
 	       	//Get the date of the currently selected option
-	       	var largest_date = $(".batch_no_specific").attr("special_data").index(0);
+	       	var largest_date = $(".batch_no_specific").attr("special_data");
 	       	var largest_data_array = data.split("^");
 	       	console.log(largest_data_array);
 	       	var large_date = data_array[0];

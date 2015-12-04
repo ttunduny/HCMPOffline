@@ -75,12 +75,72 @@ class Dispensing extends MY_Controller {
 	}
 
 	public function patients(){
-		$p_data = Patients::get_patient_data();
+		$p_data = Patients::get_all();
+		// $p_data = Patients::get_patient_data();		
 		$data['patient_data'] = $p_data;
+		$facility_code = $this -> session -> userdata('facility_id');
+		$data['title'] = "Patient Management";
+		$data['banner_text'] = "Patient Management";
 		$data['sidebar'] = "facility/facility_dispensing/sidebar_dispensing";
 		$view = 'shared_files/template/template';
-				// $data['report_view']
+		$data['content_view'] = 'facility/facility_dispensing/patients_create_v';
 		$this->load->view($view,$data);
+	}
+
+	public function add_multiple_patients(){		
+		$facility_code = $this -> session -> userdata('facility_id');
+		$data['title'] = "Patient Management";
+		$data['banner_text'] = "Add Multiple Patients";
+		$data['sidebar'] = "facility/facility_dispensing/sidebar_dispensing";
+		$view = 'shared_files/template/template';
+		$data['content_view'] = 'facility/facility_dispensing/patients_multiple_create_v';
+		$this->load->view($view,$data);
+	}
+
+		
+	public function save_patient_multiple(){
+		$facility_code = $this -> session -> userdata('facility_id');
+		$count = count($this->input->post('first_name'));		
+		for ($i=0; $i < $count; $i++) { 
+			$patient_number = $this->input->post('patient_number')[$i];
+			$dob = date('y-m-d', strtotime($this->input->post('clone_datepicker_normal_limit_today')[$i]));
+			$date_created = date('Y-m-d',strtotime('NOW'));
+			$data_array = array('firstname' =>$this->input->post('first_name')[$i] ,
+								'lastname' =>$this->input->post('last_name')[$i] ,
+								'date_of_birth' =>$dob ,
+								'gender' =>$this->input->post('gender')[$i] ,
+								'telephone' =>$this->input->post('telephone')[$i] ,
+								'email' =>$this->input->post('email')[$i] ,
+								'home_address' =>$this->input->post('physical_address')[$i] ,
+								'work_address' =>$this->input->post('work_address')[$i] ,
+								'patient_number' =>$this->input->post('patient_number')[$i],
+								'facility_code' =>$facility_code ,
+								'date_created' =>$date_created ,
+								'status' =>1);		
+
+			$patients = Patients::save_patient($data_array,$patient_number,$date_created,$facility_code);
+		}
+		redirect('dispensing/add_multiple_patients');
+		
+	}
+	public function save_patient(){
+		$facility_code = $this -> session -> userdata('facility_id');
+		$patient_number = $this->input->post('patient_number');
+		$date_created = date('Y-m-d',strtotime('NOW'));
+		$data_array = array('firstname' =>$this->input->post('first_name') ,
+							'lastname' =>$this->input->post('last_name') ,
+							'date_of_birth' =>$this->input->post('dob') ,
+							'gender' =>$this->input->post('gender') ,
+							'telephone' =>$this->input->post('telephone') ,
+							'email' =>$this->input->post('email') ,
+							'home_address' =>$this->input->post('physical_address') ,
+							'work_address' =>$this->input->post('work_address') ,
+							'patient_number' =>$patient_number,
+							'facility_code' =>$facility_code ,
+							'date_created' =>$date_created ,
+							'status' =>1);		
+
+		$patients = Patients::save_patient($data_array,$patient_number,$date_created,$facility_code);
 	}
 
 	public function get_service_point_graph_data(){

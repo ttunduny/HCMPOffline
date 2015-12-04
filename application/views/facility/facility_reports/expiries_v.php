@@ -1,3 +1,4 @@
+
  <h1 class="page-header" style="margin: 0;font-size: 1.6em;">Expiries <?php echo $facility_name.' '.date('Y') ;?></h1>
   <div style="min-height: 400px;">
     <table  class="table table-hover table-bordered table-update" id="exp_datatable" >
