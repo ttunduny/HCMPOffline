@@ -169,6 +169,8 @@ $(document).ready(function() {
 		cloned_object.insertAfter('#add_multiple_patients_table tr:last');	
 		refresh_clone_datepicker_normal_limit_today();
     }
+
+    //random comments
     function check_if_the_form_has_been_filled_correctly(selector_object){
 		var alert_message='';
 		var first_name=selector_object.closest("tr").find(".first_name").val();
