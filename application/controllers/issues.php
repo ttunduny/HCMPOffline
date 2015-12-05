@@ -941,7 +941,7 @@ class issues extends MY_Controller {
 			$total_items_issues = ($commodity_unit_of_issue[$i] == 'Pack_Size') ? $quantity_issued[$i] * $total_units[$i] : $quantity_issued[$i];
 				//prepare the issues data
 
-			$mydata = array('facility_code' => $facility_code, 's11_No' => 'internal issue', 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])), 'qty_issued' => $total_items_issues, 'issued_to' => $service_points[$i], 'balance_as_of' => $commodity_balance_before[$i], 'date_issued' => date('y-m-d', strtotime($clone_datepicker_normal_limit_today[$i])), 'issued_by' => $this -> session -> userdata('user_id'));
+			$mydata = array('facility_code' => $facility_code, 's11_No' => 'internal issue', 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('Y-m-d', strtotime($expiry_date[$i])), 'qty_issued' => $total_items_issues, 'issued_to' => $service_points[$i], 'balance_as_of' => $commodity_balance_before[$i], 'date_issued' => date('y-m-d', strtotime($clone_datepicker_normal_limit_today[$i])), 'issued_by' => $this -> session -> userdata('user_id'));
 
 				// update the issues table
 			facility_issues::update_issues_table($mydata);
@@ -970,7 +970,7 @@ class issues extends MY_Controller {
 					'facility_code' => $facility_code,
 					'batch_no' => $batch_no[$i],
 					'commodity_id' => $commodity_id[$i],
-					'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])),
+					'expiry_date' => date('Y-m-d', strtotime($expiry_date[$i])),
 					'service_point_id' => $service_points[$i],
 					'current_balance' => $total_items_issues
 					);

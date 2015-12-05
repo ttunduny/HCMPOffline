@@ -3639,6 +3639,7 @@ class Reports extends MY_Controller {
 		 	$report_type = ($graph_type == "NULL") ? null : $graph_type;
 		// echo $district_id;exit;
 		 	$from = (($from == "NULL")) ? strtotime(date('Y-m-01')) : strtotime(urldecode($from));
+
 		 	$to = (($to == "NULL")) ? strtotime(date('Y-m-d')) : strtotime(urldecode($to));
 		 	$county_name = counties::get_county_name($county_id);
 		//start building the notifications dashboaard first
@@ -3674,6 +3675,8 @@ class Reports extends MY_Controller {
 		 	$time = "between " . date('j M y', $from) . " and " . date('j M y', $to);
 		 	$consumption_data = Facility_stocks::get_county_consumption_level_new($facility_code, $district_id, $county_id, $category_id, $commodity_id, $option, $from, $to, $report_type, $tracer);
 		//echo $consumption_data;exit;//seth
+		 	//echo "<pre>";
+		 	//print_r($consumption_data);die;
 		 	foreach ($consumption_data as $data) :
 		 		if ($report_type == "table_data") :
 		 			if ($commodity_id > 0) :
@@ -3681,16 +3684,16 @@ class Reports extends MY_Controller {
 		 			else :
 		 				array_push($series_data, array($data["name"], $data['commodity'], (int)$data['total']));
 		 			endif;
-		 			elseif ($tracer == 1) :
-		 				$series_data = array_merge($series_data, array((int)$data['total']));
+		 		elseif ($tracer == 1) :
+		 			$series_data = array_merge($series_data, array((int)$data['total']));
 		 			$series_data_ = array_merge($series_data_, array( array($data["commodity"], (int)$data['total'])));
 		 			$category_data = array_merge($category_data, array($data["commodity"]));
-		 			else :
-		 				$series_data = array_merge($series_data, array((int)$data['total']));
+		 		else :
+		 			$series_data = array_merge($series_data, array((int)$data['total']));
 		 			$series_data_ = array_merge($series_data_, array( array($data["name"], (int)$data['total'])));
 		 			$category_data = array_merge($category_data, array($data["name"]));
-		 			endif;
-		 			endforeach;
+		 		endif;
+		 	endforeach;
 		 			$default_consumption_graph_ = array();
 		 			$graph_type = 'bar';
 		 			$default_consumption_graph_ = array_merge($default_consumption_graph_, array("graph_id" => 'graph_content_'));
@@ -3705,9 +3708,11 @@ class Reports extends MY_Controller {
 		 			$data = array();
 		 			
 		 			if ($check_count <= 0) {
-		 				$def_cons= ' $("#graph_content_").html("<b>You have no Records, for this period please try using the filters</b>!");
-		 				$("#graph_content_").removeAttr( "style" );
-		 				$("#graph_content_").css({"height": "200px", "font-size": "200%","font-align": "center","margin-top": "4%"}); ';
+		 				// $def_cons= ' $("#graph_content_").html("<b>You have no Records, for this period please try using the filters</b>!");
+		 				// $("#graph_content_").removeAttr( "style" );
+		 				// $("#graph_content_").css({"height": "auto", "font-size": "200%","font-align": "center","margin-top": "2%"}); ';
+		 				$def_cons= ' $("#graph_content_").html("<b>You have no Records, for this period please try using the filters</b>!");		 				
+		 				$("#graph_content_").css({"height": "auto", "font-size": "100%","font-align": "center","margin-top": "2%"}); ';
 		 			}else {
 		 				$def_cons = $this -> hcmp_functions -> create_high_chart_graph($default_consumption_graph_);
 		 			}
@@ -3754,7 +3759,7 @@ class Reports extends MY_Controller {
 		// echo "<pre>";print_r($chopped_down);echo "</pre>";exit;
 		$this -> hcmp_functions -> create_excel($excel_data);
 	}
-	public function consumption_stats_graph($commodity_id = null, $category_id = null, $district_id = null, $facility_code = null, $option = null, $from = null, $to = null, $report_type = null) {
+	public function consumption_stats_graph($commodity_id = null, $category_id = null, $district_id = null, $facility_code = null, $option = null, $from = null, $to = null, $report_type = null,$tracer=null) {
 		//reset the values here
 		// echo $report_type;exit;
 		$commodity_id = ($commodity_id == "NULL") ? null : $commodity_id;
@@ -3762,8 +3767,11 @@ class Reports extends MY_Controller {
 		//$district_id = ($district_id=="NULL") ? null :$district_id;
 		$facility_code = ($facility_code == "NULL") ? null : $facility_code;
 		$option = ($option == "NULL" || $option == "null") ? null : $option;
-		$from = ($from == "NULL") ? strtotime(date('01-m-y')) : strtotime(urldecode($from));
-		$to = ($to == "NULL") ? strtotime(date('d-m-y')) : strtotime(urldecode($to));
+		// $from = ($from == "NULL") ? strtotime(date('01-m-y')) : strtotime(urldecode($from));
+		// $to = ($to == "NULL") ? strtotime(date('d-m-y')) : strtotime(urldecode($to));
+		// echo "$from";die;
+		$from = (($from == "NULL")) ? strtotime(date('Y-m-01')) : strtotime(urldecode($from));
+	 	$to = (($to == "NULL")) ? strtotime(date('Y-m-d')) : strtotime(urldecode($to));
 		$category_id = ($category_id == "NULL") ? null : $category_id;
 		$county_id = $this -> session -> userdata('county_id');
 		$county_name = counties::get_county_name($county_id);
@@ -3771,7 +3779,7 @@ class Reports extends MY_Controller {
 		//check if the district is set
 		$district_data = (isset($district_id) && ($district_id > 0)) ? districts::get_district_name($district_id) -> toArray() : null;
 		$district_name_ = (isset($district_data)) ? " :" . $district_data[0]['district'] . " subcounty" : null;
-		$option_new = isset($option) ? $option : "ksh";
+		$option_new = isset($option) ? $option : "packs";
 		$facility_code_ = isset($facility_code) ? facilities::get_facility_name_($facility_code) -> toArray() : null;
 		$facility_name = $facility_code_[0]['facility_name'];
 		$commodity_name = (isset($commodity_id)) ? Commodities::get_details($commodity_id) -> toArray() : null;
@@ -3779,7 +3787,9 @@ class Reports extends MY_Controller {
 		$commodity_name = isset($category_name_) ? " for " . $category_name_ : null;
 		$title = isset($facility_code) && isset($district_id) ? "$district_name_ : $facility_name" : ($district_id > 0 && !isset($facility_code) ? "$district_name_" : "$county_name[county] county");
 		$time = "between " . date('j M y', $from) . " and " . date('j M y', $to);
-		$consumption_data = Facility_stocks::get_county_consumption_level_new($facility_code, $district_id, $county_id, $category_id, $commodity_id, $option, $from, $to, $report_type);
+		$consumption_data = Facility_stocks::get_county_consumption_level_new($facility_code, $district_id, $county_id, $category_id, $commodity_id, $option, $from, $to, $report_type,$tracer);
+		// echo "<pre>";
+		// print_r($consumption_data);die;
 		foreach ($consumption_data as $data) :
 			if ($report_type == "table_data") :
 				if ($commodity_id > 0) :
