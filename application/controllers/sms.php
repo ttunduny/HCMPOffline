@@ -417,7 +417,7 @@ class sms extends MY_Controller {
 	 */
 
 	 //sends a text when a stock update is done by a facility
-	 public function send_stock_update_sms() {
+	 public function send_stock_update_sms_nullified() {
 	 	$facility_name = $this -> session -> userdata('full_name');
 	 	$facility_code = $this -> session -> userdata('facility_id'); ;
 	 	$data = Users::getUsers($facility_code) -> toArray();
