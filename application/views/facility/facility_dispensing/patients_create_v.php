@@ -198,7 +198,7 @@
 
 								<div class="input-group form-group u_mgt">
 									<span class="input-group-addon sponsor">Date of Birth <span style="color:#e60000"> * <i>required</i></span></span>
-									<input type="text" name="dob" id="dob" required="required" class="form-control datepicker" placeholder="e.g dd/mm/yyyy" tabindex="6">
+									<input type="text" name="dob" id="dob" required="required" class="form-control clone_datepicker_normal_limit_today" placeholder="e.g dd/mm/yyyy" tabindex="6">
 								</div>
 
 								<div class="input-group form-group u_mgt">
@@ -279,7 +279,7 @@ $("#create_new_patient").click(function() {
       var patient_number = $('#patient_number').val();      
       var url = "<?php echo base_url()."dispensing/save_patient";?>";
       var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";
-
+      $('.datepicker').datepicker();
 	   if(first_name==""||last_name==""||telephone==""||dob==""||gender=="0"||physical_address==""||patient_number==""){
 			alert('Please make sure you have filled in all required  fields.');
 			return;
@@ -327,3 +327,4 @@ $("#create_new_patient").click(function() {
     });
 
     </script>
+<script src="<?php echo base_url().'assets/bower_components/intro.js/intro.js'?>" type="text/javascript"></script>
