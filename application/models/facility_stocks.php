@@ -149,6 +149,7 @@ class Facility_stocks extends Doctrine_Record {
 		return $store_comm;
 	}
 	public static function get_distinct_stocks_for_this_facility($facility_code, $checker = null, $exception = null) {
+		//random comments
 
 		// $addition = isset($checker) ? ($checker === 'batch_data') ? 'and fs.current_balance>0 group by fs.id,c.id order by c.commodity_name asc,fs.expiry_date asc,fs.batch_no desc' : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc,fs.expiry_date asc,fs.batch_no desc' : null;
 		$addition = isset($checker) ? ($checker === 'batch_data') ? 'and fs.current_balance>0 group by fs.id,c.id order by c.commodity_name asc,fs.batch_no asc,fs.expiry_date asc' : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc,fs.batch_no desc' : null;

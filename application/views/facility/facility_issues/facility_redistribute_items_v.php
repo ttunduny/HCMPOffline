@@ -176,6 +176,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			});
 
 		});	
+//random
             ///when changing the commodity combobox
       		$(".desc").on('change',function(){
       		var row_id=$(this).closest("tr").index();	
