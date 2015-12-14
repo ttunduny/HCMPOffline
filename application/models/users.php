@@ -268,6 +268,11 @@ public static function get_cp_details($county_id){
 	$level = $query -> execute();
 	return $level;
 }
+public static function get_cp_details_karsan($county_id){
+	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("county_id=$county_id and usertype_id='10' ");
+	$details = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+	return $details;
+}
 public static function get_dpp_emails($distirct){
 	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("district = $distirct and usertype_id='3' and email_recieve = 1");
 		$level = $query -> execute();
