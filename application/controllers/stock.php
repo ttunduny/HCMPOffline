@@ -283,18 +283,26 @@ class Stock extends MY_Controller {
 
 	public function autosave_update_stock($excel_data = null, $facility_code = null) {
 		if (isset($excel_data)) :
+
+			// echo "<pre>";print_r($excel_data);echo "</pre>";exit;
 			foreach ($excel_data as $row_data) :
 				//get the data
-				$does_facility_have_this_drug_in_temp_table = $this -> does_facility_have_this_drug_in_temp_table($row_data['commodity_id'], $excel_data['facility_code'], $row_data['batch_no']);
+				echo "<pre>";echo $row_data['source_of_item'];
+				// echo "<pre>";echo $row_data['source_of_item'];echo "</pre>";
+					// $src_id = Commodities::get_source_id_from_name();
+					// echo "<pre>";print_r($src_id);exit;
+				// $does_facility_have_this_drug_in_temp_table = $this -> does_facility_have_this_drug_in_temp_table($row_data['commodity_id'], $excel_data['facility_code'], $row_data['batch_no']);
 				if ($does_facility_have_this_drug_in_temp_table > 0) :
 					//send the data to the db
-					$this -> update_batch_in_temp($row_data['expiry_date'], $row_data['batch_no'], $row_data['manu'], $row_data['stock_level'], $row_data['total_unit_count'], $row_data['commodity_id'], $facility_code, $row_data['unit_issue'], $row_data['total_units'], $row_data['source_of_item'], $row_data['supplier']);
+					// $this -> update_batch_in_temp($row_data['expiry_date'], $row_data['batch_no'], $row_data['manu'], $row_data['stock_level'], $row_data['total_unit_count'], $row_data['commodity_id'], $facility_code, $row_data['unit_issue'], $row_data['total_units'], $src_id, $row_data['supplier']);
 				else :
 					//save the data
+					// echo "Im HERE";
 					$mydata = array('facility_code' => $facility_code, 'commodity_id' => $row_data['commodity_id'], 'batch_no' => $row_data['batch_no'], 'manu' => $row_data['manu'], 'expiry_date' => $row_data['expiry_date'], 'stock_level' => $row_data['stock_level'], 'total_unit_count' => $row_data['total_unit_count'], 'unit_size' => $row_data['unit_size'], 'unit_issue' => $row_data['unit_issue'], 'total_units' => $row_data['total_units'], 'source_of_item' => $row_data['source_of_item'], 'supplier' => $row_data['supplier']);
 					$this -> save_batch_in_temp($mydata);
 				endif;
 			endforeach;
+			exit;
 			redirect('stock/facility_stock_first_run/first_run');
 		elseif (!isset($excel_data)) :
 			$facility_code = $this -> session -> userdata('facility_id');
