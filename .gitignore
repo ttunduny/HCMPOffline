@@ -9,7 +9,6 @@ database.php
 /drugs not in commodities table.txt
 /nbproject
 database_backups
-
 system/libraries/Hcmp_functions.php
 application/config/database.php
 .htaccess
