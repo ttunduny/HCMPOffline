@@ -1150,16 +1150,16 @@ class Facility_stocks extends Doctrine_Record {
 		switch ($option) :
 
 			case 'ksh' :
-				// $computation = "ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
-				$computation = "ifnull((SUM(ROUND(ABS(fs.qty_issued)/ d.total_commodity_units)))*d.unit_cost ,0)-ifnull((SUM(ROUND(ABS(fs.adjustmentnve)/ d.total_commodity_units)))*d.unit_cost ,0)+ifnull((SUM(ROUND(ABS(fs.adjustmentpve)/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+				// $computation = "ifnull((SUM(ROUND(ABS(fs.qty_issued)/ d.total_commodity_units)))*d.unit_cost ,0)-ifnull((SUM(ROUND(ABS(fs.adjustmentnve)/ d.total_commodity_units)))*d.unit_cost ,0)+ifnull((SUM(ROUND(ABS(fs.adjustmentpve)/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
 				break;
 			case 'units' :
-				// $computation = "ifnull(CEIL(SUM(fs.qty_issued)),0) AS total,d.commodity_name as commodity";
-				$computation = "ifnull(CEIL(SUM(ABS(fs.qty_issued))),0)-ifnull(CEIL(SUM(ABS(fs.adjustmentnve))),0)+ifnull(CEIL(SUM(ABS(fs.adjustmentpve))),0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull(CEIL(SUM(fs.qty_issued)),0) AS total,d.commodity_name as commodity";
+				// $computation = "ifnull(CEIL(SUM(ABS(fs.qty_issued))),0)-ifnull(CEIL(SUM(ABS(fs.adjustmentnve))),0)+ifnull(CEIL(SUM(ABS(fs.adjustmentpve))),0) AS total,d.commodity_name as commodity";
 				break;
 			case 'packs' :
-				// $computation = "ifnull(SUM(ROUND(fs.qty_issued/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
-				$computation = "ifnull(SUM(ROUND(ABS(fs.qty_issued)/d.total_commodity_units)),0)-ifnull(SUM(ROUND(ABS(fs.adjustmentnve)/d.total_commodity_units)),0)+ifnull(SUM(ROUND(ABS(fs.adjustmentpve)/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull(SUM(ROUND(fs.qty_issued/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
+				// $computation = "ifnull(SUM(ROUND(ABS(fs.qty_issued)/d.total_commodity_units)),0)-ifnull(SUM(ROUND(ABS(fs.adjustmentnve)/d.total_commodity_units)),0)+ifnull(SUM(ROUND(ABS(fs.adjustmentpve)/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
 				break;
 			case 'mos' :
 				$r = facility_stocks_temp::get_months_of_stock($district_id, $county_id, $facility_code);
@@ -1224,7 +1224,7 @@ class Facility_stocks extends Doctrine_Record {
 	    $and 
 	    AND d.id = fs.commodity_id
 	    $and_data
-	    $group_by_a_month
+	    $group_by_a_month having total>0
 	     ");
 			return $inserttransaction;
 	}
