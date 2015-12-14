@@ -10,8 +10,6 @@ database.php
 /nbproject
 /stash
 database_backups
-
-
 system/libraries/Hcmp_functions.php
 application/config/database.php
 .htaccess
