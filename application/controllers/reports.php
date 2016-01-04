@@ -3429,15 +3429,16 @@ class Reports extends MY_Controller {
 					$this -> hcmp_functions -> create_excel($excel_data);
 					else :
 			//echo "<pre>";print_r($category_data);echo "</pre>";exit;
-						$graph_type = 'column';
-					$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
+					$graph_type = 'bar';
+					$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));					
 					$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level $commodity_name for $title as at $month_ $year"));
 					$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
 					$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Commodity Stock level in $option_title"));
 					$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
 					$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
 			//echo $category_data;
-					$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
+					$data['graph_id'] = 'dem_graph_';
+					$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);					
 					return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 					endif;
 				}
@@ -3628,6 +3629,7 @@ class Reports extends MY_Controller {
 		 	$axis = "Packs";
 		 	break;
 		 	default :
+		 	$option = 'packs';
 		 	$axis = "Packs";
 				// $axis = "Ksh";
 		 	break;
@@ -3726,6 +3728,15 @@ class Reports extends MY_Controller {
 		//echo "<pre>";print_r($data['county_dashboard_notifications']); exit;
 		 			return $this -> load -> view("subcounty/ajax/county_consumption_data_filter_v", $data);
 		 		}
+	public function generate_county_filter(){
+		$county_id = $this -> session -> userdata('county_id');
+		$data['district_data'] = districts::getDistrict($county_id);
+		$data['c_data'] = Commodities::get_all_2();
+		$data['tracer_items'] = Commodities::get_tracer_items();
+		$data['categories'] = commodity_sub_category::get_all_pharm();
+		return $this -> load -> view("subcounty/ajax/new_county_consumption_data_filter_v", $data);
+
+	}
 	public function tracer_report(){//seth
 		//THIS REPORT IS CURRENTLY STATIC UNTIL AN INTERFACE IS MADE
 		// $t_report = Facility_stocks::get_tracer_items_report_new($facility_code, $district_id, $county_id, $category_id, $commodity_id, $option, $from, $to, $report_type, $tracer);
@@ -3787,7 +3798,7 @@ class Reports extends MY_Controller {
 		$commodity_name = isset($category_name_) ? " for " . $category_name_ : null;
 		$title = isset($facility_code) && isset($district_id) ? "$district_name_ : $facility_name" : ($district_id > 0 && !isset($facility_code) ? "$district_name_" : "$county_name[county] county");
 		$time = "between " . date('j M y', $from) . " and " . date('j M y', $to);
-		$consumption_data = Facility_stocks::get_county_consumption_level_new($facility_code, $district_id, $county_id, $category_id, $commodity_id, $option, $from, $to, $report_type,$tracer);
+		$consumption_data = Facility_stocks::get_county_consumption_level_new($facility_code, $district_id, $county_id, $category_id, $commodity_id, $option_new, $from, $to, $report_type,$tracer);
 		// echo "<pre>";
 		// print_r($consumption_data);die;
 		foreach ($consumption_data as $data) :
@@ -3828,7 +3839,8 @@ class Reports extends MY_Controller {
 			$data['table_id'] = "dem_graph_";
 			return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
 			else :
-				$graph_type = 'column';
+				$graph_type = 'bar';
+				// $graph_type = 'column';
 			$graph_data = array_merge($graph_data, array("graph_id" => 'dem_graph_'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "Consumption level $commodity_name $title $time"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
@@ -3836,6 +3848,7 @@ class Reports extends MY_Controller {
 			$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
 			$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
 			$data = array();
+			$data['graph_id'] = 'dem_graph_';
 			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
 			return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 			endif;
