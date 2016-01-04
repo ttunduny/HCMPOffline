@@ -87,6 +87,18 @@ class Dispensing extends MY_Controller {
 		$this->load->view($view,$data);
 	}
 
+	public function issue(){
+		$p_data = Patients::get_all();
+		// $p_data = Patients::get_patient_data();		
+		$data['patient_data'] = $p_data;
+		$facility_code = $this -> session -> userdata('facility_id');
+		$data['title'] = "Patient Dispensing";
+		$data['banner_text'] = "Patient Dispensing";		
+		$view = 'shared_files/template/template';
+		$data['content_view'] = 'facility/facility_dispensing/dispense';
+		$this->load->view($view,$data);
+	}
+
 	public function add_multiple_patients(){		
 		$facility_code = $this -> session -> userdata('facility_id');
 		$data['title'] = "Patient Management";
@@ -142,7 +154,22 @@ class Dispensing extends MY_Controller {
 
 		$patients = Patients::save_patient($data_array,$patient_number,$date_created,$facility_code);
 	}
-
+	public function get_patient_detail(){
+		$patient_number = $this->input->post('patient_number');
+		$patient_details = Patients::get_one_patient($patient_number);
+		$p_dets = array();
+		foreach ($patient_details as $key => $value) {
+			$firstname = $value['firstname'];
+			$lastname = $value['lastname'];
+			$date_of_birth = $value['date_of_birth'];
+			$date_of_birth_string = date('F, m Y', strtotime($date_of_birth));
+			$gender = $value['gender'];
+			$name = $firstname.' '.$lastname;			
+			$gender = ($gender=='1') ? 'Male' : 'Female' ;
+			$p_dets[] = array($patient_number,$name,$gender,$date_of_birth_string);
+		}
+		echo json_encode($p_dets[0]);
+	}
 	public function get_service_point_graph_data(){
 		// $graph_id = "container";
 		$facility_code = $this -> session -> userdata('facility_id');
