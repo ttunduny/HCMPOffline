@@ -52,6 +52,12 @@ class Patients extends Doctrine_Record {
 		return $query;
 	}
 
+	public function get_one_patient($patient_number){
+		$sql = "select firstname, lastname, date_of_birth, gender, patient_number from patient_details where patient_number = '$patient_number' limit 0,1";
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($sql);
+		return $query;
+	}
+
 	public function get_patient_commodity_info($id = NULL){
 		$magufuli = isset($id)? "AND p.id = $id":NULL;
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
