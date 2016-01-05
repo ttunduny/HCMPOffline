@@ -95,6 +95,7 @@ class Reports extends MY_Controller {
 	 	$this -> load -> view('shared_files/template/template', $data);
 	 }
 	 public function force_file_download() {
+	 	// echo "<pre>";print_r($this->input->get());exit;
 	 	$this -> hcmp_functions -> download_file($this -> input -> get('url'));
 	 }
 	 public function get_facilities() {
