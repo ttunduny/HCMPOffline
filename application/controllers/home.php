@@ -228,6 +228,7 @@ class Home extends MY_Controller
 	'actual_expiries'=>$actual_expiries,
 	'facility_donations'=>$facility_donations,
 	'facility_donations_pending'=>$facility_donations_pending,//,'stocks_from_v1'=>$stocks_from_v1	
+	'facility_redistribution_mismatches'=>$facility_redistribution_mismatches
 	);	
     }
 	public function tester(){
