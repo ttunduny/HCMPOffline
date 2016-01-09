@@ -1,6 +1,6 @@
 <style>  
     #footer{
-        position: relative
+        /*position: relative*/
     }
 </style>
 

@@ -671,10 +671,75 @@ class Reports extends MY_Controller {
 			$data['to'] = $to;
 			$data['facility_code'] = $this -> session -> userdata('facility_id');
 			$data_ = Facility_issues::get_bin_card($facility_code, $commodity_id, $from, $to);
+			$data_final = array();
+			foreach ($data_ as $key => $value) {
+				$date_issued = $value['date_issued'];
+				$expiry_date = $value['expiry_date'];
+				$batch_no = $value['batch_no'];
+				$unit_size = $value['unit_size'];
+				$s11_No = $value['s11_No'];
+				$balance_as_of = $value['balance_as_of'];
+				$adjustmentnve = $value['adjustmentnve'];
+				$adjustmentpve = $value['adjustmentpve'];
+				$qty_issued = $value['qty_issued'];
+				$fname = $value['fname'];
+				$lname = $value['lname'];
+				$service_point_name = $value['service_point_name'];
+				if($s11_No=='internal issue'){
+					if (preg_match('/[A-Za-z]/i', $service_point_name)) {
+						$data_final[] = array('date_issued'=>$date_issued,
+										'expiry_date'=>$expiry_date,
+										'batch_no'=>$batch_no,
+										'unit_size'=>$unit_size,
+										's11_No'=>$s11_No,
+										'balance_as_of'=>$balance_as_of,
+										'adjustmentnve'=>$adjustmentnve,
+										'adjustmentpve'=>$adjustmentpve,
+										'qty_issued'=>$qty_issued,
+										'fname'=>$fname,
+										'fname'=>$fname,
+										'service_point_name'=>$service_point_name);
+					}else {
+						$service_point_name = intval($service_point_name);
+						$service_point_details = Facility_issues::get_one_service_points($service_point_name);
+						foreach ($service_point_details as $keys => $values) {
+							$service_point_name = $values['service_point_name'];
+						}
+						$data_final[] = array('date_issued'=>$date_issued,
+										'expiry_date'=>$expiry_date,
+										'batch_no'=>$batch_no,
+										'unit_size'=>$unit_size,
+										's11_No'=>$s11_No,
+										'balance_as_of'=>$balance_as_of,
+										'adjustmentnve'=>$adjustmentnve,
+										'adjustmentpve'=>$adjustmentpve,
+										'qty_issued'=>$qty_issued,
+										'fname'=>$fname,
+										'fname'=>$fname,
+										'service_point_name'=>$service_point_name);
+					}
+				}else{
+					$data_final[] = array('date_issued'=>$date_issued,
+										'expiry_date'=>$expiry_date,
+										'batch_no'=>$batch_no,
+										'unit_size'=>$unit_size,
+										's11_No'=>$s11_No,
+										'balance_as_of'=>$balance_as_of,
+										'adjustmentnve'=>$adjustmentnve,
+										'adjustmentpve'=>$adjustmentpve,
+										'qty_issued'=>$qty_issued,
+										'fname'=>$fname,
+										'fname'=>$fname,
+										'service_point_name'=>$service_point_name);
+				}
+			}	
+			// echo "<pre>";
+			// print_r($data_final);die;
 			$available_bal= Facility_stocks::get_all_facility($facility_code,$commodity_id);
 			$distinct =count(Facility_issues::get_distinct_batch($facility_code, $commodity_id, $from, $to));
-			echo "<pre>";print_r($data_);exit;
-			$data['bin_card'] = $data_;
+			// echo "<pre>";print_r($data_);exit;
+			$data['bin_card'] = $data_final;
+			// $data['bin_card'] = $data_;
 			$count_records = count($data_);
 			$data['count_records'] = $count_records;
 			$data['distinct_batch'] = $distinct;
@@ -3211,53 +3276,42 @@ class Reports extends MY_Controller {
 			$title = "$county_name County";
 		endif;
 		//set the arrays
-		$category_data = $series_data = $series_data_ = $graph_data = $data = array();
+		$category_data = $series_data = $series_data_ = $series_data_2 = $graph_data = $data = array();
 		//loop through the data
 		foreach ($stock_level as $data) :
 			//for graph
+			$series_data_2 = array_merge($series_data_2, array((int)$data['total']));
 			$series_data = array_merge($series_data, array((int)$data['total']));
 			//$series_data_ = array_merge($series_data_, array( array($data['district'], $data["facility_name"], $data["facility_code"], $data["commodity_name"], (int)$data['total'])));
-		$category_data = array_merge($category_data, array($data["commodity_name"]));
+			$category_data = array_merge($category_data, array($data["commodity_name"]));
 		endforeach;
 		
-
 		if ($report_type == "table_data") :
-			// echo "<pre>";print_r($series_data);echo "</pre>";
-			// echo "<pre>";print_r($category_data);echo "</pre>";exit;
-			/*
+			/*$array_count = count($series_data);
+			for($i = 0; $i < $array_count; $i++){
+				$series_data_2["$a"] = array("{$category_data["$a"]}","{$series_data["$a"]}");
+			}
 			$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level $commodity_name for $title as at $month_ $year"));
-			$category_data = array( array("Commodity Name", "Stock Level"));
+			$category_data = array(array("Commodity Name", "Stock Level"));
 			$graph_data = array_merge($graph_data, array("table_id" => 'graph_default'));
 			$graph_data = array_merge($graph_data, array("table_header" => $category_data));
-			$graph_data = array_merge($graph_data, array("table_body" => $series_data));
+			$graph_data = array_merge($graph_data, array("table_body" => $series_data_2));
 			$data = array();
 			$data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);
 			$data['table_id'] = "graph_default";
-			return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
-			*/
-			$graph_type = 'column';
+			return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);*/
+		else :
+			$graph_type = 'bar';
 			$graph_data = array_merge($graph_data, array("graph_id" => 'default_graph_'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level $commodity_name for $title as at $month_ $year"));
 			$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
 			$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Commodity Stock level in $option_title"));
 			$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
 			$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
-		//echo $category_data;
+			//echo $category_data;
 			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
-		// echo "<pre>";print_r($data['high_graph']);echo "</pre>";exit;
-		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);//karsan
-		else :
-			$graph_type = 'column';
-		$graph_data = array_merge($graph_data, array("graph_id" => 'default_graph_'));
-		$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level $commodity_name for $title as at $month_ $year"));
-		$graph_data = array_merge($graph_data, array("graph_type" => $graph_type));
-		$graph_data = array_merge($graph_data, array("graph_yaxis_title" => "Commodity Stock level in $option_title"));
-		$graph_data = array_merge($graph_data, array("graph_categories" => $category_data));
-		$graph_data = array_merge($graph_data, array("series_data" => array('total' => $series_data)));
-		//echo $category_data;
-		$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
-		// echo "<pre>";print_r($data['high_graph']);echo "</pre>";exit;
-		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);//karsan
+			// echo "<pre>";print_r($data['high_graph']);echo "</pre>";exit;
+			return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);//karsan
 		endif;
 
 		/*
@@ -3527,6 +3581,7 @@ class Reports extends MY_Controller {
 		 	$graph_data = array_merge($graph_data, array("table_id" => 'dem_graph_'));
 		 	$graph_data = array_merge($graph_data, array("table_header" => $category_data));
 		 	$graph_data = array_merge($graph_data, array("table_body" => $series_data));
+		 	echo "<pre>"; print_r($graph_data); echo "</pre>"; exit;
 		 	$data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);
 		 	$data['table_id'] = "dem_graph_";
 		 	return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);

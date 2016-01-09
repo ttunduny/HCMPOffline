@@ -188,6 +188,9 @@
          <div style="height:auto; margin-bottom: 2px" class="reports message ">
           <a href="<?php echo base_url("reports") ?>"><h5>Reports</h5></a>        
         </div>
+        <div style="height:auto; margin-bottom: 2px" class="reports message ">
+          <a href="<?php echo base_url("issues/reversals") ?>"><h5>Reversals</h5></a>        
+        </div>
         <?php endif; ?>
       </div>
         </div>      

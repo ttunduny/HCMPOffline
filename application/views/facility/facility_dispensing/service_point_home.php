@@ -56,7 +56,7 @@
 							<a href="<?php echo base_url('issues/service_point_store'); ?>"><h5>Dispense Commodities To Patients</h5></a>
 						</div>
 						<div style="height: auto; margin-bottom: 2px; " class="distribute message">
-							<a href="<?php echo base_url('issues/service_point_store'); ?>"><h5>Patient Management</h5></a>
+							<a href="<?php echo base_url('dispensing/patients'); ?>"><h5>Patient Management</h5></a>
 						</div>
 						<div style="height: auto; margin-bottom: 2px; " class="distribute message">
 							<a href="<?php echo base_url('reports/service_point_store_reports'); ?>"><h5>Reports</h5></a>

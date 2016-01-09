@@ -78,7 +78,7 @@ $identifier = $this -> session -> userdata('user_indicator');
    //hcmp custom message dialog
     dialog_box(body_content,
     '<button type="button" class="btn btn-primary order_for_them" >View Their Bin Card</button>'
-    +'<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>'); 
+    +'<button type="button" class="btn btn-default" data-dis    miss="modal">Cancel</button>'); 
     $(".order_for_them").on('click', function() {
     var facility_code=$('#facility_code').val();
     if(facility_code==0){

@@ -29,7 +29,7 @@
 	<link href="<?php echo base_url().'assets/css/style_2015.css'?>" type="text/css" rel="stylesheet"/> 
   <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
-    <script src="<?php echo base_url().'assets/scripts/offline-simulate-ui.min.js'?>" type="text/javascript"></script>
+    <!--<script src="<?php echo base_url().'assets/scripts/offline-simulate-ui.min.js'?>" type="text/javascript"></script>-->
      <script src="<?php echo base_url().'assets/scripts/select2.js'?>" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/bower_components/alertifyjs/dist/js/alertify.js'?>" type="text/javascript"></script>
     <link rel="stylesheet" href="<?php echo base_url().'assets/bower_components/alertifyjs/dist/css/alertify_bootstrap_3.css'?>" />
@@ -182,7 +182,14 @@
                         <li><a class="icon icon-data" href="<?php echo base_url().'home';?>">Home</a></li>
                         <li><a class="icon icon-study" href="<?php echo base_url().'admin/manage_commodities';?>">Commodities</a></li>
                         <li><a class="icon icon-location" href="<?php echo base_url().'user/user_create';?>">User Management</a></li>
-                        <li><a class="icon icon-location" href="<?php echo base_url().'admin/user_logs';?>">User Logs</a></li>
+                        <!-- <li class="dropdown"><a class="dropdown-toggle" href="#"  data-toggle="dropdown">User Logs</a>
+                          <ul class="dropdown-menu">
+                            <li><a style="color:#000000" href="<?php echo base_url().'admin/user_logs';?>">Logged In</a></li>
+                            <li><a style="color:#000000" href="<?php echo base_url().'admin/previous_user_logs';?>">Historical Logs</a></li>
+                          </ul>
+                        </li> -->
+                        <li><a class="icon icon-user" href="<?php echo base_url().'admin/user_logs';?>">Online Users</a></li>
+                        <li><a class="icon icon-user" href="<?php echo base_url().'admin/previous_user_logs';?>">Historical Logs</a></li>
                         <li><a class="icon icon-photo" href="<?php echo base_url().'admin/manage_facilities'?>">Facility Management</a></li>
                         <li><a class="icon icon-wallet" href="<?php echo base_url().'sms/log_summary_weekly_view'?>">Weekly Usage</a></li>
                         <li><a class="icon icon-wallet" href="#">Counties</a></li>
@@ -222,6 +229,20 @@
   </div><!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->  
+<script>
+$(document).ready(function(){
+     $('table').dataTable( {
+        "sDom": "T lfrtip",
+            // "sScrollY": "320px",   
+              "sPaginationType": "bootstrap",
+              "oLanguage": {"sLengthMenu": "_MENU_ Records per page","sInfo": "Showing _START_ to _END_ of _TOTAL_ records",},
+              "oTableTools": {"aButtons": ["copy","print",{"sExtends":"collection","sButtonText": 'Save',"aButtons":[ "csv", "xls", "pdf" ]}],"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"}
+      
+      } ); 
+
+});//end of script
+  
+</script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
     <!-- Bootstrap core JavaScript===================== --> 
