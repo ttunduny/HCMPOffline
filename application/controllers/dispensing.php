@@ -162,7 +162,8 @@ class Dispensing extends MY_Controller {
 	}
 	public function get_patient_detail(){
 		$patient_number = $this->input->post('patient_number');
-		$patient_details = Patients::get_one_patient($patient_number);
+		$patient_details = Patients::filter_patient($patient_number);
+		// $patient_details = Patients::get_one_patient($patient_number);
 		if (count($patient_details)  < 1) {
 			echo 0;
 		}else{
@@ -170,6 +171,7 @@ class Dispensing extends MY_Controller {
 		foreach ($patient_details as $key => $value) {
 			$id = $value['id'];
 			$firstname = $value['firstname'];
+			$patient_number = $value['patient_number'];
 			$lastname = $value['lastname'];
 			$date_of_birth = $value['date_of_birth'];
 			$date_of_birth_string = date('F, m Y', strtotime($date_of_birth));
@@ -177,9 +179,9 @@ class Dispensing extends MY_Controller {
 			$name = $firstname.' '.$lastname;			
 			$gender = ($gender=='1') ? 'Male' : 'Female';
 			$name_and_number = $name .' | '.$patient_number;
-			$p_dets[] = array($patient_number,$name,$gender,$date_of_birth_string,$name_and_number,$id);
-		echo json_encode($p_dets[0]);
+			$p_dets[] = array($patient_number,$name,$gender,$date_of_birth_string,$name_and_number,$id);		
 		}
+		echo json_encode($p_dets);
 	}
 	}
 	public function get_service_point_graph_data(){

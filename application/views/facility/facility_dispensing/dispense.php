@@ -183,6 +183,7 @@ $("#find_patient").click(function() {
 	// 	alert('Please make sure you have filled in all required  fields.');
 	// 	return;
 	// }
+	$('#search_results').html("");
 	$.ajax({
         type: "POST",
         url: url,
@@ -197,6 +198,7 @@ $("#find_patient").click(function() {
 	       //      return false;
 	       //  }           
         //   },
+
         success: function(msg) {
         	console.log(msg);
         	if (msg == 0) {
@@ -219,22 +221,38 @@ $("#find_patient").click(function() {
 	       		$( ".form_patient_id" ).remove();
         	}else{
 	       		var patient_details = JSON.parse(msg);
-	       		// console.log(patient_details);
-	       		var p_no = patient_details[0];
-	       		var name = patient_details[1];
-	       		var gender = patient_details[2];
-	       		var dob = patient_details[3];
-	       		var names_and_no = patient_details[4];
-	       		var patient_id = patient_details[5];
-	       		// alert(patient_id);return;
-	       		$('#name').val(name);
-	       		$('#dob').val(dob);
-	       		$('#gender').val(gender);
-	       		$('#p_no').val(p_no);
-	       		$('#p_no').attr('data-patient-id', patient_id);
-	       		// $('#search_results').val(names_and_no);
-	       		$('#search_results').html("<tr><td>"+name+"</td><td>"+p_no+"</td></tr>");
-		    	$('#dispense_form').append("<input type=\"hidden\" value="+patient_id+" name=\"form_patient_id\" class=\"form_patient_id\">");
+	       		for (var i = 0; i < patient_details.length; i++) {
+	       			var p_no = patient_details[i][0];
+		       		var name = patient_details[i][1];
+		       		var gender = patient_details[i][2];
+		       		var dob = patient_details[i][3];
+		       		var names_and_no = patient_details[4];
+		       		var patient_id = patient_details[5];
+		       		$('#name').val(name);
+		       		$('#dob').val(dob);
+		       		$('#gender').val(gender);
+		       		$('#p_no').val(p_no);
+		       		$('#p_no').attr('data-patient-id', patient_id);
+		       		// $('#search_results').val(names_and_no);
+		       		$('#search_results').append("<tr><td>"+name+"</td><td>"+p_no+"</td></tr>");
+			    	$('#dispense_form').append("<input type=\"hidden\" value="+patient_id+" name=\"form_patient_id\" class=\"form_patient_id\">");
+	       			// Things[i]
+	       		};
+	      //  		var p_no = patient_details[0];
+	      //  		var name = patient_details[1];
+	      //  		var gender = patient_details[2];
+	      //  		var dob = patient_details[3];
+	      //  		var names_and_no = patient_details[4];
+	      //  		var patient_id = patient_details[5];
+	      //  		// alert(patient_id);return;
+	      //  		$('#name').val(name);
+	      //  		$('#dob').val(dob);
+	      //  		$('#gender').val(gender);
+	      //  		$('#p_no').val(p_no);
+	      //  		$('#p_no').attr('data-patient-id', patient_id);
+	      //  		// $('#search_results').val(names_and_no);
+	      //  		$('#search_results').html("<tr><td>"+name+"</td><td>"+p_no+"</td></tr>");
+		    	// $('#dispense_form').append("<input type=\"hidden\" value="+patient_id+" name=\"form_patient_id\" class=\"form_patient_id\">");
 
 	       		 // var search_table = $('#search_results').DataTable().ajax.reload();
 	       			// search_table.ajax.reload();
