@@ -19,6 +19,10 @@
 	.form-group{
 		margin-bottom: 10px;
 	}
+
+	#search_results table tr.active{
+		background-color: #e3e3e3;
+	}
 </style>
 
 <div class="container-fluid">
@@ -28,8 +32,8 @@
 
 			<div class="row">
 
-				<div class="col-md-12" style="padding-left: 3%; right:0; float:right; margin-bottom:5px;margin-left:3%;">
-					<input type="text" class="form-control" id="patient_number" name="patient_number" placeholder="Enter the Patient Number" style="width:20%;float:left;" />
+				<div class="col-md-12" style="padding-left: 1%; right:0; float:right; margin-bottom:5px;margin-left:1%;">
+					<input type="text" class="form-control" id="patient_number" name="patient_number" placeholder="Enter the Patient Number or First Name or Last Name" style="width:29%;float:left;" />
 					<button class="btn btn-primary" id="find_patient">
 						<span class="glyphicon glyphicon-search"></span>Find
 					</button>
@@ -37,7 +41,7 @@
 				<div class="col-md-12">
 					
 				<div class="clearfix" style="border:1px solid #ccc;padding:1px;">
-					<div class="col-md-4" style="padding:0 1%;height:100%;background-color:#428bca;border:1px ridge #e3e3e3;float:left;color:#ffffff">
+					<div class="col-md-4 search_container" style="padding:0 1%;height:100%;background-color:#428bca;border:1px ridge #e3e3e3;float:left;color:#ffffff">
 						<h4>Search Results</h4>
 						<!-- <textarea id="search_results" disabled="disabled" style="width:96%;height:80%;color:black;"></textarea> -->
 						<table class="table table-bordered" id="search_results">
@@ -121,7 +125,7 @@
 
 					</div>
 				</div>
-				<div class="col-md-12" style="margin:5px 0">
+				<!-- <div class="col-md-12" style="margin:5px 0">
 					<div class="col-md-6" style="height:250px">					
 						<h4>Diagnosis</h4>
 						<textarea style="width:100%;height:90%;overflow:scroll;"></textarea>
@@ -130,12 +134,12 @@
 						<h4>Prescription</h4>
 						<textarea style="width:100%;height:90%;overflow:scroll;"></textarea>
 					</div>
-				</div>
-					<div class="col-md-12" style="margin:20px 0;padding:0 28px 0 0">
+				</div> -->
+					<!-- <div class="col-md-12" style="margin:20px 0;padding:0 28px 0 0">
 					<button class="btn btn-success" id="dispense" style="float:right">
 						Dispense
 					</button>
-					</div>
+					</div> -->
 			</div>
 			
 			</div>
@@ -172,8 +176,14 @@ var search_table = $('#search_results,#prescribed_cart').dataTable( {
 		}
 	} );
 
-
-   
+$(".search_container").on("click", "table tr", function() {
+	var patient_number = $(this).attr('data-href');		
+	populate_dets(patient_number);
+	$(this).addClass('active');
+} );
+// $('#search_results tbody').on( 'click', 'tr', function () {
+   // alert('click');
+// });
 $("#find_patient").click(function() {
 
   var patient_number = $('#patient_number').val();
@@ -209,7 +219,7 @@ $("#find_patient").click(function() {
 	       		var p_no = "";
 	       		var name = "";
 	       		var gender = "";
-	       		var dob = "";
+	       		// var dob = "";
 	       		var names_and_no = "";
 	       		var patient_id = "";
 
@@ -228,13 +238,13 @@ $("#find_patient").click(function() {
 		       		var dob = patient_details[i][3];
 		       		var names_and_no = patient_details[4];
 		       		var patient_id = patient_details[5];
-		       		$('#name').val(name);
-		       		$('#dob').val(dob);
-		       		$('#gender').val(gender);
-		       		$('#p_no').val(p_no);
-		       		$('#p_no').attr('data-patient-id', patient_id);
+		       		// $('#name').val(name);
+		       		// $('#dob').val(dob);
+		       		// $('#gender').val(gender);
+		       		// $('#p_no').val(p_no);
+		       		// $('#p_no').attr('data-patient-id', patient_id);
 		       		// $('#search_results').val(names_and_no);
-		       		$('#search_results').append("<tr><td>"+name+"</td><td>"+p_no+"</td></tr>");
+		       		$('#search_results').append("<tr class='clickable-row' data-href='"+p_no+"'><td>"+name+"</td><td>"+p_no+"</td></tr>");
 			    	$('#dispense_form').append("<input type=\"hidden\" value="+patient_id+" name=\"form_patient_id\" class=\"form_patient_id\">");
 	       			// Things[i]
 	       		};
@@ -265,6 +275,9 @@ $("#find_patient").click(function() {
     });
 });
 
+$("#finfd_patient tr").click(function(){
+	alert('Click');
+});
 $(".drug_select").on('change',function(){
 	// alert("i work");
       		var row_id=$(this).closest("tr").index();	
@@ -319,6 +332,45 @@ $(".prescribe").click(function(){
 
 		
 });
+
+function populate_dets(patient_number){
+  	var url = "<?php echo base_url()."dispensing/get_patient_detail";?>";      
+
+	$.ajax({
+        type: "POST",
+        url: url,
+        data:{'patient_number': patient_number},
+        dataType: "html",       
+        success: function(msg) {
+        	console.log(msg);  
+	       	var patient_details = JSON.parse(msg);
+
+	       	var p_no = patient_details[0][0];
+	       	var name = patient_details[0][1];
+	       	var gender = patient_details[0][2];
+	       	var dob = patient_details[0][3];
+	       	var names_and_no = patient_details[0][4];
+	       	var patient_id = patient_details[0][5];	       	
+	       	$('#name').val(name);
+	       	$('#dob').val(dob);
+	       	$('#gender').val(gender);
+	       	$('#p_no').val(p_no);
+	       	$('#p_no').attr('data-patient-id', patient_id);
+	       	// $('#search_results').val(names_and_no);
+	       		// $('#search_results').html("<tr><td>"+name+"</td><td>"+p_no+"</td></tr>");
+		    $('#dispense_form').append("<input type=\"hidden\" value="+patient_id+" name=\"form_patient_id\" class=\"form_patient_id\">");
+
+	       		 // var search_table = $('#search_results').DataTable().ajax.reload();
+	       			// search_table.ajax.reload();
+        	
+
+      	},
+        error: function() {
+            alert('Error occured');
+        }
+    });
+
+}
 
 $(".prescribed_units").on('keyup',function (){
         	var available=$(".prescribed_units").data("available");

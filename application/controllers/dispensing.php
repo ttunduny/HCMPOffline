@@ -160,10 +160,13 @@ class Dispensing extends MY_Controller {
 
 		$patients = Patients::save_patient($data_array,$patient_number,$date_created,$facility_code);
 	}
-	public function get_patient_detail(){
+	public function get_patient_detail($type=NULL){
 		$patient_number = $this->input->post('patient_number');
-		$patient_details = Patients::filter_patient($patient_number);
-		// $patient_details = Patients::get_one_patient($patient_number);
+		if ($type==NULL) {
+			$patient_details = Patients::filter_patient($patient_number);			
+		}else{
+			$patient_details = Patients::get_one_patient($patient_number);
+		}
 		if (count($patient_details)  < 1) {
 			echo 0;
 		}else{
