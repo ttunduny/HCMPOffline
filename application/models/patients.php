@@ -58,6 +58,8 @@ class Patients extends Doctrine_Record {
 		return $query;
 	}
 
+	//comment
+
 	public function filter_patient($patient_number){
 		$sql = "select id,firstname, lastname, date_of_birth, gender, patient_number from patient_details where patient_number like '%$patient_number%' or firstname like '%$patient_number%' or lastname like '%$patient_number%'";
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($sql);

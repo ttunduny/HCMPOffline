@@ -183,7 +183,7 @@ $("#find_patient").click(function() {
 	// 	alert('Please make sure you have filled in all required  fields.');
 	// 	return;
 	// }
-	$('#search_results').html("");
+	$('#search_results').html("	");
 	$.ajax({
         type: "POST",
         url: url,
