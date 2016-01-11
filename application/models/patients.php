@@ -58,6 +58,12 @@ class Patients extends Doctrine_Record {
 		return $query;
 	}
 
+	public function filter_patient($patient_number){
+		$sql = "select id,firstname, lastname, date_of_birth, gender, patient_number from patient_details where patient_number like '%$patient_number%' or firstname like '%$patient_number%' or lastname like '%$patient_number%'";
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($sql);
+		return $query;
+	}
+
 	public function get_patient_commodity_info($id = NULL){
 		$magufuli = isset($id)? "AND p.id = $id":NULL;
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
