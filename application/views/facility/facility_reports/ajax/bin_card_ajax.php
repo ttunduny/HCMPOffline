@@ -155,6 +155,8 @@ border: 1px solid #FFF !important;
                     $running_bal_cl = $running_bal_op + $qty_issued;                   
                   }else if(($s11=='(+Ve Adj) Stock Addition')||($s11=='(+ve Adj) Stock Addition')){                   
                     $running_bal_cl = $running_bal_op - $qty_issued;                   
+                  }else if(($s11=='reversed issue')||($s11=='Reversed Issue')){                   
+                    $running_bal_cl = $running_bal_op - $qty_issued;                   
                   }
                 }else{
                   if($s11=='internal issue'){
@@ -162,6 +164,8 @@ border: 1px solid #FFF !important;
                   }else if(($s11=='(-ve Adj) Stock Deduction')||($s11=='(-Ve Adj) Stock Deduction')){                   
                     $running_bal_cl = $running_bal_op - $qty_issued;                   
                   }else if(($s11=='(+Ve Adj) Stock Addition')||($s11=='(+ve Adj) Stock Addition')){                   
+                    $running_bal_cl = $running_bal_op + $qty_issued;                   
+                  }else if(($s11=='reversed issue')||($s11=='Reversed Issue')){                   
                     $running_bal_cl = $running_bal_op + $qty_issued;                   
                   }else{
                     $running_bal_cl = $running_bal_op + $qty_issued;        

@@ -1,6 +1,6 @@
 <style>  
     #footer{
-        position: relative
+        /*position: relative*/
     }
 </style>
 
@@ -55,10 +55,10 @@
                 </a>
         </div>
         <div class="col-md-4">
-                <a href="<?php echo base_url().'home';?>">
+                <a href="<?php echo base_url().'admin/user_logs';?>">
             <div class="background_maroon dash_notifications">
                 <span class="icon-lg glyphicon glyphicon-dashboard"></span>
-                Online Users (Debatable)
+                Online Users
             </div>
                 </a>
         </div>

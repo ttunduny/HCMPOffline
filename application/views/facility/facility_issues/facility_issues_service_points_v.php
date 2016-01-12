@@ -1,3 +1,4 @@
+<?php //echo "<pre>";print_r($service_point);exit; ?>
 <style type="text/css">
 .row div p,.row-fluid div p{
 	padding:10px;
@@ -55,7 +56,8 @@ font-size: 12px !important;
 								<?php 
 foreach ($service_point as $service_point) :						
 			$service_point_name=$service_point->service_point_name;			
-		echo "<option  value='$service_point_name'>$service_point_name</option>";		
+			$service_point_id=$service_point->id;			
+		echo "<option  value='$service_point_id'>$service_point_name</option>";	//this is what its supposed to do	
 endforeach;
 		?> 
 						</select>
@@ -123,7 +125,7 @@ $(document).ready(function() {
 	});	
 //step one load all the facility data here
 var facility_stock_data=<?php echo $facility_stock_data;?>;
-
+	//random 
             ///when changing the commodity combobox
       		$(".desc").on('change',function(){
       		var row_id=$(this).closest("tr").index();	
@@ -238,12 +240,12 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 		  clone_the_last_row_of_the_table();
 		});	/////batch no change event
 		$('.batch_no').on('change',function(){
-			var row_id=$(this).closest("tr").index();
+			var row_id=$(this).closest("tr").attr('row_id');
 		    var locator=$('option:selected', this);
 			var data =$('option:selected', this).attr('special_data'); 
 	       	var data_array=data.split("^");
 	       	//Get the date of the currently selected option
-	       	var largest_date = $(".batch_no_specific").attr("special_data").index(0);
+	       	var largest_date = $(".batch_no_specific").attr("special_data");
 	       	var largest_data_array = data.split("^");
 	       	console.log(largest_data_array);
 	       	var large_date = data_array[0];

@@ -1,3 +1,5 @@
+application/config/database.php
+.htaccess
 Hcmp_functions.php
 database.php
 *.class
@@ -8,8 +10,8 @@ database.php
 /drug_commodity_map.sql
 /drugs not in commodities table.txt
 /nbproject
+/stash
 database_backups
-
 system/libraries/Hcmp_functions.php
-application/config/database.php
-.htaccess
+*.xls
+/system/libraries/Doctrine_

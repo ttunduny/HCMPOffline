@@ -149,9 +149,10 @@ class Facility_stocks extends Doctrine_Record {
 		return $store_comm;
 	}
 	public static function get_distinct_stocks_for_this_facility($facility_code, $checker = null, $exception = null) {
+		//random comments
 
-		$addition = isset($checker) ? ($checker === 'batch_data') ? 'and fs.current_balance>0 group by fs.id,c.id order by c.commodity_name asc,fs.expiry_date asc,fs.batch_no desc' : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc,fs.expiry_date asc,fs.batch_no desc' : null;
-		// $addition = isset($checker) ? ($checker === 'batch_data') ? 'and fs.current_balance>0 group by fs.id,c.id order by c.commodity_name asc,fs.batch_no desc,fs.expiry_date asc' : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc,fs.batch_no desc' : null;
+		// $addition = isset($checker) ? ($checker === 'batch_data') ? 'and fs.current_balance>0 group by fs.id,c.id order by c.commodity_name asc,fs.expiry_date asc,fs.batch_no desc' : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc,fs.expiry_date asc,fs.batch_no desc' : null;
+		$addition = isset($checker) ? ($checker === 'batch_data') ? 'and fs.current_balance>0 group by fs.id,c.id order by c.commodity_name asc,fs.batch_no asc,fs.expiry_date asc' : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc,fs.batch_no desc' : null;
 
 		// $addition = isset($checker) ? ($checker === 'batch_data') ? 'and fs.current_balance>0 group by fs.id,c.id order by c.commodity_name asc,fs.batch_no asc,fs.expiry_date asc' : 'and fs.current_balance>0 group by fs.commodity_id order by c.commodity_name asc,fs.batch_no desc' : null;
 		$check_expiry_date = isset($exception) ? null : " and fs.expiry_date >= NOW()";
@@ -1137,6 +1138,7 @@ class Facility_stocks extends Doctrine_Record {
 		return $inserttransaction;
 	}
 	public static function get_county_consumption_level_new($facility_code, $district_id, $county_id, $category_id, $commodity_id, $option, $from, $to, $graph_type = null, $tracer = null) {
+		// echo "$to";die;
 		$selection_for_a_month = ((!isset($facility_code) || $facility_code == "ALL") && ($district_id) > 0) || $category_id > 0 ? " f.facility_name as name," : (($commodity_id == "ALL") && isset($facility_code) ? " d.commodity_name as name," : ((isset($county_id) && $district_id == "ALL") ? " di.district as name," : ($graph_type == 'table_data' && $commodity_id > 0) ? " di.district , f.facility_name, f.facility_code, " : 1));
 		if ($selection_for_a_month == 1) {
 			$seconds_diff = $to - $from;
@@ -1148,16 +1150,16 @@ class Facility_stocks extends Doctrine_Record {
 		switch ($option) :
 
 			case 'ksh' :
-				// $computation = "ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
-				$computation = "ifnull((SUM(ROUND(ABS(fs.qty_issued)/ d.total_commodity_units)))*d.unit_cost ,0)-ifnull((SUM(ROUND(ABS(fs.adjustmentnve)/ d.total_commodity_units)))*d.unit_cost ,0)+ifnull((SUM(ROUND(ABS(fs.adjustmentpve)/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+				// $computation = "ifnull((SUM(ROUND(ABS(fs.qty_issued)/ d.total_commodity_units)))*d.unit_cost ,0)-ifnull((SUM(ROUND(ABS(fs.adjustmentnve)/ d.total_commodity_units)))*d.unit_cost ,0)+ifnull((SUM(ROUND(ABS(fs.adjustmentpve)/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
 				break;
 			case 'units' :
-				// $computation = "ifnull(CEIL(SUM(fs.qty_issued)),0) AS total,d.commodity_name as commodity";
-				$computation = "ifnull(CEIL(SUM(ABS(fs.qty_issued)),0)-ifnull(CEIL(SUM(ABS(fs.adjustmentnve)),0)+ifnull(CEIL(SUM(ABS(fs.adjustmentpve)),0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull(CEIL(SUM(fs.qty_issued)),0) AS total,d.commodity_name as commodity";
+				// $computation = "ifnull(CEIL(SUM(ABS(fs.qty_issued))),0)-ifnull(CEIL(SUM(ABS(fs.adjustmentnve))),0)+ifnull(CEIL(SUM(ABS(fs.adjustmentpve))),0) AS total,d.commodity_name as commodity";
 				break;
 			case 'packs' :
-				// $computation = "ifnull(SUM(ROUND(fs.qty_issued/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
-				$computation = "ifnull(SUM(ROUND(ABS(fs.qty_issued)/d.total_commodity_units)),0)-ifnull(SUM(ROUND(ABS(fs.adjustmentnve)/d.total_commodity_units)),0)+ifnull(SUM(ROUND(ABS(fs.adjustmentpve)/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull(SUM(ROUND(fs.qty_issued/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
+				// $computation = "ifnull(SUM(ROUND(ABS(fs.qty_issued)/d.total_commodity_units)),0)-ifnull(SUM(ROUND(ABS(fs.adjustmentnve)/d.total_commodity_units)),0)+ifnull(SUM(ROUND(ABS(fs.adjustmentpve)/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
 				break;
 			case 'mos' :
 				$r = facility_stocks_temp::get_months_of_stock($district_id, $county_id, $facility_code);
@@ -1165,8 +1167,10 @@ class Facility_stocks extends Doctrine_Record {
 				exit ;
 				break;
 			default :
-				$computation = "ifnull((SUM(ROUND(ABS(fs.qty_issued)/ d.total_commodity_units)))*d.unit_cost ,0)-ifnull((SUM(ROUND(ABS(fs.adjustmentnve)/ d.total_commodity_units)))*d.unit_cost ,0)+ifnull((SUM(ROUND(ABS(fs.adjustmentpve)/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
-				// $computation = "ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+				// $computation = "ifnull(SUM(ROUND(ABS(fs.qty_issued)/d.total_commodity_units)),0)-ifnull(SUM(ROUND(ABS(fs.adjustmentnve)/d.total_commodity_units)),0)+ifnull(SUM(ROUND(ABS(fs.adjustmentpve)/d.total_commodity_units)),0) AS total,d.commodity_name as commodity";
+			
+				// $computation = "ifnull((SUM(ROUND(ABS(fs.qty_issued)/ d.total_commodity_units)))*d.unit_cost ,0)-ifnull((SUM(ROUND(ABS(fs.adjustmentnve)/ d.total_commodity_units)))*d.unit_cost ,0)+ifnull((SUM(ROUND(ABS(fs.adjustmentpve)/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
+				$computation = "ifnull((SUM(ROUND(fs.qty_issued/ d.total_commodity_units)))*d.unit_cost ,0) AS total,d.commodity_name as commodity";
 				break;
 
 		// case 'ksh' :
@@ -1198,22 +1202,31 @@ class Facility_stocks extends Doctrine_Record {
 		$group_by_a_month = (isset($facility_code) && isset($district_id)) || isset($category_id) ? " GROUP BY fs.commodity_id having total>0" : (($district_id > 0 && !isset($facility_code)) ? " GROUP BY f.facility_code having total>0" : " GROUP BY d.id having total>0");
 		$group_by_a_month = (($facility_code == "ALL") || !isset($facility_code)) && $district_id > 0 ? " GROUP BY f.facility_code having total>0" : ($commodity_id == "ALL") && isset($facility_code) ? " GROUP BY fs.commodity_id having total>0" : (isset($county_id) && $district_id == "ALL") ? " GROUP BY d.id having total>0" : (($graph_type == 'table_data') && ($commodity_id > 0) ? " GROUP BY d.id, f.facility_code having total>0 order by di.district asc, f.facility_name asc" : 1);
 		if ($group_by_a_month == 1) {
-			$group_by_a_month = $date_diff <= 30 ? "GROUP BY DATE_FORMAT(fs.date_issued,'%d %b %y')" : " GROUP BY DATE_FORMAT(fs.date_issued,'%b %y')";
+			$group_by_a_month = $date_diff <= 30 ? "GROUP BY DATE_FORMAT(fs.date_issued,'%d %b %y'),fs.commodity_id" : " GROUP BY DATE_FORMAT(fs.date_issued,'%b %y'),fs.commodity_id";
 		} elseif ($tracer = 1) {
 			$group_by_a_month = $date_diff <= 30 ? "GROUP BY commodity" : $group_by_a_month;
 		}
 		$group_by_a_month = (isset($tracer) && ($group_by_a_month)) ? " GROUP BY commodity" : $group_by_a_month;
+		// echo "SELECT  $selection_for_a_month $computation
+	 //    FROM facility_issues fs, facilities f, commodities d, districts di
+	 //    WHERE fs.facility_code = f.facility_code
+	 //    AND f.district = di.id
+	 //    AND fs.qty_issued >=0
+	 //    $and 
+	 //    AND d.id = fs.commodity_id
+	 //    $and_data
+	 //    $group_by_a_month";die;
 		$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT  $selection_for_a_month $computation
-    FROM facility_issues fs, facilities f, commodities d, districts di
-    WHERE fs.facility_code = f.facility_code
-    AND f.district = di.id
-    AND fs.qty_issued >=0
-    $and 
-    AND d.id = fs.commodity_id
-    $and_data
-    $group_by_a_month
-     ");
-		return $inserttransaction;
+	    FROM facility_issues fs, facilities f, commodities d, districts di
+	    WHERE fs.facility_code = f.facility_code
+	    AND f.district = di.id
+	    AND fs.qty_issued >=0
+	    $and 
+	    AND d.id = fs.commodity_id
+	    $and_data
+	    $group_by_a_month having total>0
+	     ");
+			return $inserttransaction;
 	}
 	public static function get_tracer_items_report_new($facility_code, $district_id, $county_id, $category_id, $commodity_id, $option, $from, $to, $graph_type = null, $tracer = null ,$option = NULL) {
 		$selection_for_a_month = ((!isset($facility_code) || $facility_code == "ALL") && ($district_id) > 0) || $category_id > 0 ? " f.facility_name as name," : (($commodity_id == "ALL") && isset($facility_code) ? " d.commodity_name as name," : ((isset($county_id) && $district_id == "ALL") ? " di.district as name," : ($graph_type == 'table_data' && $commodity_id > 0) ? " di.district , f.facility_name, f.facility_code, " : 1));
@@ -1579,49 +1592,49 @@ class Facility_stocks extends Doctrine_Record {
 	}
 	//used to get the stock level for a specific commodity in the entire country
 	public static function get_commodity_stock_level($commodity_id) {
-	$stock_level = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT 
-		c.county,
-		d1.district AS subcounty,
-		f.facility_name,
-		f.facility_code,
-		d.commodity_name AS commodity_name,
-		d.unit_size AS unit_size,
-		round(f_s.current_balance,0) AS balance_units,
-		round((f_s.current_balance / d.total_commodity_units),0) AS balance_packs,
-		d.unit_cost,
-		f_s.manufacture,
-		f_s.batch_no,
-		f_s.expiry_date,
-		cs.source_name AS supplier,
-		temp.total_units as amc_units,
-		CASE temp.selected_option
-		WHEN 'Pack_Size' THEN ROUND(temp.consumption_level, 0)
-		WHEN 'Unit_Size' THEN ROUND(temp.total_units / temp.consumption_level, 0)
-		ELSE 0
-		END AS amc,
-		(ROUND(f_s.current_balance/temp.total_units,0)) as mos
-		FROM
-		facilities f,
-		districts d1,
-		counties c,
-		facility_stocks f_s,
-		commodities d,
-		facility_monthly_stock temp,
-		commodity_source cs
-		WHERE
-		f_s.facility_code = f.facility_code
-		AND f.district = d1.id
-		AND temp.facility_code = f.facility_code
-		AND d1.county = c.id
-		AND f_s.commodity_id = d.id
-		AND d.commodity_source_id = cs.id
-		AND temp.commodity_id = f_s.commodity_id
-		AND f_s.commodity_id = $commodity_id
-		AND f_s.expiry_date >= NOW()
-		AND f_s.current_balance >0
-		GROUP BY f_s.batch_no,d.id , f.facility_code
-		ORDER BY c.county ASC , d1.district ASC");
-	return $stock_level;
+		$stock_level = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT 
+			c.county,
+			d1.district AS subcounty,
+			f.facility_name,
+			f.facility_code,
+			d.commodity_name AS commodity_name,
+			d.unit_size AS unit_size,
+			round(f_s.current_balance,0) AS balance_units,
+			round((f_s.current_balance / d.total_commodity_units),0) AS balance_packs,
+			d.unit_cost,
+			f_s.manufacture,
+			f_s.batch_no,
+			f_s.expiry_date,
+			cs.source_name AS supplier,
+			temp.total_units as amc_units,
+			CASE temp.selected_option
+			WHEN 'Pack_Size' THEN ROUND(temp.consumption_level, 0)
+			WHEN 'Unit_Size' THEN ROUND(temp.total_units / temp.consumption_level, 0)
+			ELSE 0
+			END AS amc,
+			(ROUND(f_s.current_balance/temp.total_units,0)) as mos
+			FROM
+			facilities f,
+			districts d1,
+			counties c,
+			facility_stocks f_s,
+			commodities d,
+			facility_monthly_stock temp,
+			commodity_source cs
+			WHERE
+			f_s.facility_code = f.facility_code
+			AND f.district = d1.id
+			AND temp.facility_code = f.facility_code
+			AND d1.county = c.id
+			AND f_s.commodity_id = d.id
+			AND d.commodity_source_id = cs.id
+			AND temp.commodity_id = f_s.commodity_id
+			AND f_s.commodity_id = $commodity_id
+			AND f_s.expiry_date >= NOW()
+			AND f_s.current_balance >0
+			GROUP BY f_s.batch_no,d.id , f.facility_code
+			ORDER BY c.county ASC , d1.district ASC");
+		return $stock_level;
 	}
 	//query to get the number of facilities stocked out on a particular commodity for the year
 	public static function facilities_stocked_specific_commodity($commodity_id) {
@@ -1661,5 +1674,40 @@ class Facility_stocks extends Doctrine_Record {
 			AND commodity_id = $commodity_id
 			AND expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 3 MONTH)");
 		return count($no_of_facilities);
+	}
+
+	public static function get_service_point_stocks($facility_code = NULL,$service_point = NULL,$potential_expiries = NULL,$expiries = NULL){
+		$posterior = isset($facility_code)? "AND sp.facility_code = $facility_code " :NULL;
+		$posterior .= isset($service_point) ? "AND sp.service_point_id = $service_point " : NULL;
+		$posterior .= isset($potential_expiries) ? "AND sp.expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) " : NULL;
+		$posterior .= isset($expiries) ? "AND sp.expiry_date < NOW()" : NULL;
+		
+		
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+			SELECT 
+			    sp.id AS service_point_stock_id,
+			    sp.facility_code,
+			    sp.service_point_id,
+			    sp.commodity_id,
+				c.commodity_name,
+				c.total_commodity_units,
+			    sp.current_balance,
+			    sp.batch_no,
+			    sp.expiry_date,
+			    s.id AS service_point_id,
+			    s.service_point_name
+			FROM
+			    service_point_stocks sp,
+			    service_points s,
+			    commodities c
+			WHERE
+			    s.id = sp.service_point_id AND c.id = sp.commodity_id $posterior
+    	");
+
+		return $query;
+	}
+
+	public static function service_point_expiries(){
+
 	}
 }

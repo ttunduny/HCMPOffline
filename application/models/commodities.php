@@ -264,5 +264,12 @@ return $inserttransaction;
 		  return $getdata;
 	}
 
+	public static function get_source_id_from_name($soure_name = NULL){
+		$src_id = Doctrine_Manager::getInstance()->getCurrentConnection()
+		    ->fetchAll("SELECT id FROM commodity_source WHERE source_name='$source_name'"); 
+		              
+		  return $src_id;
+	}
+
 }
 ?>

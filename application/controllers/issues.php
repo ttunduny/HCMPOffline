@@ -21,7 +21,7 @@ class issues extends MY_Controller {
 	 |2. check if the facility has commodity data
 	 |4. save the data in the facility stock, facility transaction , issues table
 	 */
-	public function index($checker = NULL) {
+	 public function index($checker = NULL) {
 	 	$facility_code = $this -> session -> userdata('facility_id');
 	 	switch ($checker) :
 	 	case 'internal' :
@@ -54,7 +54,7 @@ class issues extends MY_Controller {
 	 	endswitch;
 	 	$data['service_point'] = service_points::get_all_active($facility_code);
 	 	$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_facility($facility_code, 1);
-
+	 	
 	 	$data_ = facility_stocks::get_distinct_stocks_for_this_facility($facility_code, "batch_data");
 	 	foreach ($data_ as $key => $data_1) {
 	 		$data_[$key]['commodity_name'] = preg_replace('/[^A-Za-z0-9\-]/', ' ', $data_1['commodity_name']);
@@ -67,13 +67,137 @@ class issues extends MY_Controller {
 	 }
 
 
-
-	public function generate_issue_excel()
-	{
-		$this -> hcmp_functions -> clone_facility_issues_sp_template('download_file');
-	
+	public function reversals(){
+		ini_set('memory_limit', '-1');	
+		$data['title'] = "Reversals";
+		$data['content_view'] = "facility/reversals_v";			
+		$data['title'] = "System Home";
+		$data['banner_text'] = "Reversals";
+		$view = 'shared_files/template/template';
+		$this -> load -> view($view, $data);
 	}
-	public function county_store_home()
+
+	public function reverse_issue($commodity_id,$time,$issuer){
+		$current_time = date("Y-m-d H:i:s", time());	
+		$current_date = date("Y-m-d", time());	
+		$created_at = date("Y-m-d H:i:s", $time);	
+		$facility_code = $this -> session -> userdata('facility_id');		
+		$current_user = $this -> session -> userdata('user_id');		
+		$issue_details = Facility_issues::get_facility_issue_details_for_reversals($facility_code,$commodity_id,$created_at,$issuer);
+		foreach ($issue_details as $key => $value) {
+			$id = $value['id'];
+			$facility_code = $value['facility_code'];
+			$commodity_id = $value['commodity_id'];
+			$s11_No = $value['s11_No'];
+			$batch_no = $value['batch_no'];
+			$expiry_date = $value['expiry_date'];
+			$balance_as_of = intval($value['balance_as_of']);
+			$qty_issued = intval($value['qty_issued']);
+			$issued_to = $value['issued_to'];
+			$new_balance = $balance_as_of - $qty_issued;
+			$new_quantity = $qty_issued*-1;			
+			$insert = Doctrine_Manager::getInstance() -> getCurrentConnection();
+					$insert -> execute("INSERT INTO facility_issues
+					 (`id`, `facility_code`, `commodity_id`, `s11_No`, `batch_no`, `expiry_date`, `balance_as_of`, `adjustmentpve`,`adjustmentnve`, `qty_issued`, `date_issued`, `issued_to`,`created_at`,`issued_by`, `status`)
+     			   VALUES (null,'$facility_code','$commodity_id','reversed issue', '$batch_no','$expiry_date','$new_balance', '0','0','$new_quantity','$current_date', 'N/A','$current_time','$current_user','1')");
+			$update = Doctrine_Manager::getInstance() -> getCurrentConnection();
+			$update -> execute("update facility_issues set status = '3'	where `id`= $id");
+			$update -> execute("update facility_stocks set current_balance = (current_balance+'$qty_issued'), date_modified='$current_time' where `facility_code`= '$facility_code' and `commodity_id`= '$commodity_id' and `batch_no`= '$batch_no' ");
+		}
+		redirect('issues/reversals');
+	}
+	public function get_reversal_table(){
+		$graph_data = array();
+		$facility_code = $this -> session -> userdata('facility_id');
+		$start_date=date('Y-m-d', strtotime("-30 days"));
+		// $start_date = date('Y-m-01',strtotime('-0 month'));		
+		$current_issues = Facility_issues::get_facility_issues_for_reversals($facility_code,$start_date);
+		// echo "<pre>";
+		// print_r($current_issues);die;
+		foreach ($current_issues as $key => $value) {
+              $commodity_id = $value['commodity_id'];
+              $commodity_name = $value['commodity_name'];
+              $batch_no = $value['batch_no'];
+              $s11_No = $value['s11_No'];
+              $qty_issued = $value['qty_issued'];
+              $issued_to = $value['issued_to'];
+              if($s11_No=='internal issue'){
+					if (preg_match('/[A-Za-z]/i', $issued_to)) {
+						$issued_to = $value['issued_to'];
+					}else{
+						$service_point_name = intval($issued_to);
+						$service_point_details = Facility_issues::get_one_service_points($service_point_name);
+						foreach ($service_point_details as $keys => $values) {
+							$issued_to = $values['service_point_name'];
+						}
+
+					}
+				}else{
+              		$issued_to = $value['issued_to'];
+				}
+              $issue_date = $value['date_issued'];
+              $create_date_raw = $value['created_at'];
+              $create_date = date('F, d Y', strtotime($create_date_raw));
+              $issue_date = date('F, d Y', strtotime($issue_date));
+              $issuer = $value['fname'].' '.$value['lname'];                          
+              $issuer_id = $value['issued_by'];
+              $create_date_timestamp = strtotime($create_date_raw); 
+              $data_id = $commodity_id.'/'.$create_date_timestamp.'/'.$issuer_id;
+              $button_reverse_link = '<button class="btn btn-danger status_btn form-control" style="width:98%"  data-id="'.$data_id.'" id="'.$data_id.'" data-attr="'.$data_id.'" data-value="'.$data_id.'">Reverse</button>';
+              // $button_dets_link = '<button class="btn btn-danger status_btn form-control" style="width:98%"  data-id="'.$data_id.'" id="'.$data_id.'" data-attr="'.$data_id.'" data-value="'.$data_id.'">Reverse</button>';
+              // $button_reverse_link = "<a href=\"".base_url().'issues/reverse_issue/'.$commodity_id.'/'.$create_date_timestamp.'/'.$issuer_id.'/reverse'."\"><button class=\"btn btn-danger  form-control\" style=\"width:98%\">Reverse Issue</button></a>";
+              $output[] = array($commodity_name,$batch_no,$qty_issued,$issue_date,$issued_to,$issuer,$create_date,$button_reverse_link);
+        }
+  //       $category_data = array( array("Commodity Name", "Batch Number","Quantity Issued (Units)", "Date of Issue",  "Issued To", "Name of Issuer", "Action"));
+		// $graph_data = array_merge($graph_data, array("table_id" => 'issues_tbl'));
+		// $graph_data = array_merge($graph_data, array("table_header" => $category_data));
+		// $graph_data = array_merge($graph_data, array("table_body" => $output));
+		// $data = array();
+		// $data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);	
+		// return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);  
+		echo json_encode($output); 
+	}
+
+	public function get_reversed_table(){
+		$graph_data = array();
+		$facility_code = $this -> session -> userdata('facility_id');
+		$start_date = date('Y-m-01',strtotime('-0 month'));		
+		$current_reversals = Facility_issues::get_facility_issues_reversals($facility_code,$start_date);		
+		foreach ($current_reversals as $key => $value) {
+              $commodity_id = $value['commodity_id'];
+              $commodity_name = $value['commodity_name'];
+              $batch_no = $value['batch_no'];
+              $qty_issued = intval($value['qty_issued'])*-1;
+              $issued_to = $value['issued_to'];
+              // $issue_date = $value['date_issued'];
+              $create_date_raw = $value['date_issued'];
+              $create_date = date('F, d Y', strtotime($create_date_raw));
+              // $issue_date = date('F, m Y', strtotime($issue_date));
+              $issuer = $value['fname'].' '.$value['lname'];                          
+              $issuer_id = $value['issued_by'];
+              $create_date_timestamp = strtotime($create_date_raw); 
+              // $data_id = $facility_code.'/'.$create_date_timestamp.'/'.$issuer_id;
+              // $button_dets_link = '<button class="btn btn-success status_btn form-control" style="width:98%"  data-id="'.$data_id.'" id="'.$data_id.'" data-attr="'.$data_id.'" data-value="'.$data_id.'">View Details</button>';
+              // $button_reverse_link = "<a href=\"".base_url().'issues/reverse_issue/'.$commodity_id.'/'.$create_date_timestamp.'/'.$issuer_id.'/reverse'."\"><button class=\"btn btn-danger  form-control\" style=\"width:98%\">Reverse Issue</button></a>";
+              $output[] = array($commodity_name,$batch_no,$qty_issued,$issued_to,$create_date,$issuer);
+        }
+        echo json_encode($output); 
+        // $category_data = array( array("Commodity Name", "Batch Number","Quantity Reversed (Units)", "Date of Reversal",  "Issued To", "Person Reversing"));
+		// $graph_data = array_merge($graph_data, array("table_id" => 'reversed_issues_tbl	'));
+		// $graph_data = array_merge($graph_data, array("table_header" => $category_data));
+		// $graph_data = array_merge($graph_data, array("table_body" => $output));
+		// $data = array();
+		// $data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);	
+		// return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);   
+	}
+
+
+	 public function generate_issue_excel()
+	 {
+	 	$this -> hcmp_functions -> clone_facility_issues_sp_template('download_file');
+	 	
+	 }
+	 public function county_store_home()
 	 {
 	 	$county_id = $this -> session -> userdata('county_id');
 
@@ -88,7 +212,7 @@ class issues extends MY_Controller {
 	 }
 
 	 /* Function For Donations to Districts*/
-	public function county_store()
+	 public function county_store()
 	 {
 	 	$county_id = $this -> session -> userdata('county_id');
 	 	$data['county_id'] = $this -> session -> userdata('county_id');
@@ -108,13 +232,13 @@ class issues extends MY_Controller {
 	 	$this -> load -> view("shared_files/template/template", $data);
 	 }
 
-	public function county_store_facilities()
+	 public function county_store_facilities()
 	 {
 	 	$county_id = $this -> session -> userdata('county_id');
 
 	 }
 
-	public function county_store_internal()
+	 public function county_store_internal()
 	 {
 	 	$county_id = $this -> session -> userdata('county_id');
 	 	$county = counties::get_county_name($county_id);
@@ -132,7 +256,7 @@ class issues extends MY_Controller {
 	 	$this -> load -> view("shared_files/template/template", $data);
 	 }
 
-	public function store_home(){
+	 public function store_home(){
 	 	$district_id = $this -> session -> userdata('district_id');	
 		// echo $district_id;exit;
 		//$data['expiry_data'] = Facility_stocks::drug_store_commodity_expiries($district_id);
@@ -146,7 +270,7 @@ class issues extends MY_Controller {
 	 	$this -> load -> view("shared_files/template/template", $data);
 	 }
 
-	public function district_store(){
+	 public function district_store(){
 	 	$district_id = $this -> session -> userdata('district_id');	
 	 	$dist = districts::get_district_name_($district_id);	
 	 	$data['district_id'] = $this -> session -> userdata('district_id');
@@ -164,7 +288,7 @@ class issues extends MY_Controller {
 
 	 }
 
-	public function district_store_internal(){
+	 public function district_store_internal(){
 	//THIS FUNCTION VANISHES WHEN A COLLINS RELATED PULL GOES DOWN
 	//#collins_repo #my_function_my_choice #hahahaha # this was some random thing so that i can commit this function. Cheers
 	 	$district_id = $this -> session -> userdata('district_id');	
@@ -184,12 +308,12 @@ class issues extends MY_Controller {
 
 	 }
 
-	public function district_store_internal_issue()
+	 public function district_store_internal_issue()
 	 {
 			// echo "<pre>";print_r($this -> input -> post());echo "</pre>";exit;
 			//security check
-	 	$facility_code = $this -> session -> userdata('facility_id');
-	 	$district_id = $this -> session -> userdata('district_id');
+		 	$facility_code = $this -> session -> userdata('facility_id');
+		 	$district_id = $this -> session -> userdata('district_id');
 			$service_point = 2;//predefined since 2 is the official code for all district stores
 			$destined_district = array_values($this->input->post('district'));
 			$commodity_id = array_values($this -> input -> post('desc'));
@@ -486,29 +610,29 @@ class issues extends MY_Controller {
 	public function county_store_external_issue(){//karsan
 			// echo "<pre>";print_r($this -> input -> post());echo "</pre>";exit;
 			//security check
-			if ($this -> input -> post('mfl')) :
+		if ($this -> input -> post('mfl')) :
 			$facility_code = $this -> session -> userdata('facility_id');
-			$district_id = $this -> session -> userdata('district_id');
-			$county_id = $this -> session -> userdata('county_id');
-			$service_point = array_values($this -> input -> post('mfl'));
-			$commodity_id = array_values($this -> input -> post('desc'));
-			$commodity_balance_before = array_values($this -> input -> post('commodity_balance'));
-			$facility_stock_id = array_values($this -> input -> post('facility_stock_id'));
-			$batch_no = array_values($this -> input -> post('batch_no'));
-			$expiry_date = array_values($this -> input -> post('expiry_date'));
-			$commodity_unit_of_issue = array_values($this -> input -> post('commodity_unit_of_issue'));
-			$quantity_issued = array_values($this -> input -> post('quantity_issued'));
-			$clone_datepicker_normal_limit_today = array_values($this -> input -> post('clone_datepicker_normal_limit_today'));
-			$manufacture = array_values($this -> input -> post('manufacture'));
+		$district_id = $this -> session -> userdata('district_id');
+		$county_id = $this -> session -> userdata('county_id');
+		$service_point = array_values($this -> input -> post('mfl'));
+		$commodity_id = array_values($this -> input -> post('desc'));
+		$commodity_balance_before = array_values($this -> input -> post('commodity_balance'));
+		$facility_stock_id = array_values($this -> input -> post('facility_stock_id'));
+		$batch_no = array_values($this -> input -> post('batch_no'));
+		$expiry_date = array_values($this -> input -> post('expiry_date'));
+		$commodity_unit_of_issue = array_values($this -> input -> post('commodity_unit_of_issue'));
+		$quantity_issued = array_values($this -> input -> post('quantity_issued'));
+		$clone_datepicker_normal_limit_today = array_values($this -> input -> post('clone_datepicker_normal_limit_today'));
+		$manufacture = array_values($this -> input -> post('manufacture'));
 
-			$total_units = array_values($this -> input -> post('total_units'));
-			$total_items = count($facility_stock_id);
+		$total_units = array_values($this -> input -> post('total_units'));
+		$total_items = count($facility_stock_id);
 			//var_dump($total_units);exit;
-			$data_array_issues_table = array();
-			$data_array_redistribution_table = array();
+		$data_array_issues_table = array();
+		$data_array_redistribution_table = array();
 
-			$new_transaction_entry = array();
-			$digested_expiry = $expiry_date[0] ;
+		$new_transaction_entry = array();
+		$digested_expiry = $expiry_date[0] ;
 			for ($i = 0; $i < $total_items; $i++) ://compute the actual stock
 
 			$total_items_issues = ($commodity_unit_of_issue[$i] == 'Pack_Size') ? $quantity_issued[$i] * $total_units[$i] : $quantity_issued[$i];
@@ -798,10 +922,10 @@ class issues extends MY_Controller {
 	// facility internal issue
 	public function internal_issue() {
 		//security check
+		// echo "<pre>";print_r($this->input->post());echo "</pre>";exit;
 		if ($this -> input -> post('service_point')) :
-			$facility_code = $this -> session -> userdata('facility_id');
+		$facility_code = $this -> session -> userdata('facility_id');
 		$service_points = array_values($this -> input -> post('service_point'));
-
 		$commodity_id = array_values($this -> input -> post('desc'));
 		$commodity_balance_before = array_values($this -> input -> post('commodity_balance'));
 		$facility_stock_id = array_values($this -> input -> post('facility_stock_id'));
@@ -817,7 +941,7 @@ class issues extends MY_Controller {
 			$total_items_issues = ($commodity_unit_of_issue[$i] == 'Pack_Size') ? $quantity_issued[$i] * $total_units[$i] : $quantity_issued[$i];
 				//prepare the issues data
 
-			$mydata = array('facility_code' => $facility_code, 's11_No' => 'internal issue', 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('y-m-d', strtotime($expiry_date[$i])), 'qty_issued' => $total_items_issues, 'issued_to' => $service_points[$i], 'balance_as_of' => $commodity_balance_before[$i], 'date_issued' => date('y-m-d', strtotime($clone_datepicker_normal_limit_today[$i])), 'issued_by' => $this -> session -> userdata('user_id'));
+			$mydata = array('facility_code' => $facility_code, 's11_No' => 'internal issue', 'batch_no' => $batch_no[$i], 'commodity_id' => $commodity_id[$i], 'expiry_date' => date('Y-m-d', strtotime($expiry_date[$i])), 'qty_issued' => $total_items_issues, 'issued_to' => $service_points[$i], 'balance_as_of' => $commodity_balance_before[$i], 'date_issued' => date('y-m-d', strtotime($clone_datepicker_normal_limit_today[$i])), 'issued_by' => $this -> session -> userdata('user_id'));
 
 				// update the issues table
 			facility_issues::update_issues_table($mydata);
@@ -831,8 +955,34 @@ class issues extends MY_Controller {
 				`closing_stock`=`closing_stock`-$total_items_issues
 				WHERE `commodity_id`= '$commodity_id[$i]' and status='1' and facility_code='$facility_code';");
 
-			endfor;
+			//insertion to service points stock table
+			$sp_checker = facility_issues::get_service_point_stocks($facility_code,$service_points[$i],$commodity_id[$i]);
 
+			// $current_balance = $commodity_balance_before[$i] - $total_items_issues;
+			
+			if (count($sp_checker)>0) {
+				$update = Doctrine_Manager::getInstance()->getCurrentConnection()->execute(
+					"UPDATE service_point_stocks SET current_balance = current_balance + $total_items_issues WHERE facility_code = $facility_code AND service_point_id = $service_points[$i]"
+					);
+			}else{
+				$sp_stocks_array= array();
+				$sp_stocks = array(
+					'facility_code' => $facility_code,
+					'batch_no' => $batch_no[$i],
+					'commodity_id' => $commodity_id[$i],
+					'expiry_date' => date('Y-m-d', strtotime($expiry_date[$i])),
+					'service_point_id' => $service_points[$i],
+					'current_balance' => $total_items_issues
+					);
+
+
+				array_push($sp_stocks_array, $sp_stocks);
+				// echo "<pre>";print_r($sp_stocks);exit;
+				$this->db->insert_batch('service_point_stocks',$sp_stocks_array);
+			}
+			
+			endfor;
+			// echo "Insertion done";exit;
 			//updates the log tables with the action
 			$user = $this -> session -> userdata('user_id');
 			$user_action = "issued";
@@ -1009,6 +1159,66 @@ class issues extends MY_Controller {
 		redirect('issues/add_service_points');
 		endif;
 		redirect(home);
+	}
+
+	//The function below was made to solve the problem where instead of the issue point ID's being stored,their descriptions were being stored
+	//A string as a relationship definer in database tables is senseless and prone to errors
+	//
+	public function db_service_pts(){//Karsan
+		// $all_issues = facility_issues::get_all();
+		$alpha_data = facility_issues::get_all_issue_data();
+		$beta_data = facility_issues::get_all_service_points();
+
+		// echo "<pre>";print_r($beta_data);exit;
+		$alphacount = count($alpha_data);
+		$betacount = count($beta_data);
+		$omega_data = array();
+		$epsilon_data = array();//for generic service points
+		for ($a=0; $a < $alphacount; $a++) { 
+			for ($b=0; $b < $betacount; $b++) { 
+				if (($alpha_data[$a]['issued_to'] == $beta_data[$b]['service_point_name']) && ($alpha_data[$a]['facility_code'] == $beta_data[$b]['facility_code'])) {
+					$omega_data[$a]['issue_id'] = $alpha_data[$a]['id'];
+					$omega_data[$a]['sp_id'] = $beta_data[$b]['id'];
+				}
+			}
+			for ($b=0; $b < $betacount; $b++) { 
+				if ($alpha_data[$a]['issued_to'] == $beta_data[$b]['service_point_name'] && ($alpha_data[$a]['facility_code'] != $beta_data[$b]['facility_code'])) {
+					$epsilon_data[$a]['issue_id'] = $alpha_data[$a]['id'];
+					$epsilon_data[$a]['sp_id'] = $beta_data[$b]['id'];
+					break;
+					echo "<pre>";echo $beta_data[$b]['id'].'  '.$b;echo "</pre>";
+				}
+			}
+		}
+
+		
+
+		// echo "<pre>";print_r($omega_data);exit;
+		// echo "<pre>";print_r($epsilon_data);exit;
+		foreach ($omega_data as $omegakey => $omegavalue) {
+			$issue_id = $omegavalue['issue_id'];
+			$service_point_id = $omegavalue['sp_id'];
+
+			$updater = Doctrine_Manager::getInstance()->getCurrentConnection()->execute("
+				UPDATE facility_issues SET issued_to = $service_point_id WHERE id = $issue_id
+				");
+		}//end of foreach
+		$omega_affected = $this->db->affected_rows();
+		echo "OMEGA AFFECTED: ".$omega_affected;
+		echo "<br>THE -OMEGA- UPDATE WAS SUCCESSFUL. </br>-EPSILON DATA- UPDATE COMMENCING</br>";
+
+		foreach ($epsilon_data as $epsilonkey => $epsilonvalue) {
+			$issue_id = $epsilonvalue['issue_id'];
+			$service_point_id = $epsilonvalue['sp_id'];
+
+			$updater = Doctrine_Manager::getInstance()->getCurrentConnection()->execute("UPDATE facility_issues SET issued_to = $service_point_id WHERE id = $issue_id");
+		}//end of foreach
+		$epsilon_affected = $this->db->affected_rows();
+		echo "EPSILON AFFECTED: ".$epsilon_affected;
+
+		echo "<br>THE -EPSILON- UPDATE WAS SUCCESSFUL </br>";
+		echo "THE UPDATE WAS SUCCESSFUL. GOD SPEED. </br>";
+
 	}
 
 }
