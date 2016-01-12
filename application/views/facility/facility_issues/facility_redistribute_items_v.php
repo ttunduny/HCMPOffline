@@ -176,6 +176,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			});
 
 		});	
+//random
             ///when changing the commodity combobox
       		$(".desc").on('change',function(){
       		var row_id=$(this).closest("tr").index();	
@@ -197,7 +198,7 @@ var facility_stock_data=<?php echo $facility_stock_data;     ?>;
 			console.log(stock_data);
             var dropdown="<option special_data=''>--select Batch--</option>"+stock_data[0];
             var facility_stock_id=stock_data[1];
-            var total_stock_bal=data_array[3];
+            var total_stock_bal=data_array[4];
             var total_issues_for_this_item=0; 
             var total_issues_for_this_batch=0;
             var total_commodity_bal=stock_data[5];         

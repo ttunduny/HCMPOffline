@@ -213,13 +213,14 @@ class Stock extends MY_Controller {
 				$rowData = $sheet -> rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
 				if (($rowData[0][7])!='') {
 				// if ((($rowData[$row][7])!='')&&(($rowData[$row][8])!=''))&&(($rowData[$row][9])!=''))) {
-					
-					if ($rowData[0][11] == 0) {
-						$unit_of_issue = "Pack_Size";
-						$total_units = $rowData[0][11];
-						$stock_level = $rowData[0][10];
-					} elseif ($rowData[0][10] >= 1) {
+					if ($rowData[0][11] >=1) {
 						$unit_of_issue = "Unit_Size";
+						// $unit_of_issue = "Pack_Size";
+						$total_units = $rowData[0][11];
+						$stock_level = $rowData[0][11];
+					} elseif ($rowData[0][10] >= 1) {
+						$unit_of_issue = "Pack_Size";
+						// $unit_of_issue = "Unit_Size";
 						$unit_size = $rowData[0][6];
 						if($unit_size==0){
 							$unit_size = 1;
@@ -227,13 +228,13 @@ class Stock extends MY_Controller {
 						$total_units = $rowData[0][10] * $unit_size;
 						$stock_level = $rowData[0][10];
 					}
-
+					// echo $unit_size.'<br/>';					
 					$InvDate = date('t M Y', PHPExcel_Shared_Date::ExcelToPHP($rowData[0][9]));
 
 					array_push($temp, array('commodity_id' => $rowData[0][0], 'unit_size' => $rowData[0][5], 'batch_no' => $rowData[0][7], 'manu' => $rowData[0][8], 'expiry_date' => $InvDate, 'stock_level' => $stock_level, 'total_unit_count' => $rowData[0][6], 'unit_issue' => $unit_of_issue, 'total_units' => $total_units, 'source_of_item' => $rowData[0][3], 'supplier' => $rowData[0][2], ));
 				}
-			}
-
+				
+			}			
 			unset($objPHPExcel);
 
 			$this -> autosave_update_stock($temp, $this -> session -> userdata('facility_id'));
@@ -280,7 +281,6 @@ class Stock extends MY_Controller {
 		}
 
 	}//auto save the data here
-
 	public function autosave_update_stock($excel_data = null, $facility_code = null) {
 		if (isset($excel_data)) :
 			foreach ($excel_data as $row_data) :
@@ -324,6 +324,58 @@ class Stock extends MY_Controller {
 			endif;
 		endif;
 	}
+	// public function autosave_update_stock_bu($excel_data = null, $facility_code = null) {		
+
+	// 	if (isset($excel_data)) :
+
+	// 		// echo "<pre>";print_r($excel_data);echo "</pre>";exit;
+	// 		foreach ($excel_data as $row_data) :
+	// 			//get the data
+	// 			// echo "<pre>";echo $row_data['source_of_item'];
+	// 			// echo "<pre>";echo $row_data['source_of_item'];echo "</pre>";
+	// 				// $src_id = Commodities::get_source_id_from_name();
+	// 				// echo "<pre>";print_r($src_id);exit;
+	// 			// $does_facility_have_this_drug_in_temp_table = $this -> does_facility_have_this_drug_in_temp_table($row_data['commodity_id'], $excel_data['facility_code'], $row_data['batch_no']);
+	// 			if ($does_facility_have_this_drug_in_temp_table > 0) :
+	// 				//send the data to the db
+	// 				// $this -> update_batch_in_temp($row_data['expiry_date'], $row_data['batch_no'], $row_data['manu'], $row_data['stock_level'], $row_data['total_unit_count'], $row_data['commodity_id'], $facility_code, $row_data['unit_issue'], $row_data['total_units'], $src_id, $row_data['supplier']);
+	// 			else :
+	// 				//save the data
+	// 				// echo "Im HERE";
+	// 				$mydata = array('facility_code' => $facility_code, 'commodity_id' => $row_data['commodity_id'], 'batch_no' => $row_data['batch_no'], 'manu' => $row_data['manu'], 'expiry_date' => $row_data['expiry_date'], 'stock_level' => $row_data['stock_level'], 'total_unit_count' => $row_data['total_unit_count'], 'unit_size' => $row_data['unit_size'], 'unit_issue' => $row_data['unit_issue'], 'total_units' => $row_data['total_units'], 'source_of_item' => $row_data['source_of_item'], 'supplier' => $row_data['supplier']);
+	// 				$this -> save_batch_in_temp($mydata);
+	// 			endif;
+	// 		endforeach;
+	// 		// exit;
+	// 		redirect('stock/facility_stock_first_run/first_run');
+	// 	elseif (!isset($excel_data)) :
+	// 		$facility_code = $this -> session -> userdata('facility_id');
+	// 		$commodity_id = $this -> input -> post('commodity_id');
+	// 		$unit_size = $this -> input -> post('unit_size');
+	// 		$expiry_date = $this -> input -> post('expiry_date');
+	// 		$batch_no = $this -> input -> post('batch_no');
+	// 		$manu = $this -> input -> post('manuf');
+	// 		$stock_level = $this -> input -> post('stock_level');
+	// 		$total_unit_count = $this -> input -> post('total_units_count');
+	// 		$unit_issue = $this -> input -> post('unit_issue');
+	// 		$total_units = $this -> input -> post('total_units');
+	// 		$source_of_item = $this -> input -> post('source_of_item');
+	// 		$supplier = $this -> input -> post('supplier');
+
+	// 		$mydata = array('facility_code' => $facility_code, 'commodity_id' => $commodity_id, 'batch_no' => $batch_no, 'manu' => $manu, 'expiry_date' => $expiry_date, 'stock_level' => $stock_level, 'total_unit_count' => $total_unit_count, 'unit_size' => $unit_size, 'unit_issue' => $unit_issue, 'total_units' => $total_units, 'source_of_item' => $source_of_item, 'supplier' => $supplier);
+	// 		//get the data
+	// 		$does_facility_have_this_drug_in_temp_table = $this -> does_facility_have_this_drug_in_temp_table($commodity_id, $facility_code, $batch_no);
+	// 		if ($does_facility_have_this_drug_in_temp_table > 0) :
+	// 			//send the data to the db
+	// 			$this -> update_batch_in_temp($expiry_date, $batch_no, $manu, $stock_level, $total_unit_count, $commodity_id, $facility_code, $unit_issue, $total_units, $source_of_item, $supplier);
+	// 			echo "UPDATE SUCCESS BATCH NO: $batch_no ";
+	// 		else :
+	// 			//save the data
+	// 			$this -> save_batch_in_temp($mydata);
+	// 			echo "SUCCESS UPDATE BATCH NO: $batch_no";
+	// 		endif;
+	// 	endif;
+	// }
 
 	public function does_facility_have_this_drug_in_temp_table($commodity_id, $facility_code, $batch_no) {
 		return facility_stocks_temp::check_if_facility_has_drug_in_temp($commodity_id, $facility_code, $batch_no);

@@ -38,7 +38,7 @@
   <div class="tab-pane active" id="home">
      <?php 
      $this -> load -> view('Admin/user_listing_v');
-     ?>
+     ?> 
     
   </div>
   <div class="tab-pane" id="profile">stats</div>
