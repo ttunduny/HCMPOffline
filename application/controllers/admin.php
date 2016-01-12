@@ -82,6 +82,27 @@ class Admin extends MY_Controller {
 
 	}
 
+
+	public function send_email(){
+		$q = "SELECT email FROM user WHERE usertype_id in (0,7,8,11,13,14,15) and status=1 ORDER BY id DESC";
+                $count = $this->db->query($q)->num_rows();
+                $a = 0;
+                $b = 98;
+                $increment = 98;
+                for ($i=$a; $a <=$count ; $i+$increment) { 
+                    $sql = "SELECT email FROM user WHERE usertype_id in (0,7,8,11,13,14,15) and status=1 ORDER BY id DESC LIMIT $a,$b";                    
+                    $res = $this->db->query($sql)->result_array();                                      
+                    $to ="";
+                    foreach ($res as $key => $value) {
+                        $one = $value['email'];
+                        $to.= $one.',';                        
+                    } 
+                    $newmail->send_email($to, $message, $subject, $attach_file, $bcc_email);
+                    $a +=$increment;
+                    $b += $increment;
+                }
+                die();
+	}
 	public function reversals(){
 		ini_set('memory_limit', '-1');
 		$permissions='super_permissions';
