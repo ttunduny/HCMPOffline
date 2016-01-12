@@ -177,7 +177,7 @@ class Dispensing extends MY_Controller {
 			$patient_number = $value['patient_number'];
 			$lastname = $value['lastname'];
 			$date_of_birth = $value['date_of_birth'];
-			$date_of_birth_string = date('F, m Y', strtotime($date_of_birth));
+			$date_of_birth_string = date('d F Y', strtotime($date_of_birth));
 			$gender = $value['gender'];
 			$name = $firstname.' '.$lastname;			
 			$gender = ($gender=='1') ? 'Male' : 'Female';

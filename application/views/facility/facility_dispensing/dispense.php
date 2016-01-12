@@ -151,6 +151,7 @@
 <script>
 $(document).ready(function () {
  // $('#search_results').datatable();
+var global_details = null;
 var counter = 0;
 var search_table = $('#search_results,#prescribed_cart').dataTable( {
 	   "sDom": "T lfrtip",
@@ -177,22 +178,33 @@ var search_table = $('#search_results,#prescribed_cart').dataTable( {
 	} );
 
 $(".search_container").on("click", "table tr", function() {
-	var patient_number = $(this).attr('data-href');		
-	populate_dets(patient_number);
+	var patient_number = $(this).attr('data-href');	
+	var row_id = $(this).find('.form_patient_row').val();	
+	var p_no = global_details[row_id][0];
+	var name = global_details[row_id][1];
+	var gender = global_details[row_id][2];
+	var dob = global_details[row_id][3];
+	// var names_and_no = global_details[4];
+	// var patient_id = global_details[5];
+	$('#name').val(name);
+	$('#dob').val(dob);
+	$('#gender').val(gender);
+	$('#p_no').val(p_no);
+	$('#p_no').attr('data-patient-id', patient_id);
 	$(this).addClass('active');
 } );
 // $('#search_results tbody').on( 'click', 'tr', function () {
    // alert('click');
 // });
 $("#find_patient").click(function() {
-
-  var patient_number = $('#patient_number').val();
-  var url = "<?php echo base_url()."dispensing/get_patient_detail";?>";      
-  var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";      
- //   if(patient_number==""){
-	// 	alert('Please make sure you have filled in all required  fields.');
-	// 	return;
-	// }
+	  clear_dets();
+	  var patient_number = $('#patient_number').val();
+	  var url = "<?php echo base_url()."dispensing/get_patient_detail";?>";      
+	  var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";      
+   if(patient_number==""){
+		alert('Please make sure you have filled in all required  fields.');
+		return;
+	}
 	$('#search_results').html("	");
 	$.ajax({
         type: "POST",
@@ -231,6 +243,8 @@ $("#find_patient").click(function() {
 	       		$( ".form_patient_id" ).remove();
         	}else{
 	       		var patient_details = JSON.parse(msg);
+	       		global_details = JSON.parse(msg);
+
 	       		for (var i = 0; i < patient_details.length; i++) {
 	       			var p_no = patient_details[i][0];
 		       		var name = patient_details[i][1];
@@ -244,7 +258,8 @@ $("#find_patient").click(function() {
 		       		// $('#p_no').val(p_no);
 		       		// $('#p_no').attr('data-patient-id', patient_id);
 		       		// $('#search_results').val(names_and_no);
-		       		$('#search_results').append("<tr class='clickable-row' data-href='"+p_no+"'><td>"+name+"</td><td>"+p_no+"</td></tr>");
+		       		$('#search_results').append("<tr class='clickable-row' data-href='"+p_no+"'><td>"+name+"</td><td>"+p_no+"</td><input type=\"hidden\" value="+i+" class=\"form_patient_row\"></tr>");
+		       		// $('#search_results').append("<tr class='clickable-row' data-href='"+p_no+"'><td>"+name+"</td><td>"+p_no+"</td></tr>");
 			    	$('#dispense_form').append("<input type=\"hidden\" value="+patient_id+" name=\"form_patient_id\" class=\"form_patient_id\">");
 	       			// Things[i]
 	       		};
@@ -332,6 +347,22 @@ $(".prescribe").click(function(){
 
 		
 });
+
+function clear_dets(){
+	var p_no = "";
+	var name = "";
+	var gender = "";
+	var dob = "";
+	var names_and_no = "";
+	var patient_id = "";
+
+	$('#name').val(name);
+	$('#dob').val(dob);
+	$('#gender').val(gender);
+	$('#p_no').val(p_no);
+	$('#p_no').attr('data-patient-id', patient_id);
+	$( ".form_patient_id" ).remove();
+}
 
 function populate_dets(patient_number){
   	var url = "<?php echo base_url()."dispensing/get_patient_detail";?>";      
