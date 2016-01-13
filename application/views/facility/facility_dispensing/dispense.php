@@ -188,6 +188,7 @@ $(".search_container").on("click", "table tr", function() {
 	// var patient_id = global_details[5];
 	$('#name').val(name);
 	$('#dob').val(dob);
+	$('#dispense_form').append("<input type=\"hidden\" value="+p_no+" name=\"form_patient_id\" class=\"form_patient_id\">");
 	$('#gender').val(gender);
 	$('#p_no').val(p_no);
 	$('#p_no').attr('data-patient-id', patient_id);

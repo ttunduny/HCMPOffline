@@ -136,9 +136,9 @@ class Dispensing extends MY_Controller {
 								'date_created' =>$date_created ,
 								'status' =>1);		
 
-			$patients = Patients::save_patient($data_array,$patient_number,$date_created,$facility_code);
+			$patients = Patients::save_patient($data_array,$patient_number,$date_created,$facility_code);			
 		}
-		redirect('dispensing/add_multiple_patients');
+		redirect('dispensing/patients');
 		
 	}
 	public function save_patient(){
