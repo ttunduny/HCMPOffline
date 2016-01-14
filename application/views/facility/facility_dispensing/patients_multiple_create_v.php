@@ -98,13 +98,59 @@ font-size: 12px !important;
 				</button>
 </div>
 </div>
+
+<!-- Modal add user -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="myform">
+	<div class="modal-dialog editable" >
+		<div class="modal-content">
+			<div class="modal-header" style="">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel" style="text-align: center;line-height: 1">Confirm?</h4>
+			</div>
+			<div class="row" style="margin:auto" id="error_msg">
+				<div class=" col-md-12">
+					<div class="form-group">
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-body" style="padding:0">
+				<div class="row" style="margin:auto">
+					<div class="col-md-12 ">
+					<center>
+					<h5>Are you sure you want to proceed?</h5>
+					</center>	
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-default borderless" data-dismiss="modal">
+					No
+				</button>
+				
+				<button class="btn btn-primary borderless" id="confirm_create_patients">
+					Yes
+				</button>
+			</div>
+		</div>
+	</div>
+</div><!-- end Modal new user -->
+
 </form>
 <?php //echo form_close();?>
 <script>
 $(document).ready(function() {	
 	$("#create_new").click(function(){
+		$('#addModal').modal('show');		
+		// $("#myform").submit();
+	});
+	$("#confirm_create_patients").click(function(){
+		// $('#addModal').modal('show');		
 		$("#myform").submit();
 	});
+	
 	var $table = $('table');
 	
 	$table.floatThead({ 
