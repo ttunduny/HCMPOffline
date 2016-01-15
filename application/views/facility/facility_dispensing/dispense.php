@@ -345,11 +345,9 @@ $(".prescribe").click(function(){
 		$(".total_available").val(current_units);
 		var commodity_id = $(".drug_select option:selected").data("id");
         var current_units = $(".drug_select option:selected").data("stock");
-        
-        var commodity_data  = {id:commodity_id, current_units:current_units};
-        //commodity_data.push(id:commodity_id, current_units:current_units);
-        console.log(commodity_data);
-		//console.log(current_units);
+
+        var updated_data  = {id:commodity_id, current_units:current_units};
+        console.log(updated_data);
 		var drug_select = $(".drug_select").val();
 		var drug_name = $(".drug_select").find(':selected').data("name");
 		// alert(drug_name);return;
