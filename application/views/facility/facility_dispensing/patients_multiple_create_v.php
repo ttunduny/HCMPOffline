@@ -100,8 +100,11 @@ font-size: 12px !important;
 </div>
 </form>
 <?php //echo form_close();?>
-<div class="modal-body" style="padding:0;">
-	
+<div class="modal fade modal-body" style="padding:0;" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-footer">
+		<button class="btn btn-default borderless" data-dismiss="modal">Close</button>
+		<button class="btn btn-primary borderless" id="">Save changes</button>
+	</div>
 </div>
 <script>
 $(document).ready(function() {	
@@ -109,20 +112,26 @@ $(document).ready(function() {
 		var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";
     	var message = confirm("Are you sure you want to proceed?");
         if (message){
-            $('.modal-body').html("<img style='margin:30% 0 20% 42%;' src="+loading_icon+">");
+            /*$('.modal-body').html("<img style='margin:30% 0 20% 42%;' src="+loading_icon+">");
+            setTimeout(function () {
+	      	$('.modal-body').html("<div class='bg-warning' style='height:30px'>"+
+							"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"+
+							"<h3>Success!!! A new patient was added to the system. Please Close to continue</h3></div>")
+							
+			$('.modal-footer').html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>")
+				location.reload();
+	    	}, 4000); */
+			setTimeout(function(){
+				//notification = '<ol>' + '<li>Patient Added</li>' + '</ol>';
+				//hcmp_message_box(title="Success!",notification, message_type="success");
+			}, 3000);
+	    	// $("#myform").submit(); 
         } else {
             return false;
         }   
-        setTimeout(function () {
-      	$('.modal-body').html("<div class='bg-warning' style='height:30px'>"+
-						"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"+
-						"<h3>Success!!! A new patient was added to the system. Please Close to continue</h3></div>")
-						
-		$('.modal-footer').html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>")
-			location.reload();
-    	}, 4000);       
 		$("#myform").submit();
 	});
+	
 	var $table = $('table');
 	
 	$table.floatThead({ 

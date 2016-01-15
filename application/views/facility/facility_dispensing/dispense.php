@@ -84,7 +84,7 @@
 											// $total_commodity_units=$stock['total_commodity_units'];
 											// $commodity_balance=$stock['commodity_balance'];		
 										// echo "<option special_data='$commodity_id^$unit^$source_name^$total_commodity_units^$commodity_balance' value='$commodity_id'>$commodity_name. ($source_name)</option>";		
-										echo "<option obesity='$commodity_id^$current_balance' value='$commodity_id' data-name = '$commodity_name'>$commodity_name</option>";		
+										echo "<option class='presc_commodity' data-id='$commodity_id' data-stock='$current_balance' obesity='$commodity_id^$current_balance' value='$commodity_id' data-name = '$commodity_name'>$commodity_name</option>";		
 										endforeach;
 
 										 /*foreach ($sp_commodities as $stock) {
@@ -96,8 +96,7 @@
 									</td>
 									<td><input type="number" class="form-control total_available" disabled="disabled"></td>
 									<td><input type="number" class="form-control quantity_issued"></td>
-
- 								
+ 									<td><input type="hidden" class="form-control total_remaining" /></td>
 								</tr>
 								<tr>
 									<td colspan="3"><button class="btn btn-success prescribe" id="prescribe" style="float:right">Prescribe</button></td>
@@ -176,7 +175,10 @@ var search_table = $('#search_results,#prescribed_cart').dataTable( {
 			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
 		}
 	} );
-
+/*$(".presc_commodity").on("click", function(){
+	console.log($(this).data());
+});*/
+// console.log($(".presc_commodity").data());
 $(".search_container").on("click", "table tr", function() {
 	var patient_number = $(this).attr('data-href');	
 	var row_id = $(this).find('.form_patient_row').val();	
@@ -193,6 +195,7 @@ $(".search_container").on("click", "table tr", function() {
 	$('#p_no').attr('data-patient-id', patient_id);
 	$(this).addClass('active');
 } );
+
 // $('#search_results tbody').on( 'click', 'tr', function () {
    // alert('click');
 // });
@@ -293,7 +296,12 @@ $("#find_patient").click(function() {
 $("#finfd_patient tr").click(function(){
 	alert('Click');
 });
-$(".drug_select").on('change',function(){
+$("#remove").on('click', function(){
+	alert("I Work!");
+	var row_id = $(this).closest("tr").index();
+	row_id.remove();
+});
+$(".drug_select").on('change', function(){
 	// alert("i work");
       		var row_id=$(this).closest("tr").index();	
       		var locator=$('option:selected', this);
@@ -301,7 +309,6 @@ $(".drug_select").on('change',function(){
 	       	var data_array=data.split("^");	 
 	           	// alert(data_array);
 	        locator.closest("tr").find(".total_available").val(data_array[1]);
-
 	     	/*
 	     	locator.closest("tr").find(".supplier_name").val(data_array[2]);
 	     	locator.closest("tr").find(".commodity_id").val(data_array[0]);
@@ -332,24 +339,30 @@ $(".prescribe").click(function(){
 		counter = counter + 1;
 		var total_available = $(".total_available").val();
 		//console.log(total_available);
+		// var commodity_id = 
+		console.log($("option:selected").data("id"));
 		var current_units = total_available - quantity_issued;
 		$(".total_available").val(current_units);
+		var commodity_id = $(".drug_select option:selected").data("id");
+        var current_units = $(".drug_select option:selected").data("stock");
+        
+        var commodity_data  = {id:commodity_id, current_units:current_units};
+        //commodity_data.push(id:commodity_id, current_units:current_units);
+        console.log(commodity_data);
 		//console.log(current_units);
 		var drug_select = $(".drug_select").val();
 		var drug_name = $(".drug_select").find(':selected').data("name");
 		// alert(drug_name);return;
 		// alert(drug_select + total_available + quantity_issued);
 		if (counter == 1) {
-	    $('#prescribed_cart').html("<tr><td>"+drug_name+"</td><td><input type=\"number\" value="+quantity_issued+" class=\"form-control input-small prescribed_units\" data-available = "+total_available+" disabled></td><td><button class=\"btn btn-danger\">Remove</button></td></tr>");
+	    $('#prescribed_cart').html("<tr><td>"+drug_name+"</td><td><input type=\"number\" value="+quantity_issued+" class=\"form-control input-small prescribed_units\" data-available = "+total_available+" disabled></td><td><button id=\"remove\" class=\"btn btn-danger\">Remove</button></td></tr>");
 	    $('#dispense_form').append("<input type=\"hidden\" value="+quantity_issued+" name=\"quantity["+counter+"]\"><input type=\"hidden\" value="+drug_select+" name=\"id["+counter+"]\">");
 		}else{
-	    $('#prescribed_cart').append("<tr><td>"+drug_name+"</td><td><input type=\"number\" value="+quantity_issued+" class=\"form-control input-small prescribed_units\" data-available = "+total_available+" disabled></td><td><button class=\"btn btn-danger\">Remove</button></td></tr>");
+	    $('#prescribed_cart').append("<tr><td>"+drug_name+"</td><td><input type=\"number\" value="+quantity_issued+" class=\"form-control input-small prescribed_units\" data-available = "+total_available+" disabled></td><td><button id=\"remove\" class=\"btn btn-danger\">Remove</button></td></tr>");
 	    $('#dispense_form').append("<input type=\"hidden\" value="+quantity_issued+" name=\"quantity["+counter+"]\"><input type=\"hidden\" value="+drug_select+" name=\"id["+counter+"]\">");
 		
 		};
 		};
-
-		
 });
 
 function clear_dets(){
