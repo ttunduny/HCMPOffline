@@ -2263,6 +2263,7 @@ public function create_excel($excel_data = NUll, $report_type = NULL, $total_fig
 	endif;
 }
 
+
 public function create_pdf($pdf_data = NULL, $district_id = NULL, $html_body = NULL) {
 		//echo $district_id;
 		//exit;
@@ -2353,8 +2354,33 @@ public function create_pdf($pdf_data = NULL, $district_id = NULL, $html_body = N
 			unlink($file);
 		//delete the attachment after sending to avoid clog up of pdf'ss
 		}
+public function new_weekly_usage($year=null,$month=null){
+	if(!isset($month)){
+		$month = date('m');
+	}
+	if(!isset($year)){
+		$year = date('Y');
+	}
+	
+	$full_date = $year.'-'.$month.'-01';
+	$month_text = date('F',strtotime($full_date));		
+	$data['year'] = $year;
+	$data['month'] = $month;
+	$data['month_text'] = $month_text;
+	$data['title'] = "Weekly Log Summary";
+	$data['content_view'] = "Admin/new_log_summary_v";
+	$data['banner_text'] = "Monthly Log Summary";	
+	$start_date = $year.'-'.$month.'-01';
+	$end_date = $year.'-'.$month.'-31';		
+	$logged_within_month = Facilities::get_facilities_logged_in_month($start_date,$end_date);
+	$not_logged_within_month = Facilities::get_facilities_not_logged_in_month($start_date,$end_date);
+	$logged_within_month_4 = Facilities::get_facilities_logged_in_count($start_date,$end_date,4);
 
-		public function log_summary_weekly_view(){
+	$data['monthly_logs'] =array('logged_in'=>$logged_within_month,'not_logged_in'=>$not_logged_within_month,'logged_in_count'=>$logged_within_month_4);
+
+	$this -> load -> view("shared_files/template/dashboard_v", $data);
+}
+public function log_summary_weekly_view(){
 			$time=date('M , d Y');
 			$active_facilities = Facilities::getAll_();
 		// echo "<pre>";print_r($active_facilities);echo "</pre>";exit;
@@ -2575,6 +2601,23 @@ public function create_pdf($pdf_data = NULL, $district_id = NULL, $html_body = N
 		$excel_data = array();
 			// $excel_data = array('doc_creator' => 'HCMP ', 'doc_title' => 'System Usage Breakdown ', 'file_name' => 'system usage breakdown');
 		$excel_data = array('doc_creator' => 'HCMP-Kenya', 'doc_title' => 'HCMP_Facility_Activity_Log_Summary ', 'file_name' => 'HCMP_Facility_Activity_Log_Summary_as_at_'.$time);
+		// $column_data = array(
+		// 	"Facility Name", 
+		// 	"Facility Code", 
+		// 	"Sub County", 
+		// 	"County",  
+		// 	"Date Last Logged In", 
+		// 	"Days From Last Log In", 
+		// 	"Date Last Issued", 
+		// 	"Days From Last Issue", 
+		// 	"Date Last Redistributed", 
+		// 	"Days From Last Redistribution", 
+		// 	"Date Last Ordered", 
+		// 	"Days From Last Order", 
+		// 	"Date Last Decommissioned", 
+		// 	"Days From Last Decommission", 
+		// 	"Date Last Received Order", 
+		// 	"Days From Added Stock");
 		$column_data = array(
 			"Facility Name", 
 			"Facility Code", 
