@@ -2373,10 +2373,13 @@ public function new_weekly_usage($year=null,$month=null){
 	$start_date = $year.'-'.$month.'-01';
 	$end_date = $year.'-'.$month.'-31';		
 	$logged_within_month = Facilities::get_facilities_logged_in_month($start_date,$end_date);
+	$issued_within_month = Facilities::get_facilities_issued_in_month($start_date,$end_date);
 	$not_logged_within_month = Facilities::get_facilities_not_logged_in_month($start_date,$end_date);
+	$not_issued_within_month = Facilities::get_facilities_not_issued_in_month($start_date,$end_date);
 	$logged_within_month_4 = Facilities::get_facilities_logged_in_count($start_date,$end_date,4);
+	$issued_within_month_4 = Facilities::get_facilities_issued_in_count($start_date,$end_date,4);
 
-	$data['monthly_logs'] =array('logged_in'=>$logged_within_month,'not_logged_in'=>$not_logged_within_month,'logged_in_count'=>$logged_within_month_4);
+	$data['monthly_logs'] =array('logged_in'=>$logged_within_month,'not_logged_in'=>$not_logged_within_month,'logged_in_count'=>$logged_within_month_4,'issued_within_month'=>$issued_within_month,'issued_count'=>$issued_within_month_4,'not_issued'=>$not_issued_within_month);
 
 	$this -> load -> view("shared_files/template/dashboard_v", $data);
 }
