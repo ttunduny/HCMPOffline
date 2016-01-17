@@ -41,8 +41,8 @@
         <div class="col-md-4">
                 <a href="<?php echo base_url().'home';?>">
             <div class="background_yellow dash_notifications">
-                <span class="icon-lg fa fa-tasks"></span>
-                Task(s)  
+                <span class="icon-lg fa fa-cloud-upload"></span>
+                Updates  
             </div>
                 </a>  
         </div>
