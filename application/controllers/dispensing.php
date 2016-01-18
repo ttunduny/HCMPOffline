@@ -331,7 +331,7 @@ class Dispensing extends MY_Controller {
 		echo json_encode($p_dets[0]);*/
 		$result_table = "";
 		$result_table .= '
-		<table class="table table-bordered row-fluid datatable">
+		<table class="table table-bordered row-fluid datatable" id="ajax_history_table">
 			<thead>
 				<th>Patient Name</th>
 				<th>Commodity Name</th>

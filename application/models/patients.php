@@ -123,7 +123,7 @@ class Patients extends Doctrine_Record {
 	}
 
 	public function get_patient_history($patient_id = NULL){
-		$filter = isset($patient_id)? "AND pd.id = $patient_id":NULL;
+		$filter = isset($patient_id)? "AND pd.patient_number = '$patient_id'":NULL;
 		$sql = "SELECT 
 				    dr.patient_id,
 				    dr.commodity_id,
@@ -134,7 +134,8 @@ class Patients extends Doctrine_Record {
 				    pd.lastname
 				FROM
 				    dispensing_records dr,commodities c,patient_details pd
-				    WHERE dr.commodity_id = c.id AND dr.patient_id = pd.id $filter";		
+				    WHERE dr.commodity_id = c.id AND dr.patient_id = pd.patient_number $filter";
+		// echo "$sql";die;		
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($sql);
 
 		return $query;
