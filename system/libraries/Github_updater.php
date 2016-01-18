@@ -1,18 +1,14 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
 /*
 Copyright (C) 2011 by Jim Saunders
-
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
-
 The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
-
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,19 +17,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-
 class Github_updater
 {
     const API_URL = 'https://api.github.com/repos/';
     const GITHUB_URL = 'https://github.com/';
     const CONFIG_FILE = 'application/config/github_updater.php';
-
     public function __construct()
     {
         $this->ci =& get_instance();
         $this->ci->load->config('github_updater');
     }
-
     /**
      * Checks if the current version is up to date
      *
@@ -42,9 +35,25 @@ class Github_updater
     public function has_update()
     {
         $branches = json_decode($this->_connect(self::API_URL.$this->ci->config->item('github_user').'/'.$this->ci->config->item('github_repo').'/branches'));
+        // $branches_raw = $this->_connect(self::API_URL.$this->ci->config->item('github_user').'/'.$this->ci->config->item('github_repo').'/branches');
+        // $var = API_URL.$this->ci->config->item('github_user').'/'.$this->ci->config->item('github_repo').'/branches';
+        // return $branches_raw;
+        // return $branches;
+        // return $branches[0]->commit->sha;
         return $branches[0]->commit->sha !== $this->ci->config->item('current_commit');
+        
     }
-
+    public function get_hash()
+    {
+        $branches = json_decode($this->_connect(self::API_URL.$this->ci->config->item('github_user').'/'.$this->ci->config->item('github_repo').'/branches'));
+        // $branches_raw = $this->_connect(self::API_URL.$this->ci->config->item('github_user').'/'.$this->ci->config->item('github_repo').'/branches');
+        // $var = API_URL.$this->ci->config->item('github_user').'/'.$this->ci->config->item('github_repo').'/branches';
+        // return $branches_raw;
+        // return $branches;
+        return $branches[0]->commit->sha;
+        // return $branches[0]->commit->sha !== $this->ci->config->item('current_commit');
+        
+    }
     /**
      * If there is an update available get an array of all of the
      * commit messages between the versions
@@ -65,8 +74,9 @@ class Github_updater
             return $messages;
         }
         return false;
+        // $response_stmt = API_URL.$this->ci->config->item('github_user').'/'.$this->ci->config->item('github_repo').'/compare/'.$this->ci->config->item('current_commit').'...'.$hash;
+        // return $response_stmt;
     }
-
     /**
      * Performs an update if one is available.
      *
@@ -80,6 +90,24 @@ class Github_updater
         {
             $commits = json_decode($this->_connect(self::API_URL.$this->ci->config->item('github_user').'/'.$this->ci->config->item('github_repo').'/compare/'.$this->ci->config->item('current_commit').'...'.$hash));
             $files = $commits->files;
+            // return $files;
+            // $dir = $this->_get_and_extract($hash);
+           /* foreach ($files as $file) {
+                if(!$this->_is_ignored($file->filename))
+                    {
+                        echo "<pre>" .$file->filename." Im ignored ". $file->status ."</pre>";
+                    }
+                    else{
+                        echo "<pre>" .$file->filename." Im not ignored ". $file->status ."</pre>";
+
+                        if($file->status == 'removed')unlink($file->filename);
+                        //Otherwise copy the file from the update.
+                        else copy($file->filename, $file->filename);
+                    }
+            }*/
+
+            // echo $this->_get_and_extract($hash);
+
             if($dir = $this->_get_and_extract($hash))
             {
                 //Loop through the list of changed files for this commit
@@ -89,6 +117,7 @@ class Github_updater
                     if(!$this->_is_ignored($file->filename))
                     {
                         //If the status is removed then delete the file
+                        // return $file->status;
                         if($file->status === 'removed')unlink($file->filename);
                         //Otherwise copy the file from the update.
                         else copy($dir.'/'.$file->filename, $file->filename);
@@ -102,20 +131,23 @@ class Github_updater
                 }
                 //Update the current commit hash
                 $this->_set_config_hash($hash);
-
-                return true;
+                return "Cleared Files";
             }
         }
         return false;
     }
-
-    private function _is_ignored($filename)
+    public function _is_ignored($filename)
     {
         $ignored = $this->ci->config->item('ignored_files');
         foreach($ignored as $ignore)
             if(strpos($filename, $ignore) !== false)return true;
-
         return false;
+    }
+
+    public function list_ignored()
+    {
+        $ignored = $this->ci->config->item('ignored_files');
+        return $ignored;
     }
 
     private function _set_config_hash($hash)
@@ -137,31 +169,29 @@ class Github_updater
         }
         return false;
     }
-
     private function _get_and_extract($hash)
     {
-        copy(self::GITHUB_URL.$this->ci->config->item('github_user').'/'.$this->ci->config->item('github_repo').'/zipball/'.$this->ci->config->item('github_branch'), "{$hash}.zip");
+       copy(self::GITHUB_URL . $this -> ci -> config -> item('github_user') . '/' . $this -> ci -> config -> item('github_repo') . '/zipball/' . $this -> ci -> config -> item('github_branch'), "{$hash}.zip");
         shell_exec("unzip {$hash}.zip");
         $files = scandir('.');
-        foreach($files as $file)
-            if(strpos($file, $this->ci->config->item('github_user').'-'.$this->ci->config->item('github_repo')) !== FALSE)return $file;
+        foreach ($files as $file)
+            if (strpos($file, $this -> ci -> config -> item('github_user') . '-' . $this -> ci -> config -> item('github_repo')) !== FALSE)
+                return $file;
 
         return false;
     }
+    private function _connect($url) {
+        $curl = new Curl();
+        $curl -> setOpt(CURLOPT_RETURNTRANSFER, TRUE);
+        $curl -> setOpt(CURLOPT_SSL_VERIFYPEER, FALSE);
+        $curl -> get($url);
 
-    private function _connect($url)
-    {
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC ) ;
-        curl_setopt($ch, CURLOPT_SSLVERSION,3);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-
-        $response = curl_exec($ch);
-
-        curl_close($ch);
+        if ($curl -> error) {
+            $curl -> error_code;
+            $response = "Error: " . $curl -> error_code;
+        } else {
+            $response = $curl -> response;
+        }
         return $response;
     }
 }
