@@ -68,6 +68,7 @@
 							<thead>
 								<th>Drugs</th>
 								<th>Total Available Units</th>
+								<th>Unit Price</th>
 								<th>Issued Units</th>
 							</thead>
 							<tbody>
@@ -95,12 +96,13 @@
 
 									</td>
 									<td><input type="number" class="form-control total_available" disabled="disabled"></td>
+									<td><input type="number" class="form-control price" value="0"></td>
 									<td><input type="number" class="form-control quantity_issued"></td>
 
  								
 								</tr>
 								<tr>
-									<td colspan="3"><button class="btn btn-success prescribe" id="prescribe" style="float:right">Prescribe</button></td>
+									<td colspan="4"><button class="btn btn-success prescribe" id="prescribe" style="float:right">Prescribe</button></td>
 								</tr>
 							</tbody>
 						</table>
@@ -108,6 +110,7 @@
 						<table class="table table-bordered prescribed_cart" id="prescribed_cart">
 							<thead>
 								<th>Commodity</th>
+								<th>Unit Price</th>
 								<th>Units Prescribed</th>
 								<th>Action</th>
 							</thead>
@@ -116,13 +119,15 @@
 							</tbody>
 						</table>
 						<div class="col-md-12">
+							<label>Total Price: 
+							<input type="number" class="form-control" id="total_price" value="0"></label>
 							<center><button class="btn btn-success" id="dispense" style="float:right;width:150px">Dispense</button></center>
 						</div>
 						<?php $att=array("name"=>'dispense_form','id'=>'dispense_form'); echo form_open('dispensing/dispense_commodities',$att); ?>
 						<?php form_close(); ?>	
 					</div>
 					
-
+					<br/>
 					</div>
 				</div>
 				<!-- <div class="col-md-12" style="margin:5px 0">
@@ -326,6 +331,7 @@ $(".quantity_issued").on('keyup',function (){
 });
 
 $(".prescribe").click(function(){
+	var total = $('#total_price').val();
 	var quantity_issued = $(".quantity_issued").val();
 	if (quantity_issued <= 0) {
 		alert("Kindly indicate amount of issue")
@@ -334,14 +340,20 @@ $(".prescribe").click(function(){
 		var drug_select = $(".drug_select").val();
 		var drug_name = $(".drug_select").find(':selected').data("name");
 		var total_available = $(".total_available").val();
+		var unit_cost = $(".price").val();
+		var interim_total = parseInt(quantity_issued)*parseInt(unit_cost);
+		total = parseInt(total);
+		var new_total = total+interim_total;
+		// $('#total_price').val('');
+		$('#total_price').val(new_total);
 		// alert(drug_name);return;
 		// alert(drug_select + total_available + quantity_issued);
 		if (counter == 1) {
-	    $('#prescribed_cart').html("<tr><td>"+drug_name+"</td><td><input type=\"number\" value="+quantity_issued+" class=\"form-control input-small prescribed_units\" data-available = "+total_available+" disabled></td><td><button class=\"btn btn-danger\">Remove</button></td></tr>");
-	    $('#dispense_form').append("<input type=\"hidden\" value="+quantity_issued+" name=\"quantity["+counter+"]\"><input type=\"hidden\" value="+drug_select+" name=\"id["+counter+"]\">");
+	    $('#prescribed_cart').html("<tr><td>"+drug_name+"</td><td><input type=\"number\" value="+unit_cost+" class=\"form-control input-small price\" data-available = "+unit_cost+" disabled></td><td><input type=\"number\" value="+quantity_issued+" class=\"form-control input-small prescribed_units\" data-available = "+total_available+" disabled></td><td><button class=\"btn btn-danger\">Remove</button></td></tr>");
+	    $('#dispense_form').append("<input type=\"hidden\" value="+quantity_issued+" name=\"quantity["+counter+"]\"><input type=\"hidden\" value="+drug_select+" name=\"id["+counter+"]\"><input type=\"hidden\" value="+unit_cost+" name=\"price["+counter+"]\">");
 		}else{
-	    $('#prescribed_cart').append("<tr><td>"+drug_name+"</td><td><input type=\"number\" value="+quantity_issued+" class=\"form-control input-small prescribed_units\" data-available = "+total_available+" disabled></td><td><button class=\"btn btn-danger\">Remove</button></td></tr>");
-	    $('#dispense_form').append("<input type=\"hidden\" value="+quantity_issued+" name=\"quantity["+counter+"]\"><input type=\"hidden\" value="+drug_select+" name=\"id["+counter+"]\">");
+	    $('#prescribed_cart').append("<tr><td>"+drug_name+"</td><td><input type=\"number\" value="+unit_cost+" class=\"form-control input-small price\" data-available = "+unit_cost+" disabled></td><td><input type=\"number\" value="+quantity_issued+" class=\"form-control input-small prescribed_units\" data-available = "+total_available+" disabled></td><td><button class=\"btn btn-danger\">Remove</button></td></tr>");
+	    $('#dispense_form').append("<input type=\"hidden\" value="+quantity_issued+" name=\"quantity["+counter+"]\"><input type=\"hidden\" value="+drug_select+" name=\"id["+counter+"]\"><input type=\"hidden\" value="+unit_cost+" name=\"price["+counter+"]\">");
 		
 		};
 		};

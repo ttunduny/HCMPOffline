@@ -758,22 +758,22 @@ $("input:radio[name=commodity_s]").click(function() {
 	        
         	}
         }
-   });
-    
-    	function ajax_return(function_url,div){
-        var function_url =url+function_url;
-        var loading_icon=url+"assets/img/Preloader_4.gif";
-        $.ajax({
+   });    
+
+	function ajax_return(function_url,div){
+	    var function_url =url+function_url;
+	    var loading_icon=url+"assets/img/Preloader_4.gif";
+	    $.ajax({
 	        type: "POST",
 	        url: function_url,
 	        beforeSend: function() {
 	        $(div).html("<img style='margin-left:20%;' src="+loading_icon+">");
-        },
-        success: function(msg) {
-        $(div).html(msg);
-        }
-        });
-        } 
+	    },
+	    success: function(msg) {
+	    $(div).html(msg);
+	    }
+    });
+    } 
     
 
 });
@@ -832,11 +832,29 @@ $("input:radio[name=commodity_s]").click(function() {
     	 
     }
     function instantiate_multiple(){
-    	
+   		var selected_options = 0;    	
     	$('.multiple_select').multipleSelect({
             width: '100%',            
             selectAll: false,
-            placeholder:'Select Commodities (Maximum 5)'
+            placeholder:'Select Commodities (Maximum 5)',
+            onClick: function(view) {
+            	var state = (view.checked ? 'checked' : 'unchecked');
+            	if (state=='checked') {
+            		selected_options +=1;
+            	}else{
+            		selected_options -=1;            		
+            	}
+                // $eventResult.text(view.label + '(' + view.value + ') ' + (view.checked ? 'checked' : 'unchecked'));
+                console.log(selected_options);
+                if(selected_options>5){
+                	// $(".multiple_select").multipleSelect("disable");
+                	// alert('You can only Select a Maximum of 5 items');
+                	// view.checked = 'unchecked';
+                	// console.log(view);
+                	// $( ".ms-drop ul li:eq(2)" ).removeClass('selected');
+                	// view.update;
+                }
+            }
         });	
     }
     
