@@ -338,16 +338,26 @@ $(".prescribe").click(function(){
 	}else{
 		counter = counter + 1;
 		var total_available = $(".total_available").val();
-		//console.log(total_available);
-		// var commodity_id = 
-		console.log($("option:selected").data("id"));
-		var current_units = total_available - quantity_issued;
-		$(".total_available").val(current_units);
+		var current_units = $(".drug_select option:selected").data("stock");
+		var current_available = current_units - quantity_issued;
+		$(".total_available").val(current_available);
+		//$(".drug_select option:selected").data("stock", current_available);
 		var commodity_id = $(".drug_select option:selected").data("id");
-        var current_units = $(".drug_select option:selected").data("stock");
+        var updated_data  = [];
 
-        var updated_data  = {id:commodity_id, current_units:current_units};
+        //Create and array to store the commodity id that have been prescribed
+        updated_data.push(commodity_id);
+        //Display the array
         console.log(updated_data);
+        console.log(updated_data.indexOf(commodity_id));
+        //Check to see if the currently selected commodity id exists in the array
+        if(contains(updated_data,commodity_id)){
+        	//if it returns true alter the data-stock attribute of the selected commodity
+        	$(".drug_select option:selected").data("stock", current_available);
+        	var confirm_avail = $(".drug_select option:selected").data("stock");
+        	console.log(confirm_avail);
+        }
+
 		var drug_select = $(".drug_select").val();
 		var drug_name = $(".drug_select").find(':selected').data("name");
 		// alert(drug_name);return;
@@ -357,12 +367,19 @@ $(".prescribe").click(function(){
 	    $('#dispense_form').append("<input type=\"hidden\" value="+quantity_issued+" name=\"quantity["+counter+"]\"><input type=\"hidden\" value="+drug_select+" name=\"id["+counter+"]\">");
 		}else{
 	    $('#prescribed_cart').append("<tr><td>"+drug_name+"</td><td><input type=\"number\" value="+quantity_issued+" class=\"form-control input-small prescribed_units\" data-available = "+total_available+" disabled></td><td><button id=\"remove\" class=\"btn btn-danger\">Remove</button></td></tr>");
-	    $('#dispense_form').append("<input type=\"hidden\" value="+quantity_issued+" name=\"quantity["+counter+"]\"><input type=\"hidden\" value="+drug_select+" name=\"id["+counter+"]\">");
+	    $('#dispense_form').append("<input type=\"hidden\" value="+quantreity_issued+" name=\"quantity["+counter+"]\"><input type=\"hidden\" value="+drug_select+" name=\"id["+counter+"]\">");
 		
 		};
 		};
 });
-
+function contains(a, commID){
+	for(var i = 0; i < a.length; i++){
+		if(a[i] === commID){
+			return true;
+		}
+	}
+	return false;
+}
 function clear_dets(){
 	var p_no = "";
 	var name = "";
