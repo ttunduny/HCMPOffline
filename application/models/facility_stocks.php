@@ -1466,6 +1466,17 @@ class Facility_stocks extends Doctrine_Record {
 			GROUP BY MONTH( fs.date_issued ) asc");
 		return $inserttransaction;
 	}
+
+	public function get_dispensing_consumption($commodity_id=null){
+		$filter = '';
+		if($commodity_id!=null){
+			$filter = "and c.id = '$commodity_id'";
+		}
+		$sql = "select ifnull(sum(dr.units_dispensed),0) AS total,c.commodity_name as commodity from dispensing_records dr, commodities c 
+		where dr.commodity_id = c.id $filter GROUP BY c.id";		
+		$consumptiom = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll($sql);
+		return $consumptiom;
+	}
 	public static function get_commodity_consumption_level($facilities_code) {
 		$year = date("Y");
 		$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT MONTHNAME( fs.date_issued )as month, cms.commodity_name as commodity, fs.qty_issued AS total_consumption
