@@ -96,8 +96,8 @@
 
 									</td>
 									<td><input type="number" class="form-control total_available" disabled="disabled"></td>
-									<td><input type="number" class="form-control price" value="0"></td>
-									<td><input type="number" class="form-control quantity_issued"></td>
+									<td><input type="number" class="form-control price" value="0" id="price"></td>
+									<td><input type="number" class="form-control quantity_issued" id="quantity_issued"></td>
 
  								
 								</tr>
@@ -348,6 +348,9 @@ $(".prescribe").click(function(){
 		$('#total_price').val(new_total);
 		// alert(drug_name);return;
 		// alert(drug_select + total_available + quantity_issued);
+		$('#price').val('0');
+		$('#quantity_issued').val('');
+
 		if (counter == 1) {
 	    $('#prescribed_cart').html("<tr><td>"+drug_name+"</td><td><input type=\"number\" value="+unit_cost+" class=\"form-control input-small price\" data-available = "+unit_cost+" disabled></td><td><input type=\"number\" value="+quantity_issued+" class=\"form-control input-small prescribed_units\" data-available = "+total_available+" disabled></td><td><button class=\"btn btn-danger\">Remove</button></td></tr>");
 	    $('#dispense_form').append("<input type=\"hidden\" value="+quantity_issued+" name=\"quantity["+counter+"]\"><input type=\"hidden\" value="+drug_select+" name=\"id["+counter+"]\"><input type=\"hidden\" value="+unit_cost+" name=\"price["+counter+"]\">");
