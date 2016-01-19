@@ -10,14 +10,15 @@ class Git_updater extends MY_Controller {
 	public function index()
 	{
 		// $this->load->view('welcome_message');
-		echo "Welcome to the the git updater";
+		echo "Welcome to the the git updater. Updated Seven times Now";
 	}
 
 	public function github_update_status(){
 		// echo "I WAS HERE";
 		$res = $this->github_updater->has_update();
 
-		echo "<pre>"; print_r($res);
+		// echo "<pre>"; print_r($res);
+		return $res;
 	}
 
 	public function github_update(){
@@ -25,6 +26,14 @@ class Git_updater extends MY_Controller {
 		$res = $this->github_updater->update();
 		// $this->unzip->extract();
 		echo "<pre>"; print_r($res);
+	}
+
+	public function github_update_download(){
+		// echo "I WAS HERE";
+		$res = $this->github_updater->update_download();
+		// $this->unzip->extract();
+		// echo "<pre>"; print_r($res);
+		return $res;
 	}
 	
 	public function get_hash(){
@@ -34,12 +43,12 @@ class Git_updater extends MY_Controller {
 		return $res;
 	}
 
-	public function extract_files(){
+	public function extract_and_copy_files(){
 		$hash = $this -> get_hash();
 
 		$unzip_status = $this->unzip->extract($hash.'.zip');
 
-		// echo "<pre>"; print_r($unzip_status);echo "</pre>";
+		// echo "<pre>"; print_r($unzip_status);echo "</pre>";exit;
 		$sanitized_directory = array();
 		foreach ($unzip_status as $unzip) {
 			$unzip = substr($unzip, 2);
@@ -54,13 +63,15 @@ class Git_updater extends MY_Controller {
 			// echo "<pre>";print_r($sanitized_directory);
 			$ignored = $this->ignored_files();
 			$squeaky = $this->array_cleaner($sanitized_directory,$ignored);
+			$extracted_path = $this->get_extracted_path();
+			// echo "<pre>";print_r($squeaky);
+			echo "<pre>";print_r($extracted_path);
 
-			echo "<pre>";print_r($squeaky);
+			$status = $this->copy_and_replace($squeaky,$extracted_path);
+			echo "<pre>";print_r($status);
+			// $set_hash = $this->github_updater->_set_config_hash($hash);
 
-			$status = $this->copy_and_replace($squeaky);
-			$set_hash = $this->github_updater_set_config_hash($hash);
-
-
+			// return $status;
 	}
 
 	public function ignored_files(){
@@ -85,13 +96,38 @@ class Git_updater extends MY_Controller {
 
 		return $dirty_array;
 		// echo FCPATH;
+	}//end of array cleaner
+
+	public function get_extracted_path(){
+		$user_name = $this -> config -> item('github_user');
+		$repo_name = $this -> config -> item('github_repo');
+		$hash = $this->get_hash();
+		$short_hash = substr($hash, 0, 7);
+
+		// echo $short_hash."<pre>";
+		$folder_name = $user_name.'-'.$repo_name.'-'.$short_hash;
+		// echo $folder_name;
+		return $folder_name;
+
 	}
 
-	public function copy_and_replace($directories){
+	public function copy_and_replace($directories,$source_path = NULL){
+		$copy_status_ = array();
+		// echo FCPATH.$source_path."<pre>";
+		$fcpath = FCPATH;
+		$sanitized_fcpath = str_replace('\\','/', $fcpath);
+		// echo $sanitized_fcpath;
 		foreach ($directories as $dir) {
-			$copy_status = copy(FCPATH.$dir, FCPATH.$dir);
+		// echo FCPATH.$dir."<pre>";
+			$dir = str_replace('/','\\', $dir);
+			$src = $sanitized_fcpath.$source_path."/".$dir;
+			$dest = $sanitized_fcpath.$dir;
+			$copy_status_[]['src']= "\"".$src."\"";
+			$copy_status_[]['dest']= "\"".$dest."\"";
+
+			$this->copy($src,$dest);
 		}
-		return $copy_status;
+		return $copy_status_;
 	}
 
 	public function delete_residual_files($path){
@@ -100,8 +136,112 @@ class Git_updater extends MY_Controller {
 		return $delete_status;
 	}
 
+	public function get_latest_zip($hash = NULL){
+		$hash = $this->get_hash();
+		$res = $this->github_updater->get_commit_zip($hash);
+
+		echo "<pre>";print_r($res);
+		// return $res;
+	}
+
+	public function admin_updates_home($update_status=NULL){
+		// echo "<pre> This";print_r($update_status);exit;
+		$permissions='super_permissions';
+		$data['user_types']=Access_level::get_access_levels($permissions);
+		$hash = $this->get_hash();
+		$status = $this->github_update_status();
+		if (isset($status) && $status == 1) {
+			$status_ = "TRUE";
+			$available_update = 1;
+		}else{
+			$status_ = "FALSE";
+			$available_update = 0;
+		}
+		// echo $available_update;exit;
+		$git_records = Offline_model::get_prior_records();
+		// echo "<pre>";print_r($git_records);exit;
+
+		$data['available_update'] = $available_update;
+		$data['most_recent_commit'] = $hash;
+		$data['update_status'] = $status_;
+		$data['git_records'] = $git_records;
+
+		$data['title'] = "System Updates";
+		$data['banner_text'] = "User Management";
+		$data['content_view'] = "offline/offline_admin_home";
+		$template = 'shared_files/template/dashboard_v';
+
+		// $update_status = $this->github_update();
+		// $hash = $this->get_hash();
+		// $update_files = $this->get_zip($hash);
+
+		// echo "<pre>";print_r($update_files);exit;
+
+		$this -> load -> view($template, $data);
+	}
+
+	public function update_system(){
+		$hash = $this->get_hash();
+		$get_zip = $this->get_latest_zip();
+		$update_files = $this->extract_and_copy_files($hash);
+		$update_hash = $this->github_updater->_set_config_hash();
+
+		// echo "Houston: ".$update_files;exit;
+		// $this->admin_updates_home($update_status);
+	}
+
 	public function tester(){
-		echo FCPATH;
+		copy("C:/xampp/htdocs/HCMP-ALPHA/karsanrichard-HCMP-ALPHA-cad542a/README.md","C:/xampp/htdocs/HCMP-ALPHA/README.md");
+	}
+
+	public function copy($src,$dest){
+		$c = copy($src,$dest);
+		return $c;
+	}
+
+	public function download_repo(){
+		$repoDL = new Repo_downloader();
+
+		$repoDL->download(array(
+		    'user'   => 'karsanrichard',
+		    'token'  => 'eb56cb95bdcdb44b81371662cc1962985d2799f5',
+		    'repo'   => 'HCMP-ALPHA',
+		    'saveAs' => 'myRepo-latest.zip'
+		));
+
+		// $this->repo_downloader->download();
+	}
+
+	public function curl_repo_download(){
+		$url = "https://github.com/karsanrichard/HCMP-ALPHA/zipball/master";
+				$ch = curl_init();
+		/**
+		* Set the URL of the page or file to download.
+		*/
+		curl_setopt($ch, CURLOPT_URL,$url);
+
+		$fp = fopen('rss.xml', 'w+');
+		/**
+		* Ask cURL to write the contents to a file
+		*/
+		curl_setopt($ch, CURLOPT_FILE, $fp);
+
+		curl_exec ($ch);
+
+		curl_close ($ch);
+		fclose($fp);
+	}
+
+	public function get_with_get(){
+		$url = "https://github.com/karsanrichard/HCMP-ALPHA/zipball/master";
+		$data = file_get_contents($url);
+		echo $data;
+	}
+
+	public function default_udpate_function(){
+		$updater = $this->github_updater->update_default();
+
+		echo $updater;
 	}
 
 }
