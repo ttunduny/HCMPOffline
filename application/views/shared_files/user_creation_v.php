@@ -790,8 +790,8 @@ $('#email').keyup(function() {
 		        }
            
           },
-          success: function(msg){          		
-	 			if(msg==true){
+          success: function(msg_mine){           		
+	 			if(msg_mine==true){
 	 			 	alertify.set({ delay: 10000 });
             		alertify.success(message_success, null);
 	            }else{

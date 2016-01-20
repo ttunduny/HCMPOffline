@@ -249,6 +249,7 @@ class Dispensing extends MY_Controller {
 		for ($i=1; $i < $id_count; $i++) { 
 			$info_array= array(
 			'patient_id'=> $patient_id,
+			'facility_code'=> $facility_code,
 			'units_dispensed'=> $quantity[$i],
 			'commodity_id'=> $commodity_id[$i],
 			'unit_price'=> $unit_price[$i]
@@ -299,10 +300,24 @@ class Dispensing extends MY_Controller {
 	public function patient_history(){
 		$facility_code = $this -> session -> userdata('facility_id');
 			$data['title'] = "Dispensing Reports";
-			$data['banner_text'] = "Facility Consumption";
+			$data['banner_text'] = "Patient History";
 			$data['c_data'] = Commodities::get_facility_commodities($facility_code);
 			$data['sidebar'] = "facility/facility_dispensing/dispensing_side_bar_v";
 			$data['report_view'] = "facility/facility_dispensing/patient_history_report";
+			$data['content_view'] = "facility/facility_reports/reports_v";
+			$view = 'shared_files/template/template';
+			$data['active_panel'] = 'consumption';
+
+		$this -> load -> view($view, $data);	
+	}
+
+	public function consumption(){
+			$facility_code = $this -> session -> userdata('facility_id');
+			$data['title'] = "Dispensing Reports";
+			$data['banner_text'] = "Facility Consumption";
+			$data['commodities'] = Commodities::get_facility_commodities($facility_code);
+			$data['sidebar'] = "facility/facility_dispensing/dispensing_side_bar_v";
+			$data['report_view'] = "facility/facility_dispensing/consumption_report";
 			$data['content_view'] = "facility/facility_reports/reports_v";
 			$view = 'shared_files/template/template';
 			$data['active_panel'] = 'consumption';
@@ -351,6 +366,33 @@ class Dispensing extends MY_Controller {
 					}
 			}else{
 				$result_table .= '<tr><td colspan="4"><b>There is no history on this patient</b></td></tr>';
+			}
+		
+		$result_table.= '</tbody></table>';
+
+		echo $result_table;
+	}
+	public function consumption_ajax(){
+		$commodity_id = $this->input->post('commodity_id');
+		$consumption = facility_stocks::get_dispensing_consumption($commodity_id);
+		$result_table = "";
+		$result_table .= '
+		<table class="table table-bordered row-fluid datatable" id="ajax_commodity_table">
+			<thead>				
+				<th>Commodity Name</th>
+				<th>Units Consumed</th>				
+			</thead>
+
+			<tbody>';
+			if (count($consumption) > 0 ) {
+				foreach ($consumption as $data) {
+					$result_table .='<tr>						
+						<td>'.$data['commodity'].'</td>
+						<td>'.$data['total'].'</td>						
+						</tr>';
+					}
+			}else{
+				$result_table .= '<tr><td colspan="2"><b>There is no history on this patient</b></td></tr>';
 			}
 		
 		$result_table.= '</tbody></table>';

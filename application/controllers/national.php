@@ -277,7 +277,7 @@ class national extends MY_Controller {
 
 	}
 
-	public function expiry($year = null, $county_id = null, $district_id = null, $facility_code = null, $graph_type = null) {
+	public function expiry($year = null, $county_id = null, $district_id = null, $facility_code = null, $graph_type = null,$commodity_id=null) {
 		$year = ($year == "NULL") ? date('Y') : $year;
 		/*//Get the current month
 
@@ -325,6 +325,7 @@ class national extends MY_Controller {
 		 $and_data .= ($facility_code > 0) ? " AND f.facility_code = '$facility_code'" : null;
 		 $and_data .= ($county_id > 0) ? " AND d1.county='$county_id'" : null;
 		 $and_data = isset($and_data) ? $and_data : null;
+		 $and_data1 =($commodity_id>0) ?" AND d.id='$commodity_id'" : null;
 
 		 $group_by = ($district_id > 0 && isset($county_id) && !isset($facility_code)) ? " ,d1.id" : null;
 		 $group_by .= ($facility_code > 0 && isset($district_id)) ? "  ,f.facility_code" : null;
@@ -426,7 +427,7 @@ class national extends MY_Controller {
 		 $row_data = array();
 		 $column_data = array("Commodity", "Unit Size", "Quantity (Packs)", "Quantity (Units)", "Unit Cost (Ksh)", "Total Cost Expired (Ksh)", "Date of Expiry", "Supplier", "Manufacturer", "Facility Name", "Facility Code", "Sub-County", "County");
 		 $excel_data['column_data'] = $column_data;
-			//echo  ; exit;
+			//echo  ; exit;		
 		 $facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select  c.county, d1.district as subcounty ,temp.drug_name,
 		 	f.facility_code, f.facility_name,temp.manufacture, sum(temp.total) as total_ksh,temp.units,
 		 	temp.unit_cost,temp.expiry_date,temp.unit_size,
@@ -443,7 +444,9 @@ class national extends MY_Controller {
 		 from facility_stocks f_s, commodities d
 		 where f_s.expiry_date < NOW( ) 
 		 and d.id=f_s.commodity_id
+		 $and_data1
 		 and year(f_s.expiry_date) !=1970
+		 and year(f_s.expiry_date) =2015
 		 AND (f_s.status =1 or f_s.status =2)
 		 GROUP BY d.id,f_s.facility_code having total >1
 
@@ -457,9 +460,13 @@ class national extends MY_Controller {
 		 order by temp.drug_name asc,temp.total asc, temp.expiry_date desc
 		 ");
 array_push($row_data, array("The below commodities have expired $title  $year"));
-foreach ($facility_stock_data as $facility_stock_data_item) :
-	array_push($row_data, array($facility_stock_data_item["drug_name"], $facility_stock_data_item["unit_size"], $facility_stock_data_item["packs"], $facility_stock_data_item["units"], $facility_stock_data_item["unit_cost"], $facility_stock_data_item["total_ksh"], $facility_stock_data_item["expiry_date"], "KEMSA", $facility_stock_data_item["manufacture"], $facility_stock_data_item["facility_name"], $facility_stock_data_item["facility_code"], $facility_stock_data_item["subcounty"], $facility_stock_data_item["county"]));
-endforeach;
+if (count($facility_stock_data)<=0) {
+	array_push($row_data, array("There are not expired commmodities for the selected commodity"));	
+}else{
+	foreach ($facility_stock_data as $facility_stock_data_item) :
+		array_push($row_data, array($facility_stock_data_item["drug_name"], $facility_stock_data_item["unit_size"], $facility_stock_data_item["packs"], $facility_stock_data_item["units"], $facility_stock_data_item["unit_cost"], $facility_stock_data_item["total_ksh"], $facility_stock_data_item["expiry_date"], "KEMSA", $facility_stock_data_item["manufacture"], $facility_stock_data_item["facility_name"], $facility_stock_data_item["facility_code"], $facility_stock_data_item["subcounty"], $facility_stock_data_item["county"]));
+	endforeach;
+}
 $excel_data['row_data'] = $row_data;
 
 $this -> hcmp_functions -> create_excel($excel_data);
@@ -467,13 +474,14 @@ endif;
 
 }
 
-public function potential($county_id=null, $district_id=null,$facility_code=null,$graph_type=null,$interval=null)
+public function potential($county_id=null, $district_id=null,$facility_code=null,$graph_type=null,$interval=null,$commodity_id=null)
 
 {
 	$interval = ((isset($interval))&& ($interval > 0))? $interval:12;//default to select annual
 	$and_data =($district_id>0) ?" AND d1.id = '$district_id'" : null;
 	$and_data .=($facility_code>0) ?" AND f.facility_code = '$facility_code'" : null;
 	$and_data .=($county_id>0) ?" AND d1.county='$county_id'" : null;
+	$and_data1 =($commodity_id>0) ?" AND d.id='$commodity_id'" : null;
 	$and_data =isset( $and_data) ?  $and_data:null;
 	if( $graph_type!="excel"):
 		$commodity_array = Doctrine_Manager::getInstance()
@@ -552,6 +560,7 @@ public function potential($county_id=null, $district_id=null,$facility_code=null
 	from facility_stocks f_s, commodities d
 	where f_s.expiry_date between DATE_ADD(CURDATE(), INTERVAL 1 day) and  DATE_ADD(CURDATE(), INTERVAL $interval MONTH)
 	and d.id=f_s.commodity_id
+	$and_data1
 	and year(f_s.expiry_date) !=1970
 	AND (f_s.status =1 or f_s.status =2)
 	GROUP BY d.id,f_s.facility_code having total >1
@@ -567,24 +576,29 @@ public function potential($county_id=null, $district_id=null,$facility_code=null
 	");
 $date=date( "d M y");
 array_push($row_data, array("The below commodities will expire in the next $interval months from $date $title  "));
-// echo "<pre>";print_r($facility_stock_data);exit;
-foreach ($facility_stock_data as $facility_stock_data_item) :
-	array_push($row_data, array($facility_stock_data_item["drug_name"],
-		$facility_stock_data_item["expiry_date"],
-		$facility_stock_data_item["unit_size"],
-		$facility_stock_data_item["packs"],
-		$facility_stock_data_item["units"],
-		$facility_stock_data_item["unit_cost"],
-		$facility_stock_data_item["total_ksh"],
-		"KEMSA",
-		$facility_stock_data_item["manufacture"],
-		$facility_stock_data_item["facility_name"],
-		$facility_stock_data_item["facility_code"],
-		$facility_stock_data_item["subcounty"],
-		$facility_stock_data_item["county"]
+if (count($facility_stock_data)<=0) {
+	array_push($row_data, array("There are no expiries for the selected commodity"));	
+}else{
+	foreach ($facility_stock_data as $facility_stock_data_item) :
+		array_push($row_data, array($facility_stock_data_item["drug_name"],
+			$facility_stock_data_item["expiry_date"],
+			$facility_stock_data_item["unit_size"],
+			$facility_stock_data_item["packs"],
+			$facility_stock_data_item["units"],
+			$facility_stock_data_item["unit_cost"],
+			$facility_stock_data_item["total_ksh"],
+			"KEMSA",
+			$facility_stock_data_item["manufacture"],
+			$facility_stock_data_item["facility_name"],
+			$facility_stock_data_item["facility_code"],
+			$facility_stock_data_item["subcounty"],
+			$facility_stock_data_item["county"]
 
-		));
-endforeach;
+			));
+	endforeach;
+}
+// echo "<pre>";print_r($facility_stock_data);exit;
+
 $excel_data['row_data'] = $row_data;
 
 $this->hcmp_functions->create_excel($excel_data);
@@ -749,7 +763,7 @@ public function stock_level_mos($county_id = null, $district_id = null, $facilit
 	else :
 		$excel_data = array('doc_creator' => "HCMP", 'doc_title' => "Stock Level in Months of Stock $title", 'file_name' => $title . ' MOS');
 	$row_data = array();
-	$column_data = array("County", "Sub-County", "Facility Name", "Facility Code", "Item Name", "MOS");
+	$column_data = array("County", "Sub-County", "Facility Name", "Facility Code", "Item Name", "MOS(packs)");
 	$excel_data['column_data'] = $column_data;
 			 //echo '' ; exit;
 
@@ -765,7 +779,15 @@ public function stock_level_mos($county_id = null, $district_id = null, $facilit
 		
 		");
 
-
+	// echo "SELECT d.id,ct.county,sc.district,f.facility_code,
+	// 	f.facility_name,sum(fs.current_balance) as bal
+	// 	,sum(fs.current_balance)/d.total_commodity_units as packs,d.total_commodity_units,fs.batch_no,fs.expiry_date,d.commodity_name
+	// 	FROM hcmp_rtk.facility_stocks fs
+	// 	INNER JOIN facilities f ON  fs.facility_code=f.facility_code
+	// 	INNER JOIN commodities d ON  fs.commodity_id=d.id
+	// 	INNER JOIN districts sc ON  f.district=sc.id
+	// 	INNER JOIN counties ct ON  sc.county=ct.id
+	// 	$and_data AND fs.status=1 group by fs.batch_no order by ct.id asc";die;
 		/*echo'<table><tr>
 					<th>County</th>
 					<th>Sub-County</th>
@@ -832,12 +854,12 @@ public function stock_level_mos($county_id = null, $district_id = null, $facilit
 			$r_data[$counter]["facility_code"] = $key['facility_code'];
 			$r_data[$counter]["facility_name"] = $key['facility_name'];
 			$r_data[$counter]["commodity_name"] = $key['commodity_name'];
-			$r_data[$counter]["batch_no"] = $key['batch_no'];
-			$r_data[$counter]["expiry_date"] = $key['expiry_date'];
-			$r_data[$counter]["balance"] = $bal;
-			$r_data[$counter]["bal_packs"] = round($packs,2);
+			// $r_data[$counter]["batch_no"] = $key['batch_no'];
+			// $r_data[$counter]["expiry_date"] = $key['expiry_date'];
+			// $r_data[$counter]["balance"] = $bal;
+			// $r_data[$counter]["bal_packs"] = round($packs,2);
 			$r_data[$counter]["amc_packs"] = $amc_packs;
-			$r_data[$counter]["amc_units"] = round($packs/$amc_packs,2);
+			// $r_data[$counter]["amc_units"] = $key['bal'];
 
 			$counter = $counter + 1;
 		}
@@ -1026,6 +1048,7 @@ public function stock_level_mos($county_id = null, $district_id = null, $facilit
 				$count_commodities = count($commodity_array);
 				$year = ($year == "NULL" || !isset($year)) ? date('Y') : $year;
 				$to = ($to == "NULL" || !isset($to)) ? date('Y-m-d') : date('Y-m-d', strtotime(urldecode($to)));
+				$from = ($from == "NULL" || !isset($from)) ? date('Y-m-d') : date('Y-m-d', strtotime(urldecode($from)));
 
 				$and_data = ($district_id > 0) ? " AND d1.id = '$district_id'" : null;
 				$and_data .= ($facility_code > 0) ? " AND f.facility_code = '$facility_code'" : null;
@@ -1034,7 +1057,8 @@ public function stock_level_mos($county_id = null, $district_id = null, $facilit
 				if($count_commodities>1){
 
 				}else{
-					$and_data .= isset($commodity_id) ? "AND d.id =$commodity_id" : "AND d.tracer_item =1";
+					$and_data .= ($commodity_id > 0) ? "AND d.id =$commodity_id" : "AND d.tracer_item =1";
+					// $and_data .= isset($commodity_id) ? "AND d.id =$commodity_id" : "AND d.tracer_item =1";
 				}
 
 		/*$group_by =($district_id>0 && isset($county_id) && !isset($facility_code)) ?" ,d.id" : null;
@@ -1042,7 +1066,8 @@ public function stock_level_mos($county_id = null, $district_id = null, $facilit
 		 $group_by .=($county_id>0 && !isset($district_id)) ?" ,c_.id" : null;
 		 $group_by =isset( $group_by) ?  $group_by: " ,c_.id";*/
 
-		 $time = "Between " . date('j M y', strtotime($from)) . " and " . date('j M y', strtotime($to));
+		 $time = "Between " . date('j M y', strtotime(urldecode($from))) . " and " . date('j M y', strtotime(urldecode($to)));
+
 
 		 if (isset($county_id)) :
 
@@ -1120,6 +1145,8 @@ public function stock_level_mos($county_id = null, $district_id = null, $facilit
 		 	ORDER BY c.county ASC , d1.district ASC";
 				// echo "$sql";die;
 		 	$facility_data = $this->db->query($sql)->result_array();
+			// array_push($final_array[0], "The below commodities were consumed $time");
+		 	$final_array[] = array("The below commodities were consumed $time",null,null,null);					
 
 		 	foreach ($facility_data as $key => $value) {
 		 		$county = $value['county'];
@@ -1140,9 +1167,10 @@ public function stock_level_mos($county_id = null, $district_id = null, $facilit
 		 			and f_i.created_at between '$from' and '$to'
 		 			AND d.id = '$commodity_id'
 		 			GROUP BY d.id , f_i.facility_code";
+		 			// echo $sql_commodity_details;die;
 		 			$consuption_details = $this->db->query($sql_commodity_details)->result_array();
 		 			if(count($consuption_details)==0){
-		 				$total = 'No Data Available';
+		 				$total = 'No Data Available';		 				
 		 				array_push($final_array[$facility_code],$total);
 
 		 			}else{
@@ -1160,6 +1188,7 @@ public function stock_level_mos($county_id = null, $district_id = null, $facilit
 		 	}
 		 	$row_data = $final_array;
 		 }else{
+			array_push($row_data, array("The below commodities were consumed $time"));
 		 	$commodity_id = $commodity_array[0];
 		 	$facility_stock_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select 
 		 		c.county,d1.district as subcounty, f.facility_name,f.facility_code, d.commodity_name as drug_name,
