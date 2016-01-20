@@ -259,7 +259,7 @@ legend{
 				    	</select>
 			  		</div>
 			  		<div id="single_options">
-			  			<select class="myoptions" id="commodity" disabled="true" > 			    	
+			  			<select class="myoptions" id="commodity1" disabled="true" > 			    	
 				    	<?php
 								foreach ($commodities as $value => $commodity) :
 										$c_id = $commodity['id'];
@@ -432,6 +432,8 @@ $('#sub_county').on('change', function(){
 			document.getElementById("specify_commodities").disabled = false;
 			load_multiple(value);
 			$(".myoptions").attr("disabled", true);
+			$("#commodity1").attr("disabled", true);
+			$("#tracer_commodities").attr("disabled", true);
 			
 			
 		}else if(value=="Actual"){
@@ -652,7 +654,8 @@ $("input:radio[name=commodity_s]").click(function() {
 	        		link='national/stock_level_units/'+county_id+'/'+district+'/'+facility+'/NULL/excel';
 	        	}
 	        	if(commodity_type=='Specify'){ 
-	        		var commodity_id=$('#commodity').val();
+	        		var commodity_id=$('#commodity1').val();
+	        		// alert(commodity_id);
 	                link='national/stock_level_units/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel';
 	        	}
 	        	if(commodity_type=='All'){ 
@@ -696,7 +699,13 @@ $("input:radio[name=commodity_s]").click(function() {
         }
         else if(criteria=='Potential'){
        		if(type=='excel'){ 
-      	    	link='national/potential/'+county_id+'/'+district+'/'+facility+'/excel/'+interval;
+       			if(commodity_type=='Specify'){ 
+	        		var commodity_id=$('#commodity1').val();	        		
+	                link='national/potential/'+county_id+'/'+district+'/'+facility+'/excel/'+interval+'/'+commodity_id;
+	        	}
+	        	if(commodity_type=='All'){ 
+      	    		link='national/potential/'+county_id+'/'+district+'/'+facility+'/excel/'+interval;		        	
+	        	}
 	        	window.open(url+link,'_parent');
 	        }else if(type=='pdf'){ 
 		        link='national/potential/'+county_id+'/'+district+'/'+facility+'/pdf/'+interval;
@@ -731,6 +740,11 @@ $("input:radio[name=commodity_s]").click(function() {
 	        		var commodity_id=$('#commodity').val();
 	        		link='national/expiry/NULL/'+county_id+'/'+district+'/'+facility+'/excel';
 	        	}
+	        	if(commodity_type=='Specify'){ 
+	        		var commodity_id=$('#commodity1').val();
+	        		link='national/expiry/NULL/'+county_id+'/'+district+'/'+facility+'/excel/'+commodity_id;	        			                
+	        	}
+	        	
 	        window.open(url+link,'_parent');
 	        
 	        }else if(type=='pdf'){ 
