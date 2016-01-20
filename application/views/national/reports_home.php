@@ -850,7 +850,7 @@ $("input:radio[name=commodity_s]").click(function() {
     	$('.multiple_select').multipleSelect({
             width: '100%',            
             selectAll: false,
-            placeholder:'Select Commodities (Maximum 5)',
+            placeholder:'Select Commodities (Maximum 3)',
             onClick: function(view) {
             	var state = (view.checked ? 'checked' : 'unchecked');
             	if (state=='checked') {

@@ -763,7 +763,7 @@ public function stock_level_mos($county_id = null, $district_id = null, $facilit
 	else :
 		$excel_data = array('doc_creator' => "HCMP", 'doc_title' => "Stock Level in Months of Stock $title", 'file_name' => $title . ' MOS');
 	$row_data = array();
-	$column_data = array("County", "Sub-County", "Facility Name", "Facility Code", "Item Name", "MOS");
+	$column_data = array("County", "Sub-County", "Facility Name", "Facility Code", "Item Name", "MOS(packs)");
 	$excel_data['column_data'] = $column_data;
 			 //echo '' ; exit;
 
@@ -779,7 +779,15 @@ public function stock_level_mos($county_id = null, $district_id = null, $facilit
 		
 		");
 
-
+	// echo "SELECT d.id,ct.county,sc.district,f.facility_code,
+	// 	f.facility_name,sum(fs.current_balance) as bal
+	// 	,sum(fs.current_balance)/d.total_commodity_units as packs,d.total_commodity_units,fs.batch_no,fs.expiry_date,d.commodity_name
+	// 	FROM hcmp_rtk.facility_stocks fs
+	// 	INNER JOIN facilities f ON  fs.facility_code=f.facility_code
+	// 	INNER JOIN commodities d ON  fs.commodity_id=d.id
+	// 	INNER JOIN districts sc ON  f.district=sc.id
+	// 	INNER JOIN counties ct ON  sc.county=ct.id
+	// 	$and_data AND fs.status=1 group by fs.batch_no order by ct.id asc";die;
 		/*echo'<table><tr>
 					<th>County</th>
 					<th>Sub-County</th>
@@ -846,12 +854,12 @@ public function stock_level_mos($county_id = null, $district_id = null, $facilit
 			$r_data[$counter]["facility_code"] = $key['facility_code'];
 			$r_data[$counter]["facility_name"] = $key['facility_name'];
 			$r_data[$counter]["commodity_name"] = $key['commodity_name'];
-			$r_data[$counter]["batch_no"] = $key['batch_no'];
-			$r_data[$counter]["expiry_date"] = $key['expiry_date'];
-			$r_data[$counter]["balance"] = $bal;
-			$r_data[$counter]["bal_packs"] = round($packs,2);
+			// $r_data[$counter]["batch_no"] = $key['batch_no'];
+			// $r_data[$counter]["expiry_date"] = $key['expiry_date'];
+			// $r_data[$counter]["balance"] = $bal;
+			// $r_data[$counter]["bal_packs"] = round($packs,2);
 			$r_data[$counter]["amc_packs"] = $amc_packs;
-			$r_data[$counter]["amc_units"] = round($packs/$amc_packs,2);
+			// $r_data[$counter]["amc_units"] = $key['bal'];
 
 			$counter = $counter + 1;
 		}
@@ -1139,7 +1147,7 @@ public function stock_level_mos($county_id = null, $district_id = null, $facilit
 		 	$facility_data = $this->db->query($sql)->result_array();
 			// array_push($final_array[0], "The below commodities were consumed $time");
 		 	$final_array[] = array("The below commodities were consumed $time",null,null,null);					
-		 	
+
 		 	foreach ($facility_data as $key => $value) {
 		 		$county = $value['county'];
 		 		$subcounty = $value['subcounty'];
