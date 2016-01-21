@@ -222,7 +222,8 @@ $("#find_patient").click(function() {
 	  var url = "<?php echo base_url()."dispensing/get_patient_detail";?>";      
 	  var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";      
    if(patient_number==""){
-		alert('Please make sure you have filled in all required  fields.');
+		// alert('Please make sure you have filled in all required  fields.');
+		swal("Incomplete Data!", "Kindly make sure you have filled in all required  fields");				
 		return;
 	}
 	$('#search_results').html("	");
@@ -533,7 +534,7 @@ $(".prescribed_units").on('keyup',function (){
         	// var input=parseInt($(this).closest("tr").find(".quantity_issued").val());
         	// alert(available);return;
         	if (input > available) {
-        		alert("Kindly input an amount less or equal to your available unit balance");
+        		// alert("Kindly input an amount less or equal to your available unit balance");
         		swal("Wrong Data!", "Kindly input an amount less or equal to your available unit balance");
         		$(".quantity_issued").val("0");
         	};
