@@ -271,21 +271,7 @@ class Dispensing extends MY_Controller {
 		}
 		
 		$totals_array = array('facility_code'=>$facility_code,'patient_id'=>$patient_id,'date_created'=>$date_created,'total'=>$total_price,'isdeleted'=>'1');
-		// echo "<pre>";
-		// print_r($totals_array);
-		/*
-		foreach ($commodity_id as $data) {
-		$info_array= array(
-			'patient_no'=> $patient_no,
-			'quantity'=> $quantity,
-			'commodity_id'=> $commodity_id
-			);	
-		}
-		*/
-		// array_push($info, $info_array);
-
-		// echo "<pre>";print_r($info);exit;
-
+		
 		$res = $this->db->insert_batch("dispensing_records",$info);
 		for ($i=1; $i <$id_count1; $i++) { 			
 			$quantity_sub = $quantity[$i];	
@@ -382,7 +368,7 @@ class Dispensing extends MY_Controller {
 						</tr>';
 					}
 			}else{
-				$result_table .= '<tr><td colspan="4"><b>There is no history on this patient</b></td></tr>';
+				$result_table .= '<tr><td><b>There is no history on this patient</b></td><td></td><td></td><td></td></tr>';
 			}
 		
 		$result_table.= '</tbody></table>';
@@ -391,7 +377,12 @@ class Dispensing extends MY_Controller {
 	}
 	public function consumption_ajax(){
 		$commodity_id = $this->input->post('commodity_id');
-		$consumption = facility_stocks::get_dispensing_consumption($commodity_id);
+		$from = $this->input->post('from');
+		$to = $this->input->post('to');
+
+		$to = ($to == "NULL" || !isset($to)) ? date('Y-m-d 23:59:59') : date('Y-m-d 23:59:59', strtotime(urldecode($to)));
+		$from = ($from == "NULL" || !isset($from)) ? date('Y-m-d 00:00:00') : date('Y-m-d 00:00:00', strtotime(urldecode($from)));
+		$consumption = facility_stocks::get_dispensing_consumption($commodity_id,$from,$to);
 		$result_table = "";
 		$result_table .= '
 		<table class="table table-bordered row-fluid datatable" id="ajax_commodity_table">
@@ -409,7 +400,7 @@ class Dispensing extends MY_Controller {
 						</tr>';
 					}
 			}else{
-				$result_table .= '<tr><td colspan="2"><b>There is no history on this patient</b></td></tr>';
+				$result_table .= '<tr><td><b>There is no consumption history on this Commodity</b></td><td>N/A</td></tr>';
 			}
 		
 		$result_table.= '</tbody></table>';

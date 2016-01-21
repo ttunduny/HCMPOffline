@@ -32,9 +32,12 @@ $county_id =$this -> session -> userdata('county_id');
 		<?php }
 
 		?>
-	</select>	
-	<button class="btn btn-primary" id="filter_consumption" style="float:left">
-		<span class="glyphicon glyphicon-search"></span>Find
+	</select>
+	<input type="text" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" id="from" placeholder="From">
+	<input type="text" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" id="to" placeholder="To">
+
+	<button class="btn btn-success" id="filter_consumption" style="float:left">
+		<span class="glyphicon glyphicon-search"></span>Filter
 	</button>
 </div>
 <div class="col-md-12">
@@ -78,12 +81,20 @@ $county_id =$this -> session -> userdata('county_id');
 		update_consumption_table(commodity_id);      
     });
 
-	function update_consumption_table(commodity_id){		
+	function update_consumption_table(commodity_id){
+		var from =$("#from").val();
+        var to =$("#to").val();
+
+        if(from==''){from="NULL";}
+        if(to==''){to="NULL";}
+			
+		from = encodeURI(from);
+		to = encodeURI(to);		
   		var url = "<?php echo base_url()."dispensing/consumption_ajax";?>";      
 		$.ajax({
         type: "POST",
         url: url,
-        data:{'commodity_id': commodity_id},       
+        data:{'commodity_id': commodity_id,'from':from,'to':to},       
         success: function(msg) {
         	// console.log(msg);return;
       	$('#graph_consumption').html(msg);
