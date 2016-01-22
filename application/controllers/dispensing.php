@@ -92,9 +92,18 @@ class Dispensing extends MY_Controller {
 		$service_point = 2;//hard coded for pharmacy,until requested for :]
 		$p_data = Patients::get_all();
 		$service_point_stock = facility_stocks::get_service_point_stocks($facility_code,$service_point);
-
+		$commodity_details = array();		
+		foreach ($service_point_stock as $key => $value) {
+			$commodity_id = $value['commodity_id'];
+			$current_balance = $value['current_balance'];
+			$commodity_name = $value['commodity_name'];
+			$commodity_details[] = array('commodity_id'=>$commodity_id,'commodity_name'=>$commodity_name,'current_balance'=>$current_balance);
+		}
+		// echo "<pre>";
+		// print_r($commodity_details);die;
 		// echo "<pre>";print_r($service_point_stock);exit;
 		$data['sp_commodities'] = $service_point_stock;
+		$data['raw_sp_commodities'] = json_encode($commodity_details);
 		// $p_data = Patients::get_patient_data();		
 		$data['patient_data'] = $p_data;
 		$facility_code = $this -> session -> userdata('facility_id');
@@ -239,46 +248,40 @@ class Dispensing extends MY_Controller {
 		$facility_code = $this -> session -> userdata('facility_id');		
 		$patient_id = $this->input->post("form_patient_id");
 		$quantity = $this->input->post("quantity");
-		$commodity_id = $this->input->post("id");
+		$commodity_id_main = $this->input->post("id");
 		$unit_price = $this->input->post("price");		
 		$date_created = date('Y-m-d',strtotime('NOW'));
-		$id_count = count($commodity_id) + 1;
-		// echo $id_count;exit;
+		$id_count = count($commodity_id_main) + 1;
+		$id_count1 = count($commodity_id_main) + 1;
+		// echo $id_count;//exit;
 		$info = array();
 		$total_price = 0;
-		for ($i=1; $i < $id_count; $i++) { 
+		for ($i=1; $i <$id_count; $i++) { 
 			$info_array= array(
 			'patient_id'=> $patient_id,
 			'facility_code'=> $facility_code,
 			'units_dispensed'=> $quantity[$i],
-			'commodity_id'=> $commodity_id[$i],
+			'commodity_id'=> $commodity_id_main[$i],
 			'unit_price'=> $unit_price[$i]
-			);	
+			);				
 			$interim_price = $quantity[$i]*$unit_price[$i];
 			$total_price+=$interim_price;
-		array_push($info, $info_array);
+			array_push($info, $info_array);
 
 		}
-
+		
 		$totals_array = array('facility_code'=>$facility_code,'patient_id'=>$patient_id,'date_created'=>$date_created,'total'=>$total_price,'isdeleted'=>'1');
-		// echo "<pre>";
-		// print_r($totals_array);
-		/*
-		foreach ($commodity_id as $data) {
-		$info_array= array(
-			'patient_no'=> $patient_no,
-			'quantity'=> $quantity,
-			'commodity_id'=> $commodity_id
-			);	
-		}
-		*/
-		// array_push($info, $info_array);
-
-		// echo "<pre>";print_r($info);exit;
-
+		
 		$res = $this->db->insert_batch("dispensing_records",$info);
+		for ($i=1; $i <$id_count1; $i++) { 			
+			$quantity_sub = $quantity[$i];	
+			$commodity_id = $commodity_id_main[$i];	
+			$facility_code = $facility_code;	
+			$sql = "update service_point_stocks set current_balance = (current_balance-$quantity_sub) where facility_code  = '$facility_code' and commodity_id = '$commodity_id' and service_point_id = '2'";								
+			$this->db->query($sql);
+		}		
 		$totals_db = $this->db->insert("dispensing_totals",$totals_array);
-		$this->issue();
+		redirect('dispensing/issue');
 		// echo $res;
 	}
 	/*REPORTS SECTION START*/
@@ -365,7 +368,7 @@ class Dispensing extends MY_Controller {
 						</tr>';
 					}
 			}else{
-				$result_table .= '<tr><td colspan="4"><b>There is no history on this patient</b></td></tr>';
+				$result_table .= '<tr><td><b>There is no history on this patient</b></td><td></td><td></td><td></td></tr>';
 			}
 		
 		$result_table.= '</tbody></table>';
@@ -374,7 +377,12 @@ class Dispensing extends MY_Controller {
 	}
 	public function consumption_ajax(){
 		$commodity_id = $this->input->post('commodity_id');
-		$consumption = facility_stocks::get_dispensing_consumption($commodity_id);
+		$from = $this->input->post('from');
+		$to = $this->input->post('to');
+
+		$to = ($to == "NULL" || !isset($to)) ? date('Y-m-d 23:59:59') : date('Y-m-d 23:59:59', strtotime(urldecode($to)));
+		$from = ($from == "NULL" || !isset($from)) ? date('Y-m-d 00:00:00') : date('Y-m-d 00:00:00', strtotime(urldecode($from)));
+		$consumption = facility_stocks::get_dispensing_consumption($commodity_id,$from,$to);
 		$result_table = "";
 		$result_table .= '
 		<table class="table table-bordered row-fluid datatable" id="ajax_commodity_table">
@@ -392,7 +400,7 @@ class Dispensing extends MY_Controller {
 						</tr>';
 					}
 			}else{
-				$result_table .= '<tr><td colspan="2"><b>There is no history on this patient</b></td></tr>';
+				$result_table .= '<tr><td><b>There is no consumption history on this Commodity</b></td><td>N/A</td></tr>';
 			}
 		
 		$result_table.= '</tbody></table>';
