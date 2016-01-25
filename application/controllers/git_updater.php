@@ -44,6 +44,7 @@ class Git_updater extends MY_Controller {
 	}
 
 	public function extract_and_copy_files(){
+		$success_status = array();
 		$hash = $this -> get_hash();
 
 		$unzip_status = $this->unzip->extract($hash.'.zip');
@@ -65,13 +66,14 @@ class Git_updater extends MY_Controller {
 			$squeaky = $this->array_cleaner($sanitized_directory,$ignored);
 			$extracted_path = $this->get_extracted_path();
 			// echo "<pre>";print_r($squeaky);
-			echo "<pre>";print_r($extracted_path);
-
+			// echo "<pre>";print_r($extracted_path);
 			$status = $this->copy_and_replace($squeaky,$extracted_path);
-			echo "<pre>";print_r($status);
+			// echo "<pre>";print_r($status);
 			// $set_hash = $this->github_updater->_set_config_hash($hash);
+			$success_status['extracted_path'] = $extracted_path;
+			$success_status['status'] = $status;
 
-			// return $status;
+			return $success_status;
 	}
 
 	public function ignored_files(){
@@ -140,8 +142,8 @@ class Git_updater extends MY_Controller {
 		$hash = $this->get_hash();
 		$res = $this->github_updater->get_commit_zip($hash);
 
-		echo "<pre>";print_r($res);
-		// return $res;
+		// echo "<pre>";print_r($res);
+		return $res;
 	}
 
 	public function admin_updates_home($update_status=NULL){
@@ -184,14 +186,22 @@ class Git_updater extends MY_Controller {
 		$hash = $this->get_hash();
 		$get_zip = $this->get_latest_zip();
 		$update_files = $this->extract_and_copy_files($hash);
-		$update_hash = $this->github_updater->_set_config_hash();
+		$update_hash = $this->set_latest_hash($hash);
+		$delete_residual_files = $this->delete_residuals();
 
-		// echo "Houston: ".$update_files;exit;
+		// echo "<pre>";print_r($update_files);exit;
 		// $this->admin_updates_home($update_status);
 	}
 
+	public function set_latest_hash($hash){
+		$hash_set = $this -> config -> item('current_commit',$hash);
+
+		return $hash_set;
+	}
+
 	public function tester(){
-		copy("C:/xampp/htdocs/HCMP-ALPHA/karsanrichard-HCMP-ALPHA-cad542a/README.md","C:/xampp/htdocs/HCMP-ALPHA/README.md");
+		// copy("C:/xampp/htdocs/HCMP-ALPHA/karsanrichard-HCMP-ALPHA-cad542a/README.md","C:/xampp/htdocs/HCMP-ALPHA/README.md");
+		// echo FCPATH;
 	}
 
 	public function copy($src,$dest){
