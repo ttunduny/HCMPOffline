@@ -2640,7 +2640,7 @@ public function log_summary_weekly_view(){
 			"Days From Added Stock");
 		$data['column_data'] = $column_data;
 		$data['row_data'] = $row_data;
-		$data['title'] = "Weekly Log Summary";
+		$data['title'] = "System Usage";
 		$data['content_view'] = "Admin/log_summary_v";
 		$data['banner_text'] = "Weekly Log Summary";
 
