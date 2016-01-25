@@ -592,7 +592,7 @@ class Facilities extends Doctrine_Record {
 			        AND f.date_of_activation < '$start_date'
 			        AND l.end_time_of_event BETWEEN '$start_date' AND '$last_date'
 			        AND l.action = 'Logged Out'
-			group by f.facility_code,l.user_id,DAYOFMONTH(l.end_time_of_event) HAVING count(l.end_time_of_event) >='$number'");
+			group by f.facility_code,l.user_id,DAY(l.end_time_of_event) HAVING count(l.end_time_of_event) >='$number'");
 
 		return $data;
 	}
@@ -636,7 +636,7 @@ class Facilities extends Doctrine_Record {
 				        AND l.end_time_of_event BETWEEN '$start_date' AND '$last_date'
 				        AND l.action = 'Logged Out'
 				        AND l.issued = '1'
-				group by f.facility_code,l.user_id,DAYOFMONTH(l.end_time_of_event) HAVING count(l.end_time_of_event) >='$number'");
+				group by f.facility_code,l.user_id,DAY(l.end_time_of_event) HAVING count(l.end_time_of_event) >='$number'");
 		return $data;
 	}
 	public function get_facilities_not_logged_in_month($start_date,$last_date){	

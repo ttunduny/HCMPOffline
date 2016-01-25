@@ -3733,7 +3733,6 @@ class Reports extends MY_Controller {
 		 			$county_id = $this -> session -> userdata('county_id');
 		 			$data['district_data'] = districts::getDistrict($county_id);
 		 			$data['c_data'] = Commodities::get_all_2();
-		 			$data['access_level'] =$this -> session -> userdata('access_level');
 		 			$data['tracer_items'] = Commodities::get_tracer_items();
 		 			$data['categories'] = commodity_sub_category::get_all_pharm();
 		 			return $this -> load -> view("subcounty/ajax/new_county_consumption_data_filter_v", $data);
