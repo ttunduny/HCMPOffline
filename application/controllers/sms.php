@@ -2367,9 +2367,9 @@ public function new_weekly_usage($year=null,$month=null){
 	$data['year'] = $year;
 	$data['month'] = $month;
 	$data['month_text'] = $month_text;
-	$data['title'] = "Weekly Log Summary";
+	$data['title'] = "System Usage";
 	$data['content_view'] = "Admin/new_log_summary_v";
-	$data['banner_text'] = "Monthly Log Summary";	
+	$data['banner_text'] = "System Usage";	
 	$start_date = $year.'-'.$month.'-01';
 	$end_date = $year.'-'.$month.'-31';		
 	$logged_within_month = Facilities::get_facilities_logged_in_month($start_date,$end_date);
