@@ -2642,7 +2642,7 @@ public function log_summary_weekly_view(){
 		$data['row_data'] = $row_data;
 		$data['title'] = "System Usage";
 		$data['content_view'] = "Admin/log_summary_v";
-		$data['banner_text'] = "Weekly Log Summary";
+		$data['banner_text'] = "System Usage";
 
 
 		$this -> load -> view("shared_files/template/dashboard_v", $data);
@@ -3202,7 +3202,7 @@ public function log_summary_weekly_view(){
 	</table><!-- /BODY -->";	
 
 	$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-	$subject = "Weekly Log Summary as at ".$time;
+	$subject = "System Usage as at ".$time;
 
 	$email_address = "smutheu@clintonhealthaccess.org,jaynerawz@gmail.com,karsanrichard@gmail.com,ttunduny@gmail.com";
 						// $email_address = "karsanrichard@gmail.com,ttunduny@gmail.com";
