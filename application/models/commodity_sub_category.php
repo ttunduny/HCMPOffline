@@ -27,6 +27,8 @@ class commodity_sub_category extends Doctrine_Record {
 		$commodities = $query -> execute();
 		return $commodities;
 	}
+
+	
 	
 	
 

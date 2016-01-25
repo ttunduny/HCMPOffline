@@ -1,6 +1,6 @@
 <div class="panel-group " id="accordion" style="padding: 0;">
 	<!--Consumption Reports-->
-	<div class="panel panel-default <?php echo $active_panel=='consumption'? 'active-panel': null; ?>">
+	<div class="panel panel-default <?php echo $active_panel=='patient_history'? 'active-panel': null; ?>">
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a  data-parent="#accordion" id="patient_history" href="<?php echo base_url("dispensing/patient_history"); ?>"><span class="glyphicon glyphicon-bookmark">
@@ -39,6 +39,14 @@
 
             </div>
         </div> -->
+    </div>
+    <div class="panel panel-default <?php echo $active_panel=='malaria'? 'active-panel': null; ?>">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a  data-parent="#accordion" id="malaria_commodities" href="<?php echo base_url("dispensing/malaria_commodities"); ?>"><span class="glyphicon glyphicon-bookmark">
+                </span>Commodities by Catgory</a>
+            </h4>
+        </div>
     </div>
     <!--Program Reports Accordion-->
    <!--  <div class="panel panel-default <?php echo $active_panel=='divisional'? 'active-panel': null; ?>">

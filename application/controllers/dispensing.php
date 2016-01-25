@@ -309,7 +309,7 @@ class Dispensing extends MY_Controller {
 			$data['report_view'] = "facility/facility_dispensing/patient_history_report";
 			$data['content_view'] = "facility/facility_reports/reports_v";
 			$view = 'shared_files/template/template';
-			$data['active_panel'] = 'consumption';
+			$data['active_panel'] = 'patient_history';
 
 		$this -> load -> view($view, $data);	
 	}
@@ -328,26 +328,27 @@ class Dispensing extends MY_Controller {
 		$this -> load -> view($view, $data);	
 	}
 
+
+	public function malaria_commodities(){
+			$facility_code = $this -> session -> userdata('facility_id');
+			$data['title'] = "Category Commodities Reports";
+			$data['banner_text'] = "Facility Commodity Consumption by Category";
+			// $data['commodities'] = Commodities::get_facility_commodities($facility_code);
+			$data['categories'] = commodity_sub_category::get_all_pharm();
+			$data['sidebar'] = "facility/facility_dispensing/dispensing_side_bar_v";
+			$data['report_view'] = "facility/facility_dispensing/malaria_consumption_report";
+			$data['content_view'] = "facility/facility_reports/reports_v";
+			$view = 'shared_files/template/template';
+			$data['active_panel'] = 'malaria';
+
+		$this -> load -> view($view, $data);	
+	}
+
 	public function patient_history_ajax(){
 		$patient_id = $this->input->post('patient_id');
 		$patient_details = Patients::get_patient_history($patient_id);
-
-		// echo "<pre>";print_r($patient_details);
-		/*$p_dets = array();
-		foreach ($patient_details as $key => $value) {
-			$id = $value['id'];
-			$firstname = $value['firstname'];
-			$lastname = $value['lastname'];
-			$date_of_birth = $value['date_of_birth'];
-			$date_of_birth_string = date('F, m Y', strtotime($date_of_birth));
-			$gender = $value['gender'];
-			$name = $firstname.' '.$lastname;			
-			$gender = ($gender=='1') ? 'Male' : 'Female';
-			$name_and_number = $name .' | '.$patient_number;
-			$p_dets[] = array($patient_number,$name,$gender,$date_of_birth_string,$name_and_number,$id);
-		}
-		echo json_encode($p_dets[0]);*/
 		$result_table = "";
+		$total = 0;
 		$result_table .= '
 		<table class="table table-bordered row-fluid datatable" id="ajax_history_table">
 			<thead>
@@ -360,6 +361,7 @@ class Dispensing extends MY_Controller {
 			<tbody>';
 			if (count($patient_details) > 0 ) {
 				foreach ($patient_details as $data) {
+					$total+= intval($data['units_dispensed']);
 					$result_table .='<tr>
 						<td>'.$data['firstname'].' '.$data['lastname'].'</td>
 						<td>'.$data['commodity_name'].'</td>
@@ -370,19 +372,20 @@ class Dispensing extends MY_Controller {
 			}else{
 				$result_table .= '<tr><td><b>There is no history on this patient</b></td><td></td><td></td><td></td></tr>';
 			}
+			$result_table.='<tr><td>--</td><td><b>Total:</b></td><td><b>'.$total.'</b></td><td></td></tr>';
 		
 		$result_table.= '</tbody></table>';
 
 		echo $result_table;
 	}
-	public function consumption_ajax(){
+	public function consumption_ajax($sub_category = null){
 		$commodity_id = $this->input->post('commodity_id');
 		$from = $this->input->post('from');
 		$to = $this->input->post('to');
-
+		$total = 0;		
 		$to = ($to == "NULL" || !isset($to)) ? date('Y-m-d 23:59:59') : date('Y-m-d 23:59:59', strtotime(urldecode($to)));
 		$from = ($from == "NULL" || !isset($from)) ? date('Y-m-d 00:00:00') : date('Y-m-d 00:00:00', strtotime(urldecode($from)));
-		$consumption = facility_stocks::get_dispensing_consumption($commodity_id,$from,$to);
+		$consumption = facility_stocks::get_dispensing_consumption($commodity_id,$from,$to,$sub_category);
 		$result_table = "";
 		$result_table .= '
 		<table class="table table-bordered row-fluid datatable" id="ajax_commodity_table">
@@ -394,6 +397,7 @@ class Dispensing extends MY_Controller {
 			<tbody>';
 			if (count($consumption) > 0 ) {
 				foreach ($consumption as $data) {
+					$total+= intval($data['total']);
 					$result_table .='<tr>						
 						<td>'.$data['commodity'].'</td>
 						<td>'.$data['total'].'</td>						
@@ -402,7 +406,7 @@ class Dispensing extends MY_Controller {
 			}else{
 				$result_table .= '<tr><td><b>There is no consumption history on this Commodity</b></td><td>N/A</td></tr>';
 			}
-		
+		$result_table.='<tr><td><b>Total:</b></td><td><b>'.$total.'</b></td></tr>';
 		$result_table.= '</tbody></table>';
 
 		echo $result_table;

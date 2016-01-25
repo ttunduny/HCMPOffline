@@ -516,8 +516,7 @@ class Facilities extends Doctrine_Record {
 		
 	}
 
-	public function get_facilities_logged_in_month($start_date,$last_date,$issued=null){
-		
+	public function get_facilities_logged_in_month($start_date,$last_date,$issued=null){		
 		$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT
 				    f.facility_code, f.facility_name, d.district, c.county
 				FROM
@@ -615,23 +614,39 @@ class Facilities extends Doctrine_Record {
 		return $data;
 	}
 	public function get_facilities_not_logged_in_month($start_date,$last_date){
+		// $data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT
+		// 	    f.facility_code,f.facility_name, d.district, c.county
+		// 	FROM
+		// 	    facilities f,
+		// 	    districts d,
+		// 	    counties c,
+		// 	    user u,
+		// 	    log l
+		// 	WHERE
+		// 	    u.usertype_id = '5'
+		// 	        AND f.facility_code = u.facility
+		// 	        and f.using_hcmp = '1'
+		// 	        AND f.date_of_activation < '$start_date'
+		// 	        AND d.id = f.district
+		// 	        AND c.id = d.county
+		// 	        AND u.id not in 
+		// 	        (select ll.user_id from log ll where ll.end_time_of_event BETWEEN '$start_date' AND '$last_date' AND ll.action = 'Logged Out') LIMIT 0,50");
 		$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT
-			    f.facility_code,f.facility_name, d.district, c.county
-			FROM
-			    facilities f,
-			    districts d,
-			    counties c,
-			    user u,
-			    log l
-			WHERE
-			    u.usertype_id = '5'
-			        AND f.facility_code = u.facility
-			        and f.using_hcmp = '1'
-			        AND f.date_of_activation < '$start_date'
-			        AND d.id = f.district
-			        AND c.id = d.county
-			        AND u.id not in 
-			        (select ll.user_id from log ll where ll.end_time_of_event BETWEEN '$start_date' AND '$last_date' AND ll.action = 'Logged Out') LIMIT 0,50");
+				    f.facility_code, f.facility_name, d.district, c.county
+				FROM
+				    facilities f,
+				    districts d,
+				    counties c,
+				    user u
+				WHERE
+				    u.usertype_id = '5'
+				        AND f.facility_code = u.facility
+				        AND f.using_hcmp = '1'
+				        AND f.date_of_activation < '$start_date'
+				        AND d.id = f.district
+				        AND c.id = d.county                
+				        and u.id not in (select distinct l.user_id from log l where l.end_time_of_event BETWEEN '$start_date' AND '$last_date' AND l.action = 'Logged Out' )
+				GROUP BY u.facility");
 		return $data;
 	}
 	public function get_facilities_not_issued_in_month($start_date,$last_date){

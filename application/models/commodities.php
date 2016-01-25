@@ -172,6 +172,7 @@ return $inserttransaction;
               
   return $inserttransaction;
 	}// set up the facility stock here
+	
 	public static function set_facility_stock_data_amc($facility_code){
 
 // 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()

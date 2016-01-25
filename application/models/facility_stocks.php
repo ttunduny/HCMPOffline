@@ -1467,10 +1467,13 @@ class Facility_stocks extends Doctrine_Record {
 		return $inserttransaction;
 	}
 
-	public function get_dispensing_consumption($commodity_id=null,$from,$to){
+	public function get_dispensing_consumption($commodity_id=null,$from,$to,$subcategory = null){
 		$filter = '';
 		if($commodity_id!=null){
 			$filter = "and c.id = '$commodity_id'";
+		}
+		if($subcategory!=null){
+			$filter.= "and c.commodity_sub_category_id = '$subcategory'";
 		}
 		$sql = "select ifnull(sum(dr.units_dispensed),0) AS total,c.commodity_name as commodity from dispensing_records dr, commodities c 
 		where dr.commodity_id = c.id $filter and date_created between '$from' and '$to' GROUP BY c.id";		
