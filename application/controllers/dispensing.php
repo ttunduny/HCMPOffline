@@ -100,8 +100,10 @@ class Dispensing extends MY_Controller {
 			$commodity_details[] = array('commodity_id'=>$commodity_id,'commodity_name'=>$commodity_name,'current_balance'=>$current_balance);
 		}
 		// echo "<pre>";
-		// print_r($commodity_details);die;
-		// echo "<pre>";print_r($service_point_stock);exit;
+		// print_r($commodity_details);
+		// echo "<pre>";
+		// print_r($service_point_stock);
+		// exit;
 		$data['sp_commodities'] = $service_point_stock;
 		$data['raw_sp_commodities'] = json_encode($commodity_details);
 		// $p_data = Patients::get_patient_data();		
@@ -415,6 +417,19 @@ class Dispensing extends MY_Controller {
 
 		// echo $deletion;
 		$this-> patients();
+	}
+
+
+	public function facility_stock_pricing(){
+		$facility_code = $this -> session -> userdata('facility_id');
+		$data['title'] = "Manage Stock Pricing";
+		$data['content_view'] = 'facility/facility_dispensing/facility_stock_prices';
+		$data['banner_text'] = "Manage Stock Pricing";
+		$data['commodities'] = Commodities::get_facility_commodities($facility_code);
+		$data['commodity_source'] = commodity_source::get_all();
+		$data['source_names'] = commodity_source::get_all_other_source_names();
+		$data['import'] = $import;
+		$this -> load -> view("shared_files/template/template", $data);
 	}
 
 	}//end of dispense class

@@ -3311,7 +3311,7 @@ class Reports extends MY_Controller {
 			$data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);
 			$data['table_id'] = "graph_default";
 			return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
-<<<<<<< HEAD
+
 			
 		// $graph_type = 'bar';
 		// $graph_data = array_merge($graph_data, array("graph_id" => 'default_graph_'));
@@ -3324,8 +3324,7 @@ class Reports extends MY_Controller {
 		// $data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
 		// // echo "<pre>";print_r($data['high_graph']);echo "</pre>";exit;
 		// return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);//karsan
-=======
-			*/
+
 			$graph_type = 'column';
 			$graph_data = array_merge($graph_data, array("graph_id" => 'default_graph_'));
 			$graph_data = array_merge($graph_data, array("graph_title" => "Stock Level $commodity_name for $title as at $month_ $year"));
@@ -3337,7 +3336,7 @@ class Reports extends MY_Controller {
 			$data['high_graph'] = $this -> hcmp_functions -> create_high_chart_graph($graph_data);
 		// echo "<pre>";print_r($data['high_graph']);echo "</pre>";exit;
 		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);//karsan
->>>>>>> 02b6c5ec4f7fc7583751c28b4364c3e9f146123f
+
 		else :
 			$graph_type = 'bar';
 		$graph_data = array_merge($graph_data, array("graph_id" => 'default_graph_'));
@@ -3553,6 +3552,10 @@ class Reports extends MY_Controller {
 		 return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		 endif;
 		}
+		
+
+
+		
 		public function get_division_commodities_data($district_id = null, $facility_code = null, $division_id = null, $option = null, $report_type = null) {
 		//reset the values here
 		// echo $report_type;exit;
@@ -3583,18 +3586,6 @@ class Reports extends MY_Controller {
 			$title = isset($facility_code) && isset($district_id) ? "$district_name_ : $facility_name" : (isset($district_id) && !isset($facility_code) ? "$district_name_" : "$county_name[county] county");
 			$commodity_array = facility_stocks::get_county_drug_stock_level_new($facility_code, $district_id, $county_id, $category_id, $commodity_id, $option_new, $report_type, $division_id);
 		// echo $facility_code." Dist: ". $district_id." Cty:". $county_id." Cat:".$category_id." Comm:". $commodity_id." Optn:". $option_new." Rpt typ:". $report_type." Div id:".$division_id;exit;
-<<<<<<< HEAD
-		foreach ($commodity_array as $data) :
-			if ($report_type == "table_data") :
-				if ($division_id > 0) :
-					array_push($series_data, array($data['district'], $data["commodity_name"], $data["facility_name"], $data["facility_code"], (int)$data['total']));
-				else :
-					array_push($series_data, array($data["name"], (int)$data['total']));
-				endif;
-				//echo "<pre>";print_r($series_data);echo "</pre>";exit;
-			else :
-				
-=======
 			foreach ($commodity_array as $data) :
 				if ($report_type == "table_data") :
 					if ($division_id > 0) :
@@ -3603,7 +3594,6 @@ class Reports extends MY_Controller {
 						array_push($series_data, array($data["name"], (int)$data['total']));
 					endif;
 					else :
->>>>>>> 02b6c5ec4f7fc7583751c28b4364c3e9f146123f
 				//$series_data_  = array_merge($series_data_ , array(array($data['district'],$data["facility_name"],$data["facility_code"],$data["commodity_name"],(int)$data['total'])));
 						$series_data = array_merge($series_data, array($data["name"] => (int)$data['total']));
 					$series_data_ = array_merge($series_data_, array( array($data["name"], $data["facility_name"], $data["commodity_name"], (int)$data['total'])));
@@ -3624,24 +3614,6 @@ class Reports extends MY_Controller {
 		 //echo "<pre>"; print_r($commodity_array);echo "</pre>";
 		 //echo "<pre>"; print_r($series_data);echo "</pre>";
 		 //echo "<pre>";print_r($category_data);echo "</pre>";exit;*/
-<<<<<<< HEAD
-
-		 //echo "<pre>";print_r($series_data);echo "</pre>";exit;
-		if ($report_type == "table_data") :
-			if ($division_id > 0) :
-				$category_data = array( array("Sub-county", "Facility Name", "Mfl", "TOTAL " . $option_new));
-			else :
-				array_push($category_data, array("Stock level $commodity_name $title $month_ $year", "stocks worth in $option_new"));
-			endif;
-			//echo "<pre>";print_r($category_data);echo "</pre>";exit;
-			$graph_data = array_merge($graph_data, array("table_id" => 'dem_graph_'));
-			$graph_data = array_merge($graph_data, array("table_header" => $category_data));
-			$graph_data = array_merge($graph_data, array("table_body" => $series_data));
-			$data['table'] = $this -> hcmp_functions -> create_data_table($graph_data);
-			$data['table_id'] = "dem_graph_";
-			return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
-		elseif ($report_type == "csv_data") :
-=======
 		 if ($report_type == "table_data") :
 		 	if ($division_id > 0) :
 		 		$category_data = array( array("Sub-county", "Facility Name", "Mfl", "TOTAL " . $option_new));
@@ -3655,7 +3627,6 @@ class Reports extends MY_Controller {
 		 	$data['table_id'] = "dem_graph_";
 		 	return $this -> load -> view("shared_files/report_templates/data_table_template_v", $data);
 		 	elseif ($report_type == "csv_data") :
->>>>>>> 02b6c5ec4f7fc7583751c28b4364c3e9f146123f
 			//echo "<pre>";print_r($series_data);echo "</pre>";exit;
 		 		$excel_data = array('doc_creator' => $this -> session -> userdata('full_name'), 'doc_title' => "Stock level $commodity_name $title $month_ $year", 'file_name' => "Stock_level_$commodity_name_$title_$month_$year");
 		 	$row_data = array();
@@ -3676,6 +3647,7 @@ class Reports extends MY_Controller {
 		 	return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
 		 	endif;
 		 }
+		 
 		 public function consumption_data_dashboard($commodity_id = null, $district_id = null, $facility_code = null, $option = null, $from = null, $to = null, $graph_type = null, $tracer = null) {
 		//reset the values here
 		 	switch ($option) :

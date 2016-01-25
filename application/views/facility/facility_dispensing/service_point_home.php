@@ -112,6 +112,9 @@
 								<div style="height: auto; margin-bottom: 2px; " class="distribute message">
 									<a href="<?php echo base_url('dispensing/patient_history'); ?>"><h5>Reports</h5></a>
 								</div>
+								<div style="height: auto; margin-bottom: 2px; " class="distribute message">
+									<a href="<?php echo base_url('dispensing/facility_stock_pricing'); ?>"><h5>Manage Facility Stock Prices</h5></a>
+								</div>
 								<?php endif; ?>
 					</div>
 				</div>
