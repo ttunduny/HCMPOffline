@@ -52,7 +52,7 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a  data-parent="#accordion" id="malaria_commodities" href="<?php echo base_url("dispensing/malaria_commodities"); ?>"><span class="glyphicon glyphicon-bookmark">
-                </span>Commodities by Catgory</a>
+                </span>Commodities by Category</a>
             </h4>
         </div>
     </div>
