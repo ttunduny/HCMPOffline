@@ -58,7 +58,7 @@
       <div class="row " style="min-height:300px; overflow: auto;"><div class="col-md-12">
     
         <?php $att = array("name" => 'myform', 'id' => 'myform');
-        echo form_open('stock/add_stock_level', $att);
+        echo form_open('dispensing/add_stock_price', $att);
  ?>
  <input type="hidden" name="form_type" value="first_run" />
         <table  class="table table-hover table-bordered table-update table-responsive"  id="facility_stock_table">
@@ -74,7 +74,7 @@
                     <th> Price</th>
                     <!-- <th> Manufacturer</th>
                     <th> Expiry Date</th> -->
-                    <th> Issue Type</th>
+                    <th> Price Per</th>
                     <!-- <th> Stock Level</th>
                     <th> Total (Units)</th> -->
                     <th> Options</th>
@@ -97,7 +97,7 @@
                                 $source_id =$commodities['supplier_id'];
                           
                                 echo "<option special_data='" . $id . "^" . $name . "^" . $commodity_code . "^" . $unit_size . "^" . $total_units ."^" . $source_id . "' 
-                                value='$id'>" . $commodities_name ." (".$name.")". "</option>";
+                                value='$commodities_name'>" . $commodities_name ." (".$name.")". "</option>";
                             }
                         ?>
                     </select></td>
@@ -139,8 +139,8 @@
                     </td> -->
                     <td>
                     <select style="width:100px !important;" name="commodity_unit_of_issue[]" class="form-control commodity_unit_of_issue input-small">
-                        <option value="Pack_Size">Packs</option>
-                        <option value="Unit_Size">Units</option>
+                        <option value="Pack">Pack</option>
+                        <option value="Unit">Unit</option>
                     </select></td>
                     <!-- <td>
                     <input style="width:60px !important;" id='commodity_available_stock' name='commodity_available_stock[]'
@@ -196,8 +196,8 @@
    <script type="text/javascript">
         $(document).ready(function() {
             window.onbeforeunload = function() {
-        return "Are you sure you want to leave?";
-    }
+            return "Are you sure you want to leave?";
+        }
    
             changeHashOnLoad();
 
@@ -205,9 +205,9 @@
                // alert();
          swal({  
 
-                  title: "Step 2 of 2",  
-                   text: "Please select a commodity & fills the stock level.",
-                     type: "info"
+                  // title: "Step 2 of 2",  
+                  //  text: "Please select a commodity & fills the stock level.",
+                  //    type: "info"
 
                      });
 
@@ -369,8 +369,8 @@
             ajax_simple_post_with_console_response(url, temp_data[0]);  /// uncomment this
             }
             clone_the_last_row_of_the_table();
-            $(".price").attr('disabled',true);            
-            $(".new_source_name").attr('disabled',true);
+            //$(".price").attr('disabled',true);            
+            //$(".new_source_name").attr('disabled',true);
             });
             $('.commodity_available_stock').on('keyup',function(){
             //get the value of the input
@@ -477,21 +477,21 @@
 
            var html_data='<style>.sweet-alert{width:60%;left:40%}</style><div style="max-height:300px;overflow-y:auto"><table class="table table-hover table-bordered table-update">'+
                     "<thead><tr>"+
-                    "<th>Description</th>"+
-                    "<th>Batch No</th>"+
-                    "<th>Quantity(Units)</th>"+
+                    "<th>Commodity Name</th>"+
+                    "<th>Price</th>"+
+                    "<th>Price Per</th>"+
                     "</tr></thead><tbody>";                       
-        $("input[name^=commodity_available_stock]").each(function(i) { 
+        $("input[name^=price]").each(function(i) { 
             //$(document).each('','input[name^=cost]', function (i){
          var commodity_name=$(this).closest("tr").find("#desc :selected").text()
-         var batchn=$(this).closest("tr").find(".commodity_batch_no").val()
-         var total_units=$(this).closest("tr").find(".commodity_total_units").val()
+         var price=$(this).closest("tr").find(".price").val()
+         var price_per=$(this).closest("tr").find(".commodity_unit_of_issue").val()
          //alert(C_name);
          //return;
         html_data +="<tr>" +
                             "<td>" +commodity_name+ "</td>" +
-                            "<td>" +batchn+ "</td>" +
-                            "<td>" +total_units+ "</td>" +   
+                            "<td>" +price+ "</td>" +
+                            "<td>" +price_per+ "</td>" +   
                                                                               
                         "</tr>" 
                     });

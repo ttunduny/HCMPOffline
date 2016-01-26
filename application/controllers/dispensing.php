@@ -432,5 +432,23 @@ class Dispensing extends MY_Controller {
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 
-	}//end of dispense class
+	public function add_stock_price(){
+		if($this -> input -> post('commodity_id')){
+			// echo "<pre>"; print_r($_POST); echo "</pre>"; die;
+			$commodity_id = array_values($this -> input -> post('commodity_id'));
+			$facility_code = $this -> session -> userdata('facility_id');
+			$commodity_name = array_values($this -> input -> post('desc'));
+			$price = array_values($this -> input -> post('price'));
+			$price_per = array_values($this -> input -> post('commodity_unit_of_issue'));
+			$count = count($commodity_id);
+			for($i = 0; $i < $count; $i++){
+				$price_data = array('facility_code' => $facility_code, 'commodity_id' => $commodity_id[$i], 'commodity_name' => $commodity_name[$i], 'price' => $price[$i], 'price_per' => $price_per[$i]);
+				// echo "<pre>"; print_r($price_data); echo "</pre>"; die;
+				dispensing_prices::save_prices($price_data);
+			}
+		}
+		redirect('dispensing/facility_stock_pricing');
+	}
+
+	}//end of dispense class''
 ?>
