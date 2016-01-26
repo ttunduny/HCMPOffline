@@ -17,21 +17,24 @@ class Dispensing extends MY_Controller {
 		// echo "<pre>";print_r($graph_data);exit;
 		$data['service_point_dashboard_notifications'] = $graph_data;
 		$facility_code = $this -> session -> userdata('facility_id');
+		$service_point_stock = facility_stocks::get_service_point_stocks($facility_code,$service_point);
+		
 		$data['banner_text'] = "Pharmacy";
-		$data['sidebar'] = "facility/facility_dispensing/sidebar_dispensing";
+		// $data['sidebar'] = "facility/facility_dispensing/sidebar_dispensing";
 		// $data['report_view'] = "facility/facility_dispensing/dispensing_home_v";
 		// $commodities = Commodities::get_all();
 		$data['content_view'] = "facility/facility_dispensing/service_point_home";
 		$view = 'shared_files/template/template';
 		$data['active_panel'] = 'dispensing';
 		$data['title'] = "Dispensing";
+		$data['service_point_stock'] = $service_point_stock;
 
-		$patients = patients::get_all();
-		$commodities_in_facility = facility_stocks::get_facility_stock_amc($facility_code);
-		$data['commodities'] = 	$commodities_in_facility;
+		// $patients = patients::get_all();
+		// $commodities_in_facility = facility_stocks::get_facility_stock_amc($facility_code);
+		// $data['commodities'] = 	$commodities_in_facility;
 		// echo "<pre>";print_r($commodities_in_facility);exit;
 
-		$data['patients'] = $patients;
+		// $data['patients'] = $patients;
 		$this -> load -> view($view, $data);		
 	}
 	public function get_patient_data(){
@@ -87,17 +90,27 @@ class Dispensing extends MY_Controller {
 		$this->load->view($view,$data);
 	}
 
+
+	public function setup_commodities(){
+		$facility_code = $this -> session -> userdata('facility_id');
+		$data['title'] = "Dispensing - Set up Service Point stock";
+		$data['content_view'] = "facility/facility_dispensing/setup_facility_stock_v";
+		$data['banner_text'] = "Set up service point stock";
+		$data['commodities'] = commodities::set_facility_service_data($facility_code,2);
+		$this -> load -> view("shared_files/template/template", $data);
+	}
 	public function issue(){
 		$facility_code = $this -> session -> userdata('facility_id');
 		$service_point = 2;//hard coded for pharmacy,until requested for :]
 		$p_data = Patients::get_all();
-		$service_point_stock = facility_stocks::get_service_point_stocks($facility_code,$service_point);
+		$service_point_stock = facility_stocks::get_service_point_stocks($facility_code,$service_point);		
 		$commodity_details = array();		
 		foreach ($service_point_stock as $key => $value) {
 			$commodity_id = $value['commodity_id'];
 			$current_balance = $value['current_balance'];
 			$commodity_name = $value['commodity_name'];
-			$commodity_details[] = array('commodity_id'=>$commodity_id,'commodity_name'=>$commodity_name,'current_balance'=>$current_balance);
+			$price = $value['price'];
+			$commodity_details[] = array('commodity_id'=>$commodity_id,'commodity_name'=>$commodity_name,'current_balance'=>$current_balance,'price'=>$price);
 		}
 		// echo "<pre>";
 		// print_r($commodity_details);die;
@@ -147,6 +160,7 @@ class Dispensing extends MY_Controller {
 
 			$patients = Patients::save_patient($data_array,$patient_number,$date_created,$facility_code);			
 		}
+		$this->session->set_flashdata('system_success_message', 'Patients added successfully');
 		redirect('dispensing/patients');
 		
 	}
@@ -281,6 +295,7 @@ class Dispensing extends MY_Controller {
 			$this->db->query($sql);
 		}		
 		$totals_db = $this->db->insert("dispensing_totals",$totals_array);
+		$this->session->set_flashdata('system_success_message', 'Commodity Dispensed Successfully');
 		redirect('dispensing/issue');
 		// echo $res;
 	}
@@ -420,6 +435,26 @@ class Dispensing extends MY_Controller {
 		// echo $deletion;
 		$this-> patients();
 	}
+
+	public function update_service_point_prices() {
+		//security check
+		$facility_code = $this -> session -> userdata('facility_id');
+		$service_point = 2;
+		$commodity_id = $this->input->post('commodity_id');
+		$price = $this->input->post('price');
+		$count = count($commodity_id);
+		for ($i=0; $i <$count ; $i++) { 
+			$c_id = $commodity_id[$i];
+			$c_price = $price[$i];
+			$insert = Doctrine_Manager::getInstance() -> getCurrentConnection();
+			$insert -> execute("update service_point_stocks set price='$c_price' where facility_code='$facility_code' AND service_point_id='$service_point' AND commodity_id='$c_id'");
+		}
+		
+		$this->session->set_flashdata('system_success_message', 'The Commodity Prices have been Updated');
+		redirect('dispensing');
+		
+	}
+
 
 	}//end of dispense class
 ?>

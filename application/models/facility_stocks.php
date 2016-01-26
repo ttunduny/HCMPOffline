@@ -1697,6 +1697,7 @@ class Facility_stocks extends Doctrine_Record {
 			    sp.facility_code,
 			    sp.service_point_id,
 			    sp.commodity_id,
+			    sp.price,
 				c.commodity_name,
 				c.total_commodity_units,
 			    sp.current_balance,
