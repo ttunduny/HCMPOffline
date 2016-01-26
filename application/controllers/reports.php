@@ -3773,7 +3773,7 @@ class Reports extends MY_Controller {
 	}
 	public function consumption_stats_graph($commodity_id = null, $category_id = null, $district_id = null, $facility_code = null, $option = null, $from = null, $to = null, $report_type = null,$tracer=null) {
 		//reset the values here
-		// echo $report_type;exit;
+		// echo $from." ".$to;exit;        
 		$commodity_id = ($commodity_id == "NULL") ? null : $commodity_id;
 		$district_id = (isset($district_id) && ($district_id)) ? $district_id : $this -> session -> userdata('district_id');
 		//$district_id = ($district_id=="NULL") ? null :$district_id;
@@ -3812,7 +3812,7 @@ class Reports extends MY_Controller {
 				else :
 					$series_data = array_merge($series_data, array((int)$data['total']));
 				$series_data_ = array_merge($series_data_, array( array($data["district"], $data["facility_name"], $data['commodity_name'], (int)$data['total'])));
-				$category_data = array_merge($category_data, array($data["name"]));
+				$category_data = array_merge($category_data, array($data["commodity"]));
 				endif;
 			//
 				endforeach;

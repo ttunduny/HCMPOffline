@@ -172,6 +172,7 @@ return $inserttransaction;
               
   return $inserttransaction;
 	}// set up the facility stock here
+	
 	public static function set_facility_stock_data_amc($facility_code){
 
 // 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
@@ -192,6 +193,16 @@ return $inserttransaction;
 				FROM  commodities c  LEFT JOIN  facility_monthly_stock f_m_s ON f_m_s.commodity_id = c.id AND f_m_s.facility_code = $facility_code 
 				LEFT JOIN   commodity_sub_category c_s_c ON c.commodity_sub_category_id = c_s_c.id,commodity_source c_s	
 				WHERE  c.status = 1  AND c.commodity_source_id = c_s.id"); 
+
+return $inserttransaction;	
+	}
+
+	public static function set_facility_service_data($facility_code,$service_point){ 		
+		$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+    ->fetchAll("SELECT DISTINCT  c.id AS commodity_id,c.commodity_code,sp.price,c.commodity_name,c.unit_size,c.commodity_sub_category_id,c.commodity_source_id,
+    			c_s.source_name FROM  commodities c   LEFT JOIN   service_point_stocks sp ON sp.commodity_id = c.id  LEFT JOIN  commodity_sub_category c_s_c 
+    			ON c.commodity_sub_category_id = c_s_c.id,commodity_source c_s WHERE  c.status = 1   AND c.commodity_source_id = c_s.id
+        		AND sp.facility_code = '$facility_code' AND sp.service_point_id ='$service_point'"); 
 
 return $inserttransaction;	
 	}
