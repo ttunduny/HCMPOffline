@@ -1,6 +1,6 @@
 <div class="panel-group " id="accordion" style="padding: 0;">
 	<!--Consumption Reports-->
-    <div class="panel panel-default <?php echo $active_panel=='patient_history'? 'active-panel': null; ?>">
+    <div class="panel panel-default <?php echo $active_panel=='home'? 'active-panel': null; ?>">
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a  data-parent="#accordion" id="home" href="<?php echo base_url("dispensing"); ?>"><span class="glyphicon glyphicon-bookmark">

@@ -105,13 +105,13 @@
 						</div>
 					<div class="panel-body">
 						 <?php $service_pointStockCount = 10; if($service_pointStockCount > 0): ?>
-								<div style="height: auto; margin-bottom: 2px; " class="distribute message">
+								<div style="height: auto; margin-bottom: 2px; " class="issue message">
 									<a href="<?php echo base_url('dispensing/issue'); ?>"><h5>Dispense Commodities To Patients</h5></a>
 								</div>
-								<div style="height: auto; margin-bottom: 2px; " class="distribute message">
+								<div style="height: auto; margin-bottom: 2px; " class="order message">
 									<a href="<?php echo base_url('dispensing/patients'); ?>"><h5>Patient Management</h5></a>
 								</div>
-								<div style="height: auto; margin-bottom: 2px; " class="distribute message">
+								<div style="height: auto; margin-bottom: 2px; " class="reports message">
 									<a href="<?php echo base_url('dispensing/patient_history'); ?>"><h5>Reports</h5></a>
 								</div>
 								<div style="height: auto; margin-bottom: 2px; " class="distribute message">
