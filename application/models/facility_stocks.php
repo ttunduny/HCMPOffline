@@ -1475,6 +1475,40 @@ class Facility_stocks extends Doctrine_Record {
 		$consumptiom = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll($sql);
 		return $consumptiom;
 	}
+
+	public function get_dispensing_consumption_by_age($commodity_id=null,$from,$to,$subcategory = null){
+		$filter = '';
+		if($commodity_id!=null){
+			$filter = "and c.id = '$commodity_id'";
+		}
+		if($subcategory!=null){
+			$filter.= "and c.commodity_sub_category_id = '$subcategory'";
+		}
+		$sql_5 = "SELECT DISTINCT ifnull(sum(dr.units_dispensed),0) as total, c.commodity_name FROM   dispensing_records dr,  patient_details p, commodities c
+				WHERE  dr.patient_id = p.patient_number  $filter AND dr.date_created BETWEEN '$from' AND '$to' AND dr.commodity_id = c.id
+        		and TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) <= 5 GROUP BY dr.commodity_id";		
+        $sql_above = "SELECT DISTINCT ifnull(sum(dr.units_dispensed),0) as total, c.commodity_name FROM   dispensing_records dr,  patient_details p, commodities c
+				WHERE  dr.patient_id = p.patient_number  $filter AND dr.date_created BETWEEN '$from' AND '$to' AND dr.commodity_id = c.id
+        		and TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) > 5 GROUP BY dr.commodity_id";		
+		$consumption_5 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll($sql_5);		
+		$consumption_5above = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll($sql_above);
+		$count5 = (count($consumption_5)>0) ? $consumption_5[0]['total'] : 0 ;
+		$countabove = (count($consumption_5above)>0) ? $consumption_5above[0]['total'] : 0 ;
+		$totals = array('5'=>$count5,'above'=>$countabove);
+		return $totals;
+	}
+	public function get_dispensing_consumption_by_commodity($from,$to,$subcategory = null){
+		$filter = '';		
+		if($subcategory!=null){
+			$filter.= "and c.commodity_sub_category_id = '$subcategory'";
+		}
+		$sql = "SELECT DISTINCT  IFNULL(SUM(dr.units_dispensed), 0) AS total, c.commodity_name FROM  dispensing_records dr,    
+    			commodities c WHERE dr.date_created BETWEEN '$from' AND '$to'  AND dr.commodity_id = c.id
+				GROUP BY dr.commodity_id order by total desc limit 0,10";		       
+        
+		$consumption = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll($sql);		
+		return $consumption;
+	}
 	public static function get_commodity_consumption_level($facilities_code) {
 		$year = date("Y");
 		$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT MONTHNAME( fs.date_issued )as month, cms.commodity_name as commodity, fs.qty_issued AS total_consumption

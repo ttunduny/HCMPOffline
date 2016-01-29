@@ -427,6 +427,132 @@ class Dispensing extends MY_Controller {
 		echo $result_table;
 	}
 
+	public function get_consumption_chart_ajax($sub_category = null){
+		$commodity_id = $this->input->post('commodity_id');
+		$from = $this->input->post('from');
+		$to = $this->input->post('to');
+		$total = 0;		
+		$to = ($to == "NULL" || !isset($to)) ? date('Y-m-d 23:59:59') : date('Y-m-d 23:59:59', strtotime(urldecode($to)));
+		$from = ($from == "NULL" || !isset($from)) ? date('Y-m-d 00:00:00') : date('Y-m-d 00:00:00', strtotime(urldecode($from)));
+		$consumption = facility_stocks::get_dispensing_consumption_by_age($commodity_id,$from,$to,$sub_category);
+		$commodity_details = Commodities::get_commodity_name($commodity_id);
+		$val1 = intval($consumption['5']);
+		$val2 = intval($consumption['above']);
+		$graph_id = 'dem_graph_';
+		$data['graph_id'] = 'dem_graph_';
+		$commodity_name = $commodity_details[0]['commodity_name'];
+		$text_title = $commodity_name.' consumption by Age between '.date('F d Y', strtotime($from)).' and '.date('F d Y', strtotime($to));
+		$result_chart = " $('#$graph_id').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: '$text_title'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: false,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true
+                    },
+                    showInLegend: true
+                }
+            },
+            series: [{
+                name: '$commodity_name',
+                colorByPoint: true,
+                data: [{
+                    name: 'Under 5 years ($val1 units)',
+                    y: $val1
+                }, {
+                    name: 'Over 5 Years ($val2 units)',
+                    y:$val2,
+                    sliced: true,
+                    selected: true
+                }]
+            }]
+        });";
+		// $result_table .= '		
+		$data['high_graph'] = $result_chart;
+		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
+		echo $result_chart;
+	}
+
+	public function get_consumption_chart_ajax_all($sub_category = null){
+		$commodity_id = $this->input->post('commodity_id');
+		$from = $this->input->post('from');
+		$to = $this->input->post('to');
+		$total = 0;		
+		$to = ($to == "NULL" || !isset($to)) ? date('Y-m-d 23:59:59') : date('Y-m-d 23:59:59', strtotime(urldecode($to)));
+		$from = ($from == "NULL" || !isset($from)) ? date('Y-m-d 00:00:00') : date('Y-m-d 00:00:00', strtotime(urldecode($from)));
+		$consumption = facility_stocks::get_dispensing_consumption_by_commodity($from,$to,$sub_category);
+		// echo "<pre>";
+		// print_r($consumption);die;
+
+		// $commodity_details = Commodities::get_commodity_name($commodity_id);		
+		$graph_id = 'dem_graph_';
+		$data['graph_id'] = 'dem_graph_';
+		// $commodity_name = $commodity_details[0]['commodity_name'];
+		$text_title = 'Top 10 Highest Consumption by Commodity between '.date('F d Y', strtotime($from)).' and '.date('F d Y', strtotime($to));
+		$result_chart = " $('#$graph_id').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: '$text_title'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: false,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true
+                    },
+                    showInLegend: true
+                }
+            },
+            series: [{
+                name: 'Test',
+                colorByPoint: true,
+                data:[";           
+	            foreach($consumption as $key=>$raw_data):
+	            	$name = $raw_data['commodity_name'];
+	            	$val = intval($raw_data['total']);				
+					$result_chart .="{ name: '$name ($val units)', y:$val";					
+					$result_chart .= "},";				  
+				endforeach;
+        //     series: [{
+        //         name: '$commodity_name',
+        //         colorByPoint: true,
+        //         data: [{
+        //             name: 'Under 5 years ($val1 units)',
+        //             y: $val1
+        //         }, {
+        //             name: 'Over 5 Years ($val2 units)',
+        //             y:$val2,                    
+        //             selected: true
+        //         }]
+        //     }]
+        // });";
+		$result_chart .="] }] })";
+		$data['high_graph'] = $result_chart;
+		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
+		// echo $result_chart;
+	}
+
 	public function delete_patient($patient_id){
 		// echo "DELETE FROM patients WHERE id='$patient_id'";exit;
 		$deletion = Doctrine_Manager::getInstance() -> getCurrentConnection() -> execute("DELETE FROM patients WHERE id= $patient_id;");
