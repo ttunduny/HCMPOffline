@@ -435,12 +435,19 @@ class Dispensing extends MY_Controller {
 		$to = ($to == "NULL" || !isset($to)) ? date('Y-m-d 23:59:59') : date('Y-m-d 23:59:59', strtotime(urldecode($to)));
 		$from = ($from == "NULL" || !isset($from)) ? date('Y-m-d 00:00:00') : date('Y-m-d 00:00:00', strtotime(urldecode($from)));
 		$consumption = facility_stocks::get_dispensing_consumption_by_age($commodity_id,$from,$to,$sub_category);
-		$commodity_details = Commodities::get_commodity_name($commodity_id);
+		$commodity_name = '';
+		if ($commodity_id!='') {
+			$commodity_details = Commodities::get_commodity_name($commodity_id);
+			$commodity_name = $commodity_details[0]['commodity_name'];
+
+		}else{
+			$commodity_details = commodity_sub_category::get_dets_one($sub_category);
+			
+		}
 		$val1 = intval($consumption['5']);
 		$val2 = intval($consumption['above']);
 		$graph_id = 'dem_graph_';
 		$data['graph_id'] = 'dem_graph_';
-		$commodity_name = $commodity_details[0]['commodity_name'];
 		$text_title = $commodity_name.' consumption by Age between '.date('F d Y', strtotime($from)).' and '.date('F d Y', strtotime($to));
 		$result_chart = " $('#$graph_id').highcharts({
             chart: {

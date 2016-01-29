@@ -1477,19 +1477,31 @@ class Facility_stocks extends Doctrine_Record {
 	}
 
 	public function get_dispensing_consumption_by_age($commodity_id=null,$from,$to,$subcategory = null){
+		$select = '';
+		$from_table = '';
 		$filter = '';
+		$group_by = '';
 		if($commodity_id!=null){
-			$filter = "and c.id = '$commodity_id'";
+			$select = "c.commodity_name";
+			$from_table = "commodities c,commodity_sub_category csc";
+			$filter = "and c.id = '$commodity_id' and csc.id = c.commodity_sub_category_id";
+			$group_by.= "GROUP BY dr.commodity_id";
+
 		}
 		if($subcategory!=null){
+			$from_table = "commodities c, commodity_sub_category csc";			
+			$select = "csc.sub_category_name as commodity_name";
 			$filter.= "and c.commodity_sub_category_id = '$subcategory'";
+			$group_by.= "GROUP BY c.commodity_sub_category_id";
 		}
-		$sql_5 = "SELECT DISTINCT ifnull(sum(dr.units_dispensed),0) as total, c.commodity_name FROM   dispensing_records dr,  patient_details p, commodities c
+		$sql_5 = "SELECT DISTINCT ifnull(sum(dr.units_dispensed),0) as total, $select FROM   dispensing_records dr,  patient_details p, $from_table
 				WHERE  dr.patient_id = p.patient_number  $filter AND dr.date_created BETWEEN '$from' AND '$to' AND dr.commodity_id = c.id
-        		and TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) <= 5 GROUP BY dr.commodity_id";		
-        $sql_above = "SELECT DISTINCT ifnull(sum(dr.units_dispensed),0) as total, c.commodity_name FROM   dispensing_records dr,  patient_details p, commodities c
+        		and TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) <= 5 $group_by";		
+        
+        $sql_above = "SELECT DISTINCT ifnull(sum(dr.units_dispensed),0) as total, c.commodity_name FROM   dispensing_records dr,  patient_details p, $from_table
 				WHERE  dr.patient_id = p.patient_number  $filter AND dr.date_created BETWEEN '$from' AND '$to' AND dr.commodity_id = c.id
-        		and TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) > 5 GROUP BY dr.commodity_id";		
+        		and TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) > 5 $group_by";	
+        // echo $sql_above;die;	
 		$consumption_5 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll($sql_5);		
 		$consumption_5above = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll($sql_above);
 		$count5 = (count($consumption_5)>0) ? $consumption_5[0]['total'] : 0 ;
