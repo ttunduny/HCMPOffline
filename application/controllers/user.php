@@ -1204,28 +1204,10 @@ class User extends MY_Controller {
 																											
 																											endif;
 																											return "SUCCESSFUL";
+																											// redirect('facility_activation/facility_dash');
 																										}
-
-																										public function users_create_multiple(){
-
-			// echo "<pre>";print_r($this->input->post());echo "</pre>";die;
-																											ini_set('error_reporting', -1);
-																											$count = count($this->input->post('username'));
-																											for ($i=0; $i < $count; $i++) { 
-																												$fname = $this->input->post('first_name')[$i];
-																												$lname = $this->input->post('last_name')[$i];
-																												$email_address = $this->input->post('email')[$i];
-																												$username = $this->input->post('email')[$i];
-																												$password;
-																												$telephone = $this->input->post('telephone')[$i];
-																												$user_type = $this->input->post('user_type')[$i];
-																												$facility_id = $this->input->post('facility_id')[$i];				
-																												$result = $this-> add_users_backend($fname,$lname,$email_address,$username,$telephone,$user_type,$facility_id);
-																												echo $result;
-																											}
 			// echo "I HAVE ENDED HEEEERE";
-																											redirect('facility_activation/facility_dash');
-																										}
+																										
 
 																										public function contact_us(){
 																											$subject = "title";
