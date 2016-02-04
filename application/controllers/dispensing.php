@@ -106,6 +106,7 @@ class Dispensing extends MY_Controller {
 		$data['content_view'] = "facility/facility_dispensing/setup_physical_count_v";
 		$data['banner_text'] = "Set Up Physical Stock Count";
 		$data['commodities'] = facility_stocks::get_service_point_stocks($facility_code,2,NULL,NULL);
+		//var_dump($data);
 		$this -> load -> view("shared_files/template/template", $data);
 	}
 
