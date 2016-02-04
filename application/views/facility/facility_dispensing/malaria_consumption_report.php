@@ -45,6 +45,9 @@ $county_id =$this -> session -> userdata('county_id');
 
 </div>
 
+<div id="graph_consumption_by_age" class="clearfix" style="border:1px solid #ccc;padding:1px;min-height:250px;margin-top:2%;height:auto;">	
+
+</div>
 <!-- <div class='graph-section' id='graph-section'></div> -->
 
 <script>
@@ -82,6 +85,7 @@ $county_id =$this -> session -> userdata('county_id');
 			return;
 		}else{
 			update_consumption_table(category_id);      
+			generate_graph(category_id);      
 		}		
     });
 
@@ -113,6 +117,31 @@ $county_id =$this -> session -> userdata('county_id');
 
     }//end of update history table
 
+     function generate_graph(category_id){
+		var from =$("#from").val();
+        var to =$("#to").val();
 
+        if(from==''){from="NULL";}
+        if(to==''){to="NULL";}
+			
+		from = encodeURI(from);
+		to = encodeURI(to);		
+  		var purl = "<?php echo base_url()."dispensing/get_consumption_chart_ajax";?>";      
+  		var url = purl+'/'+category_id;
+		$.ajax({
+        type: "POST",
+        url: url,
+        data:{'commodity_id': null,'from':from,'to':to},       
+        success: function(msg) {
+        	// console.log(msg);return;
+      	$('#graph_consumption_by_age').html(msg);
+      	// $('#ajax_commodity_table').dataTable();
+       		
+      	},
+        error: function() {
+            alert('Error occured');
+        }
+    	});
+	}
 	});
 </script>
