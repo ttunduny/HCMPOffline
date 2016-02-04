@@ -1138,15 +1138,16 @@ class Facility_stocks extends Doctrine_Record {
 		return $inserttransaction;
 	}
 	public static function get_county_consumption_level_new($facility_code, $district_id, $county_id, $category_id, $commodity_id, $option, $from, $to, $graph_type = null, $tracer = null) {
-		// echo "$to";die;
+		// echo "$category_id";die;
 		$selection_for_a_month = ((!isset($facility_code) || $facility_code == "ALL") && ($district_id) > 0) || $category_id > 0 ? " f.facility_name as name," : (($commodity_id == "ALL") && isset($facility_code) ? " d.commodity_name as name," : ((isset($county_id) && $district_id == "ALL") ? " di.district as name," : ($graph_type == 'table_data' && $commodity_id > 0) ? " di.district , f.facility_name, f.facility_code, " : 1));
 		if ($selection_for_a_month == 1) {
 			$seconds_diff = $to - $from;
 			$date_diff = floor($seconds_diff / 3600 / 24);
-			$selection_for_a_month = $date_diff <= 30 ? "DATE_FORMAT(fs.date_issued,'%d %b %y') as name," : "DATE_FORMAT(fs.date_issued,'%b %y') as name ,";
+			$selection_for_a_month = $date_diff <= 30 ? "DATE_FORMAT(fs.date_issued,'%d %b %y') as date_issued,f.facility_name as name," : "DATE_FORMAT(fs.date_issued,'%b %y') as name ,";
 		}
 		$to = date('Y-m-d', $to);
 		$from = date('Y-m-d', $from);
+		$and_data=null;
 		switch ($option) :
 
 			case 'ksh' :
@@ -1193,7 +1194,7 @@ class Facility_stocks extends Doctrine_Record {
 
 		endswitch;
 		$and_data .= (isset($category_id) && ($category_id > 0)) ? "AND d.commodity_sub_category_id = '$category_id'" : null;
-		$and_data = isset($from) && isset($to) ? "AND fs.date_issued between '$from' and '$to'" : null;
+		$and_data .= isset($from) && isset($to) ? "AND fs.date_issued between '$from' and '$to'" : null;
 		$and_data .= (isset($commodity_id) && ($commodity_id > 0)) ? "AND d.id = '$commodity_id'" : null;
 		$and_data .= (isset($district_id) && ($district_id > 0)) ? "AND di.id = '$district_id'" : null;
 		$and_data .= (isset($facility_code) && ($facility_code > 0)) ? " AND f.facility_code = '$facility_code'" : null;
@@ -1202,20 +1203,14 @@ class Facility_stocks extends Doctrine_Record {
 		$group_by_a_month = (isset($facility_code) && isset($district_id)) || isset($category_id) ? " GROUP BY fs.commodity_id having total>0" : (($district_id > 0 && !isset($facility_code)) ? " GROUP BY f.facility_code having total>0" : " GROUP BY d.id having total>0");
 		$group_by_a_month = (($facility_code == "ALL") || !isset($facility_code)) && $district_id > 0 ? " GROUP BY f.facility_code having total>0" : ($commodity_id == "ALL") && isset($facility_code) ? " GROUP BY fs.commodity_id having total>0" : (isset($county_id) && $district_id == "ALL") ? " GROUP BY d.id having total>0" : (($graph_type == 'table_data') && ($commodity_id > 0) ? " GROUP BY d.id, f.facility_code having total>0 order by di.district asc, f.facility_name asc" : 1);
 		if ($group_by_a_month == 1) {
-			$group_by_a_month = $date_diff <= 30 ? "GROUP BY DATE_FORMAT(fs.date_issued,'%d %b %y'),fs.commodity_id" : " GROUP BY DATE_FORMAT(fs.date_issued,'%b %y'),fs.commodity_id";
+			$group_by_a_month = $date_diff <= 30 ? "GROUP BY fs.commodity_id" : " GROUP BY DATE_FORMAT(fs.date_issued,'%b %y'),fs.commodity_id";
+			// $group_by_a_month = $date_diff <= 30 ? "GROUP BY DATE_FORMAT(fs.date_issued,'%d %b %y'),fs.commodity_id" : " GROUP BY DATE_FORMAT(fs.date_issued,'%b %y'),fs.commodity_id";
 		} elseif ($tracer = 1) {
 			$group_by_a_month = $date_diff <= 30 ? "GROUP BY commodity" : $group_by_a_month;
 		}
-		$group_by_a_month = (isset($tracer) && ($group_by_a_month)) ? " GROUP BY commodity" : $group_by_a_month;
-		// echo "SELECT  $selection_for_a_month $computation
-	 //    FROM facility_issues fs, facilities f, commodities d, districts di
-	 //    WHERE fs.facility_code = f.facility_code
-	 //    AND f.district = di.id
-	 //    AND fs.qty_issued >=0
-	 //    $and 
-	 //    AND d.id = fs.commodity_id
-	 //    $and_data
-	 //    $group_by_a_month";die;
+
+
+		$group_by_a_month = (isset($tracer) && ($group_by_a_month)) ? " GROUP BY commodity" : $group_by_a_month;		
 		$inserttransaction = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT  $selection_for_a_month $computation
 	    FROM facility_issues fs, facilities f, commodities d, districts di
 	    WHERE fs.facility_code = f.facility_code
@@ -1467,15 +1462,64 @@ class Facility_stocks extends Doctrine_Record {
 		return $inserttransaction;
 	}
 
-	public function get_dispensing_consumption($commodity_id=null,$from,$to){
+	public function get_dispensing_consumption($commodity_id=null,$from,$to,$subcategory = null){
 		$filter = '';
 		if($commodity_id!=null){
 			$filter = "and c.id = '$commodity_id'";
+		}
+		if($subcategory!=null){
+			$filter.= "and c.commodity_sub_category_id = '$subcategory'";
 		}
 		$sql = "select ifnull(sum(dr.units_dispensed),0) AS total,c.commodity_name as commodity from dispensing_records dr, commodities c 
 		where dr.commodity_id = c.id $filter and date_created between '$from' and '$to' GROUP BY c.id";		
 		$consumptiom = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll($sql);
 		return $consumptiom;
+	}
+
+	public function get_dispensing_consumption_by_age($commodity_id=null,$from,$to,$subcategory = null){
+		$select = '';
+		$from_table = '';
+		$filter = '';
+		$group_by = '';
+		if($commodity_id!=null){
+			$select = "c.commodity_name";
+			$from_table = "commodities c,commodity_sub_category csc";
+			$filter = "and c.id = '$commodity_id' and csc.id = c.commodity_sub_category_id";
+			$group_by.= "GROUP BY dr.commodity_id";
+
+		}
+		if($subcategory!=null){
+			$from_table = "commodities c, commodity_sub_category csc";			
+			$select = "csc.sub_category_name as commodity_name";
+			$filter.= "and c.commodity_sub_category_id = '$subcategory'";
+			$group_by.= "GROUP BY c.commodity_sub_category_id";
+		}
+		$sql_5 = "SELECT DISTINCT ifnull(sum(dr.units_dispensed),0) as total, $select FROM   dispensing_records dr,  patient_details p, $from_table
+				WHERE  dr.patient_id = p.patient_number  $filter AND dr.date_created BETWEEN '$from' AND '$to' AND dr.commodity_id = c.id
+        		and TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) <= 5 $group_by";		
+        
+        $sql_above = "SELECT DISTINCT ifnull(sum(dr.units_dispensed),0) as total, c.commodity_name FROM   dispensing_records dr,  patient_details p, $from_table
+				WHERE  dr.patient_id = p.patient_number  $filter AND dr.date_created BETWEEN '$from' AND '$to' AND dr.commodity_id = c.id
+        		and TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) > 5 $group_by";	
+        // echo $sql_above;die;	
+		$consumption_5 = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll($sql_5);		
+		$consumption_5above = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll($sql_above);
+		$count5 = (count($consumption_5)>0) ? $consumption_5[0]['total'] : 0 ;
+		$countabove = (count($consumption_5above)>0) ? $consumption_5above[0]['total'] : 0 ;
+		$totals = array('5'=>$count5,'above'=>$countabove);
+		return $totals;
+	}
+	public function get_dispensing_consumption_by_commodity($from,$to,$subcategory = null){
+		$filter = '';		
+		if($subcategory!=null){
+			$filter.= "and c.commodity_sub_category_id = '$subcategory'";
+		}
+		$sql = "SELECT DISTINCT  IFNULL(SUM(dr.units_dispensed), 0) AS total, c.commodity_name FROM  dispensing_records dr,    
+    			commodities c WHERE dr.date_created BETWEEN '$from' AND '$to'  AND dr.commodity_id = c.id
+				GROUP BY dr.commodity_id order by total desc limit 0,10";		       
+        
+		$consumption = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll($sql);		
+		return $consumption;
 	}
 	public static function get_commodity_consumption_level($facilities_code) {
 		$year = date("Y");
@@ -1699,6 +1743,7 @@ class Facility_stocks extends Doctrine_Record {
 			    sp.facility_code,
 			    sp.service_point_id,
 			    sp.commodity_id,
+			    sp.price,
 				c.commodity_name,
 				c.total_commodity_units,
 			    sp.current_balance,

@@ -15,24 +15,23 @@ $county_id =$this -> session -> userdata('county_id');
 </style>
 <div class="row-fluid">
 	
-<h1 class="page-header" style="margin: 0;font-size: 1.6em;">Consumption</h1>
+<h1 class="page-header" style="margin: 0;font-size: 1.6em;">Category Commodities Consumption</h1>
 <div class="alert alert-info" style="width: 100%">
-	<b>Proceed to Filter for Commodity Consumption </b>
+	<b>Proceed to Filter for Commodity Consumption by Category </b>
 </div>
 
 <div class="col-md-12" style="padding-left: 1%; right:0; float:right; margin-bottom:5px;margin-left:1%;">
 	<select id="commodity_id" class="form-control" style="width:30%;float:left">
-		<option value="">Select Commodity</option>
-		<?php 			
-			foreach ($commodities as $key => $value) {
-				$id =$value['commodity_id'];
-				$commodity_name =$value['commodity_name'];
-				?>
-				<option value="<?php echo $id;?>"><?php echo $commodity_name;?></option>	
-		<?php }
-
-		?>
+		<option value="">Select Commodity Category</option>
+			<?php
+			foreach($categories as $data):
+				$commodity_name=$data->sub_category_name;	
+				$commodity_id=$data->id;
+				echo "<option value='$commodity_id'>$commodity_name</option>";
+			endforeach;
+			?>
 	</select>
+	
 	<input type="text" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" id="from" placeholder="From">
 	<input type="text" class="form-control input-small col-md-1 clone_datepicker_normal_limit_today" id="to" placeholder="To">
 
@@ -49,7 +48,6 @@ $county_id =$this -> session -> userdata('county_id');
 <div id="graph_consumption_by_age" class="clearfix" style="border:1px solid #ccc;padding:1px;min-height:250px;margin-top:2%;height:auto;">	
 
 </div>
-
 <!-- <div class='graph-section' id='graph-section'></div> -->
 
 <script>
@@ -81,16 +79,17 @@ $county_id =$this -> session -> userdata('county_id');
 	} );
 
 	$('#filter_consumption').click(function () {
-		var commodity_id = $('#commodity_id').val();		
-		update_consumption_table(commodity_id); 
-		if(commodity_id!=''){
-			generate_graph(commodity_id);     
+		var category_id = $('#commodity_id').val();
+		if(category_id==''){
+			swal("Kindly select a Category to Filter");				
+			return;
 		}else{
-			generate_graph_all(commodity_id);     
-		}
+			update_consumption_table(category_id);      
+			generate_graph(category_id);      
+		}		
     });
 
-	function update_consumption_table(commodity_id){
+	function update_consumption_table(category_id){
 		var from =$("#from").val();
         var to =$("#to").val();
 
@@ -99,11 +98,12 @@ $county_id =$this -> session -> userdata('county_id');
 			
 		from = encodeURI(from);
 		to = encodeURI(to);		
-  		var url = "<?php echo base_url()."dispensing/consumption_ajax";?>";      
+  		var url = "<?php echo base_url()."dispensing/consumption_ajax";?>";
+  		var new_url = url+'/'+category_id;      
 		$.ajax({
         type: "POST",
-        url: url,
-        data:{'commodity_id': commodity_id,'from':from,'to':to},       
+        url: new_url,
+        data:{'from':from,'to':to},       
         success: function(msg) {
         	// console.log(msg);return;
       	$('#graph_consumption').html(msg);
@@ -115,11 +115,9 @@ $county_id =$this -> session -> userdata('county_id');
         }
     });
 
-	
-
     }//end of update history table
 
-    function generate_graph(commodity_id){
+     function generate_graph(category_id){
 		var from =$("#from").val();
         var to =$("#to").val();
 
@@ -128,36 +126,12 @@ $county_id =$this -> session -> userdata('county_id');
 			
 		from = encodeURI(from);
 		to = encodeURI(to);		
-  		var url = "<?php echo base_url()."dispensing/get_consumption_chart_ajax";?>";      
+  		var purl = "<?php echo base_url()."dispensing/get_consumption_chart_ajax";?>";      
+  		var url = purl+'/'+category_id;
 		$.ajax({
         type: "POST",
         url: url,
-        data:{'commodity_id': commodity_id,'from':from,'to':to},       
-        success: function(msg) {
-        	// console.log(msg);return;
-      	$('#graph_consumption_by_age').html(msg);
-      	// $('#ajax_commodity_table').dataTable();
-       		
-      	},
-        error: function() {
-            alert('Error occured');
-        }
-    	});
-	}
-	function generate_graph_all(commodity_id){
-		var from =$("#from").val();
-        var to =$("#to").val();
-
-        if(from==''){from="NULL";}
-        if(to==''){to="NULL";}
-			
-		from = encodeURI(from);
-		to = encodeURI(to);		
-  		var url = "<?php echo base_url()."dispensing/get_consumption_chart_ajax_all";?>";      
-		$.ajax({
-        type: "POST",
-        url: url,
-        data:{'commodity_id': commodity_id,'from':from,'to':to},       
+        data:{'commodity_id': null,'from':from,'to':to},       
         success: function(msg) {
         	// console.log(msg);return;
       	$('#graph_consumption_by_age').html(msg);

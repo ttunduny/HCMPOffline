@@ -81,6 +81,7 @@
 											$commodity_name=$stock['commodity_name'];
 											$commodity_id=$stock['commodity_id'];
 											$current_balance=$stock['current_balance'];
+											$price=$stock['price'];
 											// $source_name=$stock['source_name'];
 											// $total_commodity_units=$stock['total_commodity_units'];
 											// $commodity_balance=$stock['commodity_balance'];		
@@ -100,7 +101,7 @@
 										<input type="hidden" class="form-control current_total_available">
 										<input type="hidden" class="form-control row_commodity_id">
 									</td>									
-									<td><input type="number" class="form-control price" value="0" id="price"></td>
+									<td><input type="number" class="form-control price" value="0" id="price" disabled="disabled"></td>
 									<td><input type="number" class="form-control quantity_issued" id="quantity_issued" value="0"></td>
 
  								
@@ -192,7 +193,8 @@ $.each(raw_commodity_array, function(key, value) {
    var cid = value['commodity_id'];
    var cname = value['commodity_name'];
    var bal = value['current_balance'];   
-   commodity_details[cid] = [cid,cname,bal];
+   var price = value['price'];   
+   commodity_details[cid] = [cid,cname,bal,price];
 });
 
 
@@ -325,9 +327,11 @@ $(".drug_select").on('change',function(){
 	        var c_id = data_array[0];
 	        var current_cid = commodity_details[c_id][0];
 	        var current_balance = commodity_details[c_id][2];
+	        var price = commodity_details[c_id][3];
 	        locator.closest("tr").find(".total_available").val(current_balance);
 	        locator.closest("tr").find(".current_total_available").val(current_balance);
 	        locator.closest("tr").find(".row_commodity_id").val(c_id);	        
+	        locator.closest("tr").find(".price").val(price);	        
 	     	/*
 	     	locator.closest("tr").find(".supplier_name").val(data_array[2]);
 	     	locator.closest("tr").find(".commodity_id").val(data_array[0]);

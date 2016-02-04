@@ -17,21 +17,24 @@ class Dispensing extends MY_Controller {
 		// echo "<pre>";print_r($graph_data);exit;
 		$data['service_point_dashboard_notifications'] = $graph_data;
 		$facility_code = $this -> session -> userdata('facility_id');
+		$service_point_stock = facility_stocks::get_service_point_stocks($facility_code,$service_point);
+		
 		$data['banner_text'] = "Pharmacy";
-		$data['sidebar'] = "facility/facility_dispensing/sidebar_dispensing";
+		// $data['sidebar'] = "facility/facility_dispensing/sidebar_dispensing";
 		// $data['report_view'] = "facility/facility_dispensing/dispensing_home_v";
 		// $commodities = Commodities::get_all();
 		$data['content_view'] = "facility/facility_dispensing/service_point_home";
 		$view = 'shared_files/template/template';
 		$data['active_panel'] = 'dispensing';
 		$data['title'] = "Dispensing";
+		$data['service_point_stock'] = $service_point_stock;
 
-		$patients = patients::get_all();
-		$commodities_in_facility = facility_stocks::get_facility_stock_amc($facility_code);
-		$data['commodities'] = 	$commodities_in_facility;
+		// $patients = patients::get_all();
+		// $commodities_in_facility = facility_stocks::get_facility_stock_amc($facility_code);
+		// $data['commodities'] = 	$commodities_in_facility;
 		// echo "<pre>";print_r($commodities_in_facility);exit;
 
-		$data['patients'] = $patients;
+		// $data['patients'] = $patients;
 		$this -> load -> view($view, $data);		
 	}
 	public function get_patient_data(){
@@ -87,23 +90,31 @@ class Dispensing extends MY_Controller {
 		$this->load->view($view,$data);
 	}
 
+
+	public function setup_commodities(){
+		$facility_code = $this -> session -> userdata('facility_id');
+		$data['title'] = "Dispensing - Set up Service Point stock";
+		$data['content_view'] = "facility/facility_dispensing/setup_facility_stock_v";
+		$data['banner_text'] = "Set up service point stock";
+		$data['commodities'] = commodities::set_facility_service_data($facility_code,2);
+		$this -> load -> view("shared_files/template/template", $data);
+	}
 	public function issue(){
 		$facility_code = $this -> session -> userdata('facility_id');
 		$service_point = 2;//hard coded for pharmacy,until requested for :]
 		$p_data = Patients::get_all();
-		$service_point_stock = facility_stocks::get_service_point_stocks($facility_code,$service_point);
+		$service_point_stock = facility_stocks::get_service_point_stocks($facility_code,$service_point);		
 		$commodity_details = array();		
 		foreach ($service_point_stock as $key => $value) {
 			$commodity_id = $value['commodity_id'];
 			$current_balance = $value['current_balance'];
 			$commodity_name = $value['commodity_name'];
-			$commodity_details[] = array('commodity_id'=>$commodity_id,'commodity_name'=>$commodity_name,'current_balance'=>$current_balance);
+			$price = $value['price'];
+			$commodity_details[] = array('commodity_id'=>$commodity_id,'commodity_name'=>$commodity_name,'current_balance'=>$current_balance,'price'=>$price);
 		}
 		// echo "<pre>";
-		// print_r($commodity_details);
-		// echo "<pre>";
-		// print_r($service_point_stock);
-		// exit;
+		// print_r($commodity_details);die;
+		// echo "<pre>";print_r($service_point_stock);exit;
 		$data['sp_commodities'] = $service_point_stock;
 		$data['raw_sp_commodities'] = json_encode($commodity_details);
 		// $p_data = Patients::get_patient_data();		
@@ -149,6 +160,7 @@ class Dispensing extends MY_Controller {
 
 			$patients = Patients::save_patient($data_array,$patient_number,$date_created,$facility_code);			
 		}
+		$this->session->set_flashdata('system_success_message', 'Patients added successfully');
 		redirect('dispensing/patients');
 		
 	}
@@ -283,6 +295,7 @@ class Dispensing extends MY_Controller {
 			$this->db->query($sql);
 		}		
 		$totals_db = $this->db->insert("dispensing_totals",$totals_array);
+		$this->session->set_flashdata('system_success_message', 'Commodity Dispensed Successfully');
 		redirect('dispensing/issue');
 		// echo $res;
 	}
@@ -311,7 +324,7 @@ class Dispensing extends MY_Controller {
 			$data['report_view'] = "facility/facility_dispensing/patient_history_report";
 			$data['content_view'] = "facility/facility_reports/reports_v";
 			$view = 'shared_files/template/template';
-			$data['active_panel'] = 'consumption';
+			$data['active_panel'] = 'patient_history';
 
 		$this -> load -> view($view, $data);	
 	}
@@ -330,26 +343,27 @@ class Dispensing extends MY_Controller {
 		$this -> load -> view($view, $data);	
 	}
 
+
+	public function malaria_commodities(){
+			$facility_code = $this -> session -> userdata('facility_id');
+			$data['title'] = "Category Commodities Reports";
+			$data['banner_text'] = "Facility Commodity Consumption by Category";
+			// $data['commodities'] = Commodities::get_facility_commodities($facility_code);
+			$data['categories'] = commodity_sub_category::get_all_pharm();
+			$data['sidebar'] = "facility/facility_dispensing/dispensing_side_bar_v";
+			$data['report_view'] = "facility/facility_dispensing/malaria_consumption_report";
+			$data['content_view'] = "facility/facility_reports/reports_v";
+			$view = 'shared_files/template/template';
+			$data['active_panel'] = 'malaria';
+
+		$this -> load -> view($view, $data);	
+	}
+
 	public function patient_history_ajax(){
 		$patient_id = $this->input->post('patient_id');
 		$patient_details = Patients::get_patient_history($patient_id);
-
-		// echo "<pre>";print_r($patient_details);
-		/*$p_dets = array();
-		foreach ($patient_details as $key => $value) {
-			$id = $value['id'];
-			$firstname = $value['firstname'];
-			$lastname = $value['lastname'];
-			$date_of_birth = $value['date_of_birth'];
-			$date_of_birth_string = date('F, m Y', strtotime($date_of_birth));
-			$gender = $value['gender'];
-			$name = $firstname.' '.$lastname;			
-			$gender = ($gender=='1') ? 'Male' : 'Female';
-			$name_and_number = $name .' | '.$patient_number;
-			$p_dets[] = array($patient_number,$name,$gender,$date_of_birth_string,$name_and_number,$id);
-		}
-		echo json_encode($p_dets[0]);*/
 		$result_table = "";
+		$total = 0;
 		$result_table .= '
 		<table class="table table-bordered row-fluid datatable" id="ajax_history_table">
 			<thead>
@@ -362,6 +376,7 @@ class Dispensing extends MY_Controller {
 			<tbody>';
 			if (count($patient_details) > 0 ) {
 				foreach ($patient_details as $data) {
+					$total+= intval($data['units_dispensed']);
 					$result_table .='<tr>
 						<td>'.$data['firstname'].' '.$data['lastname'].'</td>
 						<td>'.$data['commodity_name'].'</td>
@@ -372,19 +387,20 @@ class Dispensing extends MY_Controller {
 			}else{
 				$result_table .= '<tr><td><b>There is no history on this patient</b></td><td></td><td></td><td></td></tr>';
 			}
+			$result_table.='<tr><td>--</td><td><b>Total:</b></td><td><b>'.$total.'</b></td><td></td></tr>';
 		
 		$result_table.= '</tbody></table>';
 
 		echo $result_table;
 	}
-	public function consumption_ajax(){
+	public function consumption_ajax($sub_category = null){
 		$commodity_id = $this->input->post('commodity_id');
 		$from = $this->input->post('from');
 		$to = $this->input->post('to');
-
+		$total = 0;		
 		$to = ($to == "NULL" || !isset($to)) ? date('Y-m-d 23:59:59') : date('Y-m-d 23:59:59', strtotime(urldecode($to)));
 		$from = ($from == "NULL" || !isset($from)) ? date('Y-m-d 00:00:00') : date('Y-m-d 00:00:00', strtotime(urldecode($from)));
-		$consumption = facility_stocks::get_dispensing_consumption($commodity_id,$from,$to);
+		$consumption = facility_stocks::get_dispensing_consumption($commodity_id,$from,$to,$sub_category);
 		$result_table = "";
 		$result_table .= '
 		<table class="table table-bordered row-fluid datatable" id="ajax_commodity_table">
@@ -396,6 +412,7 @@ class Dispensing extends MY_Controller {
 			<tbody>';
 			if (count($consumption) > 0 ) {
 				foreach ($consumption as $data) {
+					$total+= intval($data['total']);
 					$result_table .='<tr>						
 						<td>'.$data['commodity'].'</td>
 						<td>'.$data['total'].'</td>						
@@ -404,10 +421,143 @@ class Dispensing extends MY_Controller {
 			}else{
 				$result_table .= '<tr><td><b>There is no consumption history on this Commodity</b></td><td>N/A</td></tr>';
 			}
-		
+		$result_table.='<tr><td><b>Total:</b></td><td><b>'.$total.'</b></td></tr>';
 		$result_table.= '</tbody></table>';
 
 		echo $result_table;
+	}
+
+	public function get_consumption_chart_ajax($sub_category = null){
+		$commodity_id = $this->input->post('commodity_id');
+		$from = $this->input->post('from');
+		$to = $this->input->post('to');
+		$total = 0;		
+		$to = ($to == "NULL" || !isset($to)) ? date('Y-m-d 23:59:59') : date('Y-m-d 23:59:59', strtotime(urldecode($to)));
+		$from = ($from == "NULL" || !isset($from)) ? date('Y-m-d 00:00:00') : date('Y-m-d 00:00:00', strtotime(urldecode($from)));
+		$consumption = facility_stocks::get_dispensing_consumption_by_age($commodity_id,$from,$to,$sub_category);
+		$commodity_name = '';
+		if ($commodity_id!='') {
+			$commodity_details = Commodities::get_commodity_name($commodity_id);
+			$commodity_name = $commodity_details[0]['commodity_name'];
+
+		}else{
+			$commodity_details = commodity_sub_category::get_dets_one($sub_category);
+			
+		}
+		$val1 = intval($consumption['5']);
+		$val2 = intval($consumption['above']);
+		$graph_id = 'dem_graph_';
+		$data['graph_id'] = 'dem_graph_';
+		$text_title = $commodity_name.' consumption by Age between '.date('F d Y', strtotime($from)).' and '.date('F d Y', strtotime($to));
+		$result_chart = " $('#$graph_id').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: '$text_title'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: false,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true
+                    },
+                    showInLegend: true
+                }
+            },
+            series: [{
+                name: '$commodity_name',
+                colorByPoint: true,
+                data: [{
+                    name: 'Under 5 years ($val1 units)',
+                    y: $val1
+                }, {
+                    name: 'Over 5 Years ($val2 units)',
+                    y:$val2,
+                    sliced: true,
+                    selected: true
+                }]
+            }]
+        });";
+		// $result_table .= '		
+		$data['high_graph'] = $result_chart;
+		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
+		echo $result_chart;
+	}
+
+	public function get_consumption_chart_ajax_all($sub_category = null){
+		$commodity_id = $this->input->post('commodity_id');
+		$from = $this->input->post('from');
+		$to = $this->input->post('to');
+		$total = 0;		
+		$to = ($to == "NULL" || !isset($to)) ? date('Y-m-d 23:59:59') : date('Y-m-d 23:59:59', strtotime(urldecode($to)));
+		$from = ($from == "NULL" || !isset($from)) ? date('Y-m-d 00:00:00') : date('Y-m-d 00:00:00', strtotime(urldecode($from)));
+		$consumption = facility_stocks::get_dispensing_consumption_by_commodity($from,$to,$sub_category);
+		// echo "<pre>";
+		// print_r($consumption);die;
+
+		// $commodity_details = Commodities::get_commodity_name($commodity_id);		
+		$graph_id = 'dem_graph_';
+		$data['graph_id'] = 'dem_graph_';
+		// $commodity_name = $commodity_details[0]['commodity_name'];
+		$text_title = 'Top 10 Highest Consumption by Commodity between '.date('F d Y', strtotime($from)).' and '.date('F d Y', strtotime($to));
+		$result_chart = " $('#$graph_id').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: '$text_title'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: false,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true
+                    },
+                    showInLegend: true
+                }
+            },
+            series: [{
+                name: 'Test',
+                colorByPoint: true,
+                data:[";           
+	            foreach($consumption as $key=>$raw_data):
+	            	$name = $raw_data['commodity_name'];
+	            	$val = intval($raw_data['total']);				
+					$result_chart .="{ name: '$name ($val units)', y:$val";					
+					$result_chart .= "},";				  
+				endforeach;
+        //     series: [{
+        //         name: '$commodity_name',
+        //         colorByPoint: true,
+        //         data: [{
+        //             name: 'Under 5 years ($val1 units)',
+        //             y: $val1
+        //         }, {
+        //             name: 'Over 5 Years ($val2 units)',
+        //             y:$val2,                    
+        //             selected: true
+        //         }]
+        //     }]
+        // });";
+		$result_chart .="] }] })";
+		$data['high_graph'] = $result_chart;
+		return $this -> load -> view("shared_files/report_templates/high_charts_template_v", $data);
+		// echo $result_chart;
 	}
 
 	public function delete_patient($patient_id){
@@ -419,36 +569,25 @@ class Dispensing extends MY_Controller {
 		$this-> patients();
 	}
 
-
-	public function facility_stock_pricing(){
+	public function update_service_point_prices() {
+		//security check
 		$facility_code = $this -> session -> userdata('facility_id');
-		$data['title'] = "Manage Stock Pricing";
-		$data['content_view'] = 'facility/facility_dispensing/facility_stock_prices';
-		$data['banner_text'] = "Manage Stock Pricing";
-		$data['commodities'] = Commodities::get_facility_commodities($facility_code);
-		$data['commodity_source'] = commodity_source::get_all();
-		$data['source_names'] = commodity_source::get_all_other_source_names();
-		$data['import'] = $import;
-		$this -> load -> view("shared_files/template/template", $data);
-	}
-
-	public function add_stock_price(){
-		if($this -> input -> post('commodity_id')){
-			// echo "<pre>"; print_r($_POST); echo "</pre>"; die;
-			$commodity_id = array_values($this -> input -> post('commodity_id'));
-			$facility_code = $this -> session -> userdata('facility_id');
-			$commodity_name = array_values($this -> input -> post('desc'));
-			$price = array_values($this -> input -> post('price'));
-			$price_per = array_values($this -> input -> post('commodity_unit_of_issue'));
-			$count = count($commodity_id);
-			for($i = 0; $i < $count; $i++){
-				$price_data = array('facility_code' => $facility_code, 'commodity_id' => $commodity_id[$i], 'commodity_name' => $commodity_name[$i], 'price' => $price[$i], 'price_per' => $price_per[$i]);
-				// echo "<pre>"; print_r($price_data); echo "</pre>"; die;
-				dispensing_prices::save_prices($price_data);
-			}
+		$service_point = 2;
+		$commodity_id = $this->input->post('commodity_id');
+		$price = $this->input->post('price');
+		$count = count($commodity_id);
+		for ($i=0; $i <$count ; $i++) { 
+			$c_id = $commodity_id[$i];
+			$c_price = $price[$i];
+			$insert = Doctrine_Manager::getInstance() -> getCurrentConnection();
+			$insert -> execute("update service_point_stocks set price='$c_price' where facility_code='$facility_code' AND service_point_id='$service_point' AND commodity_id='$c_id'");
 		}
-		redirect('dispensing/facility_stock_pricing');
+		
+		$this->session->set_flashdata('system_success_message', 'The Commodity Prices have been Updated');
+		redirect('dispensing');
+		
 	}
 
-	}//end of dispense class''
+
+	}//end of dispense class
 ?>
