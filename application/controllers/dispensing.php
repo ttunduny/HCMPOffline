@@ -140,9 +140,9 @@ class Dispensing extends MY_Controller {
 								'date_created' =>$date_created ,
 								'status' =>1);		
 
-			$patients = Patients::save_patient($data_array,$patient_number,$date_created,$facility_code);
+			$patients = Patients::save_patient($data_array,$patient_number,$date_created,$facility_code);			
 		}
-		redirect('dispensing/add_multiple_patients');
+		redirect('dispensing/patients');
 		
 	}
 	public function save_patient(){
@@ -273,23 +273,32 @@ class Dispensing extends MY_Controller {
 	public function dispense_commodities(){
 		// echo "<pre>";print_r($this->input->post());echo "</pre>";
 
+		$facility_code = $this -> session -> userdata('facility_id');		
 		$patient_id = $this->input->post("form_patient_id");
 		$quantity = $this->input->post("quantity");
 		$commodity_id = $this->input->post("id");
-
+		$unit_price = $this->input->post("price");		
+		$date_created = date('Y-m-d',strtotime('NOW'));
 		$id_count = count($commodity_id) + 1;
 		// echo $id_count;exit;
 		$info = array();
-
+		$total_price = 0;
 		for ($i=1; $i < $id_count; $i++) { 
 			$info_array= array(
 			'patient_id'=> $patient_id,
 			'units_dispensed'=> $quantity[$i],
-			'commodity_id'=> $commodity_id[$i]
+			'commodity_id'=> $commodity_id[$i],
+			'unit_price'=> $unit_price[$i]
 			);	
+			$interim_price = $quantity[$i]*$unit_price[$i];
+			$total_price+=$interim_price;
 		array_push($info, $info_array);
 
 		}
+
+		$totals_array = array('facility_code'=>$facility_code,'patient_id'=>$patient_id,'date_created'=>$date_created,'total'=>$total_price,'isdeleted'=>'1');
+		// echo "<pre>";
+		// print_r($totals_array);
 		/*
 		foreach ($commodity_id as $data) {
 		$info_array= array(
@@ -304,6 +313,7 @@ class Dispensing extends MY_Controller {
 		// echo "<pre>";print_r($info);exit;
 
 		$res = $this->db->insert_batch("dispensing_records",$info);
+		$totals_db = $this->db->insert("dispensing_totals",$totals_array);
 		$this->issue();
 		// echo $res;
 	}
@@ -358,7 +368,7 @@ class Dispensing extends MY_Controller {
 		echo json_encode($p_dets[0]);*/
 		$result_table = "";
 		$result_table .= '
-		<table class="table table-bordered row-fluid datatable">
+		<table class="table table-bordered row-fluid datatable" id="ajax_history_table">
 			<thead>
 				<th>Patient Name</th>
 				<th>Commodity Name</th>
@@ -392,6 +402,10 @@ class Dispensing extends MY_Controller {
 
 		// echo $deletion;
 		$this-> patients();
+	}
+
+	public function stock_count(){
+		
 	}
 
 	}//end of dispense class

@@ -20,26 +20,27 @@ $county_id =$this -> session -> userdata('county_id');
 	<b>Proceed to Search for Patients Below </b>
 </div>
 
-<div class="col-md-12" style="padding-left: 3%; right:0; float:right; margin-bottom:5px;margin-left:3%;">
-	<input type="text" class="form-control" id="patient_number" name="patient_number" placeholder="Enter the Patient Number" style="width:20%;float:left;" />
+<div class="col-md-12" style="padding-left: 1%; right:0; float:right; margin-bottom:5px;margin-left:1%;">
+	<input type="text" class="form-control" id="patient_number" name="patient_number" placeholder="Enter the Patient Number or First Name or Last Name" style="width:29%;float:left;" />
 	<button class="btn btn-primary" id="find_patient">
 		<span class="glyphicon glyphicon-search"></span>Find
 	</button>
 </div>
-
-<div class="col-md-4" style="padding:0 1%;height:100%;background-color:#428bca;border:1px ridge #e3e3e3;float:left;color:#ffffff">
-	<h4>Search Results</h4>
-	<!-- <textarea id="search_results" disabled="disabled" style="width:96%;height:80%;color:black;"></textarea> -->
-	<table class="table table-bordered" id="search_results">
-		<thead>
-			<th>Name</th>
-			<th>Patient No.</th>
-		</thead>
-		<tbody>
-		</tbody>
-	</table>
-</div>
-
+<div class="col-md-12">
+	
+<div class="clearfix" style="border:1px solid #ccc;padding:1px;">
+	<div class="col-md-4 search_container" style="padding:0 1%;height:100%;background-color:#428bca;border:1px ridge #e3e3e3;float:left;color:#ffffff">
+		<h4>Search Results</h4>
+		<!-- <textarea id="search_results" disabled="disabled" style="width:96%;height:80%;color:black;"></textarea> -->
+		<table class="table table-bordered" id="search_results">
+			<thead>
+				<th>Name</th>
+				<th>Patient No.</th>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
 <div class="col-md-8" id="history_table">
 	<table class="table table-bordered row-fluid datatable">
 		<thead>
@@ -85,16 +86,70 @@ $county_id =$this -> session -> userdata('county_id');
 			"sSwfPath": "<?php echo base_url(); ?>assets/datatable/media/swf/copy_csv_xls_pdf.swf"
 		}
 	} );
+function clear_dets(){
+	var p_no = "";
+	var name = "";
+	var gender = "";
+	var dob = "";
+	var names_and_no = "";
+	var patient_id = "";
 
-		$("#find_patient").click(function() {
+	$('#name').val(name);
+	$('#dob').val(dob);
+	$('#gender').val(gender);
+	$('#p_no').val(p_no);
+	$('#p_no').attr('data-patient-id', patient_id);
+	$( ".form_patient_id" ).remove();
+}
 
-  var patient_number = $('#patient_number').val();
-  var url = "<?php echo base_url()."dispensing/get_patient_detail";?>";      
-  var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";      
+function populate_dets(patient_number){
+  	var url = "<?php echo base_url()."dispensing/get_patient_detail";?>";      
+
+	$.ajax({
+        type: "POST",
+        url: url,
+        data:{'patient_number': patient_number},
+        dataType: "html",       
+        success: function(msg) {
+        	console.log(msg);  
+	       	var patient_details = JSON.parse(msg);
+
+	       	var p_no = patient_details[0][0];
+	       	var name = patient_details[0][1];
+	       	var gender = patient_details[0][2];
+	       	var dob = patient_details[0][3];
+	       	var names_and_no = patient_details[0][4];
+	       	var patient_id = patient_details[0][5];	       	
+	       	$('#name').val(name);
+	       	$('#dob').val(dob);
+	       	$('#gender').val(gender);
+	       	$('#p_no').val(p_no);
+	       	$('#p_no').attr('data-patient-id', patient_id);
+	       	// $('#search_results').val(names_and_no);
+	       		// $('#search_results').html("<tr><td>"+name+"</td><td>"+p_no+"</td></tr>");
+		    $('#dispense_form').append("<input type=\"hidden\" value="+patient_id+" name=\"form_patient_id\" class=\"form_patient_id\">");
+
+	       		 // var search_table = $('#search_results').DataTable().ajax.reload();
+	       			// search_table.ajax.reload();
+        	
+
+      	},
+        error: function() {
+            alert('Error occured');
+        }
+    });
+
+}
+$("#find_patient").click(function() {
+	  // clear_dets();
+	  var patient_number = $('#patient_number').val();
+	  var url = "<?php echo base_url()."dispensing/get_patient_detail";?>";      
+	  var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";      
    if(patient_number==""){
 		alert('Please make sure you have filled in all required  fields.');
 		return;
 	}
+	$('#search_results').html("	");
 	$.ajax({
         type: "POST",
         url: url,
@@ -109,33 +164,76 @@ $county_id =$this -> session -> userdata('county_id');
 	       //      return false;
 	       //  }           
         //   },
+
         success: function(msg) {
-       		var patient_details = JSON.parse(msg);
-       		console.log(patient_details);
-       		var p_no = patient_details[0];
-       		var name = patient_details[1];
-       		var gender = patient_details[2];
-       		var dob = patient_details[3];
-       		var names_and_no = patient_details[4];
-       		var patient_id = patient_details[5];
-       		// alert(patient_id);return;
-       		$('#name').val(name);
-       		$('#dob').val(dob);
-       		$('#gender').val(gender);
-       		$('#p_no').val(p_no);
-       		$('#p_no').attr('data-patient-id', patient_id);
-       		// $('#search_results').val(names_and_no);
-       		$('#search_results').html("<tr><td>"+name+"</td><td>"+p_no+"</td></tr>");
-	    	// $('#dispense_form').append("<input type=\"hidden\" value="+patient_id+" name=\"patient_id\">");
-	    	// $('#history_table').html("This is it");
-       		 // var search_table = $('#search_results').DataTable().ajax.reload();
-       			// search_table.ajax.reload();
-       			update_history_table(patient_id);
+        	console.log(msg);
+        	if (msg == 0) {
+	       		$('#search_results').html("<tr><td colspan = 2> There are no records partaining to your search </td></tr>");
+
+	       		var patient_details = JSON.parse(msg);
+	       		// console.log(patient_details);
+	       		var p_no = "";
+	       		var name = "";
+	       		var gender = "";
+	       		// var dob = "";
+	       		var names_and_no = "";
+	       		var patient_id = "";
+
+	       		$('#name').val(name);
+	       		$('#dob').val(dob);
+	       		$('#gender').val(gender);
+	       		$('#p_no').val(p_no);
+	       		$('#p_no').attr('data-patient-id', patient_id);
+	       		$( ".form_patient_id" ).remove();
+        	}else{
+	       		var patient_details = JSON.parse(msg);
+	       		global_details = JSON.parse(msg);
+
+	       		for (var i = 0; i < patient_details.length; i++) {
+	       			var p_no = patient_details[i][0];
+		       		var name = patient_details[i][1];
+		       		var gender = patient_details[i][2];
+		       		var dob = patient_details[i][3];
+		       		var names_and_no = patient_details[4];
+		       		var patient_id = patient_details[5];
+		       		// $('#name').val(name);
+		       		// $('#dob').val(dob);
+		       		// $('#gender').val(gender);
+		       		// $('#p_no').val(p_no);
+		       		// $('#p_no').attr('data-patient-id', patient_id);
+		       		// $('#search_results').val(names_and_no);
+		       		$('#search_results').append("<tr class='clickable-row' data-href='"+p_no+"'><td>"+name+"</td><td>"+p_no+"</td><input type=\"hidden\" value="+i+" class=\"form_patient_row\"></tr>");
+		       		// $('#search_results').append("<tr class='clickable-row' data-href='"+p_no+"'><td>"+name+"</td><td>"+p_no+"</td></tr>");
+			    	$('#dispense_form').append("<input type=\"hidden\" value="+patient_id+" name=\"form_patient_id\" class=\"form_patient_id\">");
+	       			// Things[i]
+	       		};
+	      
+        	};
+
       	},
         error: function() {
             alert('Error occured');
         }
-    });//ajax end
+    });
+	$(".search_container").on("click", "table tr", function() {
+		var patient_number = $(this).attr('data-href');	
+		update_history_table(patient_number);
+		// alert(patient_number);
+		// var row_id = $(this).find('.form_patient_row').val();	
+		// var p_no = global_details[row_id][0];
+		// var name = global_details[row_id][1];
+		// var gender = global_details[row_id][2];
+		// var dob = global_details[row_id][3];
+		// // var names_and_no = global_details[4];
+		// // var patient_id = global_details[5];
+		// $('#name').val(name);
+		// $('#dob').val(dob);
+		// $('#dispense_form').append("<input type=\"hidden\" value="+p_no+" name=\"form_patient_id\" class=\"form_patient_id\">");
+		// $('#gender').val(gender);
+		// $('#p_no').val(p_no);
+		// $('#p_no').attr('data-patient-id', patient_id);
+		$(this).addClass('active');
+	} );
 
 	function update_history_table(patient_id){
 		// alert("Currently alerting you" + patient_id);
@@ -158,7 +256,7 @@ $county_id =$this -> session -> userdata('county_id');
         success: function(msg) {
         	// console.log(msg);return;
       	$('#history_table').html(msg);
-      	$('#history_table').dataTable();
+      	$('#ajax_history_table').dataTable();
        		 // var search_table = $('#search_results').DataTable().ajax.reload();
        			// search_table.ajax.reload();
        		

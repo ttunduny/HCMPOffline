@@ -103,6 +103,7 @@ class Admin extends MY_Controller {
                 }
                 die();
 	}
+
 	public function reversals(){
 		ini_set('memory_limit', '-1');
 		$permissions='super_permissions';
@@ -568,5 +569,12 @@ class Admin extends MY_Controller {
 		$all_online = $this->onlineusers->total_users();
 
 		echo "<pre> Here I am  ";print_r($all_online);echo "</pre>";
+	}
+
+	public function github_update_status(){
+		echo "I WAS HERE";
+		$res = $this->github_updater->get_update_comments();
+
+		echo "<pre>"; print_r($res);
 	}
 }

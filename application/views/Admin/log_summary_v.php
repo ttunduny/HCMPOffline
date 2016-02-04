@@ -57,17 +57,17 @@
       <th ><b>Facility Code</b></th>
       <th ><b>Sub-County</b></th>
       <th ><b>County</b></th>
-      <th ><b>Date Last Logged In</b></th>
+      <!-- <th ><b>Date Last Logged In</b></th> -->
       <th ><b>Days from Last Login</b></th>
-      <th ><b>Date Last Issued</b></th>
+      <!-- <th ><b>Date Last Issued</b></th> -->
       <th ><b>Days from Last Issue</b></th>
-      <th ><b>Date Last Redistributed</b></th>
+      <!-- <th ><b>Date Last Redistributed</b></th> -->
       <th ><b>Days From last Redistributed</b></th>
-      <th ><b>Date Last ordered</b></th>
+      <!-- <th ><b>Date Last ordered</b></th> -->
       <th ><b>Days From Last order</b></th>
-      <th ><b>Date Last Decommissioned</b></th>
+      <!-- <th ><b>Date Last Decommissioned</b></th> -->
       <th ><b>Days From Last Decommissioned</b></th>
-      <th ><b>Date Last Seen</b></th>
+      <!-- <th ><b>Date Last Seen</b></th> -->
       <th ><b>Days From Last Seen</b></th>
     </tr> 
   </thead>
@@ -96,17 +96,17 @@
           <td><?php echo $facility_code;?></td>
           <td><?php echo $sub_county;?></td>
           <td><?php echo $county;?></td>
-          <td><?php echo $date_last_login;?></td>
+          <!-- <td><?php //echo $date_last_login;?></td> -->
           <td><?php echo $days_from_last_login;?></td>
-          <td><?php echo $date_last_issue;?></td>
+          <!-- <td><?php //echo $date_last_issue;?></td> -->
           <td><?php echo $days_from_last_issue;?></td>
-          <td><?php echo $date_last_redistribed;?></td>
+          <!-- <td><?php //echo $date_last_redistribed;?></td> -->
           <td><?php echo $days_from_last_redistribution;?></td>
-          <td><?php echo $date_last_ordered;?></td>
+          <!-- <td><?php //echo $date_last_ordered;?></td> -->
           <td><?php echo $days_from_last_order;?></td>
-          <td><?php echo $date_last_decommissioned;?></td>
+          <!-- <td><?php //echo $date_last_decommissioned;?></td> -->
           <td><?php echo $days_from_last_decommission;?></td>
-          <td><?php echo $date_last_received_order;?></td>
+          <!-- <td><?php //echo $date_last_received_order;?></td> -->
           <td><?php echo $days_from_last_order_received;?></td>
         </tr>
       <?php }
@@ -141,11 +141,11 @@
 <script>
       $(document).ready(function () {
         
-    $('#sms_usage').dataTable({
-      "paging":   true,
-          "ordering": false,
-          "info":     false
-        }); 
+    // $('#sms_usage').dataTable({
+    //   "paging":   true,
+    //       "ordering": false,
+    //       "info":     false
+    //     }); 
 
         $('.send_email').click(function(e){
           e.preventDefault();

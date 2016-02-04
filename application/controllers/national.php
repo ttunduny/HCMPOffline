@@ -601,10 +601,12 @@ public function stock_level_mos($county_id = null, $district_id = null, $facilit
 		// echo $commodity_id;die;
 	$and_data = ($district_id > 0) ? " AND d.id = '$district_id'" : null;
 	$and_data .= ($facility_code > 0) ? " AND f.facility_code = '$facility_code'" : null;
-	$and_data .= ($county_id > 0) ? " AND counties.id='$county_id'" : null;
+	$and_data .= ($county_id > 0) ? " AND ct.id='$county_id'" : null;
+	// $and_data .= ($county_id > 0) ? " AND counties.id='$county_id'" : null;
 	$and_data = isset($and_data) ? $and_data : null;
 	if ($graph_type=='excel') {
-		$and_data .= isset($commodity_id) ? "AND commodities.id =$commodity_id" : "AND d.tracer_item =1";			
+		$and_data .= isset($commodity_id) ? "AND d.id =$commodity_id" : "AND d.tracer_item =1";			
+		// $and_data .= isset($commodity_id) ? "AND commodities.id =$commodity_id" : "AND d.tracer_item =1";			
 	}else{
 		$and_data .= isset($commodity_id) ? "AND commodities.id =$commodity_id" : "AND commodities.tracer_item =1";
 

@@ -225,7 +225,7 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
         $(".add").click(function() {
         var selector_object=$('#facility_issues_table tr:last');
         var form_data=check_if_the_form_has_been_filled_correctly(selector_object);
-        if(isNaN(form_data[0])){
+        if(isNaN(form_data[0])){	
         var notification='<ol>'+form_data[0]+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
            //hcmp custom message dialog
            hcmp_message_box(title='HCMP error message',notification,message_type='error')
