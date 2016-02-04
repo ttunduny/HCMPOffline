@@ -21,12 +21,20 @@ class commodity_sub_category extends Doctrine_Record {
 		$commodities = $query -> execute();
 		return $commodities;
 	}
+
+	public static function get_dets_one($id) {
+		$query = Doctrine_Query::create() -> select("*") -> from("commodity_sub_category")->where("status=1 and id='$id'");
+		$commodities = $query -> execute();
+		return $commodities;
+	}
 	public static function get_all_pharm() 
 	{
 		$query = Doctrine_Query::create() -> select("*") -> from("commodity_sub_category")->where("status=1 and commodity_category_id !=2");
 		$commodities = $query -> execute();
 		return $commodities;
 	}
+
+	
 	
 	
 

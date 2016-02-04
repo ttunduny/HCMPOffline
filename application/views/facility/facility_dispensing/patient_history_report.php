@@ -146,7 +146,9 @@ $("#find_patient").click(function() {
 	  var url = "<?php echo base_url()."dispensing/get_patient_detail";?>";      
 	  var loading_icon="<?php echo base_url().'assets/img/Preloader_4.gif' ?>";      
    if(patient_number==""){
-		alert('Please make sure you have filled in all required  fields.');
+		swal("Incomplete Data!", "Kindly make sure you have filled in all required  fields");				
+
+		// alert('Please make sure you have filled in all required  fields.');
 		return;
 	}
 	$('#search_results').html("	");
@@ -216,8 +218,12 @@ $("#find_patient").click(function() {
         }
     });
 	$(".search_container").on("click", "table tr", function() {
-		var patient_number = $(this).attr('data-href');	
-		update_history_table(patient_number);
+		var patient_number = $(this).attr('data-href');
+		if(patient_number=='undefined'){
+			return false;
+		}else{
+			update_history_table(patient_number);
+		}
 		// alert(patient_number);
 		// var row_id = $(this).find('.form_patient_row').val();	
 		// var p_no = global_details[row_id][0];
