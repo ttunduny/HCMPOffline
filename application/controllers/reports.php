@@ -1085,6 +1085,58 @@ class Reports extends MY_Controller {
 		return $this -> load -> view($view, $data);
 	}
 
+	public function new_system_usage_temp($year=null,$month=null,$ajax=null){
+		$identifier = $this -> session -> userdata('user_indicator');
+		$district_id = null;
+		$county_id = null;
+		if ($identifier=='district') {
+			$district_id = $this -> session -> userdata('district_id');
+		}
+
+		if ($identifier=='county') {
+			$county_id = $this -> session -> userdata('county_id');
+		}
+		// echo "$identifier";die;
+		if(!isset($month)){
+			$month = date('m');
+		}
+		if(!isset($year)){
+			$year = date('Y');
+		}
+		
+		$full_date = $year.'-'.$month.'-01';
+		$month_text = date('F',strtotime($full_date));		
+		$data['year'] = $year;
+		$data['month'] = $month;
+		$data['month_text'] = $month_text;
+		$data['title'] = " System Usage";
+		$data['banner_text'] = "System Use Statistics";		
+		$data['content_view'] = "subcounty/ajax/new_system_usage_temporary";		
+		$start_date = $year.'-'.$month.'-01';
+		$end_date = $year.'-'.$month.'-31';		
+		$logged_within_month = Facilities::get_facilities_logged_in_month($start_date,$end_date,null,$county_id,$district_id);
+		$issued_within_month = Facilities::get_facilities_issued_in_month($start_date,$end_date,null,$county_id,$district_id);
+		$not_logged_within_month = Facilities::get_facilities_not_logged_in_month($start_date,$end_date,$county_id,$district_id);
+		$not_issued_within_month = Facilities::get_facilities_not_issued_in_month($start_date,$end_date,$county_id,$district_id);
+		$logged_within_month_4 = Facilities::get_facilities_logged_in_count($start_date,$end_date,4,$county_id,$district_id);
+		$issued_within_month_4 = Facilities::get_facilities_issued_in_count($start_date,$end_date,4,$county_id,$district_id);
+
+		$data['monthly_logs'] =array('logged_in'=>$logged_within_month,'not_logged_in'=>$not_logged_within_month,'logged_in_count'=>$logged_within_month_4,'issued_within_month'=>$issued_within_month,'issued_count'=>$issued_within_month_4,'not_issued'=>$not_issued_within_month);
+		
+		$view = null;
+
+		if ($ajax!=null) {
+			$view = "subcounty/ajax/system_usage_filtered_ajax";			
+		} else {
+			$view = "subcounty/ajax/new_system_usage_temporary";
+			
+		}
+		
+		return $this -> load -> view($view, $data);
+	}
+
+
+
 	public function generate_system_usage_temp_data()
 	{
 		$temporary_system_usage = $this->monitoring(1);	
