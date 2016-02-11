@@ -7,5 +7,5 @@ CREATE TABLE `hcmp_rtk`.`service_point_stock_physical` (
   `type_of_adjustment` VARCHAR(45) NOT NULL,
   `count_difference` INT(11) NOT NULL,
   `reason` VARCHAR(200) NOT NULL,
-  `date_of_recording` DATETIME NOT NULL DEFAULT CURRDATE(),
+  `date_of_recording` DATETIME NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`));
