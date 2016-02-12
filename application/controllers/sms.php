@@ -3258,5 +3258,6 @@ public function log_summary_weekly_view(){
    	echo "<pre>";print_r($var);echo "</pre>";exit;
    }
 
+  
 }
 
