@@ -54,26 +54,26 @@ if (!$this -> session -> userdata('user_id')) {
       <![endif]-->
 
       <script>
-    $(function(){
+        $(function(){
 
-        var 
-            $online = $('.online'),
-            $offline = $('.offline');
+          var 
+          $online = $('.online'),
+          $offline = $('.offline');
 
-        Offline.on('confirmed-down', function () {
+          Offline.on('confirmed-down', function () {
             $online.fadeOut(function () {
-                $offline.fadeIn();
+              $offline.fadeIn();
             });
-        });
+          });
 
-        Offline.on('confirmed-up', function () {
+          Offline.on('confirmed-up', function () {
             $offline.fadeOut(function () {
-                $online.fadeIn();
+              $online.fadeIn();
             });
-        });
+          });
 
-    });
-</script>
+        });
+      </script>
 
       <script>
 
@@ -124,8 +124,12 @@ var url="<?php echo base_url(); ?>";
   {
     border-radius: 0 !important;
   }
-
-
+  .online-notification{
+    top:;
+    margin-top: -10px;
+    width: 100%;
+    border-radius: 0px;
+  }
 
 </style>
 
@@ -220,8 +224,8 @@ var url="<?php echo base_url(); ?>";
    $(document).ready(function() {
      alertify.set({ delay: 10000 });
      alertify.log("<?php echo $system_error_message   ?>", null);
-
    });
+
 
  </script>
 
@@ -267,6 +271,10 @@ var url="<?php echo base_url(); ?>";
     </div>
   </div>
   <!-- /.modal-dialog -->
+</div>
+<!-- <p>What happens if i say something here?</p> -->
+<div id="online-notification" class="alert alert-success online-notification">
+  <strong>Success!</strong> Indicates a successful or positive action.
 </div>
 <!-- /.modal -->   
 <?php $this -> load -> view($content_view);?>
@@ -378,16 +386,16 @@ var url="<?php echo base_url(); ?>";
             <textarea class="form-control" name="problem_desc" id="problem_desc" placeholder="Problem Description" required="required"></textarea>
           </div>
         </div>
-    </div>
-    <div class="row">
-     <div class="col-md-12">
-      <div class="form-group" >
-       <div id="new_error"></div>
+      </div>
+      <div class="row">
+       <div class="col-md-12">
+        <div class="form-group" >
+         <div id="new_error"></div>
+       </div>
      </div>
    </div>
- </div>
 
-</div>
+ </div>
 
 </div>
 <div class="modal-footer">
@@ -516,6 +524,7 @@ function checkTime(i)
 
 <script>
 	$(document).ready(function() {
+    $('#online-notification').hide();
     // $(".makesearchable").select2();//dont put form-control when you make it searchable
     changeHashOnLoad();
     $('#new_password').keyup(function() {
@@ -651,19 +660,19 @@ function checkTime(i)
         'title': $('#contact_title').val(),
         'subject': $('#problem_desc').val()
       },
-       beforeSend:function(){
-         $("#new_error").html("Processing...");
-       },
-       success: function(data){
+      beforeSend:function(){
+       $("#new_error").html("Processing...");
+     },
+     success: function(data){
             // console.log($('#current_password').val())
             console.log(data);
             //return;
             //response = jQuery.parseJSON(data);
           }
-    })
+        })
     });
 
-});
+  });
 
 </script>
 <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>
