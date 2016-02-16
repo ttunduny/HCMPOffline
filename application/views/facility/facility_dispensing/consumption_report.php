@@ -46,6 +46,10 @@ $county_id =$this -> session -> userdata('county_id');
 
 </div>
 
+<div id="graph_consumption_by_age" class="clearfix" style="border:1px solid #ccc;padding:1px;min-height:250px;margin-top:2%;height:auto;">	
+
+</div>
+
 <!-- <div class='graph-section' id='graph-section'></div> -->
 
 <script>
@@ -78,7 +82,12 @@ $county_id =$this -> session -> userdata('county_id');
 
 	$('#filter_consumption').click(function () {
 		var commodity_id = $('#commodity_id').val();		
-		update_consumption_table(commodity_id);      
+		update_consumption_table(commodity_id); 
+		if(commodity_id!=''){
+			generate_graph(commodity_id);     
+		}else{
+			generate_graph_all(commodity_id);     
+		}
     });
 
 	function update_consumption_table(commodity_id){
@@ -106,8 +115,59 @@ $county_id =$this -> session -> userdata('county_id');
         }
     });
 
+	
+
     }//end of update history table
 
+    function generate_graph(commodity_id){
+		var from =$("#from").val();
+        var to =$("#to").val();
 
+        if(from==''){from="NULL";}
+        if(to==''){to="NULL";}
+			
+		from = encodeURI(from);
+		to = encodeURI(to);		
+  		var url = "<?php echo base_url()."dispensing/get_consumption_chart_ajax";?>";      
+		$.ajax({
+        type: "POST",
+        url: url,
+        data:{'commodity_id': commodity_id,'from':from,'to':to},       
+        success: function(msg) {
+        	// console.log(msg);return;
+      	$('#graph_consumption_by_age').html(msg);
+      	// $('#ajax_commodity_table').dataTable();
+       		
+      	},
+        error: function() {
+            alert('Error occured');
+        }
+    	});
+	}
+	function generate_graph_all(commodity_id){
+		var from =$("#from").val();
+        var to =$("#to").val();
+
+        if(from==''){from="NULL";}
+        if(to==''){to="NULL";}
+			
+		from = encodeURI(from);
+		to = encodeURI(to);		
+  		var url = "<?php echo base_url()."dispensing/get_consumption_chart_ajax_all";?>";      
+		$.ajax({
+        type: "POST",
+        url: url,
+        data:{'commodity_id': commodity_id,'from':from,'to':to},       
+        success: function(msg) {
+        	// console.log(msg);return;
+      	$('#graph_consumption_by_age').html(msg);
+      	// $('#ajax_commodity_table').dataTable();
+       		
+      	},
+        error: function() {
+            alert('Error occured');
+        }
+    	});
+	}
 	});
 </script>
