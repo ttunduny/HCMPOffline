@@ -274,7 +274,7 @@ var url="<?php echo base_url(); ?>";
 </div>
 <!-- <p>What happens if i say something here?</p> -->
 <div id="online-notification" class="alert alert-success online-notification">
-  <strong>Success!</strong> Indicates a successful or positive action.
+  <strong>Internet Connection Established! </strong>You are advised to <a href="<?php echo base_url().'sync/synchronize_data'; ?>">synchronize your data</a>
 </div>
 <!-- /.modal -->   
 <?php $this -> load -> view($content_view);?>

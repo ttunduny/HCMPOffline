@@ -9,9 +9,20 @@ class Synchronization extends MY_Controller {
 
 	function __construct() {
 		parent::__construct();
+		//this comment is for you nigga
+		//erase it 
+		//hahaha
+	}
 
-		// $this -> load -> helper(array('form', 'url'));
-		// $this -> load -> library(array('hcmp_functions', 'form_validation'));
+	public function synchronize_data(){
+		$time = sync_model::get_latest_timestamp();
+		// $time = $this->last_sync_time();
+		echo "<pre>"; print_r($time); echo "</pre>";
+	}
+
+	public function last_sync_time(){
+		$time = sync_model::get_latest_timestamp();
+		return $time[0]['last_sync_date'];
 	}
 
 	public function tester(){
