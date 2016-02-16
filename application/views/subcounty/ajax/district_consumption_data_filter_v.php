@@ -364,7 +364,6 @@ $district_id_active =  $this -> session -> userdata('district_id');
 	$(function () { 
 		<?php echo $consumption_default; ?>
 	});
-
 	$(document).ready(function() {
 		<?php echo $default_consumption_graph; ?>		
     	var from =$("#tracer_from").val();
@@ -386,12 +385,10 @@ $district_id_active =  $this -> session -> userdata('district_id');
 			changeYear: true,
 			buttonImage: baseUrl
 		});
-
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 	      $('.graph_content').html('');
 	    });
 		$("#subcounty_facility_filter,#category_facility_filter").hide();
-
 		$("#subcounty_district_filter").change(function() {
 			var option_value=$(this).val();		
 			if(option_value=='NULL'){
@@ -409,7 +406,6 @@ $district_id_active =  $this -> session -> userdata('district_id');
 				$("#subcounty_facility_filter").show('slow');		
 			}
 		});	
-
 		$("#category_district_filter").change(function() {
 			var option_value=$(this).val();
 			if(option_value=='NULL'){
@@ -427,9 +423,7 @@ $district_id_active =  $this -> session -> userdata('district_id');
 				$("#category_facility_filter").show('slow');		
 			}
 		});
-
 		//TRACER	
-
 		//tracer filter
 		$(".tracer-filter").button().click(function(e) {
         	e.preventDefault(); 	        
@@ -455,7 +449,6 @@ $district_id_active =  $this -> session -> userdata('district_id');
        		$("#tracer_commodity_filter").val()+"/NULL/"+$("#tracer_district_filter").val()+"/NULL/"+$("#tracer_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/"+"table_data"+"/1"; 
         	ajax_request_replace_div_content(url_,'.graph_content');    
         }); 
-
         //Tracer Download                 
        	$(".tracer-download").button().click(function(e) {
         	e.preventDefault(); 
@@ -466,8 +459,6 @@ $district_id_active =  $this -> session -> userdata('district_id');
   			var url_ = "reports/consumption_stats_graph/"+$("#tracer_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#tracer_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/csv_data"; 
          	window.open(url+url_ ,'_blank');   
         }); 
-
-
         //CATEGORIES
         //Category Filter
         $(".category-filter").button().click(function(e) {
@@ -480,7 +471,6 @@ $district_id_active =  $this -> session -> userdata('district_id');
         	// var url_ = "reports/get_county_stock_level_new/"+"NULL/"+$("#category_filter").val()+"/"+$("#category_district_filter").val()+"/"+ $("#category_facility_filter").val()+"/"+$("#category_plot_value_filter").val()+ "/"+"NULL"+ "/"+"NULL";	
 			ajax_request_replace_div_content(url_,'.graph_content');   	
         });
-
         //Category Filter Table
         $(".category-filter-table").button().click(function(e) {
 			e.preventDefault();	
@@ -492,7 +482,6 @@ $district_id_active =  $this -> session -> userdata('district_id');
         	// var url_ = "reports/get_county_stock_level_new/"+"NULL/"+$("#category_filter").val()+"/"+$("#category_district_filter").val()+"/"+ $("#category_facility_filter").val()+"/"+$("#category_plot_value_filter").val()+ "/"+"table_data"+ "/"+"NULL";	
 			ajax_request_replace_div_content(url_,'.graph_content');	
         });
-
         //Category Download
         $(".category-download").button().click(function(e) {
 			e.preventDefault();
@@ -504,9 +493,7 @@ $district_id_active =  $this -> session -> userdata('district_id');
         	// var url_ = "reports/get_county_stock_level_new/"+"NULL/"+$("#category_filter").val()+"/"+$("#category_district_filter").val()+"/"+ $("#category_facility_filter").val()+"/"+$("#category_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/csv_data";	
 		 	window.open(url+url_ ,'_blank');	
         });	  
-
         //COUNTY VIEW
-
         //County Filter
         $(".county-filter").button().click(function(e) {
 			e.preventDefault();	
@@ -517,7 +504,6 @@ $district_id_active =  $this -> session -> userdata('district_id');
         	var url_ = "reports/consumption_stats_graph/"+$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/graph";	
 			ajax_request_replace_div_content(url_,'.graph_content');	
         });	
-
         //County Filter Table
         $(".county-filter-table").button().click(function(e) {
 			e.preventDefault();			
@@ -528,8 +514,6 @@ $district_id_active =  $this -> session -> userdata('district_id');
         	var url_ = "reports/consumption_stats_graph/"+$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/table_data";	
 			ajax_request_replace_div_content(url_,'.graph_content');	
         });
-
-
         //County Download
         $(".county-download").button().click(function(e) {
 			e.preventDefault();	
@@ -540,8 +524,6 @@ $district_id_active =  $this -> session -> userdata('district_id');
   			var url_ = "reports/consumption_stats_graph/"+$("#county_commodity_filter").val()+"/NULL/NULL/NULL/"+$("#county_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/csv_data";	
 		 	window.open(url+url_ ,'_blank');	
         }); 
-
-
         //SUB-COUNTY VIEW
         //Sub-County Filter        
         $(".subcounty-filter").button().click(function(e) {
@@ -557,8 +539,6 @@ $district_id_active =  $this -> session -> userdata('district_id');
 			// $("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+ "/NULL/NULL";	
 			ajax_request_replace_div_content(url_,'.graph_content');	
         });
-
-
         //Sub-County table
         $(".subcounty-filter-table").button().click(function(e) {
 			e.preventDefault();	
@@ -568,14 +548,12 @@ $district_id_active =  $this -> session -> userdata('district_id');
 			if(from==''){from="NULL";	}
         	if(to==''){to="NULL";}
         	var url_ = "reports/consumption_stats_graph/"+$("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/table_data";
-
    //      	var url_ = "reports/get_county_stock_level_new/"+
 			// $("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+ "/table_data/NULL";	
 			var url_ = "reports/consumption_stats_graph/"+
 			// $("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+ "/table_data/NULL";	
 			ajax_request_replace_div_content(url_,'.graph_content');	
         });
-
         //Sub-County Download
         $(".subcounty-download").button().click(function(e) {
 			e.preventDefault();	
@@ -585,18 +563,11 @@ $district_id_active =  $this -> session -> userdata('district_id');
 			if(from==''){from="NULL";	}
         	if(to==''){to="NULL";}
         	var url_ = "reports/consumption_stats_graph/"+$("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/csv_data";
-
         	// var url_ = "reports/consumption_stats_graph/"+$("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()
         	// +"/"+$("#subcounty_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/csv_data";
 			// var url_ = "reports/get_county_stock_level_new/"+
 			// $("#subcounty_commodity_filter").val()+"/NULL/"+$("#subcounty_district_filter").val()+"/"+ $("#subcounty_facility_filter").val()+"/"+$("#subcounty_plot_value_filter").val()+ "/"+encodeURI(from)+ "/"+encodeURI(to)+"/csv_data";	;	
 		 	window.open(url+url_ ,'_blank');	
         });
-
-
-
-
 	});	
-
-
 </script>
