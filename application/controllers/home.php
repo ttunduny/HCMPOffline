@@ -100,6 +100,7 @@ class Home extends MY_Controller
 
 		$token = $user_data["password"];
 		$default='123456';
+		$data['identifier'] = $identifier;
 		
 		$salt = '#*seCrEt!@-*%';
 		
