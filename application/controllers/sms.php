@@ -381,7 +381,7 @@ class sms extends MY_Controller {
 		$phone .= $this -> get_ddp_phone_numbers($data[0]['district']);
 		$message = $facility_name . " have been donated commodities. HCMP";
 
-		//$this -> send_sms(substr($phone, 0, -1), $message);
+		$this -> send_sms(substr($phone, 0, -1), $message);
 
 	}
 
@@ -443,13 +443,18 @@ class sms extends MY_Controller {
 	 public function send_email_test() {
 	 	$this -> hcmp_functions -> send_email();
 	 }
-
+	 public function configure_db(){
+	 	$sql = "CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `facility_user_log` AS select distinct `u`.`facility` AS `facility_code`,`l`.`user_id` AS `user_id`,`l`.`start_time_of_event` AS `start_time_of_event`,`l`.`end_time_of_event` AS `end_time_of_event`,`l`.`action` AS `action`,`l`.`issued` AS `issued`,`l`.`ordered` AS `ordered`,`l`.`decommissioned` AS `decommissioned`,`l`.`redistribute` AS `redistribute`,`l`.`add_stock` AS `add_stock` from (`user` `u` join `log` `l`) where ((`u`.`id` = `l`.`user_id`) and (`u`.`usertype_id` = '5'));
+";
+		$result = $this->db->query($sql);
+		echo "$result";
+	 }
 	 //Checks if there are potential expiries in the system
 	 public function check_potential_expiries() {
 	 	$year = date("Y");
 	 	$potential_expiries = Facility_stocks::get_potential_expiries_sms();
 	 	$total_potential = count($potential_expiries);
-
+	 	echo "$total_potential";die;
 	 	if ($total_potential > 0) {
 	 		$total_facilitites = count($potential_expiries);
 
@@ -502,7 +507,7 @@ class sms extends MY_Controller {
 
 	 //Stock out SMSes
 	 //will be called once a week by the system automatically
-	 public function stock_out_sms() {
+	public function stock_out_sms() {
 	 	$stock_outs = Facility_stocks::get_stock_outs_sms();
 	 	$total_stock_outs = count($stock_outs);
 	 	if ($total_stock_outs > 0) {
@@ -556,7 +561,7 @@ class sms extends MY_Controller {
 	 }
 
 	 //When stock is updated by a particular facility
-	 public function send_stock_update_sms() {
+	public function send_stock_update_sms() {
 	 	$facility_code = $this -> session -> userdata('facility_id');
 	 	$facility_name = Facilities::get_facility_name2($facility_code);
 	 	$facility_name = $facility_name['facility_name'];
@@ -3258,5 +3263,6 @@ public function log_summary_weekly_view(){
    	echo "<pre>";print_r($var);echo "</pre>";exit;
    }
 
+  
 }
 
