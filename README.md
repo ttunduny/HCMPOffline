@@ -1,4 +1,4 @@
-# HCMP-2015
-Main repository for the HCMP Project
+HCMP-2015
 
-#Deuce
+Main repository for the HCMP Project
+http://health-cmp.or.ke

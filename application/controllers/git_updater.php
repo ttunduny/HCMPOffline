@@ -13,6 +13,63 @@ class Git_updater extends MY_Controller {
 		echo "Welcome to the the git updater. Updated Seven times Now";
 	}
 
+	public function admin_updates_home($update_status=NULL){
+		// echo "<pre> This";print_r($update_status);exit;
+		$permissions='super_permissions';
+		$data['user_types']=Access_level::get_access_levels($permissions);
+		$hash = $this->get_hash();
+		$status = $this->github_update_status();
+		if (isset($status) && $status == 1) {
+			$status_ = "TRUE";
+			$available_update = 1;
+		}else{
+			$status_ = "FALSE";
+			$available_update = 0;
+		}
+		// echo $available_update;exit;
+		$git_records = Offline_model::get_prior_records();
+		// echo "<pre>";print_r($git_records);exit;
+
+		$data['available_update'] = $available_update;
+		$data['most_recent_commit'] = $hash;
+		$data['update_status'] = $status_;
+		$data['git_records'] = $git_records;
+
+		$data['title'] = "System Updates";
+		$data['banner_text'] = "User Management";
+		$data['content_view'] = "offline/offline_admin_home";
+		$template = 'shared_files/template/dashboard_v';
+
+		// $update_status = $this->github_update();
+		// $hash = $this->get_hash();
+		// $update_files = $this->get_zip($hash);
+
+		// echo "<pre>";print_r($update_files);exit;
+
+		$this -> load -> view($template, $data);
+	}
+
+	public function update_system(){
+		$hash = $this->get_hash();
+		$set_current_commit = $this->config->set_item('current_commits', '1234');
+		// echo $this->config->item('current_commits');exit;
+
+		$get_zip = $this->get_latest_zip();
+		$update_files = $this->extract_and_copy_files($hash);
+		$update_hash = $this->set_latest_hash($hash);
+		// $residual_directory = $this->config->item('github_user').'-'.$this->config->item('github_repo').'-'.$hash;
+		// $this->config->set_item('item_name', 'item_value');
+		$extracted_path = $this->get_extracted_path();
+		$delete_residual_repo = delete_files($hash.'.zip');
+		$delete_residual_dir = delete_files($extracted_path);
+		// $delete_residual_files = $this->delete_residuals();
+
+		// echo "<pre>";print_r($update_files);exit;
+		// echo $set_current_commit;exit;
+		// echo "I worked";
+		redirect('/git_updater/admin_updates_home/1');
+	}
+
 	public function github_update_status(){
 		// echo "I WAS HERE";
 		$res = $this->github_updater->has_update();
@@ -144,53 +201,6 @@ class Git_updater extends MY_Controller {
 
 		// echo "<pre>";print_r($res);
 		return $res;
-	}
-
-	public function admin_updates_home($update_status=NULL){
-		// echo "<pre> This";print_r($update_status);exit;
-		$permissions='super_permissions';
-		$data['user_types']=Access_level::get_access_levels($permissions);
-		$hash = $this->get_hash();
-		$status = $this->github_update_status();
-		if (isset($status) && $status == 1) {
-			$status_ = "TRUE";
-			$available_update = 1;
-		}else{
-			$status_ = "FALSE";
-			$available_update = 0;
-		}
-		// echo $available_update;exit;
-		$git_records = Offline_model::get_prior_records();
-		// echo "<pre>";print_r($git_records);exit;
-
-		$data['available_update'] = $available_update;
-		$data['most_recent_commit'] = $hash;
-		$data['update_status'] = $status_;
-		$data['git_records'] = $git_records;
-
-		$data['title'] = "System Updates";
-		$data['banner_text'] = "User Management";
-		$data['content_view'] = "offline/offline_admin_home";
-		$template = 'shared_files/template/dashboard_v';
-
-		// $update_status = $this->github_update();
-		// $hash = $this->get_hash();
-		// $update_files = $this->get_zip($hash);
-
-		// echo "<pre>";print_r($update_files);exit;
-
-		$this -> load -> view($template, $data);
-	}
-
-	public function update_system(){
-		$hash = $this->get_hash();
-		$get_zip = $this->get_latest_zip();
-		$update_files = $this->extract_and_copy_files($hash);
-		$update_hash = $this->set_latest_hash($hash);
-		$delete_residual_files = $this->delete_residuals();
-
-		// echo "<pre>";print_r($update_files);exit;
-		// $this->admin_updates_home($update_status);
 	}
 
 	public function set_latest_hash($hash){
