@@ -18,7 +18,12 @@ class Git_updater extends MY_Controller {
 		$permissions='super_permissions';
 		$data['user_types']=Access_level::get_access_levels($permissions);
 		$hash = $this->get_hash();
-		$status = $this->github_update_status();
+		$local_hash = $this->github_update_status_local();
+		if ($hash != $local_hash) {
+			$status = 1;
+		}
+		// echo "<pre>";print_r($status);echo "</pre>";exit;	
+
 		if (isset($status) && $status == 1) {
 			$status_ = "TRUE";
 			$available_update = 1;
@@ -51,23 +56,34 @@ class Git_updater extends MY_Controller {
 
 	public function update_system(){
 		$hash = $this->get_hash();
-		$set_current_commit = $this->config->set_item('current_commits', '1234');
-		// echo $this->config->item('current_commits');exit;
 
 		$get_zip = $this->get_latest_zip();
 		$update_files = $this->extract_and_copy_files($hash);
-		$update_hash = $this->set_latest_hash($hash);
-		// $residual_directory = $this->config->item('github_user').'-'.$this->config->item('github_repo').'-'.$hash;
-		// $this->config->set_item('item_name', 'item_value');
+		$update_git_log = $this->update_log($hash);
+		
 		$extracted_path = $this->get_extracted_path();
 		$delete_residual_repo = delete_files($hash.'.zip');
 		$delete_residual_dir = delete_files($extracted_path);
-		// $delete_residual_files = $this->delete_residuals();
 
 		// echo "<pre>";print_r($update_files);exit;
 		// echo $set_current_commit;exit;
 		// echo "I worked";
 		redirect('/git_updater/admin_updates_home/1');
+	}
+
+	public function update_log($hash){
+		$data = array('hash_value' => $hash);
+
+		$status = $this->db->insert('git_log',$data);
+		return $status;
+	}
+
+	public function github_update_status_local(){
+		$hash = $this->get_hash();
+		$local_hash = git_updater_model::get_latest_hash();
+		$actual_hash = $local_hash[0]['hash_value'];
+
+		return $actual_hash;
 	}
 
 	public function github_update_status(){
