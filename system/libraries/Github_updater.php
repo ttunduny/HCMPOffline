@@ -26,6 +26,7 @@ class Github_updater
     {
         $this->ci =& get_instance();
         $this->ci->load->config('github_updater');
+        $this->ci->load->library('curl');
     }
     /**
      * Checks if the current version is up to date

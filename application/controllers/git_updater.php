@@ -222,26 +222,6 @@ class Git_updater extends MY_Controller {
 		// $this->repo_downloader->download();
 	}
 
-	public function curl_repo_download(){
-		$url = "https://github.com/karsanrichard/HCMP-ALPHA/zipball/master";
-				$ch = curl_init();
-		/**
-		* Set the URL of the page or file to download.
-		*/
-		curl_setopt($ch, CURLOPT_URL,$url);
-
-		$fp = fopen('rss.xml', 'w+');
-		/**
-		* Ask cURL to write the contents to a file
-		*/
-		curl_setopt($ch, CURLOPT_FILE, $fp);
-
-		curl_exec ($ch);
-
-		curl_close ($ch);
-		fclose($fp);
-	}
-
 	public function get_with_get(){
 		$url = "https://github.com/karsanrichard/HCMP-ALPHA/zipball/master";
 		$data = file_get_contents($url);

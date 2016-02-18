@@ -14,6 +14,19 @@ class Synchronization extends MY_Controller {
 		//hahaha
 	}
 
+	function index(){
+		$data['title'] = "System Database Updates";
+		// $data['last_sync'] = $current_time =date('Y-m-d H:i:s');//this is wrong. last sync is to be gotten from database
+		$data['last_sync'] = 
+		$data['banner_text'] = "System Database Management";		
+		$template = 'shared_files/template/template';			
+		$data['content_view'] = 'facility/facility_db';			
+		
+		$this -> load -> view($template, $data);
+
+	}
+	
+
 	public function synchronize_data(){
 		$time = sync_model::get_latest_timestamp();
 		// $time = $this->last_sync_time();
