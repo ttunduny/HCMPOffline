@@ -16,3 +16,4 @@ system/libraries/Hcmp_functions.php
 *.xls
 /system/libraries/Doctrine_
 application/config/config.php
+README.md

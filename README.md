@@ -1,7 +1,6 @@
-# HCMP-UPDATES
-This will only contain altered files for the above system
+#HCMP-2015
 
-Only updated files shall be stored in this repository for the sake of faster remote updates. 
-This is NOT the project in its entirety.
+Main repository for the HCMP Project
+http://health-cmp.or.ke
 
 God Speed
