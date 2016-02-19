@@ -2002,7 +2002,7 @@ $handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls"
 
         //path for Mac
         //$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-$email_address = "smutheu@clintonhealthaccess.org,jaynerawz@gmail.com";
+$email_address = "smutheu@clintonhealthaccess.org";
 $bcc = "karsanrichard@gmail.com,kelvinmwas@gmail.com";
 
 $this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc);
@@ -2080,7 +2080,7 @@ public function ors_zinc_consumption_report() {
 
         //path for Mac
         //$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-	$email_address = "smutheu@clintonhealthaccess.org,jaynerawz@gmail.com";
+	$email_address = "smutheu@clintonhealthaccess.org";
 	$bcc = "karsanrichard@gmail.com,kelvinmwas@gmail.com";
 
 	$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc);
@@ -3209,7 +3209,7 @@ public function log_summary_weekly_view(){
 	$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 	$subject = "System Usage as at ".$time;
 
-	$email_address = "smutheu@clintonhealthaccess.org,jaynerawz@gmail.com,karsanrichard@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com";
+	$email_address = "smutheu@clintonhealthaccess.org,karsanrichard@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com";
 						// $email_address = "karsanrichard@gmail.com,ttunduny@gmail.com";
                         // $email_address = "ttunduny@gmail.com";
                         //$bcc = "";
