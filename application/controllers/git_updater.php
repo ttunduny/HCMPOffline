@@ -17,6 +17,8 @@ class Git_updater extends MY_Controller {
 		// echo "<pre> This";print_r($update_status);exit;
 		$permissions='super_permissions';
 		$data['user_types']=Access_level::get_access_levels($permissions);
+		$identifier = $this -> session -> userdata('user_indicator');
+
 		$hash = $this->get_hash();
 		$local_hash = $this->github_update_status_local();
 		if ($hash != $local_hash) {
@@ -41,9 +43,18 @@ class Git_updater extends MY_Controller {
 		$data['git_records'] = $git_records;
 
 		$data['title'] = "System Updates";
-		$data['banner_text'] = "User Management";
-		$data['content_view'] = "offline/offline_admin_home";
-		$template = 'shared_files/template/dashboard_v';
+		$data['banner_text'] = "System Management";
+		// $data['content_view'] = "offline/offline_admin_home";
+		// $template = 'shared_files/template/dashboard_v';
+		$data['banner_text'] = "System Management";
+ 		if ($identifier=='facility_admin') {
+ 	       $template = 'shared_files/template/template';            
+           $data['content_view'] = 'facility/offline_admin';            
+        }else{
+           $data['content_view'] = "offline/offline_admin_home";
+           $template = 'shared_files/template/dashboard_v';
+        }
+
 
 		// $update_status = $this->github_update();
 		// $hash = $this->get_hash();
@@ -55,8 +66,7 @@ class Git_updater extends MY_Controller {
 	}
 
 	public function update_system(){
-		$hash = $this->get_hash();
-
+		$hash = $this->get_hash();			
 		$get_zip = $this->get_latest_zip();
 		$update_files = $this->extract_and_copy_files($hash);
 		$update_git_log = $this->update_log($hash);
@@ -64,7 +74,7 @@ class Git_updater extends MY_Controller {
 		$extracted_path = $this->get_extracted_path();
 		$delete_residual_repo = delete_files($hash.'.zip');
 		$delete_residual_dir = delete_files($extracted_path);
-
+		$update_logs = $this->update_log($hash);
 		// echo "<pre>";print_r($update_files);exit;
 		// echo $set_current_commit;exit;
 		// echo "I worked";
@@ -72,8 +82,10 @@ class Git_updater extends MY_Controller {
 	}
 
 	public function update_log($hash){
-		$data = array('hash_value' => $hash);
-
+		$current_time =date('Y-m-d H:i:s');
+		$data = array('hash_value' => $hash,'date_added'=>$current_time);	
+		echo "<pre>";
+		// print_r($data);die;
 		$status = $this->db->insert('git_log',$data);
 		return $status;
 	}

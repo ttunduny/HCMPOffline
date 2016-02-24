@@ -2002,7 +2002,7 @@ $handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls"
 
         //path for Mac
         //$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-$email_address = "smutheu@clintonhealthaccess.org,jaynerawz@gmail.com";
+$email_address = "smutheu@clintonhealthaccess.org";
 $bcc = "karsanrichard@gmail.com,kelvinmwas@gmail.com";
 
 $this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc);
@@ -2080,7 +2080,7 @@ public function ors_zinc_consumption_report() {
 
         //path for Mac
         //$handler = "/Applications/XAMPP/xamppfiles/htdocs/hcmp/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
-	$email_address = "smutheu@clintonhealthaccess.org,jaynerawz@gmail.com";
+	$email_address = "smutheu@clintonhealthaccess.org";
 	$bcc = "karsanrichard@gmail.com,kelvinmwas@gmail.com";
 
 	$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler, $bcc);
@@ -2667,288 +2667,41 @@ public function log_summary_weekly_view(){
 	}
 	public function log_summary_weekly(){
 		$time=date('M , d Y');
-		/*PRIOR TO CONVERSION TO NEW QUERY*/
-		/*Indented for nesting*/
-			/*
-				$data = $q = Doctrine_Manager::getInstance()->getCurrentConnection()
-			        ->fetchAll("SELECT
-	                                *
-	                            FROM
-	                                (SELECT
-	                                    f.facility_name,
-	                                        f.facility_code,
-	                                        c.county,
-	                                        d.district,
-	                                        l.user_id,
-	                                        IF(l.issued = 0 AND l.ordered = 0
-	                                            AND l.redistribute = 0
-	                                            AND l.decommissioned = 0, MAX(l.start_time_of_event), NULL) AS login_only,
-	                                        l.issued,
-	                                        IF(l.issued = 1 AND l.redistribute = 0, MAX(l.start_time_of_event), NULL) AS issue_event,
-	                                        l.ordered,
-	                                        DATEDIFF(NOW(), IF(l.issued = 1 AND l.redistribute = 0, MAX(l.start_time_of_event), NULL)) AS issue_d,
-	                                        IF(l.ordered = 1, MAX(l.end_time_of_event), NULL) AS ordered_event,
-	                                        DATEDIFF(NOW(), IF(l.ordered = 1, MAX(l.start_time_of_event), 0)) AS ordered_d,
-	                                        l.redistribute,
-	                                        IF(l.redistribute = 1, MAX(l.start_time_of_event), NULL) AS redistribute_event,
-	                                        DATEDIFF(NOW(), IF(l.redistribute = 1, MAX(l.start_time_of_event), 0)) AS redistribute_d,
-	                                        l.decommissioned,
-	                                        IF(l.decommissioned = 1, MAX(l.start_time_of_event), NULL) AS decommissioned_event,
-	                                        DATEDIFF(NOW(), IF(l.decommissioned = 1, MAX(l.start_time_of_event), 0)) AS decommissioned_d,
-	                                        l.add_stock,
-	                                        IF(l.add_stock = 1, MAX(l.start_time_of_event), NULL) AS receive_event,
-	                                        DATEDIFF(NOW(), IF(l.add_stock = 1, MAX(l.start_time_of_event), 0)) AS receive_event_d,
-	                                        MAX(l.start_time_of_event) AS date_event,
-	                                        DATEDIFF(NOW(), MAX(l.start_time_of_event)) AS date_event_d
-	                                FROM
-	                                    log l
-	                                INNER JOIN user u ON l.user_id = u.id
-	                                RIGHT JOIN facilities f ON u.facility = f.facility_code
-	                                INNER JOIN districts d ON f.district = d.id
-	                                INNER JOIN counties c ON d.county = c.id
-	                                WHERE
-	                                    using_hcmp = 1
-	                                GROUP BY l.issued , l.ordered , l.redistribute , l.decommissioned , f.facility_code) AS t
-	                            GROUP BY issued , ordered , redistribute , decommissioned , facility_code
-	                                                        ");
-					    $mfl=array();
-					    // echo "<pre>";print_r($data);echo "</pre>";exit;
-								 
-						foreach ($data as $key) {
-								
-							$mfl[]=$key['facility_code'];
-									 
-								 }
-								 $unique_mfl=array_values(array_unique($mfl));
-								 //echo '<pre>';print_r($data); echo '</pre>';exit;
-								 $temp=array();
-								 foreach ($unique_mfl as $key ) {
-								 	
-								 	array_push($temp,array('facility_code'=>$key,
-									        'facility_name'=>'',
-									        'county'=>'',
-									        'district'=>'',
-									        'issued'=>'',
-									        'issue_event'=>0,
-									        'issue_d'=>0,
-									        'login_event'=>0,
-									        'ordered'=>0,
-									        'ordered_d'=>0,
-									        'ordered_event'=>'',
-									        'redistribute'=>'',
-									        'redistribute_event'=>'',
-									        'redistribute_d'=>0,
-									        'decommissioned'=>'',
-									        'decommissioned_event'=>'',
-									        'decommissioned_d'=>0,
-									        'receive_event'=>'',
-									        'receive_event_d'=>0,
-										    'date_event'=>'',
-										    'date_event_d'=>0
-									        ));
-									 
-								 }
-								//echo '<pre>';print_r($temp); echo '</pre>';exit;						 
-								 $multi_dimenetional = array();
-										foreach ($data  as $row) {
-										    $multi_dimenetional[$row['facility_name']][] = array( 'facility_name'=>$row['facility_name'],
-										    									'facility_code'=>$row['facility_code'],
-										    									'county'=>$row['county'],
-										    									'district'=>$row['district'],
-										    									  'issued'=>$row['issued'],
-										    									  'issue_event'=>($row['issue_event']),
-										    									  'issue_d'=>$row['issue_d'],
-										    									  'login_event'=>$row['login_only'],
-										    									  'ordered'=>$row['ordered'],
-										    									  'ordered_d'=>$row['ordered_d'],
-										    									  'ordered_event'=>$row['ordered_event'],
-										    									  'redistribute'=>$row['redistribute'],
-										    									  'redistribute_event'=>$row['redistribute_event'],
-										    									  'redistribute_d'=>$row['redistribute_d'],
-										    									  'decommissioned'=>$row['decommissioned'],
-										    									  'decommissioned_event'=>$row['decommissioned_event'],
-										    									  'decommissioned_d'=>$row['decommissioned_d'],
-										    									  'receive_event'=>$row['receive_event'],
-										    									  'receive_event_d'=>$row['receive_event_d'],
-										    									  'date_event'=>$row['date_event'],
-										    									  'date_event_d'=>$row['date_event_d']
-																			        );
-										}
-								 // echo '<pre>';print_r(array_values($multi_dimenetional)); echo '</pre>';exit;
-								 $clean_array=array_values($multi_dimenetional);
-								
-									$new=call_user_func_array('array_merge_recursive', $multi_dimenetional);
 
-									  $temp2 = array();
-								foreach ($clean_array as $key => $value) {
-									//echo count($value).'<br>';
-									$issue_event=array();
-									$issue_days=array();
-									$login_event=array();
-									$ordered=array();
-									$ordered_days=array();
-									$ordered_event=array();
-									$redistribute_days=array();
-									$redistribute_event=array();
-									$decommission=array();
-									$decommission_event=array();
-									$decommission_days=array();
-									
-									$receive_event=array();
-									$receive_days=array();
-									$last_event=array();
-									$lastseen_days=array();
-									foreach ($value as $key_child => $value_child) {
-										
-										foreach ($temp as $newkey => $newvalue) {
-											if ($newvalue['facility_code']==$value_child['facility_code']) {
-												$facility_name=$value_child['facility_name'];
-												$facility_code=$value_child['facility_code'];
-												$county=$value_child['county'];
-												$district=$value_child['district'];
+		$active_facilities = Facilities::getAll_();
+// echo "<pre>";print_r($active_facilities);echo "</pre>";exit;
+		$last_seen = Facilities::get_facility_data_specific(NULL,$county_id,$district_id,$facility_code,'all');
+		$last_issued = Facilities::get_facility_data_specific('last_issued',$county_id,$district_id,$facility_code,'all');
+		$last_ordered = Facilities::get_facility_data_specific('last_ordered',$county_id,$district_id,$facility_code,'all');
+		$decommissioned = Facilities::get_facility_data_specific('last_decommissioned',$county_id,$district_id,$facility_code,'all');
+		$redistributed = Facilities::get_facility_data_specific('last_redistributed',$county_id,$district_id,$facility_code,'all');
+		$added_stock = Facilities::get_facility_data_specific('last_added_stock',$county_id,$district_id,$facility_code,'all');
+// $all_faciliteis = Facilities::getAll_();
 
-												$login_event[]=$value_child['login_only'];
-												$ordered[]=$value_child['ordered'];
-												
-												$issue_event[]=$value_child['issue_event'];
-												$issue_days[]=$value_child['issue_d'];
-												
-												$ordered_days[]=$value_child['ordered_d'];
-												$ordered_event[]=$value_child['ordered_event'];
-												$redistribute_days[]=$value_child['redistribute_d'];
-												$redistribute_event[]=$value_child['redistribute_event'];
-												$decommission[]=$value_child['decommissioned'];
-												$decommission_event[]=$value_child['decommissioned_event'];
-												
-												$decommission_days[]=$value_child['decommissioned_d'];
-												$receive_event[]=$value_child['receive_event'];
-												$receive_days[]=$value_child['receive_event_d'];
-												$last_event[]=$value_child['date_event'];
-												$lastseen_days[]=$value_child['date_event_d'];
-																				
-									 
-											}
-											
-										}
-									}
-									array_push($temp2,array('facility_code'=>$facility_code,
-									        'facility_name'=>$facility_name,
-									        'county'=>$county,
-									        'district'=>$district,
-									        'issued'=>'',
-									        'issue_event'=>max($issue_event),
-									        'issue_d'=>min(array_filter($issue_days)),
-									        'login_event'=>max($login_event),
-									        'ordered'=>0,
-									        'ordered_d'=>min(array_filter($ordered_days)),
-									        'ordered_event'=>max($ordered_event),
-									        'redistribute'=>'',
-									        'redistribute_event'=>max($redistribute_event),
-									        'redistribute_d'=>min(array_filter($redistribute_days)),
-									        'decommissioned'=>'',
-									        'decommissioned_event'=>max($decommission_event),
-									        'decommissioned_d'=>min(array_filter($decommission_days)),
-									        'receive_event'=>max($receive_event),
-									        'receive_event_d'=>min(array_filter($receive_days)),
-										    'date_event'=>max($last_event),
-										    'date_event_d'=>min($lastseen_days)
-									        ));
-
-								}
-
-								$excel_data = array('doc_creator' => 'HCMP-Kenya', 'doc_title' => 'HCMP_Facility_Activity_Log_Summary ', 'file_name' => 'HCMP_Facility_Activity_Log_Summary_as_at_'.$time);
-								$row_data = array(); 
-								$column_data = array("Facility Name", "Facility Code", "County","Sub-County", "Date Last Issued", "Days from last issue",
-								"Date Last Redistributed", "Days From last Redistributed", "Date Last ordered", "Days From Last order", "Date Last Decommissioned",
-								 "Days From Last Decommissioned", "Date From Last Received Order", "Days From Last Received Order","Date Last Seen", "Days From Last Seen");
-								$excel_data['column_data'] = $column_data;
-								foreach ($temp2 as $key => $value) :
-								array_push($row_data, 
-								array($value['facility_name'],
-								$value['facility_code'],
-								$value['county'],
-								$value['district'],
-								(date('m-d-Y',strtotime($value['issue_event']))=='01-01-1970')? 'No Data Available' : $value['issue_event'],
-								($value['issue_d']==0)? 'No Data Available':$value['issue_d'],
-								(date('m-d-Y',strtotime($value['redistribute_event']))=='01-01-1970')? 'No Data Available' : $value['redistribute_event'],
-								($value['redistribute_d']=='')? 'No Data Available' :$value['redistribute_d'],
-								(date('m-d-Y',strtotime($value['ordered_event']))=='01-01-1970')? 'No Data Available' : $value['ordered_event'],
-								($value['ordered_d']=='')? 'No Data Available' :$value['ordered_d'] ,
-								(date('m-d-Y',strtotime($value['decommissioned_event']))=='01-01-1970')? 'No Data Available' : $value['decommissioned_event'],
-								($value['decommissioned_d']=='')? 'No Data Available':$value['decommissioned_d'],
-								(date('m-d-Y',strtotime($value['receive_event']))=='01-01-1970')? 'No Data Available' : $value['receive_event'],
-								($value['receive_event_d']=='')? 'No Data Available' :$value['receive_event_d'],
-								(date('m-d-Y',strtotime($value['date_event']))=='01-01-1970')? 'No Data Available' : $value['date_event'],
-								($value['date_event_d']=='')? 'No Data Available' :$value['date_event_d']
-								));
-								endforeach;
-								$excel_data['row_data'] = $row_data;
-						    // echo "<pre>";print_r($excel_data['row_data']);exit;
-								$excel_data['report_type']='Log Summary';
-								
-
-								$this -> hcmp_functions -> create_excel($excel_data);
-						*/
-								/*END OF PRIOR TO CONVERSTION TO NEW QUERY*/
-								$active_facilities = Facilities::getAll_();
-		// echo "<pre>";print_r($active_facilities);echo "</pre>";exit;
-								$last_seen = Facilities::get_facility_data_specific(NULL,$county_id,$district_id,$facility_code,'all');
-								$last_issued = Facilities::get_facility_data_specific('last_issued',$county_id,$district_id,$facility_code,'all');
-								$last_ordered = Facilities::get_facility_data_specific('last_ordered',$county_id,$district_id,$facility_code,'all');
-								$decommissioned = Facilities::get_facility_data_specific('last_decommissioned',$county_id,$district_id,$facility_code,'all');
-								$redistributed = Facilities::get_facility_data_specific('last_redistributed',$county_id,$district_id,$facility_code,'all');
-								$added_stock = Facilities::get_facility_data_specific('last_added_stock',$county_id,$district_id,$facility_code,'all');
-		// $all_faciliteis = Facilities::getAll_();
-
-		// echo "<pre>";print_r($all_faciliteis);echo "</pre>";exit;
-								$final_array = array();
-								$last_seen_count = count($last_seen);
-								$last_issued_count = count($last_issued);
-								$last_ordered_count = count($last_ordered);
-								$decommissioned_count = count($decommissioned);
-								$redistributed_count = count($redistributed);
-								$added_stock_count = count($added_stock);
-
-		// echo "<pre>".$highest;exit;
-		// echo "<pre>";print_r($last_seen);echo "</pre>";
-		// echo "END OF LAST SEEN";
-		// echo "<pre>";print_r($last_issued);echo "</pre>";
-		// echo "END OF LAST ISSUED";
-		// echo "<pre>";print_r($last_ordered);echo "</pre>";
-		// echo "END OF LAST ORDERED";
-		// echo "<pre>";print_r($decommissioned);echo "</pre>";
-		// echo "END OF LAST DECOMMISSSIONED";
-		// echo "<pre>";print_r($redistributed);echo "</pre>";
-		// echo "END OF LAST REDISTRIBUTED";
-		// echo "<pre>";print_r($added_stock);echo "</pre>";
-		// echo "END OF LAST ADDED STOCK";
-		// exit;
+// echo "<pre>";print_r($all_faciliteis);echo "</pre>";exit;
+		$final_array = array();
+		$last_seen_count = count($last_seen);
+		$last_issued_count = count($last_issued);
+		$last_ordered_count = count($last_ordered);
+		$decommissioned_count = count($decommissioned);
+		$redistributed_count = count($redistributed);
+		$added_stock_count = count($added_stock);
 
 
-								foreach ($active_facilities as $a_c) { 
-									$final_array[] = array(
-										'Facility Name' => $a_c['facility_name'], 
-										'Facility Code' => $a_c['facility_code'],
-										'County' => $a_c['county'],
-										'Sub-County' => $a_c['subcounty']
-										);
+
+
+		foreach ($active_facilities as $a_c) { 
+			$final_array[] = array(
+				'Facility Name' => $a_c['facility_name'], 
+				'Facility Code' => $a_c['facility_code'],
+				'County' => $a_c['county'],
+				'Sub-County' => $a_c['subcounty']
+				);
 		}//active_facilities foreach
 
-		// $final_array = array_unique($final_array,SORT_REGULAR);
-		// $final_array = array_map("unserialize", array_unique(array_map("serialize", $final_array)));
-		// echo "<pre>";print_r($final_array);echo "</pre>";exit;
-
+		
 		$final_array_count = count($final_array);
 
-		// echo "<pre>" . $final_array_count."</pre>";
-		// echo "<pre>" . $last_seen_count."</pre>";
-		// echo "<pre>" . $last_issued_count."</pre>";
-		// echo "<pre>" . $final_array_count."</pre>";
-		// echo "<pre>" . $last_ordered_count."</pre>";
-		// echo "<pre>" . $decommissioned_count."</pre>";
-		// echo "<pre>" . $redistributed_count."</pre>";
-		// echo "<pre>" . $added_stock_count."</pre>";
-		// exit;
 
 		$last_seen_time = NULL;
 		$last_issued_time = NULL;
@@ -3073,12 +2826,6 @@ public function log_summary_weekly_view(){
 		}
 		
 
-
-		// echo "<pre>";print_r($final_array);echo "</pre>";exit;
-		// echo $last_order_time;
-		// exit;
-
-		// echo "<pre>";print_r($final_array_count);echo "</pre>";exit;
 
 		$row_data = array();
 		$counterrrr = 0;
@@ -3209,13 +2956,13 @@ public function log_summary_weekly_view(){
 	$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 	$subject = "System Usage as at ".$time;
 
-	$email_address = "smutheu@clintonhealthaccess.org,jaynerawz@gmail.com,karsanrichard@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com,ccheruiyot@clintonhealthaccess.org";
+	$email_address = "smutheu@clintonhealthaccess.org,karsanrichard@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com";
 						// $email_address = "karsanrichard@gmail.com,ttunduny@gmail.com";
                         // $email_address = "ttunduny@gmail.com";
                         //$bcc = "";
 	$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
 
-	redirect('sms/log_summary_weekly_view');
+	redirect('sms/new_weekly_usage');
 
 
 
