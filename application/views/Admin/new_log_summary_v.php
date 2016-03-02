@@ -75,7 +75,7 @@
           
           ?>          
         </select>
-        <button class="btn btn-success form-control" style="width:15%;float:left" id="filter_month_year">Filter</button>
+        <button class="btn btn-success form-control" style="width:20%;float:left" id="filter_month_year">Filter</button>
 
          <button class="btn btn-primary send_email form-control" style="width:15%;float:right;margin-left:5px;">
           Email Weekly Log Summary
