@@ -161,6 +161,12 @@
 	  	$("#users_all").hide();
 	});
 
+	$('.make_db').click(function(e){
+		var base_url = "<?php echo base_url() . 'dumper/dump_db/'; ?>";
+	  	var facility_code = $("#facility_select").val();		
+		var url = base_url+facility_code+'/hcmp_rtk1';				
+		window.open(url, '_blank'); 
+	});
 	$("#btn_activate_facility").click(function(){
 		var facility_code = $("#facility_select").val();
 		$('#confirmActivateModal').data('id', facility_code).modal('show');
