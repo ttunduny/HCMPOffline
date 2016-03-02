@@ -53,6 +53,41 @@ class Facility_activation extends MY_Controller
 
 	}
 
+
+	public function facility_offline(){
+		$identifier = $this -> session -> userdata('user_indicator');
+		$user_type_id = $this -> session -> userdata('user_type_id');
+		$district = $this -> session -> userdata('district_id');
+		// echo $identifier;exit;
+		$county = $this -> session -> userdata('county_id');
+
+		// $data['facilities'] = isset($district) ? Facilities::get_facility_details($district) : Facilities::get_facilities_per_county($county);
+
+		if ($identifier == "district") {
+			$data['facilities'] = Facilities::get_facility_details($district);
+			$data['identifier'] = $identifier;
+		}elseif ($identifier == "county") {
+			$data['facilities'] = Facilities::get_facility_details(NULL,$county);
+			$data['identifier'] = $identifier;
+			$data['district_info'] = Districts::get_districts($county);
+			
+
+		}
+		$permissions='district_permissions';
+		// $data['facilities']=Facilities::get_facility_details($district);
+		// $data['facilities']=Facilities::get_facilities_per_county($county);
+		// echo "<pre>";print_r($data['facilities']);echo "</pre>";exit;
+		$data['title'] = "Offline Facility Setup";
+		$data['banner_text'] = "Setup Facility Offline";
+		$template = 'shared_files/template/template';
+		// $data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
+		$data['active_panel'] = 'system_usage';
+		// $data['report_view'] = "shared_files/Facility_activation_v";
+		$data['content_view'] = "shared_files/facility_offline";
+		$this -> load -> view($template, $data);
+
+	}
+
 	public function change_status($facility_code = NULL,$status = NULL){
 		$facility_code = $_POST['facility_code'];
 		$status = $_POST['status'];
@@ -77,6 +112,21 @@ class Facility_activation extends MY_Controller
 		echo json_encode($output);
 	}
 
+	//Titus 
+
+	public function get_facility_stats($facility_code){
+		$facility_data = Facilities::get_facilities_user_activation_data($facility_code);
+		foreach ($facility_data as $key => $value) {
+			$name = $value['fname'].' '.$value['lname'];
+			$created_at = $value['created_at'];
+			$last_login = $value['end_time_of_event'];
+			$created = date('d F Y',strtotime($created_at));
+			$last_login = date('d F Y',strtotime($last_login));
+			$output[] = array($name,$created,$last_login);
+		}
+		$final_output = array('number' =>count($facility_data) ,'list'=>$output );
+		echo json_encode($final_output);
+	}
 	//Titus
 	public function change_status_new($facility_code = NULL,$status = NULL){
 		$facility_code = $_POST['facility_code'];

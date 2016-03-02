@@ -149,6 +149,18 @@ $identifier = $this -> session -> userdata('user_indicator');
                         </table>
 
                     </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <!-- <a href="<?php echo base_url().'reports/potential_expiries' ?>">Potential Expiries</a> -->
+                                    <a href="<?php echo base_url("facility_activation/facility_offline") ?>">Setup Offline</a>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </div>
                     <?php }?>
                   <!--  <div id="collapseTwo" class="panel-collapse collapse <?php echo $active_panel=='stocking_levels'? 'in': null; ?>">
                          <div class="panel-body">
