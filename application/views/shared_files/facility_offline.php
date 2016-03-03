@@ -198,7 +198,8 @@
 	  	var facility_code = $('#confirmActivateModal').data('id');
 	  	change_status_new(facility_code,0,0);
 	  	$('#confirmActivateModal').modal('hide');
-	  	window.location.reload(true);
+	  	$("#facility_select").find(':selected').attr('status','1');
+	  	// window.location.reload(true);
 	});
 	$('#btnYesDeactivate').click(function() {
 	    // handle deletion here

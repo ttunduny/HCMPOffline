@@ -78,16 +78,54 @@ class Dumper extends MY_Controller {
    
    public function create_core_tables($facility_code,$database=null){
    		$database = (isset($database)) ? $database : 'hcmp_rtk';
+   		$mysqli = new mysqli("localhost", "root", "", "hcmp_rtk");
+	   	 if (mysqli_connect_errno()) {
+		    printf("Connect failed: %s", mysqli_connect_error());
+		    exit();
+		}
 	  	ini_set('memory_limit', '-1');
    		$filename = $facility_code.'.sql';	
-   		$header = "DROP DATABASE IF EXISTS `$database`;\nCREATE DATABASE `$database`;\nUSE `$database`\n;";
+   		$header = "DROP DATABASE IF EXISTS `$database`;\n\nCREATE DATABASE `$database`;\n\nUSE `$database`\n\n;";
    		$query = '';
 		$handle = fopen($filename, 'w');
-		$core_tables = array('access_level','account_list','assignments','comments','commodities','commodity_category','commodity_division_details','commodity_source','commodity_source_other','commodity_source_other_prices','commodity_sub_category','counties','county_drug_store_issues','county_drug_store_totals','county_drug_store_transaction_table','districts','drug_commodity_map','drug_store_issues','drug_store_totals','drug_store_transaction_table','email_listing','facilities','git_log','issue_type','menu','malaria_drugs','rca_county','recepients','sub_menu');
+		$core_tables = array('access_level','account_list','assignments','comments','commodities','commodity_category','commodity_division_details','commodity_source','commodity_source_other','commodity_sub_category','counties','county_drug_store_issues','county_drug_store_totals','county_drug_store_transaction_table','districts','drug_commodity_map','drug_store_issues','drug_store_totals','drug_store_transaction_table','email_listing','facilities','git_log','issue_type','menu','malaria_drugs','rca_county','recepients','sub_menu','service_points','redistribution_data','log','log_monitor','facility_order_status','facility_order_details_rejects','facility_order_details');
+
+
+
+		$facility_specific_tables = array('facility_issues'=>'facility_code',
+										  'commodity_source_other_prices'=>'facility_code',
+										  'dispensing_stock_prices'=>'facility_code',
+										  'facility_amc'=>'facility_code',
+										  'facility_amc1'=>'facility_code',
+										  'facility_stocks_temp'=>'facility_code',
+										  'facility_transaction_table'=>'facility_code',
+										  'facility_user_log'=>'facility_code',
+										  'malaria_data'=>'facility_id',
+										  'patient_details'=>'facility_code',
+										  'reversals'=>'facility_code',
+										  'rh_drugs_data'=>'facility_code',
+										  'service_point_stocks'=>'facility_code',
+										  'facility_evaluation'=>'facility_code',
+										  'facility_impact_evaluation'=>'facility_code',
+										  'facility_monthly_stock'=>'facility_code',
+										  'facility_orders'=>'facility_code',
+										  'facility_stock_out_tracker'=>'facility_code',
+										  'user'=>'facility',
+										  'tuberculosis_data'=>'facility_code',
+										  'requisitions'=>'facility',
+										  'facility_stock_out_tracker'=>'facility_code',
+										  'facility_stocks'=>'facility_code');
 		for ($i=0; $i <count($core_tables) ; $i++) { 
-			$query .= $this->create_inserts($core_tables[$i]);
+			$query .= $this->create_inserts1($core_tables[$i],null,$mysqli);
 		}
-		// $query = $this->create_inserts('access_level');
+
+		// foreach ($facility_specific_tables as $key => $value) {
+		// 	$table_name = $key;
+		// 	$where = "WHERE $value = '$facility_code'";
+		// 	$query .= $this->create_inserts1($table_name,$where,$mysqli);
+		// }
+		$mysqli->close();//die();
+		
 		$final_output = $header.$query;
 		fwrite($handle, $final_output);
 		fclose($handle);
@@ -148,6 +186,82 @@ class Dumper extends MY_Controller {
 
    }
 
+   public function create_inserts1($table_name= null,$where=null,$mysqli)
+   {
+   	 
+   	$condition = ($where!=null) ? $where : '' ;
+	$sql_create = "SHOW CREATE TABLE `$table_name`";  
+
+	$fields_total = null;
+	$create_table = '';
+    $inserts = '';
+   	$rows_total = null;   	 
+	if ($result = $mysqli->query($sql_create)) {
+		$column_types_array = array();
+		$sql_column_types = "SHOW COLUMNS FROM `$table_name`";
+		if ($result_sql_columns = $mysqli->query($sql_column_types)) {
+			$result_column_types = mysqli_fetch_all($result_sql_columns,MYSQLI_ASSOC);
+			foreach ($result_column_types as $rows => $types) {
+				$type = $types['Type'];
+			    $column_types_array[] = $type;
+			}
+		}
+
+		/* determine number of rows result set */
+	    $row_cnt = $result->num_rows;
+	    $result_create = $result->fetch_array(MYSQLI_ASSOC);
+	    $create_table = $result_create['Create Table'].";\n\n";	   
+	    $sql = "select distinct * FROM $table_name  $condition";	
+	    if ($result_sql = $mysqli->query($sql)) {
+	    	// $result_fields = $result_sql->mysqli_fetch_all(MYSQLI_ASSOC);
+	    	$result_fields = mysqli_fetch_all($result_sql,MYSQLI_ASSOC);				
+	    	 if(count($result_fields)>0){
+		   	 	$fields = array_keys($result_fields[0]); 
+		   	 	$string = '';
+				foreach ($fields as $key => $value) {
+				    $string .= ",`$value`";
+				}
+				$string = substr($string, 1); // remove leading ","
+				$fields_total = '('.$string.')';
+
+
+				for ($i=0; $i <count($result_fields) ; $i++) { 			
+					$data = array_values($result_fields[$i]);   
+					// echo "<pre>";print_r($data);die;		 	
+			   	 	$values = '';
+			   	 	$count = 0;
+					foreach ($data as $keys => $row) {
+						$row_types = $column_types_array[$keys];
+
+						if (strpos($row_types, 'int') !== false) {
+						    $values .= ",$row";				
+						}else{
+							$row = addslashes($row);
+					    	$values .= ",'$row'";
+						}
+						// if ($count==0) {							
+					 //    	$values .= ",$row";						
+						// }else{
+						// 	$row = addslashes($row);
+					 //    	$values .= ",'$row'";
+					 //    }
+					    // $count++;
+					}
+					$values = substr($values, 1); // remove leading ","
+					$rows_total = '('.$values.');';
+		   	 		$inserts .= 'INSERT INTO '.$table_name.$fields_total.' VALUES '.$rows_total."\n";
+				}
+
+				
+		   	 }
+	    }
+
+	    /* close result set */
+	    $result->close();
+	}
+   	 return $create_table.$inserts;
+
+   }
 
  //   public function get_fields($table_name = null){
  //   	 $sql = "Select * FROM access_level";
