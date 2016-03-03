@@ -96,11 +96,11 @@
 							</button>							
 						</p>
 						<br/>
-						<table id="users_table" class="table table-hover table-bordered table-update" style="margin-left: 6%;width: 80%;margin-top: 1%;float: left;">
+						<table id="users_table" class="table table-hover table-bordered table-update" style="margin-left: 6%;width: 90%;margin-top: 1%;float: left;">
 							<tr><th>Full Name</th><th>Date Created</th><th>Last Login</th></tr>
 						</table>
-
-						<button class="form-control btn btn-success make_db" style="width:20%;float;left;margin-left:1%;margin-top: 2%;margin-bottom: 2%">
+						<br/>
+						<button class="form-control btn btn-success make_db" style="width:20%;float;left;margin-left:6%;margin-top: 2%;margin-bottom: 2%">
 								DOWNLOAD FACILITY DATA
 						</button>
 					</div>
@@ -164,7 +164,7 @@
 	$('.make_db').click(function(e){
 		var base_url = "<?php echo base_url() . 'dumper/dump_db/'; ?>";
 	  	var facility_code = $("#facility_select").val();		
-		var url = base_url+facility_code+'/hcmp_rtk1';				
+		var url = base_url+facility_code+'/hcmp_rtk';				
 		window.open(url, '_blank'); 
 	});
 	$("#btn_activate_facility").click(function(){
