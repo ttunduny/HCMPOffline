@@ -16,10 +16,32 @@ class Dumper extends MY_Controller {
 	}
 
 	public function dump_db($facility_code,$db){
-		$this->create_core_tables($facility_code,$db);
+		// $this->create_core_tables($facility_code,$db);
+		$this->create_bat($facility_code);
 	}
 
- 
+ 	public function create_bat($facility_code)
+ 	{ 		
+		ini_set('memory_limit', '-1');   		
+   		$filename = 'install_db.bat';
+   		$resource_name = $facility_code.'.sql';
+   		$header = '@echo OFF';
+   		$header .= "\n\n";
+ 		$query = "C:\\xampp\mysql\bin\mysql.exe -u root -p hcmp_rtk<".$resource_name;
+		$handle = fopen($filename, 'w');		
+		$final_output = $query;
+		fwrite($handle, $final_output);
+		fclose($handle);
+
+		header("Cache-Control: public");
+		header("Content-Description: File Transfer");
+		header("Content-Length: ". filesize("$filename").";");
+		header("Content-Disposition: attachment; filename=$filename");
+		header("Content-Type: application/octet-stream; "); 
+		header("Content-Transfer-Encoding: binary");
+
+		echo "$final_output";
+ 	}
    
    public function create_core_tables($facility_code,$database=null){
    		$database = (isset($database)) ? $database : 'hcmp_rtk';
@@ -29,6 +51,7 @@ class Dumper extends MY_Controller {
 		    exit();
 		}
 	  	ini_set('memory_limit', '-1');
+   		// $filename ='db_hcmp.sql';	
    		$filename = $facility_code.'.sql';	
    		$header = "DROP DATABASE IF EXISTS `$database`;\n\nCREATE DATABASE `$database`;\n\nUSE `$database`;\n\n";
    		$query = '';
