@@ -130,7 +130,7 @@
 					<!-- Step 3 Download Data -->
 
 					<div id="step_3">
-						<h3>Step 2: Download Database </h3>						
+						<h3>Step 3: Download Database </h3>						
 						<p style="margin-top:0%;margin-left:6%;color:#000;font-size:16px;margin-bottom: 3%">
 							<span style="float: left;">
 							You can now be able to Download your Facility Data. THe data will have Users added in Step 2, which you can use to log in once set up. 
@@ -139,6 +139,19 @@
 						<br/>							
 						<br/>
 						<button id="step3_advance" class="form-control make_db btn btn-success" style="width:10%;margin-top: 1%;float: left;margin-left:1%;margin-bottom: 1%">		Download Data
+						</button>						
+						
+					</div>
+					<div id="step_4">
+						<h3>Step 4: Download Database Installer File </h3>						
+						<p style="margin-top:0%;margin-left:6%;color:#000;font-size:16px;margin-bottom: 3%">
+							<span style="float: left;">
+							You can now be able to Download required Files for Setup. Place the bat file and the Database File in the same folder as the setup. 
+							</span>													
+						</p>
+						<br/>							
+						<br/>
+						<button id="step4_advance" class="form-control make_bat btn btn-success" style="width:10%;margin-top: 1%;float: left;margin-left:1%;margin-bottom: 1%">		Download Additional Files
 						</button>						
 						
 					</div>
@@ -186,6 +199,7 @@
 	   	$("#step_1").hide();
 	   	$("#step_2").hide();
 	   	$("#step_3").hide();	   	
+	   	$("#step_4").hide();	   	
    	}
 
    	function activateFacility(){
@@ -271,6 +285,11 @@
    		hideAll();   		
 	   	$("#step_3").show();   		   		
    	}
+
+	function loadStep4(){
+   		hideAll();   		
+	   	$("#step_4").show();   		   		
+   	}
 	$('#filter_facility').click(function() {	    
 	  	loadStep1();	  	
 	});
@@ -318,6 +337,15 @@
 	  	var facility_code = $("#facility_select").val();		
 		var url = base_url+facility_code+'/hcmp_rtk';				
 		window.open(url, '_blank'); 
+		loadStep4();
+	});
+
+	$('.make_bat').click(function(e){
+		var base_url = "<?php echo base_url() . 'dumper/gen_bat/'; ?>";
+	  	var facility_code = $("#facility_select").val();		
+		var url = base_url+facility_code+'/hcmp_rtk';				
+		window.open(url, '_blank'); 
+		// loadStep4();
 	});
 	$("#btn_activate_facility").click(function(){
 		var facility_code = $("#facility_select").val();
