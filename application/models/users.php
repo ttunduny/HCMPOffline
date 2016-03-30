@@ -37,6 +37,11 @@ class Users extends Doctrine_Record {
 
 	}
 
+	public function get_date_added($phone_no){
+		$sql = "select * from user where telephone = '$phone_no' limit 0,1";		
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
 	public static function getUsers($facility_c){
 		$query = Doctrine_Query::create() -> select("*") -> from("Users")->where("facility=$facility_c");
 		$level = $query -> execute();
@@ -140,6 +145,16 @@ class Users extends Doctrine_Record {
 
 		$update = Doctrine_Manager::getInstance() -> getCurrentConnection();
 		$update -> execute("UPDATE user SET password='$value',status=1  WHERE id='$user_id' ; ");
+	}
+
+	public static function reset_password_multiple($facility_code, $new_password_confirm) {
+
+		//echo $user_id;
+		$salt = '#*seCrEt!@-*%';
+		$value = md5($salt . $new_password_confirm);
+
+		$update = Doctrine_Manager::getInstance() -> getCurrentConnection();
+		$update -> execute("UPDATE user SET password='$value',status=1  WHERE facility='$facility_code' ; ");
 	}
 
 	public static function set_deactivate_for_recovery($user_id) {

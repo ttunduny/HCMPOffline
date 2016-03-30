@@ -16,10 +16,91 @@ class Dumper extends MY_Controller {
 	}
 
 	public function dump_db($facility_code,$db){
-		$this->create_core_tables($facility_code,$db);
+		$this->create_core_tables($facility_code,$db);		
 	}
 
- 
+	public function gen_bat($facility_code){
+		$this->create_bat($facility_code);
+	}
+
+ 	public function create_bat($facility_code)
+ 	{ 		
+		ini_set('memory_limit', '-1');   		
+   		$filename = 'install_db.bat';
+   		$resource_name = $facility_code.'.sql';
+   		$header = '@echo OFF';
+   		$header .= PHP_EOL;
+   		$header .= 'set current=%~dp0';
+   		$header .= PHP_EOL;
+
+   		$header .= "set old_cnf=resources\\mysql\\old\\";
+   		$header .= PHP_EOL;
+   		$header .= "set old_cnf_file=resources\\mysql\\old\\my.ini";
+   		$header .= PHP_EOL;
+   		$header .= "set new_cnf=resources\\mysql\\new\\";
+   		$header .= PHP_EOL;
+   		$header .= "set new_cnf_file=resources\\mysql\\new\\my.ini";
+   		$header .= PHP_EOL;
+
+   		$header .= "set target_cnf=C:\\xampp\\mysql\\bin\\";
+   		$header .= PHP_EOL;
+   		$header .= "set target_cnf_file=C:\\xampp\\mysql\\bin\\my.ini";
+   		$header .= PHP_EOL;
+
+
+   		$header .= "net stop Apache2.4";
+   		$header .= PHP_EOL;
+   		$header .= "net stop MySQL";
+   		$header .= PHP_EOL;   
+
+   		$header .= "move \"%target_cnf_file%\" \"%current%%old_cnf%\"";
+   		$header .= PHP_EOL;   
+
+   		$header .= "xcopy /s \"%current%%new_cnf_file%\" \"%target_cnf%\"";
+   		$header .= PHP_EOL;   
+
+
+
+   		$header .= "net start Apache2.4";
+   		$header .= PHP_EOL;
+   		$header .= "net start MySQL";
+   		$header .= PHP_EOL;
+   		$data = "C:\\xampp\mysql\bin\mysql.exe -u root hcmp_rtk<\"%current%\"$facility_code.sql";
+   		$data.=PHP_EOL;
+ 		// $query = "C:\\xampp\mysql\bin\mysql.exe -u root -p hcmp_rtk<".$resource_name;
+ 		$header_end .= "net stop Apache2.4";
+   		$header_end .= PHP_EOL;
+   		$header_end .= "net stop MySQL";
+   		$header_end .= PHP_EOL;   
+
+   		$header_end .= "del \"%target_cnf_file%\"";
+   		$header_end .= PHP_EOL;   
+
+   		$header_end .= "move \"%current%%old_cnf_file%\" \"%target_cnf%\"";
+   		$header_end .= PHP_EOL;
+
+   		$header_end .= "net start Apache2.4";
+   		$header_end .= PHP_EOL;
+   		$header_end .= "net start MySQL";
+   		$header_end .= PHP_EOL;
+
+   		$header_end .="pause";
+
+ 		$query = $header.$data.$header_end;
+		$handle = fopen($filename, 'wb');		
+		$final_output_bat = $query;
+		fwrite($handle, $final_output_bat);
+		fclose($handle);
+
+		header("Cache-Control: public");
+		header("Content-Description: File Transfer");
+		header("Content-Length: ". filesize("$filename").";");
+		header("Content-Disposition: attachment; filename=$filename");
+		header("Content-Type: application/octet-stream; "); 
+		header("Content-Transfer-Encoding: binary");
+
+		echo "$final_output_bat";
+ 	}
    
    public function create_core_tables($facility_code,$database=null){
    		$database = (isset($database)) ? $database : 'hcmp_rtk';
@@ -29,6 +110,7 @@ class Dumper extends MY_Controller {
 		    exit();
 		}
 	  	ini_set('memory_limit', '-1');
+   		// $filename ='db_hcmp.sql';	
    		$filename = $facility_code.'.sql';	
    		$header = "DROP DATABASE IF EXISTS `$database`;\n\nCREATE DATABASE `$database`;\n\nUSE `$database`;\n\n";
    		$query = '';
@@ -44,7 +126,6 @@ class Dumper extends MY_Controller {
 										  'facility_amc1'=>'facility_code',
 										  'facility_stocks_temp'=>'facility_code',
 										  'facility_transaction_table'=>'facility_code',
-										  'facility_user_log'=>'facility_code',
 										  'malaria_data'=>'facility_id',
 										  'patient_details'=>'facility_code',
 										  'reversals'=>'facility_code',
@@ -68,7 +149,7 @@ class Dumper extends MY_Controller {
 		
 		foreach ($facility_specific_tables as $key => $value) {
 			$table_name = $key;
-			$where = "WHERE $value = '$facility_code'";
+			$where = "WHERE $value = '$facility_code'";			
 			$query .= $this->create_inserts($table_name,$where,$mysqli);
 		}
 

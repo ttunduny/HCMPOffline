@@ -57,11 +57,8 @@ class Facility_activation extends MY_Controller
 	public function facility_offline(){
 		$identifier = $this -> session -> userdata('user_indicator');
 		$user_type_id = $this -> session -> userdata('user_type_id');
-		$district = $this -> session -> userdata('district_id');
-		// echo $identifier;exit;
+		$district = $this -> session -> userdata('district_id');		
 		$county = $this -> session -> userdata('county_id');
-
-		// $data['facilities'] = isset($district) ? Facilities::get_facility_details($district) : Facilities::get_facilities_per_county($county);
 
 		if ($identifier == "district") {
 			$data['facilities'] = Facilities::get_facility_details($district);
@@ -70,14 +67,13 @@ class Facility_activation extends MY_Controller
 			$data['facilities'] = Facilities::get_facility_details(NULL,$county);
 			$data['identifier'] = $identifier;
 			$data['district_info'] = Districts::get_districts($county);
-			
-
 		}
+
 		$permissions='district_permissions';
-		// $data['facilities']=Facilities::get_facility_details($district);
-		// $data['facilities']=Facilities::get_facilities_per_county($county);
-		// echo "<pre>";print_r($data['facilities']);echo "</pre>";exit;
+		$data['user_types']=Access_level::get_access_levels($permissions);	
+		
 		$data['title'] = "Offline Facility Setup";
+		$data['district_id'] = $district;
 		$data['banner_text'] = "Setup Facility Offline";
 		$template = 'shared_files/template/template';
 		// $data['sidebar'] = "shared_files/report_templates/side_bar_sub_county_v";
@@ -115,14 +111,12 @@ class Facility_activation extends MY_Controller
 	//Titus 
 
 	public function get_facility_stats($facility_code){
-		$facility_data = Facilities::get_facilities_user_activation_data($facility_code);
+		$facility_data = Facilities::get_facilities_users_data($facility_code);
 		foreach ($facility_data as $key => $value) {
 			$name = $value['fname'].' '.$value['lname'];
-			$created_at = $value['created_at'];
-			$last_login = $value['end_time_of_event'];
-			$created = date('d F Y',strtotime($created_at));
-			$last_login = date('d F Y',strtotime($last_login));
-			$output[] = array($name,$created,$last_login);
+			$created_at = $value['created_at'];			
+			$created = date('d F Y',strtotime($created_at));			
+			$output[] = array($name,$created);
 		}
 		$final_output = array('number' =>count($facility_data) ,'list'=>$output );
 		echo json_encode($final_output);

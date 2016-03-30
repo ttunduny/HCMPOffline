@@ -102,6 +102,11 @@ class Dispensing extends MY_Controller {
 	public function issue(){
 		$facility_code = $this -> session -> userdata('facility_id');
 		$service_point = 2;//hard coded for pharmacy,until requested for :]
+
+		$selected_service_point = Selected_service_points::get_dispensing_point($facility_code);
+		foreach ($selected_service_point as $sp) {
+			$service_point = $sp->service_point_id;
+		}
 		$p_data = Patients::get_all();
 		$service_point_stock = facility_stocks::get_service_point_stocks($facility_code,$service_point);		
 		$commodity_details = array();		
@@ -214,6 +219,11 @@ class Dispensing extends MY_Controller {
 		// $graph_id = "container";
 		$facility_code = $this -> session -> userdata('facility_id');
 		$service_point = 2;//hard coded for pharmacy,until requested for :]
+
+		$selected_service_point = Selected_service_points::get_dispensing_point($facility_code);
+		foreach ($selected_service_point as $sp) {
+			$service_point = $sp->service_point_id;
+		}
 
 		$service_point_stock = facility_stocks::get_service_point_stocks($facility_code,$service_point);
 		$service_point_name = $service_point_stock[0]['service_point_name'];
@@ -573,6 +583,11 @@ class Dispensing extends MY_Controller {
 		//security check
 		$facility_code = $this -> session -> userdata('facility_id');
 		$service_point = 2;
+
+		$selected_service_point = Selected_service_points::get_dispensing_point($facility_code);
+		foreach ($selected_service_point as $sp) {
+			$service_point = $sp->service_point_id;
+		}
 		$commodity_id = $this->input->post('commodity_id');
 		$price = $this->input->post('price');
 		$count = count($commodity_id);
