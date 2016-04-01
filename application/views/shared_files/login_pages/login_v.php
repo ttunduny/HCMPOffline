@@ -36,6 +36,21 @@
 			button {
 				border-radius: 0 !important;
 			}
+			.green{
+			    color:green;
+			  }
+		  .no-margin{
+		    margin:0;
+		  }
+		  .small-margin{
+		    margin:2px;
+		  }
+		  .online-status{
+		    font-size: 15px;
+		  }
+		  .red{
+		    color:#F22613;
+		  }
 		</style>
 		<?php 
 		$myurl=$this->uri->segment(2);
@@ -82,13 +97,20 @@
 		</script>
 	</head>
 	<body data-spy="scroll" data-target=".subnav" data-offset="50" screen_capture_injected="true" style="padding: 0;">
-		<div class="navbar  navbar-static-top" id="top-panel">
-			<a href="<?php echo base_url(); ?>"> <img style="max-width: 9em; float: left; margin-right: 2px;" src="<?php echo base_url(); ?>assets/img/coat_of_arms.png" class="img-responsive " alt="Responsive image"></a>
-
-			<div id="logo_text" style="margin-top: 3%">
+		<div class="navbar  navbar-static-top col-md-12" id="top-panel">
+			<div class="col-md-12">
+			<a href="<?php echo base_url(); ?>"> 
+				<img style="max-width: 9em;margin:auto;" src="<?php echo base_url(); ?>assets/img/coat_of_arms.png" class="img-responsive " alt="Responsive image"></a>
+			</div>
+			<div class="col-md-12" id="logo_text">
+			<center>
 				<span style="font-size: 1.7em;font-weight: bold">Ministry of Health</span>
 				<br />
-				<span style="font-size: 1.3em">Health Commodities Management Platform (HCMP)</span>
+				<span style="font-size: 1.3em">Health Commodities Management Platform</span>
+    <!-- <div class="online-status"><span class="red"><b><span class="glyphicon glyphicon-off small-margin"></span>Off</span>line</b></div> -->
+    <div class="online-status"><span class="green"><b><span class="glyphicon glyphicon-off small-margin"></span>On</span>line</b></div>
+
+			</center>
 			</div>
 
 			<div class="pull-right" style="top: 0">
@@ -132,7 +154,7 @@
 
 		</div>
 
-		<div class="container" style="margin-top: 3%;" id="containerlogin">
+		<div class="container" style="" id="containerlogin">
 
 			<div class="row">
 			<div class="col-md-3">

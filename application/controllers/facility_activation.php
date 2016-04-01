@@ -113,12 +113,14 @@ class Facility_activation extends MY_Controller
 	public function get_facility_stats($facility_code){
 		$facility_data = Facilities::get_facilities_users_data($facility_code);
 		foreach ($facility_data as $key => $value) {
+			$user_id = $value['id'];
 			$name = $value['fname'].' '.$value['lname'];
 			$created_at = $value['created_at'];			
 			$created = date('d F Y',strtotime($created_at));			
-			$output[] = array($name,$created);
+			$output[] = array($user_id,$name,$created);
 		}
 		$final_output = array('number' =>count($facility_data) ,'list'=>$output );
+		// echo "<pre>";print_r($final_output);exit;
 		echo json_encode($final_output);
 	}
 	//Titus

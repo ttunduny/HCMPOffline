@@ -19,6 +19,79 @@
 	.form-group{
 		margin-bottom: 10px;
 	}
+	.list-bubble{
+		display: table;
+		list-style: none;
+		margin: 0 0 20px 0;
+		padding: 0;
+		position: relative;
+		width: 100%;
+	}
+	.list-bubble ul li{
+		display: table-cell;
+	    text-align: center;
+	    width: 1%;
+	}
+	.selected{
+		color: #88bbc8;
+	}
+		
+	.stepwizard-step p {
+	    margin-top: 10px;
+	}
+
+	.stepwizard-row {
+	    display: table-row;
+	}
+
+	.stepwizard {
+	    display: table;
+	    width: 100%;
+	    position: relative;
+	}
+
+	.stepwizard-step button[disabled] {
+	    opacity: 1 !important;
+	    filter: alpha(opacity=100) !important;
+	}
+
+	.stepwizard-row:before {
+	    top: 20px;
+	    bottom: 0;
+	    position: absolute;
+	    content: " ";
+	    width: 75%;
+	    margin:0 12%;
+	    height: 1px;
+	    background-color: #ccc;
+	    z-order: 0;
+
+	}
+
+	.stepwizard-step {
+	    display: table-cell;
+	    text-align: center;
+	    position: relative;
+	}
+
+	.btn-circle {
+	    width: 40px;
+	    height: 40px;
+	    text-align: center;
+	    padding: 7px auto;
+	    font-size: 15px;
+	    line-height: 1.428571429;
+	    border-radius: 20px!important;
+	}
+	.btn{
+		opacity: 1!important;
+	}
+	.customiser{
+		background: #fff!important;
+		color:#000!important;
+	    border: 3px solid #5293C2;
+	}
+
 </style>
 <div class="container-fluid">
 	<div class="page_content">
@@ -44,15 +117,47 @@
 						?>
 			<div class="row">
 
+			<div class="col-md-12">
+				<div class="stepwizard">
+				    <div class="stepwizard-row setup-panel col-md-12">
+				        <div class="stepwizard-step col-md-3">
+				            <a href="#step-1" type="button" class="btn btn-primary btn-circle customiser">1</a>
+				            <p>Step 1</p>
+				            <p>Select and activate a facility</p>
+				        </div>
+				        <div class="stepwizard-step col-md-3">
+				            <a href="#step-2" id="step-2" type="button" class="btn btn-default btn-circle customiser" disabled="disabled">2</a>
+				            <p>Step 2</p>
+				            <p>User Management</p>
+				        </div>
+				        <div class="stepwizard-step col-md-3">
+				            <a href="#step-3" id="step-3" type="button" class="btn btn-default btn-circle customiser" disabled="disabled">3</a>
+				            <p>Step 3</p>
+				            <p>Download facility database</p>
+				        </div>
+				        <div class="stepwizard-step col-md-3">
+				            <a href="#step-4" id="step-4" type="button" class="btn btn-default btn-circle customiser" disabled="disabled">4</a>
+				            <p>Step 4</p>
+				            <p>Download additional setup files</p>
+				        </div>
+				    </div>
+				</div>
+			</div>
 				<!-- <div class="col-md-1" style="padding-left: 0; right:0; float:right; margin-bottom:5px;">
 					<button class="btn btn-primary add" data-toggle="modal" data-target="#addModal" id="add_new">
 						<span class="glyphicon glyphicon-plus"></span>Add Facility
 					</button>
 				</div> -->
 
-				<div class="col-md-12 dt" style="border: 1px solid #ddd;padding-top: 2%; " id="test">
-					<span style="margin-top: 1%;margin-bottom: 2%;float: left;font-size: 16px">Select Facility: </span>
-					<select id="facility_select" class="form-control" style="width:30%;margin-left: 1%;margin-top: 1%;margin-bottom: 2%;float: left;">
+
+
+				<div class="col-md-12" style="border-top:1px solid #ddd;border-bottom:1px solid #ddd;padding-top: 1%; " id="test">
+				<center>
+				<div class="col-md-2 col-md-offset-2">
+					<span style="font-size: 16px">Select a facility: </span>
+				</div>
+				<div class="col-md-8">
+					<select id="facility_select" class="form-control" style="width:30%;margin-left: 1%;margin-bottom: 2%;float: left;">
 
 						<?php 
 							foreach ($facilities as $key => $value) {
@@ -66,94 +171,98 @@
 
 						?>
 					</select>
-					<button id="filter_facility" class="form-control btn btn-success" style="width:20%;margin-top: 1%;margin-bottom: 2%;float: left">Get Details</button>
-
+					<button id="filter_facility" class="form-control btn btn-success" style="width:20%;margin-bottom: 2%;float: left">Get Details</button>
 				</div>
-				<div id="details_list"  class="col-md-12 dt" style="border: 1px solid #ddd;padding-top: 2%;">		
+				</center>
+				</div>
+				<div id="details_list"  class="col-md-12 dt" style="padding-top: 2%;">		
 					<div id="step_1">
+					<center>
 						<h3>Step 1 </h3>
 						<div id="activate">
-							<p style="margin-top:0%;margin-left:6%;color:#000;font-size:16px;margin-bottom: 3%">
-								<span style="float: left;">This Facility has not been activated. Do you wish to activate it? </span>
+							<p style=";color:#000;font-size:16px;">
+								<span class="glyphicon glyphicon-remove"></span></br>
+								<span style="">This facility has not been activated. Do you wish to activate it? </span>
 								<br/>
-								<button id="btn_activate_facility" class="form-control btn btn-danger" style="width:10%;margin-top: 1%;float: left;margin-left:1%;margin-bottom: 1%">Yes, Activate
+								<button id="btn_activate_facility" class="btn btn-danger" style="width:auto">Yes, Activate
 								</button>							
 							</p>
 							<br/>
 							<span style="margin-top: 1%"></span>
 						</div>
 						<div id="activated">
-							<p style="margin-top:0%;margin-left:6%;color:#000;font-size:16px;margin-bottom: 3%">
-								<span style="float: left;">This Facility is active</span>
+						<!-- <i class="fa fa-check"></i> -->
+						<span class="glyphicon glyphicon-ok"></span>
+							<p style="font-size:16px;">
+								<span> The selected facility is active</span>
 								<br/>
-								<button id="step1_advance" class="form-control step2 btn btn-success" style="width:10%;margin-top: 1%;float: left;margin-left:1%;margin-bottom: 1%">Step 2
-								</button>							
+								<button id="step1_advance" class="step2 btn btn-success">Proceed to Step 2</button>							
 							</p>
 							<br/>
 							<span style="margin-top: 1%"></span>
 						</div>	
 					</div>
-
+					</center>
 					<!-- Step two, Adding Users -->
 					<div id="step_2">
+					<center>
 						<h3>Step 2: Users </h3>
 						<div id="active_users">
-							<p style="margin-top:0%;margin-left:6%;color:#000;font-size:16px;margin-bottom: 3%">
-								<span style="float: left;">The Following users are in your Facility</span>
-								<button id="reset_pass" class="form-control btn btn-danger" style="width:10%;float: left;margin-left:1%;">Reset Passwords
+							<p style="color:#000;font-size:16px;">
+								<span>The following users are present in the selected facility</span></br>
+								<button id="reset_pass" class="btn btn-danger">Reset Passwords
 								</button>
-								<button id="add_user_active" class="form-control add_user btn btn-success" data-toggle="modal" data-target="#addModal" style="width:10%;float: left;margin-left:1%;">Add User
-								</button>							
+								<button id="add_user_active" class="add_user btn btn-primary" data-toggle="modal" data-target="#addModal">Add User</button>							
 							</p>
 							<br/>
-							<table id="users_table" class="table table-hover table-bordered table-update" style="margin-left: 6%;width: 90%;margin-top: 1%;float: left;">
+							<table id="users_table" class="table table-hover table-bordered table-update">
 								<tr><th>Full Name</th><th>Date Created</th></tr>
 							</table>
 							<br/>
-							<button id="step2a_advance" class="form-control step3 btn btn-success" style="width:10%;margin-top: 1%;float: left;margin-left:1%;margin-bottom: 1%">	Step 3
-							</button>						
+							<button id="step2a_advance" class="step3 btn btn-success">Proceed to Step 3</button>						
 						</div>
 
 						<div id="no_users">
-							<p style="margin-top:0%;margin-left:6%;color:#000;font-size:16px;margin-bottom: 3%">
-								<span style="float: left;">You have no Users</span>
-								<button id="add_user_inactive" class="form-control add_user btn btn-success" data-toggle="modal" data-target="#addModal" style="width:10%;float: left;margin-left:1%;margin-bottom: 1%">Add User
-								</button>							
+							<p style="color:#000;font-size:16px;">
+								<span>You have no Users</span>
+								<button id="add_user_inactive" class="add_user btn btn-primary" data-toggle="modal" data-target="#addModal">Add User</button>							
 							</p>
 							<br/>																			
 							
 						</div>
 						
-
+					</center>
 					</div>
 
 					<!-- Step 3 Download Data -->
 
 					<div id="step_3">
-						<h3>Step 3: Download Database </h3>						
-						<p style="margin-top:0%;margin-left:6%;color:#000;font-size:16px;margin-bottom: 3%">
-							<span style="float: left;">
-							You can now be able to Download your Facility Data. THe data will have Users added in Step 2, which you can use to log in once set up. 
+					<center>
+						<h3>Step 3: Download database </h3>						
+						<p style="color:#000;font-size:16px;">
+							<span>
+							Click the button below to download the facility's database.</br>
+							Users added in step two will be included in the database and will be usable after setup 
 							</span>													
 						</p>
 						<br/>							
 						<br/>
-						<button id="step3_advance" class="form-control make_db btn btn-success" style="width:10%;margin-top: 1%;float: left;margin-left:1%;margin-bottom: 1%">		Download Data
-						</button>						
-						
+						<button id="step3_advance" class="make_db btn btn-primary">Download Database</button>						
+					</center>
 					</div>
 					<div id="step_4">
+					<center>
 						<h3>Step 4: Download Database Installer File </h3>						
-						<p style="margin-top:0%;margin-left:6%;color:#000;font-size:16px;margin-bottom: 3%">
-							<span style="float: left;">
-							You can now be able to Download required Files for Setup. Place the bat file and the Database File in the same folder as the setup. 
+						<p style="color:#000;font-size:16px;">
+							<span>
+							You can now download additional required files for setup. </br>
+							Copy both downloaded files in to the HCMP setup folder. 
 							</span>													
 						</p>
 						<br/>							
 						<br/>
-						<button id="step4_advance" class="form-control make_bat btn btn-success" style="width:10%;margin-top: 1%;float: left;margin-left:1%;margin-bottom: 1%">		Download Additional Files
-						</button>						
-						
+						<button id="step4_advance" class="make_bat btn btn-primary" style="">Download additional files and complete setup</button>		
+					</center>
 					</div>
 				</div>			
 			</div>
@@ -217,15 +326,17 @@
 				url: url,
 				dataType: 'json',
 				success: function(s){
-					console.log(s);
+					// console.log(s);
 					var count = s.number;
 					var users = s.list;
 					if(count==0){
 						$("#users_none").show();
 					}else{
 						$.each(users, function( index, value ) {
-	                       var row = $("<tr><td>" + value[0] + "</td><td>" + value[1] + "</td><td>"+value[2]+"</td></tr>");
-	                       $("#users_table").append(row);
+							// console.log(value);
+							
+	                       var row = $("<tr><td>" + value[0] + "</td><td>" + value[1] + "</td></tr>");
+	                       // $("#users_table").append(row);
 	                    });
 						$("#activate").hide();	                    
 						// $("#users_none").hide();	                    
@@ -244,6 +355,7 @@
    		var facility_code = $("#facility_select").val();
 	  	var facility_name = $("#facility_select").text();	  	
   		var base_url = "<?php echo base_url() . 'facility_activation/get_facility_stats/'; ?>";
+  		var reset_url = "<?php echo base_url().'user/reset_pass_to_default/' ?>";
 	    var url = base_url+facility_code;				
 		$.ajax({
 			url: url,
@@ -255,7 +367,9 @@
 					$("#no_users").show();
 				}else{
 					$.each(users, function( index, value ) {
-		               var row = $("<tr><td>" + value[0] + "</td><td>" + value[1] + "</td></tr>");
+						console.log(value[0]);
+		               	var row = $("<tr><td>" + value[1] + "</td><td>" + value[2]+"</td></tr>");
+		               	// var row = $("<tr><td>" + value[1] + "</td><td>" + value[2]+"</td><td><a href=\""+reset_url+value[0]+"\" class=\"btn btn-primary btn-xs reset_pwd\" id=\"reset_pwd\"><span class=\"glyphicon glyphicon-edit\"></span>Reset Password</a></td></tr>");
 		               $("#users_table").append(row);
 		            });
 					$("#active_users").show();	                    			
@@ -264,10 +378,7 @@
 			error: function(e){
 				console.log(e.responseText);
 			}
-		});
-		
-
-	  	
+		});	
    	}
    	function loadStep1(){
    		hideAll();   		
@@ -278,16 +389,19 @@
    	function loadStep2(){
    		hideAll();   	   	
    		getUsers();
+   		$("#step-2").addClass("btn-primary");
    		$("#step_2").show();   		
    	}
 
    	function loadStep3(){
    		hideAll();   		
+   		$("#step-3").addClass("btn-primary");
 	   	$("#step_3").show();   		   		
    	}
 
 	function loadStep4(){
    		hideAll();   		
+   		$("#step-4").addClass("btn-primary");
 	   	$("#step_4").show();   		   		
    	}
 	$('#filter_facility').click(function() {	    
@@ -492,7 +606,7 @@
 
       },
       success: function(data) {
-      	console.log(data);
+      	// console.log(data);
         if(data.response=='false'){
         	$('#processing').html(data.msg);
 			$( '#processing' ).addClass( "alert-danger alert-dismissable" );
