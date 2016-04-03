@@ -382,7 +382,11 @@
    	}
    	function loadStep1(){
    		hideAll();   		
-	   	$("#step_1").show();   		
+	   	$("#step_1").show();   	
+   		$("#step-2").removeClass("btn-primary");
+   		$("#step-3").removeClass("btn-primary");
+   		$("#step-4").removeClass("btn-primary");
+
    		activateFacility();
    	}
    	
