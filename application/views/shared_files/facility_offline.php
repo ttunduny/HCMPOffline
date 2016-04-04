@@ -190,7 +190,7 @@
 									<td><span id="number_of_users"></td>
 								</tr>
 								<tr>
-									<td>Date of Last Activty: </td>
+									<td>Date of Last Activity: </td>
 									<td><span id="last_activity"></td>
 								</tr>
 								<tr>
@@ -325,6 +325,7 @@
 		$("#activate").hide();
 	   	$("#activated").hide();
 	   	$("#active_users").hide();
+	   	$("#facility_details").hide();
 	   	$("#no_users").hide();
 	   	$("#step_1").hide();
 	   	$("#step_2").hide();
@@ -348,7 +349,7 @@
 				url: url,
 				dataType: 'json',
 				success: function(s){
-					// console.log(s);
+					console.log(s);
 					var count = s.number;
 					var users = s.list;
 					if(count==0){
@@ -356,7 +357,8 @@
 					}else{
 						$.each(users, function( index, value ) {
 							// console.log(value);
-							
+						   var count = users.length;
+						   $("#number_of_users").html(count);
 	                       var row = $("<tr><td>" + value[0] + "</td><td>" + value[1] + "</td></tr>");
 	                       // $("#users_table").append(row);
 	                    });
@@ -369,9 +371,16 @@
 					console.log(e.responseText);
 				}
 			});
+
+			
 			$("#activated").show();
+			$("#facility_details").show();
 	  	}
    	}
+
+   	$("#facility_select").on("change focus", function() {
+
+   	});
 
    	function getUsers(){
    		var facility_code = $("#facility_select").val();
@@ -408,12 +417,7 @@
    		activateFacility();
    	}
 
-   	$("#facility_select").on("change", function() {
-   		var facility_code = $("#facility_select").val();
-	  	var facility_name = $("#facility_select").text();
-
-	  	console.log(facility_code);
-   	});
+   	
 
    	function loadStep2(){
    		hideAll();   	   	
@@ -433,8 +437,30 @@
    		$("#step-4").addClass("btn-primary");
 	   	$("#step_4").show();   		   		
    	}
+
 	$('#filter_facility').click(function() {	    
-	  	loadStep1();	  	
+	  	loadStep1();
+	  	var facility_code = $("#facility_select").val();
+	  	var facility_name = $("#facility_select").text();
+
+	  	var base_url2 = "<?php echo base_url() . 'facility_activation/get_facility_details/'; ?>";
+		var url2 = base_url2 + facility_code;
+		$.ajax({
+			url: url2,
+			dataType: 'json',
+			success: function(result) {
+				console.log(result);
+				// console.log(result.last_order);
+				// console.log(result.date_created);
+				$("#date_activated").html(result.date_created);
+				$("#last_order").html(result.last_order);
+				$("#last_activity").html(result.last_activity);
+			},
+			error: function(e){
+				console.log(e.responseText);
+			}
+		});
+	  	console.log(facility_code);	  	
 	});
 
 	$('#step1_advance').click(function() {	    
