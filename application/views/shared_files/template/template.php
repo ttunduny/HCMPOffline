@@ -86,13 +86,13 @@ if (!$this -> session -> userdata('user_id')) {
               $('#offline-notification').addClass("hidden");
               $('#online-notification').removeClass("hidden");
               $('#online-notification').addClass("show");
-              alert("up");
+              // alert("up");
            }else{//when offline
               $('#online-notification').removeClass("show");//remove show
               $('#online-notification').addClass("hidden");
               $('#offline-notification').removeClass("hidden");
               $('#offline-notification').addClass("show");
-              alert("down");
+              // alert("down");
               
            }
           }, 3000);
