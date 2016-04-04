@@ -179,6 +179,27 @@
 					<div id="step_1">
 					<center>
 						<h3>Step 1 </h3>
+						<div id="facility_details">
+							<table>
+								<tr>
+									<td>Date Activated: </td>
+									<td><span id="date_activated"></span> </td>
+								</tr>
+								<tr>
+									<td>Number of Users: </td>
+									<td><span id="number_of_users"></td>
+								</tr>
+								<tr>
+									<td>Date of Last Activty: </td>
+									<td><span id="last_activity"></td>
+								</tr>
+								<tr>
+									<td>Date of Last Order: </td>
+									<td><span id="last_order"></td>
+								</tr>
+							</table>
+						</div>
+
 						<div id="activate">
 							<p style=";color:#000;font-size:16px;">
 								<span class="glyphicon glyphicon-remove"></span></br>
@@ -310,10 +331,11 @@
 	   	$("#step_3").hide();	   	
 	   	$("#step_4").hide();	   	
    	}
-
+   	
    	function activateFacility(){
    		var facility_code = $("#facility_select").val();
 	  	var facility_name = $("#facility_select").text();
+	  	// console.log(facility_name);
 	  	var status = $("#facility_select").find(':selected').attr('status');
 	  	if(status==0){
 	  		$("#activate").show();
@@ -385,7 +407,14 @@
 	   	$("#step_1").show();   		
    		activateFacility();
    	}
-   	
+
+   	$("#facility_select").on("change", function() {
+   		var facility_code = $("#facility_select").val();
+	  	var facility_name = $("#facility_select").text();
+
+	  	console.log(facility_code);
+   	});
+
    	function loadStep2(){
    		hideAll();   	   	
    		getUsers();
