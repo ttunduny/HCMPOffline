@@ -28,8 +28,6 @@ class service_points extends Doctrine_Record {
 		$service_points = $query -> execute();
 		return $service_points;
 	}//save the data on to the table 
-
-	
 	public static function get_all() {
 		$query = Doctrine_Query::create() -> select("*") -> from("service_points");
 		$service_points = $query -> execute();
@@ -49,7 +47,9 @@ update service_points set `service_point_name`='$service_point_name',
 `status`='$status'
 where `id`='$id' 
 ");		
-	}	
+	}
+
+	
 	
 	
 }

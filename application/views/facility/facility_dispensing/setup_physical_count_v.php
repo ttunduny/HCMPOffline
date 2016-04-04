@@ -1,3 +1,4 @@
+<?php //echo "<pre>"; print_r($commodities); echo "</pre>"; exit; ?>
 <style>
 	.row div p{
 	padding:10px;
@@ -37,7 +38,11 @@
 	       $status=$facility_commodities['selected']=='1' ? 'checked="true"'  : null; 	
 	       
 		   echo "<tr>
-		   <input type='hidden' name='commodity_id[]' class='commodity_id' value='$facility_commodities[service_point_stock_id]'/>	   
+		   <input type='hidden' name='commodity_id[]' class='commodity_id' value='$facility_commodities[service_point_stock_id]'/>
+		   <input type='hidden' name='service_point_id[]' class='service_point_id' value='$facility_commodities[service_point_id]'/>
+		   <input type='hidden' name='batch_no[]' class='batch_no' value='$facility_commodities[batch_no]'/>	
+		   <input type='hidden' name='type_of_adjustment[]' class='adj_type' value=''/> 
+		   <input type='hidden' name='count_difference[]' class='count_difference' value=''/>  
 		   <td>$facility_commodities[facility_code]</td>	
 		   <td>$facility_commodities[commodity_name]</td>	 
 		   <td>$facility_commodities[price]</td>
@@ -67,11 +72,26 @@ $(document).ready(function() {
 	$(".reason").attr('readonly', true);
 	$(".physical_count").on("keyup", function(){
 		// console.log($(this).val());
+		var adjustmentType = "";
+		var countDifference = null;
 		var physicalCount = $(this).closest("tr").find(".physical_count").val();
 		var currentBalance = $(this).closest("tr").find(".current_balance").val();
-		if(physicalCount > currentBalance || physicalCount < currentBalance){
-			// alert("Physical Count and Current Balance not match. Enter an explanation!");
+		if(physicalCount > currentBalance){
+			 //alert("Physical Count and Current Balance not match. Enter an explanation!");
 			 $(this).closest("tr").find(".reason").attr('readonly',false);
+			 adjustmentType = "Positive Adjustment";
+			 //countDifference = physicalCount - currentBalance;
+			 console.log(countDifference);
+			 $(this).closest("tr").find(".adj_type").val(adjustmentType);
+			 $(this).closest("tr").find(".count_difference").val(physical_count);
+		}
+		else if(physicalCount < currentBalance){
+			$(this).closest("tr").find(".reason").attr('readonly',false);
+			adjustmentType = "Negative Adjustment";
+			countDifference = currentBalance - physicalCount;
+			//console.log(countDifference);
+			$(this).closest("tr").find(".adj_type").val(adjustmentType);
+			$(this).closest("tr").find(".count_difference").val(countDifference);
 		}
 		else{
 			$(this).closest("tr").find(".reason").attr('readonly',true);

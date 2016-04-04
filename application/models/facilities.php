@@ -76,6 +76,22 @@ class Facilities extends Doctrine_Record {
 		
 		return $facilities;
 	}
+
+	public static function get_more_stats($facility_code) {
+		$more_stats = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+			SELECT 
+			    f.date_of_activation AS date_of_activation,
+				MAX(fo.order_date) 	AS last_order,
+			    MAX(l.end_time_of_event) AS last_activity
+			FROM
+			    facilities f, 
+			    facility_orders fo,
+			    log l,
+			    user u
+			WHERE f.facility_code = '$facility_code' AND u.facility = '$facility_code'");
+		return $more_stats;
+	}
+
     public static function check_active_facility($facility)
     {
         $active = Doctrine_Manager::getInstance()->getCurrentConnection()
