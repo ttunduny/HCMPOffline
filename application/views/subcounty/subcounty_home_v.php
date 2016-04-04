@@ -137,29 +137,11 @@ $identifier = $this -> session -> userdata('user_indicator');
                         if (($identifier=='district') || ($identifier=='county')) {
                         // if ($identifier=='district' || $identifier=='county') {
                         ?>
-                    <div class="panel-body">
-                        <table class="table">
-                            <tr>
-                                <td>
-                                    <!-- <a href="<?php echo base_url().'reports/potential_expiries' ?>">Potential Expiries</a> -->
-                                    <a href="<?php echo base_url("facility_activation/facility_dash") ?>">Facility Activation</a>
-                                </td>
-                            </tr>
-
-                        </table>
-
+                    <div style="background-color: #F5F5F5;" class="panel-body">
+                        <a href="<?php echo base_url("facility_activation/facility_dash") ?>"><span class="glyphicon glyphicon-plus-sign"></span> Facility Activation</a>
                     </div>
-                    <div class="panel-body">
-                        <table class="table">
-                            <tr>
-                                <td>
-                                    <!-- <a href="<?php echo base_url().'reports/potential_expiries' ?>">Potential Expiries</a> -->
-                                    <a href="<?php echo base_url("facility_activation/facility_offline") ?>">Setup Offline</a>
-                                </td>
-                            </tr>
-
-                        </table>
-
+                    <div style="background-color: #F5F5F5;" class="panel-body">
+                        <a href="<?php echo base_url("facility_activation/facility_offline") ?>"><span class="glyphicon glyphicon-cog"></span> Setup Offline</a>
                     </div>
                     <?php }?>
                   <!--  <div id="collapseTwo" class="panel-collapse collapse <?php echo $active_panel=='stocking_levels'? 'in': null; ?>">
