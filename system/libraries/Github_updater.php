@@ -26,6 +26,7 @@ class Github_updater
     {
         $this->ci =& get_instance();
         $this->ci->load->config('github_updater');
+        $this->ci->load->library('curl');
     }
     /**
      * Checks if the current version is up to date
@@ -82,6 +83,40 @@ class Github_updater
      *
      * @return bool true on success, false on failure
      */
+
+    public function update_default() {
+        $branches = json_decode($this -> _connect(self::API_URL . $this -> ci -> config -> item('github_user') . '/' . $this -> ci -> config -> item('github_repo') . '/branches'));
+        $hash = $branches[0] -> commit -> sha;
+        if ($hash !== $this -> ci -> config -> item('current_commit')) {
+            $commits = json_decode($this -> _connect(self::API_URL . $this -> ci -> config -> item('github_user') . '/' . $this -> ci -> config -> item('github_repo') . '/compare/' . $this -> ci -> config -> item('current_commit') . '...' . $hash));
+            $files = $commits -> files;
+            if ($dir = $this -> _get_and_extract($hash)) {
+                //Loop through the list of changed files for this commit
+                foreach ($files as $file) {
+                    //If the file isn't in the ignored list then perform the update
+                    if (!$this -> _is_ignored($file -> filename)) {
+                        //If the status is removed then delete the file
+                        if ($file -> status === 'removed')
+                            unlink($file -> filename);
+                        //Otherwise copy the file from the update.
+                        else
+                            copy($dir . '/' . $file -> filename, $file -> filename);
+                    }
+                }
+                //Clean up
+                if ($this -> ci -> config -> item('clean_update_files')) {
+                    shell_exec("rm -rf {$dir}");
+                    unlink("{$hash}.zip");
+                }
+                //Update the current commit hash
+                $this -> _set_config_hash($hash);
+
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function update()
     {
         $branches = json_decode($this->_connect(self::API_URL.$this->ci->config->item('github_user').'/'.$this->ci->config->item('github_repo').'/branches'));
@@ -136,6 +171,48 @@ class Github_updater
         }
         return false;
     }
+
+    public function update_download()
+    {
+        $branches = json_decode($this->_connect(self::API_URL.$this->ci->config->item('github_user').'/'.$this->ci->config->item('github_repo').'/branches'));
+        $hash = $branches[0]->commit->sha;
+        if($hash !== $this->ci->config->item('current_commit'))
+        {
+            $commits = json_decode($this->_connect(self::API_URL.$this->ci->config->item('github_user').'/'.$this->ci->config->item('github_repo').'/compare/'.$this->ci->config->item('current_commit').'...'.$hash));
+            $files = $commits->files;
+            // return $files;
+            $dir = $this->_get_and_extract($hash);
+           /* foreach ($files as $file) {
+                if(!$this->_is_ignored($file->filename))
+                    {
+                        echo "<pre>" .$file->filename." Im ignored ". $file->status ."</pre>";
+                    }
+                    else{
+                        echo "<pre>" .$file->filename." Im not ignored ". $file->status ."</pre>";
+
+                        if($file->status == 'removed')unlink($file->filename);
+                        //Otherwise copy the file from the update.
+                        else copy($file->filename, $file->filename);
+                    }
+            }*/
+
+            // echo $this->_get_and_extract($hash);
+
+            /*if($dir = $this->_get_and_extract($hash))
+            {
+                //Clean up
+                if($this->ci->config->item('clean_update_files'))
+                {
+                    shell_exec("rm -rf {$dir}");
+                    unlink("{$hash}.zip");
+                }
+                //Update the current commit hash
+                $this->_set_config_hash($hash);
+            }*/
+        }
+        return true;
+    }
+
     public function _is_ignored($filename)
     {
         $ignored = $this->ci->config->item('ignored_files');
@@ -150,7 +227,7 @@ class Github_updater
         return $ignored;
     }
 
-    private function _set_config_hash($hash)
+    public function _set_config_hash($hash)
     {
         $lines = file(self::CONFIG_FILE, FILE_IGNORE_NEW_LINES);
         $count = count($lines);
@@ -180,6 +257,17 @@ class Github_updater
 
         return false;
     }
+
+    public function get_commit_zip($hash){
+       $git_files = copy(self::GITHUB_URL . $this -> ci -> config -> item('github_user') . '/' . $this -> ci -> config -> item('github_repo') . '/zipball/' . $this -> ci -> config -> item('github_branch'), "{$hash}.zip");
+       // https://github.com/karsanrichard/HCMP-ALPHA/zipball/master
+       // $var = GITHUB_URL . $this -> ci -> config -> item('github_user') . '/' . $this -> ci -> config -> item('github_repo') . '/zipball/' . $this -> ci -> config -> item('github_branch');
+       // $status = file_put_contents("{$hash}.zip", fopen(GITHUB_URL . $this -> ci -> config -> item('github_user') . '/' . $this -> ci -> config -> item('github_repo') . '/zipball/' . $this -> ci -> config -> item('github_branch')));
+       // echo $status;
+       return $git_files;
+       // return $status;
+    }
+
     private function _connect($url) {
         $curl = new Curl();
         $curl -> setOpt(CURLOPT_RETURNTRANSFER, TRUE);

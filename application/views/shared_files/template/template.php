@@ -41,6 +41,9 @@ if (!$this -> session -> userdata('user_id')) {
   <script src="<?php echo base_url().'assets/scripts/highcharts.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/bower_components/sweetalert/lib/sweet-alert.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/bower_components/alertifyjs/dist/js/alertify.js'?>" type="text/javascript"></script>
+  <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
+  <link href="<?php echo base_url().'assets/css/offline-theme-default.css'?>" type="text/css" rel="stylesheet"/> 
+  <link href="<?php echo base_url().'assets/css/offline-language-english.css'?>" type="text/css" rel="stylesheet"/> 
   <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
   <link href="<?php echo base_url().'assets/bower_components/intro.js/introjs.css'?>" type="text/css" rel="stylesheet"/>
   <!-- <link href="<?php echo base_url().'assets/metro-bootstrap/docs/font-awesome.css'?>" type="text/css" rel="stylesheet"/>
@@ -49,6 +52,29 @@ if (!$this -> session -> userdata('user_id')) {
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
       <![endif]-->
+
+      <script>
+        $(function(){
+
+          var 
+          $online = $('.online'),
+          $offline = $('.offline');
+
+          Offline.on('confirmed-down', function () {
+            $online.fadeOut(function () {
+              $offline.fadeIn();
+            });
+          });
+
+          Offline.on('confirmed-up', function () {
+            $offline.fadeOut(function () {
+              $online.fadeIn();
+            });
+          });
+
+        });
+      </script>
+
       <script>
 
        paceOptions = {
@@ -98,9 +124,27 @@ var url="<?php echo base_url(); ?>";
   {
     border-radius: 0 !important;
   }
-
-
-
+  .online-notification{
+    top:;
+    margin-top: -10px;
+    width: 100%;
+    border-radius: 0px;
+  }
+  .green{
+    color:green;
+  }
+  .no-margin{
+    margin:0;
+  }
+  .small-margin{
+    margin:2px;
+  }
+  .online-status{
+    font-size: 15px;
+  }
+  .red{
+    color:#F22613;
+  }
 </style>
 
 
@@ -194,8 +238,8 @@ var url="<?php echo base_url(); ?>";
    $(document).ready(function() {
      alertify.set({ delay: 10000 });
      alertify.log("<?php echo $system_error_message   ?>", null);
-
    });
+
 
  </script>
 
@@ -213,6 +257,8 @@ var url="<?php echo base_url(); ?>";
   </div>
   <center>
     <div class="col-md-4"style="font-weight:bold;">  
+    <div class="online-status"><span class="green"><span class="glyphicon glyphicon-off small-margin"></span>On</span>line</div>
+    <!-- <div class="online-status"><span class="red"><span class="glyphicon glyphicon-off small-margin"></span>Off</span>line</div> -->
       <span><?php echo $this-> session -> userdata('facility_count'); ?>  </span>			
     </div>
   </center>
@@ -241,6 +287,10 @@ var url="<?php echo base_url(); ?>";
     </div>
   </div>
   <!-- /.modal-dialog -->
+</div>
+<!-- <p>What happens if i say something here?</p> -->
+<div id="online-notification" class="alert alert-success online-notification">
+  <strong>Internet Connection Established! </strong>You are advised to <a href="<?php echo base_url().'sync/synchronize_data'; ?>">synchronize your data</a>
 </div>
 <!-- /.modal -->   
 <?php $this -> load -> view($content_view);?>
@@ -352,16 +402,16 @@ var url="<?php echo base_url(); ?>";
             <textarea class="form-control" name="problem_desc" id="problem_desc" placeholder="Problem Description" required="required"></textarea>
           </div>
         </div>
-    </div>
-    <div class="row">
-     <div class="col-md-12">
-      <div class="form-group" >
-       <div id="new_error"></div>
+      </div>
+      <div class="row">
+       <div class="col-md-12">
+        <div class="form-group" >
+         <div id="new_error"></div>
+       </div>
      </div>
    </div>
- </div>
 
-</div>
+ </div>
 
 </div>
 <div class="modal-footer">
@@ -490,6 +540,7 @@ function checkTime(i)
 
 <script>
 	$(document).ready(function() {
+    $('#online-notification').hide();
     // $(".makesearchable").select2();//dont put form-control when you make it searchable
     changeHashOnLoad();
     $('#new_password').keyup(function() {
@@ -625,19 +676,19 @@ function checkTime(i)
         'title': $('#contact_title').val(),
         'subject': $('#problem_desc').val()
       },
-       beforeSend:function(){
-         $("#new_error").html("Processing...");
-       },
-       success: function(data){
+      beforeSend:function(){
+       $("#new_error").html("Processing...");
+     },
+     success: function(data){
             // console.log($('#current_password').val())
             console.log(data);
             //return;
             //response = jQuery.parseJSON(data);
           }
-    })
+        })
     });
 
-});
+  });
 
 </script>
 <script src="<?php echo base_url().'assets/boot-strap3/js/bootstrap.min.js'?>" type="text/javascript"></script>

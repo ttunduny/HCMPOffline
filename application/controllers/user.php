@@ -412,6 +412,10 @@ class User extends MY_Controller {
 
 								}
 
+								public function reset_multiple_pass($facility_code){
+									Users::reset_password_multiple($facility_code, '123456');
+									echo true;
+								}
 								public function user_create($reset_user = NULL,$password_reset = NULL) {
 									if (isset($password_reset) && $password_reset == 1) {
 										$data['reset_user_id'] = isset($reset_user)?$reset_user:NULL;
@@ -603,11 +607,11 @@ class User extends MY_Controller {
 									
 									
 			//$phones=$telephone;
-									$message="Dear $fname $lname, your default password is : $default. \nVisit health-cmp.or.ke to change it and access the system.";
+									// $message="Dear $fname $lname, your default password is : $default. \nVisit health-cmp.or.ke to change it and access the system.";
 									
-									$message=urlencode($message);
+									// $message=urlencode($message);
     		//echo '<pre>'; print_r($phone_numbers);echo '<pre>';exit;
-									file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$telephone&text=$message");
+									// file("http://41.57.109.242:13000/cgi-bin/sendsms?username=clinton&password=ch41sms&to=$telephone&text=$message");
 									
 		//Send registered user email with password and validation link
 									
@@ -704,7 +708,170 @@ class User extends MY_Controller {
 
 
 																	}
-																	
+public function addnew_user_offline(){
+
+	$identifier = $this -> session -> userdata('user_indicator');
+	
+//var_dump($this->input->post());
+
+	$fname = $_POST['first_name'];
+	$lname = $_POST['last_name'];
+	$telephone = $_POST['telephone'];
+	$email_address = $_POST['email'];
+	$username = $_POST['username'];
+	$facility_id = $_POST['facility_id'];
+	$district_code = ($_POST['district_name']=='NULL')? 0: $_POST['district_name'];
+	$user_type = $_POST['user_type'];
+	$full_name= $fname .''.$lname; 
+	$county=($_POST['county']=='NULL')? 0: $_POST['county'];
+//Generate a activation code
+	$range = microtime(true);
+	
+	$activation = rand(0, $range);
+//default password is already set.
+	$default='123456';
+//removed this as the model already hashes the password at the other end
+//$salt = '#*seCrEt!@-*%';
+	
+//$password=( md5($salt . $default));	
+
+	switch ($identifier):
+	case 'moh':
+	
+	break;
+	case 'facility_admin':
+	$facility_id=$this -> session -> userdata('facility_id');
+	$district_code=$this -> session -> userdata('district_id');
+	$county=$this -> session -> userdata('county_id');
+
+	break;
+	case 'district':
+	
+	$district_code=$this -> session -> userdata('district_id');
+	$county=$this -> session -> userdata('county_id');
+	
+	break;
+	case 'super_admin':
+	$county=($_POST['county_id']=='NULL')? 0: $_POST['county_id'];	
+	case 'county':
+	$county=$this -> session -> userdata('county_id');
+	
+	break;	
+	endswitch;
+	if($email_address!=''):
+		
+		$savethis =  new Users();
+	$savethis -> fname = $fname;
+	$savethis -> lname = $lname;
+	$savethis -> email = $email_address;
+	$savethis -> username = $email_address;
+	$savethis -> password = $default;
+	$savethis -> activation = md5($activation) ;
+	$savethis -> usertype_id = $user_type;
+	$savethis -> telephone = $telephone;
+	$savethis -> district = $district_code;
+	$savethis -> facility = $facility_id;
+	$savethis -> status = 1;
+	$savethis -> county_id = $county;
+	$savethis -> save(); 
+	
+	
+	
+	$full_name = $fname.' '.$lname;
+	$link = 'health-cmp.or.ke';
+	$site_url=base_url();
+	$sms_code=$activation;
+	
+	$subject = "Account Creation";
+	$message = '
+	<table class="body">
+		<tr>
+			<td class="center" align="center" valign="top">
+				<center>
+
+					<table class="row header">
+						<tr>
+							<td class="center" align="center">
+								<center>
+
+									<table class="container">
+										<tr>
+											<td class="wrapper last">
+
+												<table class="twelve columns">
+													<tr>
+														<td class="six sub-columns last" style="text-align:right; vertical-align:middle;">
+															<span class="template-label"></span>
+														</td>
+														<td class="expander"></td>
+													</tr>
+												</table>
+
+											</td>
+										</tr>
+									</table>
+
+								</center>
+							</td>
+						</tr>
+					</table>
+
+					<table class="container">
+						<tr>
+							<td>
+
+								<table class="row">
+									<tr>
+										<td class="wrapper last">
+											
+											<table class="twelve columns">
+												<tr>
+													<td class="panel">
+														<a href="' . $link . '"
+														style="background-color:#ffffff;color:#4566A9;display:inline-block;font-family:sans-serif;font-size:18px;line-height:40px;text-align:center;text-decoration:none;width:200px;-webkit-text-size-adjust:none;">Welcome to HCMP.</a>
+													</td>
+													<td class="expander"></td>
+												</tr>
+											</table></br></br>
+
+											<table class="twelve columns">
+												<tr>
+													<td>
+														<p>
+															Your HCMP Account - ' . $email_address . ' -  was recently created.</br>
+															
+															
+															
+														</td>
+														<td class="expander"></td>
+													</tr>
+												</table>
+
+											</td>
+										</tr>
+									</table>
+
+									<table class="row callout">
+										<tr>
+											<td class="wrapper last">
+
+											</tr>
+										</table>'; 
+
+	// $email_address=$email_address.',karsanrichard@gmail.com,ttunduny@gmail.com';
+	$email_address=$email_address.',ttunduny@gmail.com';
+	$this -> hcmp_functions -> send_email($email_address, $message, $subject, $attach_file = NULL, $bcc_email = NULL, $cc_email = NULL,$full_name);
+
+//exit;
+//save report access
+
+//save user
+	
+	endif;
+	echo "true";
+
+
+}
 																	public function edit_user(){
 
 																		$county = $this -> session -> userdata('county_id');
@@ -1203,28 +1370,10 @@ class User extends MY_Controller {
 																											
 																											endif;
 																											return "SUCCESSFUL";
+																											// redirect('facility_activation/facility_dash');
 																										}
-
-																										public function users_create_multiple(){
-
-			// echo "<pre>";print_r($this->input->post());echo "</pre>";die;
-																											ini_set('error_reporting', -1);
-																											$count = count($this->input->post('username'));
-																											for ($i=0; $i < $count; $i++) { 
-																												$fname = $this->input->post('first_name')[$i];
-																												$lname = $this->input->post('last_name')[$i];
-																												$email_address = $this->input->post('email')[$i];
-																												$username = $this->input->post('email')[$i];
-																												$password;
-																												$telephone = $this->input->post('telephone')[$i];
-																												$user_type = $this->input->post('user_type')[$i];
-																												$facility_id = $this->input->post('facility_id')[$i];				
-																												$result = $this-> add_users_backend($fname,$lname,$email_address,$username,$telephone,$user_type,$facility_id);
-																												echo $result;
-																											}
 			// echo "I HAVE ENDED HEEEERE";
-																											redirect('facility_activation/facility_dash');
-																										}
+																										
 
 																										public function contact_us(){
 																											$subject = "title";

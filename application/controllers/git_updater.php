@@ -13,6 +13,91 @@ class Git_updater extends MY_Controller {
 		echo "Welcome to the the git updater. Updated Seven times Now";
 	}
 
+	public function admin_updates_home($update_status=NULL){
+		// echo "<pre> This";print_r($update_status);exit;
+		$permissions='super_permissions';
+		$data['user_types']=Access_level::get_access_levels($permissions);
+		$identifier = $this -> session -> userdata('user_indicator');
+
+		$hash = $this->get_hash();
+		$local_hash = $this->github_update_status_local();
+		if ($hash != $local_hash) {
+			$status = 1;
+		}
+		// echo "<pre>";print_r($status);echo "</pre>";exit;	
+
+		if (isset($status) && $status == 1) {
+			$status_ = "TRUE";
+			$available_update = 1;
+		}else{
+			$status_ = "FALSE";
+			$available_update = 0;
+		}
+		// echo $available_update;exit;
+		$git_records = Offline_model::get_prior_records();
+		// echo "<pre>";print_r($git_records);exit;
+
+		$data['available_update'] = $available_update;
+		$data['most_recent_commit'] = $hash;
+		$data['update_status'] = $status_;
+		$data['git_records'] = $git_records;
+
+		$data['title'] = "System Updates";
+		$data['banner_text'] = "System Management";
+		// $data['content_view'] = "offline/offline_admin_home";
+		// $template = 'shared_files/template/dashboard_v';
+		$data['banner_text'] = "System Management";
+ 		if ($identifier=='facility_admin') {
+ 	       $template = 'shared_files/template/template';            
+           $data['content_view'] = 'facility/offline_admin';            
+        }else{
+           $data['content_view'] = "offline/offline_admin_home";
+           $template = 'shared_files/template/dashboard_v';
+        }
+
+
+		// $update_status = $this->github_update();
+		// $hash = $this->get_hash();
+		// $update_files = $this->get_zip($hash);
+
+		// echo "<pre>";print_r($update_files);exit;
+
+		$this -> load -> view($template, $data);
+	}
+
+	public function update_system(){
+		$hash = $this->get_hash();			
+		$get_zip = $this->get_latest_zip();
+		$update_files = $this->extract_and_copy_files($hash);
+		$update_git_log = $this->update_log($hash);
+		
+		$extracted_path = $this->get_extracted_path();
+		$delete_residual_repo = delete_files($hash.'.zip');
+		$delete_residual_dir = delete_files($extracted_path);
+		$update_logs = $this->update_log($hash);
+		// echo "<pre>";print_r($update_files);exit;
+		// echo $set_current_commit;exit;
+		// echo "I worked";
+		redirect('/git_updater/admin_updates_home/1');
+	}
+
+	public function update_log($hash){
+		$current_time =date('Y-m-d H:i:s');
+		$data = array('hash_value' => $hash,'date_added'=>$current_time);	
+		echo "<pre>";
+		// print_r($data);die;
+		$status = $this->db->insert('git_log',$data);
+		return $status;
+	}
+
+	public function github_update_status_local(){
+		$hash = $this->get_hash();
+		$local_hash = git_updater_model::get_latest_hash();
+		$actual_hash = $local_hash[0]['hash_value'];
+
+		return $actual_hash;
+	}
+
 	public function github_update_status(){
 		// echo "I WAS HERE";
 		$res = $this->github_updater->has_update();
@@ -44,6 +129,7 @@ class Git_updater extends MY_Controller {
 	}
 
 	public function extract_and_copy_files(){
+		$success_status = array();
 		$hash = $this -> get_hash();
 
 		$unzip_status = $this->unzip->extract($hash.'.zip');
@@ -65,13 +151,14 @@ class Git_updater extends MY_Controller {
 			$squeaky = $this->array_cleaner($sanitized_directory,$ignored);
 			$extracted_path = $this->get_extracted_path();
 			// echo "<pre>";print_r($squeaky);
-			echo "<pre>";print_r($extracted_path);
-
+			// echo "<pre>";print_r($extracted_path);
 			$status = $this->copy_and_replace($squeaky,$extracted_path);
-			echo "<pre>";print_r($status);
+			// echo "<pre>";print_r($status);
 			// $set_hash = $this->github_updater->_set_config_hash($hash);
+			$success_status['extracted_path'] = $extracted_path;
+			$success_status['status'] = $status;
 
-			// return $status;
+			return $success_status;
 	}
 
 	public function ignored_files(){
@@ -140,58 +227,19 @@ class Git_updater extends MY_Controller {
 		$hash = $this->get_hash();
 		$res = $this->github_updater->get_commit_zip($hash);
 
-		echo "<pre>";print_r($res);
-		// return $res;
+		// echo "<pre>";print_r($res);
+		return $res;
 	}
 
-	public function admin_updates_home($update_status=NULL){
-		// echo "<pre> This";print_r($update_status);exit;
-		$permissions='super_permissions';
-		$data['user_types']=Access_level::get_access_levels($permissions);
-		$hash = $this->get_hash();
-		$status = $this->github_update_status();
-		if (isset($status) && $status == 1) {
-			$status_ = "TRUE";
-			$available_update = 1;
-		}else{
-			$status_ = "FALSE";
-			$available_update = 0;
-		}
-		// echo $available_update;exit;
-		$git_records = Offline_model::get_prior_records();
-		// echo "<pre>";print_r($git_records);exit;
+	public function set_latest_hash($hash){
+		$hash_set = $this -> config -> item('current_commit',$hash);
 
-		$data['available_update'] = $available_update;
-		$data['most_recent_commit'] = $hash;
-		$data['update_status'] = $status_;
-		$data['git_records'] = $git_records;
-
-		$data['title'] = "System Updates";
-		$data['banner_text'] = "User Management";
-		$data['content_view'] = "offline/offline_admin_home";
-		$template = 'shared_files/template/dashboard_v';
-
-		// $update_status = $this->github_update();
-		// $hash = $this->get_hash();
-		// $update_files = $this->get_zip($hash);
-
-		// echo "<pre>";print_r($update_files);exit;
-
-		$this -> load -> view($template, $data);
-	}
-
-	public function update_system(){
-		$hash = $this->get_hash();
-		$get_zip = $this->get_latest_zip();
-		$update_files = $this->extract_and_copy_files($hash);
-		$update_hash = $this->github_updater->_set_config_hash();
-
-		// echo "Houston: ".$update_files;exit;
-		// $this->admin_updates_home($update_status);
+		return $hash_set;
 	}
 
 	public function tester(){
-		copy("C:/xampp/htdocs/HCMP-ALPHA/karsanrichard-HCMP-ALPHA-cad542a/README.md","C:/xampp/htdocs/HCMP-ALPHA/README.md");
+		// copy("C:/xampp/htdocs/HCMP-ALPHA/karsanrichard-HCMP-ALPHA-cad542a/README.md","C:/xampp/htdocs/HCMP-ALPHA/README.md");
+		// echo FCPATH;
 	}
 
 	public function copy($src,$dest){
@@ -210,26 +258,6 @@ class Git_updater extends MY_Controller {
 		));
 
 		// $this->repo_downloader->download();
-	}
-
-	public function curl_repo_download(){
-		$url = "https://github.com/karsanrichard/HCMP-ALPHA/zipball/master";
-				$ch = curl_init();
-		/**
-		* Set the URL of the page or file to download.
-		*/
-		curl_setopt($ch, CURLOPT_URL,$url);
-
-		$fp = fopen('rss.xml', 'w+');
-		/**
-		* Ask cURL to write the contents to a file
-		*/
-		curl_setopt($ch, CURLOPT_FILE, $fp);
-
-		curl_exec ($ch);
-
-		curl_close ($ch);
-		fclose($fp);
 	}
 
 	public function get_with_get(){

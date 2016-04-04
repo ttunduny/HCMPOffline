@@ -146,7 +146,7 @@ border-color: #e7e7e7;
               <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
               	<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url().'home';?>"><span class="glyphicon glyphicon-user"></span>Essential Commodities</a></li>
                 <li role="presentation" class="divider"></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://41.89.6.223/HCMP/user"><span class="glyphicon glyphicon-user"></span>RTK</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://192.168.133.56/HCMP/user"><span class="glyphicon glyphicon-user"></span>RTK</a></li>
                 
               </ul>
             </li>

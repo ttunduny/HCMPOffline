@@ -124,7 +124,9 @@ $identifier = $this -> session -> userdata('user_indicator');
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <!-- <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" id="system_usage"><span class="glyphicon glyphicon-signal"> -->
-                            <a  href="<?php echo base_url().'reports/system_usage_temp'; ?>" id="system_usage"><span class="glyphicon glyphicon-signal">
+                            <a  href="#collapseTwo" id="new_system_usage"><span class="glyphicon glyphicon-signal">
+                            <!-- <a  href="<?php// echo base_url().'reports/new_system_usage_temp'; ?>" id="system_usage"><span class="glyphicon glyphicon-signal"> -->
+                            <!-- <a  href="<?php //echo base_url().'reports/system_usage_temp'; ?>" id="system_usage"><span class="glyphicon glyphicon-signal"> -->
                             </span>System Usage</a>
                         </h4></a>
                         </h4>
@@ -141,6 +143,18 @@ $identifier = $this -> session -> userdata('user_indicator');
                                 <td>
                                     <!-- <a href="<?php echo base_url().'reports/potential_expiries' ?>">Potential Expiries</a> -->
                                     <a href="<?php echo base_url("facility_activation/facility_dash") ?>">Facility Activation</a>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <!-- <a href="<?php echo base_url().'reports/potential_expiries' ?>">Potential Expiries</a> -->
+                                    <a href="<?php echo base_url("facility_activation/facility_offline") ?>">Setup Offline</a>
                                 </td>
                             </tr>
 
@@ -269,10 +283,15 @@ $('.page-header').html('');
 ajax_request_replace_div_content('divisional_reports/program_reports',"#notification");
 });
 //System Usage function
-$("#system_usage").on('click', function(){
+// $("#system_usage").on('click', function(){
+// active_panel(this);
+// $('.page-header').html('System Usage');
+// ajax_request_replace_div_content('reports/facility_mapping',"#notification");
+// });
+$("#new_system_usage").on('click', function(){
 active_panel(this);
 $('.page-header').html('System Usage');
-ajax_request_replace_div_content('reports/facility_mapping',"#notification");
+ajax_request_replace_div_content('reports/new_system_usage_temp',"#notification");
 });
 // $("#system_usage").on('click', function(){
 //      window.location.href = "<?php echo base_url();?>reports/system_usage_temp" ;
