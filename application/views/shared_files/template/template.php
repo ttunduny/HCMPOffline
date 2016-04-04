@@ -42,6 +42,7 @@ if (!$this -> session -> userdata('user_id')) {
   <script src="<?php echo base_url().'assets/bower_components/sweetalert/lib/sweet-alert.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/bower_components/alertifyjs/dist/js/alertify.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
+  <!-- <script src="<?php echo base_url().'assets/scripts/offline-simulate-ui.min.js'?>" type="text/javascript"></script> -->
   <link href="<?php echo base_url().'assets/css/offline-theme-default.css'?>" type="text/css" rel="stylesheet"/> 
   <link href="<?php echo base_url().'assets/css/offline-language-english.css'?>" type="text/css" rel="stylesheet"/> 
   <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
@@ -62,12 +63,14 @@ if (!$this -> session -> userdata('user_id')) {
           Offline.on('confirmed-down', function () {
             $online.fadeOut(function () {
               $offline.fadeIn();
+              // alert("aaah");
             });
           });
 
           Offline.on('confirmed-up', function () {
             $offline.fadeOut(function () {
               $online.fadeIn();
+              // alert("haaa");
             });
           });
 
@@ -77,17 +80,20 @@ if (!$this -> session -> userdata('user_id')) {
       <script>
           setInterval(function(){
           var status = Offline.state;
+          $("#connection_status").html(status);
            if (status == 'up') {//when online
               $('#offline-notification').removeClass("show");//remove show
               $('#offline-notification').addClass("hidden");
               $('#online-notification').removeClass("hidden");
               $('#online-notification').addClass("show");
-
+              alert("up");
            }else{//when offline
               $('#online-notification').removeClass("show");//remove show
               $('#online-notification').addClass("hidden");
               $('#offline-notification').removeClass("hidden");
               $('#offline-notification').addClass("show");
+              alert("down");
+              
            }
           }, 3000);
       </script>
@@ -312,6 +318,7 @@ if (!$this -> session -> userdata('user_id')) {
   <!-- /.modal-dialog -->
 </div>
 <!-- <p>What happens if i say something here?</p> -->
+<!-- <div><p>status</p><p id="connection_status"> eh? </p></div> -->
 <div id="online-notification" class="alert alert-success online-notification hidden">
   <strong>Internet Connection Established! </strong>You are advised to <a href="<?php echo base_url().'sync/synchronize_data'; ?>">synchronize your data</a>
 </div>
