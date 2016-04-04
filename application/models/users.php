@@ -65,7 +65,7 @@ class Users extends Doctrine_Record {
 	}
 
 	public static function getuserby_id($id) {
-		$query = Doctrine_Query::create() -> select("fname") -> from("users") -> where("id='$id' ");
+		$query = Doctrine_Query::create() -> select("fname,password") -> from("users") -> where("id='$id' ");
 		$level = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $level;
 	}
@@ -268,6 +268,11 @@ public static function get_cp_details($county_id){
 	$level = $query -> execute();
 	return $level;
 }
+public static function get_cp_details_karsan($county_id){
+	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("county_id=$county_id and usertype_id='10' ");
+	$details = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
+	return $details;
+}
 public static function get_dpp_emails($distirct){
 	$query = Doctrine_Query::create() -> select("*") -> from("users")->where("district = $distirct and usertype_id='3' and email_recieve = 1");
 		$level = $query -> execute();
@@ -449,10 +454,12 @@ public static function get_county_details($county_id){
 	}
 	
 	public static function check_if_email($test_email) {
-		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username LIKE '%$test_email%'");
+		$query = Doctrine_Query::create() -> select("*") -> from("Users") -> where("username = '$test_email'");
 		$result = $query -> execute(array(), Doctrine::HYDRATE_ARRAY);
 		return $result;
 	}
+
+
 
 	public static function deactivate_facility($facility_code,$status){
 		if ($status == 0) {

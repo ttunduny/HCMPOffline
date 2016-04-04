@@ -23,8 +23,8 @@
       	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
         <h5>Donations</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/pending') ?>"><span class="badge"><?php 
-				echo $facility_dashboard_notifications['facility_donations_pending'];?></span> Items have been donated and are pending receipt</a> 
+			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/to-me') ?>"><span class="badge"><?php 
+				echo $facility_dashboard_notifications['facility_donations_pending'];?></span> Items have been donated to you and are pending receipt</a> 
 			</p>
 			 </div>
 		  <?php endif; //donations_pending?>
@@ -32,8 +32,8 @@
       	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
         <h5>Donations</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/to-me') ?>"><span class="badge"><?php 
-				echo $facility_dashboard_notifications['facility_donations'];?></span> Items have been donated to you</a> 
+			<a class="link" href="<?php echo base_url('issues/confirm_external_issue/pending') ?>"><span class="badge"><?php 
+				echo $facility_dashboard_notifications['facility_donations'];?></span> Donated items by you are pending receipt</a> 
 			</p>
 			 </div>
 		  <?php endif; //donations_pending?>
@@ -65,7 +65,7 @@
       	 <div style="height:auto; margin-bottom: 2px" class="warn message ">      	
         <h5>Potential Expiries</h5> 
         	<p>
-			<a class="link" href="<?php echo base_url('reports') ?>"><span class="badge"><?php 
+			<a class="link" href="<?php echo base_url('reports/potential_expiries') ?>"><span class="badge"><?php 
 				echo $facility_dashboard_notifications['potential_expiries'];?></span>Commodities Expiring in the next 6 months</a> 
 			</p>
 			 </div>
@@ -79,6 +79,16 @@
 			</p> 
         </div>
         <?php endif; // items_stocked_out_in_facility?>
+        <?php if($facility_dashboard_notifications['facility_redistribution_mismatches']> 0): ?>
+       <div style="height:auto; margin-bottom:2px;" class="warn message">
+          <h5>Redistribution Mismatches</h5>
+          <p>
+            <a class="link" href="<?php echo base_url('reports/redistribution_mismatches') ?>">
+              <span class="badge"><?php echo $facility_dashboard_notifications['facility_redistribution_mismatches']; ?></span> Redistribution mismatches found
+            </a>
+          </p>
+        </div>
+      <?php endif; //Redistribution Mismatches?>
         <?php if(array_key_exists('pending_all', $facility_dashboard_notifications['facility_order_count']) 
         && @$facility_dashboard_notifications['facility_order_count']['pending_all']>0): ?>
       	<div style="height:auto; margin-bottom: 2px" class="warn message ">      	
@@ -154,7 +164,11 @@
         </div>
          <div style="height:auto; margin-bottom: 2px" class="" id="order_hide">
             <a href="<?php echo base_url('reports/facility_transaction_data/MEDS'); ?>"><h5>MEDS online</h5></a>
-            <a href="<?php echo base_url('reports/facility_transaction_data/KEMSA'); ?>"><h5>KEMSA online</h5></a>
+            <a id="kemsa_lists"><h5>KEMSA online</h5></a>
+            <span>
+                <a class="other_listings" style="margin-left:15px;width:100%;" href="<?php echo base_url('reports/facility_transaction_data/KEMSA'); ?>"><h5>For own facility</h5></a>
+                <a class="other_listings" style="margin-left:15px;width:100%;" href="<?php echo base_url('reports/facility_transaction_data_other/KEMSA'); ?>"><h5>For other facility</h5></a>              
+            </span>
             <a href="" class="order-for-excel"><h5>KEMSA via excel</h5></a>
             
         </div>  
@@ -165,13 +179,17 @@
          </div>  
         	  <div style="height:auto; margin-bottom: 2px" class="" id="update_order_hide">
 	            <a href="<?php echo base_url('reports/order_listing/facility'); ?>"><h5>KEMSA</h5></a>
-	            <a href="<?php echo base_url('reports/work_in_progress'); ?>"><h5>MEDS</h5></a> 
+              <a href="<?php echo base_url('reports/order_listing/facility'); ?>"><h5>MEDS</h5></a> 
+	            <!-- <a href="<?php// echo base_url('reports/work_in_progress'); ?>"><h5>MEDS</h5></a>  -->
         	</div>       	 
         <div style="height:auto; margin-bottom: 2px" class="order message ">
           <a href="<?php echo base_url("issues/add_service_points") ?>"><h5>Add Service Points </h5></a>          
         </div>
          <div style="height:auto; margin-bottom: 2px" class="reports message ">
           <a href="<?php echo base_url("reports") ?>"><h5>Reports</h5></a>        
+        </div>
+        <div style="height:auto; margin-bottom: 2px" class="reports message ">
+          <a href="<?php echo base_url("issues/reversals") ?>"><h5>Reversals</h5></a>        
         </div>
         <?php endif; ?>
       </div>
@@ -223,6 +241,11 @@
 
    		startIntro();
    	}
+    $('.other_listings').hide();
+
+    $('#kemsa_lists').click(function(e){
+      $( ".other_listings" ).toggle('fast');
+    });
    	//for hiding the tabs when the page loads
    	$('#update_order_hide').hide() 
        $('#order_hide').hide() 

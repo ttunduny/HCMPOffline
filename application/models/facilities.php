@@ -152,6 +152,13 @@ class Facilities extends Doctrine_Record {
 		$drugs = $query -> execute();
 		return $drugs;
 	}
+
+	public static function getFacilities_from_facility_code($facility_code){
+		
+		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("facility_code='$facility_code' AND using_hcmp=1")->OrderBy("facility_name asc");
+		$drugs = $query -> execute();
+		return $drugs;
+	}
 	public static function get_Facilities_using_HCMP($county_id = null, $district_id = null)
 	{
 		$and_data =(isset($county_id)&& ($county_id>0)) ?" AND d.county = $county_id" : null;
@@ -332,7 +339,7 @@ class Facilities extends Doctrine_Record {
     
 	}
 
-	public function get_facility_data_specific($report_type,$county,$district_id = NULL,$facility_code = NULL){
+	public function get_facility_data_specific($report_type,$county,$district_id = NULL,$facility_code = NULL,$scope = NULL){
 		/*
 		@author karsan AS AT 2015-08-04
 		*/
@@ -347,7 +354,7 @@ class Facilities extends Doctrine_Record {
 					");
 			}
 		}else{
-			if ($all = 'all') {
+			if ($scope = 'all') {
 					// echo "I WORK";exit;
 					$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
 		             CALL facility_monitoring_new('all','$county','$report_type');
@@ -507,6 +514,162 @@ class Facilities extends Doctrine_Record {
 		
 		
 		
+	}
+
+	public function get_facilities_logged_in_month($start_date,$last_date,$issued=null){		
+		// $data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT
+		// 		    f.facility_code, f.facility_name, d.district, c.county
+		// 		FROM
+		// 		    facilities f,
+		// 		    districts d,
+		// 		    counties c,
+		// 		    user u,
+		// 		    log l
+		// 		WHERE
+		// 		    u.usertype_id = '5'
+		// 		        AND f.facility_code = u.facility
+		// 		        AND f.using_hcmp = '1'
+		// 		        AND f.date_of_activation < '$start_date'
+		// 		        AND d.id = f.district
+		// 		        AND c.id = d.county
+		// 		        AND u.id =l.user_id
+		// 		        AND l.end_time_of_event between '$start_date' and '$last_date' 		
+		// 				AND l.action = 'Logged Out'
+		// 		group by f.facility_code,l.user_id,DATE_FORMAT(l.end_time_of_event,'%ymd%')");
+		$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT
+				    f.facility_code,c.county, d.district, f.facility_name
+				FROM
+				    facilities f,
+				    districts d,
+				    counties c,
+				    facility_user_log l
+				WHERE
+						f.facility_code = l.facility_code
+				        AND f.using_hcmp = '1'
+						AND d.id = f.district
+				        AND c.id = d.county
+				        AND f.date_of_activation < '$start_date'
+				        AND l.end_time_of_event BETWEEN '$start_date' AND '$last_date'
+				        AND l.action = 'Logged Out'
+				group by l.facility_code");
+		return $data;
+	}
+
+
+	public function get_facilities_logged_in_count($start_date,$last_date,$number){
+		// $data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT
+		// 		    f.facility_code, f.facility_name, d.district, c.county, count(l.end_time_of_event) as days
+		// 		FROM
+		// 		    facilities f,
+		// 		    districts d,
+		// 		    counties c,
+		// 		    user u,
+		// 		    log l
+		// 		WHERE
+		// 		    u.usertype_id = '5'
+		// 		        AND f.facility_code = u.facility
+		// 		        AND f.using_hcmp = '1'
+		// 		        AND f.date_of_activation < '$start_date'
+		// 		        AND d.id = f.district
+		// 		        AND c.id = d.county
+		// 		        AND u.id =l.user_id
+		// 		        AND l.end_time_of_event between '$start_date' and '$last_date' 		
+		// 				AND l.action = 'Logged Out'
+		// 		group by f.facility_code,l.user_id,DATE_FORMAT(l.end_time_of_event,'%ymd%')
+		// 		HAVING count(l.end_time_of_event) >='$number'");
+		$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT
+			    f.facility_code,c.county, d.district, f.facility_name, count(l.end_time_of_event) as days
+			FROM
+			    facilities f,
+			    districts d,
+			    counties c,
+			    facility_user_log l
+			WHERE
+					f.facility_code = l.facility_code
+			        AND f.using_hcmp = '1'
+					AND d.id = f.district
+			        AND c.id = d.county
+			        AND f.date_of_activation < '$start_date'
+			        AND l.end_time_of_event BETWEEN '$start_date' AND '$last_date'
+			        AND l.action = 'Logged Out'
+			group by f.facility_code,l.user_id,DAY(l.end_time_of_event) HAVING count(l.end_time_of_event) >='$number'");
+
+		return $data;
+	}
+	public function get_facilities_issued_in_month($start_date,$last_date,$issued=null){
+		
+		$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT
+				    f.facility_code,c.county, d.district, f.facility_name
+				FROM
+				    facilities f,
+				    districts d,
+				    counties c,
+				    facility_user_log l
+				WHERE
+						f.facility_code = l.facility_code
+				        AND f.using_hcmp = '1'
+						AND d.id = f.district
+				        AND c.id = d.county
+				        AND f.date_of_activation < '$start_date'
+				        AND l.end_time_of_event BETWEEN '$start_date' AND '$last_date'
+				        AND l.action = 'Logged Out'
+				        AND l.issued = '1'
+				group by l.facility_code");
+		return $data;
+	}
+
+
+	public function get_facilities_issued_in_count($start_date,$last_date,$number){
+		$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT
+			    f.facility_code,c.county, d.district, f.facility_name, count(l.end_time_of_event) as days
+				FROM
+				    facilities f,
+				    districts d,
+				    counties c,
+				    facility_user_log l
+				WHERE
+						f.facility_code = l.facility_code
+				        AND f.using_hcmp = '1'
+						AND d.id = f.district
+				        AND c.id = d.county
+				        AND f.date_of_activation < '$start_date'
+				        AND l.end_time_of_event BETWEEN '$start_date' AND '$last_date'
+				        AND l.action = 'Logged Out'
+				        AND l.issued = '1'
+				group by f.facility_code,l.user_id,DAY(l.end_time_of_event) HAVING count(l.end_time_of_event) >='$number'");
+		return $data;
+	}
+	public function get_facilities_not_logged_in_month($start_date,$last_date){	
+		$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT
+				    f.facility_code,c.county, d.district, f.facility_name
+				FROM
+				    facilities f,
+				    districts d,
+				    counties c
+				WHERE f.using_hcmp = '1'
+						AND d.id = f.district
+				        AND c.id = d.county
+						AND f.facility_code not in (SELECT DISTINCT
+				    l.facility_code from  facility_user_log l
+				WHERE l.end_time_of_event BETWEEN '$start_date' AND '$last_date'
+				        AND l.action = 'Logged Out')");
+		return $data;
+	}
+	public function get_facilities_not_issued_in_month($start_date,$last_date){
+		$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT
+				    f.facility_code,c.county, d.district, f.facility_name
+				FROM
+				    facilities f,
+				    districts d,
+				    counties c
+				WHERE f.using_hcmp = '1'
+						AND d.id = f.district
+				        AND c.id = d.county
+						AND f.facility_code not in (SELECT DISTINCT
+				    l.facility_code from  facility_user_log l
+				WHERE l.end_time_of_event BETWEEN '$start_date' AND '$last_date' and l.issued='1'
+				        AND l.action = 'Logged Out')");
+		return $data;
 	}
     public static function get_last_redistribution($facility_code)
     {

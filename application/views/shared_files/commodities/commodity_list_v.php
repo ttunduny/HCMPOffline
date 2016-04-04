@@ -3,7 +3,7 @@
  <table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
 		<tr>
-			<th>Category</th>
+			<!-- <th>Category</th> -->
 			<th>Commodity Name</th>
 			<th>Commodity Code</th>
 			<th>Unit Size</th>
@@ -15,8 +15,7 @@
 <?php 
     foreach($commodity_list as $commodity_list):
 	
-			echo "<tr>
-					<td>".$commodity_list['commodity_sub_category']."</td>
+			echo "<tr>					
 					<td>".$commodity_list['commodity_name']."</td>
 					<td>".$commodity_list['commodity_code']."</td>
 					<td>".$commodity_list['unit_size']."</td>

@@ -32,6 +32,24 @@ class facility_issues extends Doctrine_Record {
 		$commodities = $query -> execute();
 		return $commodities;
 	}
+
+	public function get_all_issue_data() {
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT id,issued_to,facility_code FROM facility_issues ORDER BY id");
+
+		return $query;
+	}
+
+	public function get_all_service_points() {
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT id,service_point_name,facility_code FROM service_points ORDER BY id");
+
+		return $query;
+	}
+
+	public function get_one_service_points($id) {
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT id,service_point_name,facility_code FROM service_points where id='$id' ORDER BY id");
+
+		return $query;
+	}
 	
    ////dumbing data into the issues table
 	public static function update_issues_table($data_array){
@@ -97,6 +115,74 @@ class facility_issues extends Doctrine_Record {
 	   
    }
 
+   public function get_issues_for_reversals(){   		
+   	  $issues = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+   	  select f.facility_name,  f_i.facility_code,f_i.created_at,f_i.issued_by,u.fname, u.lname from facilities f,facility_issues f_i,user u where f.facility_code = f_i.facility_code 
+   	  and f_i.s11_No ='internal issue'  AND u.id = f_i.issued_by
+   	  group by created_at, issued_by, facility_code order by created_at desc limit 0,15");
+
+        return $issues;
+   }
+
+   public function get_facility_issues_for_reversals($facility_code,$start_date){
+   	 $issues = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT distinct f.facility_name, f_i.issued_to,f_i.s11_No,f_i.facility_code,f_i.issued_by,f_i.created_at, u.fname, u.lname, f_i.commodity_id,c.commodity_name,f_i.batch_no,f_i.qty_issued,f_i.date_issued
+		FROM  facilities f, facility_issues f_i, user u, commodities c WHERE   f.facility_code = f_i.facility_code AND f_i.s11_No = 'internal issue'
+        AND u.id = f_i.issued_by  AND f.facility_code = '$facility_code'  AND c.id = f_i.commodity_id  and f_i.status = '1' 
+        and f_i.created_at between '$start_date' and NOW()
+		ORDER BY f_i.date_issued DESC");
+        return $issues;
+   }
+
+    public function get_facility_issues_reversals($facility_code,$start_date){
+   	 $issues = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT distinct f.facility_name, f_i.issued_to,f_i.facility_code,f_i.issued_by,f_i.created_at, u.fname, u.lname, f_i.commodity_id,c.commodity_name,f_i.batch_no,f_i.qty_issued,f_i.date_issued
+		FROM  facilities f, facility_issues f_i, user u, commodities c WHERE   f.facility_code = f_i.facility_code AND f_i.s11_No = 'reversed issue'
+        AND u.id = f_i.issued_by  AND f.facility_code = '$facility_code'  AND c.id = f_i.commodity_id  and f_i.status = '1' 
+        and f_i.created_at between '$start_date' and NOW()
+		ORDER BY f_i.created_at DESC");
+        return $issues;
+   }
+
+	public function get_redistributions_for_reversals(){   		
+   	  $redistributions = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT f.facility_name,r.source_facility_code as facility_code,r.receive_facility_code,r.date_sent, 
+   	  	u.fname, u.lname,r.sender_id FROM  facilities f,  redistribution_data r, user u WHERE  f.facility_code = r.source_facility_code AND u.id = r.sender_id
+		GROUP BY date_sent , sender_id ,r.source_facility_code ORDER BY date_sent DESC;");
+
+        return $redistributions;
+   }
+
+    public function get_issue_details_for_reversals($facility_code,$time,$issuer){   		
+   	  $issues = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT f.facility_name,f_i.*, c.commodity_name FROM facility_issues f_i, commodities c,facilities f 
+   	  	where f_i.facility_code = '$facility_code' and f.facility_code = f_i.facility_code and f_i.created_at='$time' and f_i.issued_by='$issuer' and f_i.s11_No ='internal issue' and f_i.commodity_id = c.id");
+
+      return $issues;
+   }
+   public function get_facility_issue_details_for_reversals($facility_code,$commodity_id,$time,$issuer){   		
+   	  $issues = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT distinct* FROM hcmp_rtk.facility_issues 
+   	  	where facility_code = '$facility_code' and commodity_id = '$commodity_id' and created_at = '$time' and issued_by = '$issuer' and status='1' LIMIT 0,1");
+      return $issues;
+   }
+
+   public function get_reversal_details_for_reversals($facility_code,$time,$issuer){   		
+   	  $redistributions = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT f.facility_name,r.*, c.commodity_name FROM redistribution_data r, commodities c,facilities f 
+	  	where r.source_facility_code = '$facility_code' and f.facility_code = r.source_facility_code and r.date_sent='$time' and r.sender_id='$issuer' and r.commodity_id = c.id");
+      return $redistributions;
+   }
+
+   public function get_reversed_issues(){   		
+   	  $reversals = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT f.facility_name, r.facility_code,r.created_at, u.fname, u.lname,r.issued_by FROM
+    	facilities f, reversals r, user u WHERE    f.facility_code = r.facility_code AND r.s11 = 'internal issue' AND u.id = r.issued_by GROUP BY created_at , issued_by , facility_code ORDER BY created_at DESC");
+       return $reversals;
+   }
+
+   public function get_undo_issue_details_for_reversals($facility_code,$time,$issuer){   		
+   	  $reversed_details = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT f.facility_name,r.*, c.commodity_name FROM reversals r, commodities c,facilities f 
+   	  	where r.facility_code = '$facility_code' and f.facility_code = r.facility_code and r.created_at='$time' 
+        and r.issued_by='$issuer' and r.s11 ='internal issue' and r.commodity_id = c.id and r.reversal_status = '1'");
+
+      return $reversed_details;
+   }
+
+
     //The function gets the consumption for the email consumption report
     public static function get_consumption_report_ors_zinc($commodities)
     {
@@ -144,15 +230,23 @@ class facility_issues extends Doctrine_Record {
 		$convertfrom=date('Y-m-d',strtotime($from ));
 		$convertto=date('Y-m-d',strtotime($to ));
 
+// 		echo "SELECT f.date_issued, f.expiry_date, f.batch_no, c.unit_size, f.s11_No, f.balance_as_of,
+//  f.adjustmentnve, f.adjustmentpve, f.qty_issued, u.fname, u.lname, f.issued_to AS service_point_name
+// FROM facility_issues f
+// INNER JOIN user u on f.issued_by = u.id
+// INNER JOIN commodities c on c.id = f.commodity_id
+// WHERE f.facility_code = $facility_code AND f.status = 1 
+// AND f.commodity_id = $commodity_id AND f.date_issued 
+// BETWEEN '$convertfrom' AND '$convertto' ORDER BY f.created_at ASC";exit;
 	$transaction = Doctrine_Manager::getInstance()->getCurrentConnection()
 	-> fetchAll("SELECT f.date_issued, f.expiry_date, f.batch_no, c.unit_size, f.s11_No, f.balance_as_of,
  f.adjustmentnve, f.adjustmentpve, f.qty_issued, u.fname, u.lname, f.issued_to AS service_point_name
 FROM facility_issues f
 INNER JOIN user u on f.issued_by = u.id
 INNER JOIN commodities c on c.id = f.commodity_id
-WHERE f.facility_code = $facility_code AND f.status = 1 
+WHERE f.facility_code = $facility_code AND f.status in (1,3) 
 AND f.commodity_id = $commodity_id AND f.date_issued 
-BETWEEN '$convertfrom' AND '$convertto' ORDER BY f.created_at ASC"); 
+BETWEEN '$convertfrom' AND '$convertto' ORDER BY f.date_issued ASC"); 
 		
 
 
@@ -201,5 +295,13 @@ BETWEEN '$convertfrom' AND '$convertto' ORDER BY f.created_at ASC");
 			ORDER BY f.`facility_name` ASC");
 		
 		return $query ;
+	}
+
+	public static function get_service_point_stocks($facility_code,$service_point,$commodity_id){
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll(
+			"SELECT * FROM service_point_stocks WHERE facility_code = $facility_code AND service_point_id = $service_point AND commodity_id = $commodity_id"
+			);
+
+		return $query;
 	}
 }

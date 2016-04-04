@@ -48,6 +48,8 @@ update service_points set `service_point_name`='$service_point_name',
 where `id`='$id' 
 ");		
 	}
+
+	
 	
 	
 }

@@ -8,6 +8,7 @@
     <!-- Bootstrap core CSS -->  
     <link rel="icon" href="<?php echo base_url().'assets/img/coat_of_arms.png'?>" type="image/x-icon" />
     <link href="<?php echo base_url().'assets/css/style.css'?>" type="text/css" rel="stylesheet"/> 
+    <link href="<?php echo base_url().'assets/multiple_select/multiple-select.css'?>" type="text/css" rel="stylesheet"/> 
     <link href="<?php echo base_url().'assets/css/offline-theme-default.css'?>" type="text/css" rel="stylesheet"/> 
     <link href="<?php echo base_url().'assets/css/styles.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/css/select2.css'?>" type="text/css" rel="stylesheet"/> 
@@ -21,6 +22,7 @@
     <link href="<?php echo base_url().'assets/datatable/TableTools.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/datatable/dataTables.bootstrap.css'?>" type="text/css" rel="stylesheet"/>
     <link href="<?php echo base_url().'assets/boot-strap3/css/bootstrap.min.css'?>" type="text/css" rel="stylesheet"/>
+    <link href="<?php echo base_url().'assets/multiple_select/multiple-select.css'?>" type="text/css" rel="stylesheet"/>
     <script src="<?php echo base_url('assets/scripts/county_sub_county_functions.js')?>" type="text/javascript"></script>
     <script src="<?php echo base_url();?>assets/FusionCharts/FusionCharts.js" type="text/javascript"></script>
      <script src="<?php echo base_url().'assets/scripts/pace.js'?>" type="text/javascript"></script>
@@ -106,16 +108,16 @@ legend{
         </div>
         <div class="navbar-header" >
   
-            <a href="<?php echo base_url().'national';?>">   
+            <a href="<?php echo base_url().'kenya';?>">   
             <img style="display:inline-block;"  src="<?php echo base_url();?>assets/img/coat_of_arms_dash.png" class="img-responsive " alt="Responsive image" id="logo" ></a>
             
         </div>
         
         <div class="collapse navbar-collapse navbar-right">
           <ul class="nav navbar-nav navbar-right">
-            <li class=""><a href="<?php echo base_url().'national';?>">Home</a></li>
+            <li class=""><a href="<?php echo base_url().'kenya';?>">Home</a></li>
             <li class="active"><a href="<?php echo base_url().'national/reports';?>">Reports</a></li>
-            <li class=""><a href="<?php echo base_url().'national/search';?>">Search</a></li>
+            <!-- <li class=""><a href="<?php echo base_url().'national/search';?>">Search</a></li> -->
             <li class="dropdown" style="background: #144d6e; color: white;">
      		<a href="#" class="dropdown-toggle" style="color:white" data-toggle="dropdown" role="button" aria-expanded="false">Log In <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -230,7 +232,7 @@ legend{
 				
 			<div class="row" style="">
 				<div class="col-md-3">
-					<input type="radio" name="commodity_s" value="Tracer" class=" " id="tracer_commodities"/> Tracer Commodities
+					<input type="radio" name="commodity_s" value="Tracer" class=" " id="tracer_commodities" /> Tracer Commodities
 				</div>
 				<div class="col-md-3">
 					
@@ -241,21 +243,33 @@ legend{
 			</div>
 			<div class="row" style="margin-top: 2%">
 				<div class="col-md-2">
-					<input type="radio" name="commodity_s" value="Specify" id="specify_commodities"/> Specify Commodity
+					<input type="radio" name="commodity_s" value="Specify" id="specify_commodities" checked="checked"/> Specify Commodity
 				</div>
 				<div class="col-md-4" style="padding: 0">
 					<div class="" style="margin-top: 2%">
-			  	
-			    <select class="form-control input-md" id="commodity"> 
-			    	<option value="NULL">All Commodities</option>
-			    	<?php
-							foreach ($commodities as $value => $commodity) :
-									 $c_id = $commodity['id'];
-									$c_name = $commodity['commodity_name'];
-								    echo "<option value='$c_id'>$c_name</option>";
-							endforeach;
-					?>
-			    	</select>
+			  		<div id="multiple_options">
+			  			<select class="multiple_select myoptions" multiple="multiple" id="commodity" disabled="true" > 			    	
+				    	<?php
+								foreach ($commodities as $value => $commodity) :
+										$c_id = $commodity['id'];
+										$c_name = $commodity['commodity_name'];
+									    echo "<option value='$c_id'>$c_name</option>";
+								endforeach;
+						?>
+				    	</select>
+			  		</div>
+			  		<div id="single_options">
+			  			<select class="myoptions" id="commodity1" disabled="true" > 			    	
+				    	<?php
+								foreach ($commodities as $value => $commodity) :
+										$c_id = $commodity['id'];
+										$c_name = $commodity['commodity_name'];
+									    echo "<option value='$c_id'>$c_name</option>";
+								endforeach;
+						?>
+				    	</select>
+			  		</div>
+				    
 			  </div>
 				</div>
 				<div class="col-md-3">
@@ -310,7 +324,7 @@ legend{
 							<input type="radio" name="doctype" value="pdf" checked/> PDF
 						</section>-->
 						<section class="col-md-3">
-							<input type="radio" name="doctype"  value="excel"/> Excel
+							<input type="radio" name="doctype"  value="excel" checked /> Excel
 						</section>
 						
 						<!-- <section class="col-md-3">
@@ -359,6 +373,9 @@ legend{
 <script>
     var url='<?php echo base_url(); ?>';
      $(document).ready(function () {
+     	$('#single_options').hide();
+     	// $('#multiple_options').hide();
+     	load_multiple(null);
      	json_obj = { "url" : "assets/img/calendar.gif'",};
 		var baseUrl=json_obj.url;
 	  //	-- Datepicker	limit today	
@@ -368,7 +385,7 @@ legend{
 		changeMonth: true,
 		changeYear: true,
 		buttonImage: baseUrl,});
-     	
+     		
      	$("#interval,#expfrom,#expto,#commodity").attr("disabled", 'disabled');
      	//$( "#to" ).datepicker();
      	//When County is selected
@@ -403,52 +420,105 @@ $('#sub_county').on('change', function(){
     //$("#expfrom,#expto" ).datepicker();
      $("input:radio[name=criteria]").click(function() {
     	var value = $(this).val();
+    	// load_multiple(value);
 	 	if(value=="Potential"){
 			$("#interval").attr("disabled", false);
 			//$("#year").attr("disabled", 'disabled');
 		 	$("#from,#to").attr("disabled", 'disabled');
 		 	document.getElementById("commodity_s").checked = true;
-			document.getElementById("tracer_commodities").disabled = true;
-			document.getElementById("specify_commodities").disabled = true;
+			// document.getElementById("tracer_commodities").disabled = true;
+			document.getElementById("tracer_commodities").disabled = false;
+			// document.getElementById("specify_commodities").disabled = true;
+			document.getElementById("specify_commodities").disabled = false;
+			load_multiple(value);
+			$(".myoptions").attr("disabled", true);
+			$("#commodity1").attr("disabled", true);
+			$("#tracer_commodities").attr("disabled", true);
+			
+			
 		}else if(value=="Actual"){
 			//$("#expfrom,#expto").attr("disabled", false);
 			$("#interval").attr("disabled", 'disabled');
-			$("#from,#to").attr("disabled", 'disabled');
+			// $("#from,#to").attr("disabled", 'disabled');
+			$("#from,#to").attr("disabled", false);
 			$("#interval").val(0);
-			document.getElementById("commodity_s").checked = true;
-			document.getElementById("tracer_commodities").disabled = true;
-			document.getElementById("specify_commodities").disabled = true;
+			// document.getElementById("commodity_s").checked = true;
+			$("#commodity_s").attr("checked", 'checked');
+			load_multiple(value);
+			document.getElementById("tracer_commodities").disabled = false;
+			// document.getElementById("tracer_commodities").disabled = true;
+			// document.getElementById("specify_commodities").disabled = true;			
+			// document.getElementById("specify_commodities").disabled = true;			
 		}else if(value=="stock_units"){
 			//$("#expfrom,#expto").attr("disabled", false);
 			$("#interval").attr("disabled", 'disabled');
-			$("#from,#to").attr("disabled", 'disabled');
+			$("#from,#to").attr("disabled", false);
+			load_multiple(value);
+			// $("#from,#to").attr("disabled", 'disabled');
 			$("#interval").val(0);
 			document.getElementById("commodity_s").checked = true;
-			document.getElementById("web_graph").disabled = true;
+			// document.getElementById("web_graph").disabled = true;
 			//document.getElementById("specify_commodities").disabled = true;
+			
 		}
 		else if(value=="Orders"){
 			$("#interval").attr("disabled", 'disabled');
-			$("#from,#to").attr("disabled", 'disabled');
+			$("#commodity_s").attr("checked", 'checked');
+			// $("#from,#to").attr("disabled", 'disabled');
+			load_multiple(value);
+			$("#from,#to").attr("disabled", false);
 			document.getElementById("commodity_s").checked = true;
-			document.getElementById("tracer_commodities").disabled = true;
-			document.getElementById("specify_commodities").disabled = true;
+			document.getElementById("tracer_commodities").disabled = false;
+			document.getElementById("specify_commodities").disabled = false;
+			// document.getElementById("tracer_commodities").disabled = true;
+			// document.getElementById("specify_commodities").disabled = true;
+			
+		}else if(value=="Consumption"){
+			$("#interval").attr("disabled", 'disabled');
+			load_multiple(value);
+			// $("#specify_commodities").attr("checked", 'checked');
+			// $("#from,#to").attr("disabled", 'disabled');
+			$("#from,#to").attr("disabled", false);
+			document.getElementById("commodity_s").checked = true;
+			$(".myoptions").attr("disabled", true);
+
+			$(".ms-choice").addClass("disabled");
+			// document.getElementById("tracer_commodities").disabled = false;
+			// document.getElementById("specify_commodities").disabled = false;
+			// document.getElementById("tracer_commodities").disabled = true;
+			// document.getElementById("specify_commodities").disabled = true;
+			
 		}else{
+			load_multiple(value);
 			$("#interval").attr("disabled", 'disabled');
 			$("#from,#to").attr("disabled", false);
+			$("#commodity_s").attr("checked", 'checked');			
+			// $(".myoptions").attr("disabled", true);
+			
 			
 		}
 });
 
 $("input:radio[name=commodity_s]").click(function() {
 	var val = $(this).val();
+	// alert(val);
    	if(val=="Specify"){
-		$("#commodity").attr("disabled", false);
+		$(".ms-choice").attr("disabled", false);
+		$(".myoptions").attr("disabled", false);
+		// $("#commodity").attr("disabled", false);
+		$(".ms-choice").removeClass("disabled");
+
+		// $("#commodity").removeClass("disabled");
 	}else{
-		$("#commodity").attr("disabled", 'disabled');
-		$("#commodity").val("NULL");
+		// $("#commodity").attr("disabled", 'disabled');
+		// $("#commodity").val("NULL");
+		$(".myoptions").attr("disabled", true);
+
+		$(".ms-choice").addClass("disabled");
 	}
 });
+
+
 //Generate the reports after user has selected the options
     $(".generate").click(function() {
       	var county_id=$('#county').val();
@@ -477,8 +547,17 @@ $("input:radio[name=commodity_s]").click(function() {
 	        		link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel/'+encodeURI(from)+ '/'+encodeURI(to);
 	       		}
 	        	if(commodity_type=='Specify'){ 
-	        		var commodity_id=$('#commodity').val();
-	        		link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel/'+encodeURI(from)+ '/'+encodeURI(to);
+	        		var commodity_id=$('#commodity').val();	        		
+	        		// console.log(mycommodity_id);
+	        		// alert(typeof mycommodity_id);
+	    //     		var foo = []; 
+					// $('#commodity :selected').each(function(i, selected){ 
+					//   foo[i] = $(selected).val(); 
+					// });
+					// commodity_id = 'commodity_id='+mycommodity_id;
+					// commodity_id = mycommodity_id.toString();
+
+	        		link='national/consumption/'+county_id+'/'+district+'/'+facility+'/'+encodeURI(commodity_id)+'/excel/'+encodeURI(from)+ '/'+encodeURI(to);
 	        	}
 	        	
 	        	window.open(url+link,'_parent');
@@ -575,7 +654,8 @@ $("input:radio[name=commodity_s]").click(function() {
 	        		link='national/stock_level_units/'+county_id+'/'+district+'/'+facility+'/NULL/excel';
 	        	}
 	        	if(commodity_type=='Specify'){ 
-	        		var commodity_id=$('#commodity').val();
+	        		var commodity_id=$('#commodity1').val();
+	        		// alert(commodity_id);
 	                link='national/stock_level_units/'+county_id+'/'+district+'/'+facility+'/'+commodity_id+'/excel';
 	        	}
 	        	if(commodity_type=='All'){ 
@@ -619,7 +699,13 @@ $("input:radio[name=commodity_s]").click(function() {
         }
         else if(criteria=='Potential'){
        		if(type=='excel'){ 
-      	    	link='national/potential/'+county_id+'/'+district+'/'+facility+'/excel/'+interval;
+       			if(commodity_type=='Specify'){ 
+	        		var commodity_id=$('#commodity1').val();	        		
+	                link='national/potential/'+county_id+'/'+district+'/'+facility+'/excel/'+interval+'/'+commodity_id;
+	        	}
+	        	if(commodity_type=='All'){ 
+      	    		link='national/potential/'+county_id+'/'+district+'/'+facility+'/excel/'+interval;		        	
+	        	}
 	        	window.open(url+link,'_parent');
 	        }else if(type=='pdf'){ 
 		        link='national/potential/'+county_id+'/'+district+'/'+facility+'/pdf/'+interval;
@@ -654,6 +740,11 @@ $("input:radio[name=commodity_s]").click(function() {
 	        		var commodity_id=$('#commodity').val();
 	        		link='national/expiry/NULL/'+county_id+'/'+district+'/'+facility+'/excel';
 	        	}
+	        	if(commodity_type=='Specify'){ 
+	        		var commodity_id=$('#commodity1').val();
+	        		link='national/expiry/NULL/'+county_id+'/'+district+'/'+facility+'/excel/'+commodity_id;	        			                
+	        	}
+	        	
 	        window.open(url+link,'_parent');
 	        
 	        }else if(type=='pdf'){ 
@@ -681,22 +772,22 @@ $("input:radio[name=commodity_s]").click(function() {
 	        
         	}
         }
-   });
-    
-    	function ajax_return(function_url,div){
-        var function_url =url+function_url;
-        var loading_icon=url+"assets/img/Preloader_4.gif";
-        $.ajax({
+   });    
+
+	function ajax_return(function_url,div){
+	    var function_url =url+function_url;
+	    var loading_icon=url+"assets/img/Preloader_4.gif";
+	    $.ajax({
 	        type: "POST",
 	        url: function_url,
 	        beforeSend: function() {
 	        $(div).html("<img style='margin-left:20%;' src="+loading_icon+">");
-        },
-        success: function(msg) {
-        $(div).html(msg);
-        }
-        });
-        } 
+	    },
+	    success: function(msg) {
+	    $(div).html(msg);
+	    }
+    });
+    } 
     
 
 });
@@ -720,3 +811,65 @@ $("input:radio[name=commodity_s]").click(function() {
   <script src="<?php echo base_url().'assets/scripts/jquery.validate.min.js'?>" type="text/javascript"></script>
   <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/loadingbar.css'?>" />
   <link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/css/elusive-webfont.css'?>" />
+  <script src="<?php echo base_url().'assets/multiple_select/jquery.multiple.select.js'?>" type="text/javascript"></script>
+
+
+<script>
+	
+    // $('#commodity').multipleSelect();
+    function load_multiple(val){
+
+    	// $('#commodity').removeAttr('disabled');
+    	if(val==null){
+    		$('#commodity').addClass('multiple_select');
+    		$('#commodity').attr('multiple','multiple');
+    		$('#commodity').removeAttr('disabled');
+    		$('#single_options').hide();
+    		instantiate_multiple();
+    	}else if(val=='Consumption'){
+    		$('#multiple_options').show();
+    		$('#single_options').hide();
+    		
+    		$('#commodity').attr('multiple','multiple');   	
+    		$('#commodity').addClass('multiple_select');	
+    		$('#commodity').removeAttr('disabled');
+    		// instantiate_multiple();
+    		
+
+    	}else{
+    		$('#commodity').removeClass('multiple_select');
+    		$('#commodity').removeAttr('multiple');
+    		$('#single_options').show();
+    		$('#multiple_options').hide();
+
+    	}
+    	 
+    }
+    function instantiate_multiple(){
+   		var selected_options = 0;    	
+    	$('.multiple_select').multipleSelect({
+            width: '100%',            
+            selectAll: false,
+            placeholder:'Select Commodities (Maximum 3)',
+            onClick: function(view) {
+            	var state = (view.checked ? 'checked' : 'unchecked');
+            	if (state=='checked') {
+            		selected_options +=1;
+            	}else{
+            		selected_options -=1;            		
+            	}
+                // $eventResult.text(view.label + '(' + view.value + ') ' + (view.checked ? 'checked' : 'unchecked'));
+                console.log(selected_options);
+                if(selected_options>5){
+                	// $(".multiple_select").multipleSelect("disable");
+                	// alert('You can only Select a Maximum of 5 items');
+                	// view.checked = 'unchecked';
+                	// console.log(view);
+                	// $( ".ms-drop ul li:eq(2)" ).removeClass('selected');
+                	// view.update;
+                }
+            }
+        });	
+    }
+    
+</script>

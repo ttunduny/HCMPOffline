@@ -13,7 +13,7 @@ font-size: 12px !important;
 
 	<div class="row">
 		<div class="col-md-6" id=""><p class="bg-info"><span class="badge ">1</span>
-		<strong>Add multiple Users Below</strong></p></div>
+		<strong>Add multiple Users Below <?php echo $facility_banner_text; ?></strong></p></div>
 		<div class="col-md-6" id="">
 
 	</div>
@@ -21,9 +21,11 @@ font-size: 12px !important;
 	
 		
 	<hr />
+	<center>
+	<div style="width:94%">
 <div class="table-responsive" style="min-height:300px; overflow-y: auto;">
- <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('user/users_create_multiple',$att); ?>
-<table  class="table table-hover table-bordered table-update" id="add_multiple_users_table" >
+ <?php $att=array("name"=>'myform','id'=>'myform','method'=>'post','enctype'=>'application/x-www-form-urlencoded'); echo form_open('user/users_create_multiple',$att); ?>
+<table  class="table table-hover table-bordered table-update" id="add_multiple_users_table"> 
 	<thead style="background-color: white">
 		<tr>
 			<th>First Name</th>
@@ -38,9 +40,9 @@ font-size: 12px !important;
 
 			if ($identifier=='county') {
 			?>
-			<th>Subcounty Name</th>
+			<!-- <th>Subcounty Name</th> -->
 			<?php } ?>
-			<th>Facility Name</th>	 
+			<!-- <th>Facility Name</th>	  -->
 			<th>Action</th>   
 		</tr>
 	</thead>
@@ -53,13 +55,13 @@ font-size: 12px !important;
 						<input type="text" name="last_name[0]" required="required" id="last_name" class="form-control last_name" placeholder="Last Name" >
 						</td>
 						<td>
-						<input type="telephone" name="telephone[0]" required="required" id="telephone" class="form-control telephone" placeholder="Enter Phone Number eg, 254" tabindex="5">
+						<input type="telephone" name="telephone[0]" required="required" id="telephone" class="form-control telephone" placeholder="254 XXX XXX XXX" tabindex="5">
 						</td>
 						<td>
 						<input type="email" name="email[0]" id="email" required="required" class="form-control email" placeholder="email@domain.com" tabindex="6">
 						</td>
 						<td>
-						<input type="email" name="username[0]" id="username" required="required" class="form-control username" placeholder="email@domain.com" tabindex="5" >
+						<input type="email" name="username[0]" id="username" required="required" class="form-control username" placeholder="email@domain.com" tabindex="5" disabled="disabled">
 						</td>
 						<td>
 						<div class="input-group form-group u_mgt">
@@ -75,7 +77,7 @@ font-size: 12px !important;
 									</select>
 						</div>
 						</td>
-						<td>
+						<!-- <td> -->
 							<?php
 
 									$identifier = $this -> session -> userdata('user_indicator');
@@ -83,44 +85,19 @@ font-size: 12px !important;
 									if ($identifier=='district') {
 									?>
 									<div class="input-group form-group u_mgt">
-										<select class="form-control facility_id" id="facility_id" name="facility_id[0]" required="required">
-											<?php 
-												if(count($facilities)>1){?>
-													<option value='NULL'>Select Facility</option>
-												<?php }							
-												
-											
-												foreach ($facilities as $facility) :
-													$id = $facility ['facility_code'];
-													$facility_name = $facility ['facility_name'];
-													echo "<option value='$id'>$facility_name</option>";
-												endforeach;
-												?>
-											</select>
+									<input type="hidden" class="form-control facility_id" id="facility_id" name="facility_id[0]"/>
+										
 									</div>
 
 
 									<?php }elseif ($identifier=='county') { ?>
 									<div class="input-group form-group u_mgt">
-										<select class="form-control district_name" id="district_name" name="district_name[0]" required="required">
-											<option value=''>Select Sub-County</option>
-
-											<?php
-											foreach ($district_data as $district_) :
-												$district_id = $district_ ['id'];
-												$district_name = $district_ ['district'];
-												echo "<option value='$district_id'>$district_name</option>";
-											endforeach;
-											?>
-										</select>
+										<input type="hidden" class="form-control district_name" id="district_name" name="district_name[0]"/>										
 									</div>
-									</td>
-									<td>
+									<!-- </td> -->
+									<!-- <td> -->
 									<div class="input-group form-group u_mgt">
-										<select class="form-control facility_id" id="facility_id" name="facility_id[0]" required="required">
-												<option value="">Select Facility</option>
-												
-										</select>
+										<input type="hidden" class="form-control facility_id" id="facility_id" name="facility_id[0]"/>										
 
 									</div>
 
@@ -141,7 +118,7 @@ font-size: 12px !important;
 										</select>
 								</div>
 								<?php }?>
-						</td>
+						<!-- </td> -->
 						<td>
 							<button type="button" class="remove btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span>row</button>
 							<button type="button" id="step7" class="add btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span>row</button>
@@ -150,6 +127,8 @@ font-size: 12px !important;
 		           </tbody>
 		           </table>
 </div>
+</div>
+</center>
 <hr />
 <div class="container-fluid">
 <div style="float: right">
@@ -158,11 +137,20 @@ font-size: 12px !important;
 				</button>
 </div>
 </div>
-<?php echo form_close();?>
+</form>
+<?php //echo form_close();?>
 <script>
 $(document).ready(function() {	
-
-			var count_rows=0;
+		var no_of_facilities = '<?php echo $no_of_facilities;?>';
+		var district_name = '<?php echo $district_name;?>';
+		var district_id = '<?php echo $district_id;?>';
+		var facility_code = '<?php echo $facility_code;?>';
+		if(no_of_facilities==1)
+		{
+			$('.facility_id').val(facility_code);
+			$('.district_name').val(district_id);
+		}
+		var count_rows=0;
 $("#create_new").click(function(){
 	$("#myform").submit();
 });

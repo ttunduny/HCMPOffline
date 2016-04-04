@@ -93,6 +93,27 @@ class Malaria_Data extends Doctrine_Record
 			
 	}
 
+	public static function get_sub_county_antimalaria($subcounty_id)
+	{
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->
+		fetchAll("SELECT 
+    COUNT(fs.current_balance) AS quantity, c.commodity_name as commodity
+FROM
+    facility_stocks fs, commodities c
+WHERE
+	fs.commodity_id in (247,248,249,250)
+    AND c.id = fs.commodity_id AND
+   fs.facility_code IN (SELECT 
+            facility_code
+        FROM
+            facilities
+        WHERE
+            district = '$subcounty_id')
+GROUP BY fs.commodity_id");
+
+		return $query;	
+	}
+
 	public static function get_facility_stock_data($facility_code = NULL)
 	{
 		$facility_data = array();

@@ -1,0 +1,63 @@
+/*
+@author Karsan
+*/
+
+.logo {
+	width: 6em;
+	height: 6em;
+	margin-left: 10%;
+	position: relative;
+	background: url("../img/coat_of_arms1.png") no-repeat;
+	float: left;
+	margin-bottom: 0.5%;
+}
+
+.dash_notifications{
+	height: 100px;
+	color: #FFF;
+	text-align: center;
+	font-size: 1.5em;
+	padding: 10%;
+}
+
+.dash_notifications a{
+	color: #FFF;
+}
+
+.admin_dashboard a:hover {
+    font-size: 13px;
+    text-decoration:none;
+}
+
+.margin_top_sm{
+	margin: 10px 0;
+}
+
+.icon-lg{
+	font-size: 20px!important;
+}
+
+.background_blue{
+	background-image: linear-gradient(155deg, #2292D9 40%, #1D48BA);
+}
+
+.background_green_light{
+	background-image: linear-gradient(155deg, #1DC096 40%, #1896A1);
+}
+.background_blue_light{
+background-image: linear-gradient(155deg, #1ECADE 40%, #1A86BF);
+}
+
+.background_yellow{
+background-image: linear-gradient(155deg, #FBBA52 40%, #FB792F);
+}
+
+.background_purple{
+	background-image: linear-gradient(155deg, #C122D9 40%, #531DBA);
+}
+
+.background_maroon{
+	background-image: linear-gradient(155deg, #FB297B 40%, #A22424);
+}
+
+
