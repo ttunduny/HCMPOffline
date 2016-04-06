@@ -43,7 +43,7 @@ if (!$this -> session -> userdata('user_id')) {
   <script src="<?php echo base_url().'assets/bower_components/alertifyjs/dist/js/alertify.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
   <!-- <script src="<?php echo base_url().'assets/scripts/offline-simulate-ui.min.js'?>" type="text/javascript"></script> -->
-  <link href="<?php echo base_url().'assets/css/offline-theme-default.css'?>" type="text/css" rel="stylesheet"/> 
+  <!-- <link href="<?php echo base_url().'assets/css/offline-theme-default.css'?>" type="text/css" rel="stylesheet"/>  -->
   <link href="<?php echo base_url().'assets/css/offline-language-english.css'?>" type="text/css" rel="stylesheet"/> 
   <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
   <link href="<?php echo base_url().'assets/bower_components/intro.js/introjs.css'?>" type="text/css" rel="stylesheet"/>
@@ -286,8 +286,8 @@ if (!$this -> session -> userdata('user_id')) {
   </div>
   <center>
     <div class="col-md-4"style="font-weight:bold;">  
-    <!-- <div id="online-top" class="online-status"><span class="green"><span class="glyphicon glyphicon-off small-margin"></span>On</span>line</div> -->
-    <div id="offline-top" class="online-status"><span class="red"><span class="glyphicon glyphicon-off small-margin"></span>Off</span>line</div>
+    <!-- <div id="online-top" class="online-status"><span class="green"><span style="font-weight: bold" class="glyphicon glyphicon-off small-margin"></span>On</span>line</div> -->
+    <div id="offline-top" class="online-status"><span class="red"><span style="font-weight: bold" class="glyphicon glyphicon-off small-margin"></span>Off</span>line</div>
       <span><?php echo $this-> session -> userdata('facility_count'); ?>  </span>			
     </div>
   </center>

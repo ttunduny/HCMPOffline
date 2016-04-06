@@ -1,6 +1,6 @@
 CREATE TABLE `git_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `hash` varchar(45) DEFAULT NULL,
-  `date_added` timestamp NULL DEFAULT NULL,
+  `hash_value` varchar(150) DEFAULT NULL,
+  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
