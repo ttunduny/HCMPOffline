@@ -1,0 +1,9 @@
+diff a/application/models/facilities.php b/application/models/facilities.php	(rejected hunks)
+@@ -76,6 +76,7 @@
+ 		
+ 		return $facilities;
+ 	}
++
+ 	public static function get_more_stats($facility_code) {
+ 		$more_stats = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+ 			SELECT 
