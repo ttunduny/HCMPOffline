@@ -1,7 +1,6 @@
-CREATE TABLE `selected_service_points` (
+CREATE TABLE `sync_db` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `facility_code` varchar(45) DEFAULT NULL,
-  `service_point_id` int(11) DEFAULT NULL,
+  `last_sync` timestamp NULL DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1

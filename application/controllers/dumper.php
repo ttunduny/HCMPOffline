@@ -15,6 +15,44 @@ class Dumper extends MY_Controller {
 		// $this->load->model('dumper_model','dumper_model');
 	}
 
+	public function create_zip($facility_code)
+	{
+		$this->create_core_tables($facility_code);
+		$this->create_bat($facility_code);
+
+		$sql_filepath = 'tmp/'.$facility_code.'.sql';
+		$expected_zip_sql_filepath = $facility_code.'/'.$facility_code.'.sql';
+
+		$bat_filepath = 'tmp/'.$facility_code.'_install_db.bat';
+		$expected_zip_bat_filepath = $facility_code.'/'.$facility_code.'_install_db.bat';
+
+		$zip = new ZipArchive();
+		$zip_name = $facility_code.'.zip';
+		$zip->open($zip_name, ZipArchive::CREATE);
+
+		$zip->addFile($sql_filepath, $expected_zip_sql_filepath);
+		$zip->addFile($bat_filepath, $expected_zip_bat_filepath);
+
+		$zip->close();
+
+		header("Cache-Control: public");
+		// header("Content-Description: File Transfer");
+		header("Content-Length: ". filesize("$zip_name").";");
+		header("Content-Disposition: attachment; filename=$zip_name");
+		header("Content-type: application/zip"); 
+		header("Content-Transfer-Encoding: binary");
+
+		readfile($zip_name);
+
+		unlink($sql_filepath);
+		unlink($bat_filepath);
+		unlink($zip_name);
+		// echo "$final_output_bat";
+
+		// echo "I worked";
+		// echo "Expecto patronum";
+	}
+
 	public function dump_db($facility_code,$db){
 		$this->create_core_tables($facility_code,$db);		
 	}
@@ -26,7 +64,7 @@ class Dumper extends MY_Controller {
  	public function create_bat($facility_code)
  	{ 		
 		ini_set('memory_limit', '-1');   		
-   		$filename = 'install_db.bat';
+   		$filename = 'tmp/'.$facility_code.'_install_db.bat';
    		$resource_name = $facility_code.'.sql';
    		$header = '@echo OFF';
    		$header .= PHP_EOL;
@@ -87,19 +125,20 @@ class Dumper extends MY_Controller {
    		$header_end .="pause";
 
  		$query = $header.$data.$header_end;
-		$handle = fopen($filename, 'wb');		
+		$handle = fopen($filename, 'w');		
 		$final_output_bat = $query;
 		fwrite($handle, $final_output_bat);
 		fclose($handle);
+		// echo $handle;exit;	
 
-		header("Cache-Control: public");
-		header("Content-Description: File Transfer");
-		header("Content-Length: ". filesize("$filename").";");
-		header("Content-Disposition: attachment; filename=$filename");
-		header("Content-Type: application/octet-stream; "); 
-		header("Content-Transfer-Encoding: binary");
+		// header("Cache-Control: public");
+		// header("Content-Description: File Transfer");
+		// header("Content-Length: ". filesize("$filename").";");
+		// header("Content-Disposition: attachment; filename=$filename");
+		// header("Content-Type: application/octet-stream; "); 
+		// header("Content-Transfer-Encoding: binary");
 
-		echo "$final_output_bat";
+		// echo "$final_output_bat";
  	}
    
    public function create_core_tables($facility_code,$database=null){
@@ -111,7 +150,7 @@ class Dumper extends MY_Controller {
 		}
 	  	ini_set('memory_limit', '-1');
    		// $filename ='db_hcmp.sql';	
-   		$filename = $facility_code.'.sql';	
+   		$filename = 'tmp/'.$facility_code.'.sql';	
    		$header = "DROP DATABASE IF EXISTS `$database`;\n\nCREATE DATABASE `$database`;\n\nUSE `$database`;\n\n";
    		$query = '';
 		$handle = fopen($filename, 'w');
@@ -163,14 +202,14 @@ class Dumper extends MY_Controller {
 		fwrite($handle, $final_output);
 		fclose($handle);
 
-		header("Cache-Control: public");
-		header("Content-Description: File Transfer");
-		header("Content-Length: ". filesize("$filename").";");
-		header("Content-Disposition: attachment; filename=$filename");
-		header("Content-Type: application/octet-stream; "); 
-		header("Content-Transfer-Encoding: binary");
+		// header("Cache-Control: public");
+		// header("Content-Description: File Transfer");
+		// header("Content-Length: ". filesize("$filename").";");
+		// header("Content-Disposition: attachment; filename=$filename");
+		// header("Content-Type: application/octet-stream; "); 
+		// header("Content-Transfer-Encoding: binary");
 
-		echo "$final_output";
+		// echo "$final_output";
    }
   
   public function show_procedures($mysqli){

@@ -42,7 +42,8 @@ if (!$this -> session -> userdata('user_id')) {
   <script src="<?php echo base_url().'assets/bower_components/sweetalert/lib/sweet-alert.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/bower_components/alertifyjs/dist/js/alertify.js'?>" type="text/javascript"></script>
   <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
-  <link href="<?php echo base_url().'assets/css/offline-theme-default.css'?>" type="text/css" rel="stylesheet"/> 
+  <!-- <script src="<?php echo base_url().'assets/scripts/offline-simulate-ui.min.js'?>" type="text/javascript"></script> -->
+  <!-- <link href="<?php echo base_url().'assets/css/offline-theme-default.css'?>" type="text/css" rel="stylesheet"/>  -->
   <link href="<?php echo base_url().'assets/css/offline-language-english.css'?>" type="text/css" rel="stylesheet"/> 
   <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
   <link href="<?php echo base_url().'assets/bower_components/intro.js/introjs.css'?>" type="text/css" rel="stylesheet"/>
@@ -55,7 +56,6 @@ if (!$this -> session -> userdata('user_id')) {
 
       <script>
         $(function(){
-
           var 
           $online = $('.online'),
           $offline = $('.offline');
@@ -63,12 +63,14 @@ if (!$this -> session -> userdata('user_id')) {
           Offline.on('confirmed-down', function () {
             $online.fadeOut(function () {
               $offline.fadeIn();
+              // alert("aaah");
             });
           });
 
           Offline.on('confirmed-up', function () {
             $offline.fadeOut(function () {
               $online.fadeIn();
+              // alert("haaa");
             });
           });
 
@@ -76,37 +78,56 @@ if (!$this -> session -> userdata('user_id')) {
       </script>
 
       <script>
+          setInterval(function(){
+          var status = Offline.state;
+          $("#connection_status").html(status);
+           if (status == 'up') {//when online
+              $('#offline-notification').removeClass("show");//remove show
+              $('#offline-notification').addClass("hidden");
+              $('#online-notification').removeClass("hidden");
+              $('#online-notification').addClass("show");
+              // alert("up");
+           }else{//when offline
+              $('#online-notification').removeClass("show");//remove show
+              $('#online-notification').addClass("hidden");
+              $('#offline-notification').removeClass("hidden");
+              $('#offline-notification').addClass("show");
+              // alert("down");
+              
+           }
+          }, 3000);
+      </script>
+
+
+      <script>
 
        paceOptions = {
-  ajax: false, // disabled
-  document: true, // 
-  eventLag: true,
-  restartOnPushState: false,
-  elements:{
-  	selectors:['body']
-  } // 
-  
-};
+          ajax: false, // disabled
+          document: true, // 
+          eventLag: true,
+          restartOnPushState: false,
+          elements:{
+          	selectors:['body']
+          } // 
+          
+        };
 
-function load(time){
-  var x = new XMLHttpRequest()
-  x.open('GET', document.URL , true);
-  x.send();
-};
+        function load(time){
+          var x = new XMLHttpRequest()
+          x.open('GET', document.URL , true);
+          x.send();
+        };
+        setTimeout(function(){
+          Pace.ignore(function(){
+            load(3100);
+          });
+        },4500);
 
+        Pace.on('hide', function(){
+           //   console.log('done');
+         });
 
-
-setTimeout(function(){
-  Pace.ignore(function(){
-    load(3100);
-  });
-},4500);
-
-Pace.on('hide', function(){
-   //   console.log('done');
- });
-
-var url="<?php echo base_url(); ?>";
+        var url="<?php echo base_url(); ?>";
 </script>
 <style>
   .panel-success>.panel-heading {
@@ -130,6 +151,14 @@ var url="<?php echo base_url(); ?>";
     width: 100%;
     border-radius: 0px;
   }
+
+  .offline-notification{
+    top:;
+    margin-top: -10px;
+    width: 100%;
+    border-radius: 0px;
+  }
+
   .green{
     color:green;
   }
@@ -257,8 +286,8 @@ var url="<?php echo base_url(); ?>";
   </div>
   <center>
     <div class="col-md-4"style="font-weight:bold;">  
-    <div class="online-status"><span class="green"><span class="glyphicon glyphicon-off small-margin"></span>On</span>line</div>
-    <!-- <div class="online-status"><span class="red"><span class="glyphicon glyphicon-off small-margin"></span>Off</span>line</div> -->
+    <!-- <div id="online-top" class="online-status"><span class="green"><span style="font-weight: bold" class="glyphicon glyphicon-off small-margin"></span>On</span>line</div> -->
+    <div id="offline-top" class="online-status"><span class="red"><span style="font-weight: bold" class="glyphicon glyphicon-off small-margin"></span>Off</span>line</div>
       <span><?php echo $this-> session -> userdata('facility_count'); ?>  </span>			
     </div>
   </center>
@@ -289,9 +318,15 @@ var url="<?php echo base_url(); ?>";
   <!-- /.modal-dialog -->
 </div>
 <!-- <p>What happens if i say something here?</p> -->
-<div id="online-notification" class="alert alert-success online-notification">
+<!-- <div><p>status</p><p id="connection_status"> eh? </p></div> -->
+<div id="online-notification" class="alert alert-success online-notification hidden">
   <strong>Internet Connection Established! </strong>You are advised to <a href="<?php echo base_url().'sync/synchronize_data'; ?>">synchronize your data</a>
 </div>
+
+<div id="offline-notification" class="alert alert-info offline-notification hidden">
+  <strong>Disconnected from the internet.</strong> The system will continuously attempt to establish a connection
+</div>
+
 <!-- /.modal -->   
 <?php $this -> load -> view($content_view);?>
 </div> <!-- /container -->

@@ -6,7 +6,7 @@
 
 <script>
 		setInterval(function(){
-			var status = Offline.state;
+		var status = Offline.state;
 		 if (status == 'up') {
     		$('#online-notification').show();
 		 }else{

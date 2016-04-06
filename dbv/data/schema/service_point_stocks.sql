@@ -6,5 +6,6 @@ CREATE TABLE `service_point_stocks` (
   `current_balance` int(11) DEFAULT NULL,
   `batch_no` varchar(100) DEFAULT NULL,
   `expiry_date` varchar(100) DEFAULT NULL,
+  `status` int(11) DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1
