@@ -30,14 +30,14 @@ class Dumper extends MY_Controller {
 		$zip_name = $facility_code.'.zip';
 		$zip->open($zip_name, ZipArchive::CREATE);
 
-		$zip->addFile($sql_filepath, $expected_zip_sql_filepath);
-		$zip->addFile($bat_filepath, $expected_zip_bat_filepath);
+		$zip->addFile($sql_filepath, ltrim($expected_zip_sql_filepath,'/'));
+		$zip->addFile($bat_filepath, ltrim($expected_zip_bat_filepath,'/'));
 
 		$zip->close();
 
 		header("Cache-Control: public");
 		// header("Content-Description: File Transfer");
-		header("Content-Length: ". filesize("$zip_name").";");
+		// header("Content-Length: ". filesize("$zip_name").";");
 		header("Content-Disposition: attachment; filename=$zip_name");
 		header("Content-type: application/zip"); 
 		header("Content-Transfer-Encoding: binary");
