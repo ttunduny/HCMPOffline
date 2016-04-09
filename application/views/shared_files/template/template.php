@@ -44,7 +44,7 @@ if (!$this -> session -> userdata('user_id')) {
   <script src="<?php echo base_url().'assets/scripts/offline.js'?>" type="text/javascript"></script>
   <!-- <script src="<?php echo base_url().'assets/scripts/offline-simulate-ui.min.js'?>" type="text/javascript"></script> -->
   <!-- <link href="<?php echo base_url().'assets/css/offline-theme-default.css'?>" type="text/css" rel="stylesheet"/>  -->
-  <link href="<?php echo base_url().'assets/css/offline-language-english.css'?>" type="text/css" rel="stylesheet"/> 
+  <!-- <link href="<?php echo base_url().'assets/css/offline-language-english.css'?>" type="text/css" rel="stylesheet"/>  -->
   <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
   <link href="<?php echo base_url().'assets/bower_components/intro.js/introjs.css'?>" type="text/css" rel="stylesheet"/>
   <!-- <link href="<?php echo base_url().'assets/metro-bootstrap/docs/font-awesome.css'?>" type="text/css" rel="stylesheet"/>
@@ -55,7 +55,7 @@ if (!$this -> session -> userdata('user_id')) {
       <![endif]-->
 
       <script>
-        $(function(){
+    /*    $(function(){
           var 
           $online = $('.online'),
           $offline = $('.offline');
@@ -74,7 +74,7 @@ if (!$this -> session -> userdata('user_id')) {
             });
           });
 
-        });
+        });*/
       </script>
 
       <script>
@@ -323,7 +323,7 @@ if (!$this -> session -> userdata('user_id')) {
   <strong>Internet Connection Established! </strong>You are advised to <a href="<?php echo base_url().'sync/synchronize_data'; ?>">synchronize your data</a>
 </div>
 
-<div id="offline-notification" class="alert alert-info offline-notification hidden">
+<div id="offline-notification" class="alert alert-danger offline-notification hidden">
   <strong>Disconnected from the internet.</strong> The system will continuously attempt to establish a connection
 </div>
 

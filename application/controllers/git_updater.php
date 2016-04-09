@@ -24,7 +24,7 @@ class Git_updater extends MY_Controller {
 		if ($hash != $local_hash) {
 			$status = 1;
 		}
-		// echo "<pre>";print_r($status);echo "</pre>";exit;	
+		// echo "<pre>";print_r($local_hash);echo "</pre>";exit;	
 
 		if (isset($status) && $status == 1) {
 			$status_ = "TRUE";
@@ -47,13 +47,17 @@ class Git_updater extends MY_Controller {
 		// $data['content_view'] = "offline/offline_admin_home";
 		// $template = 'shared_files/template/dashboard_v';
 		$data['banner_text'] = "System Management";
- 		if ($identifier=='facility_admin') {
+ 		// if ($identifier=='facility_admin') {
+ 	 //       $template = 'shared_files/template/template';            
+   //         // $data['content_view'] = 'facility/offline_admin';            
+   //         $data['content_view'] = "offline/offline_admin_home";
+   //      }else{
+   //         $template = 'shared_files/template/dashboard_v';
+   //         $data['content_view'] = "offline/offline_admin_home";
+   //      }
  	       $template = 'shared_files/template/template';            
-           $data['content_view'] = 'facility/offline_admin';            
-        }else{
+ 	       $data['latest_hash'] = $hash;
            $data['content_view'] = "offline/offline_admin_home";
-           $template = 'shared_files/template/dashboard_v';
-        }
 
 
 		// $update_status = $this->github_update();
@@ -72,8 +76,8 @@ class Git_updater extends MY_Controller {
 		$update_git_log = $this->update_log($hash);
 		
 		$extracted_path = $this->get_extracted_path();
-		$delete_residual_repo = delete_files($hash.'.zip');
-		$delete_residual_dir = delete_files($extracted_path);
+		$delete_residual_repo = delete_residual_files($hash.'.zip');
+		$delete_residual_dir = delete_residual_files($extracted_path);
 		$update_logs = $this->update_log($hash);
 		// echo "<pre>";print_r($update_files);exit;
 		// echo $set_current_commit;exit;
@@ -83,9 +87,8 @@ class Git_updater extends MY_Controller {
 
 	public function update_log($hash){
 		$current_time =date('Y-m-d H:i:s');
-		$data = array('hash_value' => $hash,'date_added'=>$current_time);	
-		echo "<pre>";
-		// print_r($data);die;
+		$data = array('hash_value' => $hash,'update_time'=>$current_time);	
+		// echo "<pre>";print_r($data);die;
 		$status = $this->db->insert('git_log',$data);
 		return $status;
 	}

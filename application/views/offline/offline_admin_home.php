@@ -54,11 +54,12 @@
 			<div class="row" style="padding:5%;">
 					<!-- <div class="col-md-3" style="margin:10px 0;float:right;"> -->
 						<?php if ($available_update == 1) { ?>
-						<a class="btn btn-success col-md-3" href="<?php echo base_url().'git_updater/update_system'; ?>" style="margin:10px 0;">Update Available</a>
+						<a class="btn btn-success col-md-3" href="<?php echo base_url().'git_updater/update_system'; ?>" style="margin:10px 0;">Update Available</a> 
 						<?php } else{ ?>
 						<a class="btn btn-success col-md-3" disabled="disabled" href="<?php echo base_url().'update_system'; ?>" style="margin:10px 0;">You are currently up to date</a>
 					<?php } ?>
 					<!-- </div> -->
+					<div class="col-md-12"><p>Latest hash: <?php echo $latest_hash ?></p></div>
 				<div class="col-md-12" style="border: 1px solid #ddd;padding-top: 1%; " id="test">
 					
 
@@ -69,8 +70,10 @@
 						</thead>
 						<tbody>
 							<?php foreach ($git_records as $records) { ?>
+							<?php //echo"<pre>";print_r($records); ?>
 								<tr>
-									<td><?php echo $records['update_time']; ?></td>
+									<td><?php echo date('F, m Y',strtotime($records['update_time'])); ?></td>
+									<!-- <td><?php echo $records['update_time']; ?></td> -->
 									<td><?php echo $records['hash_value']; ?></td>
 								</tr>
 							<?php } ?>

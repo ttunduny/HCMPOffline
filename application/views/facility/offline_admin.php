@@ -54,7 +54,7 @@
 			<div class="row" style="padding:5%;">
 					<!-- <div class="col-md-3" style="margin:10px 0;float:right;"> -->
 						<?php if ($available_update == 1) { ?>
-						<a class="btn btn-success col-md-3" href="<?php echo base_url().'git_updater/update_system'; ?>" style="width:50%;margin:10px 0;">Update Available</a>
+						<a class="btn btn-success col-md-3" href="<?php echo base_url().'git_updater/update_system'; ?>" style="width:50%;margin:10px 0;">Update Available</a> <p>Latest hash: <?php echo $latest_hash ?></p>
 						<?php } else{ ?>
 						<a class="btn btn-success col-md-3" disabled="disabled" href="<?php echo base_url().'update_system'; ?>" style="width:50%;margin:10px 0;">You are currently up to date</a>
 					<?php } ?>
