@@ -24,7 +24,9 @@ class Git_updater extends MY_Controller {
 		if ($hash != $local_hash) {
 			$status = 1;
 		}
-		// echo "<pre>";print_r($local_hash);echo "</pre>";exit;	
+		$res = $this->github_updater->get_hash();
+
+		// echo "<pre>";print_r($hash);echo "</pre>";exit;	
 
 		if (isset($status) && $status == 1) {
 			$status_ = "TRUE";
@@ -76,8 +78,8 @@ class Git_updater extends MY_Controller {
 		$update_git_log = $this->update_log($hash);
 		
 		$extracted_path = $this->get_extracted_path();
-		$delete_residual_repo = delete_residual_files($hash.'.zip');
-		$delete_residual_dir = delete_residual_files($extracted_path);
+		$delete_residual_repo = $this->delete_residual_files($hash.'.zip');
+		$delete_residual_dir = $this->delete_residual_files($extracted_path);
 		$update_logs = $this->update_log($hash);
 		// echo "<pre>";print_r($update_files);exit;
 		// echo $set_current_commit;exit;
