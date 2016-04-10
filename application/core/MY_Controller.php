@@ -1,5 +1,7 @@
 <?php
-
+/*
+@author Karsan
+*/
 class  MY_Controller  extends  CI_Controller  {
 
     function __construct()
@@ -34,8 +36,15 @@ class  MY_Controller  extends  CI_Controller  {
 
 		return $actual_hash;
 	}
+	/*END OF GENERIC FUNCTION(S) FOR GITHUB UPDATES*/
 
+	/*GENERIC FUNCTION FOR GENERATING THE SYSTEM'S FORMAT FOR NAMING DYNAMICALLY GENERATED FILES*/
+	/*SIMPLE BUT NECESSARY FOR REFERENCE WHEN READING THESE FILES FOR PROCESSING*/
+	public function generate_filestamp()
+	{
+		$file_name_header = date("Dd_Hms");//sample output: Sun10_220434. Sunday,10th,22:04:34
+		return $file_name_header;
+	}
+	/*END OF FILESTAMP GENERATION FUNCTION(S)*/
 
-	/*END OF GENERIC CLASSES FOR GITHUB UPDATES*/
-
-    } 
+} 
