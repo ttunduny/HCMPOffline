@@ -320,7 +320,7 @@ if (!$this -> session -> userdata('user_id')) {
 <!-- <p>What happens if i say something here?</p> -->
 <!-- <div><p>status</p><p id="connection_status"> eh? </p></div> -->
 <div id="online-notification" class="alert alert-success online-notification hidden">
-  <strong>Internet Connection Established! </strong>You are advised to <a href="<?php echo base_url().'sync/synchronize_data'; ?>">synchronize your data</a>
+  <strong>Internet Connection Established! </strong>You are advised to <a href="<?php echo base_url().'synchronization/index'; ?>">synchronize your data</a>
 </div>
 
 <div id="offline-notification" class="alert alert-danger offline-notification hidden">

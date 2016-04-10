@@ -71,6 +71,19 @@ class Git_updater extends MY_Controller {
 		$this -> load -> view($template, $data);
 	}
 
+	public function update_status()
+	{
+		$hash = $this->get_hash();
+		$local_hash = $this->github_update_status_local();
+		if ($hash != $local_hash) {
+			$status = 1;
+		}else{
+			$status = 0;
+		}
+
+		return $status;
+	}
+
 	public function update_system(){
 		$hash = $this->get_hash();			
 		$get_zip = $this->get_latest_zip();

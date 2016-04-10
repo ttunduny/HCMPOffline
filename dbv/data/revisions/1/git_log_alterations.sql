@@ -1,3 +1,13 @@
 ALTER TABLE `hcmp_rtk`.`git_log` 
 CHANGE COLUMN `update_time` `update_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
 ADD COLUMN `date_added` TIMESTAMP(0) NULL DEFAULT CURRENT_TIMESTAMP AFTER `update_time`;
+
+ALTER TABLE `hcmp_rtk`.`db_sync` 
+CHANGE COLUMN `status` `facility_code` INT(11) NULL DEFAULT NULL ;
+
+ALTER TABLE `hcmp_rtk`.`git_log` 
+CHANGE COLUMN `update_time` `last_updated` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
+CHANGE COLUMN `date_added` `added_on` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ;
+
+DROP TABLE `hcmp_rtk`.`sync_updates`;
+
