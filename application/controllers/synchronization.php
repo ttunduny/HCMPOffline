@@ -57,11 +57,11 @@ class Synchronization extends MY_Controller {
 	    $all_tables = $this->db->list_tables();
 	    // $tables_to_be_ignored = array('commodities','commodity_division_details','facilities');//add tables to be ignored by database sync
 
-	    foreach ($tables_to_be_ignored as $key => $value) {
+	    /*foreach ($tables_to_be_ignored as $key => $value) {
 		    if(($key = array_search($value, $all_tables)) !== false) {
 		    	unset($all_tables[$key]);
 		    }
-		}
+		}*/
 		$all_tables = array_values($all_tables);//index reset
 	    // echo "<pre>";print_r($all_tables);exit;
 
