@@ -3,9 +3,15 @@ class Sync_model extends Doctrine_Record {
 	public static function get_latest_timestamp(){
 		// $query = $this->db->query("SELECT * FROM db_sync WHERE last_updated=(SELECT MAX(last_updated) FROM db_sync)");
 		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT * FROM db_sync WHERE last_updated=(SELECT MAX(last_updated) FROM db_sync)");
-		echo "<pre>This ";print_r($query);exit;
+
+		// echo "<pre>This ";print_r($query);exit;
 		// $result = $query->result_array();
-		return $query[0]['last_updated'];
+		if (!empty($query)) {
+			return $query[0]['last_updated'];
+		}
+		else{
+			return $query;
+		}
 	}
 
 	public static function get_sync_data(){
