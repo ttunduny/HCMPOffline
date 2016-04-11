@@ -19,7 +19,7 @@ class Synchronization extends MY_Controller {
 		$time = sync_model::get_latest_timestamp();
 		$sync_data = sync_model::get_sync_data();
 		$update_status = $this->system_update_status();
-		// echo "<pre>";print_r($sync_data);exit;
+		echo "<pre>";print_r($time);exit;
 		$data['sync_data'] = $sync_data;
 		$data['update_status'] = $update_status;
 		// echo $status;exit;
