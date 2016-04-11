@@ -90,9 +90,8 @@ class Synchronization extends MY_Controller {
 		$queried_data = http_build_query($data_from_table);
 
 		// echo "<pre>";print_r($queried_data);exit;
-		// $url = "41.89.6.209/hcmp_demo/synchronization/receive_data/?facility_code=".$facility_code.'?data='.$queried_data;
+		$url = "41.89.6.209/hcmp_demo/synchronization/receive_data/?facility_code=".$facility_code.'?data='.$queried_data;
 		
-
 		$local_url = base_url().'synchronization/receive_post';
 		$result = $this->post_data($local_url,$data_from_table);
 		echo $result;exit;
@@ -194,24 +193,6 @@ class Synchronization extends MY_Controller {
 
 	public function receive_data_new()
 	{
-		if (isset($_POST['upload'])) {
-		    if (!empty($_FILES['my_file'])) {
-					//check for image submitted
-		    		if ($_FILES['my_file']['error'] > 0) {
-					// check for error re file
-		            echo "Error: " . $_FILES["my_file"]["error"] ;
-		        } else {
-					//move temp file to our server
-					// move_uploaded_file($_FILES['my_file']['tmp_name'],
-					// $upload_directory . $_FILES['my_file']['name']);
-					echo 'Uploaded File.';
-		        }
-		    } else {
-			        die('File not uploaded.');
-					// exit script
-		    }
-		}
-
 		$data = $this->input->post();
 		return "i worked";
 		echo "<pre>";print_r($data);
