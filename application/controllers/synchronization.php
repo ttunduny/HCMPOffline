@@ -67,9 +67,7 @@ class Synchronization extends MY_Controller {
 	    $final_data_from_table = array();
 	    $table_count = count($all_tables);
 
-		// ini_set('display_errors', 1);
-		// ini_set('display_startup_errors', 1);
-		// error_reporting(E_ALL);
+		
 	    $data_from_table['facility_code'] = $facility_code;
 		ini_set("memory_limit","200M");
 	    foreach ($all_tables as $key => $table_name) {
@@ -79,22 +77,32 @@ class Synchronization extends MY_Controller {
 	          
 
 		// echo "<pre>";print_r($data_from_table);exit;
-		$write_to_file = $this->receive_data($facility_code,$data_from_table);
-		echo $write_to_file;exit;
+		// $write_to_file = $this->receive_data($facility_code,$data_from_table);
+		
+		// echo FCPATH;exit;
+		// echo $write_to_file;exit;
+		ini_set('display_errors', 1);
+		ini_set('display_startup_errors', 1);
+		error_reporting(E_ALL);
+		$stringify = print_r($data_from_table,true);
+
+		$url = "41.89.6.209/hcmp_demo/synchronization/receive_data/?facility_code=".$facility_code.'?data='.$stringify;
+		$ch = curl_init($url);
+		$status = curl_exec($ch);
+		echo "<pre>";print_r($ch);exit;
 	        // var_dump($data_from_table);
 	}
 
 	public function receive_data($facility_code,$data)
 	{
-		// ini_set("memory_limit","900M");
-		// ini_set('display_errors', 1);
-		// ini_set('display_startup_errors', 1);
-		// error_reporting(E_ALL);
-
+		ini_set("memory_limit","900M");
+		ini_set('display_errors', 1);
+		ini_set('display_startup_errors', 1);
+		error_reporting(E_ALL);
 		$stringify = print_r($data,true);
 		$filestamp = $this->generate_filestamp();
 
-		$file = 'sync_files/'.$filestamp.'_'.$facility_code.'.txt';
+		$file = FCPATH.'sync_files/'.$filestamp.'_'.$facility_code.'.txt';
 
 		$fp = fopen($file, 'w');
 
