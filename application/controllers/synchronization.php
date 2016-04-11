@@ -89,32 +89,13 @@ class Synchronization extends MY_Controller {
 
 		$queried_data = http_build_query($data_from_table);
 
-
-
-		/*SECOND ATTEMPT AT POSTING THIS DATA*/
-		$url = "41.89.6.209/hcmp_demo/synchronization/receive_data";
-		// $url = 'http://api.example.com/api';
-		$field_string = http_build_query($data_from_table);
-		// echo "<pre>";print_r($field_string);exit;
-		//open connection
-		$ch = curl_init();
-
-		//set the url, number of POST vars, POST data
-		curl_setopt($ch,CURLOPT_URL, $url);
-		curl_setopt($ch,CURLOPT_POST, 1);
-		curl_setopt($ch,CURLOPT_POSTFIELDS, $field_string);
-
-		//execute post
-		$result = curl_exec($ch);
-		echo $result;
-
-		//close connection
-		curl_close($ch);
-		/*END OF ATTEMPT*/
-		echo "END OF ALL THIS";exit;
-
 		// echo "<pre>";print_r($queried_data);exit;
-		$url = "41.89.6.209/hcmp_demo/synchronization/receive_data/?facility_code=".$facility_code.'?data='.$queried_data;
+		// $url = "41.89.6.209/hcmp_demo/synchronization/receive_data/?facility_code=".$facility_code.'?data='.$queried_data;
+		
+
+		$local_url = base_url().'synchronization/receive_post';
+		$result = $this->post_data($local_url,$data_from_table);
+		echo $result;exit;
 		// echo $url;exit;
 		$ch = curl_init($url);
 		$status = curl_exec($ch);
@@ -122,10 +103,34 @@ class Synchronization extends MY_Controller {
 	        // var_dump($data_from_table);
 	}
 
+	public function sample_post()
+	{
+		$local_directory=dirname(__FILE__).'/local_files/';
+		$local_directory = base_url();
+		$url = base_url().'synchronization/receive_data_new';
+ 
+	    $ch = curl_init();
+	    curl_setopt($ch, CURLOPT_HEADER, 0);
+	    curl_setopt($ch, CURLOPT_VERBOSE, 0);
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	    curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
+	    curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_URL,  $url);
+		//most importent curl assues @filed as file field
+	    $post_array = array(
+	        "my_file"=>"@".$local_directory.'sync_data/sample.txt',
+	        "upload"=>"Upload"
+	    );
+	    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_array);
+	    $response = curl_exec($ch);
+		echo $response;
+		// echo "I work";exit;
+	}
+
 	public function receive_data($facility_code,$data)
 	{
-		echo "<pre>";print_r($this->input->post());exit;
-		echo "<pre>";print_r($data);exit;
+		// echo "<pre>";print_r($this->input->post());exit;
+		// echo "<pre>";print_r($data);exit;
 		// ini_set("memory_limit","900M");
 		// ini_set('display_errors', 1);
 		// ini_set('display_startup_errors', 1);
@@ -147,13 +152,69 @@ class Synchronization extends MY_Controller {
 		// fclose($fp);
 		chmod($file, 0777); 
 		// echo $fp;
-		echo "success";
+		// echo "success";
+		return $file;
 	}
 
 	public function convert_time()
 	{
 	    echo date("Dd_Hms");
 		
+	}
+
+	public function post_data($url, $fields)
+	{
+		$post_field_string = http_build_query($fields, '', '&');
+	    
+	    $ch = curl_init();
+	    
+	    curl_setopt($ch, CURLOPT_URL, $url);
+	    
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	    
+	    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+	    
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	    
+	    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_field_string);
+	    
+	    curl_setopt($ch, CURLOPT_POST, true);
+	    
+	    $response = curl_exec($ch);
+	    
+	    curl_close ($ch);
+	    
+	    return $response;
+	}
+
+	public function receive_post(){
+		$data = $this->input->post();
+		echo "<pre>";print_r($data);
+	}
+
+	public function receive_data_new()
+	{
+		if (isset($_POST['upload'])) {
+		    if (!empty($_FILES['my_file'])) {
+					//check for image submitted
+		    		if ($_FILES['my_file']['error'] > 0) {
+					// check for error re file
+		            echo "Error: " . $_FILES["my_file"]["error"] ;
+		        } else {
+					//move temp file to our server
+					// move_uploaded_file($_FILES['my_file']['tmp_name'],
+					// $upload_directory . $_FILES['my_file']['name']);
+					echo 'Uploaded File.';
+		        }
+		    } else {
+			        die('File not uploaded.');
+					// exit script
+		    }
+		}
+
+		$data = $this->input->post();
+		return "i worked";
+		echo "<pre>";print_r($data);
 	}
 
 }

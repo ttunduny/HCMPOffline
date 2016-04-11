@@ -7,6 +7,10 @@ class  MY_Controller  extends  CI_Controller  {
     function __construct()
     {
         parent::__construct(); 
+        ini_set("memory_limit","300M");
+		ini_set('upload_max_filesize', '100M');
+		ini_set('post_max_size', '100M'); 
+		
     }
     /*GENERIC CLASSES FOR GITHUB UPDATES TO LOCAL MACHINES FROM GITHUB REPOSITORY*/
     public function system_update_status()
