@@ -1,6 +1,6 @@
 <?php
 class Sync_model extends Doctrine_Record {
-	public function get_latest_timestamp(){
+	public static function get_latest_timestamp(){
 		$query = $this->db->query("SELECT * FROM db_sync WHERE last_updated=(SELECT MAX(last_updated) FROM db_sync)");
 		$result = $query->result_array();
 		return $result[0]['last_updated'];
