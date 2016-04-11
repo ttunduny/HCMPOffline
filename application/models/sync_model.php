@@ -6,7 +6,7 @@ class Sync_model extends Doctrine_Record {
 		return $result[0]['last_updated'];
 	}
 
-	public function get_sync_data(){
+	public static function get_sync_data(){
 		$query = $this->db->query("SELECT * FROM db_sync ORDER BY last_updated DESC");
 		$result = $query->result_array();
 		return $result;
