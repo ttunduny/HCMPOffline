@@ -102,8 +102,8 @@ class Synchronization extends MY_Controller {
 		$stringify = print_r($data,true);
 		$filestamp = $this->generate_filestamp();
 		// echo FCPATH."<\br>";
-		echo $_SERVER['DOCUMENT_ROOT']."<\br>";
-		$file = FCPATH.'sync_files/'.$filestamp.'_'.$facility_code.'.txt';
+		echo $_SERVER['DOCUMENT_ROOT']."<pre>";
+		$file = $_SERVER['DOCUMENT_ROOT'].'sync_files/'.$filestamp.'_'.$facility_code.'.txt';
 
 		$fp = fopen($file, 'w');
 
