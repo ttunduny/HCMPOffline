@@ -103,6 +103,9 @@ class Synchronization extends MY_Controller {
 		$filestamp = $this->generate_filestamp();
 		// echo FCPATH."<\br>";
 		// echo $_SERVER['DOCUMENT_ROOT']."<br>";
+		if(!file_exists(dirname(FCPATH.'sync_files'))): 
+		    mkdir(dirname(FCPATH.'sync_files'));
+		endif;
 		$file = FCPATH.'sync_files/'.$filestamp.'_'.$facility_code.'.txt';
 		$file = trim($file);
 		$fp = fopen($file, 'w') or die('Cannot open file: '.$file);;
