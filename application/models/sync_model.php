@@ -1,15 +1,17 @@
 <?php
 class Sync_model extends Doctrine_Record {
 	public static function get_latest_timestamp(){
-		$query = $this->db->query("SELECT * FROM db_sync WHERE last_updated=(SELECT MAX(last_updated) FROM db_sync)");
-		$result = $query->result_array();
-		return $result[0]['last_updated'];
+		// $query = $this->db->query("SELECT * FROM db_sync WHERE last_updated=(SELECT MAX(last_updated) FROM db_sync)");
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT * FROM db_sync WHERE last_updated=(SELECT MAX(last_updated) FROM db_sync)");
+
+		// $result = $query->result_array();
+		return $query[0]['last_updated'];
 	}
 
 	public static function get_sync_data(){
-		$query = $this->db->query("SELECT * FROM db_sync ORDER BY last_updated DESC");
-		$result = $query->result_array();
-		return $result;
+		$query = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT * FROM db_sync ORDER BY last_updated DESC");
+		// $result = $query->result_array();
+		return $query;
 	}
 
 	public static function get_new_data($table_name,$last_sync_time = NULL){
