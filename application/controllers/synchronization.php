@@ -84,21 +84,26 @@ class Synchronization extends MY_Controller {
 		ini_set('display_errors', 1);
 		ini_set('display_startup_errors', 1);
 		error_reporting(E_ALL);
+
 		$stringify = print_r($data_from_table,true);
 
-		$url = "41.89.6.209/hcmp_demo/synchronization/receive_data/?facility_code=".$facility_code.'?data='.$stringify;
+		$queried_data = http_build_query($data_from_table);
+		// echo "<pre>";print_r($queried_data);exit;
+		$url = "41.89.6.209/hcmp_demo/synchronization/receive_data/?facility_code=".$facility_code.'?data='.$queried_data;
+		// echo $url;exit;
 		$ch = curl_init($url);
 		$status = curl_exec($ch);
-		echo "<pre>";print_r($ch);exit;
+		echo "<pre>";print_r($status);exit;
 	        // var_dump($data_from_table);
 	}
 
 	public function receive_data($facility_code,$data)
 	{
-		ini_set("memory_limit","900M");
-		ini_set('display_errors', 1);
-		ini_set('display_startup_errors', 1);
-		error_reporting(E_ALL);
+		echo "<pre>";print_r($data);exit;
+		// ini_set("memory_limit","900M");
+		// ini_set('display_errors', 1);
+		// ini_set('display_startup_errors', 1);
+		// error_reporting(E_ALL);
 		$stringify = print_r($data,true);
 		$filestamp = $this->generate_filestamp();
 		// echo FCPATH."<\br>";
@@ -115,8 +120,8 @@ class Synchronization extends MY_Controller {
 		// fwrite($fp, $data);
 		// fclose($fp);
 		chmod($file, 0777); 
-		echo $fp;
-		echo "<\br> success";
+		// echo $fp;
+		echo "success";
 	}
 
 	public function convert_time()
