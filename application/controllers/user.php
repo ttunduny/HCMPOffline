@@ -438,6 +438,7 @@ class User extends MY_Controller {
 										$district = $this -> session -> userdata('district_id');
 										$county = $this -> session -> userdata('county_id');
 										$facility = $this -> session -> userdata('facility_id');
+										
 			//query to get user listing by type of user
 
 										switch ($identifier):
@@ -496,6 +497,7 @@ class User extends MY_Controller {
 										$data['user_types']=Access_level::get_access_levels($permissions);	
 										$data['banner_text'] = "User Management";
 										$data['content_view'] = "shared_files/user_creation_v";
+										$data['current_user_id'] = $this-> session -> userdata('user_id');
 										$this -> load -> view($template, $data);
 									}
 		//get user details in session
