@@ -101,7 +101,7 @@ class Synchronization extends MY_Controller {
 		error_reporting(E_ALL);
 		$stringify = print_r($data,true);
 		$filestamp = $this->generate_filestamp();
-
+		echo FCPATH;
 		$file = FCPATH.'sync_files/'.$filestamp.'_'.$facility_code.'.txt';
 
 		$fp = fopen($file, 'w');
@@ -112,7 +112,7 @@ class Synchronization extends MY_Controller {
 		// fclose($fp);
 		chmod($file, 0777); 
 
-		echo "success";
+		echo "<\br> success";
 	}
 
 	public function convert_time()
