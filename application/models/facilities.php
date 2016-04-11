@@ -76,6 +76,7 @@ class Facilities extends Doctrine_Record {
 		
 		return $facilities;
 	}
+
     public static function check_active_facility($facility)
     {
         $active = Doctrine_Manager::getInstance()->getCurrentConnection()

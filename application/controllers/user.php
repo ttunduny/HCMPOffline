@@ -107,7 +107,6 @@ class User extends MY_Controller {
 				$menus[$counter] = array("menu_text" => $menu_item -> menu_text, "menu_url" => $menu_item -> menu_url, "menu_id" => $menu_item -> id, "parent_status" => $menu_item -> parent_status);
 				$counter++;
 				$menuids[] = $menu_item -> id;
-
 			}
 			
 			$sub_menus = array();
@@ -416,6 +415,16 @@ class User extends MY_Controller {
 								public function reset_multiple_pass($facility_code){
 									Users::reset_password_multiple($facility_code, '123456');
 									echo true;
+								}
+
+								public function reset_select_multiple_pass($user_array){
+
+									foreach($user_array as $user_id){
+										Users::reset_password($user_id, '123456');
+										
+									}
+									echo true;
+
 								}
 								public function user_create($reset_user = NULL,$password_reset = NULL) {
 									if (isset($password_reset) && $password_reset == 1) {

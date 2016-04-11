@@ -7,6 +7,8 @@ class  MY_Controller  extends  CI_Controller  {
     function __construct()
     {
         parent::__construct(); 
+    	$this->output->enable_profiler(TRUE);
+        
     }
     /*GENERIC CLASSES FOR GITHUB UPDATES TO LOCAL MACHINES FROM GITHUB REPOSITORY*/
     public function system_update_status()
