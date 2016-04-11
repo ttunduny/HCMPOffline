@@ -88,6 +88,31 @@ class Synchronization extends MY_Controller {
 		$stringify = print_r($data_from_table,true);
 
 		$queried_data = http_build_query($data_from_table);
+
+
+
+		/*SECOND ATTEMPT AT POSTING THIS DATA*/
+		$url = "41.89.6.209/hcmp_demo/synchronization/receive_data";
+		// $url = 'http://api.example.com/api';
+		$field_string = http_build_query($data_from_table);
+		// echo "<pre>";print_r($field_string);exit;
+		//open connection
+		$ch = curl_init();
+
+		//set the url, number of POST vars, POST data
+		curl_setopt($ch,CURLOPT_URL, $url);
+		curl_setopt($ch,CURLOPT_POST, 1);
+		curl_setopt($ch,CURLOPT_POSTFIELDS, $field_string);
+
+		//execute post
+		$result = curl_exec($ch);
+		echo $result;
+
+		//close connection
+		curl_close($ch);
+		/*END OF ATTEMPT*/
+		echo "END OF ALL THIS";exit;
+
 		// echo "<pre>";print_r($queried_data);exit;
 		$url = "41.89.6.209/hcmp_demo/synchronization/receive_data/?facility_code=".$facility_code.'?data='.$queried_data;
 		// echo $url;exit;
@@ -99,6 +124,7 @@ class Synchronization extends MY_Controller {
 
 	public function receive_data($facility_code,$data)
 	{
+		echo "<pre>";print_r($this->input->post());exit;
 		echo "<pre>";print_r($data);exit;
 		// ini_set("memory_limit","900M");
 		// ini_set('display_errors', 1);
