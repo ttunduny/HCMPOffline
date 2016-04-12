@@ -40,7 +40,11 @@
 
 <?php 
 	
-
+	// $all_info = $this -> session -> all_userdata();
+	// echo "<pre>";
+	// print_r($all_info);
+	// echo "</pre>";
+	// exit;
 
 // $pwd_reset = 1;
 	if (isset($pwd_reset) && $pwd_reset == 1) {
@@ -93,12 +97,12 @@
 			
 			<div class="row">
 
-				<div class="col-md-1" style="padding-left: 0; right:0; float:right; margin-bottom:5px;">
+				<!-- <div class="col-md-1" style="padding-left: 0; right:0; float:right; margin-bottom:5px;">
 					<button class="btn btn-primary add" data-toggle="modal" data-target="#addModal" id="add_new">
 						<span class="glyphicon glyphicon-plus"></span>Add User
 					</button>
 						<a href="user_create_multiple" style="margin: 5px 0;">Add Multiple Users</a>
-				</div>
+				</div> -->
 
 
 				</div>
@@ -115,7 +119,7 @@
 								<th>User Type</th>
 								<th>Status (Checked means Active)</th>
 								<th>Password</th>
-								<th>Action</th>
+								<!-- <th>Action</th> -->
 							</tr>
 						</thead>
 
@@ -143,19 +147,19 @@
 									<!-- <div class="btn btn-primary btn-xs" id="reset_pwd"  data-attr="<?php echo $list['user_id']; ?>">
 									<span class="glyphicon glyphicon-edit"></span>Reset Password
 									</div> -->
-									<a href="#" class="btn btn-primary btn-xs reset_pwd" name="reset_pwd"  id="reset_pwd" data-attr="<?php echo $list['user_id']; ?>" data-name="<?php echo $list['email']; ?>">
+									<a href="#" class="btn btn-primary btn-xs <?php if($list['level_id'] == 16){ echo "disabled"; }?> reset_pwd" name="reset_pwd"  id="reset_pwd" data-attr="<?php echo $list['user_id']; ?>" data-name="<?php echo $list['email']; ?>">
 									<!-- <a href="<?php //echo base_url().'user/reset_pass_to_default/'.$list['user_id']; ?>" class="btn btn-primary btn-xs" name="reset_pwd" class="reset_pwd" id="reset_pwd" data-attr="<?php echo $list['user_id']; ?>"> -->
 									<span class="glyphicon glyphicon-edit"></span>Reset Password
 									 </a>	 
 								</td>
 
-								<td>
+								<!-- <td>
 								<button class="btn btn-primary btn-xs edit " data-toggle="modal" data-target="#myModal" id="<?php echo $list['user_id']; ?>" data-target="#">
 									<span class="glyphicon glyphicon-edit"></span>Edit
 								</button>
-								</td>
+								</td> -->
 							</tr>
-							<?php } } ?>
+							<?php }} ?>
 						</tbody>
 					</table>
 

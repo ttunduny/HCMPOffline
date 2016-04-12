@@ -79,7 +79,7 @@ class User extends MY_Controller {
 			$facility_no = Counties::get_facilities_in_county($county_id);
 			$facility_count = "Total Facilities Using HCMP in ".$county_name['county']." County: ".count($facility_no);
 			
-			elseif ($user_indicator  == 'facility' || $user_indicator == 'facility_admin') :
+			elseif ($user_indicator  == 'facility' || $user_indicator == 'facility_admin' || $user_indicator == 'recovery') :
              //get facility name
 				$facility_name = Facilities::get_facility_name2($facility_id);
 			$district_name = districts::get_district_name_($district_id);

@@ -121,6 +121,16 @@ class Home extends MY_Controller
 		}
 
 		break;
+		case 'recovery':
+			$facility = $this -> session -> userdata('facility_id');
+			$view = 'shared_files/template/template';
+			$data['title'] = "User Management";
+			$data['banner_text'] = "User Management";
+			$data['current_user_id'] = $this-> session -> userdata('user_id');
+			$data['content_view'] = "shared_files/user_recovery_v";
+			$data['listing']= Users::get_user_list_facility($facility);
+			
+		break;
 		case 'district':
 		$data['content_view'] = "subcounty/subcounty_home_v";	
 		$view = 'shared_files/template/template';
