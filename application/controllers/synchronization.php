@@ -165,35 +165,33 @@ class Synchronization extends MY_Controller {
 		
 	}
 
-	public function post_data($url, $fields)
-	{
-		$post_field_string = http_build_query($fields, '', '&');
-	    
-	    $ch = curl_init();
-	    
-	    curl_setopt($ch, CURLOPT_URL, $url);
-	    
-	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	    
-	    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-	    
-	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	    
-	    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_field_string);
-	    
-	    curl_setopt($ch, CURLOPT_POST, true);
-	    
-	    $response = curl_exec($ch);
-	    
-	    curl_close ($ch);
-	    
-	    return $response;
-	}
-
-	public function receive_post(){
-		$data = $this->input->post();
-		echo "<pre>";print_r($data);
-	}
+	public function upload_file_to_server(){
+        $source = 'uploads/'.$fileName;
+                
+        //Load codeigniter FTP class
+        $this->load->library('ftp');
+        
+        //FTP configuration
+        $ftp_config['hostname'] = 'ftp.example.com'; 
+        $ftp_config['username'] = 'ftp_username';
+        $ftp_config['password'] = 'ftp_password';
+        $ftp_config['debug']    = TRUE;
+        
+        //Connect to the remote server
+        $this->ftp->connect($ftp_config);
+        
+        //File upload path of remote server
+        $destination = '/assets/'.$fileName;
+        
+        //Upload file to the remote server
+        $this->ftp->upload($source, ".".$destination);
+        
+        //Close FTP connection
+        $this->ftp->close();
+        
+        //Delete file from local server
+        @unlink($source);
+}
 
 	public function receive_data_new()
 	{
