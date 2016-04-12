@@ -92,7 +92,7 @@ class Synchronization extends MY_Controller {
 
 		$queried_data = http_build_query($data_from_table);
 		$file_write = $this->receive_data($facility_code,$data_from_table);
-		echo "<pre>";print_r($file_write);
+		echo "<pre> this";print_r($file_write);
 		// echo "<pre>";print_r($queried_data);exit;
 		// $url = "41.89.6.209/hcmp_demo/synchronization/receive_data/?facility_code=".$facility_code.'?data='.$queried_data;
 		
@@ -145,7 +145,7 @@ class Synchronization extends MY_Controller {
 		// if(!file_exists(dirname(FCPATH.'sync_files'))): 
 		//     mkdir(dirname(FCPATH.'sync_files'));
 		// endif;
-		$file = FCPATH.'sync_files/'.$filestamp.'_'.$facility_code.'.txt';
+		$file = FCPATH.'sync_files\\'.$filestamp.'_'.$facility_code.'.txt';
 		$file = trim($file);
 		$fp = fopen($file, 'w') or die('Cannot open file: '.$file);;
 
