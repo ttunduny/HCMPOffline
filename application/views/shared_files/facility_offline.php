@@ -546,6 +546,7 @@
 
 	$("#add_user_inactive").click(function(){
 		$("#addModal").show();
+		loadStep3();
 	})
 
 	
