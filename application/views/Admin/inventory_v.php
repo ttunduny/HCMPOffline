@@ -18,7 +18,7 @@
 <div class="row">
    <div class="col-md-12" style="padding-left: 0; float:right; right:0;clear:both;  margin-bottom:5px;">
         <a id="upload_excel" href="#modal-dialog-excel" class="btn btn-sm btn-primary float-right margin-right" data-toggle="modal">Upload inventory excel</a>
-        <a  class="btn btn-sm btn-primary float-right margin-right" href="<?php echo base_url().'Admin/download_inventory_excel'; ?>">Download template for upload</a>
+        <a  class="btn btn-sm btn-primary float-right margin-right" href="<?php echo base_url().'admin/download_inventory_excel'; ?>">Download template for upload</a>
 	</div> 
 </div>
 <div class="row col-md-12 datatable">

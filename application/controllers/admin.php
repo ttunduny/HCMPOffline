@@ -763,7 +763,7 @@ class Admin extends MY_Controller {
 		        LEFT JOIN
 		    districts d ON d.id = i.subcounty";
 		$result = $this->db->query($query)->result_array();//FACILITY CODE SEARCH
-
+		// echo "<pre>";print_r($result);exit;	
 		return $result;
 	}
 
