@@ -67,7 +67,7 @@ if (!$this -> session -> userdata('user_id')) {
         
           // $("#connection_status").html(status);
 
-             if (status == true) {//when online
+            /* if (status == true) {//when online
                 $('#offline-notification').removeClass("show");//remove show
                 $('#offline-notification').addClass("hidden");
                 $('#online-notification').removeClass("hidden");
@@ -84,7 +84,7 @@ if (!$this -> session -> userdata('user_id')) {
                 // console.log("offline");
                 // alert("down");
                 
-             }
+             }*/
           }, 3000);
           
           function days_from_last_sync(){
