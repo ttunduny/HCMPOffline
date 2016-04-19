@@ -55,47 +55,62 @@ if (!$this -> session -> userdata('user_id')) {
       <![endif]-->
 
       <script>
-    /*    $(function(){
-          var 
-          $online = $('.online'),
-          $offline = $('.offline');
+      /*ENABLE ONLINE OFFLINE NOTIFICATION FOR SYNCHRONIZATION OF DATA*/
+      /*FOR OFFLINE SYSTEMS*/
+          
+       setInterval(function(){
+          // var status = Offline.state;//using offline.js which doesnt work on a local server which is the whole point of offlining the damn system
 
-          Offline.on('confirmed-down', function () {
-            $online.fadeOut(function () {
-              $offline.fadeIn();
-              // alert("aaah");
-            });
-          });
+        var status = navigator.onLine;
+        var days = days_from_last_sync();
+        // console.log(status);
+        
+          // $("#connection_status").html(status);
 
-          Offline.on('confirmed-up', function () {
-            $offline.fadeOut(function () {
-              $online.fadeIn();
-              // alert("haaa");
-            });
-          });
-
-        });*/
-      </script>
-
-      <script>
-          setInterval(function(){
-          var status = Offline.state;
-          $("#connection_status").html(status);
-           if (status == 'up') {//when online
-              $('#offline-notification').removeClass("show");//remove show
-              $('#offline-notification').addClass("hidden");
-              $('#online-notification').removeClass("hidden");
-              $('#online-notification').addClass("show");
-              // alert("up");
-           }else{//when offline
-              $('#online-notification').removeClass("show");//remove show
-              $('#online-notification').addClass("hidden");
-              $('#offline-notification').removeClass("hidden");
-              $('#offline-notification').addClass("show");
-              // alert("down");
-              
-           }
+             if (status == true) {//when online
+                $('#offline-notification').removeClass("show");//remove show
+                $('#offline-notification').addClass("hidden");
+                $('#online-notification').removeClass("hidden");
+                $('#online-notification').addClass("show");
+                // alert("up");
+                // var days = days_from_last_sync();
+                // alert(days);
+                // console.log("online");
+             }else{//when offline
+                $('#online-notification').removeClass("show");//remove show
+                $('#online-notification').addClass("hidden");
+                $('#offline-notification').removeClass("hidden");
+                $('#offline-notification').addClass("show");
+                // console.log("offline");
+                // alert("down");
+                
+             }
           }, 3000);
+          
+          function days_from_last_sync(){
+            var url = "<?php echo base_url()."synchronization/days_from_last_sync";?>";
+              
+              $.ajax({
+               url:url,
+               type: "POST",
+               cache:"false",
+               data:'',
+               success: function(data){
+                if (data == "FIRST") {
+                  $("#days_from_last_sync_on").html("This will be your <b>first</b> synchronization");
+                  $("#days_from_last_sync_off").html("This will be your <b>first</b> synchronization");
+
+                }
+                else{
+                  $("#days_from_last_sync_on").html("Days from last sync: <b>"+data+"</b>");
+                  $("#days_from_last_sync_off").html("Days from last sync: <b>"+data+"</b>");
+                }
+                  // console.log(data)
+                }
+              });
+
+          }
+
       </script>
 
 
@@ -319,12 +334,13 @@ if (!$this -> session -> userdata('user_id')) {
 </div>
 <!-- <p>What happens if i say something here?</p> -->
 <!-- <div><p>status</p><p id="connection_status"> eh? </p></div> -->
+
 <div id="online-notification" class="alert alert-success online-notification hidden">
-  <strong>Internet Connection Established! </strong>You are advised to <a href="<?php echo base_url().'synchronization/index'; ?>">synchronize your data</a>
+  <strong>Internet Connection Established! </strong>You are advised to <a href="<?php echo base_url().'synchronization/index'; ?>">synchronize your data. </a><span id="days_from_last_sync_on"></span>
 </div>
 
 <div id="offline-notification" class="alert alert-danger offline-notification hidden">
-  <strong>Disconnected from the internet.</strong> The system will continuously attempt to establish a connection
+  <strong>Disconnected from the internet.</strong> The system will continuously attempt to establish a connection. <span id="days_from_last_sync_off"></span>
 </div>
 
 <!-- /.modal -->   

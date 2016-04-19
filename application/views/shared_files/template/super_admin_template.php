@@ -47,10 +47,10 @@
                 </a>  
         </div>
         <div class="col-md-4">
-                <a href="<?php echo base_url().'home';?>">
+                <a href="<?php echo base_url().'admin/inventory';?>">
             <div class="background_purple dash_notifications">
-                <span class="icon-lg fa fa-envelope-o"></span>
-                Messages    
+                <span class="icon-lg fa fa-briefcase"></span>
+                Inventory    
             </div>
                 </a>
         </div>

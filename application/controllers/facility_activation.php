@@ -218,6 +218,13 @@ class Facility_activation extends MY_Controller
 		// $savefacility -> save(); 
 
 	}
+
+	public function download_system_zip()
+	{	
+		ini_set('memory_limit', '-1');
+		$path = FCPATH.'tmp/HCMP.zip';
+		$this->hcmp_functions->download_file($path);
+	}
 }
 
 ?>
