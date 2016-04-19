@@ -26,15 +26,23 @@ class Dumper extends MY_Controller {
 		$bat_filepath = 'tmp/'.$facility_code.'_install_db.bat';
 		$expected_zip_bat_filepath = $facility_code.'/'.$facility_code.'_install_db.bat';
 
+		$ini_filepath = 'offline/my.ini';
+		$expected_ini_filepath = $facility_code.'/'.'my.ini';
+
+		$expected_old_filepath = $facility_code.'/old/';
+
 		$zip = new ZipArchive();
 		$zip_name = $facility_code.'.zip';
 		$zip->open($zip_name, ZipArchive::CREATE);
 
 		$zip->addFile($sql_filepath, ltrim($expected_zip_sql_filepath,'/'));
 		$zip->addFile($bat_filepath, ltrim($expected_zip_bat_filepath,'/'));
+		$zip->addEmptyDir($expected_old_filepath);
+
+		$zip->addFile($ini_filepath, ltrim($expected_ini_filepath,'/'));
 
 		$zip->close();
-
+		// ob_end_clean();
 		header("Cache-Control: public");
 		header("Content-Description: File Transfer");
 		// header("Content-Length: ". filesize("$zip_name").";");
@@ -53,15 +61,32 @@ class Dumper extends MY_Controller {
 		// echo "Expecto patronum";
 	}
 
+
+
 	public function dump_db($facility_code,$db){
 		$this->create_core_tables($facility_code,$db);		
 	}
 
 	public function gen_bat($facility_code){
+		$db = 'hcmp_rtk';
 		$this->create_bat($facility_code);
+		$this->dump_db($facility_code,$db);
 	}
 
- 	public function create_bat($facility_code)
+	// public function set_up_folder($facility_code)
+	// {
+	// 	$offline_path =  FCPATH.'offline/';
+	// 	$file_path = $offline_path.$facility_code;
+	// 	$file_path_old_cnf = $offline_path.$facility_code.'/old';
+	// 	$ini_path = $offline_path.'my.ini';
+	// 	$file_path_ini = $offline_path.$facility_code.'/my.ini';
+	// 	mkdir ($file_path,0777, true);		
+	// 	copy($ini_path, $file_path_ini);
+	// 	mkdir ($file_path_old_cnf,0777, true);
+	// 	return $file_path;		
+	// }
+
+public function create_bat($facility_code)
  	{ 		
 		ini_set('memory_limit', '-1');   		
    		$filename = 'tmp/'.$facility_code.'_install_db.bat';
@@ -71,13 +96,13 @@ class Dumper extends MY_Controller {
    		$header .= 'set current=%~dp0';
    		$header .= PHP_EOL;
 
-   		$header .= "set old_cnf=resources\\mysql\\old\\";
+   		$header .= "set old_cnf=old\\";
    		$header .= PHP_EOL;
-   		$header .= "set old_cnf_file=resources\\mysql\\old\\my.ini";
+   		$header .= "set old_cnf_file=old\\my.ini";
    		$header .= PHP_EOL;
-   		$header .= "set new_cnf=resources\\mysql\\new\\";
+   		//$header .= "set new_cnf=resources\\mysql\\new\\";
    		$header .= PHP_EOL;
-   		$header .= "set new_cnf_file=resources\\mysql\\new\\my.ini";
+   		$header .= "set new_cnf_file=my.ini";
    		$header .= PHP_EOL;
 
    		$header .= "set target_cnf=C:\\xampp\\mysql\\bin\\";
@@ -141,6 +166,87 @@ class Dumper extends MY_Controller {
 		// echo "$final_output_bat";
  	}
    
+
+ 	// public function create_bat($facility_code)
+ 	// { 		
+		// ini_set('memory_limit', '-1');   		
+  //  		$filename = 'tmp/'.$facility_code.'_install_db.bat';
+  //  		$resource_name = $facility_code.'.sql';
+  //  		$header = '@echo OFF';
+  //  		$header .= PHP_EOL;
+  //  		$header .= 'set current=%~dp0';
+  //  		$header .= PHP_EOL;
+
+  //  		$header .= "set old_cnf=resources\\mysql\\old\\";
+  //  		$header .= PHP_EOL;
+  //  		$header .= "set old_cnf_file=resources\\mysql\\old\\my.ini";
+  //  		$header .= PHP_EOL;
+  //  		$header .= "set new_cnf=resources\\mysql\\new\\";
+  //  		$header .= PHP_EOL;
+  //  		$header .= "set new_cnf_file=resources\\mysql\\new\\my.ini";
+  //  		$header .= PHP_EOL;
+
+  //  		$header .= "set target_cnf=C:\\xampp\\mysql\\bin\\";
+  //  		$header .= PHP_EOL;
+  //  		$header .= "set target_cnf_file=C:\\xampp\\mysql\\bin\\my.ini";
+  //  		$header .= PHP_EOL;
+
+
+  //  		$header .= "net stop Apache2.4";
+  //  		$header .= PHP_EOL;
+  //  		$header .= "net stop MySQL";
+  //  		$header .= PHP_EOL;   
+
+  //  		$header .= "move \"%target_cnf_file%\" \"%current%%old_cnf%\"";
+  //  		$header .= PHP_EOL;   
+
+  //  		$header .= "xcopy /s \"%current%%new_cnf_file%\" \"%target_cnf%\"";
+  //  		$header .= PHP_EOL;   
+
+
+
+  //  		$header .= "net start Apache2.4";
+  //  		$header .= PHP_EOL;
+  //  		$header .= "net start MySQL";
+  //  		$header .= PHP_EOL;
+  //  		$data = "C:\\xampp\mysql\bin\mysql.exe -u root hcmp_rtk<\"%current%\"$facility_code.sql";
+  //  		$data.=PHP_EOL;
+ 	// 	// $query = "C:\\xampp\mysql\bin\mysql.exe -u root -p hcmp_rtk<".$resource_name;
+ 	// 	$header_end .= "net stop Apache2.4";
+  //  		$header_end .= PHP_EOL;
+  //  		$header_end .= "net stop MySQL";
+  //  		$header_end .= PHP_EOL;   
+
+  //  		$header_end .= "del \"%target_cnf_file%\"";
+  //  		$header_end .= PHP_EOL;   
+
+  //  		$header_end .= "move \"%current%%old_cnf_file%\" \"%target_cnf%\"";
+  //  		$header_end .= PHP_EOL;
+
+  //  		$header_end .= "net start Apache2.4";
+  //  		$header_end .= PHP_EOL;
+  //  		$header_end .= "net start MySQL";
+  //  		$header_end .= PHP_EOL;
+
+  //  		$header_end .="pause";
+
+ 	// 	$query = $header.$data.$header_end;
+		// $handle = fopen($filename, 'w');		
+		// $final_output_bat = $query;
+		// fwrite($handle, $final_output_bat);
+		// fclose($handle);
+		// // echo $handle;exit;	
+
+		// // header("Cache-Control: public");
+		// // header("Content-Description: File Transfer");
+		// // header("Content-Length: ". filesize("$filename").";");
+		// // header("Content-Disposition: attachment; filename=$filename");
+		// // header("Content-Type: application/octet-stream; "); 
+		// // header("Content-Transfer-Encoding: binary");
+
+		// // echo "$final_output_bat";
+ 	// }
+ 	
    public function create_core_tables($facility_code,$database=null){
    		$database = (isset($database)) ? $database : 'hcmp_rtk';
    		$mysqli = new mysqli("localhost", "root", "", "hcmp_rtk");
