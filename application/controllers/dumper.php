@@ -17,6 +17,7 @@ class Dumper extends MY_Controller {
 
 	public function create_zip($facility_code)
 	{
+		$this->update_rollout_status($facility_code);
 		$this->create_core_tables($facility_code);
 		$this->create_bat($facility_code);
 
@@ -61,6 +62,12 @@ class Dumper extends MY_Controller {
 		// echo "Expecto patronum";
 	}
 
+
+	public function update_rollout_status($facility_code){
+		$date = date('Y-m-d h:i:s');
+		$sql ="update facilities set using_hcmp = '2',date_of_activation= '$date' where facility_code = '$facility_code'";
+		$this->db->query($sql);
+	}
 
 
 	public function dump_db($facility_code,$db){
