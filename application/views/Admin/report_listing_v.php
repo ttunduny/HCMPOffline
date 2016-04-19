@@ -17,8 +17,8 @@
 </style>
 <div class="row">
    <div class="col-md-12" style="padding-left: 0; float:right; right:0;clear:both;  margin-bottom:5px;">
-        <a id="upload_excel" href="#modal-dialog-excel" class="btn btn-sm btn-primary float-right margin-right" data-toggle="modal">Upload inventory excel</a>
-        <a  class="btn btn-sm btn-primary float-right margin-right" href="<?php echo base_url().'Admin/download_inventory_excel'; ?>">Download template for upload</a>
+        <a id="upload_excel" href="#modal-dialog-excel" class="btn btn-sm btn-primary float-right margin-right" data-toggle="modal">Upload report listing excel</a>
+        <a  class="btn btn-sm btn-primary float-right margin-right" href="<?php echo base_url().'admin/download_report_listing_excel'; ?>">Download report listing template for upload</a>
 	</div> 
 </div>
 <div class="row col-md-12 datatable">
@@ -47,15 +47,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">Upload SMS inventory excel</h4>
+                <h4 class="modal-title">Upload report listing excel</h4>
             </div>
             <div class="modal-body">
-                <?php $attr = array('id'=>'upload_form','class'=>''); echo form_open_multipart('Admin/upload_inventory_excel',$attr); ?>
+                <?php $attr = array('id'=>'upload_form','class'=>''); echo form_open_multipart('Admin/upload_report_listing_excel',$attr); ?>
                 <table class="table table-bordered">
                     <tbody>
                         <tr>
                             <td>Choose file:</td>
-                            <td><input type="file" name="inventory_excel" size="20" required="required"></td>
+                            <td><input type="file" name="report_listing_excel" size="20" required="required"></td>
                         </tr>
                         <tr>
                             <td colspan="2"><button id="submit_upload" class="btn btn-success m-r-5" type="submit" value='upload' name="submit"><i class="fa fa-upload"></i> Upload</button></td>

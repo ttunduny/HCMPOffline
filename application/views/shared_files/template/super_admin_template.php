@@ -39,10 +39,10 @@
     <div class="row margin_top_sm">
 
         <div class="col-md-4">
-                <a href="<?php echo base_url().'git_updater/admin_updates_home';?>">
+                <a href="<?php echo base_url().'admin/report_listing';?>">
             <div class="background_yellow dash_notifications">
                 <span class="icon-lg fa fa-cloud-upload"></span>
-                Updates  
+                Report Listing  
             </div>
                 </a>  
         </div>
