@@ -78,9 +78,10 @@ endforeach;
 		?> 		
 	</select>
 						</td>
-						<td>
+						<td id="hidden_data">
 						<input type="hidden" id="" name="commodity_id[0]" value="" class="commodity_id"/>
 						<input type="hidden" id="" name="total_units[0]" value="" class="total_units"/>
+						<!-- <input type="hidden" id="" name="batch_name[0]" value="" class="batch_no_specific"/> -->
 						<input type="hidden" name="commodity_balance[0]" value="0" class="commodity_balance"/>
 						<input type="hidden" name="facility_stock_id[0]" value="0" class="facility_stock_id"/>	
 						<input type="hidden" name="total_commodity_bal[0]" value="0" class="total_commodity_bal"/>	
@@ -132,6 +133,12 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
       		var locator=$('option:selected', this);
 			var data =$('option:selected', this).attr('special_data'); 
 	       	var data_array=data.split("^");	 
+
+	       	// console.log(data_array[0]);
+	       	// console.log(data_array[1]);
+	       	// console.log(data_array[2]);
+	       	// console.log(data_array[3]);
+	       	// console.log(data_array[4]);
 	           
 	        locator.closest("tr").find(".unit_size").val(data_array[1]);
 	     	locator.closest("tr").find(".supplier_name").val(data_array[2]);
@@ -169,6 +176,16 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 		        var remaining_items=total_stock_bal-total_issues_for_this_batch;	
 		        var remaining_comodity_bal=total_commodity_bal-total_issues_for_this_item;	
 		
+				// console.log(stock_data[0]);
+	   //     		console.log(stock_data[1]);
+		  //      	console.log(stock_data[2]);
+		  //      	console.log(stock_data[3]);
+		  //      console.log(stock_data[4]);
+		  //  		console.log(stock_data[5]);
+		  //  		console.log(stock_data[6]);
+
+		  // console.log(remaining_items);
+		  // console.log(remaining_comodity_bal);
 		        locator.closest("tr").find(".manufacture").val(stock_data[4]);
 		        locator.closest("tr").find(".facility_stock_id").val(stock_data[1]);	        
 				locator.closest("tr").find(".batch_no").html(dropdown);
@@ -178,7 +195,33 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 				locator.closest("tr").find(".available_stock").val(remaining_items);		
 				// locator.closest("tr").find(".available_stock").val(stock_data[2]-total_issues_for_this_batch);		
 				locator.closest("tr").find(".commodity_id").val(commodity_id);
-				locator.closest("tr").find(".commodity_balance").val(remaining_items);	
+				locator.closest("tr").find(".commodity_balance").val(remaining_items);
+				//locator.closest("tr").find(".batch_no_specific").val(remaining_items);
+				locator.closest("tr").find(".batch_specific").remove();
+
+				var count = stock_data[5].length;	
+				//console.log(count);
+
+				for(var i = 0; i<count; i++ ){
+
+					//console.log(locator.closest("tr").find("#batch" +i).attr("name"))
+
+					 // if(locator.closest("tr").find("#batch" +[i]).attr("name") ==  stock_data[5][i] ){
+
+						locator.closest("tr").find("#hidden_data").append("<input type=\"hidden\" id=\"batch" +[i] +"\" class=\"batch_specific\" name=\""+ stock_data[5][i] +"\" value=\"" +stock_data[6][i] +"\" class=\"batch_no_specific\"/>");
+						
+						// }
+
+				}
+				// var selected_batch = locator.closest("tr").find(".batch_no").val();
+				 //var name = "[name='"+selected_batch+"']";
+				// //alert(name);
+				// //console.log(locator.closest("tr").find(name).val());
+				// locator.closest("tr").find(name).val(remaining_items);	
+				// console.log(locator.closest("tr").find(".batch_specific").attr(name).val());	
+				 //locator.closest("tr").find(".batch_specific").attr("name", selected_batch).val(remaining_items);
+
+
 		});//entering the values to issue check if you have enough balance
        $(".quantity_issued").on('keyup',function (){
         	var bal=parseInt($(this).closest("tr").find(".available_stock").val());
@@ -223,21 +266,78 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 
         });// adding a new row 
         $(".add").click(function() {
-        var selector_object=$('#facility_issues_table tr:last');
-        var form_data=check_if_the_form_has_been_filled_correctly(selector_object);
-        if(isNaN(form_data[0])){	
-        var notification='<ol>'+form_data[0]+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
-           //hcmp custom message dialog
-           hcmp_message_box(title='HCMP error message',notification,message_type='error')
-       // dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
-        return;   }// set the balance here
-			//set the quantities to readonly  $("#dropdown").prop("disabled", true);
-			selector_object.closest("tr").find(".quantity_issued").attr('readonly','readonly');
-			selector_object.closest("tr").find(".batch_no").attr("disabled", true);
-			selector_object.closest("tr").find(".commodity_unit_of_issue").attr("disabled", true);
-			selector_object.closest("tr").find(".desc").attr("disabled", true);				
-			//reset the values of current element */
-		  clone_the_last_row_of_the_table();
+	        var selector_object=$('#facility_issues_table tr:last');
+	        var form_data=check_if_the_form_has_been_filled_correctly(selector_object);
+	        if(isNaN(form_data[0])){	
+	        var notification='<ol>'+form_data[0]+'</ol>&nbsp;&nbsp;&nbsp;&nbsp;';
+	           //hcmp custom message dialog
+	           hcmp_message_box(title='HCMP error message',notification,message_type='error')
+	       // dialog_box(notification,'<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>');
+	        return;   }// set the balance here
+
+	        	clone_the_last_row_of_the_table();
+
+	        	var row_id=$(this).closest("tr").index();	
+	        	var locator=$('.desc option:selected');
+				var data =$('.desc option:selected').attr('special_data'); 
+	       		var data_array=data.split("^");
+
+	       		// console.log(data_array[0]);
+	       		// console.log(data_array[1]);
+	       		// console.log(data_array[2]);
+	       		// console.log(data_array[3]);
+	       		// console.log(data_array[4]);
+
+	       		var commodity_id=data_array[0];
+				var stock_data=extract_data(data_array[0],commodity_id,'batch_data');			
+            	//var dropdown="<option special_data=''>--select Batch--</option>"+stock_data[0];           
+            	var facility_stock_id=stock_data[1];
+            	var total_stock_bal=data_array[4];
+            	var total_issues_for_this_item=0; 
+            	var total_issues_for_this_batch=0           
+            	var total_commodity_bal=stock_data[4];
+
+       //      	console.log(stock_data[0]);
+	      //  		console.log(stock_data[1]);
+		     //   	console.log(stock_data[2]);
+		     //   	console.log(stock_data[3]);
+		     //   	console.log(stock_data[4]);
+		   		// console.log(stock_data[5]);
+		   		// console.log(stock_data[6]);
+
+            	$("input[name^=commodity_id]").each(function(index, value) { 
+				 var row_id_=$(this).closest("tr").index(); 
+				 var facility_stock_id_=$(this).closest("tr").find(".facility_stock_id").val();  
+	                  if($(this).val()==commodity_id){
+					    	total_issues_for_this_item=parseInt(calculate_actual_stock(data_array[3],$(this).closest("tr").find(".commodity_unit_of_issue").val(),
+					    	$(this).closest("tr").find(".quantity_issued").val(),'return',''))+total_issues_for_this_item;
+		               } 
+                  if(facility_stock_id_==facility_stock_id && row_id_<row_id){                 	
+				            total_issues_for_this_batch=parseInt(calculate_actual_stock(data_array[3],$(this).closest("tr").find(".commodity_unit_of_issue").val(),
+				    		$(this).closest("tr").find(".quantity_issued").val(),'return',''))+total_issues_for_this_batch;
+				       }
+               });		                    	
+
+		        var remaining_items=total_stock_bal-total_issues_for_this_batch;	
+		        var remaining_comodity_bal=total_commodity_bal-total_issues_for_this_item;
+		        var selected_batch = locator.closest("tr").find(".batch_no").val();
+		        // console.log(selected_batch);
+		        // console.log(total_stock_bal);
+		        // console.log(total_issues_for_this_batch);
+		        // console.log(remaining_items);
+		        
+				var name = "[name='"+selected_batch+"']";
+				//console.log(locator.closest("tr").find(name).val());
+				locator.closest("tr").find(name).val(remaining_items);	
+
+
+				//set the quantities to readonly  $("#dropdown").prop("disabled", true);
+				selector_object.closest("tr").find(".quantity_issued").attr('readonly','readonly');
+				selector_object.closest("tr").find(".batch_no").attr("disabled", true);
+				selector_object.closest("tr").find(".commodity_unit_of_issue").attr("disabled", true);
+				selector_object.closest("tr").find(".desc").attr("disabled", true);				
+				//reset the values of current element */
+			  // clone_the_last_row_of_the_table();
 		});	/////batch no change event
 		$('.batch_no').on('change',function(){
 			var row_id=$(this).closest("tr").attr('row_id');
@@ -276,8 +376,8 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
                  var total_current_issues=$(this).closest("tr").find(".quantity_issued").val();              
                  var total_commodity_bal=$(this).closest("tr").find(".balance").val();              
                   if($(this).val()==facility_stock_id_current && row_id_<row_id){
-                   total_issues=parseInt(calculate_actual_stock(data_array[3],$(this).closest("tr").find(".commodity_unit_of_issue").val(),
-    total_current_issues,'return',''))+total_issues;                 
+                   	total_issues=parseInt(calculate_actual_stock(data_array[3],$(this).closest("tr").find(".commodity_unit_of_issue").val(),
+    				total_current_issues,'return',''))+total_issues;                 
                   }                
 		        });
 		        var total_commodity_bal = $(this).closest("tr").find(".total_commodity_bal").val();
@@ -298,7 +398,8 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 			     locator.closest("tr").find(".total_commodity_bal").val(total_commodity_bal);
 			    locator.closest("tr").find(".quantity_issued").val("0");	
 			    }  			
-      }); // change issue type
+      }); 
+      // change issue type
         $(".commodity_unit_of_issue").on('change', function(){
           $(this).closest("tr").find(".quantity_issued").val('0');
           $(this).closest("tr").find(".balance").val($(this).closest("tr").find(".total_commodity_bal").val());	
@@ -410,7 +511,7 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 	    return[alert_message,service_point,commodity_id,issue_quantity,issue_date];	
 		}//extract facility_data  from the json object 		
 		function extract_data(commodity_id_,commodity_stock_row_id,type_of_drop_down){
-			var row_id=0; var dropdown='';var facility_stock_id_='';  var total_stock_bal=0; var expiry_date='';var total_commodity_balance = 0;
+			var row_id=0; var dropdown='';var facility_stock_id_='';  var total_stock_bal=0; var expiry_date='';var total_commodity_balance = 0; var batches = Array(); var batches_balance = Array();
 			$.each(facility_stock_data, function(i, jsondata) {
 			var commodity_id=facility_stock_data[i]['commodity_id'];
 			
@@ -442,9 +543,11 @@ var facility_stock_data=<?php echo $facility_stock_data;?>;
 						//dropdown+="data-date="+facility_stock_data[i]['expiry_date'];						
 						dropdown+="</option>";}
 			row_id++; //auto-increment the checker
+			batches.push(facility_stock_data[i]['batch_no']);
+			batches_balance.push(facility_stock_data[i]['commodity_balance']);
 			}
 				});
-			return 	[dropdown,facility_stock_id_,total_stock_bal,expiry_date,total_commodity_balance];
+			return 	[dropdown,facility_stock_id_,total_stock_bal,expiry_date,total_commodity_balance, batches, batches_balance];
 		}
 		 $('.toolt').tooltip({
         placement: 'left'

@@ -54,11 +54,21 @@ class issues extends MY_Controller {
 	 	endswitch;
 	 	$data['service_point'] = service_points::get_all_active($facility_code);
 	 	$data['commodities'] = facility_stocks::get_distinct_stocks_for_this_facility($facility_code, 1);
+
+	 	// echo "<pre>";
+	 	// print_r($data['commodities']);
+	 	// echo "</pre>";
+	 	// exit;
 	 	
 	 	$data_ = facility_stocks::get_distinct_stocks_for_this_facility($facility_code, "batch_data");
 	 	foreach ($data_ as $key => $data_1) {
 	 		$data_[$key]['commodity_name'] = preg_replace('/[^A-Za-z0-9\-]/', ' ', $data_1['commodity_name']);
 	 	}
+
+	 	// echo "<pre>";
+	 	// print_r($data_);
+	 	// echo "</pre>";
+	 	// exit;
 	 	$data['facility_stock_data'] = json_encode($data_);
 		// echo "<pre>";print_r($data_);echo "</pre>";//exit;
 		// echo "<pre>";print_r($data['commodities']);echo "</pre>";exit;
