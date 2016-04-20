@@ -2665,7 +2665,7 @@ public function log_summary_weekly_view(){
 
 		
 	}
-	public function log_summary_weekly(){
+	public function log_summary_weekly($county_id = NULL,$district_id = NULL,$facility_code = NULL){
 		$time=date('M , d Y');
 
 		$active_facilities = Facilities::getAll_();
