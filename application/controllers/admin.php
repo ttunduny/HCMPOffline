@@ -1021,7 +1021,7 @@ class Admin extends MY_Controller {
     				case when el.county != '' then (select c.county from counties c where c.id = el.county) else 'N/A' end as county    
 					FROM   email_listing_new el, access_level al where al.id = el.usertype and el.status = '0'";
 
-		$result = $this->db->query($query);//FACILITY CODE SEARCH
+		$result = $this->db->query($query)->result_array();//FACILITY CODE SEARCH
 		// echo "<pre>";print_r($result);exit;	
 		return $result;
 	}
