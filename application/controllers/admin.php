@@ -569,6 +569,8 @@ class Admin extends MY_Controller {
 
 		// echo "<pre>";print_r($inventory);exit;
 		$data['inventory_data'] = $inventory;
+		$data['title'] = "Inventory";
+		$data['banner_text'] = "inventory Management";
 		$view = 'shared_files/template/dashboard_v';
 		$data['content_view'] = "Admin/inventory_v";
 		$this->load->view($view,$data);
@@ -626,7 +628,7 @@ class Admin extends MY_Controller {
 		    array_push($rowData, $rowData_[0]);
 		    //  Insert row data array into your database of choice here
 		}
-		// echo "<pre>";print_r($rowData);exit;
+		echo "<pre>";print_r($rowData);exit;//Titus,comment this out to proceed and see the sanitization. It selects the district id based on the district in the excel,same for county.
 		foreach ($rowData as $r_data) {
 			// echo "<pre>";print_r($r_data);echo "</pre>";
 			$status = 1;
@@ -763,7 +765,7 @@ class Admin extends MY_Controller {
 		        LEFT JOIN
 		    districts d ON d.id = i.subcounty";
 		$result = $this->db->query($query)->result_array();//FACILITY CODE SEARCH
-
+		// echo "<pre>";print_r($result);exit;	
 		return $result;
 	}
 
@@ -787,5 +789,219 @@ class Admin extends MY_Controller {
        $objPHPExcel -> disconnectWorksheets();
        unset($objPHPExcel);
 	}
+	/*END OF INVENTORY*/
+
+	/*REPORT LISTING*/
+	public function report_listing()
+	{
+		//to move query functions to model,wanna complete this today so...why worry
+		// same conundrum as when making inventory haha
+		// $report_listing_data = $this->get_report_listing_data();
+
+		// echo "<pre>";print_r($inventory);exit;
+		$data['report_listing_data'] = $report_listing_data;
+		$data['title'] = "Report Listing";
+		$data['banner_text'] = "inventory Management";
+		$view = 'shared_files/template/dashboard_v';
+		$data['content_view'] = "Admin/report_listing_v";
+		$this->load->view($view,$data);
+	}
+
+	public function upload_report_listing_excel(){
+		// echo "<pre>";print_r($this->input->post());echo "</pre>";exit;
+		// error_reporting(E_ALL);
+		$config['upload_path'] = 'print_docs/excel/uploaded_files/';
+		$config['allowed_types'] = 'xls|xlsx';
+		$config['max_size']	= '2048';
+		$name = 'inventory_'.date('d-m-Y').'_';
+		$config['file_name'] = $name;
+		$this->upload->initialize($config);
+		if ( ! $this->upload->do_upload("report_listing_excel"))
+		{
+			echo "<pre>";print_r($this->upload->display_errors());echo "</pre>";
+			// echo "I didnt work";
+		}
+		else
+		{
+			// echo "I work";exit;
+			// $data = array('upload_data' => $this->upload->data());
+
+			$result = $this->upload->data();
+			$file_name = $result['file_name'];
+			$this->upload_report_listing($file_name);
+			// echo "I worked";
+		}
+	}//end of upload excel
+	public function upload_report_listing($file_name){
+		//  Include PHPExcel_IOFactory
+		// include 'PHPExcel/IOFactory.php';
+		// include 'PHPExcel/PHPExcel.php';
+
+		// $inputFileName = 'excel_files/garissa_sms_recepients_updated.xlsx';
+		// echo $category;exit;
+		$inputFileName = 'print_docs/excel/uploaded_files/'.$file_name;
+
+		$objReader = new PHPExcel_Reader_Excel2007();
+		$objReader->setReadDataOnly(true);
+		$objPHPExcel = $objReader->load($inputFileName);
+
+		// echo "<pre>";print_r($inputFileName);exit;
+
+		$sheet = $objPHPExcel->getSheet(0); 
+		$highestRow = $sheet->getHighestRow()+1; 
+		$highestColumn = $sheet->getHighestColumn();
+
+		// echo "<pre>";print_r($highestRow);echo "</pre>";exit;
+		$rowData = array();
+		for ($row = 4; $row < $highestRow; $row++){ 
+		    //  Read a row of data into an array
+		    $rowData_ = $sheet->rangeToArray('A' . $row . ':F' . $row);
+		// echo "<pre>";print_r($rowData_);echo "</pre>";
+		    array_push($rowData, $rowData_[0]);
+		    //  Insert row data array into your database of choice here
+		}
+		
+		// echo "<pre>";print_r($rowData);exit;//echo's array
+
+		foreach ($rowData as $r_data) {
+			// echo "<pre>";print_r($r_data);echo "</pre>";
+			/*
+			Result array key
+			0 = name
+			1 = phone
+			2 = email
+			3 = county
+			4 = subcounty
+			5 = mfl
+			*/
+			$status = 1;
+			$county_id = $district_id = $facility_code = 0;
+			
+			$county_name = strtolower($r_data[3]);//lower case
+			$county_name = str_replace(" ", "", $county_name);
+			$county_name = str_replace("-", " ", $county_name);
+			$county_name = ucwords($county_name);//upper first character
+			
+			$district = strtolower($r_data[4]);
+			$district = ucfirst($district);
+
+			$phone = preg_replace('/\s+/', '', $r_data[1]);
+			// echo "<pre>";print_r($phone);
+			// echo "<pre>";print_r($county_name);
+			$facility_code = (!empty($r_data[5]))? $r_data[5]:NULL;
+			
+			$fault_index = NULL;
+			// echo $district;
+
+
+			$query = "SELECT * FROM facilities WHERE facility_code = '$facility_code'";
+			$result = $this->db->query($query)->result_array();//FACILITY CODE SEARCH
+			// echo "<pre>";print_r($result);echo "</pre>";
+
+			if (empty($result)){//if no facility code then district
+				$queryy = "SELECT * FROM districts WHERE district = '$district'";
+				$resultt = $this->db->query($queryy)->result_array();
+				
+				if (empty($resultt)) {//no district then county
+					$queryyy = "SELECT * FROM counties WHERE county = '$county_name'";
+					$resulttt = $this->db->query($queryyy)->result_array();
+					if (empty($resulttt)){
+						// echo "Empty county,subcounty and facility";
+					}else{
+						$county_id = $resulttt[0]['id'];
+						// echo "\t Only County ".$phone;
+					}
+				}else{//if district matches
+					$district_id = $resultt[0]['id'];
+					$county_id = $this->get_county_id_for_district($district_id);
+					echo "<pre>\t District ".$phone;
+
+				}//district name match
+
+			}//if no facility code match
+
+			else{//if facility_code_match
+				// echo "<pre>";print_r($result);exit;
+				$district_id = $result[0]['district'];
+				$county_id = $this->get_county_id_for_district($district_id);
+				echo "<pre>\t Facility: ".$phone;
+				// echo "<pre>"; print_r($county_id);exit;
+			}
+					/*
+					//code for appending 254 to phone numbers
+					if (isset($phone)) {
+						$phone = preg_replace('/\s+/', '', $phone);
+						$phone = ltrim($phone, '0');
+						// echo "<pre>".substr($phone, 0,3);
+						if (substr($phone, 0,3) != '254') {
+							$phone = '254'.$phone;
+						}
+					}else{
+						$phone = NULL;
+					}
+
+					*/
+					$number_length = isset($phone)?strlen($phone):0;
+					// echo "Number Length:  ".$number_length;
+					if ($number_length != 12) {
+						if (isset($fault_index)) {
+							$fault_index = 3;//both error in phone and district
+							// $status = 2;
+						}else{
+							$fault_index = 2;
+						}
+							$fault_index = 2;//overriding both district and phone error as district is not necessarily necessary
+							$status = 2;
+					}
+					/*commented out insertion below*/
+					/*
+					$listing = array();
+					$listing_data = array(
+						'phone' => $phone,
+						'county' => $county_id,
+						'subcounty' => $district_id,
+						'facility_code' => $facility_code
+						);
+					array_push($inv, $inv_data);
+					// echo "<pre>";print_r($inv);
+
+					$similarity_query = "SELECT * FROM inventory WHERE phone = '$phone'";
+					$similarity = $this->db->query($similarity_query)->result_array();//FACILITY CODE SEARCH
+					if (empty($similarity)){
+						$insertion = $this->db->insert_batch('inventory',$inv);
+						// echo "QUERY SUCCESSFUL. ".$insertion." ".mysql_insert_id()."</br>";
+					}else{
+						// echo "<pre> Dab on em";
+					}*/
+		}
+					// echo "<pre>";print_r($inv);
+				
+		// unlink($inputFileName);
+		// echo "QUERY SUCCESSFUL. LAST ID INSERTED: ".mysql_insert_id(); exit;
+		// redirect(base_url().'admin/report_listing');
+		// exit;
+
+	}//end of recepient upload
+	public function download_report_listing_excel() {
+	 	// echo "<pre>";print_r($this->input->get());exit;
+		$filepath = "print_docs/excel/excel_template/report_listing_excel.xlsx";
+	 	$this -> hcmp_functions -> download_file($filepath);
+	}
+	public function get_report_listing_data()
+	{
+		$query = "
+		SELECT 
+		    i.phone, i.added_on, c.county, d.district
+		FROM
+		    inventory i
+		        LEFT JOIN
+		    counties c ON i.county = c.id
+		        LEFT JOIN
+		    districts d ON d.id = i.subcounty";
+		$result = $this->db->query($query)->result_array();//FACILITY CODE SEARCH
+		// echo "<pre>";print_r($result);exit;	
+		return $result;
+	}
+
 
 }

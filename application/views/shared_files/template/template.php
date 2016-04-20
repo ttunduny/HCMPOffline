@@ -67,7 +67,7 @@ if (!$this -> session -> userdata('user_id')) {
         
           // $("#connection_status").html(status);
 
-             if (status == true) {//when online
+            /* if (status == true) {//when online
                 $('#offline-notification').removeClass("show");//remove show
                 $('#offline-notification').addClass("hidden");
                 $('#online-notification').removeClass("hidden");
@@ -84,7 +84,7 @@ if (!$this -> session -> userdata('user_id')) {
                 // console.log("offline");
                 // alert("down");
                 
-             }
+             }*/
           }, 3000);
           
           function days_from_last_sync(){
@@ -301,8 +301,8 @@ if (!$this -> session -> userdata('user_id')) {
   </div>
   <center>
     <div class="col-md-4"style="font-weight:bold;">  
-    <!-- <div id="online-top" class="online-status"><span class="green"><span style="font-weight: bold" class="glyphicon glyphicon-off small-margin"></span>On</span>line</div> -->
-    <div id="offline-top" class="online-status"><span class="red"><span style="font-weight: bold" class="glyphicon glyphicon-off small-margin"></span>Off</span>line</div>
+    <div id="online-top" class="online-status"><span class="green"><span style="font-weight: bold" class="glyphicon glyphicon-off small-margin"></span>On</span>line</div>
+    <!-- <div id="offline-top" class="online-status"><span class="red"><span style="font-weight: bold" class="glyphicon glyphicon-off small-margin"></span>Off</span>line</div> -->
       <span><?php echo $this-> session -> userdata('facility_count'); ?>  </span>			
     </div>
   </center>

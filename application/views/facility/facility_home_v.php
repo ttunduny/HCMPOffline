@@ -194,19 +194,19 @@
         <?php endif; ?>
         <?php 
           if($identifier=='facility_admin'){?>
-             <div style="height:auto; margin-bottom: 2px" class="reports message ">
+            <!--  <div style="height:auto; margin-bottom: 2px" class="reports message ">
                 <a href="<?php echo base_url("git_updater/admin_updates_home"); ?>"><h5>System Updates</h5></a>        
-             </div>
+             </div> -->
 
             <!--  
               <div style="height:auto; margin-bottom: 2px" class="reports message ">
                 <a href="<?php //echo base_url("client_sync/index"); ?>"><h5>Database Updates</h5></a>        
              </div>
               -->
-
+<!-- 
                <div style="height:auto; margin-bottom: 2px" class="reports message ">
                 <a href="<?php echo base_url("client_sync/database_setup"); ?>"><h5>Database Setup</h5></a>        
-             </div>
+             </div> -->
         <?php }
         ?>
       </div>
