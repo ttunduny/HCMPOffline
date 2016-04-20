@@ -24,18 +24,26 @@
 <div class="row col-md-12 datatable">
 	<table class="table table-bordered">
 		<thead>
+			<th>Name</th>
+			<th>Email</th>
 			<th>Phone No</th>
 			<th>County</th>
 			<th>Subcounty</th>
+			<th>Facility Code</th>
+			<th>User Level</th>
 			<th>Date Uploaded</th>
 		</thead>
 		<tbody>
-			<?php foreach ($inventory_data as $data): ?>
+			<?php foreach ($report_listing_data as $data): ?>
 				<tr>
+					<td><?php echo $data['name']; ?></td>
+					<td><?php echo $data['email']; ?></td>
 					<td><?php echo $data['phone']; ?></td>
 					<td><?php echo $data['county']; ?></td>
 					<td><?php echo $data['district']; ?></td>
-					<td><?php echo date('M-d-Y',strtotime($data['added_on'])); ?></td>
+					<td><?php echo $data['facility']; ?></td>
+					<td><?php echo $data['usertype']; ?></td>
+					<td><?php echo date('M-d-Y',strtotime($data['date_uploaded'])); ?></td>
 				</tr>
 			<?php endforeach ?>
 		</tbody>

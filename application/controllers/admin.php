@@ -796,12 +796,12 @@ class Admin extends MY_Controller {
 	{
 		//to move query functions to model,wanna complete this today so...why worry
 		// same conundrum as when making inventory haha
-		// $report_listing_data = $this->get_report_listing_data();
+		$report_listing_data = $this->get_report_listing_data();
 
 		// echo "<pre>";print_r($inventory);exit;
 		$data['report_listing_data'] = $report_listing_data;
 		$data['title'] = "Report Listing";
-		$data['banner_text'] = "inventory Management";
+		$data['banner_text'] = "Report Listing Management";
 		$view = 'shared_files/template/dashboard_v';
 		$data['content_view'] = "Admin/report_listing_v";
 		$this->load->view($view,$data);
@@ -830,6 +830,8 @@ class Admin extends MY_Controller {
 			$file_name = $result['file_name'];
 			$this->upload_report_listing($file_name);
 			// echo "I worked";
+			$this->session->set_flashdata('message', 'The File upload was successful');
+			redirect('admin/report_listing');
 		}
 	}//end of upload excel
 	public function upload_report_listing($file_name){
@@ -876,6 +878,7 @@ class Admin extends MY_Controller {
 			*/
 			$status = 1;
 			$county_id = $district_id = $facility_code = 0;
+			$new_county_id = $new_district_id = $new_facility_code = $usertype =  null;
 			
 			$county_name = strtolower($r_data[3]);//lower case
 			$county_name = str_replace(" ", "", $county_name);
@@ -889,7 +892,13 @@ class Admin extends MY_Controller {
 			// echo "<pre>";print_r($phone);
 			// echo "<pre>";print_r($county_name);
 			$facility_code = (!empty($r_data[5]))? $r_data[5]:NULL;
-			
+
+			$name = (!empty($r_data[0]))? $r_data[0]:NULL;
+
+			$email = (!empty($r_data[2]))? $r_data[2]:NULL;
+				
+			$date_uploaded = date('Y-m-d h:i:s');
+
 			$fault_index = NULL;
 			// echo $district;
 
@@ -897,7 +906,7 @@ class Admin extends MY_Controller {
 			$query = "SELECT * FROM facilities WHERE facility_code = '$facility_code'";
 			$result = $this->db->query($query)->result_array();//FACILITY CODE SEARCH
 			// echo "<pre>";print_r($result);echo "</pre>";
-
+			$sql = null;
 			if (empty($result)){//if no facility code then district
 				$queryy = "SELECT * FROM districts WHERE district = '$district'";
 				$resultt = $this->db->query($queryy)->result_array();
@@ -906,15 +915,22 @@ class Admin extends MY_Controller {
 					$queryyy = "SELECT * FROM counties WHERE county = '$county_name'";
 					$resulttt = $this->db->query($queryyy)->result_array();
 					if (empty($resulttt)){
-						// echo "Empty county,subcounty and facility";
+						echo "Empty county,subcounty and facility";
 					}else{
 						$county_id = $resulttt[0]['id'];
-						// echo "\t Only County ".$phone;
+						// echo "<pre>\t Only County ".$phone;
+						$new_county_id = $county_id;	
+						$usertype = 10;					
+
 					}
 				}else{//if district matches
 					$district_id = $resultt[0]['id'];
 					$county_id = $this->get_county_id_for_district($district_id);
-					echo "<pre>\t District ".$phone;
+					// echo "<pre>\t District ".$phone;
+					$new_county_id = $county_id;
+					$new_district_id = $district_id;
+
+					$usertype = 3;
 
 				}//district name match
 
@@ -924,7 +940,12 @@ class Admin extends MY_Controller {
 				// echo "<pre>";print_r($result);exit;
 				$district_id = $result[0]['district'];
 				$county_id = $this->get_county_id_for_district($district_id);
-				echo "<pre>\t Facility: ".$phone;
+				// echo "<pre>\t Facility: ".$phone;
+
+				$new_county_id = $county_id;
+				$new_district_id = $district_id;
+				$new_facility_code = $facility_code;
+				$usertype = 5;
 				// echo "<pre>"; print_r($county_id);exit;
 			}
 					/*
@@ -954,25 +975,30 @@ class Admin extends MY_Controller {
 							$status = 2;
 					}
 					/*commented out insertion below*/
-					/*
+					
 					$listing = array();
 					$listing_data = array(
-						'phone' => $phone,
-						'county' => $county_id,
-						'subcounty' => $district_id,
-						'facility_code' => $facility_code
+						'name' => $name,
+						'email' => $email,
+						'phone_number' => $phone,
+						'facility_code' => $new_facility_code,						
+						'sub_county' => $new_district_id,
+						'county' => $new_county_id,						
+						'usertype' => $usertype,
+						'date_uploaded' => $date_uploaded,
+						'status'=>'0'						
 						);
-					array_push($inv, $inv_data);
+					array_push($listing, $listing_data);
 					// echo "<pre>";print_r($inv);
 
-					$similarity_query = "SELECT * FROM inventory WHERE phone = '$phone'";
+					$similarity_query = "SELECT * FROM email_listing_new WHERE phone_number = '$phone'";
 					$similarity = $this->db->query($similarity_query)->result_array();//FACILITY CODE SEARCH
 					if (empty($similarity)){
-						$insertion = $this->db->insert_batch('inventory',$inv);
+						$insertion = $this->db->insert_batch('email_listing_new',$listing);
 						// echo "QUERY SUCCESSFUL. ".$insertion." ".mysql_insert_id()."</br>";
 					}else{
 						// echo "<pre> Dab on em";
-					}*/
+					}
 		}
 					// echo "<pre>";print_r($inv);
 				
@@ -989,15 +1015,11 @@ class Admin extends MY_Controller {
 	}
 	public function get_report_listing_data()
 	{
-		$query = "
-		SELECT 
-		    i.phone, i.added_on, c.county, d.district
-		FROM
-		    inventory i
-		        LEFT JOIN
-		    counties c ON i.county = c.id
-		        LEFT JOIN
-		    districts d ON d.id = i.subcounty";
+		$query = "SELECT distinct   el.name, el.email, el.phone_number AS phone, al.level as usertype,el.date_uploaded,
+    				case when el.facility_code != '' then (select f.facility_name from facilities f where f.facility_code = el.facility_code) else 'N/A' end as facility,
+    				case when el.sub_county != '' then (select d.district from districts d where d.id = el.sub_county) else 'N/A' end as district,
+    				case when el.county != '' then (select c.county from counties c where c.id = el.county) else 'N/A' end as county    
+					FROM   email_listing_new el, access_level al where al.id = el.usertype and el.status = '0'";
 		$result = $this->db->query($query)->result_array();//FACILITY CODE SEARCH
 		// echo "<pre>";print_r($result);exit;	
 		return $result;
