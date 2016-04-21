@@ -157,9 +157,13 @@
 
 
 				<div class="col-md-12">
-				<center><b>
-				Once a facility is selected,you will not be able to go to previous steps. Refresh the page to restart the process.</div>
-				</b></center>
+				<center>
+				<b>
+				Once a facility is selected,you will not be able to go to previous steps. Refresh the page to restart the process.
+				</b></br>
+				<a href="<?php echo base_url()."facility_activation/download_system_zip"; ?>">Click here to download system installation package (Does not come with the database installation files)</a>
+				</center>
+				</div>
 				<div class="col-md-12" style="border-top:1px solid #ddd;border-bottom:1px solid #ddd;padding-top: 1%; " id="test">
 				<center>
 				<div class="col-md-2 col-md-offset-2">
@@ -591,6 +595,7 @@
 
 	$("#add_user_inactive").click(function(){
 		$("#addModal").show();
+		loadStep3();
 	})
 
 	

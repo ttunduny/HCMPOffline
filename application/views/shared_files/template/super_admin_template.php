@@ -39,18 +39,18 @@
     <div class="row margin_top_sm">
 
         <div class="col-md-4">
-                <a href="<?php echo base_url().'git_updater/admin_updates_home';?>">
+                <a href="<?php echo base_url().'admin/report_listing';?>">
             <div class="background_yellow dash_notifications">
                 <span class="icon-lg fa fa-cloud-upload"></span>
-                Updates  
+                Report Listing  
             </div>
                 </a>  
         </div>
         <div class="col-md-4">
-                <a href="<?php echo base_url().'home';?>">
+                <a href="<?php echo base_url().'admin/inventory';?>">
             <div class="background_purple dash_notifications">
-                <span class="icon-lg fa fa-envelope-o"></span>
-                Messages    
+                <span class="icon-lg fa fa-briefcase"></span>
+                Inventory    
             </div>
                 </a>
         </div>

@@ -15,8 +15,12 @@
 				</div>
 			<?php else: ?>
 				<div class="btn col-md-8" style="margin:10px 0;">
+				<?php if (isset($sync_status) && $sync_status ==1): ?>
+				<p class="col-md-12">You have succesfully synchronized your data with the live server. Your data will be visible on the main system within <b>24 hours</b></p></br>
+				<?php endif ?>
+
 					<?php if (!empty($sync_data)&&$sync_data!=''): ?>
-						Your last sync was on <b><?php echo date('F, m Y H:i:s',strtotime($last_sync));?></b>
+						<p class="col-md-12">Your last sync was on <b><?php echo date('F, m Y H:i:s',strtotime($last_sync));?></b></p>
 						<table class="table table-bordered">
 							<thead>
 								<th>Past database synchronizations</th>
@@ -24,7 +28,7 @@
 							<tbody>
 								<?php foreach ($sync_data as $key): ?>
 									<tr>
-										<td><?php echo date('F, m Y H:i:s',strtotime($key['last_updated'])); ?></td>
+										<td><?php echo date('F, m Y H:i:s',strtotime($key['last_sync'])); ?></td>
 									</tr>
 								<?php endforeach ?>
 							</tbody>
@@ -35,8 +39,11 @@
 						<i class="glyphicon glyphicon-hand-right" style="font-size: 40px"></i>
 					<?php endif ?>
 				</div>		
+				<div class="col-md-4">
+				<a class="btn btn-success col-md-12" href="<?php echo base_url().'synchronization/sync' ?>" style="margin:37px 0;">Synchronize data now</a>	
+				
+				</div>
 
-				<a class="btn btn-success col-md-4" href="<?php echo base_url().'synchronization/sync' ?>" style="margin:37px 0;">Synchronize data now</a>	
 			<?php endif ?>
 
 			</div>
