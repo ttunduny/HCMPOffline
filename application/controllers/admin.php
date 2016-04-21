@@ -810,7 +810,7 @@ class Admin extends MY_Controller {
 	public function upload_report_listing_excel(){
 		// echo "<pre>";print_r($this->input->post());echo "</pre>";exit;
 		// error_reporting(E_ALL);
-		$config['upload_path'] = 'print_docs/excel/uploaded_files/';
+		$config['upload_path'] = './print_docs/excel/uploaded_files/';
 		$config['allowed_types'] = 'xls|xlsx';
 		$config['max_size']	= '2048';
 		$name = 'inventory_'.date('d-m-Y').'_';

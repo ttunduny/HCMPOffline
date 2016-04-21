@@ -76,7 +76,10 @@
     </div>
 </div>
 <script>
+
 	$('#upload_excel').click(function () {
-     $('#modal-dialog-excel').appendTo("body").modal('show');
-})
+     	$('#modal-dialog-excel').appendTo("body").modal('show');
+	})
+
+	
 </script>

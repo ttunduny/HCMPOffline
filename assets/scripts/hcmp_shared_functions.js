@@ -126,6 +126,74 @@ function calculate_actual_stock(actual_units,pack_unit_option,user_input,target_
  
 }
  /******************---------------END--------------------------**********************/
+
+ //** New Compute actual Stock **/
+ function new_calculate_actual_stock(comm_id,batch){
+ // function new_calculate_actual_stock(comm_id,batch_number=null){
+
+
+  var total_issues_comm = 0;
+  var total_issues_batch = 0;
+  $.each($('.desc'), function(index, item) { 
+      var commodity_id = $(item).closest("tr").find(".desc").val();
+      var checker = $(item).closest("tr").find(".checker").val();
+      var batch_number = $(item).closest("tr").find(".batch_no").val();
+      var issue_type = $(item).closest("tr").find(".commodity_unit_of_issue").val();
+      var unit_size = $(item).closest("tr").find(".unit_size").val();
+      var issued_qtty = $(item).closest("tr").find(".quantity_issued").val();
+      var batch_quantity_in_units = 0;
+      var commodity_quantity_in_units = 0;
+
+      if(batch!=''){
+        if (batch == batch_number) {
+          if (checker>0) {
+            if (issue_type == 'Pack_Size'){
+                batch_quantity_in_units = parseInt(issued_qtty)*parseInt(unit_size);
+            }else{
+                batch_quantity_in_units = parseInt(issued_qtty);
+            }
+          }
+        }
+      }
+      if(comm_id!=''){
+        if (comm_id == commodity_id) {
+          if (checker>0) {
+            if (issue_type == 'Pack_Size'){
+                commodity_quantity_in_units = parseInt(issued_qtty)*parseInt(unit_size);
+            }else{
+                commodity_quantity_in_units = parseInt(issued_qtty);
+            }
+          }
+        }
+      }
+
+      
+
+      total_issues_comm = total_issues_comm + commodity_quantity_in_units; 
+      total_issues_batch = total_issues_batch + batch_quantity_in_units; 
+      
+  });
+  
+  return [total_issues_comm,total_issues_batch];
+    
+ 
+}
+
+//** Calculate the actual issue in units //
+
+function calculate_issues(qtty,issue_type,unit_size){
+  var batch_quantity_in_units;
+  if (issue_type == 'Pack_Size'){
+      batch_quantity_in_units = parseInt(qtty)*parseInt(unit_size);
+  }else{
+      batch_quantity_in_units = parseInt(qtty);
+  }
+
+  return batch_quantity_in_units;
+}
+
+//** End of new Function by Titus **//
+
 /* HCMP AJAX request and console response for comfirmation  */
 function ajax_simple_post_with_console_response(url, data){
 	          $.ajax({
