@@ -1026,5 +1026,25 @@ class Admin extends MY_Controller {
 		return $result;
 	}
 
+	public function set_log_facility(){
+		$sql = "select distinct user_id from log where user_id in (select distinct id from user)";
+		$result = $this->db->query($sql)->result_array();		
+		foreach ($result as $key => $value) {
+			$user_id = $value['user_id'];
+			$sql_get_facility = "select facility from user where id='$user_id'";
+			$result_facilities = $this->db->query($sql_get_facility)->result_array();
+			foreach ($result_facilities as $keys => $values) {
+				$facility_code = $values['facility'];
+				if($facility_code!=0){
+					$sql_update  = "update log set facility_code='$facility_code' where user_id='$user_id'";
+					$this->db->query($sql_update);
+				}
+			}
+			// echo "<pre>";print_r($result_facilities);die;
+
+
+		}
+	}
+
 
 }

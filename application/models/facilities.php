@@ -530,28 +530,47 @@ class Facilities extends Doctrine_Record {
 		if ($district_id!=null) {
 			$and_data.= " and d.id = $district_id ";
 		}		
-		$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT
-				    f.facility_code,c.county, d.district, f.facility_name
-				FROM
-				    facilities f,
-				    districts d,
-				    counties c,
-				    facility_user_log l
-				WHERE
-						f.facility_code = l.facility_code
-				        AND f.using_hcmp = '1'
-						AND d.id = f.district
-				        AND c.id = d.county
-				        $and_data
-				        AND f.date_of_activation < '$start_date'
-				        AND l.end_time_of_event BETWEEN '$start_date' AND '$last_date'
-				        AND l.action = 'Logged Out'
-				group by l.facility_code");
+
+		$sql = "SELECT DISTINCT f.facility_code, c.county, d.district, f.facility_name 
+				FROM facilities f, districts d, counties c, facility_user_log_new fl
+				WHERE  f.facility_code = fl.facility_code AND f.using_hcmp = '1'
+		        AND d.id = f.district AND c.id = d.county $and_data AND f.date_of_activation < '$last_date'
+		        AND fl.end_time_of_event BETWEEN '$start_date' AND '$last_date' AND fl.action = 'Logged Out'
+				GROUP BY fl.facility_code";
+		
+		$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll($sql);
 		return $data;
 	}
 
+	public function new_get_facility_logged_in_count($start_date,$last_date,$number,$county_id=null,$district_id = null){
+		$final_array = array();
+		$sql = "SELECT DISTINCT   f.facility_code, c.county, d.district,f.facility_name
+				FROM facilities f,districts d, counties c,facility_user_log_new fl
+				WHERE f.facility_code = fl.facility_code AND f.using_hcmp = '1'
+        		AND d.id = f.district AND c.id = d.county AND f.date_of_activation < '$last_date'
+        		AND fl.end_time_of_event BETWEEN '$start_date' AND '$last_date' AND fl.action = 'Logged Out'";
+        $result = $this->db->query($sql)->result_array();
+        foreach ($result as $key => $value) {
+        	$facility_code =$value['facility_code'];
+        	$district =$value['district'];
+        	$county =$value['county'];      	
 
-	public function get_facilities_logged_in_count($start_date,$last_date,$number,$county_id=null,$district_id = null){
+        	$sql_count = "SELECT DISTINCT DATE(fl.end_time_of_event) mydate, COUNT(DISTINCT fl.facility_code) AS times
+						FROM facility_user_log_new fl WHERE fl.end_time_of_event BETWEEN '$start_date' AND '$last_date'
+    					AND fl.action = 'Logged Out' AND fl.facility_code = '$facility_code' GROUP BY mydate 
+    					HAVING COUNT(fl.end_time_of_event) >= '$number'";
+    		$result_count = $this->db->query($sql_count)->result_array();
+    		$count = count($result_count);
+    		if($count>0){    			
+    			$final_array[] = array('facility_code' => $facility_code,'facility_name'=>$facility_name,'district'=>$district,
+    									'county'=>$county,'days'=>$count);
+    		}
+    		
+        }
+        return $final_array;
+        
+	}
+	public function get_facilities_count($start_date,$last_date,$number,$county_id=null,$district_id = null,$type=null){		
 		$and_data = '';
 		if ($county_id!=null) {
 			$and_data.= " and c.id = $county_id ";
@@ -559,26 +578,38 @@ class Facilities extends Doctrine_Record {
 		if ($district_id!=null) {
 			$and_data.= " and d.id = $district_id ";
 		}
-		
-		$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT
-			    f.facility_code,c.county, d.district, f.facility_name, count(l.end_time_of_event) as days
-			FROM
-			    facilities f,
-			    districts d,
-			    counties c,
-			    facility_user_log l
-			WHERE
-					f.facility_code = l.facility_code
-			        AND f.using_hcmp = '1'
-					AND d.id = f.district
-			        AND c.id = d.county
-			        $and_data
-			        AND f.date_of_activation < '$start_date'
-			        AND l.end_time_of_event BETWEEN '$start_date' AND '$last_date'
-			        AND l.action = 'Logged Out'
-			group by f.facility_code,l.user_id,DAY(l.end_time_of_event) HAVING count(l.end_time_of_event) >='$number'");
 
-		return $data;
+		if(isset($type)){
+			$and_data.= ($type='issued') ? 'and issued = 1' : null;
+		}
+		
+		$final_array = array();
+		$sql = "SELECT DISTINCT f.facility_code, c.county, d.district,f.facility_name
+				FROM facilities f,districts d, counties c,facility_user_log_new fl
+				WHERE f.facility_code = fl.facility_code AND f.using_hcmp = '1'
+        		AND d.id = f.district AND c.id = d.county AND f.date_of_activation < '$last_date'
+        		AND fl.end_time_of_event $and_data BETWEEN '$start_date' AND '$last_date' AND fl.action = 'Logged Out'";
+        $result = $this->db->query($sql)->result_array();
+        foreach ($result as $key => $value) {
+        	$facility_code =$value['facility_code'];
+        	$facility_name =$value['facility_name'];
+        	$district =$value['district'];
+        	$county =$value['county'];      	
+
+        	$sql_count = "SELECT DISTINCT DATE(fl.end_time_of_event) mydate, COUNT(DISTINCT fl.facility_code) AS times
+						FROM facility_user_log_new fl WHERE fl.end_time_of_event BETWEEN '$start_date' AND '$last_date'
+    					AND fl.action = 'Logged Out' AND fl.facility_code = '$facility_code' $and_data GROUP BY mydate 
+    					HAVING COUNT(fl.end_time_of_event) >= '$number'";
+    		// echo "$sql_count";die;
+    		$result_count = $this->db->query($sql_count)->result_array();    		
+    		$count = count($result_count);
+    		if($count>0){    			
+    			$final_array[] = array('facility_code' => $facility_code,'facility_name'=>$facility_name,'district'=>$district,
+    									'county'=>$county,'days'=>$count);
+    		}
+    		
+        }	        
+        return $final_array;
 	}
 	public function get_facilities_issued_in_month($start_date,$last_date,$issued=null,$county_id=null,$district_id=null){
 		$and_data = '';
