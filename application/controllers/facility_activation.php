@@ -108,6 +108,20 @@ class Facility_activation extends MY_Controller
 		echo json_encode($output);
 	}
 
+	public function get_facility_details($facility_code) {
+		$facility_data = Facilities::get_more_stats($facility_code);
+		$final_data = array();
+		foreach ($facility_data as $key => $value) {
+			$date_created = $value['date_of_activation'];
+			$last_order = $value['last_order'];
+			$last_activity = $value['last_activity'];
+			$last_order_date = date('d F y', strtotime($last_order));
+			$final_data = array('date_created' => $date_created, "last_order" => $last_order, "last_activity" => $last_activity);
+		}
+		// echo "<pre>"; print_r($final_data); echo "</pre>"; exit;
+		echo json_encode($final_data);
+	}
+
 	//Titus 
 
 	public function get_facility_stats($facility_code){

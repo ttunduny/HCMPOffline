@@ -1,0 +1,10 @@
+diff a/application/views/shared_files/facility_offline.php b/application/views/shared_files/facility_offline.php	(rejected hunks)
+@@ -190,7 +190,7 @@
+ 									<td><span id="number_of_users"></td>
+ 								</tr>
+ 								<tr>
+-									<td>Date of Last Activty: </td>
++									<td>Date of Last Activity: </td>
+ 									<td><span id="last_activity"></td>
+ 								</tr>
+ 								<tr>

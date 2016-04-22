@@ -99,6 +99,63 @@ class Dispensing extends MY_Controller {
 		$data['commodities'] = commodities::set_facility_service_data($facility_code,2);
 		$this -> load -> view("shared_files/template/template", $data);
 	}
+
+	public function setup_physical_count(){
+		$facility_code = $this -> session -> userdata('facility_id');
+		$data['title'] = "Dispensing - Set up Physical Stock Count";
+		$data['content_view'] = "facility/facility_dispensing/setup_physical_count_v";
+		$data['banner_text'] = "Set Up Physical Stock Count";
+		$data['commodities'] = facility_stocks::get_service_point_stocks($facility_code,2,NULL,NULL);
+		// var_dump($data);
+
+		// echo "<pre>";
+		// print_r($data);
+		// echo "</pre>";
+		// exit;
+		$this -> load -> view("shared_files/template/template", $data);
+	}
+
+	public function update_physical_count(){
+		// echo "<pre>"; print_r($_POST); echo "</pre>";
+		$count = count($this->input->post('commodity_id'));
+		$c_count = null;
+		$counts = array_values($this->input->post('physical_count'));
+		// echo "<pre>"; print_r($counts); echo "</pre>";
+		// echo "Count: " . count($counts) . "<br />"; 
+		// echo "Count Not Empty: " . count(!empty($counts)) . "<br />";
+		// for($i = 1; $i < count($counts); $i++) {
+		// 	$ac_count = count(!empty($counts[$i]));
+		// }
+		// echo "Actual Count: " . $ac_count;
+		// exit;
+		// for($i = 0; $i < $count; $i++){
+		// $c_count = count($this->input->post('physical_count') !== null);
+		// echo "Count: " . $c_count;
+		// }
+		// exit;
+		$facility_code =  $this -> session -> userdata('facility_id');
+		$service_point_id = $this -> input -> post('service_point_id');
+		// $commodity_id = $this->input->post('commodity_id');
+		$commodity_id = $this->input->post('commodity_id');
+		$physical_count =  $this->input->post('physical_count');
+		$type_of_adjustment = $this->input->post('type_of_adjustment'); // Positive or Negative 
+		$count_difference = $this->input->post('count_difference');
+		$reason = $this->input->post('reason');
+
+		for ($i=0; $i < $count; $i++) { 
+			// $physical_count = isset($this->input->post('physical_count')[$i])? $this->input->post('physical_count')[$i] : NULL;
+			// $reason = isset($this->input->post('reason')[$i])? $this->input->post('reason')[$i] : NULL;
+			// echo $id .": " .$physical_count ." ".$reason ."<br>";
+			$insert = Doctrine_Manager::getInstance() -> getCurrentConnection();
+			$insert -> execute("INSERT INTO service_point_stock_physical(facility_id, service_point_id, commodity_id, batch_no, type_of_adjustment, 
+				count_difference, reason) VALUES('$facility_code', '$service_point_id[$i]','$commodity_id[$i]','$batch_no[$i]','$type_of_adjustment[$i]','$count_difference[$i]','$reason[$i]')");
+			// $stock = facility_stocks::update_service_point_physical_count($id, $physical_count, $reason);
+		}
+		$this->session->set_flashdata('system_success_message', 'Service Point Physical Count updated');
+		redirect('dispensing');
+
+	}
+
 	public function issue(){
 		$facility_code = $this -> session -> userdata('facility_id');
 		$service_point = 2;//hard coded for pharmacy,until requested for :]
@@ -602,7 +659,6 @@ class Dispensing extends MY_Controller {
 		redirect('dispensing');
 		
 	}
-
 
 	}//end of dispense class
 ?>

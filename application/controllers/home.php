@@ -121,6 +121,16 @@ class Home extends MY_Controller
 		}
 
 		break;
+		case 'recovery':
+			$facility = $this -> session -> userdata('facility_id');
+			$view = 'shared_files/template/template';
+			$data['title'] = "User Management";
+			$data['banner_text'] = "User Management";
+			$data['current_user_id'] = $this-> session -> userdata('user_id');
+			$data['content_view'] = "shared_files/user_recovery_v";
+			$data['listing']= Users::get_user_list_facility($facility);
+			
+		break;
 		case 'district':
 		$data['content_view'] = "subcounty/subcounty_home_v";	
 		$view = 'shared_files/template/template';
@@ -231,6 +241,27 @@ class Home extends MY_Controller
 			'facility_donations_pending'=>$facility_donations_pending,//,'stocks_from_v1'=>$stocks_from_v1	
 			);	
 	}
+	// return array('facility_stock_count'=>$facility_stock_count,
+	// 'faciliy_stock_graph'=>$faciliy_stock_data,
+	// 'items_stocked_out_in_facility'=>$items_stocked_out_in_facility,
+	// 'facility_order_count'=>$facility_order_count,
+	// 'potential_expiries'=>$potential_expiries,
+	// 'actual_expiries'=>$actual_expiries,
+	// 'facility_donations'=>$facility_donations,
+	// 'facility_donations_pending'=>$facility_donations_pending,//,'stocks_from_v1'=>$stocks_from_v1
+	// 'facility_redistribution_mismatches'=>$facility_redistribution_mismatches
+	// );	
+	/*return array('facility_stock_count'=>$facility_stock_count,
+	'faciliy_stock_graph'=>$faciliy_stock_data,
+	'items_stocked_out_in_facility'=>$items_stocked_out_in_facility,
+	'facility_order_count'=>$facility_order_count,
+	'potential_expiries'=>$potential_expiries,
+	'actual_expiries'=>$actual_expiries,
+	'facility_donations'=>$facility_donations,
+	'facility_donations_pending'=>$facility_donations_pending,//,'stocks_from_v1'=>$stocks_from_v1	
+	'facility_redistribution_mismatches'=>$facility_redistribution_mismatches
+	);	
+    }*/
 	public function tester(){
 			// $this->load->model('users');
 		$view = 'shared_files/template/template';

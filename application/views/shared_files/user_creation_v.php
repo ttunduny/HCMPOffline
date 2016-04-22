@@ -39,6 +39,9 @@
  </script>
 
 <?php 
+	
+
+
 // $pwd_reset = 1;
 	if (isset($pwd_reset) && $pwd_reset == 1) {
 		// echo $reset_user_id;exit;
@@ -120,6 +123,7 @@
 
 							<?php
 							foreach ($listing as $list ) {
+								if($list['level_id'] == 16){}else{
 							?>
 							<tr class="edit_tr" >
 								<td class="fname" ><?php echo ucfirst($list['fname'])." ".ucfirst($list['lname']);?></td>
@@ -131,7 +135,7 @@
 								<td class="level" data-attr="<?php echo $list['level_id']; ?>"><?php echo $list['level']; ?></td>
 								<td style="width:20px;" >
 								<?php if ($list['status']==1) {?>
-								<input type="checkbox" name="status-checkbox" id="status_switch_change" data-attr="<?php echo $list['user_id']; ?>" class="small-status-switch" checked = "checked" style="border-radius:0px!important;">
+								<input type="checkbox" <?php if($current_user_id == $list['user_id']){ echo "disabled"; }?> name="status-checkbox" id="status_switch_change" data-attr="<?php echo $list['user_id']; ?>"  class="small-status-switch" checked = "checked" style="border-radius:0px!important;">
 								<?php }else{ ?>
 								<input type="checkbox" name="status-checkbox" id="status_switch_change" data-attr="<?php echo $list['user_id']; ?>" class="small-status-switch" style="border-radius:0px!important;">
 								<?php } ?> 
@@ -151,7 +155,7 @@
 								</button>
 								</td>
 							</tr>
-							<?php } ?>
+							<?php } } ?>
 						</tbody>
 					</table>
 

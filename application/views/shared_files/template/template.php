@@ -2,6 +2,7 @@
 if (!$this -> session -> userdata('user_id')) {
   redirect("user");
 }
+$identifier = $this -> session -> userdata('user_indicator');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -242,7 +243,7 @@ if (!$this -> session -> userdata('user_id')) {
     <li class="dropdown " id="drop-step">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user" ></span><?php echo $this -> session -> userdata('full_name');?> <b class="caret"></b></a>
       <ul class="dropdown-menu" >
-        <li><a style="background: whitesmoke;color: black !important" href="" data-toggle="modal" data-target="#changepassModal"><span class="glyphicon glyphicon-pencil" style="margin-right: 2%; "></span>Change password</a></li>               
+        <?php if($identifier == "recovery"){}else{?><li><a style="background: whitesmoke;color: black !important" href="" data-toggle="modal" data-target="#changepassModal"><span class="glyphicon glyphicon-pencil" style="margin-right: 2%; "></span>Change password</a></li>  <?php }?>            
         <li><a style="background: whitesmoke;color: black !important" href="<?php echo site_url("user/logout");?>" ><span class="glyphicon glyphicon-off" style="margin-right: 2%;"></span>Log out</a></li>
         <li ><a style="background: whitesmoke;color: black !important" href="mailto:hcmphelpdesk@googlegroups.com" onclick="startIntro();" ><span class="glyphicon glyphicon-question-sign" style="margin-right: 2%;"></span>Help</a></li>
       </ul>

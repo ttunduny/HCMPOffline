@@ -229,7 +229,11 @@
 							</p>
 							<br/>
 							<table id="users_table" class="table table-hover table-bordered table-update">
-								<tr><th>Full Name</th><th>Date Created</th></tr>
+								<tr>
+									<th><input name="select_all" value="1" id="select_all_users" type="checkbox" />Select</th>
+									<th>Full Name</th>
+									<th>Date Created</th>
+								</tr>
 							</table>
 							<br/>
 							<button id="step2a_advance" class="step3 btn btn-success">Proceed to Step 3</button>						
@@ -367,12 +371,15 @@
 					if(count==0){
 						$("#users_none").show();
 					}else{
-						$.each(users, function( index, value ) {
-							// console.log(value);
+						// $("#users_table tbody > tr").remove();
+						// var table_header = $("<tr><th><input type=\"checkbox\" id=\"select_all_users\" name=\"select_all\"/>Select</th><th>Full Name</th><th>Date Created</th></tr>");
+						// $("#users_table").append(table_header);
+						// $.each(users, function( index, value ) {
+						// 	// console.log(value);
 							
-	                       var row = $("<tr><td>" + value[0] + "</td><td>" + value[1] + "</td></tr>");
-	                       // $("#users_table").append(row);
-	                    });
+	     //                   var row = $("<tr><td>" + value[0] + "</td><td>" + value[1] + "</td></tr>");
+	     //                   // $("#users_table").append(row);
+	     //                });
 						$("#activate").hide();	                    
 						// $("#users_none").hide();	                    
 						// $("#users_all").show();	                    
@@ -390,7 +397,7 @@
    		var facility_code = $("#facility_select").val();
 	  	var facility_name = $("#facility_select").text();	  	
   		var base_url = "<?php echo base_url() . 'facility_activation/get_facility_stats/'; ?>";
-  		var reset_url = "<?php echo base_url().'user/reset_pass_to_default/' ?>";
+  		//var reset_url = "<?php echo base_url().'user/reset_pass_to_default/' ?>";
 	    var url = base_url+facility_code;				
 		$.ajax({
 			url: url,
@@ -402,9 +409,10 @@
 					$("#no_users").show();
 				}else{
 					$.each(users, function( index, value ) {
-						console.log(value[0]);
-		               	var row = $("<tr><td>" + value[1] + "</td><td>" + value[2]+"</td></tr>");
-		               	// var row = $("<tr><td>" + value[1] + "</td><td>" + value[2]+"</td><td><a href=\""+reset_url+value[0]+"\" class=\"btn btn-primary btn-xs reset_pwd\" id=\"reset_pwd\"><span class=\"glyphicon glyphicon-edit\"></span>Reset Password</a></td></tr>");
+						//console.log(value[0]);
+		               	//var row = $("<tr><td>" + value[1] + "</td><td>" + value[2]+"</td></tr>");
+		                //var row = $("<tr><td>" + value[1] + "</td><td>" + value[2]+"</td><td><a href=\""+reset_url+value[0]+"\" class=\"btn btn-primary btn-xs reset_pwd\" id=\"reset_pwd\"><span class=\"glyphicon glyphicon-edit\"></span>Reset Password</a></td></tr>");
+		               	var row = $("<tr><td><input class=\"selected_users\" type=\"checkbox\" value=\""+value[0]+"\"/></td><td>" + value[1] + "</td><td>" + value[2] + "</td></tr>");
 		               $("#users_table").append(row);
 		            });
 					$("#active_users").show();	                    			
@@ -415,6 +423,12 @@
 			}
 		});	
    	}
+
+   	$("#select_all_users").change(function () {
+    	$("input:checkbox").prop('checked', $(this).prop("checked"));
+	});
+
+
    	function loadStep1(){
    		hideAll();   		
 	   	$("#step_1").show();   	
@@ -523,25 +537,60 @@
 	  	loadSuccess();	  	
 	});
 
-	$('#reset_pass').click(function() {
-	    // handle deletion here
-	  	var facility_code = $("#facility_select").val();
-	  	var my_message = '';
-  		var base_url = "<?php echo base_url() . 'user/reset_multiple_pass/'; ?>";
-	    var url = base_url+facility_code;			    
-		$.ajax({
-			url: url,
-			dataType: 'json',
-			success: function(s){				
-				my_message = "User passwords reset successfully";				
-				alertify.set({ delay: 10000 });
-          		alertify.success(my_message, null);
-			},
-			error: function(e){
-				console.log(e.responseText);
-			}
-		});
+	// $('#reset_pass').click(function() {
+	//     // handle deletion here
+	//   	var facility_code = $("#facility_select").val();
+	//   	var my_message = '';
+ //  		var base_url = "<?php echo base_url() . 'user/reset_multiple_pass/'; ?>";
+	//     var url = base_url+facility_code;			    
+	// 	$.ajax({
+	// 		url: url,
+	// 		dataType: 'json',
+	// 		success: function(s){				
+	// 			my_message = "User passwords reset successfully";				
+	// 			alertify.set({ delay: 10000 });
+ //          		alertify.success(my_message, null);
+	// 		},
+	// 		error: function(e){
+	// 			console.log(e.responseText);
+	// 		}
+	// 	});
 	  	
+	// });
+
+	$('#reset_pass').click(function() {
+		var my_message = '';
+		var url = "<?php echo base_url() .'user/reset_select_multiple_pass/'; ?>";
+		var users_array = [];
+		$(".selected_users:checked").each(function(){
+			var user_id = $(this).val();
+			users_array.push(user_id);					
+							
+		});
+		//console.log(users_array);
+		if(users_array.length<1){
+			//console.log("No user selected");
+			my_message = "Kindly select a user first";				
+			alertify.set({ delay: 3000 });
+	        alertify.error(my_message, null);
+		}else{
+			$.ajax({
+					url: url,
+					dataType: 'json',
+					data: users_array,
+				success: function(s){				
+					my_message = "User passwords reset successfully";				
+					alertify.set({ delay: 3000 });
+	          		alertify.success(my_message, null);
+				},
+				error: function(e){
+					console.log(e.responseText);
+				}
+			});
+
+		}
+		
+		
 	});
 
 	$("#add_user_inactive").click(function(){
