@@ -628,7 +628,7 @@ class Admin extends MY_Controller {
 		    array_push($rowData, $rowData_[0]);
 		    //  Insert row data array into your database of choice here
 		}
-		echo "<pre>";print_r($rowData);exit;//Titus,comment this out to proceed and see the sanitization. It selects the district id based on the district in the excel,same for county.
+		// echo "<pre>";print_r($rowData);exit;//Titus,comment this out to proceed and see the sanitization. It selects the district id based on the district in the excel,same for county.
 		foreach ($rowData as $r_data) {
 			// echo "<pre>";print_r($r_data);echo "</pre>";
 			$status = 1;
@@ -1020,6 +1020,7 @@ class Admin extends MY_Controller {
     				case when el.sub_county != '' then (select d.district from districts d where d.id = el.sub_county) else 'N/A' end as district,
     				case when el.county != '' then (select c.county from counties c where c.id = el.county) else 'N/A' end as county    
 					FROM   email_listing_new el, access_level al where al.id = el.usertype and el.status = '0'";
+
 		$result = $this->db->query($query)->result_array();//FACILITY CODE SEARCH
 		// echo "<pre>";print_r($result);exit;	
 		return $result;
