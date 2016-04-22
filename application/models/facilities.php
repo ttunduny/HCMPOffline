@@ -352,22 +352,22 @@ class Facilities extends Doctrine_Record {
 		if (isset($county)) {
 			if (isset($district_id)) {
 				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-		             CALL facility_monitoring_new('district','$district_id','$report_type');
+		             CALL facility_monitoring_new1('district','$district_id','$report_type');
 					");
 			}else{//if district id isnt set
 				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-		             CALL facility_monitoring_new('county','$county','$report_type');
+		             CALL facility_monitoring_new1('county','$county','$report_type');
 					");
 			}
 		}else{
 			if ($scope = 'all') {
 					// echo "I WORK";exit;
 					$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-		             CALL facility_monitoring_new('all','$county','$report_type');
+		             CALL facility_monitoring_new1('all','$county','$report_type');
 					");
 				}else{
 				$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-		             CALL facility_monitoring_new('county','$county','$report_type');
+		             CALL facility_monitoring_new1('county','$county','$report_type');
 					");
 		}
 	}
@@ -1362,7 +1362,7 @@ public static function get_facility_district_county_level($facility_code)
 
 public static function model_tester(){
 	$data = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-             CALL facility_monitoring_new('county','23','last_seen');
+             CALL facility_monitoring_new1('county','23','last_seen');
 			");
 	return $data;
 }
