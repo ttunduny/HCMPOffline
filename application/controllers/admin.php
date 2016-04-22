@@ -1028,7 +1028,10 @@ class Admin extends MY_Controller {
 
 	public function set_log_facility(){
 		$sql = "select distinct user_id from log where user_id in (select distinct id from user)";
-		$result = $this->db->query($sql)->result_array();		
+		$result = $this->db->query($sql)->result_array();	
+		// echo count($result);die;	
+			// echo "<pre>";print_r($result_facilities);die;
+
 		foreach ($result as $key => $value) {
 			$user_id = $value['user_id'];
 			$sql_get_facility = "select facility from user where id='$user_id'";
@@ -1040,7 +1043,6 @@ class Admin extends MY_Controller {
 					$this->db->query($sql_update);
 				}
 			}
-			// echo "<pre>";print_r($result_facilities);die;
 
 
 		}

@@ -266,7 +266,7 @@
       <th ><b>Facility Code</b></th>
       <th ><b>Sub-County</b></th>
       <th ><b>County</b></th>
-      <th ><b>Number of Issues</b></th>
+      <!-- <th ><b>Number of Issues</b></th> -->
     </tr> 
   </thead>
   <tbody>
@@ -284,7 +284,7 @@
           <td><?php echo $facility_code;?></td>
           <td><?php echo $sub_county;?></td>
           <td><?php echo $county;?></td>
-          <td><?php echo $number;?></td>
+          <!-- <td><?php //echo $number;?></td> -->
         </tr>
       <?php }
      
