@@ -1,4 +1,3 @@
-DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `facility_monitoring_new1`(filter_level VARCHAR (45),filter_id INT (45), filter_type VARCHAR(45))
 BEGIN
     CASE filter_level 
@@ -612,5 +611,4 @@ WHERE
         ORDER BY last_seen ASC;
     END IF;
 END CASE;
-END$$
-DELIMITER ;
+END
