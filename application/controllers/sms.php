@@ -2960,8 +2960,8 @@ public function log_summary_weekly_view(){
 	$handler = "/print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 	$subject = "System Usage as at ".$time;
 
-	// $email_address = "smutheu@clintonhealthaccess.org,karsanrichard@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com";
-						$email_address = "karsanrichard@gmail.com,ttunduny@gmail.com,lesaneric@gmail.com";
+	$email_address = "smutheu@clintonhealthaccess.org,karsanrichard@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com";
+						// $email_address = "karsanrichard@gmail.com,ttunduny@gmail.com,lesaneric@gmail.com";
                         // $email_address = "ttunduny@gmail.com";
                         //$bcc = "";
 	$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
