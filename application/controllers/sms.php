@@ -3006,7 +3006,7 @@ public function log_summary_weekly_view(){
 
 		$appended = !empty($district_name)? $district_name['district']." Subcounty" :$county_name['county']." County";
 		$excel_title = 'HCMP facility activity log summary for '.$appended;
-		$email_subject = 'System usage for '.$appended.' as at '.$time;
+		$email_subject = 'HCMP System usage report for '.$appended.' as at '.$time;
 		// echo $county_name.' '.$district_name;
 		// echo $excel_title;exit;
 
