@@ -2665,7 +2665,7 @@ public function log_summary_weekly_view(){
 
 		
 	}
-	public function log_summary_weekly($county_id = NULL,$district_id = NULL,$facility_code = NULL){
+	public function log_summary_weekly($county_id = NULL,$district_id = NULL,$facility_code = NULL){//Karsan
 		$time=date('M , d Y');
 
 		$active_facilities = Facilities::getAll_();
@@ -2956,12 +2956,13 @@ public function log_summary_weekly_view(){
 	$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 	$subject = "System Usage as at ".$time;
 
-	$email_address = "smutheu@clintonhealthaccess.org,karsanrichard@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com";
+	$email_address = "karsanrichard@gmail.com";
 						// $email_address = "karsanrichard@gmail.com,ttunduny@gmail.com";
                         // $email_address = "ttunduny@gmail.com";
                         //$bcc = "";
-	$this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
-
+	$status = $this -> hcmp_functions -> send_email($email_address, $message, $subject, $handler);
+	echo "I work till here";exit;
+	echo "<pre>";print_r($status);exit;
 	redirect('sms/new_weekly_usage');
 
 
