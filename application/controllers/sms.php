@@ -2968,7 +2968,7 @@ public function log_summary_weekly_view(){
    }
 
   
-   public function send_system_usage_specific($county_id = NULL,$district_id = NULL,$facility_code = NULL,$email_address = NULL){//Karsan
+   public function send_system_usage_specific($county_id = NULL,$district_id = NULL,$facility_code = NULL,$listing_email_address = NULL){//Karsan
 		$time=date('M , d Y');
 		$county_name = counties::get_county_name($county_id);
 		$district_name = districts::get_district_name_($district_id);
@@ -3272,8 +3272,9 @@ public function log_summary_weekly_view(){
 		$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 		// $subject = $excel_title." as at ".$time;
 
-		// $email_address = "smutheu@clintonhealthaccess.org,karsanrichard@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com";
-		$email_address = "karsanrichard@gmail.com";
+		$email_address = "smutheu@clintonhealthaccess.org,sethrichard40@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com";
+		// $email_address = "smutheu@clintonhealthaccess.org,sethrichard40@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com".$listing_email_address;
+		// $email_address = "karsanrichard@gmail.com";
 		// $email_address = "karsanrichard@gmail.com,ttunduny@gmail.com";
         // $email_address = "ttunduny@gmail.com";
         //$bcc = "";
