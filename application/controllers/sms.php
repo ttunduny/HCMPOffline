@@ -2973,7 +2973,14 @@ public function log_summary_weekly_view(){
 		$county_name = counties::get_county_name($county_id);
 		$district_name = districts::get_district_name_($district_id);
 
-		// echo "<pre>";print_r($county_name);
+		$cp_email_query = "SELECT * FROM email_listing_new WHERE county = $county_id AND usertype = 10";
+		$cp_emails = $this->db->query($cp_email_query)->result_array();
+
+		$scp_email_query = "SELECT * FROM email_listing_new WHERE county = $county_id AND usertype = 3";
+		$scp_emails = $this->db->query($scp_email_query)->result_array();
+
+		// echo "<pre>";print_r($scp_emails);exit;
+
 		// echo "<pre>";print_r($district_name);
 		// echo "<pre>OVER ";
 
@@ -2994,6 +3001,8 @@ public function log_summary_weekly_view(){
 		// $all_faciliteis = Facilities::getAll_();
 
 		// echo "<pre>";print_r($active_facilities);echo "</pre>";exit;
+		$facility_count = (empty($active_facilities))? NULL : count($active_facilities);
+
 		$final_array = array();
 		$last_seen_count = count($last_seen);
 		$last_issued_count = count($last_issued);
@@ -3273,12 +3282,20 @@ public function log_summary_weekly_view(){
 		// $subject = $excel_title." as at ".$time;
 
 		// $email_address = "smutheu@clintonhealthaccess.org,sethrichard40@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com";
-		$email_address = "smutheu@clintonhealthaccess.org,sethrichard40@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com".$listing_email_address;
+		// $email_address = $listing_email_address;
+		$email_address = $cp_emails;
+		$cc_email = $scp_emails;
+		$bcc_email = "smutheu@clintonhealthaccess.org,karsanrichard@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com,ronohb@gmail.com,odiwuorybrian@gmail.com,mwakiojoy@gmail.com,kevgithuka@gmail.com,margie.odora@gmail.com,kiganyastephenthua@gmail.com";
+
 		// $email_address = "karsanrichard@gmail.com";
+		// $bcc_email = "";
+		// $cc_email = "";
 		// $email_address = "karsanrichard@gmail.com,ttunduny@gmail.com";
         // $email_address = "ttunduny@gmail.com";
         //$bcc = "";
-		$status = $this -> hcmp_functions -> send_email($email_address, $message, $email_subject, $handler);
+        if (!empty($facility_count) && $facility_count>0) {
+			$status = $this -> hcmp_functions -> send_email($email_address, $message, $email_subject, $handler,$bcc_email,$cc_email);
+        }
 		// echo "I work till here";exit;
 		// echo "<pre>";print_r($status);exit;
 		// redirect('sms/new_weekly_usage');
@@ -3286,19 +3303,21 @@ public function log_summary_weekly_view(){
 
    public function send_sytem_usage()
    {
-   	$listing = $this->db->query("SELECT * FROM email_listing_new")->result_array();
+   	$listing = $this->db->query("SELECT county FROM email_listing_new WHERE usertype = 10 GROUP BY county")->result_array();
+
    	// echo "<pre>";print_r($listing);exit;
    	foreach ($listing as $list => $value) {
    		# code...
 		// echo "<pre>";print_r($value);
 		$county_id = $value['county'];
-		$subcounty = $value['sub_county'];
-		$email_address = $value['email'];
+		// $subcounty = $value['sub_county'];
+		// $email_address = $value['email'];
 
-		$send_it = $this-> send_system_usage_specific($county_id,$subcounty,NULL,$email_address);
+		$send_it = $this-> send_system_usage_specific($county_id,NULL,NULL,$email_address);
+		// echo "done";exit;
    	}
 
-   	echo "Whole thing done";exit;
+   	// echo "Whole thing done";exit;
    }//end of send system usage
 
    public function tester(){
