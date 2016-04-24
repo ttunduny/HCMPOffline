@@ -3272,8 +3272,8 @@ public function log_summary_weekly_view(){
 		$handler = "./print_docs/excel/excel_files/" . $excel_data['file_name'] . ".xls";
 		// $subject = $excel_title." as at ".$time;
 
-		// $email_address = "smutheu@clintonhealthaccess.org,sethrichard40@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com";
-		$email_address = "smutheu@clintonhealthaccess.org,sethrichard40@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com".$listing_email_address;
+		$email_address = "smutheu@clintonhealthaccess.org,sethrichard40@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com";
+		// $email_address = "smutheu@clintonhealthaccess.org,sethrichard40@gmail.com,ttunduny@gmail.com,teddyodera@gmail.com".$listing_email_address;
 		// $email_address = "karsanrichard@gmail.com";
 		// $email_address = "karsanrichard@gmail.com,ttunduny@gmail.com";
         // $email_address = "ttunduny@gmail.com";
