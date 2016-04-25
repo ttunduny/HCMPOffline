@@ -3,7 +3,8 @@ class Log extends Doctrine_Record {
 	public function setTableDefinition() 
 	{
 		$this -> hasColumn('id', 'int',50);	
-		$this -> hasColumn('user_id', 'int',50);	
+		$this -> hasColumn('user_id', 'int',50);
+		$this -> hasColumn('facility_code', 'int',50);	
 		$this -> hasColumn('action', 'varchar',50);
 		$this -> hasColumn('action_id', 'int',50);
 		$this -> hasColumn('start_time_of_event', 'date');
