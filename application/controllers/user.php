@@ -131,6 +131,7 @@ class User extends MY_Controller {
 			
 			$u1 = new Log();
 			$action = 'Logged In';
+			$u1->facility_code = $facility_id;
 			$u1->user_id = $this -> session -> userdata('user_id');
 			$u1->action = $action;
 			$u1->save();
