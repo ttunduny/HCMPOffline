@@ -68,7 +68,7 @@ $identifier = $this -> session -> userdata('user_indicator');
         
           // $("#connection_status").html(status);
 
-            /* if (status == true) {//when online
+             if (status == true) {//when online
                 $('#offline-notification').removeClass("show");//remove show
                 $('#offline-notification').addClass("hidden");
                 $('#online-notification').removeClass("hidden");
@@ -85,7 +85,7 @@ $identifier = $this -> session -> userdata('user_indicator');
                 // console.log("offline");
                 // alert("down");
                 
-             }*/
+             }
           }, 3000);
           
           function days_from_last_sync(){
