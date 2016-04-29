@@ -267,7 +267,7 @@ public function create_bat($facility_code)
    		$header = "DROP DATABASE IF EXISTS `$database`;\n\nCREATE DATABASE `$database`;\n\nUSE `$database`;\n\n";
    		$query = '';
 		$handle = fopen($filename, 'w');
-		$core_tables = array('access_level','account_list','assignments','comments','commodities','commodity_category','commodity_division_details','commodity_source','commodity_source_other','commodity_sub_category','counties','county_drug_store_issues','county_drug_store_totals','county_drug_store_transaction_table','districts','drug_commodity_map','drug_store_issues','drug_store_totals','drug_store_transaction_table','email_listing','facilities','git_log','issue_type','menu','malaria_drugs','rca_county','recepients','sub_menu','service_points','redistribution_data','log','log_monitor','facility_order_status','facility_order_details_rejects','facility_order_details');
+		$core_tables = array('access_level','account_list','assignments','comments','commodities','commodity_category','commodity_division_details','commodity_source','commodity_source_other','commodity_sub_category','counties','county_drug_store_issues','county_drug_store_totals','county_drug_store_transaction_table','districts','drug_commodity_map','drug_store_issues','drug_store_totals','drug_store_transaction_table','email_listing','facilities','git_log','issue_type','menu','malaria_drugs','rca_county','recepients','sub_menu','service_points','redistribution_data','receive_redistributions','log','log_monitor','facility_order_status','facility_order_details_rejects','facility_order_details');
 
 
 
