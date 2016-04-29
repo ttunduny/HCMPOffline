@@ -10,6 +10,7 @@
 </style>
 
 <div class="container" style="width: 96%; margin: auto;">
+
 	<div class="row">
 	   <div class="col-md-12" style="padding-left: 0; float:right; right:0;clear:both;  margin-bottom:5px;">	
 	 		<a id="upload_excel" href="#modal-dialog-excel" class="btn btn-sm btn-primary float-right margin-right" data-toggle="modal">Upload Redistribution Receivals excel</a>
@@ -17,83 +18,55 @@
 	        
 		</div> 
 	</div>
-	<div class="row">
-		<div class="col-md-6"><p class="text-danger">*To avoid adding items to your stock, leave the values as zero</p></div>
-		
-	</div>
 	
- <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('stock/add_more_stock_level_external',$att); ?>
+	
+ <?php $att=array("name"=>'myform','id'=>'myform'); echo form_open('issues/confirm_offline_issue',$att); ?>
  <table width="98%" border="0" class="row-fluid table table-hover table-bordered table-update"  id="example">
 	<thead>
 		<tr>
-			<th>From</th>
-			<th>To</th>
+			<th>From</th>			
 			<th>Commodity Name</th>
 			<th>Commodity Code</th>
-			<th>Date Sent</th>
-			<th>Unit Size</th>
-			<th>Batch No</th>
+			<th>Batch Number</th>
+			<th>Date Received</th>						
 			<th>Expiry Date</th>
-			<th>Manufacturer</th>
-			<th>Quantity Sent(units)</th>
-			<th>Quantity Sent(packs)</th>
-			<th>Issue Type</th>
-			<th>Quantity Received</th>
-			<th>Total Units</th>
+			<th>Manufacturer</th>			
+			<th>Quantity Received (Units)</th>
+			<th>Quantity Received (Packs)</th>			
 		</tr>
 	</thead>
 	<tbody>
-		<?php $edit=($editable!='to-me') ? "readonly='readonly'": null;	
-		foreach($redistribution_data as $redistribution_data){
-			$manu=$redistribution_data->manufacturer;
-			foreach($redistribution_data->facility_detail_source as $facility){
-					$name_=$facility->facility_name." MFL ".$facility->facility_code; $mfl=$facility->facility_code;}
-			foreach($redistribution_data->facility_detail_receive as $facility){
-					$name_facility_detail_receive=$facility->facility_name." MFL ".$facility->facility_code;}
-			foreach($redistribution_data->stock_detail as $stock_detail){			
-				
-				foreach($stock_detail->commodity_detail as $commodity_detail){
-				$name=$commodity_detail->commodity_name;
-				$code=$commodity_detail->commodity_code;
-				$unit_size=$commodity_detail->unit_size;
-				$total_commodity_units=$commodity_detail->total_commodity_units;
-				$source_of_item=$commodity_detail->commodity_source_id;	
-				}
-				$packs=round($redistribution_data->quantity_sent/$total_commodity_units,1);	
-				$date=date('d My',strtotime($redistribution_data->expiry_date));
-				$date_sent=date('d M Y',strtotime($redistribution_data->date_sent));
-						
-			}
+		<?php 
+			foreach ($redistribution_data as $key => $value) {
+				$sending_facility = $value['facility_name'];				
+				$commodity_name = $value['commodity_name'];
+				$commodity_code = $value['commodity_code'];
+				$commodity_id = $value['commodity_id'];
+				$batch_no = $value['batch_no'];
+				$manufacturer = $value['manufacturer'];
+				$expiry_date = $value['expiry_date'];
+				$date_received = $value['date_received'];
+				$quantity_received = $value['quantity_received'];
+				$unit_size = $value['total_commodity_units'];
+				$unit_size = ($unit_size!=0) ? $unit_size : 1 ;
+				$quantity_packs = intval($quantity_received)/intval($unit_size);
 		echo "<tr>
-		<td>
-		<input type='hidden' name='source_of_item[]' class='source_of_item' value='$source_of_item'>
-		<input type='hidden' name='service_point[]' class='service_point' value='$mfl'>
-		<input type='hidden' name='total_commodity_units[]' class='total_commodity_units' value='$total_commodity_units'>
-		<input type='hidden' name='commodity_id[]' class='commodity_id' value='$redistribution_data->commodity_id'>
-		<input type='hidden' name='facility_stock_id[]' class='facility_stock_id' value='$redistribution_data->id'>
-		$name_</td>
-		<td>$name_facility_detail_receive</td>
-		<td>$name</td>
-		<td>$code</td>
-		<td>$date_sent</td>
-		<td>$unit_size</td>
-		<td><input type='text' 
-		name='commodity_batch_no[]' class='form-control input-small commodity_batch_no' value='$redistribution_data->batch_no' $edit></td>
-		<td><input type='text' 
-		name='clone_datepicker[]' class=' form-control big clone_datepicker' value='$date' $edit></td>
-		<td><input type='text' 
-		name='commodity_manufacture[]' class='form-control input-small  commodity_manufacture' value='$manu' $edit></td>
-		<td><input type='text' readonly='readonly' 
-		name='commodity_total_units[]' class='form-control input-small commodity_total_units' value='$redistribution_data->quantity_sent'></td>
-		<td><input class='form-control big commodity_total_units' type='text' readonly='readonly' value='$packs'></td>
-		<td><select class='form-control  commodity_unit_of_issue ' name='commodity_unit_of_issue[]'>
-			<option value='Pack_Size'>Pack Size</option>
-			<option value='Unit_Size'>Unit Size</option>
-			</select></td>
-		<td><input class='form-control big quantity' 
-		type='text' 'name='quantity[]' value='0' $edit/></td>
-		<td><input class='form-control big actual_quantity' 
-		type='text' name='actual_quantity[]' readonly='readonly' value='0'/></td>
+		<td>				
+		<input type='hidden' name='manufacturer[]' class='manufacturer' value='$manufacturer'>				
+		<input type='hidden' name='total_commodity_units[]' class='total_commodity_units' value='$quantity_received'>
+		<input type='hidden' name='commodity_id[]' class='commodity_id' value='$commodity_id'>
+		<input type='hidden' name='expiry_date[]' class='expiry_date' value='$expiry_date'>
+		<input type='hidden' name='commodity_name[]' class='commodity_name' value='$commodity_name'>
+		<input type='hidden' name='batch_no[]' class='batch_no' value='$batch_no'>
+		$sending_facility</td>
+		<td>$commodity_name</td>
+		<td>$commodity_code</td>
+		<td>$batch_no</td>
+		<td>$date_received</td>
+		<td>$expiry_date</td>
+		<td>$manufacturer</td>
+		<td>$quantity_received</td>
+		<td>$quantity_packs</td>		
 		</tr>";			
 		}
 		
@@ -105,21 +78,23 @@
 <?php echo form_close();?> 
 <div id="confirm_actions" class="container-fluid" style="margin-top:5%; width:100%;height:50px;">
 
-	<?php if(!isset($editable)){ } else{
-			if($editable=='to-me'){
-
-	 ?>
-	<div style="float: right">
+	
+	<!-- <div style="float: right">
 		<button class="btn btn-success save form-input" ><span class="glyphicon glyphicon-open"></span>Update</button>
 	</div>
-
- 	<?php };};?>
-
+ -->
+ 	
+ 	<?php
+ 	if (count($redistribution_data)>0) {?>
+ 		
  	<div style="float: right">
- 		<a href="<?php echo base_url().'issues/confirm_external_issue_edit';?>">
-			<button class="btn btn-primary " ><span class="glyphicon glyphicon-open"></span>Edit</button>
+ 		<a href="<?php echo base_url().'issues/confirm_offline_issue';?>">
+			<button class="btn btn-success save form-input" ><span class="glyphicon glyphicon-open"></span>Update</button>
 		</a>	
 	</div>
+
+	<?php 
+ 	} ?>
 
 </div>
 
@@ -195,4 +170,39 @@ $(document).ready(function() {
     confirm_if_the_user_wants_to_save_the_form("#myform");
      });
 });
+</script>
+
+
+<div class="modal fade" id="modal-dialog-excel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Upload report listing excel</h4>
+            </div>
+            <div class="modal-body">
+                <?php $attr = array('id'=>'upload_form','class'=>''); echo form_open_multipart('issues/upload_redistribution_excel',$attr); ?>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td>Choose file:</td>
+                            <td><input type="file" name="redistribution_excel" size="20" required="required"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><button id="submit_upload" class="btn btn-success m-r-5" type="submit" value='upload' name="submit"><i class="fa fa-upload"></i> Upload</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <?php echo form_close(); ?>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+	$('#upload_excel').click(function () {
+     	$('#modal-dialog-excel').appendTo("body").modal('show');
+	})
+
+	
 </script>

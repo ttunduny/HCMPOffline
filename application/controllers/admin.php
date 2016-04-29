@@ -1016,7 +1016,7 @@ class Admin extends MY_Controller {
 	public function download_redistribution_receival_excel() {
 	 	// echo "<pre>";print_r($this->input->get());exit;
 		$filename = "Facility_redistributions.xlsx";		
-	 	$this -> hcmp_functions -> clone_redistribution_template($filepath);
+	 	$this -> hcmp_functions -> clone_redistribution_template($filename);
 	 	// $this -> hcmp_functions -> download_file($filepath);
 
 	}

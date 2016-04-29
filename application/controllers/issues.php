@@ -1158,15 +1158,190 @@ class issues extends MY_Controller {
 	}
 
 
-	public function confirm_external_issue_offline($editable = null) {
+	public function confirm_external_issue_offline($type = null) {
 		$facility_code = $this -> session -> userdata('facility_id');		
-		$data['title'] = ($editable!='') ? 'Receive Redistribution' :'Confirm Redistribution' ;		
-		$data['banner_text']= ($editable!='') ? 'Receive Redistribution' :'Confirm Redistribution' ;		
-		$data['redistribution_data'] = redistribution_data::get_all_active($facility_code, $editable);
-		$data['editable'] = $editable;
-		$data['content_view'] = "facility/facility_issues/facility_redistribute_items_confirmation_v";
+		$data['title'] = 'Receive Redistribution' ;		
+		$data['banner_text']= ($editable=='') ? 'Receive Redistribution' :'Confirm Redistribution' ;		
+		$data['redistribution_data'] = redistribution_data::get_all_received($facility_code);
+
+		$data['commodities'] = commodities::get_all();
+		
+		if ($type==null) {
+			$data['content_view'] = "facility/facility_issues/facility_redistribute_items_confirmation_v";
+		}else{
+			$data['content_view'] = "facility/facility_issues/facility_redistribute_items_confirmation_v_online";
+		}		
 		$this -> load -> view("shared_files/template/template", $data);
 	}
+
+	public function upload_redistribution_excel(){
+		// echo "<pre>";print_r($this->input->post());echo "</pre>";exit;
+		// error_reporting(E_ALL);
+		$config['upload_path'] = './print_docs/excel/uploaded_files/';
+		$config['allowed_types'] = 'xls|xlsx';
+		$config['max_size']	= '2048';
+		$name = 'redistribution'.date('d-m-Y').'_';
+		$config['file_name'] = $name;
+		$this->upload->initialize($config);
+		if ( ! $this->upload->do_upload("redistribution_excel"))
+		{
+			echo "<pre>";print_r($this->upload->display_errors());echo "</pre>";			
+		}
+		else
+		{
+			$result = $this->upload->data();
+			$file_name = $result['file_name'];
+			$this->upload_redistribution($file_name);
+			// echo "I worked";
+			$this->session->set_flashdata('message', 'The File upload was successful');
+			// redirect('admin/report_listing');
+		}
+	}//end of upload excel
+	public function upload_redistribution($file_name){
+		$inputFileName = 'print_docs/excel/uploaded_files/'.$file_name;
+		$objReader = new PHPExcel_Reader_Excel2007();
+		$objReader->setReadDataOnly(true);
+		$objPHPExcel = $objReader->load($inputFileName);
+		$sheet = $objPHPExcel->getSheet(0); 
+		$highestRow = $sheet->getHighestRow()+1; 
+		$highestColumn = $sheet->getHighestColumn();
+
+		$sending_facility = $sheet->getCell('C8')->getValue();
+		$facility_code = $this -> session -> userdata('facility_id');
+		$current_date = date($format = "Y-m-d h:i:s", PHPExcel_Shared_Date::ExcelToPHP($sheet->getCell('C9')->getValue()));
+		// echo "$current_date";die;
+		$today = date('Y-m-d h:i:s');
+		$rowData = array();
+		for ($row = 12; $row < $highestRow; $row++){ 
+		    //  Read a row of data into an array
+		    $rowData_ = $sheet->rangeToArray('B' . $row . ':G' . $row);		
+		    array_push($rowData, $rowData_[0]);		    
+		}		
+
+		foreach ($rowData as $r_data) {
+
+			$commodity_name = $r_data[0];
+			$batch_no = $r_data[1];
+			$manufacturer = $r_data[2];
+			$expiry_date = date($format = "Y-m-d h:i:s", PHPExcel_Shared_Date::ExcelToPHP($r_data[3]));
+			// $expiry_date =  date($format = "Y-m-d h:i:s", PHPExcel_Shared_Date::ExcelToPHP($expiry_date)); 
+			
+			$quantity_packs = $r_data[4];
+			$quantity_units = $r_data[5];			
+			//Get commodity details from the name
+			$commodity_details = commodities::get_details_name($commodity_name);
+			foreach ($commodity_details as $key => $value) {
+				$commodity_id = $value['id'];
+				$commodity_code = $value['commodity_code'];
+				$unit_size = $value['pack_size'];
+				$commodity_source_id = $value['commodity_source_id'];
+
+				//Convert the Packs to Units
+				$received_quantity = null;
+				if($quantity_units!=''||$quantity_units!=null){
+					$received_quantity = $quantity_units;
+				}else{
+					$unit_size = ($unit_size==0) ? 1 : $unit_size ;
+					$received_quantity = $quantity_packs * $unit_size;
+				}
+
+				//Save the Data in a temporary table 
+				$received_data = array(array('facility_code' =>$facility_code,
+													'sending_facility'=>$sending_facility,
+													'commodity_id'=>$commodity_id,
+													'batch_no'=>$batch_no,
+													'manufacturer'=>$manufacturer,													
+													'quantity_received'=>$received_quantity,
+													'expiry_date'=>$expiry_date,
+													'date_received'=>$current_date,													
+													'status'=>1));
+				//Save to receive redistributions table
+				$this -> db -> insert_batch('receive_redistributions', $received_data);
+				
+			}
+		}
+
+		$this -> session -> set_flashdata('system_success_message', "File Upload Successful");
+		redirect('issues/confirm_external_issue_offline');
+			
+
+	}//end of recepient upload
+	public function confirm_offline_issue(){
+		
+		
+		$today = date('Y-m-d h:i:s');
+		$count =count($this->input->post('commodity_id'));	
+		$commodity_name = $this->input->post('commodity_name');	
+		$commodity_id = $this->input->post('commodity_id');	
+		$expiry_date = $this->input->post('expiry_date');	
+		$manufacturer = $this->input->post('manufacturer');	
+		$batch_no = $this->input->post('batch_no');	
+		$total_commodity_units = $this->input->post('total_commodity_units');
+		$facility_code = $this -> session -> userdata('facility_id');
+
+		for ($i=0; $i <$count ; $i++) { 			
+			$commodity_details = commodities::get_details_name($commodity_name[$i]);
+			foreach ($commodity_details as $key => $value) {
+				$new_commodity_id = $value['id'];
+				$commodity_code = $value['commodity_code'];
+				$unit_size = $value['pack_size'];
+				$commodity_source_id = $value['commodity_source_id'];
+
+				//Convert the Packs to Units
+				$received_quantity = $total_commodity_units[$i];
+				
+
+				//Check if batch exists in the facility stocks table
+				$batch_details = facility_stocks::get_batch_details($batch_no[$i],$facility_code);
+
+				//If the batch does not exits
+				if(count($batch_details)<=0){
+					$facility_stocks_data = array(array('facility_code' =>$facility_code,
+													'commodity_id'=>$new_commodity_id,
+													'batch_no'=>$batch_no[$i],
+													'manufacture'=>$manufacturer[$i],
+													'initial_quantity'=>$received_quantity,
+													'current_balance'=>$received_quantity,
+													'date_added'=>$today,
+													'date_modified'=>$today,
+													'source_of_commodity'=>$commodity_source_id,
+													'status'=>1,
+													'expiry_date'=>$expiry_date[$i]
+													 ));
+					// echo "<pre>";print_r($facility_stocks_data);die;
+					$this -> db -> insert_batch('facility_stocks', $facility_stocks_data);
+				}else{
+					// echo "<pre>";print_r($batch_details);die;
+					$current_balance = intval($batch_details[0]['current_balance']);
+					$quantity_units = $total_commodity_units[$i];
+					$current_balance = $current_balance + intval($quantity_units);
+					$facility_stocks_data_update = array('batch_no'=>$batch_no[$i],								
+													'current_balance'=>$current_balance,													
+													'date_modified'=>$today,																
+													'expiry_date'=>$expiry_date[$i]
+													 );
+					// echo "<pre>";print_r($facility_stocks_data_update);die;
+					$this->db->where('batch_no', $batch_no[$i]);
+					$this->db->where('facility_code', $facility_code);
+					$this->db->update('facility_stocks', $facility_stocks_data_update); 
+					//Above code updates the facility Stocks table if the batch exists
+				}
+
+			}
+			$receive_redistribution_data_update = array('batch_no'=>$batch_no[$i],								
+													'status'=>0
+													 );
+			$this->db->where('batch_no', $batch_no[$i]);
+			$this->db->where('status',1);
+			$this->db->where('facility_code', $facility_code);
+			$this->db->update('receive_redistributions', $receive_redistribution_data_update); 
+		}
+
+		$this -> session -> set_flashdata('system_success_message', "Redistribution Data Has Been Updated");
+		redirect('home');
+			
+
+	}//end of recepient upload
 
 	public function delete_redistribution($id){
 		$redistribution_data = redistribution_data::get_one($id);

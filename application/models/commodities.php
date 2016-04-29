@@ -282,5 +282,10 @@ return $inserttransaction;
 		  return $src_id;
 	}
 
+	public static function get_details_name($commodity_name){
+		$details = Doctrine_Manager::getInstance()->getCurrentConnection()
+		    ->fetchAll("select id,commodity_code, commodity_name, unit_size, total_commodity_units as pack_size, commodity_source_id from commodities where status = '1' and commodity_name='$commodity_name' limit 0,1");
+		return $details;
+	}
 }
 ?>

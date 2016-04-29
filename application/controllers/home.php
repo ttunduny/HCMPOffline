@@ -211,9 +211,9 @@ class Home extends MY_Controller
     	//get actual Expiries infor here
 		$actual_expiries=count(Facility_stocks::All_expiries($facility_code));
 		//get items they have been donated for
-		$facility_donations=redistribution_data::get_all_active($facility_code)->count();
+		// $facility_donations=redistribution_data::get_all_active($facility_code)->count();
 		//get items they have been donated and are pending
-		$facility_donations_pending=redistribution_data::get_all_active($facility_code,"to-me")->count();
+		// $facility_donations_pending=redistribution_data::get_all_active($facility_code,"to-me")->count();
 		//get redistribution mismatch data
 		$facility_redistribution_mismatches = redistribution_data::get_redistribution_mismatches_count($facility_code);
 		//get stocks from v1

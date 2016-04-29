@@ -144,6 +144,12 @@ class Facility_stocks extends Doctrine_Record {
 		$store_comm = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT DISTINCT commodity_id as commodity_id from drug_store_issues");
 		return $store_comm;
 	}
+	public static function get_batch_details($batch_no,$facility_code) {
+		$batch_data = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("select * from facility_stocks where batch_no = '$batch_no' and facility_code='$facility_code'");
+		return $batch_data;
+	}
+	
+
 	public static function get_district_store_total_commodities($district_id) {
 		$store_comm = Doctrine_Manager::getInstance() -> getCurrentConnection() -> fetchAll("SELECT * from drug_store_totals");
 		return $store_comm;

@@ -39,6 +39,11 @@ class redistribution_data extends Doctrine_Record {
 		$redistribution_data = $query -> execute();
 		return $redistribution_data;
 	}
+  public function get_all_received($facility_code) {  
+    $sql = "select f.facility_name as facility_name,c.commodity_name,c.commodity_code,c.total_commodity_units, r.* from receive_redistributions r, facilities f,commodities c where f.facility_code = r.sending_facility and c.id = r.commodity_id and r.status = 1 and r.facility_code = '$facility_code'";
+    $received_data = $this->db->query($sql)->result_array();
+    return $received_data;
+  }
 
     public function get_one($id){
         $sql = "SELECT quantity_sent, facility_stock_ref_id as stock_id FROM redistribution_data where id ='$id'";
