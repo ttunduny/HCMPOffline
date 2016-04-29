@@ -39,7 +39,7 @@
 */
 
 
-$route['default_controller'] = "kenya";
+$route['default_controller'] = "user";
 $route['404_override'] = '';
 // $route['(:any)'] = ;
 /* End of file routes.php */

@@ -197,7 +197,7 @@
 				<br />
 				<span style="font-size: 1.3em">Health Commodities Management Platform</span>
     <!-- <div class="online-status"><span class="red"><b><span class="glyphicon glyphicon-off small-margin"></span>Off</span>line</b></div> -->
-    			<div class="online-status"><span class="green"><b><span class="glyphicon glyphicon-off small-margin"></span>On</span>line</b></div>
+    			<div class="online-status"><span class="red"><b><span class="glyphicon glyphicon-off small-margin"></span>Off</span>line</b></div>
 
 			</center>
 			</div>
@@ -239,12 +239,12 @@
 			</div>
 
 		</div>
-		<div class="col-md-2 pull-right">
+		<!-- <div class="col-md-2 pull-right">
 				<a href="<?php echo base_url('kenya') ?>">
 				<button class="btn btn-success col-md-12">
 					<span class="glyphicon glyphicon-dashboard"></span>National Dashboard
 				</button></a>
-		</div>
+		</div> -->
 
 		<div class="container" style="" id="containerlogin">
 

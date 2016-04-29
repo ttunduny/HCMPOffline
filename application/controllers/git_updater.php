@@ -102,7 +102,7 @@ class Git_updater extends MY_Controller {
 
 	public function update_log($hash){
 		$current_time =date('Y-m-d H:i:s');
-		$data = array('hash_value' => $hash,'update_time'=>$current_time);	
+		$data = array('hash_value' => $hash,'last_updated'=>$current_time);	
 		// echo "<pre>";print_r($data);die;
 		$status = $this->db->insert('git_log',$data);
 		return $status;
